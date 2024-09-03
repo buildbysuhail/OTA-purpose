@@ -1,0 +1,3 @@
+export interface ItemSummaryCard {total: number, currency: string, summary:ItemSummaryCardStateSummary[],monthVariation: number, for:string, branchData:ItemSummaryCardBranchSummary[], totalBranches: number, contextBranches: number, branches:string[]}
+export interface ItemSummaryCardBranchSummary {branchId: number, branchName: string, total: number, currency: string, summary:ItemSummaryCardStateSummary[]}
+export interface ItemSummaryCardStateSummary {amount: number, monthAndYear: string, currency: string }

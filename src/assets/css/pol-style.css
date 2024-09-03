@@ -1,0 +1,10 @@
+
+.box-title-desc {
+  @apply text-defaulttextcolor text-[.75rem] font-[400] me-auto dark:text-defaulttextcolor/70;
+}
+.custom-before {
+  @apply before:absolute before:h-4 before:w-[0.2rem] before:top-[0.15rem] before:-start-[0.65rem] before:bg-gradient-to-b before:from-primary/50 before:to-secondary/50 before:rounded-md;
+}
+.box-title {
+  @apply text-[.800rem];
+}

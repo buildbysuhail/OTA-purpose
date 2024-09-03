@@ -1,0 +1,1 @@
+export function getTailwindColor(colorName: string): string;

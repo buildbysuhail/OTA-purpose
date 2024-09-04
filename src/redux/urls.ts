@@ -34,10 +34,35 @@ const Urls = {
   getUserAppSetting: "/User/getUserAppSetting",
   updateUserAppSetting: "/User/updateUserAppSetting",
 
-  // AccountSettings
+  // AccountSettings/Profile
+  uploadUserImage: "/Subscription/Profile/UploadUserImage/",
+  changeEmailRequest_profile: "/Subscription/Profile/ChangeEmailRequest/",
+  verifyEmail_profile: "/Subscription/Profile/VerifyEmail/",
+  changePhoneRequest_profile: "/Subscription/Profile/ChangePhoneRequest/",
+  changePhone: "/Subscription/Profile/ChangePhone/",
+  verifyPhone_profile: "/Subscription/Profile/VerifyPhone/",
   updateUserBasicInfo: "/Subscription/Profile/ChangeBasicInfo/",
-  getUserBasicInfo: "/Subscription/Profile/GetBasicInfo/"
-  
+  getUserBasicInfo: "/Subscription/Profile/GetBasicInfo/",
+  getEmail_profile: "/Subscription/Profile/GetEmail/",
+  getPhone_profile: "/Subscription/Profile/GetPhone/",
+  getImage_profile: "/Subscription/Profile/GetProfileImage/",
+
+  // AccountSettings/Security
+  updatePassword: "/Subscription/AccountSettings/Security/ResetPassword/",
+
+  // AccountSettings/Preferences
+  updateLanguage: "/Core/Preferences/UpdateLanguage/",
+  updatePreference: "/Core/Preferences/UpdatePreference/",
+  updateDateRegion: "/Core/Preferences/UpdateDateRegion/",
+  updateUserThemes: "/Core/Preferences/UpdateUserThemes/",
+  getLanguage: "/Core/Preferences/GetLanguage/",
+  getPreference: "/Core/Preferences/GetPreference/",
+  getDateRegion: "/Core/Preferences/GetDateRegion/",
+  getUserThemes: "/Core/Preferences/GetUserThemes/",
+
+  // AccountSettings/UserBranches
+  userBranches: "/Core/UserBranches/",
+  deleteUserBranches: "/Core/UserBranches/{Id}/",
 };
 
 export default Urls;

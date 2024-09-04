@@ -46,7 +46,7 @@ const jwtHelper = {
     }
   },
   getCurrency: () => {
-    debugger;
+    
     const user = Cookies.get("token");
     if (!user) {
       return 'USD';

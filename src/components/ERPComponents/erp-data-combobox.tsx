@@ -117,7 +117,7 @@ export default function SBDataCombobox({
   const fieldKey = field?.id?.replaceAll("_id", "");
   const defaultValueKey = defaultData?.[fieldKey]?.[field?.valueKey];
   console.log(`SBDataCombobox,  : default_value_key`, defaultValueKey);
-debugger;
+
   let value = field?.labelKey ? defaultData?.[field?.id]?.[field?.labelKey] : defaultData?.[field?.id];
   if (data !== undefined && data?.[field?.id] !== undefined) {
     value = data?.[field?.id] === undefined ? value : localValue?.label;
@@ -143,7 +143,7 @@ debugger;
     query === ""
       ? options
       : options?.filter((person: any) => person?.label?.toLowerCase()?.replace(/\s+/g, "")?.includes(query?.toLowerCase()?.replace(/\s+/g, "")));
-debugger;
+
   const defualt = options?.find((option: any) => option?.value === defaultValueKey);
   const selected = options?.find((option: any) => option?.value === data?.[field?.id]);
 
@@ -181,7 +181,7 @@ debugger;
         disabled={disableCombobox()}
         value={selected || defualt || exceptional || initialValue}
         onChange={(value) => {
-          debugger;
+          
           onChange && onChange(value);
           onChangeData && value && data && onChangeData({ ...data, [id]: value?.value });
           handleChange && handleChange(field?.id, value?.value);

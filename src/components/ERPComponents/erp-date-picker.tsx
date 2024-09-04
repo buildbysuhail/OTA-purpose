@@ -31,7 +31,7 @@ const ERPDatePicker = ({ label, data, field, defaultData, handleChange, onChange
             handleChange && handleChange(field?.id, dayjs(newValue).format());
             onChange && onChange(newValue);
           }}
-          renderInput={(params: any) => <TextField required={field?.required} {...params} size="small" />}
+          // renderInput={(params: any) => <TextField required={field?.required} {...params} size="small" />}
         />
       </LocalizationProvider>
     </FormControl>

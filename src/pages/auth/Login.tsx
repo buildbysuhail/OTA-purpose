@@ -31,14 +31,14 @@ const Login = () => {
 
   const handleSubmit = async (event: any) => {
     
-    debugger;
+    
     event.preventDefault();
     if (data?.userName && data?.password) {
       setError(null);
       
-      debugger;
+      
         const login = await dispatch(loginUser(data)).unwrap();
-        debugger;
+        
         if (login.isOk == true) {   
           Cookies.set("token", login.item.token, { expires: 30 });       
             navigate("/");

@@ -42,7 +42,7 @@ class APIClient {
    */
   get = (url: string, queryString: string = ''): Promise<any> => {
     let response: Promise<any>;
-    debugger;
+    
 
       response = queryString !== '' ? axios.get(`${url}?${queryString}`) : axios.get(`${url}`);
 

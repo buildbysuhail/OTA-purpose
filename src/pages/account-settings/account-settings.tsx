@@ -11,16 +11,31 @@ import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPDatePicker from "../../components/ERPComponents/erp-date-picker";
 import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
-import { getThunkAndSlice, getThunkAndSliceWithValidation } from "../../redux/slices/dynamicThunkAndSlice";
-import { ActionType, ApiState, ApiStateWithValidation } from "../../redux/types";
+import {
+  getThunkAndSlice,
+  getThunkAndSliceWithValidation,
+} from "../../redux/slices/dynamicThunkAndSlice";
+import {
+  ActionType,
+  ApiState,
+  ApiStateWithValidation,
+} from "../../redux/types";
 import { useDispatch } from "react-redux";
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
-import { ResponseModel, ResponseModelWithValidation } from "../../base/response-model";
+import phoneImage from "../../assets/images/apps/phone.png";
+import {
+  ResponseModel,
+  ResponseModelWithValidation,
+} from "../../base/response-model";
 import { useLocation } from "react-router-dom";
-import './profile.css'; 
+import "./profile.css";
 import SBModelForm from "../../components/common/polosys/sb-model-form";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import ERPModal from "../../components/ERPComponents/erp-modal";
+import { handleResponse } from "../../utilities/HandleResponse";
+import { APIClient } from "../../helpers/api-client";
+import { getAction, postAction } from "../../redux/app-actions";
+import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 
 interface AccountSettingsProps {}
 interface UserProfileBasicInfo {
@@ -30,10 +45,20 @@ interface UserProfileBasicInfo {
 }
 
 const AccountSettings: FC<AccountSettingsProps> = (props) => {
+  let api = new APIClient();
   const [image, setImage] = useState<string>("#");
+  const [phone, setPhone] = useState<string>("");
+  const [_phone, set_Phone] = useState<string>("");
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
   const [isOpenPhoneChange, setIsOpenPhoneChange] = useState<boolean>(false);
-  const [postDataEmail, setPostDataEmail] = useState<any>();
+  const [postDataEmail, setPostDataEmail] = useState<any>({
+    data: { userName: "", password: "", newValue: "" },
+    validations: { userName: "", password: "", newValue: "" },
+    tokenSend: false,
+  });
+  const [postDataEmailTokenVerify, setPostDataEmailTokenVerify] = useState<any>(
+    { userName: "", newValue: "", otp: "", confirToken: "" }
+  );
   const [postDataPhone, setPostDataPhone] = useState<any>();
   const initialBasicInfoWithValidation = {
     data: {
@@ -42,26 +67,82 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
       fullName: null,
     },
     validations: {
-      countryCode: '',
-      dob: '',
+      countryCode: "",
+      dob: "",
       fullName: "",
     },
   };
   const dispatch = useDispatch();
-  debugger;
+
   ////////////email change
-  const { thunk: postFormEmailThunk } =
-  getThunkAndSlice<any>(
-    Urls.updateUserBasicInfo,
-    ActionType.POST,
-    false,
-    {data:{userName:'',password:'',newValue:''}, loading: false}
+  const { thunk: postFormEmailThunk } = getThunkAndSliceWithValidation<
+    any,
+    any
+  >(Urls.verifyEmail_profile, ActionType.POST, false, {
+    data: { userName: "", password: "", newValue: "" },
+    loading: false,
+  });
+  const updatedFormDataEmail: any = useAppDynamicSelector(
+    Urls.verifyEmail_profile,
+    ActionType.POST
   );
-const updatedFormDataEmail: any = useAppDynamicSelector(
-  Urls.updateUserBasicInfo,
-  ActionType.POST
-);
-////Basic InfoUpdate
+
+  const { thunk: getFormEmailThunk } = getThunkAndSliceWithValidation<any, any>(
+    Urls.getEmail_profile,
+    ActionType.GET,
+    false
+  );
+  const formDataEmail: any = useAppDynamicSelector(
+    Urls.getEmail_profile,
+    ActionType.GET
+  );
+  debugger;
+  const { thunk: postFormEmailTokenThunk } = getThunkAndSliceWithValidation<
+    any,
+    any
+  >(Urls.changeEmailRequest_profile, ActionType.POST, false, {
+    data: { userName: "", password: "", newValue: "" },
+    loading: false,
+  });
+  const updatedFormDataEmailToken: any = useAppDynamicSelector(
+    Urls.changeEmailRequest_profile,
+    ActionType.POST
+  );
+
+  const postFormEmail = async () => {
+    if (postDataEmail.tokenSend) {
+      await verifyFormEmail();
+    } else {
+      debugger;
+      const response: ResponseModelWithValidation<any, any> = await dispatch(
+        postFormEmailThunk(postDataEmail.data)
+      ).unwrap();
+      debugger;
+      handleResponse(response, () => {
+        setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
+        setPostDataEmailTokenVerify((prevData: any) => ({
+          ...prevData,
+          userName: response.item.userName,
+          newValue: response.item.newValue,
+          confirToken: response.item.confirToken,
+        }));
+      });
+    }
+  };
+  const verifyFormEmail = async () => {
+    debugger;
+    const response: ResponseModelWithValidation<any, any> = await dispatch(
+      postFormEmailTokenThunk(postDataEmailTokenVerify)
+    ).unwrap();
+    debugger;
+    handleResponse(response, () => {
+      setIsOpenEmailChange(false);
+      setPostDataEmail({});
+      dispatch(getFormEmailThunk());
+    });
+  };
+
+  ////Basic InfoUpdate
   const { thunk: getUserBasicInfoThunk, slice: basicInfoSlice } =
     getThunkAndSliceWithValidation<UserProfileBasicInfo, any>(
       Urls.getUserBasicInfo,
@@ -75,7 +156,7 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
     ActionType.GET,
     false
   );
-  debugger;
+
   const { thunk: updateUserBasicInfoThunk } =
     getThunkAndSlice<UserProfileBasicInfo>(
       Urls.updateUserBasicInfo,
@@ -88,91 +169,137 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
     ActionType.POST
   );
   const location = useLocation();
-  const path = location.pathname.split('/').pop(); // Extract the last part of the route
+  const path = location.pathname.split("/").pop(); // Extract the last part of the route
 
   useEffect(() => {
     dispatch(getUserBasicInfoThunk());
+    dispatch(getFormEmailThunk());
+    api.get(Urls.getImage_profile).then((url) => {
+      setImage(url);
+    });
+    api.get(Urls.getPhone_profile).then((phone) => {
+      setPhone(phone);
+      set_Phone(phone);
+    });
   }, []);
   const onImageSuccess = useMemo(() => {
+    debugger;
     return (url: string) => {
-      debugger;
       setImage(url);
     };
   }, []);
   const resetBasicInfo = useCallback(async () => {
-    await dispatch(basicInfoSlice.actions.updateData(initialBasicInfoWithValidation));
+    await dispatch(
+      basicInfoSlice.actions.updateData(initialBasicInfoWithValidation)
+    );
   }, [dispatch, _basicInfo]);
+  const changePhone = useCallback(async () => {
+    const response: ResponseModelWithValidation<any, any> = await dispatch(
+      postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
+    ).unwrap();
+    handleAxiosResponse(response);
+  }, [dispatch, phone]);
   const updateBasicInfo = useCallback(async () => {
-    debugger;
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       updateUserBasicInfoThunk(_basicInfo.data)
     ).unwrap();
-    debugger;
-    if (response.isOk !== true) {
-      await dispatch(basicInfoSlice.actions.updateValidation(response.validations));
-    }
-    else{
-      
-      await dispatch(basicInfoSlice.actions.updateData(initialBasicInfoWithValidation));
-    }
-  }, [dispatch, _basicInfo]);
-  const onSubmitEmail = useCallback(async () => {
-    await dispatch(basicInfoSlice.actions.updateData(initialBasicInfoWithValidation));
+    await dispatch(
+      basicInfoSlice.actions.updateValidation(response.validations)
+    );
+    handleResponse(response, () => {});
   }, [dispatch, _basicInfo]);
   const PopUpModalEmailChange = () => {
     return (
       <div className="w-full pt-4">
-        <form
-          onSubmit={(e) => {
-            e?.preventDefault();
-            onSubmitEmail();
-          }}
-        >
+        {postDataEmail && postDataEmail.tokenSend != true ? (
           <div className="grid grid-cols-1 gap-3">
             <ERPInput
-              id="email"
+              id="userName"
               type="email"
               placeholder="Current Email"
               required={true}
-              data={postDataEmail}
-              onChangeData={(data: any) => setPostDataEmail((prevData: any) => ({ ...prevData, ...data }))}
-              value={postDataEmail?.userName }
+              data={postDataEmail.data}
+              onChangeData={(data: any) => {
+                setPostDataEmail((prevData: any) => ({
+                  ...prevData,
+                  data: data,
+                }));
+              }}
+              value={postDataEmail.data?.userName}
             />
             <ERPInput
               id="password"
-              placeholder="Currency Name"
+              placeholder="Password"
               required={true}
-              value={postDataEmail?.password}
-              data={postDataEmail}
-              onChangeData={(data: any) => setPostDataEmail((prevData: any) => ({ ...prevData, ...data }))}
+              value={postDataEmail.data?.password}
+              data={postDataEmail.data}
+              onChangeData={(data: any) =>
+                setPostDataEmail((prevData: any) => ({
+                  ...prevData,
+                  data: data,
+                }))
+              }
             />
-             <ERPInput
-              id="newemail"
+            <ERPInput
+              id="newValue"
               type="email"
               placeholder="New Email"
               required={true}
-              data={postDataEmail}
-              onChangeData={(data: any) => setPostDataEmail((prevData: any) => ({ ...prevData, ...data }))}
-              value={postDataEmail?.newValue }
+              data={postDataEmail.data}
+              onChangeData={(data: any) =>
+                setPostDataEmail((prevData: any) => ({
+                  ...prevData,
+                  data: data,
+                }))
+              }
+              value={postDataEmail.data?.newValue}
             />
           </div>
-          <div className="flex gap-3 mt-5">
-            <ERPSubmitButton type="submit" loading={updatedFormDataEmail?.loading}>
-              Save
-            </ERPSubmitButton>
-            <ERPSubmitButton
-              type="reset"
-              varient="secondary"
-              onClick={() => {
-                setIsOpenEmailChange(false);
-                setPostDataEmail({});
-              }}
-              disabled={updatedFormDataEmail?.loading}
-            >
-              Cancel
-            </ERPSubmitButton>
+        ) : (
+          <div className="grid grid-cols-1 gap-3">
+            <p>
+              Pls Enter the verification code you received to your email{" "}
+              {postDataEmail.data.newValue}
+            </p>
+            <ERPInput
+              id="confirToken"
+              placeholder="Pleas Enter Verification Code"
+              required={true}
+              value={postDataEmailTokenVerify.otp}
+              data={postDataEmailTokenVerify}
+              onChangeData={(data: any) =>
+                setPostDataEmail((prevData: any) => ({
+                  ...prevData,
+                  ...data,
+                }))
+              }
+            />
           </div>
-        </form>
+        )}
+        <div className="w-full p-2 flex justify-end">
+          <ERPButton
+            type="reset"
+            title="Cancel"
+            variant="secondary"
+            onClick={() => {
+              setIsOpenEmailChange(false);
+              setPostDataEmail({});
+            }}
+            disabled={updatedFormDataEmail?.loading}
+          ></ERPButton>
+          <ERPButton
+            type="button"
+            disabled={updatedFormDataEmail?.loading}
+            variant="primary"
+            onClick={postFormEmail}
+            loading={updatedFormDataEmail?.loading}
+            title={
+              postDataEmail && postDataEmail.tokenSend != true
+                ? "Update"
+                : "Verify"
+            }
+          ></ERPButton>
+        </div>
       </div>
     );
   };
@@ -184,7 +311,12 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
-            <div id="avatar" className={`xxl:col-span-12 xl:col-span-12 ${path === 'avatar' ? 'blink' : ''} col-span-12`}>
+            <div
+              id="avatar"
+              className={`xxl:col-span-12 xl:col-span-12 ${
+                path === "avatar" ? "blink" : ""
+              } col-span-12`}
+            >
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -232,7 +364,12 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
                 </div>
               </div>
             </div>
-            <div id="email-address" className={`xxl:col-span-12 xl:col-span-12 ${path === 'email-address' ? 'blink' : ''} col-span-12`}>
+            <div
+              id="email-address"
+              className={`xxl:col-span-12 xl:col-span-12 ${
+                path === "email-address" ? "blink" : ""
+              } col-span-12`}
+            >
               <div className="box custom-box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -254,22 +391,21 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
                           <h6 className="font-semibold mb-1  text-[.75rem]">
-                            Json Taylor
+                            {formDataEmail.data}
                           </h6>
                         </div>
-                        <p className="mb-1 opacity-[0.7] text-[.65rem]">
-                          Chief Executive Officer (C.E.O)
-                        </p>
+                        {/* <p className="mb-1 opacity-[0.7] text-[.65rem]">
+                         modified a month ago
+                        </p> */}
                       </div>
                     </div>
 
                     <ERPButton
                       title="Change Primary Email Address"
-                      onClick={() =>{
-                        setIsOpenEmailChange(!isOpenEmailChange)
-                      }
-                    }
-                      loading={updatedUserBasicInfo.loading}
+                      onClick={() => {
+                        setIsOpenEmailChange(!isOpenEmailChange);
+                      }}
+                      variant="primary"
                     ></ERPButton>
                   </div>
                 </div>
@@ -285,7 +421,12 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
                 content={PopUpModalEmailChange()}
               />
             </div>
-            <div id="phone-number" className={`xxl:col-span-12 xl:col-span-12 ${path === 'phone-number' ? 'blink' : ''} col-span-12`}>
+            <div
+              id="phone-number"
+              className={`xxl:col-span-12 xl:col-span-12 ${
+                path === "phone-number" ? "blink" : ""
+              } col-span-12`}
+            >
               <div className="box custom-box">
                 <div className="box-header justify-between">
                   <div className="box-title">
@@ -300,27 +441,28 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
                 </div>
                 <div className="box-body">
                   <div className="grid grid-cols-1 gap-3">
-                    <div className="sm:flex items-start items-center">
-                      <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
-                        <img src={emailImage} />
-                      </span>
-                      <div className="flex-grow p-2">
-                        <div className="flex items-center !justify-between">
-                          <h6 className="font-semibold mb-1  text-[.75rem]">
-                            Json Taylor
-                          </h6>
-                        </div>
-                        <p className="mb-1 opacity-[0.7] text-[.65rem]">
-                          Chief Executive Officer (C.E.O)
-                        </p>
-                      </div>
-                    </div>
-
+                    <ERPInput
+                      id="phone"
+                      placeholder="Pleas Enter Phone Number"
+                      required={true}
+                      value={phone}
+                      data={phone}
+                      onChangeData={(data: any) =>
+                       setPhone(data.phone)
+                      }
+                    />
+ <div className="w-full p-2 flex justify-end">
                     <ERPButton
-                      title="Change Primary Email Address"
-                      onClick={updateBasicInfo}
-                      loading={updatedUserBasicInfo.loading}
+                      title={
+                        phone != undefined && phone != null && phone != ""
+                          ? "Update"
+                          : "Add Phone"
+                      }
+                      disabled={phone == _phone}
+                      onClick={changePhone}
+                      variant="primary"
                     ></ERPButton>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -328,7 +470,12 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
           </div>
         </div>
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
-        <div id="basic-information" className={`xxl:col-span-12 xl:col-span-12 ${path === 'basic-information' ? 'blink' : ''} col-span-12`}>
+          <div
+            id="basic-information"
+            className={`xxl:col-span-12 xl:col-span-12 ${
+              path === "basic-information" ? "blink" : ""
+            } col-span-12`}
+          >
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
@@ -343,21 +490,21 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
               </div>
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
-               
                   <ERPInput
                     id="fullName"
                     label="Display Name"
                     placeholder="Display Name"
                     required={true}
                     data={_basicInfo.data}
-                    onChangeData={(data: any) =>
-                     {
-                      debugger;
-                      dispatch(basicInfoSlice.actions.updateData(data))
-                     }
-                    }
+                    onChangeData={(data: any) => {
+                      dispatch(basicInfoSlice.actions.updateData(data));
+                    }}
                     validation={_basicInfo.validations.fullName}
-                    value={_basicInfo?.data?.fullName ? _basicInfo?.data?.fullName : ""}
+                    value={
+                      _basicInfo?.data?.fullName
+                        ? _basicInfo?.data?.fullName
+                        : ""
+                    }
                   />
                   <ERPDataCombobox
                     id="countryCode"
@@ -369,7 +516,12 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
                       labelKey: "name",
                     }}
                     onChange={(value: any) => {
-                      dispatch(basicInfoSlice.actions.updateDataByKey({key:'countryCode', value: value.value}))
+                      dispatch(
+                        basicInfoSlice.actions.updateDataByKey({
+                          key: "countryCode",
+                          value: value.value,
+                        })
+                      );
                     }}
                     validation={_basicInfo.validations.countryCode}
                     data={_basicInfo.data}
@@ -378,12 +530,17 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
                     label="Country"
                   />
                   <ERPDateInput
-                  id='dob'
+                    id="dob"
                     field={{ type: "date", id: "dob", required: true }}
                     label={"Date of Birth"}
                     data={_basicInfo.data}
                     handleChange={(id: any, value: any) =>
-                      dispatch(basicInfoSlice.actions.updateDataByKey({key:id, value: value}))
+                      dispatch(
+                        basicInfoSlice.actions.updateDataByKey({
+                          key: id,
+                          value: value,
+                        })
+                      )
                     }
                     validation={_basicInfo.validations.dob}
                   />
@@ -398,6 +555,7 @@ const updatedFormDataEmail: any = useAppDynamicSelector(
                       onClick={updateBasicInfo}
                       variant="primary"
                       loading={updatedUserBasicInfo.loading}
+                      disabled={updatedUserBasicInfo.loading}
                     ></ERPButton>
                   </div>
                 </div>

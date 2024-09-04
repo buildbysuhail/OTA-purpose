@@ -15,7 +15,7 @@ const sliceRegistry: { [key: string]: any } = {};
 const createApiThunk = (type: string, url: string, method: ActionType) =>
     createAsyncThunk(type, async (payload: any, { rejectWithValue }) => {
       try {
-        debugger;
+        
         let response;
         switch (method) {
           case 'GET':
@@ -53,7 +53,7 @@ export const getThunkAndSliceWithValidation = <T,V>(
     key: keyof T;
     value: T[keyof T];
   }
-    debugger;
+    
     let name = reducerNameFromUrl(url, method,isDetail);
   if (sliceRegistry[name]) {
     return sliceRegistry[name];
@@ -84,17 +84,17 @@ export const getThunkAndSliceWithValidation = <T,V>(
     extraReducers: (builder) => {
       builder
         .addCase(apiThunk.pending, (state) => {
-          debugger;
+          
           state.loading = true;
           state.error = null;
         })
         .addCase(apiThunk.fulfilled, (state, action: PayloadAction<T>) => {
-          debugger;
+          
           state.loading = false;
           state.data = action.payload as Draft<T>;
         })
         .addCase(apiThunk.rejected, (state, action) => {
-          debugger;
+          
           state.loading = false;
           state.error = action.payload as string;
         });
@@ -118,7 +118,7 @@ export const getThunkAndSlice = <T>(
   initialState?: Partial<ApiState<T>>, // Allows overriding default initial state,
   updateStateReducer: boolean = false
 ) => {
-    debugger;
+    
     let name = reducerNameFromUrl(url, method,isDetail);
   if (sliceRegistry[name]) {
     return sliceRegistry[name];
@@ -136,7 +136,7 @@ export const getThunkAndSlice = <T>(
     
     reducers: {
       updateData: (state, action: PayloadAction<T>) => {
-        debugger;
+        
         state.data = action.payload as Draft<T>;
       },
       // updateDataByKey: (state, action: PayloadAction<{ key: string; value: any }>) => {
@@ -148,17 +148,17 @@ export const getThunkAndSlice = <T>(
     extraReducers: (builder) => {
       builder
         .addCase(apiThunk.pending, (state) => {
-          debugger;
+          
           state.loading = true;
           state.error = null;
         })
         .addCase(apiThunk.fulfilled, (state, action: PayloadAction<T>) => {
-          debugger;
+          
           state.loading = false;
           state.data = action.payload as Draft<T>;
         })
         .addCase(apiThunk.rejected, (state, action) => {
-          debugger;
+          
           state.loading = false;
           state.error = action.payload as string;
         });

@@ -1,4 +1,5 @@
 import { toast, TypeOptions } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const autoClose = 3400;
 

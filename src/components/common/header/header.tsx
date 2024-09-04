@@ -322,7 +322,7 @@ const Header: FC<HeaderProps> = () => {
     };
   };
   const ToggleDark = () => {
-    debugger;
+    
     const theme =  updateAppStateValues(appState);
     updateAppState(theme);
 

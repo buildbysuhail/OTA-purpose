@@ -22,6 +22,7 @@ import { postAction } from "../../redux/app-actions";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { ResponseModel } from "../../base/response-model";
 import { onSuccess } from "redux-axios-middleware";
+import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 
 export function useDebounceEffect(
   fn: () => void,
@@ -73,7 +74,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
   onImageSuccess = () => {}
 }) => {
   const dispatch = useAppDispatch();
-debugger;
+
   const [imgSrc, setImgSrc] = useState("");
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -96,11 +97,13 @@ debugger;
     let res = await dispatch(
       postAction({ apiUrl: apiUrl, data: { base64: base64String } }) as any
     );
-    debugger;
+    
     setIsLoading(false);
-    handleResponse(res, () => {
+    debugger;
+    handleAxiosResponse(res, () => {
       setIsOpen(false);
       setImgSrc("");
+
       onImageSuccess(res.payload.item);
     });
   };

@@ -17,6 +17,7 @@ type ERPModalProps = {
   className?: string;
   closeOnSubmit?: boolean;
   hasTopCloseButton?: boolean;
+  disableOutsideClickClose?: boolean;
 };
 
 const ERPModal = ({
@@ -33,11 +34,13 @@ const ERPModal = ({
   closeTitle = "Cancel",
   className,
   closeOnSubmit = true,
+  disableOutsideClickClose = true, // Default to true
 }: ERPModalProps) => {
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        <Dialog as="div" className="relative z-10" onClose={disableOutsideClickClose ? () => {} : closeModal} // Disable outside click close
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

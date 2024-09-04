@@ -4,7 +4,7 @@ import { reducerNameFromUrl } from '../utils';
 export const CreateCrudModuleSlices = (CrudConfig: CrudConfigType) => {
   return Object.keys(CrudConfig).reduce((acc: any, key: string) => {
     const url = CrudConfig[key].endpointUrl;
-    debugger;
+    
     const methods = ['GET', 'POST', 'PATCH', 'DELETE'];
 
     // methods.forEach((_method) => {

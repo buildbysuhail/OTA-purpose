@@ -617,6 +617,28 @@ const Sidebar: FC<SidebarProps> = () => {
                       <Menuloop MENUITEMS={levelone} level={level + 1} toggleSidemenu={toggleSidemenu} />
                       : ''}
                   </li>
+                  
+                  {levelone.menutitle_lg && 
+                      <li className='slide__category_Detail'>
+                        <div className="sm:flex items-start items-center">
+                          <div>
+                            <span className="avatar avatar-md avatar-rounded ">
+                              <img
+                                alt="Remy Sharp"
+                                src="https://res.cloudinary.com/dgawskn3l/image/upload/c_fill,h_400,w_400/wzdy9qkumlu0xfuvlyam"
+                              />
+                            </span>
+                          </div>
+                          <div className="flex-grow p-2">
+                            <div className="flex items-center !justify-between">
+                              <h6 className="mb-1  text-[.6rem]">
+                                Json Taylor
+                              </h6>
+                            </div>
+                          </div>
+                        </div>
+                        </li>}
+                 
                 </Fragment>
               ))}
             </ul>

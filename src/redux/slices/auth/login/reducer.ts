@@ -56,7 +56,7 @@ const loginSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loginUser.fulfilled, (state, action) => {
       if(action.payload.isOk) {
-        debugger;
+        
         let userSession = jwtHelper.getUserDetailsFromToken(action.payload.item.token, action.payload.item.permissionToken);
         state = userSession;        
       state.loading = false;

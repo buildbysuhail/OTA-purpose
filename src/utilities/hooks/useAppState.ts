@@ -10,7 +10,7 @@ export const useAppState = () => {
   console.log('Entire state appState:', appState);
   
   const updateAppState = (newState: (typeof appState)) => {
-    debugger;
+    
     dispatch(setAppState(newState));
   };
 

@@ -52,7 +52,7 @@ export const PopModelContainer = () => {
   const { thunk } = getThunkAndSlice<any>(form.endpointUrl,ActionType.GET,false,{});
   
   const apiData = useAppDynamicSelector<ApiState<any>>(form.endpointUrl, ActionType.GET);
-  debugger;
+  
   const appData = useAppSelector((state: RootState) => state.AppState) as AppState;
   const terms = useSelector((state: any) => state?.GetSettingsPaymentTerms)?.data?.results;
 
@@ -82,7 +82,7 @@ export const PopModelContainer = () => {
   const formData: ApiStateWithValidation<any, any> = useAppDynamicSelector(
     form.endpointUrl,ActionType.GET,false
   );
-  debugger;
+  
   const { thunk: postFormThunk } =
     getThunkAndSlice<any>(
       form.postUrl ?? form?.endpointUrl,

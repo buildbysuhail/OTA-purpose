@@ -47,7 +47,7 @@ const ERPAvatar: React.FC<ERPAvatarProps> = ({
   useStringAvatar = true,
   // ...otherProps
 }) => {
-  debugger;
+  
   name = name??alt;
   const bgColor = useStringAvatar && (src == undefined || src == null || src == '#') && name ? stringToColor(name): '';
   const initials = useStringAvatar && (src == undefined || src == null || src == '#') && name ? getInitials(name): '';

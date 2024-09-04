@@ -19,15 +19,13 @@ interface ERPSubmitButtonProps {
 ///
 const getVarientStyle = (varient?: "outline" | "danger" | "secondary" | "primary" | "success" | undefined): string => {
   switch (varient) {
-    case  'primary':"ext-white bg-primary bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500";
+    case  'primary':"ti-btn-primary-full";
     case "outline":
       return "disabled:bg-gray-200 bg-gray-100 text-gray-700 hover:bg-gray-50";
     case "secondary":
       return "disabled:bg-gray-200 bg-gray-100 text-gray-700 hover:bg-gray-50";
     case "danger":
       return "disabled:bg-gray-200 bg-red-300 text-gray-700 hover:bg-red-400";
-    case "primary":
-      return "disabled:bg-accent/70 bg-accent text-white hover:bg-accent/90";
     case "success":
       return "bg-gray-200 bg-green-600 text-white hover:bg-green-700";
     default:

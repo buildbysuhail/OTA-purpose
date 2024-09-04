@@ -5,9 +5,6 @@ export const MENUITEMS = [
     menutitle_lg: 'Account Settings',
   },
   {
-    menutitle: 'Safvan',
-  },
-  {
     icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
     type: 'sub',
     Name: '',
@@ -35,9 +32,9 @@ export const MENUITEMS = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}account-settings/signin-method`, type: 'link', active: false, selected: false, title: 'Sign in Method' },
-      { path: `${import.meta.env.BASE_URL}account-settings/two-factor-authentication`, type: 'link', active: false, selected: false, title: '2 Factor Authentication' },
-      { path: `${import.meta.env.BASE_URL}account-settings/password`, type: 'link', active: false, selected: false, title: 'Password' }
+      // { path: `${import.meta.env.BASE_URL}account-settings/signin-method`, type: 'link', active: false, selected: false, title: 'Sign in Method' },
+      // { path: `${import.meta.env.BASE_URL}account-settings/two-factor-authentication`, type: 'link', active: false, selected: false, title: '2 Factor Authentication' },
+      { path: `${import.meta.env.BASE_URL}account-settings/security/password`, type: 'link', active: false, selected: false, title: 'Password' }
     ]
   }, 
   {

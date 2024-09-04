@@ -13,7 +13,7 @@ const CurrencyFormatter: React.FC<CurrencyFormatterProps> = ({ amount = 0, curre
     amount = amount??0;
     currency = currency == null || currency === '' ? jwtHelper.getCurrency() : currency;
     locale = locale == null || locale === '' ? jwtHelper.getLocale() : locale;
-    const formattedCurrency = new Intl.NumberFormat(locale, { style, currency }).format(amount);
+    const formattedCurrency = new Intl.NumberFormat(locale, { currency }).format(amount);
     
     return (
         <span>{formattedCurrency}</span>

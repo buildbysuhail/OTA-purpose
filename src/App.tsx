@@ -12,6 +12,7 @@ import store from './redux/store';
 import Layout from './components/common/layout/layout';
 import Login from './pages/auth/Login';
 import Cookies from "js-cookie";
+import { toast, ToastContainer } from 'react-toastify';
 
 export const LoadingAnimation = () => {
   return (
@@ -33,7 +34,7 @@ function App() {
     // handleResponse(res, () => res?.payload?.data[0]?.content && dispatch(syncAppSettings(res?.payload?.data[0]?.content)));
   };
   useEffect(() => {
-    debugger;
+    
     if (!token && pathname !== "/shared-view") {
       navigate("/login");
     }
@@ -79,6 +80,7 @@ function App() {
           />
           <Switcher />
           <div className='page'>
+          
           <Suspense fallback={LoadingAnimation()}>
             <Routes>
               <Route path="login" element={<Login />} />

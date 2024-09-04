@@ -48,10 +48,10 @@ export const MENUITEMS = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}account-settings/theme`, type: 'link', active: false, selected: false, title: 'Theme' },
-      { path: `${import.meta.env.BASE_URL}account-settings/date-and-region`, type: 'link', active: false, selected: false, title: 'Date & Region' },
-      { path: `${import.meta.env.BASE_URL}account-settings/language`, type: 'link', active: false, selected: false, title: 'Language & Typing' },
-      { path: `${import.meta.env.BASE_URL}account-settings/system-preferences`, type: 'link', active: false, selected: false, title: 'Other System Preference' }
+      { path: `${import.meta.env.BASE_URL}account-settings/preferences/language`, type: 'link', active: false, selected: false, title: 'Language & Typing' },
+      { path: `${import.meta.env.BASE_URL}account-settings/preferences/theme`, type: 'link', active: false, selected: false, title: 'Theme' },
+      // { path: `${import.meta.env.BASE_URL}account-settings/preferences/date-and-region`, type: 'link', active: false, selected: false, title: 'Date & Region' },
+      { path: `${import.meta.env.BASE_URL}account-settings/preferences/system-preferences`, type: 'link', active: false, selected: false, title: 'Other System Preference' }
     ]
   },
   {

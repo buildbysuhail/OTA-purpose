@@ -9,12 +9,14 @@ import { APIClient } from "../../helpers/api-client";
 import { getAction, postAction } from "../../redux/app-actions";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { useLocation } from "react-router-dom";
+import { handleResponse } from "../../utilities/HandleResponse";
 
 interface AccountSettingsProps {}
 
 const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
+ 
   const dispatch = useDispatch();
 
   const resetPassword = async () => {
@@ -26,7 +28,7 @@ const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
       }) as any
     ).unwrap();
     debugger;
-    handleAxiosResponse(response, () => {
+    handleResponse(response, () => {
       setPassword("");
     });
   };
@@ -66,7 +68,7 @@ const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
                     required={true}
                     value={password}
                     data={{password: password}}
-                    onChange={(data: any) => {
+                    onChangeData={(data: any) => {
                       console.log('safvan');
                       
                       debugger;
@@ -76,7 +78,7 @@ const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
                   <div className="w-full p-2 flex justify-end">
                     <ERPButton
                       title="Reset"
-                      disabled={password != null && password != ""}
+                      disabled={password == null || password == ""}
                       onClick={resetPassword}
                       variant="primary"
                     ></ERPButton>

@@ -2,6 +2,7 @@ import { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AccountSettings from '../../../pages/account-settings/account-settings';
 import AccountSettingsSecurity from '../../../pages/account-settings/account-settings-security';
+import AccountSettingsPreference from '../../../pages/account-settings/account-settings-preference';
 
 interface ContentProps { }
 const loading = (
@@ -21,6 +22,9 @@ const Content: FC<ContentProps> = () => {
           <Route path="/account-settings/profile/email-address" element={<AccountSettings />} />
           <Route path="/account-settings/profile/phone-number" element={<AccountSettings />} />
           <Route path="/account-settings/security/password" element={<AccountSettingsSecurity />} />
+          <Route path="/account-settings/preferences/theme" element={<AccountSettingsPreference />} />
+          <Route path="/account-settings/preferences/language" element={<AccountSettingsPreference />} />
+          <Route path="/account-settings/preferences/system-preferences" element={<AccountSettingsPreference />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {
               return <Route key={idx} path={route.path} element={<route.component />} />;

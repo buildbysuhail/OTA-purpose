@@ -379,14 +379,14 @@ const userTheme = () => {
                               name="direction"
                               className="ti-form-radio"
                               id="switcher-ltr"
-                              defaultChecked={theme.direction != "rtl"}
-                              onChange={(e) => {if(e.target.checked == true) { 
+                              checked={theme.direction != "rtl"}
+                              onChange={(e) => {}}
+                              onClick={(e) => {
                                 switcherdata.Ltr(updateAppState,appState); ; setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   direction: 'ltr',
                                 }));}
-                                console.log(theme)
-                              }}
+                              }
                             />
                             <label
                               htmlFor="switcher-ltr"
@@ -402,7 +402,10 @@ const userTheme = () => {
                               className="ti-form-radio"
                               id="switcher-rtl"
                               checked={theme.direction == "rtl"}
-                              onChange={(e) => {if(e.target.checked == true) { 
+                              onChange={(e) => {}}
+                              onClick={(e) => {
+                                debugger;
+                                if(true == true) { 
                                 switcherdata.Rtl(updateAppState,appState);; setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   direction: 'rtl',

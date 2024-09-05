@@ -201,13 +201,12 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
           <div className="xxl:col-span-6 xl:col-span-6  col-span-6">
             {!!imgSrc && (
               <ReactCrop
-                circularCrop={true}
+                circularCrop={useCircle}
                 crop={crop}
                 onChange={(_, percentCrop) => setCrop(percentCrop)}
                 onComplete={(c) => setCompletedCrop(c)}
                 aspect={aspect}
-
-                // circularCrop
+                
               >
                 <img
                   ref={imgRef}

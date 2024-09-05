@@ -1,15 +1,12 @@
 import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import ERPAvatar from "../../components/ERPComponents/erp-avatar";
 import {
-  useAppDispatch,
   useAppDynamicSelector,
 } from "../../utilities/hooks/useAppDispatch";
 import ERPCropper from "../../components/ERPComponents/erp-cropper";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
-import ERPDatePicker from "../../components/ERPComponents/erp-date-picker";
-import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import {
   getThunkAndSlice,
@@ -17,59 +14,48 @@ import {
 } from "../../redux/slices/dynamicThunkAndSlice";
 import {
   ActionType,
-  ApiState,
   ApiStateWithValidation,
 } from "../../redux/types";
 import { useDispatch } from "react-redux";
-import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
-import phoneImage from "../../assets/images/apps/phone.png";
 import {
-  ResponseModel,
   ResponseModelWithValidation,
 } from "../../base/response-model";
 import { useLocation } from "react-router-dom";
 import "./profile.css";
-import SBModelForm from "../../components/common/polosys/sb-model-form";
-import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
-import { getAction, postAction } from "../../redux/app-actions";
+import { postAction } from "../../redux/app-actions";
+
+import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 
-interface AccountSettingsProps {}
+interface WorkSpaceSettingsProps {}
 interface UserProfileBasicInfo {
-  fullName?: string | null; // Represents the full name as a string
-  dob?: Date | null; // Represents the date of birth as a Date object
-  countryCode?: string | null; // Represents the country code as a string
+  companyName?: string | null; // Represents the full name as a string      
+  companyNameArabic?: string | null; // Represents the full name as a string      
+  country?: string | null; // Represents the full name as a string      
+  taxNumber?: string | null; // Represents the country code as a string
 }
 
-const AccountSettings: FC<AccountSettingsProps> = (props) => {
+const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   let api = new APIClient();
   const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
-  const [isOpenPhoneChange, setIsOpenPhoneChange] = useState<boolean>(false);
-  const [postDataEmail, setPostDataEmail] = useState<any>({
-    data: { userName: "", password: "", newValue: "" },
-    validations: { userName: "", password: "", newValue: "" },
-    tokenSend: false,
-  });
-  const [postDataEmailTokenVerify, setPostDataEmailTokenVerify] = useState<any>(
-    { userName: "", newValue: "", otp: "", confirToken: "" }
-  );
-  const [postDataPhone, setPostDataPhone] = useState<any>();
   const initialBasicInfoWithValidation = {
     data: {
-      countryCode: null,
-      dob: null,
-      fullName: null,
+      companyName: null,
+      companyNameArabic: null,
+      country: null,
+      taxNumber: null,
     },
     validations: {
-      countryCode: "",
-      dob: "",
-      fullName: "",
+      companyName: "",
+      country: "",
+      taxNumber: "",
     },
   };
   const dispatch = useDispatch();
@@ -78,94 +64,60 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
   const { thunk: postFormEmailThunk } = getThunkAndSliceWithValidation<
     any,
     any
-  >(Urls.verifyEmail_profile, ActionType.POST, false, {
-    data: { userName: "", password: "", newValue: "" },
+  >(Urls.updateCompanyEmail_workspace, ActionType.POST, false, {
+    data: { newValue: "" },
     loading: false,
   });
-  const updatedFormDataEmail: any = useAppDynamicSelector(
-    Urls.verifyEmail_profile,
+  const updateCompanyEmail_workspace: any = useAppDynamicSelector(
+    Urls.updateCompanyEmail_workspace,
     ActionType.POST
   );
 
   const { thunk: getFormEmailThunk } = getThunkAndSliceWithValidation<any, any>(
-    Urls.getEmail_profile,
+    Urls.getEmail_workspace,
     ActionType.GET,
     false
   );
   const formDataEmail: any = useAppDynamicSelector(
-    Urls.getEmail_profile,
+    Urls.getEmail_workspace,
     ActionType.GET
   );
-  debugger;
-  const { thunk: postFormEmailTokenThunk } = getThunkAndSliceWithValidation<
-    any,
-    any
-  >(Urls.changeEmailRequest_profile, ActionType.POST, false, {
-    data: { userName: "", password: "", newValue: "" },
-    loading: false,
-  });
-  const updatedFormDataEmailToken: any = useAppDynamicSelector(
-    Urls.changeEmailRequest_profile,
-    ActionType.POST
-  );
-
+ 
   const postFormEmail = async () => {
-    if (postDataEmail.tokenSend) {
-      await verifyFormEmail();
-    } else {
-      debugger;
-      const response: ResponseModelWithValidation<any, any> = await dispatch(
-        postFormEmailThunk(postDataEmail.data)
-      ).unwrap();
-      debugger;
-      handleResponse(response, () => {
-        setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
-        setPostDataEmailTokenVerify((prevData: any) => ({
-          ...prevData,
-          userName: response.item.userName,
-          newValue: response.item.newValue,
-          confirToken: response.item.confirToken,
-        }));
-      });
-    }
-  };
-  const verifyFormEmail = async () => {
-    debugger;
     const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postFormEmailTokenThunk(postDataEmailTokenVerify)
+      postFormEmailThunk(email)
     ).unwrap();
     debugger;
     handleResponse(response, () => {
-      setIsOpenEmailChange(false);
-      setPostDataEmail({});
-      dispatch(getFormEmailThunk());
+      
     });
   };
+ 
 
   ////Basic InfoUpdate
   const { thunk: getUserBasicInfoThunk, slice: basicInfoSlice } =
     getThunkAndSliceWithValidation<UserProfileBasicInfo, any>(
-      Urls.getUserBasicInfo,
+      Urls.getBasicInfo_workspace,
       ActionType.GET,
       false,
       initialBasicInfoWithValidation,
       true
     );
   const _basicInfo: ApiStateWithValidation<any, any> = useAppDynamicSelector(
-    Urls.getUserBasicInfo,
+    Urls.getBasicInfo_workspace,
     ActionType.GET,
     false
   );
 
-  const { thunk: updateUserBasicInfoThunk } =
+  const { thunk: updateBasicInfoThunk } =
     getThunkAndSlice<UserProfileBasicInfo>(
-      Urls.updateUserBasicInfo,
+      Urls.changeBasicInfo_workspace,
       ActionType.POST,
       false,
-      { data: { countryCode: "", dob: null, fullName: "" }, loading: false }
+      { data: { companyName: "", companyNameArabic: "", country: "", taxNumber:""}, loading: false }
     );
   const updatedUserBasicInfo: any = useAppDynamicSelector(
-    Urls.updateUserBasicInfo,
+    Urls.changeBasicInfo_workspace,
     ActionType.POST
   );
   const location = useLocation();
@@ -174,10 +126,10 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
   useEffect(() => {
     dispatch(getUserBasicInfoThunk());
     dispatch(getFormEmailThunk());
-    api.get(Urls.getImage_profile).then((url) => {
+    api.get(Urls.getLogo_workspace).then((url) => {
       setImage(url);
     });
-    api.get(Urls.getPhone_profile).then((phone) => {
+    api.get(Urls.getPhone_workspace).then((phone) => {
       setPhone(phone);
       set_Phone(phone);
     });
@@ -193,15 +145,17 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
       basicInfoSlice.actions.updateData(initialBasicInfoWithValidation)
     );
   }, [dispatch, _basicInfo]);
+
   const changePhone = useCallback(async () => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
+      postAction({apiUrl:Urls.changePhone_workspace, data: {phone: phone}}) as any
     ).unwrap();
     handleAxiosResponse(response);
   }, [dispatch, phone]);
+
   const updateBasicInfo = useCallback(async () => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
-      updateUserBasicInfoThunk(_basicInfo.data)
+      updateBasicInfoThunk(_basicInfo.data)
     ).unwrap();
     await dispatch(
       basicInfoSlice.actions.updateValidation(response.validations)
@@ -211,71 +165,23 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
   const PopUpModalEmailChange = () => {
     return (
       <div className="w-full pt-4">
-        {postDataEmail && postDataEmail.tokenSend != true ? (
           <div className="grid grid-cols-1 gap-3">
+           
             <ERPInput
-              id="userName"
-              type="email"
-              placeholder="Current Email"
-              required={true}
-              data={postDataEmail.data}
-              onChangeData={(data: any) => {
-                setPostDataEmail((prevData: any) => ({
-                  ...prevData,
-                  data: data,
-                }));
-              }}
-              value={postDataEmail.data?.userName}
-            />
-            <ERPInput
-              id="password"
-              placeholder="Password"
-              required={true}
-              value={postDataEmail.data?.password}
-              data={postDataEmail.data}
-              onChangeData={(data: any) =>
-                setPostDataEmail((prevData: any) => ({
-                  ...prevData,
-                  data: data,
-                }))
-              }
-            />
-            <ERPInput
-              id="newValue"
+              id="email"
               type="email"
               placeholder="New Email"
               required={true}
-              data={postDataEmail.data}
+              data={{email:email}}
               onChangeData={(data: any) =>
-                setPostDataEmail((prevData: any) => ({
+                setEmail((prevData: any) => ({
                   ...prevData,
-                  data: data,
+                  email: data.email,
                 }))
               }
-              value={postDataEmail.data?.newValue}
+              value={email}
             />
           </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-3">
-            <p>
-              Pls Enter the verification code you received to your email{" "}
-              {postDataEmail.data.newValue}
-            </p>
-            <ERPInput
-              id="confirToken"
-              placeholder="Pleas Enter Verification Code"
-              required={true}
-              value={postDataEmailTokenVerify.otp}
-              data={postDataEmailTokenVerify}
-              onChangeData={(data: any) =>
-                setPostDataEmail((prevData: any) => ({
-                  ...prevData,
-                  ...data,
-                }))
-              }
-            />
-          </div>
-        )}
         <div className="w-full p-2 flex justify-end">
           <ERPButton
             type="reset"
@@ -283,20 +189,17 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
             variant="secondary"
             onClick={() => {
               setIsOpenEmailChange(false);
-              setPostDataEmail({});
             }}
-            disabled={updatedFormDataEmail?.loading}
+            disabled={updateCompanyEmail_workspace?.loading}
           ></ERPButton>
           <ERPButton
             type="button"
-            disabled={updatedFormDataEmail?.loading}
+            disabled={updateCompanyEmail_workspace?.loading}
             variant="primary"
             onClick={postFormEmail}
-            loading={updatedFormDataEmail?.loading}
+            loading={updateCompanyEmail_workspace?.loading}
             title={
-              postDataEmail && postDataEmail.tokenSend != true
-                ? "Update"
-                : "Verify"
+              "Update"
             }
           ></ERPButton>
         </div>
@@ -320,11 +223,9 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
               <div className="box">
                 <div className="box-header justify-between">
                   <div className="box-title">
-                    Avatar
+                  Workspace Logo
                     <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                      Customize the way you will look to other users when they
-                      see you in we. You can use your own photos or some custom
-                      made avatars from us.
+                    Customize the way your Business logo will look to others. Please note that this logo will appear on documents such as Invoice, Estimates and Receipts
                     </p>
                   </div>
                 </div>
@@ -332,8 +233,9 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                   <div className="flex items-start justify-between mb-6">
                     <div className="sm:flex items-start items-center">
                       <div>
-                        <span className="avatar avatar-xxl avatar-rounded ">
+                        <span className="avatar avatar-xxl avatar-badge">
                           <ERPAvatar
+                            variant="square"
                             alt="Remy Sharp"
                             src={image}
                             sx={useMemo(() => {
@@ -353,12 +255,21 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                         </p> */}
                       </div>
                     </div>
-                    <div className="sm:flex items-center p-6">
+                    <div className="sm:flex items-top p-6">
                       <ERPCropper
                         apiUrl="/Subscription/Profile/UploadUserImage"
                         onImageSuccess={onImageSuccess}
-                        useCircle
+                         useCircle={false}
+
                       ></ERPCropper>
+                      
+                         {/* Maximum 5MB in size.
+JPG, PNG, or GIF formats.
+Recommended size: 300 x 300 pixels. */}
+                    {/* </div>
+                   
+                    <div> */}
+                  
                     </div>
                   </div>
                 </div>
@@ -373,18 +284,16 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
               <div className="box custom-box">
                 <div className="box-header justify-between">
                   <div className="box-title">
-                    My Email Address
+                  Primary Email Address
                     <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                      You can use the following email addresses to sign in to
-                      your account and also to reset your password if you ever
-                      forget it.
+                    This email address is used for all inquiries and prominently displayed on our invoices, estimates, and purchase orders.
                     </p>
                   </div>
                   <div></div>
                 </div>
                 <div className="box-body">
                   <div className="grid grid-cols-1 gap-3">
-                    <div className="sm:flex items-start items-center">
+                  <div className="sm:flex items-start items-center">
                       <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
                         <img src={emailImage} />
                       </span>
@@ -401,7 +310,7 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                     </div>
 
                     <ERPButton
-                      title="Change Primary Email Address"
+                      title="Add Primary Email Address"
                       onClick={() => {
                         setIsOpenEmailChange(!isOpenEmailChange);
                       }}
@@ -416,7 +325,6 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                 isForm={true}
                 closeModal={() => {
                   setIsOpenEmailChange(false);
-                  setPostDataEmail({});
                 }}
                 content={PopUpModalEmailChange()}
               />
@@ -430,11 +338,9 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
               <div className="box custom-box">
                 <div className="box-header justify-between">
                   <div className="box-title">
-                    Mobile Number
+                  Business Phone Number
                     <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                      View and manage the mobile number associated with your
-                      account. Please note that we need to verify your mobile
-                      number for updating.
+                    View and manage the mobile number associated with your account. Please note that we do not currently support the verification of mobile numbers.
                     </p>
                   </div>
                   <div></div>
@@ -481,9 +387,7 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                 <div className="box-title">
                   Basic Information
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    Provide as much or as little information as you’d like. we
-                    will never share or sell individual personal information or
-                    personally identifiable details.
+                  Provide as much or as little information about your Business. Biz will never share or sell information or identifiable details.
                   </p>
                 </div>
                 <div></div>
@@ -492,8 +396,8 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                 <div className="grid grid-cols-1 gap-3">
                   <ERPInput
                     id="fullName"
-                    label="Display Name"
-                    placeholder="Display Name"
+                    label="Business Name"
+                    placeholder="Eg: Novalabs"
                     required={true}
                     data={_basicInfo.data}
                     onChangeData={(data: any) => {
@@ -529,7 +433,108 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                     value={_basicInfo.data.countryCode}
                     label="Country"
                   />
-                  <ERPDateInput
+                   <ERPDataCombobox
+                    id="countryCode"
+                    field={{
+                      id: "countryCode",
+                      required: true,
+                      getListUrl: Urls.country,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    onChange={(value: any) => {
+                      dispatch(
+                        basicInfoSlice.actions.updateDataByKey({
+                          key: "countryCode",
+                          value: value.value,
+                        })
+                      );
+                    }}
+                    validation={_basicInfo.validations.countryCode}
+                    data={_basicInfo.data}
+                    defaultData={_basicInfo.data}
+                    value={_basicInfo.data.countryCode}
+                    label="Business Currency"
+                  />
+                   <ERPDataCombobox
+                    id="countryCode"
+                    field={{
+                      id: "countryCode",
+                      required: true,
+                      getListUrl: Urls.country,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    onChange={(value: any) => {
+                      dispatch(
+                        basicInfoSlice.actions.updateDataByKey({
+                          key: "countryCode",
+                          value: value.value,
+                        })
+                      );
+                    }}
+                    validation={_basicInfo.validations.countryCode}
+                    data={_basicInfo.data}
+                    defaultData={_basicInfo.data}
+                    value={_basicInfo.data.countryCode}
+                    label="Industry"
+                  />
+                  <ERPDataCombobox
+                    id="countryCode"
+                    field={{
+                      id: "countryCode",
+                      required: true,
+                      getListUrl: Urls.country,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    onChange={(value: any) => {
+                      dispatch(
+                        basicInfoSlice.actions.updateDataByKey({
+                          key: "countryCode",
+                          value: value.value,
+                        })
+                      );
+                    }}
+                    validation={_basicInfo.validations.countryCode}
+                    data={_basicInfo.data}
+                    defaultData={_basicInfo.data}
+                    value={_basicInfo.data.countryCode}
+                    label="Number of Employees"
+                  />
+                  <ERPInput
+                    id="fullName ⑦"
+                    label="Business ID"
+                    placeholder="Eg: 58733"
+                    required={true}
+                    data={_basicInfo.data}
+                    onChangeData={(data: any) => {
+                      dispatch(basicInfoSlice.actions.updateData(data));
+                    }}
+                    validation={_basicInfo.validations.fullName}
+                    value={
+                      _basicInfo?.data?.fullName
+                        ? _basicInfo?.data?.fullName
+                        : ""
+                    }
+                  />
+                  <ERPInput
+                    id="fullName"
+                    label="Tax identification Number"
+                    placeholder="Eg: 58733"
+                    required={true}
+                    data={_basicInfo.data}
+                    onChangeData={(data: any) => {
+                      dispatch(basicInfoSlice.actions.updateData(data));
+                    }}
+                    validation={_basicInfo.validations.fullName}
+                    value={
+                      _basicInfo?.data?.fullName
+                        ? _basicInfo?.data?.fullName
+                        : ""
+                    }
+                  />
+                  {/* <ERPDateInput
                     id="dob"
                     field={{ type: "date", id: "dob", required: true }}
                     label={"Date of Birth"}
@@ -543,10 +548,10 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                       )
                     }
                     validation={_basicInfo.validations.dob}
-                  />
+                  /> */}
                   <div className="w-full p-2 flex justify-end">
                     <ERPButton
-                      title="Reset"
+                      title="Cancel"
                       onClick={resetBasicInfo}
                       type="reset"
                     ></ERPButton>
@@ -569,4 +574,4 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
   );
 };
 
-export default AccountSettings;
+export default WorkSpaceSettings;

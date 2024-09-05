@@ -47,6 +47,20 @@ const Urls = {
   getPhone_profile: "/Subscription/Profile/GetPhone/",
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
 
+  uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
+changeEmailRequest_workspace : "/Subscription/WorkSpace/ChangeEmailRequest/",
+verifyEmail_workspace : "/Subscription/WorkSpace/VerifyEmail/",
+updateCompanyEmail_workspace : "/Subscription/WorkSpace/UpdateCompanyEmailAsync/",
+changePhoneRequest_workspace : "/Subscription/WorkSpace/ChangePhoneRequest/",
+changePhone_workspace : "/Subscription/WorkSpace/changePhone_workspace/",
+verifyPhone_workspace : "/Subscription/WorkSpace/VerifyPhone/",
+changeBasicInfo_workspace : "/Subscription/WorkSpace/ChangeBasicInfo/",
+changeAddress_workspace : "/Subscription/WorkSpace/ChangeAddress/",
+getBasicInfo_workspace : "/Subscription/WorkSpace/GetBasicInfo/",
+getEmail_workspace : "/Subscription/WorkSpace/GetEmail/",
+getPhone_workspace : "/Subscription/WorkSpace/GetPhone/",
+getLogo_workspace : "/Subscription/WorkSpace/GetLogo/",
+getAddress_workspace : "/Subscription/WorkSpace/GetAddress/",
   // AccountSettings/Security
   updatePassword: "/Subscription/AccountSettings/Security/ResetPassword/",
 

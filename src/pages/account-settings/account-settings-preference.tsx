@@ -38,16 +38,23 @@ import { getAction, postAction } from "../../redux/app-actions";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import SBDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import SBSelect from "../../components/common/polosys/SBSelect";
+import Themeprimarycolor, { ColorPicker, hexToRgb } from "../../components/common/switcher/switcherdata/switcherdata";
 
+import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
+import { useAppState } from "../../utilities/hooks/useAppState";
 interface AccountSettingsProps {}
-interface UserProfileBasicInfo {
-  fullName?: string | null; // Represents the full name as a string
-  dob?: Date | null; // Represents the date of birth as a Date object
-  countryCode?: string | null; // Represents the country code as a string
+interface UserLanguage {
+  language?: string | null; 
 }
 
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
-  let api = new APIClient();
+  let api = new APIClient();  
+  const [language, setLanguage] = useState<string>("en");
+  const [_language, _setLanguage] = useState<string>("en");
+  const [languages, setLanguages] = useState<any[]>([
+    { value: "ar", label: "العربية" },
+    { value: "en", label: "English" },
+  ]);
   const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");
@@ -111,109 +118,120 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
     ActionType.POST
   );
 
-  const postFormEmail = async () => {
-    if (postDataEmail.tokenSend) {
-      await verifyFormEmail();
-    } else {
-      debugger;
-      const response: ResponseModelWithValidation<any, any> = await dispatch(
-        postFormEmailThunk(postDataEmail.data)
-      ).unwrap();
-      debugger;
-      handleResponse(response, () => {
-        setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
-        setPostDataEmailTokenVerify((prevData: any) => ({
-          ...prevData,
-          userName: response.item.userName,
-          newValue: response.item.newValue,
-          confirToken: response.item.confirToken,
-        }));
-      });
-    }
-  };
-  const verifyFormEmail = async () => {
+ 
+  const { thunk: updateUserLanguageThunk } =
+    getThunkAndSlice<UserLanguage>(
+      Urls.updateLanguage,
+      ActionType.POST,
+      false,
+      { data: { language: language }, loading: false }
+    );
+  const updatedUserLanguage: any = useAppDynamicSelector(
+    Urls.updateLanguage,
+    ActionType.POST
+  );
+  const updateLanguage = async () => {
     debugger;
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postFormEmailTokenThunk(postDataEmailTokenVerify)
+    const response: ResponseModel<any> = await dispatch(
+      updateUserLanguageThunk({language: language})
     ).unwrap();
     debugger;
     handleResponse(response, () => {
-      setIsOpenEmailChange(false);
-      setPostDataEmail({});
-      dispatch(getFormEmailThunk());
+      
     });
   };
-
-  ////Basic InfoUpdate
-  const { thunk: getUserBasicInfoThunk, slice: basicInfoSlice } =
-    getThunkAndSliceWithValidation<UserProfileBasicInfo, any>(
-      Urls.getUserBasicInfo,
-      ActionType.GET,
-      false,
-      initialBasicInfoWithValidation,
-      true
-    );
-  const _basicInfo: ApiStateWithValidation<any, any> = useAppDynamicSelector(
-    Urls.getUserBasicInfo,
-    ActionType.GET,
-    false
-  );
-
-  const { thunk: updateUserBasicInfoThunk } =
-    getThunkAndSlice<UserProfileBasicInfo>(
-      Urls.updateUserBasicInfo,
-      ActionType.POST,
-      false,
-      { data: { countryCode: "", dob: null, fullName: "" }, loading: false }
-    );
-  const updatedUserBasicInfo: any = useAppDynamicSelector(
-    Urls.updateUserBasicInfo,
-    ActionType.POST
-  );
+  const restLanguage = async () => {
+    setLanguage(_language);
+  };
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
-
+const userTheme = () => {
+  api.get(Urls.getUserThemes).then((theme) => {
+    setTheme(theme);
+    _setTheme(theme);
+  });
+}
   useEffect(() => {
-    dispatch(getUserBasicInfoThunk());
-    dispatch(getFormEmailThunk());
-    api.get(Urls.getImage_profile).then((url) => {
-      setImage(url);
-    });
+    userTheme();
     api.get(Urls.getPhone_profile).then((phone) => {
       setPhone(phone);
       set_Phone(phone);
     });
+    api.get(Urls.getLanguage).then((lang) => {
+      setLanguage(lang);
+      _setLanguage(lang);
+    });
   }, []);
-  const onImageSuccess = useMemo(() => {
+
+  interface Theme {
+    direction: string | null;
+    mode: string | null;
+    navLayout: string | null;
+    navigationMenuStyle: string | null;
+    sidemenuLayoutStyles: string | null;
+    pageStyle: string | null;
+    menuPosition: string | null;
+    headerPosition: string | null;
+    colorPrimaryRgb: string | null;
+  }
+  
+  const [theme, setTheme] = useState<Theme>({
+    direction: 'ltr',
+    mode: 'light',
+    navLayout: null,
+    navigationMenuStyle: null,
+    sidemenuLayoutStyles: null,
+    pageStyle: null,
+    menuPosition: null,
+    headerPosition: null,
+    colorPrimaryRgb: 'rgb(25,118,210,1)',
+  });
+  const [_theme, _setTheme] = useState<Theme>({
+    direction: 'ltr',
+    mode: 'light',
+    navLayout: null,
+    navigationMenuStyle: null,
+    sidemenuLayoutStyles: null,
+    pageStyle: null,
+    menuPosition: null,
+    headerPosition: null,
+    colorPrimaryRgb: 'rgb(25,118,210,1)',
+  });
+  
+  const resetThemeChange = () => {
+    // setTheme((prevTheme) => ({
+    //   ..._theme
+    // }));
+  };
+  const { thunk: updateUserThemeThunk } =
+    getThunkAndSlice<Theme>(
+      Urls.updateUserThemes,
+      ActionType.POST,
+      false,
+      { }
+    );
+  const updatedUserTheme: any = useAppDynamicSelector(
+    Urls.updateUserThemes,
+    ActionType.POST
+  );
+  const saveThemeChange = async () => {
     debugger;
-    return (url: string) => {
-      setImage(url);
-    };
-  }, []);
-  const resetBasicInfo = useCallback(async () => {
-    await dispatch(
-      basicInfoSlice.actions.updateData(initialBasicInfoWithValidation)
-    );
-  }, [dispatch, _basicInfo]);
-  const changePhone = useCallback(async () => {
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({ apiUrl: Urls.changePhone, data: { phone: phone } }) as any
-    ).unwrap();
-    handleAxiosResponse(response);
-  }, [dispatch, phone]);
-  const updateBasicInfo = useCallback(async () => {
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      updateUserBasicInfoThunk(_basicInfo.data)
-    ).unwrap();
-    await dispatch(
-      basicInfoSlice.actions.updateValidation(response.validations)
-    );
-    handleResponse(response, () => {});
-  }, [dispatch, _basicInfo]);
-  const [language, setLanguage] = useState<string>("en");
-  const [languages, setLanguages] = useState<any[]>([
-    { value: "ar", label: "العربية" }, { value: "en", label: "English" }
-  ]);
+    const res = await dispatch(updateUserThemeThunk(theme) as any).unwrap();
+    handleResponse(res, ()=> {
+      userTheme();
+    });
+  };
+  const handleThemeChange = (key: string, mode: string) => {
+    debugger;
+    setTheme((prevTheme) => ({
+      ...prevTheme,
+      [key]: mode,
+    }));
+    console.log(theme);
+    
+  };
+  
+  const { appState, updateAppState } = useAppState();
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
@@ -243,8 +261,9 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
                     <SBSelect
                       id="language"
                       options={languages}
-                      handleChange={(value: any) => {
-                        setLanguage(value);
+                      handleChange={(id: any ,value: any) => {
+                        debugger;
+                        setLanguage(value.value);
                       }}
                       value={language}
                       defaultValue={language}
@@ -253,112 +272,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
                     <div className="w-full p-2 flex justify-end">
                       <ERPButton
                         title="Reset"
-                        onClick={resetBasicInfo}
+                        onClick={restLanguage}
                         type="reset"
                       ></ERPButton>
                       <ERPButton
                         title="Save Changes"
-                        onClick={updateBasicInfo}
+                        onClick={updateLanguage}
                         variant="primary"
-                        loading={updatedUserBasicInfo.loading}
-                        disabled={updatedUserBasicInfo.loading}
+                        loading={updatedUserLanguage.loading}
+                        disabled={updatedUserLanguage.loading}
                       ></ERPButton>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              id="email-address"
-              className={`xxl:col-span-12 xl:col-span-12 ${
-                path === "email-address" ? "blink" : ""
-              } col-span-12`}
-            >
-              <div className="box custom-box">
-                <div className="box-header justify-between">
-                  <div className="box-title">
-                    My Email Address
-                    <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                      You can use the following email addresses to sign in to
-                      your account and also to reset your password if you ever
-                      forget it.
-                    </p>
-                  </div>
-                  <div></div>
-                </div>
-                <div className="box-body">
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="sm:flex items-start items-center">
-                      <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
-                        <img src={emailImage} />
-                      </span>
-                      <div className="flex-grow p-2">
-                        <div className="flex items-center !justify-between">
-                          <h6 className="font-semibold mb-1  text-[.75rem]">
-                            {formDataEmail.data}
-                          </h6>
-                        </div>
-                        {/* <p className="mb-1 opacity-[0.7] text-[.65rem]">
-                         modified a month ago
-                        </p> */}
-                      </div>
-                    </div>
-
-                    <ERPButton
-                      title="Change Primary Email Address"
-                      onClick={() => {
-                        setIsOpenEmailChange(!isOpenEmailChange);
-                      }}
-                      variant="primary"
-                    ></ERPButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              id="phone-number"
-              className={`xxl:col-span-12 xl:col-span-12 ${
-                path === "phone-number" ? "blink" : ""
-              } col-span-12`}
-            >
-              <div className="box custom-box">
-                <div className="box-header justify-between">
-                  <div className="box-title">
-                    Mobile Number
-                    <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                      View and manage the mobile number associated with your
-                      account. Please note that we need to verify your mobile
-                      number for updating.
-                    </p>
-                  </div>
-                  <div></div>
-                </div>
-                <div className="box-body">
-                  <div className="grid grid-cols-1 gap-3">
-                    <ERPInput
-                      id="phone"
-                      placeholder="Pleas Enter Phone Number"
-                      required={true}
-                      value={phone}
-                      data={phone}
-                      onChangeData={(data: any) => setPhone(data.phone)}
-                    />
-                    <div className="w-full p-2 flex justify-end">
-                      <ERPButton
-                        title={
-                          phone != undefined && phone != null && phone != ""
-                            ? "Update"
-                            : "Add Phone"
-                        }
-                        disabled={phone == _phone}
-                        onClick={changePhone}
-                        variant="primary"
-                      ></ERPButton>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
@@ -371,83 +300,269 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
-                  Basic Information
+                  Theme
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    Provide as much or as little information as you’d like. we
-                    will never share or sell individual personal information or
-                    personally identifiable details.
+                    Set your Theme here.
                   </p>
                 </div>
                 <div></div>
               </div>
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
-                  <ERPInput
-                    id="fullName"
-                    label="Display Name"
-                    placeholder="Display Name"
-                    required={true}
-                    data={_basicInfo.data}
-                    onChangeData={(data: any) => {
-                      dispatch(basicInfoSlice.actions.updateData(data));
-                    }}
-                    validation={_basicInfo.validations.fullName}
-                    value={
-                      _basicInfo?.data?.fullName
-                        ? _basicInfo?.data?.fullName
-                        : ""
-                    }
-                  />
-                  <ERPDataCombobox
-                    id="countryCode"
-                    field={{
-                      id: "countryCode",
-                      required: true,
-                      getListUrl: Urls.country,
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    onChange={(value: any) => {
-                      dispatch(
-                        basicInfoSlice.actions.updateDataByKey({
-                          key: "countryCode",
-                          value: value.value,
-                        })
-                      );
-                    }}
-                    validation={_basicInfo.validations.countryCode}
-                    data={_basicInfo.data}
-                    defaultData={_basicInfo.data}
-                    value={_basicInfo.data.countryCode}
-                    label="Country"
-                  />
-                  <ERPDateInput
-                    id="dob"
-                    field={{ type: "date", id: "dob", required: true }}
-                    label={"Date of Birth"}
-                    data={_basicInfo.data}
-                    handleChange={(id: any, value: any) =>
-                      dispatch(
-                        basicInfoSlice.actions.updateDataByKey({
-                          key: id,
-                          value: value,
-                        })
-                      )
-                    }
-                    validation={_basicInfo.validations.dob}
-                  />
+                  <div className="ti-offcanvas-body" id="switcher-body">
+                    <div
+                      id="switcher-1"
+                      role="tabpanel"
+                      aria-labelledby="switcher-item-1"
+                      className=""
+                    >
+                      <div className="">
+                        <p className="switcher-style-head">Theme Color Mode:</p>
+                        <div className="grid grid-cols-3 switcher-style">
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              name="theme-style"
+                              className="ti-form-radio"
+                              id="switcher-light-theme"
+                              
+                              checked={theme.mode === "light"}
+                              onChange={(e) => {if(e.target.checked == true) { 
+                                switcherdata.Light(updateAppState,appState);
+                                setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                mode: 'light',
+                              }));}}}
+                              // onClick={() =>
+                              //   handleThemeChange("mode", "light")
+                              // }
+                            />
+                            <label
+                              htmlFor="switcher-light-theme"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              Light
+                            </label>
+                          </div>
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              name="theme-style"
+                              className="ti-form-radio"
+                              id="switcher-dark-theme"
+                              defaultChecked={theme.mode === "dark"}
+                              
+                              onChange={(e) => {if(e.target.checked == true) { 
+                                switcherdata.Dark(updateAppState,appState); setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                mode: 'dark',
+                              }));}
+                              console.log(theme)
+                            }}
+                              // onClick={() => {debugger; handleThemeChange("mode", "dark")}}
+                            />
+                            <label
+                              htmlFor="switcher-dark-theme"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              Dark
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="switcher-style-head">Directions:</p>
+                        <div className="grid grid-cols-3  switcher-style">
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              name="direction"
+                              className="ti-form-radio"
+                              id="switcher-ltr"
+                              defaultChecked={theme.direction != "rtl"}
+                              onChange={(e) => {if(e.target.checked == true) { 
+                                switcherdata.Ltr(updateAppState,appState); ; setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  direction: 'ltr',
+                                }));}
+                                console.log(theme)
+                              }}
+                            />
+                            <label
+                              htmlFor="switcher-ltr"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              LTR
+                            </label>
+                          </div>
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              name="direction"
+                              className="ti-form-radio"
+                              id="switcher-rtl"
+                              checked={theme.direction == "rtl"}
+                              onChange={(e) => {if(e.target.checked == true) { 
+                                switcherdata.Rtl(updateAppState,appState);; setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  direction: 'rtl',
+                                }));}
+                                console.log(theme)
+                              }}
+                            />
+                            <label
+                              htmlFor="switcher-rtl"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              RTL
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="theme-colors">
+                        <p className="switcher-style-head">Theme Primary:</p>
+                        <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-1"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.colorPrimaryRgb == "58, 88, 146"}
+                              id="switcher-primary"
+                              onClick={
+                                () => {
+                                  switcherdata.primaryColor1(updateAppState,appState);
+                                  setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  colorPrimaryRgb: '58, 88, 146',
+                                }));}
+                              }
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-2"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.colorPrimaryRgb == "92, 144 ,163"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary1"
+                              onClick={
+                                () => {
+                                  switcherdata.primaryColor2(updateAppState,appState);
+                                  setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  colorPrimaryRgb: '92, 144 ,163',
+                                }));}
+                              }
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-3"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.colorPrimaryRgb == "161, 90 ,223"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary2"
+                              onClick={
+                                () => {
+                                  switcherdata.primaryColor3(updateAppState,appState);
+                                  setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  colorPrimaryRgb: '161, 90 ,223',
+                                }));}
+                                
+                              }
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-4"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.colorPrimaryRgb == "78, 172, 76"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary3"
+                              onClick={
+                                () => {
+                                  switcherdata.primaryColor4(updateAppState,appState);
+                                  setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  colorPrimaryRgb: '78, 172, 76',
+                                }));}
+                              }
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-5"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.colorPrimaryRgb == "223, 90, 90"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary4"
+                              onClick={
+                                () => {
+                                  switcherdata.primaryColor5(updateAppState,appState);
+                                  setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  colorPrimaryRgb: '223, 90, 90',
+                                }));}
+                              }
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select ps-0 mt-1 ">
+                            <div className="theme-container"  style={{ backgroundColor: `rgb(${theme.colorPrimaryRgb})` }}>
+                              
+                            </div>
+                            <div className="pickr-container-primary">
+                              <div className="pickr">
+                                <button
+                                  className="pcr-button"
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
+                                    <ColorPicker onChange={(e: any) => {
+                                const rgb = hexToRgb(e.target.value);
+
+                                if (rgb !== null) {
+                                    const { r, g, b } = rgb;
+                                    switcherdata.primaryColorCustom(updateAppState,appState,  `${r},  ${g},  ${b}`);
+                                    setTheme((prevTheme) => ({
+                                      ...prevTheme,
+                                      colorPrimaryRgb: `${r},  ${g},  ${b}`,
+                                    }))
+                                    // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                }
+                            }} value={"#FFFFFF"} />
+                                </div>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="ti-form-radio switch-select ps-0 mt-1 color-primary-light"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="w-full p-2 flex justify-end">
                     <ERPButton
                       title="Reset"
-                      onClick={resetBasicInfo}
+                      onClick={resetThemeChange}
                       type="reset"
                     ></ERPButton>
                     <ERPButton
                       title="Save Changes"
-                      onClick={updateBasicInfo}
+                      onClick={saveThemeChange}
                       variant="primary"
-                      loading={updatedUserBasicInfo.loading}
-                      disabled={updatedUserBasicInfo.loading}
+                      loading={updatedUserTheme.loading}
+                      disabled={updatedUserTheme.loading}
                     ></ERPButton>
                   </div>
                 </div>

@@ -506,6 +506,15 @@ export const transparentHeader = (actionfunction: any, appState: any) => {
     localStorage.setItem("ynexHeader", "transparent");
 };
 
+export const primaryColorCustom = (actionfunction: any, appState: any, rgb: string) => {
+    actionfunction({
+        ...appState,
+        "colorPrimaryRgb": rgb,
+        "colorPrimary": rgb
+    });
+    localStorage.setItem("primaryRGB", rgb);
+    localStorage.setItem("primaryRGB1", rgb);
+};
 export const primaryColor1 = (actionfunction: any, appState: any) => {
     actionfunction({
         ...appState,
@@ -631,7 +640,7 @@ export const backgroundColor5 = (actionfunction: any, appState: any) => {
     localStorage.setItem('Light', "125 71 25");
 };
 
-const ColorPicker = (props: any) => {
+export const ColorPicker = (props: any) => {
     return (
         <div className="color-picker-input">
             <input type="color" {...props} />
@@ -639,7 +648,7 @@ const ColorPicker = (props: any) => {
     );
 };
 
-function hexToRgb(hex: any) {
+export function hexToRgb(hex: any) {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? {
         r: parseInt(result[1], 16),

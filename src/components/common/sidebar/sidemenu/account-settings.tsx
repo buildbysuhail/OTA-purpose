@@ -51,7 +51,7 @@ export const MENUITEMS = [
       { path: `${import.meta.env.BASE_URL}account-settings/preferences/language`, type: 'link', active: false, selected: false, title: 'Language & Typing' },
       { path: `${import.meta.env.BASE_URL}account-settings/preferences/theme`, type: 'link', active: false, selected: false, title: 'Theme' },
       // { path: `${import.meta.env.BASE_URL}account-settings/preferences/date-and-region`, type: 'link', active: false, selected: false, title: 'Date & Region' },
-      { path: `${import.meta.env.BASE_URL}account-settings/preferences/system-preferences`, type: 'link', active: false, selected: false, title: 'Other System Preference' }
+      // { path: `${import.meta.env.BASE_URL}account-settings/preferences/system-preferences`, type: 'link', active: false, selected: false, title: 'Other System Preference' }
     ]
   },
   {

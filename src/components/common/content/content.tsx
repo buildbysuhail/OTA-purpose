@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import AccountSettings from '../../../pages/account-settings/account-settings';
 import AccountSettingsSecurity from '../../../pages/account-settings/account-settings-security';
 import AccountSettingsPreference from '../../../pages/account-settings/account-settings-preference';
+import WorkSpaceSettings from '../../../pages/work-space/workspace-settings';
 
 interface ContentProps { }
 const loading = (
@@ -25,6 +26,11 @@ const Content: FC<ContentProps> = () => {
           <Route path="/account-settings/preferences/theme" element={<AccountSettingsPreference />} />
           <Route path="/account-settings/preferences/language" element={<AccountSettingsPreference />} />
           <Route path="/account-settings/preferences/system-preferences" element={<AccountSettingsPreference />} />
+
+          <Route path="/workspace-settings/profile/workspace-logo" element={<WorkSpaceSettings />} />
+          <Route path="/workspace-settings/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
+          <Route path="/workspace-settings/profile/primary-email" element={<WorkSpaceSettings />} />
+          <Route path="/workspace-settings/profile/business-number" element={<WorkSpaceSettings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {
               return <Route key={idx} path={route.path} element={<route.component />} />;

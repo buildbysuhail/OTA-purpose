@@ -1,0 +1,10 @@
+/* Profile.css */
+.blink {
+  animation: blinker .5s linear ;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}

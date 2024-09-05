@@ -12,7 +12,7 @@ const initialState: AppInitialState = {
     class: "light",
     dataMenuStyles: "dark",
     dataNavLayout: "vertical",
-    dataHeaderStyles: "light",
+    dataHeaderStyles: "color",
     dataVerticalStyle: "overlay",
     toggled: "",
     dataNavStyle: "",
@@ -85,6 +85,15 @@ const appStateSlice = createSlice({
     },
     setMode: (state, action: PayloadAction<'light' | 'dark'>) => {
       state.appState.mode = action.payload;
+
+      state.appState.class = action.payload;
+      state.appState.dataHeaderStyles = action.payload;
+      state.appState.darkBg = "";
+      state.appState.bodyBg = "";
+      state.appState.dataMenuStyles = action.payload == "dark" ? "dark" :state.appState.dataNavLayout == 'horizontal' ? 'light' : "dark";
+      state.appState.inputBorder = "";
+      state.appState.Light = "";      
+      
     },
     setClass: (state, action: PayloadAction<string>) => {
       state.appState.class = action.payload;

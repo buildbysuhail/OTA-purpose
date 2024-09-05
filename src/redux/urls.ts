@@ -1,4 +1,5 @@
 import config from "../config";
+import { getUserSession } from "./slices/auth/profile/thunk";
 
 export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;
@@ -46,6 +47,7 @@ const Urls = {
   getEmail_profile: "/Subscription/Profile/GetEmail/",
   getPhone_profile: "/Subscription/Profile/GetPhone/",
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
+  getUserSession: "/Subscription/account/getUserSession/",
 
   // AccountSettings/Security
   updatePassword: "/Subscription/AccountSettings/Security/ResetPassword/",

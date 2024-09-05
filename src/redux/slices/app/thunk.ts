@@ -10,6 +10,6 @@ export const uploadAppState = createAsyncThunk('app/uploadAppState', async (stat
   return response.data;
 });
 export const getAppState = createAsyncThunk('app/getAppState', async () => {
-  const response = await api.get(Urls.getUserAppSetting);
+  const response = await api.get(Urls.getUserThemes);
   return response.data;
 });

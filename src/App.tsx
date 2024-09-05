@@ -1,18 +1,25 @@
-
-import { Fragment, Suspense, useEffect, useState } from 'react';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Provider } from 'react-redux';
-import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import Footer from './components/common/footer/footer';
-import Header from './components/common/header/header';
-import Loader from './components/common/loader/loader';
-import Sidebar from './components/common/sidebar/sidebar';
-import Switcher from './components/common/switcher/switcher';
-import store from './redux/store';
-import Layout from './components/common/layout/layout';
-import Login from './pages/auth/Login';
+import 'devextreme/dist/css/dx.light.css';
+import { Fragment, Suspense, useEffect, useState } from "react";
+import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Provider } from "react-redux";
+import {
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
+import Loader from "./components/common/loader/loader";
+import Switcher from "./components/common/switcher/switcher";
+import Layout from "./components/common/layout/layout";
+import Login from "./pages/auth/Login";
 import Cookies from "js-cookie";
-import { toast, ToastContainer } from 'react-toastify';
+import { useAppDispatch } from "./utilities/hooks/useAppDispatch";
+import { getAppState } from "./redux/slices/app/thunk";
+import { Theme } from "./pages/account-settings/account-settings-preference";
+import { setColorPrimary, setColorPrimaryRgb, setDataHeaderStyles, setDirection, setMode } from "./redux/slices/app/reducer";
+import { APIClient } from "./helpers/api-client";
+import Urls from "./redux/urls";
 
 export const LoadingAnimation = () => {
   return (
@@ -23,23 +30,54 @@ export const LoadingAnimation = () => {
 };
 
 function App() {
+  let api = new APIClient();
   const [MyclassName, setMyClass] = useState("");
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  Cookies.set('token','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJ1c2VySWQiOiIyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6ImFkbWluIiwibG9nZ2VkVXNlciI6ImFkbWluIiwidWlDdWx0dXJlIjoiZW4iLCJncm91cCI6IkJyYW5jaCBBZG1pbiIsImdyb3VwSWQiOiJCQSIsImNvbXBhbnlJZCI6IjEiLCJlbXBsb3llZUlkIjoiMCIsImNvbXBhbnlOYW1lIjoiMS5CdXNpbmVzcyBOYW1lIiwidXNlckNvbXBhbmllcyI6IjEiLCJjb21wYW55Q3VycmVuY3kiOiJTQVIiLCJjb21wYW55Q3VycmVuY3lEZWNpbWFsUG9pbnRzIjoiMiIsInRheERlY2ltYWxQb2ludCI6IjAiLCJ1bml0UHJpY2VEZWNpbWFsUG9pbnQiOiIwIiwiY29tcGFueUN1cnJlbmN5U3ltYm9sIjoiMiIsImV4cCI6MTcyNDY4MTIxOCwiaXNzIjoiSldIODciLCJhdWQiOiJYMkhJSSJ9.lAVC0lK5QDm7kEya30Wu9kGflCYTs8MtoJCvhR_eh4o')
+  var dispatch = useAppDispatch();
+  Cookies.set(
+    "token",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjIiLCJ1c2VySWQiOiIyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvbmFtZSI6ImFkbWluIiwibG9nZ2VkVXNlciI6ImFkbWluIiwidWlDdWx0dXJlIjoiZW4iLCJncm91cCI6IkJyYW5jaCBBZG1pbiIsImdyb3VwSWQiOiJCQSIsImNvbXBhbnlJZCI6IjEiLCJlbXBsb3llZUlkIjoiMCIsImNvbXBhbnlOYW1lIjoiMS5CdXNpbmVzcyBOYW1lIiwidXNlckNvbXBhbmllcyI6IjEiLCJjb21wYW55Q3VycmVuY3kiOiJTQVIiLCJjb21wYW55Q3VycmVuY3lEZWNpbWFsUG9pbnRzIjoiMiIsInRheERlY2ltYWxQb2ludCI6IjAiLCJ1bml0UHJpY2VEZWNpbWFsUG9pbnQiOiIwIiwiY29tcGFueUN1cnJlbmN5U3ltYm9sIjoiMiIsImV4cCI6MTcyNDY4MTIxOCwiaXNzIjoiSldIODciLCJhdWQiOiJYMkhJSSJ9.lAVC0lK5QDm7kEya30Wu9kGflCYTs8MtoJCvhR_eh4o"
+  );
   const token = Cookies.get("token");
   const syncAppStates = async () => {
     // setReloading(true);
-    // const res = (await dispatch(getAppState()).unwrap()) as any;
-    // setReloading(false);
-    // handleResponse(res, () => res?.payload?.data[0]?.content && dispatch(syncAppSettings(res?.payload?.data[0]?.content)));
+    api.get(Urls.getUserThemes).then((res) => {
+      debugger;
+      dispatch(setDirection(res.direction ?? "ltr"));
+      localStorage.setItem("ynexltr", res.direction ?? "ltr");
+      localStorage.removeItem("ynexrtl");
+
+      dispatch(setMode(res.mode ?? "light"));
+      if (res.mode == "light") {
+        dispatch(setMode(res.mode ?? "light"));
+        localStorage.setItem("ynexlighttheme", "light");
+        localStorage.removeItem("ynexdarktheme");
+        localStorage.removeItem("Light");
+        localStorage.removeItem("bodyBgRGB");
+        localStorage.removeItem("darkBgRGB");
+      } else {
+        localStorage.setItem("ynexdarktheme", "dark");
+        localStorage.removeItem("ynexlighttheme");
+        localStorage.removeItem("ynexlighttheme");
+        localStorage.removeItem("darkBgRGB");
+      }
+debugger;
+      dispatch(setColorPrimaryRgb(res.colorPrimaryRgb));
+      dispatch(setColorPrimary(res.colorPrimaryRgb));
+      localStorage.setItem("primaryRGB", res.colorPrimaryRgb);
+    localStorage.setItem("primaryRGB1", res.colorPrimaryRgb);
+
+      dispatch(setDataHeaderStyles("color"));
+      localStorage.setItem("ynexHeader", "color");
+      localStorage.removeItem("dark");
+  
+    });
   };
   useEffect(() => {
-    
     if (!token && pathname !== "/shared-view") {
       navigate("/login");
-    }
-    else {
+    } else {
       syncAppStates();
     }
   }, [token]);
@@ -49,43 +87,39 @@ function App() {
     }
     if (window.innerWidth > 992) {
       let html = document.documentElement;
-      if (html.getAttribute('icon-overlay') === 'open') {
-          html.setAttribute('icon-overlay' ,"");
+      if (html.getAttribute("icon-overlay") === "open") {
+        html.setAttribute("icon-overlay", "");
       }
     }
-  }
+  };
 
-
- 
   useEffect(() => {
     import("preline");
-
   }, []);
-  
+
   return (
     <Fragment>
-      <Loader/>
+      <Loader />
       <HelmetProvider>
-          <Helmet
-            htmlAttributes={{
-              lang: "en",
-              dir: "ltr",
-              "data-menu-styles": "dark",
-              "class": "light",
-              "data-nav-layout": "vertical",
-              "data-header-styles": "light",
-              "data-vertical-style": "overlay",
-              "loader": "disable",
-              "data-icon-text": MyclassName,
-            }}
-          />
-          <Switcher />
-          <div className='page'>
-          
+        <Helmet
+          htmlAttributes={{
+            lang: "en",
+            dir: "ltr",
+            "data-menu-styles": "dark",
+            class: "light",
+            "data-nav-layout": "vertical",
+            "data-header-styles": "light",
+            "data-vertical-style": "overlay",
+            loader: "disable",
+            "data-icon-text": MyclassName,
+          }}
+        />
+        <Switcher />
+        <div className="page">
           <Suspense fallback={LoadingAnimation()}>
             <Routes>
               <Route path="login" element={<Login />} />
-              
+
               {/* <Route path="create-organization" element={<Organization />} />
               <Route path="select-organization" element={<OrgSelect />} />
               <Route path="shared-view" element={<ExternalView />} /> */}
@@ -93,9 +127,8 @@ function App() {
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
           </Suspense>
-            
-          </div>
-        </HelmetProvider>
+        </div>
+      </HelmetProvider>
     </Fragment>
   );
 }

@@ -281,7 +281,113 @@ const updateBasicInfo = useCallback(async () => {
       </div>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
-         
+          <div className="grid grid-cols-12 gap-x-6">
+           
+            <div
+              id="email-address"
+              className={`xxl:col-span-12 xl:col-span-12 ${
+                path === "email-address" ? "blink" : ""
+              } col-span-12`}
+            >
+              <div className="box custom-box">
+                <div className="box-header justify-between">
+                  <div className="box-title">
+                    My Email Address
+                    <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                      You can use the following email addresses to sign in to
+                      your account and also to reset your password if you ever
+                      forget it.
+                    </p>
+                  </div>
+                  <div></div>
+                </div>
+                <div className="box-body">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="sm:flex items-start items-center">
+                      <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
+                        <img src={emailImage ? emailImage : ''} />
+                      </span>
+                      <div className="flex-grow p-2">
+                        <div className="flex items-center !justify-between">
+                          <h6 className="font-semibold mb-1  text-[.75rem]">
+                            {email}
+                          </h6>
+                        </div>
+                      </div>
+                    </div>
+
+                    <ERPButton
+                      title="Change Primary Email Address"
+                      onClick={() => {
+                        setIsOpenEmailChange(!isOpenEmailChange);
+                      }}
+                      variant="primary"
+                    ></ERPButton>
+                  </div>
+                </div>
+              </div>
+              <ERPModal
+                isOpen={isOpenEmailChange}
+                title={"Update Email"}
+                isForm={true}
+                closeModal={() => {
+                  setIsOpenEmailChange(false);
+                  setPostDataEmail({});
+                }}
+                content={PopUpModalEmailChange()}
+              />
+            </div>
+            <div
+              id="phone-number"
+              className={`xxl:col-span-12 xl:col-span-12 ${
+                path === "phone-number" ? "blink" : ""
+              } col-span-12`}
+            >
+              <div className="box custom-box">
+                <div className="box-header justify-between">
+                  <div className="box-title">
+                    Mobile Number
+                    <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                      View and manage the mobile number associated with your
+                      account. Please note that we need to verify your mobile
+                      number for updating.
+                    </p>
+                  </div>
+                  <div></div>
+                </div>
+                <div className="box-body">
+                  <div className="grid grid-cols-1 gap-3">
+                    <ERPInput
+                      id="phone"
+                      placeholder="Pleas Enter Phone Number"
+                      required={true}
+                      value={phone ? phone : ''}
+                      data={{phone: phone}}
+                      onChangeData={(data: any) =>
+                      {
+                        
+                        setPhone(data.phone)
+                      }
+                      }
+                    />
+ <div className="w-full p-2 flex justify-end">
+                    <ERPButton
+                      title={
+                        phone != undefined && phone != null && phone != ""
+                          ? "Update"
+                          : "Add Phone"
+                      }
+                      disabled={phone == _phone || phoneLoading}
+                      loading={phoneLoading}
+                      onClick={changePhone}
+                      variant="primary"
+                    ></ERPButton>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
         <div

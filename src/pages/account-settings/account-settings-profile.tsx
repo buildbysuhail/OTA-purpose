@@ -320,30 +320,7 @@ const updateBasicInfo = useCallback(async () => {
                   </div>
                   <div></div>
                 </div>
-                <div className="box-body">
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="sm:flex items-start items-center">
-                      <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
-                        <img src={emailImage ? emailImage : ''} />
-                      </span>
-                      <div className="flex-grow p-2">
-                        <div className="flex items-center !justify-between">
-                          <h6 className="font-semibold mb-1  text-[.75rem]">
-                            {email}
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-
-                    <ERPButton
-                      title="Change Primary Email Address"
-                      onClick={() => {
-                        setIsOpenEmailChange(!isOpenEmailChange);
-                      }}
-                      variant="primary"
-                    ></ERPButton>
-                  </div>
-                </div>
+               
               </div>
               <ERPModal
                 isOpen={isOpenEmailChange}

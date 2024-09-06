@@ -105,7 +105,7 @@ const resetBasicInfo = useCallback(async () => {
 const updateBasicInfo = useCallback(async () => {
   debugger;
   setBasicInfoLoading(true);
-  const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
+  const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo?.data);
   debugger;
   setBasicInfoLoading(false);
   
@@ -114,7 +114,7 @@ const updateBasicInfo = useCallback(async () => {
     validations: response.validations
   }));
   handleResponse(response, () => {});
-}, [dispatch, basicInfo.data]);
+}, [dispatch, basicInfo?.data]);
 
 /////////////////////////////////////////////////////////////////////
 
@@ -127,7 +127,7 @@ const updateBasicInfo = useCallback(async () => {
       setEmailLoading(true);
       
       const response: ResponseModelWithValidation<any, any> =
-        await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
+        await AccountSettingsApis.verifyEmail_profile(postDataEmail?.data);
       
         setEmailLoading(false);
       handleResponse(response, () => {
@@ -188,21 +188,21 @@ const updateBasicInfo = useCallback(async () => {
               type="email"
               placeholder="Current Email"
               required={true}
-              data={postDataEmail.data}
+              data={postDataEmail?.data}
               onChangeData={(data: any) => {
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
                 }));
               }}
-              value={postDataEmail.data?.userName}
+              value={postDataEmail?.data?.userName}
             />
             <ERPInput
               id="password"
               placeholder="Password"
               required={true}
-              value={postDataEmail.data?.password}
-              data={postDataEmail.data}
+              value={postDataEmail?.data?.password}
+              data={postDataEmail?.data}
               onChangeData={(data: any) =>
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
@@ -215,21 +215,21 @@ const updateBasicInfo = useCallback(async () => {
               type="email"
               placeholder="New Email"
               required={true}
-              data={postDataEmail.data}
+              data={postDataEmail?.data}
               onChangeData={(data: any) =>
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
                 }))
               }
-              value={postDataEmail.data?.newValue}
+              value={postDataEmail?.data?.newValue}
             />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3">
             <p>
               Pls Enter the verification code you received to your email{" "}
-              {postDataEmail.data.newValue}
+              {postDataEmail?.data.newValue}
             </p>
             <ERPInput
               id="otp"
@@ -300,40 +300,7 @@ const updateBasicInfo = useCallback(async () => {
                     </p>
                   </div>
                 </div>
-                <div className="box-body">
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="sm:flex items-start items-center">
-                      <div>
-                        <span className="avatar avatar-xxl avatar-rounded ">
-                          <ERPAvatar
-                            alt="Remy Sharp"
-                            src={image}
-                            sx={useMemo(() => {
-                              return { width: 75, height: 75 };
-                            }, [])}
-                          />
-                        </span>
-                      </div>
-                      <div className="flex-grow p-2">
-                        <div className="flex items-center !justify-between">
-                          <h6 className="font-semibold mb-1  text-[1rem]">
-                            Json Taylor
-                          </h6>
-                        </div>
-                        {/* <p className="mb-1 opacity-[0.7]">
-                          Chief Executive Officer (C.E.O)
-                        </p> */}
-                      </div>
-                    </div>
-                    <div className="sm:flex items-center p-6">
-                      <ERPCropper
-                        apiUrl="/Subscription/Profile/UploadUserImage"
-                        onImageSuccess={onImageSuccess}
-                        useCircle
-                      ></ERPCropper>
-                    </div>
-                  </div>
-                </div>
+                
               </div>
             </div>
             <div
@@ -354,30 +321,7 @@ const updateBasicInfo = useCallback(async () => {
                   </div>
                   <div></div>
                 </div>
-                <div className="box-body">
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="sm:flex items-start items-center">
-                      <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
-                        <img src={emailImage} />
-                      </span>
-                      <div className="flex-grow p-2">
-                        <div className="flex items-center !justify-between">
-                          <h6 className="font-semibold mb-1  text-[.75rem]">
-                            {email}
-                          </h6>
-                        </div>
-                      </div>
-                    </div>
-
-                    <ERPButton
-                      title="Change Primary Email Address"
-                      onClick={() => {
-                        setIsOpenEmailChange(!isOpenEmailChange);
-                      }}
-                      variant="primary"
-                    ></ERPButton>
-                  </div>
-                </div>
+               
               </div>
               <ERPModal
                 isOpen={isOpenEmailChange}
@@ -414,7 +358,7 @@ const updateBasicInfo = useCallback(async () => {
                       id="phone"
                       placeholder="Pleas Enter Phone Number"
                       required={true}
-                      value={phone}
+                      value={phone ? phone : ''}
                       data={{phone: phone}}
                       onChangeData={(data: any) =>
                       {
@@ -502,16 +446,16 @@ const updateBasicInfo = useCallback(async () => {
                     thunkAction= {countries}
                     reducer="CountriesData"
                     validation={basicInfo.validations.nationality}
-                    data={basicInfo.data}
-                    defaultData={basicInfo.data}
-                    value={basicInfo != undefined && basicInfo.data != undefined && basicInfo.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
+                    data={basicInfo?.data}
+                    defaultData={basicInfo?.data}
+                    value={basicInfo != undefined && basicInfo?.data != undefined && basicInfo?.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
                     label="Country"
                   />
                   <ERPDateInput
                     id="dob"
                     field={{ type: "date", id: "dob", required: true }}
                     label={"Date of Birth"}
-                    data={basicInfo.data}
+                    data={basicInfo?.data}
                     handleChange={(id: any, value: any) =>
                     {
                       

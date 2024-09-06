@@ -54,13 +54,13 @@ const ERPAvatar: React.FC<ERPAvatarProps> = ({
   return (
     <Box>
       <Avatar
-        alt={alt || name}
-        src={src}
-        srcSet={srcSet}
-        variant={variant}
-        sizes={sizes}
-        onClick={onClick}
-        sx={{ bgcolor: bgColor, ...sx }}
+       alt={alt || name}
+       src={src !== '#' ? src : undefined}
+       srcSet={srcSet}
+       variant={variant}
+       sizes={sizes}
+       onClick={onClick}
+       sx={{ bgcolor: bgColor, ...sx }}
         // {...otherProps}
       >
         {useStringAvatar && (src == undefined || src == null || src == '#') && name ? initials:null}

@@ -15,13 +15,14 @@ const Urls = {
   upload: "/",
   user: "/user",
   imgBaseUrl: "/",
-  host: `${domain}/`,
+  host: `${domain}/`, 
   baseUrl: `${domain}/api`,
 
   // Dropdown
-
   language: "/settings/language/",
   country: "/core/data/countries/",
+  currency: "/core/data/Currencies/",
+  industry: "/core/data/Industries/",
   state: "/Subscription/auth/MigrateCRMDb/",
 
   // Auth
@@ -49,10 +50,11 @@ const Urls = {
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
   getUserSession: "/Subscription/account/getUserSession/",
 
-  uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
+uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
 changeEmailRequest_workspace : "/Subscription/WorkSpace/ChangeEmailRequest/",
 verifyEmail_workspace : "/Subscription/WorkSpace/VerifyEmail/",
 updateCompanyEmail_workspace : "/Subscription/WorkSpace/UpdateCompanyEmailAsync/",
+UpdateCompanyPhone_workspace: "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
 changePhoneRequest_workspace : "/Subscription/WorkSpace/ChangePhoneRequest/",
 changePhone_workspace : "/Subscription/WorkSpace/changePhone_workspace/",
 verifyPhone_workspace : "/Subscription/WorkSpace/VerifyPhone/",

@@ -20,14 +20,14 @@ const WorkSpaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
   const dispatch = useDispatch();
 
   const resetPassword = async () => {
-    debugger;
+    
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
         apiUrl: Urls.updatePassword,
         data: { password: password },
       }) as any
     ).unwrap();
-    debugger;
+    
     handleResponse(response, () => {
       setPassword("");
     });
@@ -71,7 +71,7 @@ const WorkSpaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
                     onChangeData={(data: any) => {
                       console.log('safvan');
                       
-                      debugger;
+                      
                       setPassword(data.password)}
                     }
                   />

@@ -42,7 +42,7 @@ function App() {
   const token = Cookies.get("token");
   const syncAppStates = async () => {
     // setReloading(true);
-    api.get(Urls.getUserThemes).then((res) => {
+    let res = await api.get(Urls.getUserThemes)
       debugger;
       dispatch(setDirection(res.direction ?? "ltr"));
       localStorage.setItem("ynexltr", res.direction ?? "ltr");
@@ -72,7 +72,6 @@ debugger;
       localStorage.setItem("ynexHeader", "color");
       localStorage.removeItem("dark");
   
-    });
   };
   useEffect(() => {
     if (!token && pathname !== "/shared-view") {

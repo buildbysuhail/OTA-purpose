@@ -74,9 +74,9 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
       await verifyFormEmail();
     } else {
       setEmailLoading(true);
-      debugger;
+      
       const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
-      debugger;
+      
       handleResponse(response, () => {
         setEmailLoading(false);
         setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
@@ -90,10 +90,10 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
     }
   };
   const verifyFormEmail = async () => {
-    debugger;
+    
     setEmailLoading(true);
     const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.changeEmailRequest_profile(postDataEmailTokenVerify);
-    debugger;
+    
     setEmailLoading(false);
     handleResponse(response, () => {
       setIsOpenEmailChange(false);
@@ -130,7 +130,7 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
     });
   }, []);
   const onImageSuccess = useMemo(() => {
-    debugger;
+    
     return (url: string) => {
       setImage(url);
     };

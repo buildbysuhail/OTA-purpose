@@ -47,7 +47,7 @@ let isInitial = true;
             params = { ...params, [i]: JSON.stringify(loadOptions[i]) };
           }
         });
-        debugger;
+        
         if (isInitial) {
           params.sort = JSON.stringify([{ selector: "id", desc: true }]);
           isInitial = false;
@@ -96,14 +96,14 @@ let isInitial = true;
   const dispatch = useDispatch();
 
   const resetPassword = async () => {
-    debugger;
+    
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
         apiUrl: Urls.updatePassword,
         data: { password: password },
       }) as any
     ).unwrap();
-    debugger;
+    
     handleResponse(response, () => {
       setPassword("");
     });
@@ -116,7 +116,6 @@ let isInitial = true;
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
         <div></div>
       </div>
-      <div className="grid grid-cols-12 gap-x-6">
       <DataGrid
                             height={gridHeight}
                             dataSource={store}
@@ -142,7 +141,6 @@ let isInitial = true;
                                     dataType="boolean" 
                                   />
                         </DataGrid>
-      </div>
       
     </Fragment>
   );

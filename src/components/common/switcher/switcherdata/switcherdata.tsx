@@ -43,7 +43,7 @@ export function Ltr(actionfunction: any, appState: any) {
     localStorage.removeItem("ynexrtl");
 }
 export function Rtl(actionfunction: any, appState: any) {
-    debugger;
+    
     actionfunction({ ...appState, dir: "rtl" });
     localStorage.setItem("ynexrtl", "rtl");
     localStorage.removeItem("ynexltr");

@@ -26,7 +26,7 @@ const rootReducer = {
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
   AppState: AppStateReducer,
-  countries: countriesDataReducer
+  Countries: countriesDataReducer
 };
 
 export default rootReducer;

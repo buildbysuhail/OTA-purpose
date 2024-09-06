@@ -46,7 +46,7 @@ const ERPDateInput = ({ field, label, disabled, handleChange, defaultData, data,
       // defaultValue={dayjs(defaultData?.[field?.id]).format("YYYY-MM-DD")}
       // value={dayjs(data?.[field?.id]).format("YYYY-MM-DD") || dayjs(defaultData?.[field?.id]).format("YYYY-MM-DD") || undefined}
 
-      defaultValue={value == undefined ? "" : value}
+      // defaultValue={value == undefined ? "" : value}
       value={value == undefined ? "" : value}
     />
     <ERPElementValidationMessage validation={validation}></ERPElementValidationMessage>

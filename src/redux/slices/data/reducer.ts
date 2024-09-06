@@ -23,9 +23,11 @@ const countriesSlice = createSlice({
       .addCase(countries.pending, (state) => {
         // You can set a loading state here if needed
       })
-      .addCase(countries.fulfilled, (state, action: PayloadAction<Country[]>) => {
+      .addCase(countries.fulfilled, (state, action: PayloadAction<any>) => {
+        
         // Replace the entire state with the new data
         return action.payload;
+        
       })
       .addCase(countries.rejected, (state, action) => {
         // Handle the error state here if needed

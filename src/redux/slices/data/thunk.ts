@@ -5,5 +5,6 @@ const api = new APIClient();
 
 export const countries = createAsyncThunk('app/countries', async () => {
   const response = await api.get(Urls.country);
-  return response.data;
+  
+  return response;
 });

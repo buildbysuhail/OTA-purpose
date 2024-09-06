@@ -115,7 +115,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
     Urls.getEmail_profile,
     ActionType.GET
   );
-  debugger;
+  
   const { thunk: postFormEmailTokenThunk } = getThunkAndSliceWithValidation<
     any,
     any
@@ -141,11 +141,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
     ActionType.POST
   );
   const updateLanguage = async () => {
-    debugger;
+    
     const response: ResponseModel<any> = await dispatch(
       updateUserLanguageThunk({language: language})
     ).unwrap();
-    debugger;
+    
     handleResponse(response, () => {
       
     });
@@ -215,14 +215,14 @@ const userTheme = () => {
     ActionType.POST
   );
   const saveThemeChange = async () => {
-    debugger;
+    
     const res = await dispatch(updateUserThemeThunk(theme) as any).unwrap();
     handleResponse(res, ()=> {
       userTheme();
     });
   };
   const handleThemeChange = (key: string, mode: string) => {
-    debugger;
+    
     setTheme((prevTheme) => ({
       ...prevTheme,
       [key]: mode,
@@ -262,7 +262,7 @@ const userTheme = () => {
                       id="language"
                       options={languages}
                       handleChange={(id: any ,value: any) => {
-                        debugger;
+                        
                         setLanguage(value.value);
                       }}
                       value={language}
@@ -359,7 +359,7 @@ const userTheme = () => {
                               }));}
                               console.log(theme)
                             }}
-                              // onClick={() => {debugger; handleThemeChange("mode", "dark")}}
+                              // onClick={() => { handleThemeChange("mode", "dark")}}
                             />
                             <label
                               htmlFor="switcher-dark-theme"
@@ -404,7 +404,7 @@ const userTheme = () => {
                               checked={theme.direction == "rtl"}
                               onChange={(e) => {}}
                               onClick={(e) => {
-                                debugger;
+                                
                                 if(true == true) { 
                                 switcherdata.Rtl(updateAppState,appState);; setTheme((prevTheme) => ({
                                   ...prevTheme,

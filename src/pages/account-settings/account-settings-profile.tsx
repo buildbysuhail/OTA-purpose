@@ -22,26 +22,26 @@ import { Validation } from "devextreme-react/cjs/gantt";
 
 interface AccountSettingsProps {}
 interface UserProfileBasicInfo {
-  fullName?: string | null; // Represents the full name as a string
+  displayName?: string | null; // Represents the full name as a string
   dob?: Date | null; // Represents the date of birth as a Date object
-  countryCode?: string | null; // Represents the country code as a string
+  nationality?: string | null; // Represents the country code as a string
 }
 let api = new APIClient();
 const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
   const initialBasicInfoWithValidation = {
     data: {
-      countryCode: null,
+      nationality: null,
       dob: null,
-      fullName: null,
+      displayName: null,
     },
     validations: {
-      countryCode: "",
+      nationality: "",
       dob: "",
-      fullName: "",
+      displayName: "",
     },
   };
   const [image, setImage] = useState<string>("#");
-
+  debugger;
   
   const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
@@ -71,7 +71,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
   //////////////////////////////////////////////////////////////////////
   
   const getPhone = async () => {
-    debugger;
+    
     let res = await AccountSettingsApis.getPhone();
     setPhone(res);
     set_Phone(res);
@@ -81,7 +81,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
     ).unwrap();
-    debugger;
+    
     setPhoneChangeLoading(false);
     handleAxiosResponse(response);
   }, [dispatch, phone]);
@@ -98,20 +98,22 @@ const getBasicInfo = async() => {
 }
 
 const resetBasicInfo = useCallback(async () => {
-  setBasicInfo(initialBasicInfoWithValidation);
+  // setBasicInfo(initialBasicInfoWithValidation);
 }, [initialBasicInfoWithValidation]);
 
 const updateBasicInfo = useCallback(async () => {
+  debugger;
   setBasicInfoLoading(true);
   const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
-  setBasicInfoLoading(false);
   debugger;
+  setBasicInfoLoading(false);
+  
   setBasicInfo((prevData: any) => ({
     ...prevData,
     validations: response.validations
   }));
   handleResponse(response, () => {});
-}, [dispatch]);
+}, [dispatch, basicInfo.data]);
 
 /////////////////////////////////////////////////////////////////////
 
@@ -122,10 +124,10 @@ const updateBasicInfo = useCallback(async () => {
       await verifyFormEmail();
     } else {
       setEmailLoading(true);
-      debugger;
+      
       const response: ResponseModelWithValidation<any, any> =
         await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
-      debugger;
+      
         setEmailLoading(false);
       handleResponse(response, () => {
         setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
@@ -139,13 +141,13 @@ const updateBasicInfo = useCallback(async () => {
     }
   };
   const verifyFormEmail = async () => {
-    debugger;
+    
     setEmailLoading(true);
     const response: ResponseModelWithValidation<any, any> =
       await AccountSettingsApis.changeEmailRequest_profile(
         postDataEmailTokenVerify
       );
-    debugger;
+    
     setEmailLoading(false);
     handleResponse(response, () => {
       setIsOpenEmailChange(false);
@@ -154,14 +156,14 @@ const updateBasicInfo = useCallback(async () => {
     });
   };
   const getEmail = async () => {
-    debugger;
+    
     let res = await AccountSettingsApis.getEmail();
     setEmail(res);
   };
 
   /////////////////////////////////////////////////////////////////////
   const onImageSuccess = useMemo(() => {
-    debugger;
+    
     return (url: string) => {
       setImage(url);
     };
@@ -236,7 +238,7 @@ const updateBasicInfo = useCallback(async () => {
               data={postDataEmailTokenVerify}
               onChangeData={(data: any) =>
               {
-                debugger;
+                
                 setPostDataEmailTokenVerify(
                   data
                 )
@@ -415,7 +417,7 @@ const updateBasicInfo = useCallback(async () => {
                       data={{phone: phone}}
                       onChangeData={(data: any) =>
                       {
-                        debugger;
+                        
                         setPhone(data.phone)
                       }
                       }
@@ -461,33 +463,11 @@ const updateBasicInfo = useCallback(async () => {
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
                   <ERPInput
-                    id="fullName"
+                    id="displayName"
                     label="Display Name"
                     placeholder="Display Name"
                     required={true}
-                    data={basicInfo.data}
-                    onChangeData={(data: any) => {
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
-                    validation={basicInfo.validations?.fullName}
-                    value={
-                      basicInfo?.data?.fullName
-                        ? basicInfo?.data?.fullName
-                        : ""
-                    }
-                  />
-                  <ERPDataCombobox
-                    id="countryCode"
-                    field={{
-                      id: "countryCode",
-                      required: true,
-                      getListUrl: Urls.country,
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
+                    data={basicInfo?.data}
                     onChangeData={(data: any) => {
                       debugger;
                       setBasicInfo((prev: any) => ({
@@ -495,10 +475,33 @@ const updateBasicInfo = useCallback(async () => {
                         data: data
                       }))
                     }}
-                    validation={basicInfo.validations.countryCode}
+                    validation={basicInfo.validations?.displayName}
+                    value={
+                      basicInfo?.data?.displayName
+                        ? basicInfo?.data?.displayName
+                        : ""
+                    }
+                  />
+                  <ERPDataCombobox
+                    id="nationality"
+                    field={{
+                      id: "nationality",
+                      required: true,
+                      getListUrl: Urls.country,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    onChangeData={(data: any) => {
+                      
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data
+                      }))
+                    }}
+                    validation={basicInfo.validations.nationality}
                     data={basicInfo.data}
                     defaultData={basicInfo.data}
-                    value={basicInfo.data.countryCode}
+                    value={basicInfo != undefined && basicInfo.data != undefined && basicInfo.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
                     label="Country"
                   />
                   <ERPDateInput
@@ -508,7 +511,7 @@ const updateBasicInfo = useCallback(async () => {
                     data={basicInfo.data}
                     handleChange={(id: any, value: any) =>
                     {
-                      debugger;
+                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: {

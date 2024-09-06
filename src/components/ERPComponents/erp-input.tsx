@@ -100,7 +100,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
             }}
             onBlur={onBlur}
             id={id}
-            value={value}
+            value={value == undefined ? "" : value}
             defaultValue={defaultValue}
             type={type}
             name={id}

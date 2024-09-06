@@ -89,7 +89,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postFormEmailThunk(email)
     ).unwrap();
-    debugger;
+    
     handleResponse(response, () => {
       
     });
@@ -137,7 +137,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     });
   }, []);
   const onImageSuccess = useMemo(() => {
-    debugger;
+    
     return (url: string) => {
       setImage(url);
     };

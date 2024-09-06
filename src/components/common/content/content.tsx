@@ -4,6 +4,7 @@ import AccountSettings from '../../../pages/account-settings/account-settings';
 import AccountSettingsSecurity from '../../../pages/account-settings/account-settings-security';
 import AccountSettingsPreference from '../../../pages/account-settings/account-settings-preference';
 import WorkSpaceSettings from '../../../pages/work-space/workspace-settings';
+import AccountSettingsSessions from '../../../pages/account-settings/account-settings-sessions';
 
 interface ContentProps { }
 const loading = (
@@ -26,6 +27,7 @@ const Content: FC<ContentProps> = () => {
           <Route path="/account-settings/preferences/theme" element={<AccountSettingsPreference />} />
           <Route path="/account-settings/preferences/language" element={<AccountSettingsPreference />} />
           <Route path="/account-settings/preferences/system-preferences" element={<AccountSettingsPreference />} />
+          <Route path="/account-settings/sessions" element={<AccountSettingsSessions />} />
 
           <Route path="/workspace-settings/profile/workspace-logo" element={<WorkSpaceSettings />} />
           <Route path="/workspace-settings/profile/workspace-basic-information" element={<WorkSpaceSettings />} />

@@ -72,8 +72,9 @@ export const MENUITEMS = [
     ]
   },
   {
-    icon: (<i className="side-menu__icon ri-login-circle-line"></i>),
+    icon: (<i className="side-menu__icon ri-macbook-line"></i>),
     type: 'link',
+    path: `${import.meta.env.BASE_URL}account-settings/sessions`,
     Name: '',
     active: false,
     selected: false,

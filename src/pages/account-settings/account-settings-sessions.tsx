@@ -17,7 +17,7 @@ import workspaceApis from "./workspace-apis";
 
 interface AccountSettingsProps {}
 
-const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
+const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
     let wh = window.innerHeight;
@@ -148,4 +148,4 @@ let isInitial = true;
   );
 };
 
-export default AccountSettingsSecurity;
+export default AccountSettingsSessions;

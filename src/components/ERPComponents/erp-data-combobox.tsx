@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
@@ -64,7 +64,7 @@ export const getOptions = (data: any, keyLabel: string) => {
   }
 };
 
-export default function SBDataCombobox({
+const SBDataCombobox: React.FC<SBDataComboboxProps> = ({
   id,
   label,
   handleChange,
@@ -87,95 +87,98 @@ export default function SBDataCombobox({
   isPaginated = false,
   disabledApiCall = false,
   validation
-}: SBDataComboboxProps) {
+}) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { pathname } = useLocation();
 
   const comboboxRef = useRef<any>(null);
-  const currencySymbol = getCurrentCurrencySymbol();
 
   const [query, setQuery] = useState("");
-  const [localValue, setLocalValue] = useState<any>();
+  const [localValue, setLocalValue] = useState<any>(null);
   const [hasValue, setHasValue] = useState<boolean>(false);
 
-  const { thunk } = getThunkAndSlice<string>(field?.getListUrl, ActionType.GET, false,{});
+  const { thunk } = getThunkAndSlice<string>(field?.getListUrl, ActionType.GET, false, {});
   const dataList: any = useAppDynamicSelector(field?.getListUrl, ActionType.GET);
-  const appState = useSelector((state: RootState) => state.appState) as AppState;
 
   const listData = isPaginated ? dataList?.data?.results : dataList?.data;
-
-  console.log(`SBDataCombobox,  : data_list_data`, id, dataList);
-
-  useEffect(() => {
-    if (!disabledApiCall) {
-      field?.getListUrl &&  dispatch(thunk());
-    }
-  }, []);
 
   const iLabel = label || id?.replaceAll("_", " ");
   const fieldKey = field?.id?.replaceAll("_id", "");
   const defaultValueKey = defaultData?.[fieldKey]?.[field?.valueKey];
-  console.log(`SBDataCombobox,  : default_value_key`, defaultValueKey);
-debugger;
-  let value = field?.labelKey ? defaultData?.[field?.id]?.[field?.labelKey] : defaultData?.[field?.id];
-  if (data !== undefined && data?.[field?.id] !== undefined) {
-    value = data?.[field?.id] === undefined ? value : localValue?.label;
-  }
 
-  // let isActive = field?.id?.includes("customer") || field?.id?.includes("vendor") || field?.id === "item";
-  // let activeData = dataList?.data?.filter((item: any) => item?.[field?.activeCheckKey] === true);
-
-  let options = getOptions(listData, field?.labelKey) || [];
-
-  options = field?.isPriceList
-    ? getPriceListOptions(
-        listData?.filter((item: any) => item?.is_active == true),
+  const options = useMemo(() => {
+    let opts = getOptions(listData, field?.labelKey) || [];
+    if (field?.isPriceList) {
+      opts = getPriceListOptions(
+        listData?.filter((item: any) => item?.is_active === true),
         "name",
         "is_for"
-      )?.filter((item: any) => item?.is_for == field?.filterKey)
-    : options;
-  console.log(`SBDataCombobox,  : options_data_value`, options, excludeOptions);
-  options = options?.filter((option: any) => !excludeOptions?.includes(option?.value));
-  options = includeOptions ? [...includeOptions, ...options] : options;
+      )?.filter((item: any) => item?.is_for === field?.filterKey);
+    }
+    opts = opts?.filter((option: any) => !excludeOptions?.includes(option?.value));
+    return includeOptions ? [...includeOptions, ...opts] : opts;
+  }, [listData, field, excludeOptions, includeOptions]);
 
-  const filteredPeople =
+  const filteredPeople = useMemo(() => 
     query === ""
       ? options
-      : options?.filter((person: any) => person?.label?.toLowerCase()?.replace(/\s+/g, "")?.includes(query?.toLowerCase()?.replace(/\s+/g, "")));
-debugger;
-  const defualt = options?.find((option: any) => option?.value === defaultValueKey);
+      : options?.filter((person: any) => 
+          person?.label?.toLowerCase()?.replace(/\s+/g, "")?.includes(query?.toLowerCase()?.replace(/\s+/g, ""))
+        ),
+    [query, options]
+  );
+
   const selected = options?.find((option: any) => option?.value === data?.[field?.id]);
+  const defualt = options?.find((option: any) => option?.value === defaultValueKey);
+  const exceptional = (defaultData && fieldKey === "payment_terms" && options[0]) || (fieldKey === "currency");
 
-  console.log(`SBDataCombobox,  : default_data_value`, defaultData, options, defualt);
-
-  const exceptional =
-    (defaultData && fieldKey === "payment_terms" && options[0]) ||
-    (fieldKey === "currency");
+  useEffect(() => {
+    if (!disabledApiCall && field?.getListUrl) {
+      dispatch(thunk());
+    }
+  }, [disabledApiCall, field?.getListUrl, dispatch, thunk]);
 
   useEffect(() => {
     if (defaultData) {
-      defualt && setHasValue(true);
+      const defaultOption = options?.find((option: any) => option?.value === defaultValueKey);
+      if (defaultOption) {
+        setHasValue(true);
+        setLocalValue(defaultOption);
+      }
     }
-  }, [defaultData]);
+  }, [defaultData, options, defaultValueKey]);
 
-  const clearSelection = (e?: any) => {
+  const clearSelection = useCallback((e?: React.MouseEvent) => {
     e?.stopPropagation();
     setQuery("");
     setHasValue(false);
-    comboboxRef.current.value = "";
+    setLocalValue(null);
+    if (comboboxRef.current) {
+      comboboxRef.current.value = "";
+    }
     handleChange && handleChange(field?.id, "");
     onChange && onChange("");
-  };
+  }, [handleChange, onChange, field?.id]);
 
-  // =================== Disable field based on data =============
-  const disableCombobox = () => {
-    if (pathname?.includes("/accountant/chart_of_accounts") && field?.id == "currency_id" && defaultData?.has_transactions) return true;
+  const disableCombobox = useCallback(() => {
+    if (pathname?.includes("/accountant/chart_of_accounts") && field?.id === "currency_id" && defaultData?.has_transactions) return true;
     return disabled;
-  };
+  }, [pathname, field?.id, defaultData?.has_transactions, disabled]);
+
+  const handleComboboxChange = useCallback((value: any) => {
+    onChange && onChange(value);
+    onChangeData && value && data && onChangeData({ ...data, [id]: value?.value });
+    handleChange && handleChange(field?.id, value?.value);
+    handleChangeData && handleChangeData(field?.id, value?.value);
+    onSelectItem && onSelectItem(listData?.find((val: any) => val?.[field?.valueKey] === value?.value));
+    setHasValue(true);
+    setLocalValue(value);
+  }, [onChange, onChangeData, handleChange, handleChangeData, onSelectItem, data, id, field, listData]);
+
 
   return (
-    <div className="relative">
+   <div className="relative">
       {/* <SBModelForm formFields={field?.formFields} show={showForm} onClose={() => setShowForm(false)} title={iLabel} /> */}
       <Combobox
         disabled={disableCombobox()}
@@ -292,3 +295,4 @@ debugger;
     </div>
   );
 }
+export default SBDataCombobox;

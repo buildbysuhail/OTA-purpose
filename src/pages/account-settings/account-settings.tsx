@@ -43,9 +43,9 @@ interface UserProfileBasicInfo {
   dob?: Date | null; // Represents the date of birth as a Date object
   countryCode?: string | null; // Represents the country code as a string
 }
-
+let api = new APIClient();
 const AccountSettings: FC<AccountSettingsProps> = (props) => {
-  let api = new APIClient();
+  
   const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");

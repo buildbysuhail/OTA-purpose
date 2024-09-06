@@ -1,9 +1,4 @@
-import { combineReducers } from "redux";
 
-// Front
-// import LayoutReducer from "./layouts/reducer";
-
-// Authentication
 import LoginReducer from "./auth/login/reducer";
 import AccountReducer from "./auth/register/reducer";
 import ForgetPasswordReducer from "./auth/forgetpwd/reducer";
@@ -11,7 +6,7 @@ import ProfileReducer from "./auth/profile/reducer";
 import AppStateReducer from "./app/reducer";
 import { CreateCrudModuleSlices } from "./crud-slices";
 import { CrudConfig } from "../../configs/crud-config";
-
+import countriesDataReducer from "./data/reducer";
 const crudModuleSlices = CreateCrudModuleSlices(CrudConfig);
 
 // const rootReducer = combineReducers({
@@ -30,7 +25,8 @@ const rootReducer = {
   Account: AccountReducer,
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
-  AppState: AppStateReducer
+  AppState: AppStateReducer,
+  countries: countriesDataReducer
 };
 
 export default rootReducer;

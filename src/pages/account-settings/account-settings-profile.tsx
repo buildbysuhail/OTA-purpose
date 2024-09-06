@@ -6,15 +6,10 @@ import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
-import {
-  ActionType,
-  ApiState,
-} from "../../redux/types";
+import { ActionType, ApiState } from "../../redux/types";
 import { useDispatch } from "react-redux";
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
-import {
-  ResponseModelWithValidation,
-} from "../../base/response-model";
+import { ResponseModelWithValidation } from "../../base/response-model";
 import { useLocation } from "react-router-dom";
 import "./profile.css";
 import ERPModal from "../../components/ERPComponents/erp-modal";
@@ -32,8 +27,7 @@ interface UserProfileBasicInfo {
   countryCode?: string | null; // Represents the country code as a string
 }
 let api = new APIClient();
-const AccountSettings: FC<AccountSettingsProps> = (props) => {
-  
+const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
   const initialBasicInfoWithValidation = {
     data: {
       countryCode: null,
@@ -47,11 +41,11 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
     },
   };
   const [image, setImage] = useState<string>("#");
-  const [phone, setPhone] = useState<string>("");
-  const [_phone, set_Phone] = useState<string>("");
-  const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
+
+  
   const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
+
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [emailLoading, setEmailLoading] = useState<boolean>(false);
@@ -63,28 +57,83 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
   const [postDataEmailTokenVerify, setPostDataEmailTokenVerify] = useState<any>(
     { userName: "", newValue: "", otp: "", confirToken: "" }
   );
-  const [postDataPhone, setPostDataPhone] = useState<any>();
-  const dispatch = useDispatch();
 
   
+  const [phone, setPhone] = useState<string>("");
+  const [_phone, set_Phone] = useState<string>("");
+  const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+
+  const location = useLocation();
+  const path = location.pathname.split("/").pop(); // Extract the last part of the route
+  
+  //////////////////////////////////////////////////////////////////////
+  
+  const getPhone = async () => {
+    debugger;
+    let res = await AccountSettingsApis.getPhone();
+    setPhone(res);
+    set_Phone(res);
+  };
+  const changePhone = useCallback(async () => {
+    setPhoneChangeLoading(true);
+    const response: ResponseModelWithValidation<any, any> = await dispatch(
+      postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
+    ).unwrap();
+    debugger;
+    setPhoneChangeLoading(false);
+    handleAxiosResponse(response);
+  }, [dispatch, phone]);
+////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+
+const getBasicInfo = async() => {
+  let res = await AccountSettingsApis.getUserBasicInfo();
+    setBasicInfo((prevData: any) => ({
+      ...prevData,
+      data: res
+    }))
+}
+
+const resetBasicInfo = useCallback(async () => {
+  setBasicInfo(initialBasicInfoWithValidation);
+}, [initialBasicInfoWithValidation]);
+
+const updateBasicInfo = useCallback(async () => {
+  setBasicInfoLoading(true);
+  const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
+  setBasicInfoLoading(false);
+  debugger;
+  setBasicInfo((prevData: any) => ({
+    ...prevData,
+    validations: response.validations
+  }));
+  handleResponse(response, () => {});
+}, [dispatch]);
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
 
   const postFormEmail = async () => {
-    
     if (postDataEmail.tokenSend) {
       await verifyFormEmail();
     } else {
       setEmailLoading(true);
       debugger;
-      const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
+      const response: ResponseModelWithValidation<any, any> =
+        await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
       debugger;
-      handleResponse(response, () => {
         setEmailLoading(false);
+      handleResponse(response, () => {
         setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
         setPostDataEmailTokenVerify((prevData: any) => ({
           ...prevData,
           userName: response.item.userName,
           newValue: response.item.newValue,
-          confirToken: response.item.confirToken,
+          confirToken: response.item.token,
         }));
       });
     }
@@ -92,7 +141,10 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
   const verifyFormEmail = async () => {
     debugger;
     setEmailLoading(true);
-    const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.changeEmailRequest_profile(postDataEmailTokenVerify);
+    const response: ResponseModelWithValidation<any, any> =
+      await AccountSettingsApis.changeEmailRequest_profile(
+        postDataEmailTokenVerify
+      );
     debugger;
     setEmailLoading(false);
     handleResponse(response, () => {
@@ -101,61 +153,27 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
       getEmail();
     });
   };
-  const getEmail = async() => {
+  const getEmail = async () => {
+    debugger;
     let res = await AccountSettingsApis.getEmail();
-      setEmail(res);
-  }
+    setEmail(res);
+  };
 
-  const getBasicInfo = async() => {
-    let res = await AccountSettingsApis.getUserBasicInfo();
-      setBasicInfo((prevData: any) => ({
-        ...prevData,
-        data: res
-      }))
-  }
-  ////Basic InfoUpdate
-  
-  const location = useLocation();
-  const path = location.pathname.split("/").pop(); // Extract the last part of the route
-
-  useEffect(() => {
-    getBasicInfo();
-    getEmail();
-    api.get(Urls.getImage_profile).then((url) => {
-      setImage(url);
-    });
-    api.get(Urls.getPhone_profile).then((phone) => {
-      setPhone(phone);
-      set_Phone(phone);
-    });
-  }, []);
+  /////////////////////////////////////////////////////////////////////
   const onImageSuccess = useMemo(() => {
     debugger;
     return (url: string) => {
       setImage(url);
     };
   }, []);
-  const resetBasicInfo = useCallback(async () => {
-    setBasicInfo(initialBasicInfoWithValidation);
-  }, [initialBasicInfoWithValidation]);
-  const changePhone = useCallback(async () => {
-    setPhoneChangeLoading(true);
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
-    ).unwrap();
-    setPhoneChangeLoading(false);
-    handleAxiosResponse(response);
-  }, [dispatch, phone]);
-  const updateBasicInfo = useCallback(async () => {
-    setBasicInfoLoading(true);
-    const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
-    setBasicInfoLoading(false);
-    setBasicInfo((prevData: any) => ({
-      ...prevData,
-      Validations: response.validations
-    }));
-    handleResponse(response, () => {});
-  }, [dispatch]);
+  useEffect(() => {
+    getBasicInfo();
+    getEmail();
+    getPhone();
+    api.get(Urls.getImage_profile).then((url) => {
+      setImage(url);
+    });
+  }, []);
 
   const PopUpModalEmailChange = () => {
     return (
@@ -211,16 +229,18 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
               {postDataEmail.data.newValue}
             </p>
             <ERPInput
-              id="confirToken"
+              id="otp"
               placeholder="Pleas Enter Verification Code"
               required={true}
-              value={postDataEmailTokenVerify.otp}
+              value={postDataEmailTokenVerify?.otp}
               data={postDataEmailTokenVerify}
               onChangeData={(data: any) =>
-                setPostDataEmail((prevData: any) => ({
-                  ...prevData,
-                  ...data,
-                }))
+              {
+                debugger;
+                setPostDataEmailTokenVerify(
+                  data
+                )
+              }
               }
             />
           </div>
@@ -343,9 +363,6 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                             {email}
                           </h6>
                         </div>
-                        {/* <p className="mb-1 opacity-[0.7] text-[.65rem]">
-                         modified a month ago
-                        </p> */}
                       </div>
                     </div>
 
@@ -395,9 +412,12 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                       placeholder="Pleas Enter Phone Number"
                       required={true}
                       value={phone}
-                      data={phone}
+                      data={{phone: phone}}
                       onChangeData={(data: any) =>
-                       setPhone(data.phone)
+                      {
+                        debugger;
+                        setPhone(data.phone)
+                      }
                       }
                     />
  <div className="w-full p-2 flex justify-end">
@@ -407,7 +427,8 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                           ? "Update"
                           : "Add Phone"
                       }
-                      disabled={phone == _phone}
+                      disabled={phone == _phone || phoneLoading}
+                      loading={phoneLoading}
                       onClick={changePhone}
                       variant="primary"
                     ></ERPButton>
@@ -419,7 +440,7 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
           </div>
         </div>
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
-          <div
+        <div
             id="basic-information"
             className={`xxl:col-span-12 xl:col-span-12 ${
               path === "basic-information" ? "blink" : ""
@@ -468,6 +489,7 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                       labelKey: "name",
                     }}
                     onChangeData={(data: any) => {
+                      debugger;
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: data
@@ -484,12 +506,18 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
                     field={{ type: "date", id: "dob", required: true }}
                     label={"Date of Birth"}
                     data={basicInfo.data}
-                    onChangeData={(data: any) => {
+                    handleChange={(id: any, value: any) =>
+                    {
+                      debugger;
                       setBasicInfo((prev: any) => ({
                         ...prev,
-                        data: data
-                      }))
-                    }}
+                        data: {
+                          ...prev.data,
+                          [id]: value
+                        }
+                      }));
+                    }
+                    }
                     validation={basicInfo.validations.dob}
                   />
                   <div className="w-full p-2 flex justify-end">
@@ -517,4 +545,4 @@ const AccountSettings: FC<AccountSettingsProps> = (props) => {
   );
 };
 
-export default AccountSettings;
+export default AccountSettingsProfile;

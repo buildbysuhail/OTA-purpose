@@ -13,7 +13,7 @@ import { handleResponse } from "../../utilities/HandleResponse";
 import { DataGrid } from "devextreme-react";
 import { Column, FilterRow, HeaderFilter, Paging, Scrolling, SearchPanel } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
-import workspaceApis from "./workspace-apis";
+import AccountSettingsApis from "./account-settings-apis";
 
 interface AccountSettingsProps {}
 
@@ -65,7 +65,7 @@ let isInitial = true;
       .join('&');
   
         try {
-          const response = await workspaceApis.getAvailableSessionsForDxGrid(
+          const response = await AccountSettingsApis.getAvailableSessionsForDxGrid(
             queryString
           );
   

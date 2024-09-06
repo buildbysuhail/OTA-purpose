@@ -36,6 +36,8 @@ interface UserProfileBasicInfo {
   companyNameArabic?: string | null; // Represents the full name as a string      
   country?: string | null; // Represents the full name as a string      
   taxNumber?: string | null; // Represents the country code as a string
+  
+
 }
 
 const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
@@ -148,7 +150,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
 
   const changePhone = useCallback(async () => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({apiUrl:Urls.changePhone_workspace, data: {phone: phone}}) as any
+      postAction({apiUrl:Urls.UpdateCompanyPhone_workspace, data: {phone: phone}}) as any
     ).unwrap();
     handleAxiosResponse(response);
   }, [dispatch, phone]);
@@ -172,7 +174,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
               type="email"
               placeholder="New Email"
               required={true}
-              data={{email:email}}
+              data={{email:"email"}}
               onChangeData={(data: any) =>
                 setEmail((prevData: any) => ({
                   ...prevData,
@@ -257,7 +259,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
                     </div>
                     <div className="sm:flex items-top p-6">
                       <ERPCropper
-                        apiUrl="/Subscription/Profile/UploadUserImage"
+                        apiUrl="/Subscription/WorkSpace/UploadCompanyLogo"
                         onImageSuccess={onImageSuccess}
                          useCircle={false}
 
@@ -410,6 +412,22 @@ Recommended size: 300 x 300 pixels. */}
                         : ""
                     }
                   />
+                   <ERPInput
+                    id="SecondLName"
+                    label="Name in second language"
+                    placeholder="Eg: Novalabs"
+                    required={true}
+                    data={_basicInfo.data}
+                    onChangeData={(data: any) => {
+                      dispatch(basicInfoSlice.actions.updateData(data));
+                    }}
+                    validation={_basicInfo.validations.SecondLName}
+                    value={
+                      _basicInfo?.data?.SecondLName
+                        ? _basicInfo?.data?.SecondLName
+                        : ""
+                    }
+                  />
                   <ERPDataCombobox
                     id="countryCode"
                     field={{
@@ -434,18 +452,18 @@ Recommended size: 300 x 300 pixels. */}
                     label="Country"
                   />
                    <ERPDataCombobox
-                    id="countryCode"
+                    id="CurrencyId"
                     field={{
-                      id: "countryCode",
+                      id: "Currency",
                       required: true,
-                      getListUrl: Urls.country,
+                      getListUrl: Urls.currency,
                       valueKey: "id",
                       labelKey: "name",
                     }}
                     onChange={(value: any) => {
                       dispatch(
                         basicInfoSlice.actions.updateDataByKey({
-                          key: "countryCode",
+                          key: "Currency",
                           value: value.value,
                         })
                       );
@@ -457,18 +475,18 @@ Recommended size: 300 x 300 pixels. */}
                     label="Business Currency"
                   />
                    <ERPDataCombobox
-                    id="countryCode"
+                    id="Industry"
                     field={{
-                      id: "countryCode",
+                      id: "IndustryCode",
                       required: true,
-                      getListUrl: Urls.country,
+                      getListUrl: Urls.industry,
                       valueKey: "id",
                       labelKey: "name",
                     }}
                     onChange={(value: any) => {
                       dispatch(
                         basicInfoSlice.actions.updateDataByKey({
-                          key: "countryCode",
+                          key: "IndustryCode",
                           value: value.value,
                         })
                       );
@@ -479,7 +497,7 @@ Recommended size: 300 x 300 pixels. */}
                     value={_basicInfo.data.countryCode}
                     label="Industry"
                   />
-                  <ERPDataCombobox
+                  {/* <ERPDataCombobox
                     id="countryCode"
                     field={{
                       id: "countryCode",
@@ -501,8 +519,8 @@ Recommended size: 300 x 300 pixels. */}
                     defaultData={_basicInfo.data}
                     value={_basicInfo.data.countryCode}
                     label="Number of Employees"
-                  />
-                  <ERPInput
+                  /> */}
+                  {/* <ERPInput
                     id="fullName ⑦"
                     label="Business ID"
                     placeholder="Eg: 58733"
@@ -517,9 +535,9 @@ Recommended size: 300 x 300 pixels. */}
                         ? _basicInfo?.data?.fullName
                         : ""
                     }
-                  />
+                  /> */}
                   <ERPInput
-                    id="fullName"
+                    id="TaxNumber"
                     label="Tax identification Number"
                     placeholder="Eg: 58733"
                     required={true}
@@ -527,10 +545,10 @@ Recommended size: 300 x 300 pixels. */}
                     onChangeData={(data: any) => {
                       dispatch(basicInfoSlice.actions.updateData(data));
                     }}
-                    validation={_basicInfo.validations.fullName}
+                    validation={_basicInfo.validations.TaxNumber}
                     value={
-                      _basicInfo?.data?.fullName
-                        ? _basicInfo?.data?.fullName
+                      _basicInfo?.data?.TaxNumber
+                        ? _basicInfo?.data?.TaxNumber
                         : ""
                     }
                   />

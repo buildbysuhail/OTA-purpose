@@ -53,8 +53,6 @@ export const PopModelContainer = () => {
   
   const apiData = useAppDynamicSelector<ApiState<any>>(form.endpointUrl, ActionType.GET);
   
-  const appData = useAppSelector((state: RootState) => state.AppState) as AppState;
-  const terms = useSelector((state: any) => state?.GetSettingsPaymentTerms)?.data?.results;
 
   /* ########################################################################################### */
 

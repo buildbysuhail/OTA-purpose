@@ -472,7 +472,7 @@ const updateBasicInfo = useCallback(async () => {
                         data: data
                       }))
                     }}
-                    validation={basicInfo.validations.fullName}
+                    validation={basicInfo.validations?.fullName}
                     value={
                       basicInfo?.data?.fullName
                         ? basicInfo?.data?.fullName

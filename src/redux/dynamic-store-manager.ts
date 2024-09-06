@@ -30,7 +30,7 @@ class DynamicReducerManager {
 
   constructor(initialReducers: ReducerMap) {
     this.reducers = { ...initialReducers };
-    this.store.replaceReducer(combineReducers(this.reducers));
+    this.store.replaceReducer(combineReducers(rootReducer));
   }
 
   getStore() {

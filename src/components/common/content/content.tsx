@@ -4,6 +4,8 @@ import AccountSettings from '../../../pages/account-settings/account-settings';
 import AccountSettingsSecurity from '../../../pages/account-settings/account-settings-security';
 import AccountSettingsPreference from '../../../pages/account-settings/account-settings-preference';
 import WorkSpaceSettings from '../../../pages/work-space/workspace-settings';
+import AccountSettingsSessions from '../../../pages/account-settings/account-settings-sessions';
+import AccountSettingsProfile from '../../../pages/account-settings/account-settings-profile';
 
 interface ContentProps { }
 const loading = (
@@ -18,14 +20,15 @@ const Content: FC<ContentProps> = () => {
     <Suspense fallback={loading}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/account-settings/profile/avatar" element={<AccountSettings />} />
-          <Route path="/account-settings/profile/basic-information" element={<AccountSettings />} />
-          <Route path="/account-settings/profile/email-address" element={<AccountSettings />} />
-          <Route path="/account-settings/profile/phone-number" element={<AccountSettings />} />
+          <Route path="/account-settings/profile/avatar" element={<AccountSettingsProfile />} />
+          <Route path="/account-settings/profile/basic-information" element={<AccountSettingsProfile />} />
+          <Route path="/account-settings/profile/email-address" element={<AccountSettingsProfile />} />
+          <Route path="/account-settings/profile/phone-number" element={<AccountSettingsProfile />} />
           <Route path="/account-settings/security/password" element={<AccountSettingsSecurity />} />
           <Route path="/account-settings/preferences/theme" element={<AccountSettingsPreference />} />
           <Route path="/account-settings/preferences/language" element={<AccountSettingsPreference />} />
           <Route path="/account-settings/preferences/system-preferences" element={<AccountSettingsPreference />} />
+          <Route path="/account-settings/sessions" element={<AccountSettingsSessions />} />
 
           <Route path="/workspace-settings/profile/workspace-logo" element={<WorkSpaceSettings />} />
           <Route path="/workspace-settings/profile/workspace-basic-information" element={<WorkSpaceSettings />} />

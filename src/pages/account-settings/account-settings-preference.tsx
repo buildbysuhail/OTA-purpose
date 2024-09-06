@@ -46,7 +46,17 @@ interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null; 
 }
-
+export interface Theme {
+  direction: "ltr" | "rtl";
+  mode: string | null;
+  navLayout: string | null;
+  navigationMenuStyle: string | null;
+  sidemenuLayoutStyles: string | null;
+  pageStyle: string | null;
+  menuPosition: string | null;
+  headerPosition: string | null;
+  colorPrimaryRgb: string | null;
+}
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
   let api = new APIClient();  
   const [language, setLanguage] = useState<string>("en");
@@ -163,17 +173,7 @@ const userTheme = () => {
     });
   }, []);
 
-  interface Theme {
-    direction: string | null;
-    mode: string | null;
-    navLayout: string | null;
-    navigationMenuStyle: string | null;
-    sidemenuLayoutStyles: string | null;
-    pageStyle: string | null;
-    menuPosition: string | null;
-    headerPosition: string | null;
-    colorPrimaryRgb: string | null;
-  }
+  
   
   const [theme, setTheme] = useState<Theme>({
     direction: 'ltr',
@@ -493,7 +493,7 @@ const userTheme = () => {
                                   switcherdata.primaryColor4(updateAppState,appState);
                                   setTheme((prevTheme) => ({
                                   ...prevTheme,
-                                  colorPrimaryRgb: '78, 172, 76',
+                                  colorPrimaryRgb: "78, 172, 76",
                                 }));}
                               }
                             />

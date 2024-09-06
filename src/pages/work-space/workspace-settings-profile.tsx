@@ -6,15 +6,10 @@
 // import ERPInput from "../../components/ERPComponents/erp-input";
 // import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 // import ERPButton from "../../components/ERPComponents/erp-button";
-// import {
-//   ActionType,
-//   ApiState,
-// } from "../../redux/types";
+// import { ActionType, ApiState } from "../../redux/types";
 // import { useDispatch } from "react-redux";
 // import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
-// import {
-//   ResponseModelWithValidation,
-// } from "../../base/response-model";
+// import { ResponseModelWithValidation } from "../../base/response-model";
 // import { useLocation } from "react-router-dom";
 // import "./profile.css";
 // import ERPModal from "../../components/ERPComponents/erp-modal";
@@ -22,36 +17,35 @@
 // import { APIClient } from "../../helpers/api-client";
 // import { postAction } from "../../redux/app-actions";
 // import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
-// import AccountSettingsApis from "./account-settings-apis";
+// import AccountSettingsApis from "./workspace-settings-apis";
 // import { Validation } from "devextreme-react/cjs/gantt";
 
-// interface AccountSettingsProps {}
-// interface UserProfileBasicInfo {
-//   fullName?: string | null; // Represents the full name as a string
+// interface WorkSpaceSettingsProps {}
+// interface WorkspaceProfileBasicInfo {
+//   displayName?: string | null; // Represents the full name as a string
 //   dob?: Date | null; // Represents the date of birth as a Date object
-//   countryCode?: string | null; // Represents the country code as a string
+//   nationality?: string | null; // Represents the country code as a string
 // }
 // let api = new APIClient();
-// const AccountSettings: FC<AccountSettingsProps> = (props) => {
-  
+// const WorkspaceSettingsProfile: FC<WorkSpaceSettingsProps> = (props) => {
 //   const initialBasicInfoWithValidation = {
 //     data: {
-//       countryCode: null,
+//       nationality: null,
 //       dob: null,
-//       fullName: null,
+//       displayName: null,
 //     },
 //     validations: {
-//       countryCode: "",
+//       nationality: "",
 //       dob: "",
-//       fullName: "",
+//       displayName: "",
 //     },
 //   };
 //   const [image, setImage] = useState<string>("#");
-//   const [phone, setPhone] = useState<string>("");
-//   const [_phone, set_Phone] = useState<string>("");
-//   const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
+//   debugger;
+  
 //   const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
 //   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
+
 //   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
 //   const [email, setEmail] = useState<string>("");
 //   const [emailLoading, setEmailLoading] = useState<boolean>(false);
@@ -63,28 +57,85 @@
 //   const [postDataEmailTokenVerify, setPostDataEmailTokenVerify] = useState<any>(
 //     { userName: "", newValue: "", otp: "", confirToken: "" }
 //   );
-//   const [postDataPhone, setPostDataPhone] = useState<any>();
-//   const dispatch = useDispatch();
 
   
+//   const [phone, setPhone] = useState<string>("");
+//   const [_phone, set_Phone] = useState<string>("");
+//   const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
+
+//   const dispatch = useDispatch();
+
+//   const location = useLocation();
+//   const path = location.pathname.split("/").pop(); // Extract the last part of the route
+  
+//   //////////////////////////////////////////////////////////////////////
+  
+//   const getPhone = async () => {
+    
+//     let res = await AccountSettingsApis.getPhone();
+//     setPhone(res);
+//     set_Phone(res);
+//   };
+//   const changePhone = useCallback(async () => {
+//     setPhoneChangeLoading(true);
+//     const response: ResponseModelWithValidation<any, any> = await dispatch(
+//       postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
+//     ).unwrap();
+    
+//     setPhoneChangeLoading(false);
+//     handleAxiosResponse(response);
+//   }, [dispatch, phone]);
+// ////////////////////////////////////////////////////////////////////
+
+// /////////////////////////////////////////////////////////////////////
+
+// const getBasicInfo = async() => {
+//   let res = await AccountSettingsApis.getUserBasicInfo();
+//     setBasicInfo((prevData: any) => ({
+//       ...prevData,
+//       data: res
+//     }))
+// }
+
+// const resetBasicInfo = useCallback(async () => {
+//   // setBasicInfo(initialBasicInfoWithValidation);
+// }, [initialBasicInfoWithValidation]);
+
+// const updateBasicInfo = useCallback(async () => {
+//   debugger;
+//   setBasicInfoLoading(true);
+//   const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
+//   debugger;
+//   setBasicInfoLoading(false);
+  
+//   setBasicInfo((prevData: any) => ({
+//     ...prevData,
+//     validations: response.validations
+//   }));
+//   handleResponse(response, () => {});
+// }, [dispatch, basicInfo.data]);
+
+// /////////////////////////////////////////////////////////////////////
+
+// /////////////////////////////////////////////////////////////////////
 
 //   const postFormEmail = async () => {
-    
 //     if (postDataEmail.tokenSend) {
 //       await verifyFormEmail();
 //     } else {
 //       setEmailLoading(true);
       
-//       const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
+//       const response: ResponseModelWithValidation<any, any> =
+//         await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
       
-//       handleResponse(response, () => {
 //         setEmailLoading(false);
+//       handleResponse(response, () => {
 //         setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
 //         setPostDataEmailTokenVerify((prevData: any) => ({
 //           ...prevData,
 //           userName: response.item.userName,
 //           newValue: response.item.newValue,
-//           confirToken: response.item.confirToken,
+//           confirToken: response.item.token,
 //         }));
 //       });
 //     }
@@ -92,7 +143,10 @@
 //   const verifyFormEmail = async () => {
     
 //     setEmailLoading(true);
-//     const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.changeEmailRequest_profile(postDataEmailTokenVerify);
+//     const response: ResponseModelWithValidation<any, any> =
+//       await AccountSettingsApis.changeEmailRequest_profile(
+//         postDataEmailTokenVerify
+//       );
     
 //     setEmailLoading(false);
 //     handleResponse(response, () => {
@@ -101,61 +155,27 @@
 //       getEmail();
 //     });
 //   };
-//   const getEmail = async() => {
+//   const getEmail = async () => {
+    
 //     let res = await AccountSettingsApis.getEmail();
-//       setEmail(res);
-//   }
+//     setEmail(res);
+//   };
 
-//   const getBasicInfo = async() => {
-//     let res = await AccountSettingsApis.getUserBasicInfo();
-//       setBasicInfo((prevData: any) => ({
-//         ...prevData,
-//         data: res
-//       }))
-//   }
-//   ////Basic InfoUpdate
-  
-//   const location = useLocation();
-//   const path = location.pathname.split("/").pop(); // Extract the last part of the route
-
-//   useEffect(() => {
-//     getBasicInfo();
-//     getEmail();
-//     api.get(Urls.getImage_profile).then((url) => {
-//       setImage(url);
-//     });
-//     api.get(Urls.getPhone_profile).then((phone) => {
-//       setPhone(phone);
-//       set_Phone(phone);
-//     });
-//   }, []);
+//   /////////////////////////////////////////////////////////////////////
 //   const onImageSuccess = useMemo(() => {
     
 //     return (url: string) => {
 //       setImage(url);
 //     };
 //   }, []);
-//   const resetBasicInfo = useCallback(async () => {
-//     setBasicInfo(initialBasicInfoWithValidation);
-//   }, [initialBasicInfoWithValidation]);
-//   const changePhone = useCallback(async () => {
-//     setPhoneChangeLoading(true);
-//     const response: ResponseModelWithValidation<any, any> = await dispatch(
-//       postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
-//     ).unwrap();
-//     setPhoneChangeLoading(false);
-//     handleAxiosResponse(response);
-//   }, [dispatch, phone]);
-//   const updateBasicInfo = useCallback(async () => {
-//     setBasicInfoLoading(true);
-//     const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
-//     setBasicInfoLoading(false);
-//     setBasicInfo((prevData: any) => ({
-//       ...prevData,
-//       Validations: response.validations
-//     }));
-//     handleResponse(response, () => {});
-//   }, [dispatch]);
+//   useEffect(() => {
+//     getBasicInfo();
+//     getEmail();
+//     getPhone();
+//     api.get(Urls.getImage_profile).then((url) => {
+//       setImage(url);
+//     });
+//   }, []);
 
 //   const PopUpModalEmailChange = () => {
 //     return (
@@ -211,16 +231,18 @@
 //               {postDataEmail.data.newValue}
 //             </p>
 //             <ERPInput
-//               id="confirToken"
+//               id="otp"
 //               placeholder="Pleas Enter Verification Code"
 //               required={true}
-//               value={postDataEmailTokenVerify.otp}
+//               value={postDataEmailTokenVerify?.otp}
 //               data={postDataEmailTokenVerify}
 //               onChangeData={(data: any) =>
-//                 setPostDataEmail((prevData: any) => ({
-//                   ...prevData,
-//                   ...data,
-//                 }))
+//               {
+                
+//                 setPostDataEmailTokenVerify(
+//                   data
+//                 )
+//               }
 //               }
 //             />
 //           </div>
@@ -343,9 +365,6 @@
 //                             {email}
 //                           </h6>
 //                         </div>
-//                         {/* <p className="mb-1 opacity-[0.7] text-[.65rem]">
-//                          modified a month ago
-//                         </p> */}
 //                       </div>
 //                     </div>
 
@@ -395,9 +414,12 @@
 //                       placeholder="Pleas Enter Phone Number"
 //                       required={true}
 //                       value={phone}
-//                       data={phone}
+//                       data={{phone: phone}}
 //                       onChangeData={(data: any) =>
-//                        setPhone(data.phone)
+//                       {
+                        
+//                         setPhone(data.phone)
+//                       }
 //                       }
 //                     />
 //  <div className="w-full p-2 flex justify-end">
@@ -407,7 +429,8 @@
 //                           ? "Update"
 //                           : "Add Phone"
 //                       }
-//                       disabled={phone == _phone}
+//                       disabled={phone == _phone || phoneLoading}
+//                       loading={phoneLoading}
 //                       onClick={changePhone}
 //                       variant="primary"
 //                     ></ERPButton>
@@ -419,7 +442,7 @@
 //           </div>
 //         </div>
 //         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
-//           <div
+//         <div
 //             id="basic-information"
 //             className={`xxl:col-span-12 xl:col-span-12 ${
 //               path === "basic-information" ? "blink" : ""
@@ -440,43 +463,45 @@
 //               <div className="box-body">
 //                 <div className="grid grid-cols-1 gap-3">
 //                   <ERPInput
-//                     id="fullName"
+//                     id="displayName"
 //                     label="Display Name"
 //                     placeholder="Display Name"
 //                     required={true}
-//                     data={basicInfo.data}
+//                     data={basicInfo?.data}
 //                     onChangeData={(data: any) => {
+//                       debugger;
 //                       setBasicInfo((prev: any) => ({
 //                         ...prev,
 //                         data: data
 //                       }))
 //                     }}
-//                     validation={basicInfo.validations.fullName}
+//                     validation={basicInfo.validations?.displayName}
 //                     value={
-//                       basicInfo?.data?.fullName
-//                         ? basicInfo?.data?.fullName
+//                       basicInfo?.data?.displayName
+//                         ? basicInfo?.data?.displayName
 //                         : ""
 //                     }
 //                   />
 //                   <ERPDataCombobox
-//                     id="countryCode"
+//                     id="nationality"
 //                     field={{
-//                       id: "countryCode",
+//                       id: "nationality",
 //                       required: true,
 //                       getListUrl: Urls.country,
 //                       valueKey: "id",
 //                       labelKey: "name",
 //                     }}
 //                     onChangeData={(data: any) => {
+                      
 //                       setBasicInfo((prev: any) => ({
 //                         ...prev,
 //                         data: data
 //                       }))
 //                     }}
-//                     validation={basicInfo.validations.countryCode}
+//                     validation={basicInfo.validations.nationality}
 //                     data={basicInfo.data}
 //                     defaultData={basicInfo.data}
-//                     value={basicInfo.data.countryCode}
+//                     value={basicInfo != undefined && basicInfo.data != undefined && basicInfo.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
 //                     label="Country"
 //                   />
 //                   <ERPDateInput
@@ -484,12 +509,18 @@
 //                     field={{ type: "date", id: "dob", required: true }}
 //                     label={"Date of Birth"}
 //                     data={basicInfo.data}
-//                     onChangeData={(data: any) => {
+//                     handleChange={(id: any, value: any) =>
+//                     {
+                      
 //                       setBasicInfo((prev: any) => ({
 //                         ...prev,
-//                         data: data
-//                       }))
-//                     }}
+//                         data: {
+//                           ...prev.data,
+//                           [id]: value
+//                         }
+//                       }));
+//                     }
+//                     }
 //                     validation={basicInfo.validations.dob}
 //                   />
 //                   <div className="w-full p-2 flex justify-end">
@@ -517,4 +548,4 @@
 //   );
 // };
 
-// export default AccountSettings;
+// export default WorkspaceSettingsProfile;

@@ -8,10 +8,8 @@ import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
-import {
-  getThunkAndSlice,
-  getThunkAndSliceWithValidation,
-} from "../../redux/slices/dynamicThunkAndSlice";
+
+import { countries, currencies, industries } from "../../redux/slices/data/thunk";
 import {
   ActionType,
   ApiStateWithValidation,
@@ -29,14 +27,11 @@ import { postAction } from "../../redux/app-actions";
 
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
+import WorkspaceSettingsApis from "./workspace-settings-apis";
 
 interface WorkSpaceSettingsProps {}
-interface UserProfileBasicInfo {
-  companyName?: string | null; // Represents the full name as a string      
-  companyNameArabic?: string | null; // Represents the full name as a string      
-  country?: string | null; // Represents the full name as a string      
-  taxNumber?: string | null; // Represents the country code as a string
-  
+interface ProfileBasicInfo {
+ 
 
 }
 
@@ -46,142 +41,142 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [postEmail, setPostEmail] = useState<string>("");
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
   const initialBasicInfoWithValidation = {
     data: {
-      companyName: null,
-      companyNameArabic: null,
-      country: null,
+      registeredName: null,
+      nameInSecondLanguage: null,
+      countryId: null,
       taxNumber: null,
+      currencyId: null,
+      industry: null,
     },
     validations: {
-      companyName: "",
-      country: "",
-      taxNumber: "",
+      registeredName: "",
+      nameInSecondLanguage:  "",
+      countryId:  "",
+      taxNumber:  "",
+      currencyId:  "",
+      industry:  "",
     },
   };
   const dispatch = useDispatch();
 
-  ////////////email change
-  const { thunk: postFormEmailThunk } = getThunkAndSliceWithValidation<
-    any,
-    any
-  >(Urls.updateCompanyEmail_workspace, ActionType.POST, false, {
-    data: { newValue: "" },
-    loading: false,
-  });
-  const updateCompanyEmail_workspace: any = useAppDynamicSelector(
-    Urls.updateCompanyEmail_workspace,
-    ActionType.POST
-  );
-
-  const { thunk: getFormEmailThunk } = getThunkAndSliceWithValidation<any, any>(
-    Urls.getEmail_workspace,
-    ActionType.GET,
-    false
-  );
-  const formDataEmail: any = useAppDynamicSelector(
-    Urls.getEmail_workspace,
-    ActionType.GET
-  );
- 
-  const postFormEmail = async () => {
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postFormEmailThunk(email)
-    ).unwrap();
-    
-    handleResponse(response, () => {
-      
-    });
-  };
- 
-
-  ////Basic InfoUpdate
-  const { thunk: getUserBasicInfoThunk, slice: basicInfoSlice } =
-    getThunkAndSliceWithValidation<UserProfileBasicInfo, any>(
-      Urls.getBasicInfo_workspace,
-      ActionType.GET,
-      false,
-      initialBasicInfoWithValidation,
-      true
-    );
-  const _basicInfo: ApiStateWithValidation<any, any> = useAppDynamicSelector(
-    Urls.getBasicInfo_workspace,
-    ActionType.GET,
-    false
-  );
-
-  const { thunk: updateBasicInfoThunk } =
-    getThunkAndSlice<UserProfileBasicInfo>(
-      Urls.changeBasicInfo_workspace,
-      ActionType.POST,
-      false,
-      { data: { companyName: "", companyNameArabic: "", country: "", taxNumber:""}, loading: false }
-    );
-  const updatedUserBasicInfo: any = useAppDynamicSelector(
-    Urls.changeBasicInfo_workspace,
-    ActionType.POST
-  );
+  
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
+ 
+  debugger;
+  
+  const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
+  const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    dispatch(getUserBasicInfoThunk());
-    dispatch(getFormEmailThunk());
-    api.get(Urls.getLogo_workspace).then((url) => {
-      setImage(url);
-    });
-    api.get(Urls.getPhone_workspace).then((phone) => {
-      setPhone(phone);
-      set_Phone(phone);
-    });
-  }, []);
+ 
+ 
+  const [emailLoading, setEmailLoading] = useState<boolean>(false);
+  const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
+  
+  //////////////////////////////////////////////////////////////////////
+  
+  const getPhone = async () => {
+    
+    let res = await WorkspaceSettingsApis.getPhone();
+    setPhone(res);
+    set_Phone(res);
+  };
+  const changePhone = useCallback(async () => {
+    setPhoneChangeLoading(true);
+    const response: ResponseModelWithValidation<any, any> = await dispatch(
+      postAction({apiUrl:Urls.changePhone_workspace, data: {phone: phone}}) as any
+    ).unwrap();
+    
+    setPhoneChangeLoading(false);
+    handleAxiosResponse(response);
+  }, [dispatch, phone]);
+////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+
+const getBasicInfo = async() => {
+  let res = await WorkspaceSettingsApis.getUserBasicInfo();
+    setBasicInfo((prevData: any) => ({
+      ...prevData,
+      data: res
+    }))
+}
+
+const resetBasicInfo = useCallback(async () => {
+  setBasicInfo(initialBasicInfoWithValidation);
+}, [initialBasicInfoWithValidation]);
+
+const updateBasicInfo = useCallback(async () => {
+  debugger;
+  setBasicInfoLoading(true);
+  const response: ResponseModelWithValidation<any, any> = await WorkspaceSettingsApis.updateUserBasicInfo(basicInfo.data);
+  debugger;
+  setBasicInfoLoading(false);
+  
+  setBasicInfo((prevData: any) => ({
+    ...prevData,
+    validations: response.validations
+  }));
+  handleResponse(response, () => {});
+}, [dispatch, basicInfo.data]);
+
+/////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+
+  const postFormEmail = async () => {
+    setEmailLoading(true);
+      
+      const response: ResponseModelWithValidation<any, any> =
+        await WorkspaceSettingsApis.verifyEmail_profile({newValue: postEmail});
+      
+        setEmailLoading(false);
+      handleResponse(response, () => {
+        setIsOpenEmailChange(false);
+      });
+  };
+  
+  const getEmail = async () => {
+    
+    let res = await WorkspaceSettingsApis.getEmail();
+    setEmail(res);
+  };
+
+  /////////////////////////////////////////////////////////////////////
   const onImageSuccess = useMemo(() => {
     
     return (url: string) => {
       setImage(url);
     };
   }, []);
-  const resetBasicInfo = useCallback(async () => {
-    await dispatch(
-      basicInfoSlice.actions.updateData(initialBasicInfoWithValidation)
-    );
-  }, [dispatch, _basicInfo]);
+  useEffect(() => {
+    getBasicInfo();
+    getEmail();
+    getPhone();
+    api.get(Urls.getEmail_workspace).then((url) => {
+      setImage(url);
+    });
+  }, []);
 
-  const changePhone = useCallback(async () => {
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({apiUrl:Urls.UpdateCompanyPhone_workspace, data: {phone: phone}}) as any
-    ).unwrap();
-    handleAxiosResponse(response);
-  }, [dispatch, phone]);
-
-  const updateBasicInfo = useCallback(async () => {
-    const response: ResponseModelWithValidation<any, any> = await dispatch(
-      updateBasicInfoThunk(_basicInfo.data)
-    ).unwrap();
-    await dispatch(
-      basicInfoSlice.actions.updateValidation(response.validations)
-    );
-    handleResponse(response, () => {});
-  }, [dispatch, _basicInfo]);
   const PopUpModalEmailChange = () => {
     return (
       <div className="w-full pt-4">
           <div className="grid grid-cols-1 gap-3">
            
             <ERPInput
-              id="email"
-              type="email"
+              id="newValue"
+              type="newValue"
               placeholder="New Email"
               required={true}
-              data={{email:"email"}}
+              data={{newValue:postEmail}}
               onChangeData={(data: any) =>
-                setEmail((prevData: any) => ({
-                  ...prevData,
-                  email: data.email,
-                }))
+              {debugger;setPostEmail(data.newValue)}
               }
-              value={email}
+              value={postEmail}
             />
           </div>
         <div className="w-full p-2 flex justify-end">
@@ -192,14 +187,14 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
             onClick={() => {
               setIsOpenEmailChange(false);
             }}
-            disabled={updateCompanyEmail_workspace?.loading}
+            disabled={emailLoading}
           ></ERPButton>
           <ERPButton
             type="button"
-            disabled={updateCompanyEmail_workspace?.loading}
+            disabled={emailLoading}
             variant="primary"
             onClick={postFormEmail}
-            loading={updateCompanyEmail_workspace?.loading}
+            loading={emailLoading}
             title={
               "Update"
             }
@@ -302,7 +297,7 @@ Recommended size: 300 x 300 pixels. */}
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
                           <h6 className="font-semibold mb-1  text-[.75rem]">
-                            {formDataEmail.data}
+                            {email?email:""}
                           </h6>
                         </div>
                         {/* <p className="mb-1 opacity-[0.7] text-[.65rem]">
@@ -349,14 +344,17 @@ Recommended size: 300 x 300 pixels. */}
                 </div>
                 <div className="box-body">
                   <div className="grid grid-cols-1 gap-3">
-                    <ERPInput
+                  <ERPInput
                       id="phone"
                       placeholder="Pleas Enter Phone Number"
                       required={true}
                       value={phone}
-                      data={phone}
+                      data={{phone: phone}}
                       onChangeData={(data: any) =>
-                       setPhone(data.phone)
+                      {
+                        
+                        setPhone(data.phone)
+                      }
                       }
                     />
  <div className="w-full p-2 flex justify-end">
@@ -397,104 +395,116 @@ Recommended size: 300 x 300 pixels. */}
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
                   <ERPInput
-                    id="fullName"
+                    id="registeredName"
                     label="Business Name"
                     placeholder="Eg: Novalabs"
                     required={true}
-                    data={_basicInfo.data}
+                    data={basicInfo.data}
                     onChangeData={(data: any) => {
-                      dispatch(basicInfoSlice.actions.updateData(data));
+                      debugger;
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data
+                      }))
                     }}
-                    validation={_basicInfo.validations.fullName}
+                    validation={basicInfo.validations?.registeredName}
                     value={
-                      _basicInfo?.data?.fullName
-                        ? _basicInfo?.data?.fullName
+                      basicInfo?.data?.registeredName
+                        ? basicInfo?.data?.registeredName
                         : ""
                     }
                   />
                    <ERPInput
-                    id="SecondLName"
+                    id="nameInSecondLanguage"
                     label="Name in second language"
                     placeholder="Eg: Novalabs"
                     required={true}
-                    data={_basicInfo.data}
+                    data={basicInfo.data}
                     onChangeData={(data: any) => {
-                      dispatch(basicInfoSlice.actions.updateData(data));
+                      debugger;
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data
+                      }))
                     }}
-                    validation={_basicInfo.validations.SecondLName}
+                  
+                    validation={basicInfo.validations?.nameInSecondLanguage}
                     value={
-                      _basicInfo?.data?.SecondLName
-                        ? _basicInfo?.data?.SecondLName
+                      basicInfo?.data?.nameInSecondLanguage
+                        ? basicInfo?.data?.nameInSecondLanguage
                         : ""
                     }
                   />
                   <ERPDataCombobox
-                    id="countryCode"
+                    id="countryId"
                     field={{
-                      id: "countryCode",
+                      id: "countryId",
                       required: true,
                       getListUrl: Urls.country,
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    onChange={(value: any) => {
-                      dispatch(
-                        basicInfoSlice.actions.updateDataByKey({
-                          key: "countryCode",
-                          value: value.value,
-                        })
-                      );
+                    onChangeData={(data: any) => {
+                      
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data
+                      }))
                     }}
-                    validation={_basicInfo.validations.countryCode}
-                    data={_basicInfo.data}
-                    defaultData={_basicInfo.data}
-                    value={_basicInfo.data.countryCode}
+                    validation={basicInfo.validations?.countryId}
+                    thunkAction= {countries}
+                    reducer="CountriesData"
+                    data={basicInfo.data}
+                    defaultData={basicInfo.data}
+                    value={basicInfo.data.countryId}
                     label="Country"
                   />
                    <ERPDataCombobox
-                    id="CurrencyId"
+                    id="currencyId"
                     field={{
-                      id: "Currency",
+                      id: "currencyId",
                       required: true,
                       getListUrl: Urls.currency,
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    onChange={(value: any) => {
-                      dispatch(
-                        basicInfoSlice.actions.updateDataByKey({
-                          key: "Currency",
-                          value: value.value,
-                        })
-                      );
+                    thunkAction= {currencies}
+                    reducer="Curencies"
+                    onChangeData={(data: any) => {
+                      debugger;
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data
+                      }))
                     }}
-                    validation={_basicInfo.validations.countryCode}
-                    data={_basicInfo.data}
-                    defaultData={_basicInfo.data}
-                    value={_basicInfo.data.countryCode}
+                    validation={basicInfo?.validations?.currencyId}
+                    data={basicInfo?.data}
+                    defaultData={basicInfo?.data}
+                    value={basicInfo?.data?.currencyId}
                     label="Business Currency"
                   />
                    <ERPDataCombobox
-                    id="Industry"
+                    id="industry"
                     field={{
-                      id: "IndustryCode",
+                      id: "industry",
                       required: true,
                       getListUrl: Urls.industry,
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    onChange={(value: any) => {
-                      dispatch(
-                        basicInfoSlice.actions.updateDataByKey({
-                          key: "IndustryCode",
-                          value: value.value,
-                        })
-                      );
+                    thunkAction= {industries}
+                    reducer="Industries"
+                    onChangeData={(data: any) => {
+                      
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data
+                      }))
                     }}
-                    validation={_basicInfo.validations.countryCode}
-                    data={_basicInfo.data}
-                    defaultData={_basicInfo.data}
-                    value={_basicInfo.data.countryCode}
+                    validation={basicInfo.validations?.industry}
+                    data={basicInfo.data}
+                    defaultData={basicInfo.data}
+                    value={basicInfo.data.industry}
                     label="Industry"
                   />
                   {/* <ERPDataCombobox
@@ -514,7 +524,7 @@ Recommended size: 300 x 300 pixels. */}
                         })
                       );
                     }}
-                    validation={_basicInfo.validations.countryCode}
+                    validation={_basicInfo.validations?.countryCode}
                     data={_basicInfo.data}
                     defaultData={_basicInfo.data}
                     value={_basicInfo.data.countryCode}
@@ -529,7 +539,7 @@ Recommended size: 300 x 300 pixels. */}
                     onChangeData={(data: any) => {
                       dispatch(basicInfoSlice.actions.updateData(data));
                     }}
-                    validation={_basicInfo.validations.fullName}
+                    validation={_basicInfo.validations?.fullName}
                     value={
                       _basicInfo?.data?.fullName
                         ? _basicInfo?.data?.fullName
@@ -541,14 +551,18 @@ Recommended size: 300 x 300 pixels. */}
                     label="Tax identification Number"
                     placeholder="Eg: 58733"
                     required={true}
-                    data={_basicInfo.data}
+                    data={basicInfo.data}
                     onChangeData={(data: any) => {
-                      dispatch(basicInfoSlice.actions.updateData(data));
+                      debugger;
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data
+                      }))
                     }}
-                    validation={_basicInfo.validations.TaxNumber}
+                    validation={basicInfo.validations?.TaxNumber}
                     value={
-                      _basicInfo?.data?.TaxNumber
-                        ? _basicInfo?.data?.TaxNumber
+                      basicInfo?.data?.TaxNumber
+                        ? basicInfo?.data?.TaxNumber
                         : ""
                     }
                   />
@@ -565,7 +579,7 @@ Recommended size: 300 x 300 pixels. */}
                         })
                       )
                     }
-                    validation={_basicInfo.validations.dob}
+                    validation={_basicInfo.validations?.dob}
                   /> */}
                   <div className="w-full p-2 flex justify-end">
                     <ERPButton
@@ -577,8 +591,8 @@ Recommended size: 300 x 300 pixels. */}
                       title="Save Changes"
                       onClick={updateBasicInfo}
                       variant="primary"
-                      loading={updatedUserBasicInfo.loading}
-                      disabled={updatedUserBasicInfo.loading}
+                      loading={basicInfoLoading}
+                      disabled={basicInfoLoading}
                     ></ERPButton>
                   </div>
                 </div>

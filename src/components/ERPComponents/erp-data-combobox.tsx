@@ -15,8 +15,7 @@ import { RootState } from "../../redux/store";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import showForm from "./erp-popup-model-form";
 import { getAction } from "../../redux/app-actions";
-import { countries } from "../../redux/slices/data/thunk";
-
+type ReducerName = keyof RootState;
 interface SBDataComboboxProps {
   id: string;
   label?: string;
@@ -43,6 +42,8 @@ interface SBDataComboboxProps {
   isPaginated?: boolean;
   disabledApiCall?: boolean;
   validation?: string;
+  reducer: ReducerName;
+  thunkAction?: () => any;
 }
 
 export const getOptions = (data: any, keyLabel: string) => {
@@ -88,7 +89,9 @@ export default function SBDataCombobox({
   initialValue,
   isPaginated = false,
   disabledApiCall = false,
-  validation
+  validation,
+  reducer,
+  thunkAction
 }: SBDataComboboxProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -100,16 +103,17 @@ export default function SBDataCombobox({
   const [query, setQuery] = useState("");
   const [localValue, setLocalValue] = useState<any>();
   const [hasValue, setHasValue] = useState<boolean>(false);
-
-  const dataList: any = useAppSelector((state: RootState) => state.Countries);
+debugger;
+  const dataList: any = useAppSelector((state: RootState) => state[reducer] );
 
   const listData = isPaginated ? dataList?.results : dataList;
 
   console.log(`SBDataCombobox,  : data_list_data`, id, dataList);
 
   useEffect(() => {
+    debugger;
     if (!disabledApiCall) {
-      field?.getListUrl &&  dispatch(countries());
+      thunkAction  != undefined && dispatch(thunkAction());
     }
   }, []);
 

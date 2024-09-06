@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { countries } from "./thunk";
+import { industries } from "./thunk";
 
 interface Country {
   // Define properties of a country here
@@ -12,30 +12,29 @@ interface Country {
 // Define the initial state
 const initialState: Country[] = [];
 
-const countriesSlice = createSlice({
-  name: 'countries',
+const industriesSlice = createSlice({
+  name: 'Industries',
   initialState,
   reducers: {
     // You can add any synchronous reducers here if needed
   },
   extraReducers: (builder) => {
     builder
-      .addCase(countries.pending, (state) => {
+      .addCase(industries.pending, (state) => {
         // You can set a loading state here if needed
       })
-      .addCase(countries.fulfilled, (state, action: PayloadAction<any>) => {
-        
+      .addCase(industries.fulfilled, (state, action: PayloadAction<any>) => {
+        debugger;
         // Replace the entire state with the new data
         return action.payload;
         
       })
-      .addCase(countries.rejected, (state, action) => {
+      .addCase(industries.rejected, (state, action) => {
         // Handle the error state here if needed
       });
   },
 });
 
-// Extract the actions
-export const {} = countriesSlice.actions;
+export const {} = industriesSlice.actions;
 
-export default countriesSlice.reducer;
+export default industriesSlice.reducer;

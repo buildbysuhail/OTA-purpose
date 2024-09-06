@@ -1,3 +1,6 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { countries } from "./thunk";
+
 interface Country {
   // Define properties of a country here
   // For example:

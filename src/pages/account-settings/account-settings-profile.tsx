@@ -306,7 +306,7 @@ const updateBasicInfo = useCallback(async () => {
                         <span className="avatar avatar-xxl avatar-rounded ">
                           <ERPAvatar
                             alt="Remy Sharp"
-                            src={image}
+                            src={image ? image : ''}
                             sx={useMemo(() => {
                               return { width: 75, height: 75 };
                             }, [])}
@@ -357,7 +357,7 @@ const updateBasicInfo = useCallback(async () => {
                   <div className="grid grid-cols-1 gap-3">
                     <div className="sm:flex items-start items-center">
                       <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
-                        <img src={emailImage} />
+                        <img src={emailImage ? emailImage : ''} />
                       </span>
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
@@ -413,7 +413,7 @@ const updateBasicInfo = useCallback(async () => {
                       id="phone"
                       placeholder="Pleas Enter Phone Number"
                       required={true}
-                      value={phone}
+                      value={phone ? phone : ''}
                       data={{phone: phone}}
                       onChangeData={(data: any) =>
                       {

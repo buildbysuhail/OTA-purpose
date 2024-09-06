@@ -299,34 +299,7 @@ const updateBasicInfo = useCallback(async () => {
                     </p>
                   </div>
                 </div>
-                <div className="box-body">
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="sm:flex items-start items-center">
-                      <div>
-                        <span className="avatar avatar-xxl avatar-rounded ">
-                          <ERPAvatar
-                          alt="Remy Sharp"
-                          src={typeof image === 'string' ? image : ''}
-                          sx={{ width: 75, height: 75 }}
-                          />
-                        </span>
-                      </div>
-                      <div className="flex-grow p-2">
-                        <div className="flex items-center !justify-between">
-                          <h6 className="font-semibold mb-1  text-[1rem]">
-                            Json Taylor
-                          </h6>
-                        </div>
-                        {/* <p className="mb-1 opacity-[0.7]">
-                          Chief Executive Officer (C.E.O)
-                        </p> */}
-                      </div>
-                    </div>
-                    <div className="sm:flex items-center p-6">
-                     
-                    </div>
-                  </div>
-                </div>
+                
               </div>
             </div>
             <div

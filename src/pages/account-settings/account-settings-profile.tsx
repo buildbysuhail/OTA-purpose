@@ -104,7 +104,7 @@ const resetBasicInfo = useCallback(async () => {
 const updateBasicInfo = useCallback(async () => {
   debugger;
   setBasicInfoLoading(true);
-  const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
+  const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo?.data);
   debugger;
   setBasicInfoLoading(false);
   
@@ -113,7 +113,7 @@ const updateBasicInfo = useCallback(async () => {
     validations: response.validations
   }));
   handleResponse(response, () => {});
-}, [dispatch, basicInfo.data]);
+}, [dispatch, basicInfo?.data]);
 
 /////////////////////////////////////////////////////////////////////
 
@@ -126,7 +126,7 @@ const updateBasicInfo = useCallback(async () => {
       setEmailLoading(true);
       
       const response: ResponseModelWithValidation<any, any> =
-        await AccountSettingsApis.verifyEmail_profile(postDataEmail.data);
+        await AccountSettingsApis.verifyEmail_profile(postDataEmail?.data);
       
         setEmailLoading(false);
       handleResponse(response, () => {
@@ -187,21 +187,21 @@ const updateBasicInfo = useCallback(async () => {
               type="email"
               placeholder="Current Email"
               required={true}
-              data={postDataEmail.data}
+              data={postDataEmail?.data}
               onChangeData={(data: any) => {
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
                 }));
               }}
-              value={postDataEmail.data?.userName}
+              value={postDataEmail?.data?.userName}
             />
             <ERPInput
               id="password"
               placeholder="Password"
               required={true}
-              value={postDataEmail.data?.password}
-              data={postDataEmail.data}
+              value={postDataEmail?.data?.password}
+              data={postDataEmail?.data}
               onChangeData={(data: any) =>
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
@@ -214,21 +214,21 @@ const updateBasicInfo = useCallback(async () => {
               type="email"
               placeholder="New Email"
               required={true}
-              data={postDataEmail.data}
+              data={postDataEmail?.data}
               onChangeData={(data: any) =>
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
                 }))
               }
-              value={postDataEmail.data?.newValue}
+              value={postDataEmail?.data?.newValue}
             />
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-3">
             <p>
               Pls Enter the verification code you received to your email{" "}
-              {postDataEmail.data.newValue}
+              {postDataEmail?.data.newValue}
             </p>
             <ERPInput
               id="otp"
@@ -499,16 +499,16 @@ const updateBasicInfo = useCallback(async () => {
                       }))
                     }}
                     validation={basicInfo.validations.nationality}
-                    data={basicInfo.data}
-                    defaultData={basicInfo.data}
-                    value={basicInfo != undefined && basicInfo.data != undefined && basicInfo.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
+                    data={basicInfo?.data}
+                    defaultData={basicInfo?.data}
+                    value={basicInfo != undefined && basicInfo?.data != undefined && basicInfo?.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
                     label="Country"
                   />
                   <ERPDateInput
                     id="dob"
                     field={{ type: "date", id: "dob", required: true }}
                     label={"Date of Birth"}
-                    data={basicInfo.data}
+                    data={basicInfo?.data}
                     handleChange={(id: any, value: any) =>
                     {
                       

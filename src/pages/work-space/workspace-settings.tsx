@@ -141,8 +141,9 @@ const updateBasicInfo = useCallback(async () => {
   };
   
   const getEmail = async () => {
-    
+    debugger;
     let res = await WorkspaceSettingsApis.getEmail();
+    debugger;
     setEmail(res);
   };
 

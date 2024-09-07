@@ -20,7 +20,7 @@ const AccountSettingsApis = {
   },
   getPhone: async () => {
     try {
-      const responseData = await api.get(Urls.getPhone_profile);
+      const responseData = await api.getAsync(Urls.getPhone_profile);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -29,7 +29,7 @@ const AccountSettingsApis = {
   },
   getEmail: async () => {
     try {
-      const responseData = await api.get(Urls.getEmail_profile);
+      const responseData = await api.getAsync(Urls.getEmail_profile);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -38,7 +38,7 @@ const AccountSettingsApis = {
   },
   getUserBasicInfo: async () => {
     try {
-      const responseData = await api.get(Urls.getUserBasicInfo);
+      const responseData = await api.getAsync(Urls.getUserBasicInfo);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);

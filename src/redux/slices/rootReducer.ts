@@ -6,7 +6,9 @@ import ProfileReducer from "./auth/profile/reducer";
 import AppStateReducer from "./app/reducer";
 import { CreateCrudModuleSlices } from "./crud-slices";
 import { CrudConfig } from "../../configs/crud-config";
-import countriesDataReducer from "./data/reducer";
+import CountriesDataReducer from "./data/country-reducer";
+import IndustriesReducer from "./data/industry-reducer";
+import CurenciesReducer from "./data/currency-reducer";
 const crudModuleSlices = CreateCrudModuleSlices(CrudConfig);
 
 // const rootReducer = combineReducers({
@@ -26,7 +28,9 @@ const rootReducer = {
   ForgetPassword: ForgetPasswordReducer,
   Profile: ProfileReducer,
   AppState: AppStateReducer,
-  Countries: countriesDataReducer
+  CountriesData: CountriesDataReducer,
+  Industries: IndustriesReducer,
+  Curencies: CurenciesReducer
 };
 
 export default rootReducer;

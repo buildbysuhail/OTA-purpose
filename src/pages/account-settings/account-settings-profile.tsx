@@ -19,6 +19,7 @@ import { postAction } from "../../redux/app-actions";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import AccountSettingsApis from "./account-settings-apis";
 import { Validation } from "devextreme-react/cjs/gantt";
+import { countries } from "../../redux/slices/data/thunk";
 
 interface AccountSettingsProps {}
 interface UserProfileBasicInfo {
@@ -473,6 +474,8 @@ const updateBasicInfo = useCallback(async () => {
                         data: data
                       }))
                     }}
+                    thunkAction= {countries}
+                    reducer="CountriesData"
                     validation={basicInfo.validations.nationality}
                     data={basicInfo?.data}
                     defaultData={basicInfo?.data}

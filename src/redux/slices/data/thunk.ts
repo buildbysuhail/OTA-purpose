@@ -4,7 +4,14 @@ import Urls from '../../urls';
 const api = new APIClient();
 
 export const countries = createAsyncThunk('app/countries', async () => {
-  const response = await api.get(Urls.country);
-  
+  const response = await api.get(Urls.country);  
+  return response;
+});
+export const industries = createAsyncThunk('app/industries', async () => {
+  const response = await api.get(Urls.industry);  
+  return response;
+});
+export const currencies = createAsyncThunk('app/currencies', async () => {
+  const response = await api.get(Urls.currency);  
   return response;
 });

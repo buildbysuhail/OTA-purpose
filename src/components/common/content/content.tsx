@@ -1,6 +1,5 @@
 import { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import AccountSettings from '../../../pages/account-settings/account-settings';
 import AccountSettingsSecurity from '../../../pages/account-settings/account-settings-security';
 import AccountSettingsPreference from '../../../pages/account-settings/account-settings-preference';
 import WorkSpaceSettings from '../../../pages/work-space/workspace-settings';

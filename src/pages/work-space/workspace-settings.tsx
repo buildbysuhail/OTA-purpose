@@ -548,7 +548,7 @@ Recommended size: 300 x 300 pixels. */}
                     }
                   /> */}
                   <ERPInput
-                    id="TaxNumber"
+                    id="taxNumber"
                     label="Tax identification Number"
                     placeholder="Eg: 58733"
                     required={true}
@@ -560,10 +560,10 @@ Recommended size: 300 x 300 pixels. */}
                         data: data
                       }))
                     }}
-                    validation={basicInfo.validations?.TaxNumber}
+                    validation={basicInfo.validations?.taxNumber}
                     value={
-                      basicInfo?.data?.TaxNumber
-                        ? basicInfo?.data?.TaxNumber
+                      basicInfo?.data?.taxNumber
+                        ? basicInfo?.data?.taxNumber
                         : ""
                     }
                   />

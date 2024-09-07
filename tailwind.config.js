@@ -268,5 +268,11 @@ plugins: [
   }),
 ],
   
+safelist: [
+  {
+    pattern: /border-b-\[rgb\(.*\)\]/,
+  },
+],
+  
 }
 

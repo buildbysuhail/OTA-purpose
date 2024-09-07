@@ -1,7 +1,7 @@
 import { FC, Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import store from '../../../redux/store';
+import store, { RootState } from '../../../redux/store';
 import logo1 from "../../../assets/images/brand-logos/desktop-logo.png";
 import logo2 from "../../../assets/images/brand-logos/toggle-logo.png";
 import logo3 from "../../../assets/images/brand-logos/desktop-dark.png";
@@ -14,11 +14,12 @@ import { useAppState } from '../../../utilities/hooks/useAppState';
 import { MENUITEMS } from './sidemenu/sidemenu';
 import { AccountSettingsMenuItems } from './sidemenu/account-settings';
 import { WorkspaceSettingsMenuItems } from './sidemenu/workspace-settings';
+import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
 interface SidebarProps { type: "erp" | "account-settings" | "workspace-settings" }
 
 const Sidebar: FC<SidebarProps> = ({ type }) => {
   const [menuitems, setMenuitems] = useState<any>([]);
-
+  let userSession  = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
     debugger;
     switch (type) {
@@ -575,7 +576,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
             <ul className="main-menu" onClick={() => Sideclick()}>
               {menuitems.map((levelone:any) => (
                 <Fragment key={Math.random()}>
-                  <li className={`${levelone.menutitle ? 'slide__category' :levelone.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${levelone.hasTopBorder === true ? 'border-t border-t-[1px] border-solid border-t-[rgb(255,255,255 / 0.1)]' : ''} ${levelone.type === 'link' ? 'slide' : ''}
+                  <li className={`${levelone.menutitle ? 'slide__category' :levelone.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${levelone.hasTopBorder === true ? 'border-t border-t-[1px] border-solid border-t-white/10 pt-2' : ''} ${levelone.type === 'link' ? 'slide' : ''}
                        ${levelone.type === 'sub' ? 'slide has-sub' : ''} ${levelone?.active ? 'open' : ''} ${levelone?.selected ? 'active' : ''}`}>
                     {levelone.menutitle ?
                       <span className='category-name'>
@@ -628,15 +629,16 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                           <div>
                             <span className="avatar avatar-md avatar-rounded ">
                               <img
-                                alt="Remy Sharp"
-                                src="https://res.cloudinary.com/dgawskn3l/image/upload/c_fill,h_400,w_400/wzdy9qkumlu0xfuvlyam"
+                                alt={userSession.displayName}
+                                src={userSession.userimage}
                               />
                             </span>
                           </div>
                           <div className="flex-grow p-2">
                             <div className="flex items-center !justify-between">
                               <h6 className="mb-1  text-[.6rem]">
-                                Json Taylor
+                                {userSession.displayName}
+                                <p>{userSession.email}</p>
                               </h6>
                             </div>
                           </div>

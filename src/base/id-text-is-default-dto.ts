@@ -8,3 +8,13 @@ export class IdTextIsDefaultDto implements IIdTextIsDefaultDto {
     text: string = "";
     isDefault: string = "";
 }
+export interface IdTextLogoDto {
+    id: number;
+    text: string;
+    logo: string; // Assuming `logo` is a string; adjust type if needed.
+}
+
+export interface IdTextDto {
+    id: number;
+    text: string;
+}

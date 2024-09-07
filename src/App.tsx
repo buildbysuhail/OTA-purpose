@@ -22,6 +22,7 @@ import { APIClient } from "./helpers/api-client";
 import Urls from "./redux/urls";
 import AccountSettingsLayout from './components/common/layout/account-settings-layout';
 import WorkspaceSettingsLayout from './components/common/layout/workspace-settings-layout';
+import { userSession } from './redux/slices/user-session/thunk';
 
 export const LoadingAnimation = () => {
   return (
@@ -45,7 +46,11 @@ function App() {
   const syncAppStates = async () => {
     // setReloading(true);
     let res = await api.get(Urls.getUserThemes)
+    let res2 = await dispatch(userSession())
       debugger;
+
+      dispatch(setDirection(res.direction ?? "ltr"));
+
       dispatch(setDirection(res.direction ?? "ltr"));
       localStorage.setItem("ynexltr", res.direction ?? "ltr");
       localStorage.removeItem("ynexrtl");

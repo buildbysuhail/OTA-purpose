@@ -76,6 +76,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
  
   const [emailLoading, setEmailLoading] = useState<boolean>(false);
   const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
+
   
   //////////////////////////////////////////////////////////////////////
   
@@ -94,6 +95,20 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     setPhoneChangeLoading(false);
     handleResponse(response);
   }, [dispatch, phone]);
+  const changeEmail = useCallback(async () => {
+    setEmailLoading(true);
+    debugger;
+    const response: ResponseModelWithValidation<any, any> = await dispatch(
+      postAction({apiUrl:Urls.updateCompanyEmail_workspace, data: {newValue: postEmail}}) as any
+    ).unwrap();
+    
+    setEmailLoading(false);
+    handleResponse(response, ()=> {
+      
+    setIsOpenEmailChange(false);
+    getEmail();
+    });
+  }, [dispatch, postEmail]);
 ////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
@@ -194,7 +209,7 @@ const updateBasicInfo = useCallback(async () => {
             type="button"
             disabled={emailLoading}
             variant="primary"
-            onClick={postFormEmail}
+            onClick={changeEmail}
             loading={emailLoading}
             title={
               "Update"
@@ -416,7 +431,6 @@ Recommended size: 300 x 300 pixels. */}
                     id="nameInSecondLanguage"
                     label="Name in second language"
                     placeholder="Eg: Novalabs"
-                    required={true}
                     data={basicInfo.data}
                     onChangeData={(data: any) => {
                       debugger;
@@ -461,7 +475,7 @@ Recommended size: 300 x 300 pixels. */}
                     id="currencyId"
                     field={{
                       id: "currencyId",
-                      required: true,
+                   
                       getListUrl: Urls.currency,
                       valueKey: "id",
                       labelKey: "name",
@@ -548,7 +562,7 @@ Recommended size: 300 x 300 pixels. */}
                     id="taxNumber"
                     label="Tax identification Number"
                     placeholder="Eg: 58733"
-                    required={true}
+                  
                     data={basicInfo.data}
                     onChangeData={(data: any) => {
                       debugger;

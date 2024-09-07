@@ -1,10 +1,10 @@
-import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
 import config from "../config";
 import Cookies from "js-cookie";
 
-import * as jwt_decode from 'jwt-decode';
-import ErrorManager from '../utilities/ErrorManager';
-import Urls from '../redux/urls';
+import * as jwt_decode from "jwt-decode";
+import ErrorManager from "../utilities/ErrorManager";
+import Urls from "../redux/urls";
 const { api } = config;
 
 // default
@@ -14,8 +14,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 
 // content type
 const token = Cookies.get("token");
-if (token)
-  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
 // intercepting to capture errors
 axios.interceptors.response.use(
@@ -40,21 +39,35 @@ class APIClient {
   /**
    * Fetches data from the given URL
    */
-  get = (url: string, queryString: string = ''): Promise<any> => {
+  get = (url: string, queryString: string = ""): Promise<any> => {
     let response: Promise<any>;
-    
-
-      response = queryString !== '' ? axios.get(`${url}?${queryString}`) : axios.get(`${url}`);
-
+    response =
+      queryString !== ""
+        ? axios.get(`${url}?${queryString}`)
+        : axios.get(`${url}`);
     return response;
+  };
+  getAsync = async (url: string, queryString: string = ""): Promise<any> => {
+    let response: any;
+    response =
+      queryString !== ""
+        ? axios.get(`${url}?${queryString}`)
+        : await axios.get(`${url}`);
+    if (response?.status != undefined && response?.status != null) {
+      return response?.data;
+    }
+    else
+    {
+      return response
+    }
   };
 
   /**
    * Posts the given data to the URL
    */
   post = (url: string, data: any): Promise<any> => {
-    console.log('create ', data);
-    
+    console.log("create ", data);
+
     return axios.post(url, data);
   };
 
@@ -72,10 +85,12 @@ class APIClient {
   /**
    * Deletes data
    */
-  delete = (url: string, config?: AxiosRequestConfig): Promise<AxiosResponse> => {
+  delete = (
+    url: string,
+    config?: AxiosRequestConfig
+  ): Promise<AxiosResponse> => {
     return axios.delete(url, { ...config });
   };
 }
-
 
 export { APIClient, setAuthorization };

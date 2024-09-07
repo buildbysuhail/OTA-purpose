@@ -412,19 +412,14 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
 
     // ... the rest of your useEffect code
   }, [location]);
-
-  //
   function toggleSidemenu(event: any, targetObject: any, MENUITEMS = menuitems) {
     const theme = appState;
     let element = event.target;
-
-
     if ((window.screen.availWidth <= 992 || theme.dataNavStyle != "icon-hover") && (window.screen.availWidth <= 992 || theme.dataNavStyle != "menu-hover")) {
       for (const item of MENUITEMS) {
         if (item === targetObject) {
           if (theme.dataVerticalStyle == 'doublemenu' && item.active) { return }
           item.active = !item.active;
-
           if (item.active) {
             closeOtherMenus(MENUITEMS, item);
           } else {
@@ -433,7 +428,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
             }
           }
           setAncestorsActive(MENUITEMS, item);
-
         }
         else if (!item.active) {
           if (theme.dataVerticalStyle != 'doublemenu') {
@@ -491,7 +485,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
     }
     setMenuitems((arr: any) => [...arr]);
   }
-
   function setAncestorsActive(MENUITEMS: any, targetObject: any) {
     const theme = appState;
     const parent = findParent(MENUITEMS, targetObject);
@@ -500,16 +493,13 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       if (parent.active) {
         updateAppState({ ...theme, toggled: "double-menu-open" });
       }
-
       setAncestorsActive(MENUITEMS, parent);
     } else {
       if (theme.dataVerticalStyle == "doublemenu") {
         updateAppState({ ...theme, toggled: "double-menu-close" });
       }
-
     }
   }
-
   function closeOtherMenus(MENUITEMS: any, targetObject: any) {
     for (const item of MENUITEMS) {
       if (item !== targetObject) {
@@ -520,7 +510,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       }
     }
   }
-
   function findParent(MENUITEMS: any, targetObject: any) {
     for (const item of MENUITEMS) {
       if (item.children && item.children.includes(targetObject)) {
@@ -535,7 +524,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
     }
     return null;
   }
-
   const Sideclick = () => {
     if (window.innerWidth > 992) {
       let html = document.documentElement;
@@ -545,8 +533,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
    
     }
   }
-
-
  function handleAttributeChange(mutationsList:any) {
     for (const mutation of mutationsList) {
       if (mutation.type === 'attributes' && (mutation.attributeName === 'data-nav-layout' || mutation.attributeName === 'data-vertical-style')) {
@@ -561,7 +547,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         }
     }
 }
-
   return (
     <Fragment>
       <div id="responsive-overlay"

@@ -6,6 +6,7 @@ const WorkspaceSettingsApis = {
 
   getAvailableSessionsForDxGrid: async (loadOptions: any) => {
     try {
+      debugger;
       const responseData = await api.get(Urls.getUserSession, loadOptions);
       return responseData;
     } catch (error) {

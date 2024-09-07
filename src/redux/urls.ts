@@ -48,7 +48,8 @@ const Urls = {
   getEmail_profile: "/Subscription/Profile/GetEmail/",
   getPhone_profile: "/Subscription/Profile/GetPhone/",
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
-  getUserSession: "/Subscription/account/getUserSession/",
+  getUserSession: "/Core/LoginSessions/GetAllAsync",
+
 
 uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
 changeEmailRequest_workspace : "/Subscription/WorkSpace/ChangeEmailRequest/",

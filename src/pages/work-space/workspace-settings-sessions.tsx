@@ -18,17 +18,20 @@ import AccountSettingsApis from "./workspace-settings-apis";
 interface WorkSpaceSettingsProps {}
 
 const WorkspaceSettingsSessions: FC<WorkSpaceSettingsProps> = (props) => {
+ 
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeight = wh - 305;
     setGridHeight(gridHeight);
+    debugger;
     loadDxGrid(); // Load initial data
   }, []);
   let store: any = {};
 
 let isInitial = true;
   const loadDxGrid = () => {
+    debugger;
     store = new CustomStore({
       key: "id",
       async load(loadOptions: { [key: string]: any }) {
@@ -52,7 +55,7 @@ let isInitial = true;
           params.sort = JSON.stringify([{ selector: "id", desc: true }]);
           isInitial = false;
       }
-  
+  debugger;
         let queryString = Object.entries(params)
       .map(([key, value]) => {
           if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
@@ -63,8 +66,9 @@ let isInitial = true;
           }
       })
       .join('&');
-  
+      debugger;
         try {
+          debugger;
           const response = await AccountSettingsApis.getAvailableSessionsForDxGrid(
             queryString
           );
@@ -85,6 +89,7 @@ let isInitial = true;
                 groupCount: 0,
               };
         } catch (err) {
+          debugger;
           throw new Error("Data Loading Error");
         }
       }

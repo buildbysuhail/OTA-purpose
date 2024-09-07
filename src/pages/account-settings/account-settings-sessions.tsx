@@ -21,7 +21,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeight = wh - 305;
+    let gridHeight = wh-180;
     setGridHeight(gridHeight);
     loadDxGrid(); // Load initial data
   }, []);
@@ -29,44 +29,15 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
 
 let isInitial = true;
   const loadDxGrid = () => {
+    debugger;
     store = new CustomStore({
       key: "id",
       async load(loadOptions: { [key: string]: any }) {
-        let params: any = {};
-        [
-          "filter",
-          "requireTotalCount",
-          "sort",
-          "skip",
-          "take",
-          "userData",
-        ].forEach((i: string) => {
-          if (
-            loadOptions[i] !== undefined 
-          ) {
-            params = { ...params, [i]: JSON.stringify(loadOptions[i]) };
-          }
-        });
-        
-        if (isInitial) {
-          params.sort = JSON.stringify([{ selector: "id", desc: true }]);
-          isInitial = false;
-      }
-  
-        let queryString = Object.entries(params)
-      .map(([key, value]) => {
-          if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
-              return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
-          } else {
-              // Handle other types or unexpected types if needed
-              return ''; // Or some other default behavior
-          }
-      })
-      .join('&');
-  
+        console.log('Load function called', loadOptions);
+        debugger;
         try {
           const response = await AccountSettingsApis.getAvailableSessionsForDxGrid(
-            queryString
+            ""
           );
   
           const result = response;
@@ -114,32 +85,45 @@ let isInitial = true;
   return (
     <Fragment>
       <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
-        <div></div>
+        <div> </div>
       </div>
       <DataGrid
+      
                             height={gridHeight}
-                            dataSource={store}
+                            dataSource={"https://localhost:7213/api/Core/LoginSessions/GetAllAsync"}
                             showBorders={true}
-                            remoteOperations={true}
+                            // remoteOperations={true}
                             showColumnLines={false}
                             showRowLines={true}
+                            onRowPrepared={(e) => {
+                              if (e.rowType === 'data' && e.data.isActive) {
+                                  e.rowElement.style.backgroundColor = '#90ee90';  // Apply green background for active rows
+                              }
+                          }}
                         >
-                          <Scrolling mode="virtual" rowRenderingMode="virtual" />
+                          {/* <Scrolling mode="virtual" rowRenderingMode="virtual" /> */}
                           <Paging defaultPageSize={100} />
-                            <FilterRow visible={true} applyFilter="auto" />
+                            {/* <FilterRow visible={true} applyFilter="auto" />
                             <HeaderFilter visible={true} />
-                            <SearchPanel visible={true} width={240} placeholder={'Search...'} />
-                            <Column dataField="name" caption={'Name'} dataType="string" />
-                            <Column allowSearch={true} allowFiltering={true} dataField="email" caption={'Email'} dataType="string" />
-                            <Column allowSearch={true} allowFiltering={true} dataField="country" caption={'Country'} dataType="string" />
-                            <Column allowSearch={true} allowFiltering={true} dataField="contactNumber" caption={'Contact Number'} dataType="string" />
-                            <Column dataField="isDefault" caption={'Is Default'} cellRender={({ data }) => (
+                            <SearchPanel visible={true} width={240} placeholder={'Search...'} /> */}
+                            {/* <Column dataField="branchName" caption={'branchName'} dataType="string" /> */}
+
+                            <Column allowSearch={true} allowFiltering={true} dataField="branchName" caption={'BranchName'} dataType="string" />
+                            <Column allowSearch={true} allowFiltering={true} dataField="browser" caption={'browser'} dataType="string" />
+                            <Column allowSearch={true} allowFiltering={true} dataField="ipAddress" caption={'ipAddress'} dataType="string" />
+                            <Column allowSearch={true} allowFiltering={true} dataField="device" caption={'device'} dataType="string" />
+                            <Column allowSearch={true} allowFiltering={true} dataField="location" caption={'location'} dataType="string" />
+                            <Column allowSearch={true} allowFiltering={true} dataField="latitude" caption={'latitude'} dataType="string" />
+                            <Column allowSearch={true} allowFiltering={true} dataField="longitude" caption={'Longitude'} dataType="string" />
+                            <Column allowSearch={true} allowFiltering={true} dataField="recentActivity" caption={'RecentActivity'} dataType="datetime" />
+                            {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}
+                            {/* <Column dataField="isDefault" caption={'Is Default'} cellRender={({ data }) => (
                                       data.isDefault === true ? 
                                       (<span className="badge bg-default" id="payment-status">Default</span>) : 
                                       null
                                     )} 
                                     dataType="boolean" 
-                                  />
+                                  /> */}
                         </DataGrid>
       
     </Fragment>

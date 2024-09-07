@@ -92,7 +92,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     ).unwrap();
     
     setPhoneChangeLoading(false);
-    handleAxiosResponse(response);
+    handleResponse(response);
   }, [dispatch, phone]);
 ////////////////////////////////////////////////////////////////////
 
@@ -157,7 +157,7 @@ const updateBasicInfo = useCallback(async () => {
     getBasicInfo();
     getEmail();
     getPhone();
-    api.get(Urls.getEmail_workspace).then((url) => {
+    api.get(Urls.getLogo_workspace).then((url) => {
       setImage(url);
     });
   }, []);
@@ -257,9 +257,7 @@ const updateBasicInfo = useCallback(async () => {
                         apiUrl="/Subscription/WorkSpace/UploadCompanyLogo"
                         onImageSuccess={onImageSuccess}
                          useCircle={false}
-
                       ></ERPCropper>
-                      
                          {/* Maximum 5MB in size.
 JPG, PNG, or GIF formats.
 Recommended size: 300 x 300 pixels. */}
@@ -352,7 +350,6 @@ Recommended size: 300 x 300 pixels. */}
                       data={{phone: phone}}
                       onChangeData={(data: any) =>
                       {
-                        
                         setPhone(data.phone)
                       }
                       }

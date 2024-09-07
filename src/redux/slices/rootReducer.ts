@@ -9,6 +9,7 @@ import { CrudConfig } from "../../configs/crud-config";
 import CountriesDataReducer from "./data/country-reducer";
 import IndustriesReducer from "./data/industry-reducer";
 import CurenciesReducer from "./data/currency-reducer";
+import UserSessionReducer from "./user-session/reducer";
 const crudModuleSlices = CreateCrudModuleSlices(CrudConfig);
 
 // const rootReducer = combineReducers({
@@ -30,7 +31,8 @@ const rootReducer = {
   AppState: AppStateReducer,
   CountriesData: CountriesDataReducer,
   Industries: IndustriesReducer,
-  Curencies: CurenciesReducer
+  Curencies: CurenciesReducer,
+  UserSession: UserSessionReducer
 };
 
 export default rootReducer;

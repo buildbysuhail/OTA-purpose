@@ -5,7 +5,7 @@ import product3 from "../../../assets/images/ecommerce/jpg/3.jpg";
 import product5 from "../../../assets/images/ecommerce/jpg/5.jpg";
 import product4 from "../../../assets/images/ecommerce/jpg/4.jpg";
 import product6 from "../../../assets/images/ecommerce/jpg/6.jpg";
-import store from '../../../redux/store';
+import store, { RootState } from '../../../redux/store';
 import { connect } from 'react-redux';
 import us from "../../../assets/images/flags/us_flag.jpg";
 import spain from "../../../assets/images/flags/spain_flag.jpg";
@@ -35,6 +35,7 @@ import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
 import { useAppState } from '../../../utilities/hooks/useAppState';
 import { AppState } from '../../../redux/slices/app/types';
+import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
 
 interface HeaderProps { }
 
@@ -58,7 +59,8 @@ const Header: FC<HeaderProps> = () => {
       document.exitFullscreen().then(() => setFullScreen(false));
     }
   };
-
+let userSession  = useAppSelector((state: RootState) => state.UserSession);
+debugger;
   const handleFullscreenChange = () => {
     setFullScreen(!!document.fullscreenElement);
   };
@@ -379,14 +381,14 @@ const Header: FC<HeaderProps> = () => {
 
             <div className="header-content-right">
 
-              <div className="header-element py-[1rem] md:px-[0.65rem] px-2 header-search">
+              {/* <div className="header-element py-[1rem] md:px-[0.65rem] px-2 header-search">
                 <button aria-label="button" type="button" data-hs-overlay="#search-modal"
                   className="inline-flex flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium focus:ring-offset-0 focus:ring-offset-white transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10">
                   <i className="bx bx-search-alt-2 header-link-icon"></i>
                 </button>
-              </div>
+              </div> */}
 
-              <div className="header-element py-[1rem] md:px-[0.65rem] px-2  header-country hs-dropdown ti-dropdown  hidden sm:block [--placement:bottom-left]">
+              {/* <div className="header-element py-[1rem] md:px-[0.65rem] px-2  header-country hs-dropdown ti-dropdown  hidden sm:block [--placement:bottom-left]">
                 <button id="dropdown-flag" type="button"
                   className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0  !border-0 !rounded-full !shadow-none">
                   <img src={us} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
@@ -476,8 +478,8 @@ const Header: FC<HeaderProps> = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="header-element header-theme-mode hidden !items-center sm:block !py-[1rem] md:!px-[0.65rem] px-2" onClick={() => ToggleDark()}>
+              </div> */}
+              {/* <div className="header-element header-theme-mode hidden !items-center sm:block !py-[1rem] md:!px-[0.65rem] px-2" onClick={() => ToggleDark()}>
                 <Link aria-label="anchor"
                   className="hs-dark-mode-active:hidden flex hs-dark-mode group flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium transition-all text-xs dark:bg-bgdark dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                   to="#" data-hs-theme-click-value="dark">
@@ -489,8 +491,8 @@ const Header: FC<HeaderProps> = () => {
                   to="#" data-hs-theme-click-value="light">
                   <i className="bx bx-sun header-link-icon"></i>
                 </Link>
-              </div>
-              <div className="header-element cart-dropdown hs-dropdown ti-dropdown md:!block !hidden py-[1rem] md:px-[0.65rem] px-2 [--placement:bottom-right] rtl:[--placement:bottom-left]">
+              </div> */}
+              {/* <div className="header-element cart-dropdown hs-dropdown ti-dropdown md:!block !hidden py-[1rem] md:px-[0.65rem] px-2 [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button id="dropdown-cart" type="button" onClick={handleToggleDropdown}
                   className="hs-dropdown-toggle relative ti-dropdown-toggle !p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none align-middle text-xs">
                   <i className="bx bx-cart header-link-icon"></i>
@@ -561,7 +563,7 @@ const Header: FC<HeaderProps> = () => {
                     </div>
 
                   </div>
-              </div>
+              </div> */}
               <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown !hidden md:!block [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button id="dropdown-notification" type="button"
                   className="hs-dropdown-toggle relative ti-dropdown-toggle !p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none align-middle text-xs">
@@ -627,7 +629,7 @@ const Header: FC<HeaderProps> = () => {
                   </div>
                 </div>
               </div>
-              <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">
+              {/* <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">
 
                 <button aria-label="button" id="dropdown-apps" type="button"
                   className="hs-dropdown-toggle ti-dropdown-toggle !p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs">
@@ -721,7 +723,7 @@ const Header: FC<HeaderProps> = () => {
                   </div>
 
                 </div>
-              </div>
+              </div> */}
               <div className="header-element header-fullscreen py-[1rem] md:px-[0.65rem] px-2">
 
                 <Link to="#" aria-label="anchor" onClick={toggleFullScreen}
@@ -737,11 +739,11 @@ const Header: FC<HeaderProps> = () => {
 
                 <button id="dropdown-profile" type="button"
                   className="hs-dropdown-toggle ti-dropdown-toggle !gap-2 !p-0 flex-shrink-0 sm:me-2 me-0 !rounded-full !shadow-none text-xs align-middle !border-0 !shadow-transparent ">
-                  <img className="inline-block rounded-full " src={face9} width="32" height="32" alt="Image Description" />
+                  <img className="inline-block rounded-full " title={userSession?.userimage} src={userSession?.userimage} width="32" height="32" alt="Image Description" />
                 </button>
                 <div className="md:block hidden dropdown-profile">
-                  <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">Json Taylor</p>
-                  <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">Web Designer</span>
+                  <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">{userSession?.displayName}</p>
+                  <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">{userSession.userTypeName}</span>
                 </div>
                 <div
                   className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
@@ -749,36 +751,28 @@ const Header: FC<HeaderProps> = () => {
 
                   <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
                     <li>
-                      <Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" to="#">
-                        <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>Profile
+                      <Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" to="/account-settings/profile/avatar">
+                        <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>Account Settings
                       </Link>
                     </li>
                     <li>
                       <Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex" to="#"><i
-                        className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>Inbox <span
+                        className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>Organizations <span
                           className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">25</span>
                       </Link>
                     </li>
-                    <li><Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0 !p-[0.65rem] !inline-flex" to="#"><i
-                      className="ti ti-clipboard-check text-[1.125rem] me-2 opacity-[0.7]"></i>Task Manager</Link></li>
-                    <li><Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0 !p-[0.65rem] !inline-flex" to="#"><i
-                      className="ti ti-adjustments-horizontal text-[1.125rem] me-2 opacity-[0.7]"></i>Settings</Link></li>
-                    <li><Link className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0 !p-[0.65rem] !inline-flex" to="#"><i
-                      className="ti ti-wallet text-[1.125rem] me-2 opacity-[0.7]"></i>Bal: $7,12,950</Link></li>
-                    <li><Link className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex" to="#"><i
-                      className="ti ti-headset text-[1.125rem] me-2 opacity-[0.7]"></i>Support</Link></li>
                     <li><Link className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex" to="#"><i
                       className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>Log Out</Link></li>
                   </ul>
                 </div>
               </div>
-              <div className="header-element md:px-[0.48rem]">
+              {/* <div className="header-element md:px-[0.48rem]">
                 <button aria-label="button" type="button"
                   className="hs-dropdown-toggle switcher-icon inline-flex flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium  align-middle transition-all text-xs dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
                   data-hs-overlay="#hs-overlay-switcher">
                   <i className="bx bx-cog header-link-icon animate-spin-slow"></i>
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         </nav>

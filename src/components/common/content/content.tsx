@@ -19,20 +19,20 @@ const Content: FC<ContentProps> = () => {
     <Suspense fallback={loading}>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/account-settings/profile/avatar" element={<AccountSettingsProfile />} />
-          <Route path="/account-settings/profile/basic-information" element={<AccountSettingsProfile />} />
-          <Route path="/account-settings/profile/email-address" element={<AccountSettingsProfile />} />
-          <Route path="/account-settings/profile/phone-number" element={<AccountSettingsProfile />} />
-          <Route path="/account-settings/security/password" element={<AccountSettingsSecurity />} />
-          <Route path="/account-settings/preferences/theme" element={<AccountSettingsPreference />} />
-          <Route path="/account-settings/preferences/language" element={<AccountSettingsPreference />} />
-          <Route path="/account-settings/preferences/system-preferences" element={<AccountSettingsPreference />} />
-          <Route path="/account-settings/sessions" element={<AccountSettingsSessions />} />
+          <Route path="/profile/avatar" element={<AccountSettingsProfile />} />
+          <Route path="/profile/basic-information" element={<AccountSettingsProfile />} />
+          <Route path="/profile/email-address" element={<AccountSettingsProfile />} />
+          <Route path="/profile/phone-number" element={<AccountSettingsProfile />} />
+          <Route path="/security/password" element={<AccountSettingsSecurity />} />
+          <Route path="/preferences/theme" element={<AccountSettingsPreference />} />
+          <Route path="/preferences/language" element={<AccountSettingsPreference />} />
+          <Route path="/preferences/system-preferences" element={<AccountSettingsPreference />} />
+          <Route path="/sessions" element={<AccountSettingsSessions />} />
 
-          <Route path="/workspace-settings/profile/workspace-logo" element={<WorkSpaceSettings />} />
-          <Route path="/workspace-settings/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
-          <Route path="/workspace-settings/profile/primary-email" element={<WorkSpaceSettings />} />
-          <Route path="/workspace-settings/profile/business-number" element={<WorkSpaceSettings />} />
+          <Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
+          <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
+          <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
+          <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {
               return <Route key={idx} path={route.path} element={<route.component />} />;

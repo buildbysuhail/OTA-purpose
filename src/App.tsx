@@ -20,6 +20,8 @@ import { Theme } from "./pages/account-settings/account-settings-preference";
 import { setColorPrimary, setColorPrimaryRgb, setDataHeaderStyles, setDirection, setMode } from "./redux/slices/app/reducer";
 import { APIClient } from "./helpers/api-client";
 import Urls from "./redux/urls";
+import AccountSettingsLayout from './components/common/layout/account-settings-layout';
+import WorkspaceSettingsLayout from './components/common/layout/workspace-settings-layout';
 
 export const LoadingAnimation = () => {
   return (
@@ -121,7 +123,9 @@ debugger;
 
               {/* <Route path="create-organization" element={<Organization />} />
               <Route path="select-organization" element={<OrgSelect />} />
-              <Route path="shared-view" element={<ExternalView />} /> */}
+               */}
+               <Route path="account-settings/*" element={<AccountSettingsLayout setMyClass={setMyClass} />} />
+               <Route path="workspace-settings/*" element={<WorkspaceSettingsLayout setMyClass={setMyClass} />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>

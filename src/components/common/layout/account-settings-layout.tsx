@@ -8,7 +8,7 @@ interface LayoutProps {
   setMyClass: Dispatch<SetStateAction<string>>;
 }
 
-const Layout: FC<LayoutProps> = ({setMyClass}) => {
+const AccountSettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
   const Bodyclickk = () => {
     if (localStorage.getItem("ynexverticalstyles") == "icontext") {
       setMyClass("");
@@ -23,7 +23,7 @@ const Layout: FC<LayoutProps> = ({setMyClass}) => {
   return (
     <>
     <Header />
-            <Sidebar type='erp'/>
+            <Sidebar type='account-settings'/>
             <div className='content main-index'>
               <div className='main-content'
                 onClick={Bodyclickk}
@@ -35,5 +35,5 @@ const Layout: FC<LayoutProps> = ({setMyClass}) => {
     </>
   );
 }
-export default Layout;
+export default AccountSettingsLayout;
 

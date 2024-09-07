@@ -1,6 +1,6 @@
 
 
-export const MENUITEMS = [
+export const WorkspaceSettingsMenuItems = [
   {
     menutitle_lg: 'Workspace Settings',
   },

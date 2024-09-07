@@ -3917,7 +3917,7 @@ label {
   @apply text-[0.6rem] font-semibold tracking-[0.065rem] uppercase py-3 px-[1.65rem] whitespace-nowrap opacity-50 relative text-[#a3aed1] dark:text-[#8f9bb3];
 }
 .app-sidebar .slide__category_Detail {
-  @apply text-[0.6rem] font-semibold tracking-[0.065rem] border-t border-b py-3 px-[1.65rem] whitespace-nowrap opacity-100 relative text-[#a3aed1] dark:text-[#8f9bb3];
+  @apply text-[0.6rem] font-semibold tracking-[0.065rem] py-3 px-[1.65rem] whitespace-nowrap opacity-100 relative text-[#a3aed1] dark:text-[#8f9bb3] border-t border-t-[1px] border-b border-b-[1px] border-solid border-t-[rgb(255,255,255)] border-b-[rgb(255,255,255)];
 }
 .app-sidebar .slide__category__lg {
   @apply text-[1rem] font-semibold tracking-[0.065rem] uppercase py-3 px-[1.65rem] whitespace-nowrap opacity-100 relative text-[#a3aed1] dark:text-[#8f9bb3];

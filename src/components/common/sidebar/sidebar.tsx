@@ -1,7 +1,6 @@
 import { FC, Fragment, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import { MENUITEMS } from './sidemenu/account-settings';
 import store from '../../../redux/store';
 import logo1 from "../../../assets/images/brand-logos/desktop-logo.png";
 import logo2 from "../../../assets/images/brand-logos/toggle-logo.png";
@@ -12,10 +11,30 @@ import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from 'simplebar-react';
 import Menuloop from '../../ui/menuloop';
 import { useAppState } from '../../../utilities/hooks/useAppState';
-interface SidebarProps { }
+import { MENUITEMS } from './sidemenu/sidemenu';
+import { AccountSettingsMenuItems } from './sidemenu/account-settings';
+import { WorkspaceSettingsMenuItems } from './sidemenu/workspace-settings';
+interface SidebarProps { type: "erp" | "account-settings" | "workspace-settings" }
 
-const Sidebar: FC<SidebarProps> = () => {
-  const [menuitems, setMenuitems] = useState<any>(MENUITEMS);
+const Sidebar: FC<SidebarProps> = ({ type }) => {
+  const [menuitems, setMenuitems] = useState<any>([]);
+
+  useEffect(() => {
+    debugger;
+    switch (type) {
+      case 'erp':
+        setMenuitems(MENUITEMS);
+        break;
+      case 'account-settings':
+        setMenuitems(AccountSettingsMenuItems);
+        break;
+      case 'workspace-settings':
+        setMenuitems(WorkspaceSettingsMenuItems);
+        break;
+      default:
+        setMenuitems([]);
+    }
+  }, [type]);
   const { appState, updateAppState } = useAppState();
   
   const local_varaiable = appState;
@@ -27,7 +46,7 @@ const Sidebar: FC<SidebarProps> = () => {
         closeMenuRecursively(item.children);
       });
     };
-    closeMenuRecursively(MENUITEMS);
+    closeMenuRecursively(menuitems);
     setMenuitems((arr: any) => [...arr]);
   }
 
@@ -366,7 +385,7 @@ const Sidebar: FC<SidebarProps> = () => {
         setSubmenuRecursively(item.children);
       });
     };
-    setSubmenuRecursively(MENUITEMS);
+    setSubmenuRecursively(menuitems);
   }
  const [previousUrl , setPreviousUrl]= useState('/')
 
@@ -567,11 +586,11 @@ const Sidebar: FC<SidebarProps> = () => {
               height="24" viewBox="0 0 24 24">
               <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
             </svg></div>
-
+            {/* hasTopBorder */}
             <ul className="main-menu" onClick={() => Sideclick()}>
-              {MENUITEMS.map((levelone:any) => (
+              {menuitems.map((levelone:any) => (
                 <Fragment key={Math.random()}>
-                  <li className={`${levelone.menutitle ? 'slide__category' :levelone.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${levelone.type === 'link' ? 'slide' : ''}
+                  <li className={`${levelone.menutitle ? 'slide__category' :levelone.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${levelone.hasTopBorder === true ? 'border-t border-t-[1px] border-solid border-t-[rgb(255,255,255 / 0.1)]' : ''} ${levelone.type === 'link' ? 'slide' : ''}
                        ${levelone.type === 'sub' ? 'slide has-sub' : ''} ${levelone?.active ? 'open' : ''} ${levelone?.selected ? 'active' : ''}`}>
                     {levelone.menutitle ?
                       <span className='category-name'>

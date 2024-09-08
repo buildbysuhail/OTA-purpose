@@ -66,6 +66,7 @@ getEmail_workspace : "/Subscription/WorkSpace/GetEmail/",
 getPhone_workspace : "/Subscription/WorkSpace/GetPhone/",
 getLogo_workspace : "/Subscription/WorkSpace/GetLogo/",
 getAddress_workspace : "/Subscription/WorkSpace/GetAddress/",
+delete_workspace:"/Subscription/WorkSpace/DeleteWorkspace",
   // AccountSettings/Security
   updatePassword: "/Subscription/AccountSettings/Security/ResetPassword/",
 

@@ -11,12 +11,18 @@ export class LoginValidations {
   userNameValidationMessage: string = "";
   passwordValidationMessage: string = "";
 }
-
+export class LogoutData {
+  systemId: string = "";
+}
 
 const api = new APIClient();
 
 export const loginUser = createAsyncThunk<ResponseModel<any>, LoginData>('login/loginUser', async (user) => {
   const response = await api.post('/Subscription/Auth/Login', user);
+  return response;
+});
+export const logoutUser = createAsyncThunk<ResponseModel<any>, LogoutData>('logout/logoutUser', async (user) => {
+  const response = await api.post('/Subscription/Auth/Logout', user);
   return response;
 });
 

@@ -23,6 +23,7 @@ import Urls from "./redux/urls";
 import AccountSettingsLayout from './components/common/layout/account-settings-layout';
 import WorkspaceSettingsLayout from './components/common/layout/workspace-settings-layout';
 import { userSession } from './redux/slices/user-session/thunk';
+import Logout from './pages/auth/Logout';
 
 export const LoadingAnimation = () => {
   return (
@@ -124,7 +125,8 @@ debugger;
         <div className="page">
           <Suspense fallback={LoadingAnimation()}>
             <Routes>
-              <Route path="login" element={<Login />} />
+            <Route path="login" element={<Login />} />
+            <Route path="logout" element={<Logout />} />
 
               {/* <Route path="create-organization" element={<Organization />} />
               <Route path="select-organization" element={<OrgSelect />} />

@@ -52,10 +52,9 @@ const WorkSpaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
-                  Password{" "}
+                Delete Workspace{" "}
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    We recommend you to change your password often, it will make
-                    you feel better about your security!
+                  This will permanently remove all associated data from your account.
                   </p>
                 </div>
                 <div></div>

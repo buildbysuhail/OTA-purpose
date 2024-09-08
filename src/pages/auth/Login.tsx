@@ -55,7 +55,7 @@ const Login = () => {
   const token = Cookies.get("token");
   useEffect(() => {
     if (token) {
-      navigate("/dashboard");
+      navigate("/");
     } else {
       // navigate("/login");
     }

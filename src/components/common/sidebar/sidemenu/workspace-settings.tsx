@@ -64,6 +64,7 @@ export const WorkspaceSettingsMenuItems = [
   {
     icon: (<i className="side-menu__icon ri-logout-circle-line"></i>),
     type: 'link',
+    path: `${import.meta.env.BASE_URL}logout`,
     Name: '',
     active: false,
     selected: false,

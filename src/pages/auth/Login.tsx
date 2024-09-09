@@ -110,10 +110,11 @@ new heights</h2>
                 <ERPInput
                   label={t("Email or Phone or Username")}
                   data={data}
-                  onChangeData={(data: any) => setData(data)}
+                  onChangeData={(_data: any) => {debugger; setData(_data)}}
                   id="userName"
                   autocomplete=""
                   required
+                  value={data.userName}
                   type="text"
                 />
               </div>

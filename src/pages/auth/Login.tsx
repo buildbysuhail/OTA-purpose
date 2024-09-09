@@ -38,9 +38,13 @@ const Login = () => {
       
       
         const login = await dispatch(loginUser(data)).unwrap();
+        setError('');
         
         if (login.isOk == true) {   
-          Cookies.set("token", login.item.token, { expires: 30 });       
+          Cookies.set("token", login.item.token, { expires: 30 }); 
+          if(login.item.permissionToken != undefined && login.item.permissionToken != null && login.item.permissionToken != '') {
+            Cookies.set("permissionToken", login.item.permissionToken, { expires: 30 });         
+          }       
             navigate("/");
         }
         else

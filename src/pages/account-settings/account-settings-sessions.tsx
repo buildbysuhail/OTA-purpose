@@ -39,7 +39,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
 
   let isInitial = true;
   const store = new CustomStore({
-    key: "Id",
+    // key: "Id",
     async load(loadOptions: any) {
       const paramNames = [
         "skip",

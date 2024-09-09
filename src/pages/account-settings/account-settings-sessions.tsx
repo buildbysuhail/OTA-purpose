@@ -31,43 +31,53 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
     let wh = window.innerHeight;
     let gridHeight = wh - 180;
     setGridHeight(gridHeight);
-    loadDxGrid(); // Load initial data
   }, []);
-  let store: any = {};
+
+  function isNotEmpty(value: string | undefined | null) {
+    return value !== undefined && value !== null && value !== "";
+  }
 
   let isInitial = true;
-  const loadDxGrid = () => {
-    debugger;
-    store = new CustomStore({
-      key: "id",
-      async load(loadOptions: { [key: string]: any }) {
-        console.log("Load function called", loadOptions);
-        debugger;
-        try {
-          const response =
-            await AccountSettingsApis.getAvailableSessionsForDxGrid("");
+  const store = new CustomStore({
+    key: "Id",
+    async load(loadOptions: any) {
+      const paramNames = [
+        "skip",
+        "take",
+        "requireTotalCount",
+        "sort",
+        "filter",
+      ];
 
-          const result = response;
+      const queryString = paramNames
+        .filter((paramName) => isNotEmpty(loadOptions[paramName]))
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
+        .join("&");
 
-          return result !== undefined && result != null
-            ? {
-                data: result.data,
-                totalCount: result.totalCount,
-                summary: result.summary,
-                groupCount: result.groupCount,
-              }
-            : {
-                data: [],
-                totalCount: 0,
-                summary: {},
-                groupCount: 0,
-              };
-        } catch (err) {
-          throw new Error("Data Loading Error");
-        }
-      },
-    });
-  };
+      try {
+        const response = await AccountSettingsApis.getSessions("");
+
+        const result = response;
+
+        return result !== undefined && result != null
+          ? {
+              data: result,
+              totalCount: result.length,
+            }
+          : {
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
+      } catch (err) {
+        throw new Error("Data Loading Error");
+      }
+    },
+  });
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
 
@@ -114,7 +124,8 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                   <DataGrid
                     height={gridHeight}
                     dataSource={
-                      "https://localhost:7213/api/Core/LoginSessions/GetAllAsync"
+                      store
+                      // "https://localhost:7213/api/Core/LoginSessions/GetAllAsync"
                     }
                     showBorders={true}
                     // remoteOperations={true}

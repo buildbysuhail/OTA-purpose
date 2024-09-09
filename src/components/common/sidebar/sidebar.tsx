@@ -795,7 +795,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                           <span className="avatar avatar-md avatar-rounded ">
                             <img
                               alt={userSession.displayName}
-                              src={userSession.userImage}
+                              src={userSession.userimage}
                             />
                           </span>
                         </div>

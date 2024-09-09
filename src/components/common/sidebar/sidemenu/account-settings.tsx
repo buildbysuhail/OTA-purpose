@@ -3,6 +3,7 @@
 export const AccountSettingsMenuItems = [
   {
     menutitle_lg: 'Account Settings',
+    showUserMiniCard: true,
   },
   {
     icon: (<i className="side-menu__icon ri-user-heart-line"></i>),

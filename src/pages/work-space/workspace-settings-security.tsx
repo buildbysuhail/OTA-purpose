@@ -37,9 +37,7 @@ const WorkSpaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   return (
     <Fragment>
-      <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
-        <div></div>
-      </div>
+      
       <div className="grid grid-cols-12 gap-x-6">
       <div className="xxl:col-span-6 xl:col-span-12 col-span-12">
         <div className="grid grid-cols-12 gap-x-6">

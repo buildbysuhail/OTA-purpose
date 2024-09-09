@@ -1,35 +1,38 @@
-import { FC, Fragment, useEffect, useState } from 'react';
-import { connect } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom';
-import store, { RootState } from '../../../redux/store';
+import { FC, Fragment, useEffect, useMemo, useState } from "react";
+import { connect } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+import store, { RootState } from "../../../redux/store";
 import logo1 from "../../../assets/images/brand-logos/desktop-logo.png";
 import logo2 from "../../../assets/images/brand-logos/toggle-logo.png";
 import logo3 from "../../../assets/images/brand-logos/desktop-dark.png";
 import logo4 from "../../../assets/images/brand-logos/toggle-dark.png";
 import logo5 from "../../../assets/images/brand-logos/desktop-white.png";
 import logo6 from "../../../assets/images/brand-logos/toggle-white.png";
-import SimpleBar from 'simplebar-react';
-import Menuloop from '../../ui/menuloop';
-import { useAppState } from '../../../utilities/hooks/useAppState';
-import { MENUITEMS } from './sidemenu/sidemenu';
-import { AccountSettingsMenuItems } from './sidemenu/account-settings';
-import { WorkspaceSettingsMenuItems } from './sidemenu/workspace-settings';
-import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
-interface SidebarProps { type: "erp" | "account-settings" | "workspace-settings" }
+import SimpleBar from "simplebar-react";
+import Menuloop from "../../ui/menuloop";
+import { useAppState } from "../../../utilities/hooks/useAppState";
+import { MENUITEMS } from "./sidemenu/sidemenu";
+import { AccountSettingsMenuItems } from "./sidemenu/account-settings";
+import { WorkspaceSettingsMenuItems } from "./sidemenu/workspace-settings";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import ErpAvatar from "../../ERPComponents/erp-avatar";
+interface SidebarProps {
+  type: "erp" | "account-settings" | "workspace-settings";
+}
 
 const Sidebar: FC<SidebarProps> = ({ type }) => {
   const [menuitems, setMenuitems] = useState<any>([]);
-  let userSession  = useAppSelector((state: RootState) => state.UserSession);
+  let userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
     debugger;
     switch (type) {
-      case 'erp':
+      case "erp":
         setMenuitems(MENUITEMS);
         break;
-      case 'account-settings':
+      case "account-settings":
         setMenuitems(AccountSettingsMenuItems);
         break;
-      case 'workspace-settings':
+      case "workspace-settings":
         setMenuitems(WorkspaceSettingsMenuItems);
         break;
       default:
@@ -37,7 +40,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
     }
   }, [type]);
   const { appState, updateAppState } = useAppState();
-  
+
   const local_varaiable = appState;
 
   function closeMenuFn() {
@@ -52,68 +55,103 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   }
 
   useEffect(() => {
-
-    const mainContent:any = document.querySelector(".main-content");
-    mainContent.addEventListener('click', menuClose);
-    window.addEventListener('resize', menuResizeFn);
+    const mainContent: any = document.querySelector(".main-content");
+    mainContent.addEventListener("click", menuClose);
+    window.addEventListener("resize", menuResizeFn);
   }, []);
 
   // const location = useLocation();
   const location = useLocation();
 
-
+  const avatarStyle = useMemo(() => {
+    return { width: 40, height: 40 };
+  }, []);
+  let companyLogo = "#";
+  if (
+    userSession &&
+    userSession.companies &&
+    Array.isArray(userSession.companies)
+  ) {
+    const company = userSession.companies.find(
+      (x) => x.text === userSession.currentClientName
+    );
+    if (company && company.logo) {
+      companyLogo = company.logo;
+    }
+  }
   function Onhover() {
     const theme = appState;
-    if ((theme.toggled == 'icon-overlay-close' || theme.toggled == 'detached-close') && theme.iconOverlay != 'open') {
-      updateAppState({ ...theme, "iconOverlay": "open" });
+    if (
+      (theme.toggled == "icon-overlay-close" ||
+        theme.toggled == "detached-close") &&
+      theme.iconOverlay != "open"
+    ) {
+      updateAppState({ ...theme, iconOverlay: "open" });
     }
   }
   function Outhover() {
     const theme = appState;
-    if ((theme.toggled == 'icon-overlay-close' || theme.toggled == 'detached-close') && theme.iconOverlay == 'open') {
-      updateAppState({ ...theme, "iconOverlay": "" });
+    if (
+      (theme.toggled == "icon-overlay-close" ||
+        theme.toggled == "detached-close") &&
+      theme.iconOverlay == "open"
+    ) {
+      updateAppState({ ...theme, iconOverlay: "" });
     }
   }
 
   function menuClose() {
-
     const theme = appState;
     if (window.innerWidth <= 992) {
       updateAppState({ ...theme, toggled: "close" });
     }
-    const overlayElement = document.querySelector("#responsive-overlay") as HTMLElement | null;
+    const overlayElement = document.querySelector(
+      "#responsive-overlay"
+    ) as HTMLElement | null;
     if (overlayElement) {
-
       overlayElement.classList.remove("active");
     }
-    if (theme.dataNavLayout == 'horizontal' || theme.dataNavStyle == 'menu-click' || theme.dataNavStyle == 'icon-click') {
+    if (
+      theme.dataNavLayout == "horizontal" ||
+      theme.dataNavStyle == "menu-click" ||
+      theme.dataNavStyle == "icon-click"
+    ) {
       closeMenuFn();
     }
-
   }
 
-  const WindowPreSize = [window.innerWidth]
+  const WindowPreSize = [window.innerWidth];
 
   function menuResizeFn() {
-
     WindowPreSize.push(window.innerWidth);
-    if (WindowPreSize.length > 2) { WindowPreSize.shift() }
+    if (WindowPreSize.length > 2) {
+      WindowPreSize.shift();
+    }
     const theme = appState;
     if (WindowPreSize.length > 1) {
-      if ((WindowPreSize[WindowPreSize.length - 1] < 992) && (WindowPreSize[WindowPreSize.length - 2] >= 992)) {
+      if (
+        WindowPreSize[WindowPreSize.length - 1] < 992 &&
+        WindowPreSize[WindowPreSize.length - 2] >= 992
+      ) {
         // less than 992;
         updateAppState({ ...theme, toggled: "close" });
       }
 
-      if ((WindowPreSize[WindowPreSize.length - 1] >= 992) && (WindowPreSize[WindowPreSize.length - 2] < 992)) {
+      if (
+        WindowPreSize[WindowPreSize.length - 1] >= 992 &&
+        WindowPreSize[WindowPreSize.length - 2] < 992
+      ) {
         // greater than 992
-        updateAppState({ ...theme, toggled: theme.dataVerticalStyle == "doublemenu" ? "double-menu-open" : "" });
+        updateAppState({
+          ...theme,
+          toggled:
+            theme.dataVerticalStyle == "doublemenu" ? "double-menu-open" : "",
+        });
       }
     }
   }
 
   function switcherArrowFn(): void {
-
     // Used to remove is-expanded class and remove class on clicking arrow buttons
     function slideClick(): void {
       const slide = document.querySelectorAll<HTMLElement>(".slide");
@@ -142,7 +180,9 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
 
     if (menuNav && mainContainer1) {
       const marginLeftValue = Math.ceil(
-        Number(window.getComputedStyle(menuNav).marginInlineStart.split("px")[0])
+        Number(
+          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0]
+        )
       );
       const marginRightValue = Math.ceil(
         Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0])
@@ -155,20 +195,27 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
           if (Math.abs(check) > Math.abs(marginLeftValue)) {
             menuNav.style.marginInlineEnd = "0";
 
-            if (!(Math.abs(check) > Math.abs(marginLeftValue) + mainContainer1Width)) {
+            if (
+              !(
+                Math.abs(check) >
+                Math.abs(marginLeftValue) + mainContainer1Width
+              )
+            ) {
               mainContainer1Width = Math.abs(check) - Math.abs(marginLeftValue);
-              const slideRightButton = document.querySelector<HTMLElement>("#slide-right");
+              const slideRightButton =
+                document.querySelector<HTMLElement>("#slide-right");
               if (slideRightButton) {
                 slideRightButton.classList.add("hidden");
               }
             }
 
             menuNav.style.marginInlineStart =
-              (Number(menuNav.style.marginInlineStart.split("px")[0]) -
-                Math.abs(mainContainer1Width)) +
+              Number(menuNav.style.marginInlineStart.split("px")[0]) -
+              Math.abs(mainContainer1Width) +
               "px";
 
-            const slideRightButton = document.querySelector<HTMLElement>("#slide-right");
+            const slideRightButton =
+              document.querySelector<HTMLElement>("#slide-right");
             if (slideRightButton) {
               slideRightButton.classList.remove("hidden");
             }
@@ -177,20 +224,28 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
           if (Math.abs(check) > Math.abs(marginRightValue)) {
             menuNav.style.marginInlineEnd = "0";
 
-            if (!(Math.abs(check) > Math.abs(marginRightValue) + mainContainer1Width)) {
-              mainContainer1Width = Math.abs(check) - Math.abs(marginRightValue);
-              const slideRightButton = document.querySelector<HTMLElement>("#slide-right");
+            if (
+              !(
+                Math.abs(check) >
+                Math.abs(marginRightValue) + mainContainer1Width
+              )
+            ) {
+              mainContainer1Width =
+                Math.abs(check) - Math.abs(marginRightValue);
+              const slideRightButton =
+                document.querySelector<HTMLElement>("#slide-right");
               if (slideRightButton) {
                 slideRightButton.classList.add("hidden");
               }
             }
 
             menuNav.style.marginInlineStart =
-              (Number(menuNav.style.marginInlineStart.split("px")[0]) -
-                Math.abs(mainContainer1Width)) +
+              Number(menuNav.style.marginInlineStart.split("px")[0]) -
+              Math.abs(mainContainer1Width) +
               "px";
 
-            const slideLeftButton = document.querySelector<HTMLElement>("#slide-left");
+            const slideLeftButton =
+              document.querySelector<HTMLElement>("#slide-left");
             if (slideLeftButton) {
               slideLeftButton.classList.remove("hidden");
             }
@@ -198,8 +253,12 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         }
       }
 
-      const element = document.querySelector<HTMLElement>(".main-menu > .slide.open");
-      const element1 = document.querySelector<HTMLElement>(".main-menu > .slide.open > ul");
+      const element = document.querySelector<HTMLElement>(
+        ".main-menu > .slide.open"
+      );
+      const element1 = document.querySelector<HTMLElement>(
+        ".main-menu > .slide.open > ul"
+      );
       if (element) {
         element.classList.remove("active");
       }
@@ -217,7 +276,9 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
 
     if (menuNav && mainContainer1) {
       const marginLeftValue = Math.ceil(
-        Number(window.getComputedStyle(menuNav).marginInlineStart.split("px")[0])
+        Number(
+          window.getComputedStyle(menuNav).marginInlineStart.split("px")[0]
+        )
       );
       const marginRightValue = Math.ceil(
         Number(window.getComputedStyle(menuNav).marginInlineEnd.split("px")[0])
@@ -234,20 +295,28 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
           if (Math.abs(check) > Math.abs(marginRightValue)) {
             menuNav.style.marginInlineStart = "0";
 
-            if (!(Math.abs(check) > Math.abs(marginRightValue) + mainContainer1Width)) {
-              mainContainer1Width = Math.abs(check) - Math.abs(marginRightValue);
-              const slideRightButton = document.querySelector<HTMLElement>("#slide-right");
+            if (
+              !(
+                Math.abs(check) >
+                Math.abs(marginRightValue) + mainContainer1Width
+              )
+            ) {
+              mainContainer1Width =
+                Math.abs(check) - Math.abs(marginRightValue);
+              const slideRightButton =
+                document.querySelector<HTMLElement>("#slide-right");
               if (slideRightButton) {
                 slideRightButton.classList.add("hidden");
               }
             }
 
             menuNav.style.marginInlineStart =
-              (Number(menuNav.style.marginInlineStart.split("px")[0]) -
-                Math.abs(mainContainer1Width)) +
+              Number(menuNav.style.marginInlineStart.split("px")[0]) -
+              Math.abs(mainContainer1Width) +
               "px";
 
-            const slideLeftButton = document.querySelector<HTMLElement>("#slide-left");
+            const slideLeftButton =
+              document.querySelector<HTMLElement>("#slide-left");
             if (slideLeftButton) {
               slideLeftButton.classList.remove("hidden");
             }
@@ -255,8 +324,12 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         }
       }
 
-      const element = document.querySelector<HTMLElement>(".main-menu > .slide.open");
-      const element1 = document.querySelector<HTMLElement>(".main-menu > .slide.open > ul");
+      const element = document.querySelector<HTMLElement>(
+        ".main-menu > .slide.open"
+      );
+      const element1 = document.querySelector<HTMLElement>(
+        ".main-menu > .slide.open > ul"
+      );
       if (element) {
         element.classList.remove("active");
       }
@@ -267,7 +340,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
 
     switcherArrowFn();
   }
-
 
   const Topup = () => {
     if (window.scrollY > 30 && document.querySelector(".app-sidebar")) {
@@ -284,13 +356,16 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   };
   window.addEventListener("scroll", Topup);
 
-  const level = 0
-  let hasParent = false
-  let hasParentLevel = 0
+  const level = 0;
+  let hasParent = false;
+  let hasParentLevel = 0;
 
   function setSubmenu(event: any, targetObject: any, MENUITEMS = menuitems) {
     const theme = appState;
-    if ((window.screen.availWidth <= 992 || theme.dataNavStyle != "icon-hover") && (window.screen.availWidth <= 992 || theme.dataNavStyle != "menu-hover")) {
+    if (
+      (window.screen.availWidth <= 992 || theme.dataNavStyle != "icon-hover") &&
+      (window.screen.availWidth <= 992 || theme.dataNavStyle != "menu-hover")
+    ) {
       if (!event?.ctrlKey) {
         for (const item of MENUITEMS) {
           if (item === targetObject) {
@@ -309,7 +384,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
             setSubmenu(event, targetObject, item.children);
           }
         }
-
       }
     }
 
@@ -318,10 +392,13 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   function getParentObject(obj: any, childObject: any) {
     for (const key in obj) {
       if (obj.hasOwnProperty(key)) {
-        if (typeof obj[key] === 'object' && JSON.stringify(obj[key]) === JSON.stringify(childObject)) {
+        if (
+          typeof obj[key] === "object" &&
+          JSON.stringify(obj[key]) === JSON.stringify(childObject)
+        ) {
           return obj; // Return the parent object
         }
-        if (typeof obj[key] === 'object') {
+        if (typeof obj[key] === "object") {
           const parentObject: any = getParentObject(obj[key], childObject);
           if (parentObject !== null) {
             return parentObject;
@@ -342,13 +419,12 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       parent.selected = true;
       hasParentLevel += 1;
       setMenuAncestorsActive(parent);
-    }
-   else if (!hasParent) {
-      if (theme.dataVerticalStyle == 'doublemenu') {
+    } else if (!hasParent) {
+      if (theme.dataVerticalStyle == "doublemenu") {
         // console.log("closee")
         // html.setAttribute('data-toggled', 'double-menu-close');
         updateAppState({ ...theme, toggled: "double-menu-close" });
-    }
+      }
     }
   }
   function removeActiveOtherMenus(item: any) {
@@ -365,22 +441,19 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       if (item.children && item.children.length > 0) {
         removeActiveOtherMenus(item.children);
       }
-    }
-    else {
+    } else {
       return;
     }
   }
   //
   function setMenuUsingUrl(currentPath: any) {
-
     hasParent = false;
     hasParentLevel = 1;
     // Check current url and trigger the setSidemenu method to active the menu.
     const setSubmenuRecursively = (items: any) => {
-
       items?.forEach((item: any) => {
-        if (item.path == '') { }
-        else if (item.path === currentPath) {
+        if (item.path == "") {
+        } else if (item.path === currentPath) {
           setSubmenu(null, item);
         }
         setSubmenuRecursively(item.children);
@@ -388,49 +461,58 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
     };
     setSubmenuRecursively(menuitems);
   }
- const [previousUrl , setPreviousUrl]= useState('/')
+  const [previousUrl, setPreviousUrl] = useState("/");
 
   useEffect(() => {
+    // Select the target element
+    const targetElement = document.documentElement;
 
-        // Select the target element
-        const targetElement = document.documentElement;
+    // Create a MutationObserver instance
+    const observer = new MutationObserver(handleAttributeChange);
 
-        // Create a MutationObserver instance
-        const observer = new MutationObserver(handleAttributeChange);
-    
-        // Configure the observer to watch for attribute changes
-        const config = { attributes: true };
-    
-        // Start observing the target element
-        observer.observe(targetElement, config);
-        let currentPath = location.pathname.endsWith("/") ? location.pathname.slice(0, -1) : location.pathname;
-        
-        if (currentPath !== previousUrl) {
-          setMenuUsingUrl(currentPath);
-          setPreviousUrl(currentPath)
-        }
+    // Configure the observer to watch for attribute changes
+    const config = { attributes: true };
+
+    // Start observing the target element
+    observer.observe(targetElement, config);
+    let currentPath = location.pathname.endsWith("/")
+      ? location.pathname.slice(0, -1)
+      : location.pathname;
+
+    if (currentPath !== previousUrl) {
+      setMenuUsingUrl(currentPath);
+      setPreviousUrl(currentPath);
+    }
 
     // ... the rest of your useEffect code
   }, [location]);
-  function toggleSidemenu(event: any, targetObject: any, MENUITEMS = menuitems) {
+  function toggleSidemenu(
+    event: any,
+    targetObject: any,
+    MENUITEMS = menuitems
+  ) {
     const theme = appState;
     let element = event.target;
-    if ((window.screen.availWidth <= 992 || theme.dataNavStyle != "icon-hover") && (window.screen.availWidth <= 992 || theme.dataNavStyle != "menu-hover")) {
+    if (
+      (window.screen.availWidth <= 992 || theme.dataNavStyle != "icon-hover") &&
+      (window.screen.availWidth <= 992 || theme.dataNavStyle != "menu-hover")
+    ) {
       for (const item of MENUITEMS) {
         if (item === targetObject) {
-          if (theme.dataVerticalStyle == 'doublemenu' && item.active) { return }
+          if (theme.dataVerticalStyle == "doublemenu" && item.active) {
+            return;
+          }
           item.active = !item.active;
           if (item.active) {
             closeOtherMenus(MENUITEMS, item);
           } else {
-            if (theme.dataVerticalStyle == 'doublemenu') {
+            if (theme.dataVerticalStyle == "doublemenu") {
               updateAppState({ ...theme, toggled: "double-menu-close" });
             }
           }
           setAncestorsActive(MENUITEMS, item);
-        }
-        else if (!item.active) {
-          if (theme.dataVerticalStyle != 'doublemenu') {
+        } else if (!item.active) {
+          if (theme.dataVerticalStyle != "doublemenu") {
             item.active = false; // Set active to false for items not matching the target
           }
         }
@@ -439,19 +521,27 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         }
       }
       if (targetObject?.children && targetObject.active) {
-        if (theme.dataVerticalStyle == 'doublemenu' && theme.toggled != 'double-menu-open') {
+        if (
+          theme.dataVerticalStyle == "doublemenu" &&
+          theme.toggled != "double-menu-open"
+        ) {
           updateAppState({ ...theme, toggled: "double-menu-open" });
         }
       }
-      if (element && theme.dataNavLayout == 'horizontal' && (theme.dataNavStyle == 'menu-click' || theme.dataNavStyle == 'icon-click')) {
+      if (
+        element &&
+        theme.dataNavLayout == "horizontal" &&
+        (theme.dataNavStyle == "menu-click" ||
+          theme.dataNavStyle == "icon-click")
+      ) {
         const listItem = element.closest("li");
         if (listItem) {
           // Find the first sibling <ul> element
           const siblingUL = listItem.querySelector("ul");
           let outterUlWidth = 0;
-          let listItemUL = listItem.closest('ul:not(.main-menu)');
+          let listItemUL = listItem.closest("ul:not(.main-menu)");
           while (listItemUL) {
-            listItemUL = listItemUL.parentElement.closest('ul:not(.main-menu)');
+            listItemUL = listItemUL.parentElement.closest("ul:not(.main-menu)");
             if (listItemUL) {
               outterUlWidth += listItemUL.clientWidth;
             }
@@ -459,14 +549,26 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
           if (siblingUL) {
             // You've found the sibling <ul> element
             let siblingULRect = listItem.getBoundingClientRect();
-            if (theme.dir == 'rtl') {
-              if ((siblingULRect.left - siblingULRect.width - outterUlWidth + 150 < 0 && outterUlWidth < window.innerWidth) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
+            if (theme.dir == "rtl") {
+              if (
+                siblingULRect.left - siblingULRect.width - outterUlWidth + 150 <
+                  0 &&
+                outterUlWidth < window.innerWidth &&
+                outterUlWidth + siblingULRect.width + siblingULRect.width <
+                  window.innerWidth
+              ) {
                 targetObject.dirchange = true;
               } else {
                 targetObject.dirchange = false;
               }
             } else {
-              if ((outterUlWidth + siblingULRect.right + siblingULRect.width + 50 > window.innerWidth && siblingULRect.right >= 0) && (outterUlWidth + siblingULRect.width + siblingULRect.width < window.innerWidth)) {
+              if (
+                outterUlWidth + siblingULRect.right + siblingULRect.width + 50 >
+                  window.innerWidth &&
+                siblingULRect.right >= 0 &&
+                outterUlWidth + siblingULRect.width + siblingULRect.width <
+                  window.innerWidth
+              ) {
                 targetObject.dirchange = true;
               } else {
                 targetObject.dirchange = false;
@@ -475,9 +577,10 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
           }
           setTimeout(() => {
             let computedValue = siblingUL.getBoundingClientRect();
-            if ((computedValue.bottom) > window.innerHeight) {
-              siblingUL.style.height = (window.innerHeight - computedValue.top - 8) + 'px';
-              siblingUL.style.overflow = 'auto';
+            if (computedValue.bottom > window.innerHeight) {
+              siblingUL.style.height =
+                window.innerHeight - computedValue.top - 8 + "px";
+              siblingUL.style.overflow = "auto";
             }
           }, 100);
         }
@@ -516,7 +619,10 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         return item;
       }
       if (item.children && item.children.length > 0) {
-        const parent: any = findParent(MENUITEMS = item.children, targetObject);
+        const parent: any = findParent(
+          (MENUITEMS = item.children),
+          targetObject
+        );
         if (parent) {
           return parent;
         }
@@ -527,36 +633,50 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   const Sideclick = () => {
     if (window.innerWidth > 992) {
       let html = document.documentElement;
-      if (html.getAttribute('icon-overlay') != 'open') {
-        html.setAttribute('icon-overlay', 'open');
+      if (html.getAttribute("icon-overlay") != "open") {
+        html.setAttribute("icon-overlay", "open");
       }
-   
+    }
+  };
+  function handleAttributeChange(mutationsList: any) {
+    for (const mutation of mutationsList) {
+      if (
+        mutation.type === "attributes" &&
+        (mutation.attributeName === "data-nav-layout" ||
+          mutation.attributeName === "data-vertical-style")
+      ) {
+        const newValue = mutation.target.getAttribute("data-nav-layout");
+        if (newValue == "vertical") {
+          let currentPath = location.pathname.endsWith("/")
+            ? location.pathname.slice(0, -1)
+            : location.pathname;
+          currentPath = !currentPath ? "/dashboard/ecommerce" : currentPath;
+          setMenuUsingUrl(currentPath);
+        } else {
+          closeMenuFn();
+        }
+      }
     }
   }
- function handleAttributeChange(mutationsList:any) {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'attributes' && (mutation.attributeName === 'data-nav-layout' || mutation.attributeName === 'data-vertical-style')) {
-            const newValue = mutation.target.getAttribute('data-nav-layout');
-            if (newValue == 'vertical') {
-                let currentPath = location.pathname.endsWith('/') ? location.pathname.slice(0, -1) : location.pathname;
-                currentPath = !currentPath ? '/dashboard/ecommerce' : currentPath;
-                setMenuUsingUrl(currentPath);
-            } else {
-                closeMenuFn();
-            }
-        }
-    }
-}
   return (
     <Fragment>
-      <div id="responsive-overlay"
-        onClick={() => { menuClose() }}
+      <div
+        id="responsive-overlay"
+        onClick={() => {
+          menuClose();
+        }}
       ></div>
-      <aside className="app-sidebar" id="sidebar" onMouseEnter={() => Onhover()}
-        onMouseLeave={() => Outhover()}>
-
+      <aside
+        className="app-sidebar"
+        id="sidebar"
+        onMouseEnter={() => Onhover()}
+        onMouseLeave={() => Outhover()}
+      >
         <div className="main-sidebar-header">
-          <a href={`${import.meta.env.BASE_URL}dashboards/crm/`} className="header-logo">
+          <a
+            href={`${import.meta.env.BASE_URL}dashboards/crm/`}
+            className="header-logo"
+          >
             <img src={logo1} alt="logo" className="desktop-logo" />
             <img src={logo2} alt="logo" className="toggle-logo" />
             <img src={logo3} alt="logo" className="desktop-dark" />
@@ -566,30 +686,65 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
           </a>
         </div>
         <SimpleBar className="main-sidebar" id="sidebar-scroll">
-
           <nav className="main-menu-container nav nav-pills flex-column sub-open">
-            <div className="slide-left" id="slide-left" onClick={() => { slideLeft(); }}><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24"
-              height="24" viewBox="0 0 24 24">
-              <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
-            </svg></div>
+            <div
+              className="slide-left"
+              id="slide-left"
+              onClick={() => {
+                slideLeft();
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#7b8191"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
+              </svg>
+            </div>
             {/* hasTopBorder */}
             <ul className="main-menu" onClick={() => Sideclick()}>
-              {menuitems.map((levelone:any) => (
+              {menuitems.map((levelone: any) => (
                 <Fragment key={Math.random()}>
-                  <li className={`${levelone.menutitle ? 'slide__category' :levelone.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${levelone.hasTopBorder === true ? 'border-t border-t-[1px] border-solid border-t-white/10 pt-2' : ''} ${levelone.type === 'link' ? 'slide' : ''}
-                       ${levelone.type === 'sub' ? 'slide has-sub' : ''} ${levelone?.active ? 'open' : ''} ${levelone?.selected ? 'active' : ''}`}>
-                    {levelone.menutitle ?
-                      <span className='category-name'>
+                  <li
+                    className={`${
+                      levelone.menutitle
+                        ? "slide__category"
+                        : levelone.menutitle_lg
+                        ? "slide__category slide__category__lg"
+                        : ""
+                    } ${
+                      levelone.hasTopBorder === true
+                        ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
+                        : ""
+                    } ${levelone.type === "link" ? "slide" : ""}
+                       ${levelone.type === "sub" ? "slide has-sub" : ""} ${
+                      levelone?.active ? "open" : ""
+                    } ${levelone?.selected ? "active" : ""}`}
+                  >
+                    {levelone.menutitle ? (
+                      <span className="category-name">
                         {levelone.menutitle}
                       </span>
-                      : ""}
-                      {levelone.menutitle_lg ?
-                      <span className='category-name'>
+                    ) : (
+                      ""
+                    )}
+                    {levelone.menutitle_lg ? (
+                      <span className="category-name">
                         {levelone.menutitle_lg}
                       </span>
-                      : ""}
-                    {levelone.type === "link" ?
-                      <Link to={levelone.path } className={`side-menu__item ${levelone.selected ? 'active' : ''}`} >
+                    ) : (
+                      ""
+                    )}
+                    {levelone.type === "link" ? (
+                      <Link
+                        to={levelone.path}
+                        className={`side-menu__item ${
+                          levelone.selected ? "active" : ""
+                        }`}
+                      >
                         {levelone.icon}
                         <span className="side-menu__label">
                           {levelone.title}
@@ -602,9 +757,11 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                           )}
                         </span>
                       </Link>
-                      : ""}
-                    {levelone.type === "empty" ?
-                      <Link to="#" className='side-menu__item'>
+                    ) : (
+                      ""
+                    )}
+                    {levelone.type === "empty" ? (
+                      <Link to="#" className="side-menu__item">
                         {levelone.icon}
                         <span className="">
                           {levelone.title}
@@ -617,55 +774,97 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                           )}
                         </span>
                       </Link>
-                      : ""}
-                    {levelone.type === "sub" ?
-                      <Menuloop MENUITEMS={levelone} level={level + 1} toggleSidemenu={toggleSidemenu} />
-                      : ''}
+                    ) : (
+                      ""
+                    )}
+                    {levelone.type === "sub" ? (
+                      <Menuloop
+                        MENUITEMS={levelone}
+                        level={level + 1}
+                        toggleSidemenu={toggleSidemenu}
+                      />
+                    ) : (
+                      ""
+                    )}
                   </li>
-                  
-                  {levelone.menutitle_lg && 
-                      <li className='slide__category_Detail'>
-                        <div className="sm:flex items-start items-center">
-                          <div>
-                            <span className="avatar avatar-md avatar-rounded ">
-                              <img
-                                alt={userSession.displayName}
-                                src={userSession.userimage}
-                              />
-                            </span>
-                          </div>
-                          <div className="flex-grow p-2">
-                            <div className="flex items-center !justify-between">
-                              <h6 className="mb-1  text-[.6rem]">
-                                {userSession.displayName}
-                                <p>{userSession.email}</p>
-                              </h6>
-                            </div>
+
+                  {levelone.menutitle_lg && levelone.showUserMiniCard && (
+                    <li className="slide__category_Detail">
+                      <div className="sm:flex items-start items-center">
+                        <div>
+                          <span className="avatar avatar-md avatar-rounded ">
+                            <img
+                              alt={userSession.displayName}
+                              src={userSession.userimage}
+                            />
+                          </span>
+                        </div>
+                        <div className="flex-grow p-2">
+                          <div className="flex items-center !justify-between">
+                            <h6 className="mb-1  text-[.6rem]">
+                              {userSession.displayName}
+                              <p>{userSession.email}</p>
+                            </h6>
                           </div>
                         </div>
-                        </li>}
-                 
+                      </div>
+                    </li>
+                  )}
+                  {levelone.menutitle_lg && levelone.showWorkspaceMiniCard && (
+                    <li className="slide__category_Detail">
+                      <div className="sm:flex items-start items-center">
+                        <div>
+                          <span className="avatar avatar-md avatar-rounded ">
+                            <ErpAvatar
+                              variant="square"
+                              alt={userSession.currentClientName}
+                              src={
+                                companyLogo
+                              }
+                              sx={avatarStyle}
+                            />
+                          </span>
+                        </div>
+                        <div className="flex-grow p-2">
+                          <div className="flex items-center !justify-between">
+                            <h6 className="mb-1  text-[.6rem]">
+                              <p>{userSession.currentClientName }</p>
+                              <p>Branch: {userSession.currentBranchName}</p>
+                            </h6>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  )}
                 </Fragment>
               ))}
             </ul>
-            <div className="slide-right" id="slide-right" onClick={() => { slideRight(); }}><svg xmlns="http://www.w3.org/2000/svg" fill="#7b8191" width="24"
-              height="24" viewBox="0 0 24 24">
-              <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
-            </svg>
+            <div
+              className="slide-right"
+              id="slide-right"
+              onClick={() => {
+                slideRight();
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#7b8191"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
+              </svg>
             </div>
           </nav>
-
         </SimpleBar>
-
       </aside>
     </Fragment>
-  )
-    ;
-}
+  );
+};
 
 const mapStateToProps = (state: any) => ({
-  local_varaiable: state
+  local_varaiable: state,
 });
 
 export default Sidebar;
-

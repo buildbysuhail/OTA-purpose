@@ -20,6 +20,8 @@ import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import AccountSettingsApis from "./account-settings-apis";
 import { Validation } from "devextreme-react/cjs/gantt";
 import { countries } from "../../redux/slices/data/thunk";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
 
 interface AccountSettingsProps {}
 interface UserProfileBasicInfo {
@@ -29,6 +31,7 @@ interface UserProfileBasicInfo {
 }
 let api = new APIClient();
 const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
+  let userSession  = useAppSelector((state: RootState) => state.UserSession);
   const initialBasicInfoWithValidation = {
     data: {
       nationality: null,
@@ -277,9 +280,7 @@ const updateBasicInfo = useCallback(async () => {
   };
   return (
     <Fragment>
-      <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
-        <div></div>
-      </div>
+      
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
@@ -315,7 +316,7 @@ const updateBasicInfo = useCallback(async () => {
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
                           <h6 className="font-semibold mb-1  text-[1rem]">
-                            Json Taylor
+                            {userSession?.displayName}
                           </h6>
                         </div>
                         {/* <p className="mb-1 opacity-[0.7]">

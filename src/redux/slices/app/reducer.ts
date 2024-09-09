@@ -75,6 +75,7 @@ const appStateSlice = createSlice({
   initialState,
   reducers: {
     setAppState: (state, action: PayloadAction<AppState>) => {
+      debugger;
       state.appState = action.payload;
     },
     setDirection: (state, action: PayloadAction<'ltr' | 'rtl'>) => {

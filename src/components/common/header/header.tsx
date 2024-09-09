@@ -735,16 +735,14 @@ debugger;
                   )}
                 </Link>
               </div>
-              <div className="header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left]">
+              <div id="dropdown-profile" className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] min-w-[150px]">
 
-                <button id="dropdown-profile" type="button"
-                  className="hs-dropdown-toggle ti-dropdown-toggle !gap-2 !p-0 flex-shrink-0 sm:me-2 me-0 !rounded-full !shadow-none text-xs align-middle !border-0 !shadow-transparent ">
-                  <img className="inline-block rounded-full " title={userSession?.userimage} src={userSession?.userimage} width="32" height="32" alt="Image Description" />
-                </button>
-                <div className="md:block hidden dropdown-profile">
+                <img className="inline-block rounded-full " title={userSession?.userimage} src={userSession?.userimage} width="32" height="32" alt="Image Description" />  
+                  <div className="md:block hidden dropdown-profile">
                   <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">{userSession?.displayName}</p>
                   <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">{userSession.userTypeName}</span>
                 </div>
+               
                 <div
                   className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
                   aria-labelledby="dropdown-profile">
@@ -761,7 +759,7 @@ debugger;
                           className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">25</span>
                       </Link>
                     </li>
-                    <li><Link className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex" to="#"><i
+                    <li><Link className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex" to="/logout"><i
                       className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>Log Out</Link></li>
                   </ul>
                 </div>

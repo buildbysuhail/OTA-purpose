@@ -3,6 +3,8 @@
 export const WorkspaceSettingsMenuItems = [
   {
     menutitle_lg: 'Workspace Settings',
+    showWorkspaceMiniCard: true,
+
   },
   {
     icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
@@ -34,12 +36,13 @@ export const WorkspaceSettingsMenuItems = [
     children: [
       // { path: `${import.meta.env.BASE_URL}account-settings/signin-method`, type: 'link', active: false, selected: false, title: 'Sign in Method' },
       // { path: `${import.meta.env.BASE_URL}account-settings/two-factor-authentication`, type: 'link', active: false, selected: false, title: '2 Factor Authentication' },
-      { path: `${import.meta.env.BASE_URL}account-settings/security/password`, type: 'link', active: false, selected: false, title: 'Delete Workspace' }
+      { path: `${import.meta.env.BASE_URL}workspace-settings/security/password`, type: 'link', active: false, selected: false, title: 'Delete Workspace' }
     ]
   }, 
   {
     icon: (<i className="side-menu__icon ri-bar-chart-line"></i>),
     type: 'link',
+    path: `${import.meta.env.BASE_URL}workspace-settings/members`,
     Name: '',
     active: false,
     selected: false,
@@ -47,23 +50,23 @@ export const WorkspaceSettingsMenuItems = [
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
-    path: `${import.meta.env.BASE_URL}account-settings/preferences/language`
   },
-  {
-    icon: (<i className="side-menu__icon ri-bar-chart-line"></i>),
-    type: 'link',
-    Name: '',
-    active: false,
-    selected: false,
-    title: 'Billing History',
-    badge: '',
-    badgetxt: '',
-    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
-    path: `${import.meta.env.BASE_URL}account-settings/preferences/language`
-  },
+  // {
+  //   icon: (<i className="side-menu__icon ri-bar-chart-line"></i>),
+  //   type: 'link',
+  //   Name: '',
+  //   active: false,
+  //   selected: false,
+  //   title: 'Billing History',
+  //   badge: '',
+  //   badgetxt: '',
+  //   class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+  //   path: `${import.meta.env.BASE_URL}account-settings/preferences/language`
+  // },
   {
     icon: (<i className="side-menu__icon ri-logout-circle-line"></i>),
     type: 'link',
+    path: `${import.meta.env.BASE_URL}logout`,
     Name: '',
     active: false,
     selected: false,

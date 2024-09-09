@@ -37,9 +37,7 @@ const WorkSpaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   return (
     <Fragment>
-      <div className="md:flex block items-center justify-between my-[1.5rem] page-header-breadcrumb">
-        <div></div>
-      </div>
+      
       <div className="grid grid-cols-12 gap-x-6">
       <div className="xxl:col-span-6 xl:col-span-12 col-span-12">
         <div className="grid grid-cols-12 gap-x-6">
@@ -52,10 +50,9 @@ const WorkSpaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
-                  Password{" "}
+                Delete Workspace{" "}
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    We recommend you to change your password often, it will make
-                    you feel better about your security!
+                  This will permanently remove all associated data from your account.
                   </p>
                 </div>
                 <div></div>

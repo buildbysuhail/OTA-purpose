@@ -253,13 +253,13 @@ export const Closedmenu = (actionfunction: any, appState: any) => {
 
 };
 
-function icontextOpenFn() {
+export function icontextOpenFn() {
     let html = document.documentElement;
     if (html.getAttribute('data-toggled') === 'icon-text-close') {
         html.setAttribute('icon-text', 'open');
     }
 }
-function icontextCloseFn() {
+export function icontextCloseFn() {
     let html = document.documentElement;
     if (html.getAttribute('data-toggled') === 'icon-text-close') {
         html.removeAttribute('icon-text');
@@ -310,7 +310,7 @@ export const iconOverayFn = (actionfunction: any, appState: any) => {
     });
 };
 
-function DetachedOpenFn() {
+export function DetachedOpenFn() {
     if (window.innerWidth > 992) {
    
         let html = document.documentElement;
@@ -319,7 +319,7 @@ function DetachedOpenFn() {
         }
     }
 }
-function DetachedCloseFn() {
+export function DetachedCloseFn() {
     if (window.innerWidth > 992) {
     
         let html = document.documentElement;
@@ -334,7 +334,7 @@ export const DetachedFn = (actionfunction: any, appState: any) => {
         ...appState,
         "dataNavLayout": "vertical",
         "dataVerticalStyle": "detached",
-        "toggled": "detached-close",
+        "toggled": "detached-open",
         "dataNavStyle": "",
     });
     localStorage.setItem("ynexverticalstyles", "detached");

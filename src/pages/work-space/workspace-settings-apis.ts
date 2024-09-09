@@ -4,10 +4,10 @@ import Urls from "../../redux/urls";
 const api = new APIClient();
 const WorkspaceSettingsApis = {
 
-  getAvailableSessionsForDxGrid: async (loadOptions: any) => {
+  getMembers: async (loadOptions: any) => {
     try {
       debugger;
-      const responseData = await api.get(Urls.getUserSession, loadOptions);
+      const responseData = await api.get(Urls.get_members, loadOptions);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);

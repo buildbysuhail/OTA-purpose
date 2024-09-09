@@ -3,6 +3,7 @@
 export const AccountSettingsMenuItems = [
   {
     menutitle_lg: 'Account Settings',
+    showUserMiniCard: true,
   },
   {
     icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
@@ -69,6 +70,7 @@ export const AccountSettingsMenuItems = [
   {
     icon: (<i className="side-menu__icon ri-logout-circle-line"></i>),
     type: 'link',
+    path: `${import.meta.env.BASE_URL}logout`,
     Name: '',
     active: false,
     selected: false,

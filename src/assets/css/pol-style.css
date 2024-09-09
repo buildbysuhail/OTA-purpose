@@ -8,3 +8,6 @@
 .box-title {
   @apply text-[.800rem];
 }
+.main-content {
+  @apply pt-4;
+}

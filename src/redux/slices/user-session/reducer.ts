@@ -5,7 +5,7 @@ import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
 export interface UserModel {
   userId: number;
   displayName: string;
-  userImage: string;
+  userimage: string;
   userTypeId: number;
   userTypeName: string;
   email: string;
@@ -27,7 +27,7 @@ export const initialState: UserModel = {
   displayName: '',
   userTypeId: 0,
   userTypeName: '',
-  userImage: '',
+  userimage: '',
   email: '',
   currentClientId: 0,
   currentClientName: '',

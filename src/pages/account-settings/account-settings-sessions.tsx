@@ -131,7 +131,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     // remoteOperations={true}
                     showColumnLines={false}
                     showRowLines={true}
-                    onRowPrepared={(e) => {
+                    onRowPrepared={(e: any) => {
                       if (e.rowType === "data" && e.data.isActive) {
                         e.rowElement.style.backgroundColor = "#90ee90"; // Apply green background for active rows
                       }

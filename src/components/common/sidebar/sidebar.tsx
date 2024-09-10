@@ -465,7 +465,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         companyLogo = company.logo;
       }
     }
-}, [userSession]);
+}, [userSession.companies]);
   useEffect(() => {
     // Select the target element
     const targetElement = document.documentElement;

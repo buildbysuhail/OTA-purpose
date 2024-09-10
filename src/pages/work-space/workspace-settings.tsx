@@ -2,6 +2,7 @@ import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import ERPAvatar from "../../components/ERPComponents/erp-avatar";
 import {
   useAppDynamicSelector,
+  useAppSelector,
 } from "../../utilities/hooks/useAppDispatch";
 import ERPCropper from "../../components/ERPComponents/erp-cropper";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
@@ -28,6 +29,8 @@ import { postAction } from "../../redux/app-actions";
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import WorkspaceSettingsApis from "./workspace-settings-apis";
+import { RootState } from "../../redux/store";
+import { userSession } from "../../redux/slices/user-session/thunk";
 
 interface WorkSpaceSettingsProps {}
 interface ProfileBasicInfo {
@@ -36,6 +39,7 @@ interface ProfileBasicInfo {
 }
 
 const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
+  let _userSession = useAppSelector((state: RootState) => state.UserSession);
   let api = new APIClient();
   const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");
@@ -136,8 +140,13 @@ const updateBasicInfo = useCallback(async () => {
     ...prevData,
     validations: response.validations
   }));
-  handleResponse(response, () => {});
-}, [dispatch, basicInfo.data]);
+  if(response.isOk) {
+    // await dispatch(userSession());
+  }
+  handleResponse(response, () => {
+    
+  });
+}, [dispatch, basicInfo.data, userSession]);
 
 /////////////////////////////////////////////////////////////////////
 
@@ -258,7 +267,7 @@ const updateBasicInfo = useCallback(async () => {
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
                           <h6 className="font-semibold mb-1  text-[1rem]">
-                            Json Taylor
+                            {_userSession.currentClientName}
                           </h6>
                         </div>
                         {/* <p className="mb-1 opacity-[0.7]">

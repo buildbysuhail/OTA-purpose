@@ -22,9 +22,10 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = ({ type }) => {
   const [menuitems, setMenuitems] = useState<any>([]);
+  const [companyLogo, setCompanyLogo] = useState<string>('');
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
-    debugger;
+    
     switch (type) {
       case "erp":
         setMenuitems(MENUITEMS);
@@ -66,7 +67,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   const avatarStyle = useMemo(() => {
     return { width: 40, height: 40 };
   }, []);
-  let companyLogo = "#";
+  
   
   function Onhover() {
     const theme = appState;
@@ -453,16 +454,18 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   const [previousUrl, setPreviousUrl] = useState("/");
 
   useEffect(() => {
+    
     if (
       userSession &&
       userSession.companies &&
       Array.isArray(userSession.companies)
     ) {
+      debugger;
       const company = userSession.companies.find(
-        (x) => x.text === userSession.currentClientName
+        (x) => x.name === userSession.currentClientName
       );
       if (company && company.logo) {
-        companyLogo = company.logo;
+        setCompanyLogo(company.logo);
       }
     }
 }, [userSession.companies]);

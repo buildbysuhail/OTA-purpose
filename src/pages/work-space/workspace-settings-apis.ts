@@ -6,7 +6,7 @@ const WorkspaceSettingsApis = {
 
   getMembers: async (loadOptions: any) => {
     try {
-      debugger;
+      
       const responseData = await api.get(Urls.get_members, loadOptions);
       return responseData;
     } catch (error) {
@@ -22,7 +22,7 @@ const WorkspaceSettingsApis = {
   getPhone: async () => {
     try {
       const responseData = await api.getAsync(Urls.getPhone_workspace);
-      debugger;
+      
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -32,7 +32,7 @@ const WorkspaceSettingsApis = {
   getEmail: async () => {
     try {
       const responseData = await api.getAsync(Urls.getEmail_workspace);
-      debugger;
+      
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -42,7 +42,7 @@ const WorkspaceSettingsApis = {
   getUserBasicInfo: async () => {
     try {
       const responseData = await api.getAsync(Urls.getBasicInfo_workspace);
-      debugger;
+      
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);

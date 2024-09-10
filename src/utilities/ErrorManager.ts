@@ -5,7 +5,7 @@ import HttpCodeMessages from "./HttpCodeMessages";
 const ErrorManager = {
   
   handle(error: any) {
-    debugger;
+    
     var msg = "";
     console.log(`ErrorManager,  : error?.response `, error?.response);
     if (error.toJSON().message === "Network Error") {

@@ -45,7 +45,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
     },
   };
   const [image, setImage] = useState<string>("#");
-  debugger;
+  
   
   const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
@@ -106,10 +106,10 @@ const resetBasicInfo = useCallback(async () => {
 }, [initialBasicInfoWithValidation]);
 
 const updateBasicInfo = useCallback(async () => {
-  debugger;
+  
   setBasicInfoLoading(true);
   const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo?.data);
-  debugger;
+  
   setBasicInfoLoading(false);
   
   setBasicInfo((prevData: any) => ({
@@ -469,7 +469,7 @@ const updateBasicInfo = useCallback(async () => {
                     required={true}
                     data={basicInfo?.data}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: data

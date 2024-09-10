@@ -103,7 +103,7 @@ export default function SBDataCombobox({
   const [query, setQuery] = useState("");
   const [localValue, setLocalValue] = useState<any>();
   const [hasValue, setHasValue] = useState<boolean>(false);
-debugger;
+
   const dataList: any = useAppSelector((state: RootState) => state[reducer] );
 
   const listData = isPaginated ? dataList?.results : dataList;
@@ -111,7 +111,7 @@ debugger;
   console.log(`SBDataCombobox,  : data_list_data`, id, dataList);
 
   useEffect(() => {
-    debugger;
+    
     if (!disabledApiCall) {
       thunkAction  != undefined && dispatch(thunkAction());
     }

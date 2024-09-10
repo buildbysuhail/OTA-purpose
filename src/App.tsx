@@ -64,7 +64,7 @@ function App() {
     // setReloading(true);
     let res = await api.get(Urls.getUserThemes);
     await dispatch(userSession());
-    debugger;
+    
 
     dispatch(setDirection(res.direction ?? "ltr"));
 
@@ -86,13 +86,13 @@ function App() {
       localStorage.removeItem("ynexlighttheme");
       localStorage.removeItem("darkBgRGB");
     }
-    debugger;
+    
     dispatch(setColorPrimaryRgb(res.colorPrimaryRgb));
     dispatch(setColorPrimary(res.colorPrimaryRgb));
     localStorage.setItem("primaryRGB", res.colorPrimaryRgb);
     localStorage.setItem("primaryRGB1", res.colorPrimaryRgb);
 
-    debugger;
+    
     switch (res.menuStyle) {
       case "dark":
         dispatch(setDataMenuStyles("dark"));

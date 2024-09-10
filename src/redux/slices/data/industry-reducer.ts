@@ -24,7 +24,7 @@ const industriesSlice = createSlice({
         // You can set a loading state here if needed
       })
       .addCase(industries.fulfilled, (state, action: PayloadAction<any>) => {
-        debugger;
+        
         // Replace the entire state with the new data
         return action.payload;
         

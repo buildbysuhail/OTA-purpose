@@ -67,7 +67,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
  
-  debugger;
+  
   
   const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
@@ -97,7 +97,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   }, [dispatch, phone]);
   const changeEmail = useCallback(async () => {
     setEmailLoading(true);
-    debugger;
+    
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({apiUrl:Urls.updateCompanyEmail_workspace, data: {newValue: postEmail}}) as any
     ).unwrap();
@@ -126,10 +126,10 @@ const resetBasicInfo = useCallback(async () => {
 }, [initialBasicInfoWithValidation]);
 
 const updateBasicInfo = useCallback(async () => {
-  debugger;
+  
   setBasicInfoLoading(true);
   const response: ResponseModelWithValidation<any, any> = await WorkspaceSettingsApis.updateUserBasicInfo(basicInfo.data);
-  debugger;
+  
   setBasicInfoLoading(false);
   
   setBasicInfo((prevData: any) => ({
@@ -156,9 +156,9 @@ const updateBasicInfo = useCallback(async () => {
   };
   
   const getEmail = async () => {
-    debugger;
+    
     let res = await WorkspaceSettingsApis.getEmail();
-    debugger;
+    
     setEmail(res);
   };
 
@@ -190,7 +190,7 @@ const updateBasicInfo = useCallback(async () => {
               required={true}
               data={{newValue:postEmail}}
               onChangeData={(data: any) =>
-              {debugger;setPostEmail(data.newValue)}
+              {setPostEmail(data.newValue)}
               }
               value={postEmail}
             />
@@ -412,7 +412,7 @@ Recommended size: 300 x 300 pixels. */}
                     required={true}
                     data={basicInfo.data}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: data
@@ -431,7 +431,7 @@ Recommended size: 300 x 300 pixels. */}
                     placeholder="Eg: Novalabs"
                     data={basicInfo.data}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: data
@@ -481,7 +481,7 @@ Recommended size: 300 x 300 pixels. */}
                     thunkAction= {currencies}
                     reducer="Curencies"
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: data
@@ -563,7 +563,7 @@ Recommended size: 300 x 300 pixels. */}
                   
                     data={basicInfo.data}
                     onChangeData={(data: any) => {
-                      debugger;
+                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: data

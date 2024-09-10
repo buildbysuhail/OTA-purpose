@@ -60,7 +60,7 @@ const Header: FC<HeaderProps> = () => {
     }
   };
 let userSession  = useAppSelector((state: RootState) => state.UserSession);
-debugger;
+
   const handleFullscreenChange = () => {
     setFullScreen(!!document.fullscreenElement);
   };

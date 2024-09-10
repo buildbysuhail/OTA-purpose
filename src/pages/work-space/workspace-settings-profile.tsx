@@ -41,7 +41,7 @@
 //     },
 //   };
 //   const [image, setImage] = useState<string>("#");
-//   debugger;
+//   
   
 //   const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
 //   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
@@ -102,10 +102,10 @@
 // }, [initialBasicInfoWithValidation]);
 
 // const updateBasicInfo = useCallback(async () => {
-//   debugger;
+//   
 //   setBasicInfoLoading(true);
 //   const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo.data);
-//   debugger;
+//   
 //   setBasicInfoLoading(false);
   
 //   setBasicInfo((prevData: any) => ({
@@ -469,7 +469,7 @@
 //                     required={true}
 //                     data={basicInfo?.data}
 //                     onChangeData={(data: any) => {
-//                       debugger;
+//                       
 //                       setBasicInfo((prev: any) => ({
 //                         ...prev,
 //                         data: data

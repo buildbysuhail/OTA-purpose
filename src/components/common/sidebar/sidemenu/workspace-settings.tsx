@@ -36,7 +36,7 @@ export const WorkspaceSettingsMenuItems = [
     children: [
       // { path: `${import.meta.env.BASE_URL}account-settings/signin-method`, type: 'link', active: false, selected: false, title: 'Sign in Method' },
       // { path: `${import.meta.env.BASE_URL}account-settings/two-factor-authentication`, type: 'link', active: false, selected: false, title: '2 Factor Authentication' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/security/password`, type: 'link', active: false, selected: false, title: 'Delete Workspace' }
+      { path: `${import.meta.env.BASE_URL}workspace-settings/security/deleteWorkspace`, type: 'link', active: false, selected: false, title: 'Delete Workspace' }
     ]
   }, 
   {

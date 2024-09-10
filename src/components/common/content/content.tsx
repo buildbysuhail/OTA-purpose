@@ -6,6 +6,7 @@ import WorkSpaceSettings from '../../../pages/work-space/workspace-settings';
 import AccountSettingsSessions from '../../../pages/account-settings/account-settings-sessions';
 import AccountSettingsProfile from '../../../pages/account-settings/account-settings-profile';
 import WorkspaceSettingsMembers from '../../../pages/work-space/workspace-settings-members';
+import WorkspaceSettingsSecurity from '../../../pages/work-space/workspace-settings-security';
 
 interface ContentProps { }
 const loading = (
@@ -34,6 +35,7 @@ const Content: FC<ContentProps> = () => {
           <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
           <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
           <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
+          <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
           <Route path="/members" element={<WorkspaceSettingsMembers />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {

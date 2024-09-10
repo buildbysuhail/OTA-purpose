@@ -18,11 +18,15 @@ import {
   Paging,
   Scrolling,
   SearchPanel,
+  DataGridTypes
 } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import AccountSettingsApis from "./account-settings-apis";
 import Pageheader from "../../components/common/pageheader/pageheader";
-
+import chrome from '../../assets/images/browser-logos/chrome.png';
+import firefox from '../../assets/images/browser-logos/firefox.png';
+import microsoft from '../../assets/images/browser-logos/microsoft.png';
+import safari from '../../assets/images/browser-logos/safari.png';
 interface AccountSettingsProps {}
 
 const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
@@ -78,6 +82,9 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       }
     },
   });
+  
+ 
+  
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
 
@@ -98,6 +105,53 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
 
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
+
+// ======================================cellRender===================================================
+
+  const renderBrowserCell = (data: DataGridTypes.ColumnCellTemplateData) => {
+    let browserImage = '';
+    
+    switch (data.data.browser) {
+      case 'Chrome':
+        browserImage = chrome;
+        break;
+      case 'Firefox':
+        browserImage = firefox;
+        break;
+      case 'Edge':
+        browserImage = microsoft;
+        break;
+      case 'Safari':
+        browserImage = safari;
+        break;
+      default:
+        browserImage = ''; // You can add a default image or leave it empty
+    }
+  
+    return (
+      <div className="flex justify-start items-center gap-1">
+        {browserImage && <img src={browserImage} alt={data.data.browser} style={{ width: '20px', height: '20px' }} />}
+        <span>{data.data.browser}</span>
+      </div>
+    );
+  };
+
+ const renderCountryCell = (data: DataGridTypes.ColumnCellTemplateData)=>(
+  <div className="flex justify-start items-center gap-0.5">
+   <img
+      src={data.data.country_flag ? data.data.country_flag : "data:image/gif;base64,R0lGODlhAQABAIAAAAUEBA=="}
+      alt={``}
+      className="object-scale-down"
+      style={{ width: '40px', height: '20px', minWidth: '40px', minHeight: '20px' }} 
+    />
+    <span>{`${data.data.state}-${data.data.country}`}</span>
+</div>
+ )
+
+//  const renderDeviceCell = (data: DataGridTypes.ColumnCellTemplateData)=>{}
+
+ 
+//  ==========================================================================================
   return (
     <Fragment>
       
@@ -128,6 +182,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       // "https://localhost:7213/api/Core/LoginSessions/GetAllAsync"
                     }
                     showBorders={true}
+                    columnAutoWidth={true}
                     // remoteOperations={true}
                     showColumnLines={false}
                     showRowLines={true}
@@ -155,6 +210,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="browser"
+                      cellRender={renderBrowserCell}
                       caption={"browser"}
                       dataType="string"
                     />
@@ -169,12 +225,14 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="device"
+                      // cellRender={renderDeviceCell}
                       caption={"device"}
                       dataType="string"
                     />
                     <Column
                       allowSearch={true}
                       allowFiltering={true}
+                      cellRender={renderCountryCell}
                       dataField="location"
                       caption={"location"}
                       dataType="string"

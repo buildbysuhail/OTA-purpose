@@ -67,18 +67,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
     return { width: 40, height: 40 };
   }, []);
   let companyLogo = "#";
-  if (
-    userSession &&
-    userSession.companies &&
-    Array.isArray(userSession.companies)
-  ) {
-    const company = userSession.companies.find(
-      (x) => x.text === userSession.currentClientName
-    );
-    if (company && company.logo) {
-      companyLogo = company.logo;
-    }
-  }
+  
   function Onhover() {
     const theme = appState;
     if (
@@ -463,6 +452,20 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   }
   const [previousUrl, setPreviousUrl] = useState("/");
 
+  useEffect(() => {
+    if (
+      userSession &&
+      userSession.companies &&
+      Array.isArray(userSession.companies)
+    ) {
+      const company = userSession.companies.find(
+        (x) => x.text === userSession.currentClientName
+      );
+      if (company && company.logo) {
+        companyLogo = company.logo;
+      }
+    }
+}, [userSession]);
   useEffect(() => {
     // Select the target element
     const targetElement = document.documentElement;

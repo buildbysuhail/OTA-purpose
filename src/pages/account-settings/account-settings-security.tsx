@@ -11,9 +11,9 @@ import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { useLocation } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 
-interface WorkSpaceSettingsProps {}
+interface AccountSettingsProps {}
 
-const AccountSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
+const AccountSettingsSecurity: FC<AccountSettingsProps> = (props) => {
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
  
@@ -50,9 +50,9 @@ const AccountSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
             <div className="box custom-box">
               <div className="box-header justify-between">
                 <div className="box-title">
-                Delete Workspace{" "}
+                Reset Password{" "}
                   <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                  This will permanently remove all associated data from your account.
+                  We recommend you to change your password often, it will make you feel better about your security!
                   </p>
                 </div>
                 <div></div>

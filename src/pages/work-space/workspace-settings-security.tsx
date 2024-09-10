@@ -11,10 +11,10 @@ import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { useLocation, useNavigate } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 import ERPModal from "../../components/ERPComponents/erp-modal";
+ 
+interface WorkSpaceSettingsProps {}
 
-interface AccountSettingsProps {}
-
-const WorkspaceSettingsSecurity: FC<AccountSettingsProps> = (props) => {
+const WorkspaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
   const [deleteWorkspacePopupOpen, setDeleteWorkspacePopupOpen] =
@@ -23,8 +23,8 @@ const WorkspaceSettingsSecurity: FC<AccountSettingsProps> = (props) => {
       useState<boolean>(false);
 
   const [postDataDeleteWorkspace, setPostDataDeleteWorkspace] = useState<any>({
-    data: { userName: "", password: "", workspaceName: "" },
-    validations: { userName: "", password: "", workspaceName: "" },
+    data: { userName: "", password: "", newValue: "" },
+    validations: { userName: "", password: "", newValue: "" },
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const WorkspaceSettingsSecurity: FC<AccountSettingsProps> = (props) => {
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
         apiUrl: Urls.delete_workspace,
-        data: postDataDeleteWorkspace,
+        data: postDataDeleteWorkspace.data,
       }) as any
     ).unwrap();
     setPostDataDeleteWorkspace((prevData: any) => ({
@@ -58,8 +58,8 @@ const WorkspaceSettingsSecurity: FC<AccountSettingsProps> = (props) => {
        <div className="grid grid-cols-1 gap-3">
             <ERPInput
               id="userName"
-              type="email"
-              placeholder="Current Email"
+              type="text"
+              placeholder="UserName"
               required={true}
               data={postDataDeleteWorkspace?.data}
               onChangeData={(data: any) => {
@@ -86,9 +86,9 @@ const WorkspaceSettingsSecurity: FC<AccountSettingsProps> = (props) => {
               validation={postDataDeleteWorkspace?.validations?.password}
             />
             <ERPInput
-              id="workspaceName"
+              id="newValue"
               type="text"
-              placeholder="New Email"
+              placeholder="Workspace Name"
               required={true}
               data={postDataDeleteWorkspace?.data}
               onChangeData={(data: any) =>
@@ -97,8 +97,8 @@ const WorkspaceSettingsSecurity: FC<AccountSettingsProps> = (props) => {
                   data: data,
                 }))
               }
-              value={postDataDeleteWorkspace?.data?.workspaceName}
-              validation={postDataDeleteWorkspace?.validations?.workspaceName}
+              value={postDataDeleteWorkspace?.data?.newValue}
+              validation={postDataDeleteWorkspace?.validations?.newValue}
             />
           </div>
         <div className="w-full p-2 flex justify-end">

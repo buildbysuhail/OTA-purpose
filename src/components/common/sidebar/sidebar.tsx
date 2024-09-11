@@ -820,7 +820,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                     <li className="slide__category_Detail">
                       <div className="sm:flex items-start items-center">
                         <div>
-                          <span className="avatar avatar-md avatar-rounded ">
+                          <span className="avatar avatar-md avatar-badge ">
                             <ErpAvatar
                               variant="square"
                               alt={userSession.currentClientName}

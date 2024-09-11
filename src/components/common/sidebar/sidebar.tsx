@@ -808,7 +808,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         <div className="flex-grow p-2">
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
-                              {userSession.displayName}
+                              <p className="mb-1  text-[.8rem]">{userSession.displayName}</p>
                               <p>{userSession.email}</p>
                             </h6>
                           </div>
@@ -820,7 +820,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                     <li className="slide__category_Detail">
                       <div className="sm:flex items-start items-center">
                         <div>
-                          <span className="avatar avatar-md avatar-rounded ">
+                          <span className="avatar avatar-md avatar-badge ">
                             <ErpAvatar
                               variant="square"
                               alt={userSession.currentClientName}
@@ -834,7 +834,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         <div className="flex-grow p-2">
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
-                              <p>{userSession.currentClientName }</p>
+                              <p className="mb-1  text-[.8rem]">{userSession.currentClientName }</p>
                               <p>Branch: {userSession.currentBranchName}</p>
                             </h6>
                           </div>

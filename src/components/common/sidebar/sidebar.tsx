@@ -834,7 +834,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         <div className="flex-grow p-2">
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
-                              <p>{userSession.currentClientName }</p>
+                              <p className="mb-1  text-[.8rem]">{userSession.currentClientName }</p>
                               <p>Branch: {userSession.currentBranchName}</p>
                             </h6>
                           </div>

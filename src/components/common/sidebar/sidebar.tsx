@@ -808,7 +808,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         <div className="flex-grow p-2">
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
-                              {userSession.displayName}
+                              <p className="mb-1  text-[.8rem]">{userSession.displayName}</p>
                               <p>{userSession.email}</p>
                             </h6>
                           </div>

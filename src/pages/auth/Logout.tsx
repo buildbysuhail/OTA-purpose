@@ -26,6 +26,7 @@ const Logout = () => {
       logoutUser({ systemId: Cookies.get("systemId") ?? "" })
     ).unwrap();
 
+    Cookies.remove("token");
     if (logout.isOk == true) {
       Cookies.remove("token");
       navigate("/login");

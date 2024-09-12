@@ -41,7 +41,9 @@ const ERPButton = ({
       className={`ti-btn ti-btn-full m-2 py-2 px-4 text-sm ${disabled && "opacity-60"} rounded-md font-medium ${variantType}`}
     >
       <div className="flex gap-2">
-        {startIcon && startIcon}
+        {startIcon && 
+		<i className="ri-logout-box-r-line"></i>
+		}
         {title}
         {loading && (
           <div className="flex items-center">

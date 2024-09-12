@@ -28,6 +28,7 @@ const Urls = {
   // Auth
 
   login: "/login/",
+  logout: "/logout/",
   password_reset: "/passwordReset",
   password_reset_confirm: "/resetPassword/",
   social_signup: "/socialSignup",
@@ -49,6 +50,7 @@ const Urls = {
   getPhone_profile: "/Subscription/Profile/GetPhone/",
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
   getUserSession: "/Core/LoginSessions/GetAllAsync",
+  logoutUserSession: "/Core/LoginSessions/InActiveSession",
 
 
 uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",

@@ -90,19 +90,26 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   
   let api = new APIClient();
   const [password, setPassword] = useState<string>("");
+  const [loadingLogout, setLoadingLogout] = useState<{loading:boolean, deviceId: string}>({loading:false, deviceId: ''});
 
+ 
   const dispatch = useDispatch();
 
-  const resetPassword = async () => {
+  const handleLogout = async (deviceId:string) => {
+    setLoadingLogout({loading: true, deviceId: deviceId});
+    // debugger;
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
-        apiUrl: Urls.updatePassword,
-        data: { password: password },
+        apiUrl: Urls.logoutUserSession,
+        data: {
+           deviceId: deviceId
+           },
       }) as any
     ).unwrap();
-
+    // debugger;
+    setLoadingLogout({loading: false, deviceId: deviceId});
     handleResponse(response, () => {
-      setPassword("");
+      store.load();
     });
   };
 
@@ -132,23 +139,24 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
     }
   
     return (
-      <div className="flex justify-start items-center gap-1">
-        {browserImage && <img src={browserImage} alt={data.data.browser} style={{ width: '18px', height: '18px' }} />}
-        <span>{data.data.browser}</span>
-        <i className="ri-checkbox-blank-circle-fill drop-shadow-md" style={{ color: data.data.isActive ? '#22c55e' : '#57534e',fontSize: '7px' }}></i>
+      <div className="flex justify-start items-center  gap-1">
+        {browserImage && <img src={browserImage} alt={data.data.browser} style={{ width: '15px', height: '15px' }} />}
+        <span className="text-[12px] text-black font-sans">{data.data.browser}</span>
+       
+        {data.data.isActive && <i className="ri-checkbox-blank-circle-fill drop-shadow-sm self-center" style={{ color:'#22c55e',fontSize: '7px' }}></i>}
       </div>
     );
   };
 
  const renderCountryCell = (data: DataGridTypes.ColumnCellTemplateData)=>(
-  <div className="flex justify-start items-center gap-1">
+  <div className="flex justify-start items-center  gap-1">
    <img
       src={data.data.country_flag ? data.data.country_flag : ""}
       alt={``}
       className="aspect-square  rounded-full"
-      style={{ width: '18px', height: '18px',}} 
+      style={{ width: '15px', height: '15px',}} 
     />
-    <span>{`${data.data.country},${data.data.state}`}</span>
+    <span className="text-[12px] text-black font-sans">{`${data.data.country},${data.data.state}`}</span>
 </div>
  )
 
@@ -180,10 +188,12 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   };
 
   return (
-    <div className="flex justify-start items-center gap-1">
+    <div className="flex justify-start items-center  gap-1">
       {/* {deviceImage && <img src={deviceImage} alt={data.data.device} className="aspect-square object-contain" style={{ width: '17px', height: '17px' }} />} */}
-      {iconclass  && <i className={`${iconclass}  text-[20px] text-sky-600`} ></i>}
-      <span className="">{data.data.device} </span>
+      <div className="w-[16px] h-[16px]  flex justify-center ">
+      {iconclass  && <i className={`${iconclass} object-contain text-[16px] text-sky-400`} ></i>}
+      </div>
+      <span className="text-black font-sans font-[200]">{data.data.device} </span>
       
     </div>
   );
@@ -191,11 +201,15 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
 
 
  const renderCellHeader = (data:any) => {
- return  <span className="font-semibold text-black font-sans text-[13px] py-2">
+ return  <div className=" font-me font-sans text-black text-[13px] ">
   {data.column.caption}
-</span>
+</div>
  }
  
+ const cellPrepared = (e:any) => {
+
+     e.cellElement.style.cssText = " color: #000000; font-size:12px; font-weight:200; ";
+}
 //  ==========================================================================================
   return (
     <Fragment>
@@ -234,7 +248,8 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     // remoteOperations={true}
                     showColumnLines={false}
                     showRowLines={true}
-                   
+                    onCellPrepared={cellPrepared}
+                    // onScroll={handleScroll}
                     // onRowPrepared={(e: any) => {
                     //   if (e.rowType === "data" && e.data.isActive) {
                     //     e.rowElement.style.backgroundColor = "#90ee90"; // Apply green background for active rows
@@ -255,6 +270,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     {/* <Column dataField="branchName" caption={'branchName'} dataType="string" /> */}
 
                     <Column
+                      
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="branchName"
@@ -268,10 +284,10 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowFiltering={true}
                       dataField="browser"
                       cellRender={renderBrowserCell}
-                      calculateSortValue={(rowData) => (
-                       rowData.isActive ? 0 : 1 
-                      )}
-                      sortOrder="asc"
+                      // calculateSortValue={(rowData) => (
+                      //  rowData.isActive ? 0 : 1 
+                      // )}
+                      // sortOrder="asc"
                       caption={"Browser"}
                       headerCellRender={renderCellHeader}
                       dataType="string"
@@ -302,20 +318,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       headerCellRender={renderCellHeader}
                       dataType="string"
                     />
-                    {/* <Column
-                      allowSearch={true}
-                      allowFiltering={true}
-                      dataField="latitude"
-                      caption={"latitude"}
-                      dataType="string"
-                    /> */}
-                    {/* <Column
-                      allowSearch={true}
-                      allowFiltering={true}
-                      dataField="longitude"
-                      caption={"Longitude"}
-                      dataType="string"
-                    /> */}
+
                     <Column
                       allowSearch={true}
                       allowFiltering={true}
@@ -328,15 +331,27 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                        
                       fixed={true} fixedPosition="right"
                       cellRender={({ data }) => (
+                    // <div className="flex justify-center" }>
+                    
+                    <ERPButton  title="" 
+                    onClick={()=>
+                    {
+                      // debugger;
+                      handleLogout(data?.deviceId??"")
+                    }
+                    } 
+                    className="p-0 m-0  "
+                    startIcon="ri-logout-box-r-line" type="button"
+                    disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
+                    loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
                    
-                      // onClick={() => handleLogout(data)} 
-                     
-                      // <i className="ri-logout-box-r-fill text-sky-800  text-[23px] ml-2"></i>
-                     <i className="ri-logout-box-r-line text-sky-800 text-center  text-[20px]  pl-1" ></i>
-                     
+                     >
+
+                     </ERPButton>
+                    
                        )}
                     caption="" 
-                     width={50} 
+                     width={55} 
                     
                      />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}

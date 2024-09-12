@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Header from "./Components/Header";
-import { SettingsRoutes } from "./SettingsRoutes";
-import SettingsCard from "./Components/SettingsCard";
-import { useSelector } from "react-redux";
-import jwtHelper from "../../../helpers/jwt_helper";
+// import React, { useEffect, useState } from "react";
+// import Header from "./Components/Header";
+// import { SettingsRoutes } from "./SettingsRoutes";
+// import SettingsCard from "./Components/SettingsCard";
+// import { useSelector } from "react-redux";
+// import jwtHelper from "../../../helpers/jwt_helper";
 
 const Settings = () => {
   // const [settingsRoutes, setSettingRoutes] = useState(SettingsRoutes);

@@ -85,6 +85,22 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   
   //////////////////////////////////////////////////////////////////////
   
+  useEffect(() => {
+    
+    if (
+      _userSession &&
+      _userSession.companies &&
+      Array.isArray(_userSession.companies)
+    ) {
+      debugger;
+      const company = _userSession.companies.find(
+        (x) => x.name === _userSession.currentClientName
+      );
+      if (company && company.logo) {
+        setImage(company.logo);
+      }
+    }
+}, [_userSession.companies]);
   const getPhone = async () => {
     
     let res = await WorkspaceSettingsApis.getPhone();
@@ -175,7 +191,6 @@ const updateBasicInfo = useCallback(async () => {
   const onImageSuccess = useMemo(() => {
     
     return (url: string) => {
-      setImage(url);
       appDispatch(userSession());
     };
   }, []);
@@ -183,9 +198,6 @@ const updateBasicInfo = useCallback(async () => {
     getBasicInfo();
     getEmail();
     getPhone();
-    api.get(Urls.getLogo_workspace).then((url) => {
-      setImage(url);
-    });
   }, []);
 
   const PopUpModalEmailChange = () => {

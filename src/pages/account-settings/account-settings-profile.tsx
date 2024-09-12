@@ -45,6 +45,11 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
       displayName: "",
     },
   };
+  const initialEmailData = {
+    data: { userName: "", password: "", newValue: "" },
+    validations: { userName: "", password: "", newValue: "" },
+    tokenSend: false,
+  }
   const [image, setImage] = useState<string>("#");
   
   
@@ -54,11 +59,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
   const [email, setEmail] = useState<string>("");
   const [emailLoading, setEmailLoading] = useState<boolean>(false);
-  const [postDataEmail, setPostDataEmail] = useState<any>({
-    data: { userName: "", password: "", newValue: "" },
-    validations: { userName: "", password: "", newValue: "" },
-    tokenSend: false,
-  });
+  const [postDataEmail, setPostDataEmail] = useState<any>(initialEmailData);
   const [postDataEmailTokenVerify, setPostDataEmailTokenVerify] = useState<any>(
     { userName: "", newValue: "", otp: "", confirToken: "" }
   );
@@ -158,7 +159,7 @@ const updateBasicInfo = useCallback(async () => {
     setEmailLoading(false);
     handleResponse(response, () => {
       setIsOpenEmailChange(false);
-      setPostDataEmail({});
+      setPostDataEmail({initialEmailData});
       getEmail();
     });
   };
@@ -193,10 +194,11 @@ const updateBasicInfo = useCallback(async () => {
             <ERPInput
               id="userName"
               type="email"
-              placeholder="Current Email"
+              placeholder="Current Emailt"
               required={true}
               data={postDataEmail?.data}
               onChangeData={(data: any) => {
+                debugger;
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
@@ -211,10 +213,14 @@ const updateBasicInfo = useCallback(async () => {
               value={postDataEmail?.data?.password}
               data={postDataEmail?.data}
               onChangeData={(data: any) =>
+              {
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
                 }))
+                debugger;
+              }
+                
               }
             />
             <ERPInput
@@ -224,10 +230,13 @@ const updateBasicInfo = useCallback(async () => {
               required={true}
               data={postDataEmail?.data}
               onChangeData={(data: any) =>
+               {
+                debugger;
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
                 }))
+               }
               }
               value={postDataEmail?.data?.newValue}
             />
@@ -262,7 +271,7 @@ const updateBasicInfo = useCallback(async () => {
             variant="secondary"
             onClick={() => {
               setIsOpenEmailChange(false);
-              setPostDataEmail({});
+              setPostDataEmail({initialEmailData});
             }}
             disabled={emailLoading}
           ></ERPButton>
@@ -387,8 +396,8 @@ const updateBasicInfo = useCallback(async () => {
                 title={"Update Email"}
                 isForm={true}
                 closeModal={() => {
+                  setPostDataEmail(initialEmailData);
                   setIsOpenEmailChange(false);
-                  setPostDataEmail({});
                 }}
                 content={PopUpModalEmailChange()}
               />

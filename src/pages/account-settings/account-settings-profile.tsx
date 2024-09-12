@@ -20,8 +20,9 @@ import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import AccountSettingsApis from "./account-settings-apis";
 import { Validation } from "devextreme-react/cjs/gantt";
 import { countries } from "../../redux/slices/data/thunk";
-import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
+import { userSession } from "../../redux/slices/user-session/thunk";
 
 interface AccountSettingsProps {}
 interface UserProfileBasicInfo {
@@ -31,7 +32,7 @@ interface UserProfileBasicInfo {
 }
 let api = new APIClient();
 const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
-  let userSession  = useAppSelector((state: RootState) => state.UserSession);
+  let _userSession  = useAppSelector((state: RootState) => state.UserSession);
   const initialBasicInfoWithValidation = {
     data: {
       nationality: null,
@@ -68,6 +69,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
   const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
 
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
@@ -116,6 +118,7 @@ const updateBasicInfo = useCallback(async () => {
     ...prevData,
     validations: response.validations
   }));
+  appDispatch(userSession());
   handleResponse(response, () => {});
 }, [dispatch, basicInfo?.data]);
 
@@ -163,13 +166,14 @@ const updateBasicInfo = useCallback(async () => {
     
     let res = await AccountSettingsApis.getEmail();
     setEmail(res);
+    appDispatch(userSession());
   };
 
   /////////////////////////////////////////////////////////////////////
   const onImageSuccess = useMemo(() => {
-    
     return (url: string) => {
       setImage(url);
+      appDispatch(userSession());
     };
   }, []);
   useEffect(() => {
@@ -316,7 +320,7 @@ const updateBasicInfo = useCallback(async () => {
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
                           <h6 className="font-semibold mb-1  text-[1rem]">
-                            {userSession?.displayName}
+                            {_userSession?.displayName}
                           </h6>
                         </div>
                         {/* <p className="mb-1 opacity-[0.7]">

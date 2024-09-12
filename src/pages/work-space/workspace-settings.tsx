@@ -1,6 +1,7 @@
 import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import ERPAvatar from "../../components/ERPComponents/erp-avatar";
 import {
+  useAppDispatch,
   useAppDynamicSelector,
   useAppSelector,
 } from "../../utilities/hooks/useAppDispatch";
@@ -66,7 +67,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     },
   };
   const dispatch = useDispatch();
-
+  const appDispatch = useAppDispatch();
   
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
@@ -140,6 +141,7 @@ const updateBasicInfo = useCallback(async () => {
     ...prevData,
     validations: response.validations
   }));
+  appDispatch(userSession());
   if(response.isOk) {
     // await dispatch(userSession());
   }
@@ -165,9 +167,7 @@ const updateBasicInfo = useCallback(async () => {
   };
   
   const getEmail = async () => {
-    
     let res = await WorkspaceSettingsApis.getEmail();
-    
     setEmail(res);
   };
 
@@ -176,6 +176,7 @@ const updateBasicInfo = useCallback(async () => {
     
     return (url: string) => {
       setImage(url);
+      appDispatch(userSession());
     };
   }, []);
   useEffect(() => {
@@ -254,13 +255,11 @@ const updateBasicInfo = useCallback(async () => {
                     <div className="sm:flex items-start items-center">
                       <div>
                         <span className="avatar avatar-xxl avatar-badge">
-                          <ERPAvatar
-                            variant="square"
-                            alt="Remy Sharp"
-                            src={image}
-                            sx={useMemo(() => {
-                              return { width: 75, height: 75 };
-                            }, [])}
+                        <ERPAvatar
+                        variant="square"
+                          alt="Remy Sharp"
+                          src={typeof image === 'string' ? image : ''}
+                          sx={{ width: 75, height: 75 }}
                           />
                         </span>
                       </div>

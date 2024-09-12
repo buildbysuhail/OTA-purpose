@@ -87,7 +87,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
     ).unwrap();
     
     setPhoneChangeLoading(false);
-    handleAxiosResponse(response);
+    handleResponse(response);
   }, [dispatch, phone]);
 ////////////////////////////////////////////////////////////////////
 

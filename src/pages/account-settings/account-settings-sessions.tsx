@@ -163,7 +163,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
  const renderDeviceCell = (data: DataGridTypes.ColumnCellTemplateData)=>{
   // let deviceImage = '';
   let iconclass = "";
-  // <i className="ri-windows-fill"></i>
+ 
   switch (data.data.device) {
     case 'Windows':
     //  deviceImage = deviceLogos.windows;
@@ -176,12 +176,16 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       break;
     case 'Android':
     //  deviceImage = deviceLogos.android;
+    iconclass ="ri-android-fill"
       break;
-    case 'Mac':
+    case 'macOS':
     //  deviceImage = deviceLogos.mac;
+    iconclass = "ri-mac-fill"
       break;
-      case 'Ios':
+      case 'iOS':
     //  deviceImage = deviceLogos.ios;
+    iconclass ="ri-apple-fill"
+    
       break; 
     default:
     //  deviceImage = ''; // You can add a default image or leave it empty
@@ -201,7 +205,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
 
 
  const renderCellHeader = (data:any) => {
- return  <div className=" font-me font-sans text-black text-[13px] ">
+ return  <div className=" font-medium font-sans text-black text-[13px] ">
   {data.column.caption}
 </div>
  }
@@ -331,27 +335,32 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                        
                       fixed={true} fixedPosition="right"
                       cellRender={({ data }) => (
-                    // <div className="flex justify-center" }>
                     
-                    <ERPButton  title="" 
-                    onClick={()=>
-                    {
-                      // debugger;
-                      handleLogout(data?.deviceId??"")
-                    }
-                    } 
-                    className="p-0 m-0  "
-                    startIcon="ri-logout-box-r-line" type="button"
-                    disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
-                    loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
-                   
-                     >
-
-                     </ERPButton>
-                    
-                       )}
+                        <>
+                         {data.isActive && 
+                         <ERPButton  title="Logout" 
+                         onClick={()=>
+                         {
+                           // debugger;
+                           handleLogout(data?.deviceId??"")
+                         }
+                         } 
+                         className="p-[5px] m-[0px]"
+                          type="button"
+                          variant="primary"
+                         disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
+                         loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
+                        
+                          >
+     
+                          </ERPButton>
+                       }
+                        </>
+                       )
+                         }
+                      
                     caption="" 
-                     width={55} 
+                     width={110} 
                     
                      />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}

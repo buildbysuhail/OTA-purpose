@@ -23,6 +23,7 @@ const crudModuleSlices = CreateCrudModuleSlices(CrudConfig);
 //         return acc;
 //       }, {}),
 // });
+
 const rootReducer = {
   Login: LoginReducer,
   Account: AccountReducer,

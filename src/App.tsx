@@ -39,6 +39,7 @@ import Logout from "./pages/auth/Logout";
 import { useAppState } from "./utilities/hooks/useAppState";
 
 import Themeprimarycolor, * as switcherdata from "../src/components/common/switcher/switcherdata/switcherdata";
+import OrgSelect from "./pages/OrgSelect";
 
 export const LoadingAnimation = () => {
   return (
@@ -269,7 +270,7 @@ function App() {
   };
   useEffect(() => {
     if (!token && pathname !== "/shared-view") {
-      navigate("/login");
+      // navigate("/login");
     } else {
       syncAppStates();
     }
@@ -314,9 +315,9 @@ function App() {
             <Routes>
               <Route path="login" element={<Login />} />
               <Route path="logout" element={<Logout />} />
+              <Route path="select-organization" element={<OrgSelect />} />
 
               {/* <Route path="create-organization" element={<Organization />} />
-              <Route path="select-organization" element={<OrgSelect />} />
                */}
               <Route
                 path="account-settings/*"

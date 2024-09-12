@@ -1,7 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { userSession } from "./thunk";
+import { setBranch, userSession } from "./thunk";
 import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
-
+export interface BranchSelectDto {
+  id: number;
+  name?: string;
+  clientId: number;
+  clientName?: string;
+  logo?: string;
+  isActive: boolean;
+}
 export interface UserModel {
   userId: number;
   displayName: string;
@@ -19,7 +26,7 @@ export interface UserModel {
   unitPriceDecimalPoint: number;
   language: string;
   companies: IdTextLogoDto[];
-  branches: IdTextDto[];
+  branches: BranchSelectDto[];
 }
 // export const initialState : login  =  {loading: false, token: ""};
 export const initialState: UserModel = {
@@ -49,6 +56,12 @@ const userSessionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(userSession.fulfilled, (state, action) => {
+      if(action.payload.isOk) {
+        
+        return  action.payload.item;        
+      }
+    });
+    builder.addCase(setBranch.fulfilled, (state, action) => {
       if(action.payload.isOk) {
         return  action.payload.item;        
       }

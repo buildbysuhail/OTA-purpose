@@ -140,7 +140,7 @@ const updateBasicInfo = useCallback(async () => {
         setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
         setPostDataEmailTokenVerify((prevData: any) => ({
           ...prevData,
-          userName: response.item.userName,
+          userName: postDataEmail?.data.userName,
           newValue: response.item.newValue,
           confirToken: response.item.token,
         }));

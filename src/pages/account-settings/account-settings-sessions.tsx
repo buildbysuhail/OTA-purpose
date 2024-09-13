@@ -140,8 +140,8 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   
     return (
       <div className="flex justify-start items-center  gap-1">
-        {browserImage && <img src={browserImage} alt={data.data.browser} style={{ width: '15px', height: '15px' }} />}
-        <span className="text-[12px] text-black font-sans">{data.data.browser}</span>
+        {browserImage && <img src={browserImage} alt={data.data.browser} className=" hover:brightness-150 drop-shadow-md" style={{ width: '15px', height: '15px' }} />}
+        <span className="text-[14px] font-[200] text-black font-sans">{data.data.browser}</span>
        
         {data.data.isActive && <i className="ri-checkbox-blank-circle-fill drop-shadow-sm self-center" style={{ color:'#22c55e',fontSize: '7px' }}></i>}
       </div>
@@ -153,10 +153,10 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
    <img
       src={data.data.country_flag ? data.data.country_flag : ""}
       alt={``}
-      className="aspect-square  rounded-full"
+      className="aspect-square  rounded-full drop-shadow-md hover:brightness-150"
       style={{ width: '15px', height: '15px',}} 
     />
-    <span className="text-[12px] text-black font-sans">{`${data.data.country},${data.data.state}`}</span>
+    <span className="text-[14px] font-[200] text-black font-sans">{`${data.data.country},${data.data.state}`}</span>
 </div>
  )
 
@@ -197,7 +197,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       <div className="w-[16px] h-[16px]  flex justify-center ">
       {iconclass  && <i className={`${iconclass} object-contain text-[16px] text-sky-400`} ></i>}
       </div>
-      <span className="text-black font-sans font-[200]">{data.data.device} </span>
+      <span className="text-black font-sans font-[200] text-[14px]">{data.data.device} </span>
       
     </div>
   );
@@ -205,14 +205,14 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
 
 
  const renderCellHeader = (data:any) => {
- return  <div className=" font-medium font-sans text-black text-[13px] ">
+ return  <div className=" font-medium font-sans text-black text-[16px] ">
   {data.column.caption}
 </div>
  }
  
  const cellPrepared = (e:any) => {
 
-     e.cellElement.style.cssText = " color: #000000; font-size:12px; font-weight:200; ";
+     e.cellElement.style.cssText = " color: #000000; font-size:14px; font-weight:200;  ";
 }
 //  ==========================================================================================
   return (
@@ -337,9 +337,9 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       cellRender={({ data }) => (
                     
                         <>
-                         {data.isActive && 
+                         {!data.isActive && 
                          <ERPButton 
-                         title= {loadingLogout.loading == false ?  "Logout" : ''}
+                         title= {loadingLogout.loading == false ?  "Logout" : ""}
                           
                     onClick={()=>
                     {
@@ -347,7 +347,8 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       handleLogout(data?.deviceId??"")
                     }
                     } 
-                    className="p-[5px] m-[0px]"
+                  
+                    className="p-[2px] m-[0px] h-8 "
                      type="button"
                      variant="primary"
                     disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
@@ -362,7 +363,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                          }
                       
                     caption="" 
-                     width={110} 
+                     width={90} 
                     
                      />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}

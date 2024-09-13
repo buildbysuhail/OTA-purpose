@@ -40,7 +40,7 @@ const ERPButton = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={'ti-btn ti-btn-full m-2 py-2 px-4 text-sm' + disabled && "opacity-60" + "rounded-md font-medium " + variantType +" "+ className}
+      className={`ti-btn ti-btn-full m-2 py-2 px-4 text-sm ${disabled && "opacity-60"} rounded-md font-medium ${variantType} ${className}`}
     >
       <div className="flex gap-2">
         {startIcon && 

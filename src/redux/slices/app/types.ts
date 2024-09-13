@@ -57,6 +57,19 @@ export interface AppState {
   locale: Locale;
   tableState?: TableState;
 }
+export const initialThemeData: Theme = {
+  direction: "ltr",  // default to left-to-right
+  mode: "light",     // default to light mode
+  navLayout: null,   // initialize as null, can be assigned a specific layout later
+  navigationMenuStyle: null,  // initialize as null
+  sidemenuLayoutStyles: null, // initialize as null
+  pageStyle: null,    // initialize as null
+  headerStyle: null,  // initialize as null
+  menuStyle: null,    // initialize as null
+  menuPosition: null, // initialize as null
+  headerPosition: 'fixed',  // default position for header
+  colorPrimaryRgb: '255,255,255',  // default white color in RGB format
+};
 export interface Theme {
   direction: "ltr" | "rtl";
   mode: "light" | "dark";

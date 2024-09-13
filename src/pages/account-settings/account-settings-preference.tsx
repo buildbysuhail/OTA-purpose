@@ -46,6 +46,8 @@ import Themeprimarycolor, {
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import { Theme } from "../../redux/slices/app/types";
+import Cookies from "js-cookie";
+import { modelToBase64 } from "../../utilities/jsonConverter";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -148,6 +150,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   const userTheme = () => {
     api.get(Urls.getUserThemes).then((theme) => {
+      Cookies.set("ut", modelToBase64(theme), { expires: 30 }); 
       setTheme(theme);
       _setTheme(theme);
     });

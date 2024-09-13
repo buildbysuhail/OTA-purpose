@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { setBranch, userSession } from "./thunk";
 import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
+import Cookies from "js-cookie";
+import { modelToBase64 } from "../../../utilities/jsonConverter";
 export interface BranchSelectDto {
   id: number;
   name?: string;
@@ -9,6 +11,25 @@ export interface BranchSelectDto {
   logo?: string;
   isActive: boolean;
 }
+export const initialUserSessionData: UserModel = {
+  userId: 0,
+  displayName: '',
+  userimage: '',
+  userTypeId: 0,
+  userTypeName: '',
+  email: '',
+  currentClientId: 0,
+  currentClientName: '',
+  currentBranchId: 0,
+  currentBranchName: '',
+  currency: null,
+  currencySymbol: null,
+  taxDecimalPoint: 0,
+  unitPriceDecimalPoint: 0,
+  language: 'en',
+  companies: [],
+  branches: [],
+};
 export interface UserModel {
   userId: number;
   displayName: string;
@@ -52,14 +73,15 @@ const userSessionSlice = createSlice({
   name: "userSession",
   initialState,
   reducers: {
-    setUserSession: (state, action: PayloadAction<UserModel>) => {      
+    setUserSession: (state, action: PayloadAction<UserModel>) => {   
+      debugger;   
       return action.payload;
     }
   },
   extraReducers: (builder) => {
     builder.addCase(userSession.fulfilled, (state, action) => {
-      if(action.payload.isOk) {
-        
+      if(action.payload.isOk) {        
+      Cookies.set("ut", modelToBase64(action.payload.item), { expires: 30 }); 
         return  action.payload.item;        
       }
     });

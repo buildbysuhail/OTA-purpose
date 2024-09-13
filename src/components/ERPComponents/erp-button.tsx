@@ -2,7 +2,7 @@ import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 
 type ERPButtonProps = {
-	title: string;
+	title?: string;
 	disabled?: boolean;
 	loading?: boolean;
 	startIcon?: React.ReactNode;

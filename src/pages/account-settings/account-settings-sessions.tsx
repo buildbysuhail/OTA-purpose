@@ -261,12 +261,11 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     // }}
                   >
                     <ColumnFixing enabled={true}/>
-                    {/* <Scrolling  mode="standard" 
-                      scrollByContent={true}
-                      useNative={false}
-                      scrollByThumb={true}
-                      showScrollbar="always"
-                    rowRenderingMode="virtual" /> */}
+                    <Scrolling  mode="virtual" 
+                      scrollByContent={false}
+                     
+                    rowRenderingMode="virtual" 
+                    />
                     <Paging defaultPageSize={100} />
                     {/* <FilterRow visible={true} applyFilter="auto" />
       <HeaderFilter visible={true} />
@@ -337,33 +336,36 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       cellRender={({ data }) => (
                     
                         <>
-                         {!data.isActive && 
+                         {/* {data.isActive &&  */}
                          <ERPButton 
-                         title= {loadingLogout.loading == false ?  "Logout" : ""}
+                        //  title= {loadingLogout.loading == false ?  "Logout" : "..."}
                           
                     onClick={()=>
                     {
                       // debugger;
-                      handleLogout(data?.deviceId??"")
+                      // if(data.isActive){
+                        handleLogout(data?.deviceId??"")
+                      // }
+                    
                     }
                     } 
-                  
+                    startIcon= {loadingLogout.loading == false ?  "ri-logout-box-r-line" : ""}
                     className="p-[2px] m-[0px] h-8 "
                      type="button"
                      variant="primary"
-                    disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
+                    disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false} 
                     loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
                    
                      >
 
                      </ERPButton>
-                       }
+                      
                         </>
                        )
                          }
                       
                     caption="" 
-                     width={90} 
+                     width={60} 
                     
                      />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}

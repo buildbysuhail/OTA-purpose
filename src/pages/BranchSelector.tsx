@@ -26,7 +26,7 @@ const BranchSelector = ({}) => {
     setSelectionLoading(true);
     const branch = {
       branchId: item?.id,
-      companyId: item.clientId
+      clientId: item.clientId
     } as any;
 
     const response = await dispatch(setBranch(branch)).unwrap();

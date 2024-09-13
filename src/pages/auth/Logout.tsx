@@ -27,7 +27,8 @@ const Logout = () => {
     ).unwrap();
 
     Cookies.remove("token");
-    Cookies.remove("token");
+    Cookies.remove("ut");
+    Cookies.remove("up");
     navigate("/login");
     if (logout.isOk == true) {
      

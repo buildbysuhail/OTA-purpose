@@ -204,16 +204,17 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
  }
 
 
- const renderCellHeader = (data:any) => {
- return  <div className=" font-medium font-sans text-black text-[16px] ">
-  {data.column.caption}
-</div>
- }
+//  const renderCellHeader = (data:any) => {
+//   // " font-medium font-sans text-black text-[16px] "
+//  return  <div className=" dx-datagrid-action ">
+//   {data.column.caption}
+// </div>
+//  }
  
- const cellPrepared = (e:any) => {
+//  const cellPrepared = (e:any) => {
 
-     e.cellElement.style.cssText = " color: #000000; font-size:14px; font-weight:200;  ";
-}
+//      e.cellElement.style.cssText = " color: #000000; font-size:14px; font-weight:200;  ";
+// }
 //  ==========================================================================================
   return (
     <Fragment>
@@ -246,13 +247,13 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       store
                       // "https://localhost:7213/api/Core/LoginSessions/GetAllAsync"
                     }
-                  
+                   className="custom-data-grid"
                     showBorders={true}
                     // columnAutoWidth={true}
                     // remoteOperations={true}
                     showColumnLines={false}
                     showRowLines={true}
-                    onCellPrepared={cellPrepared}
+                    // onCellPrepared={cellPrepared}
                     // onScroll={handleScroll}
                     // onRowPrepared={(e: any) => {
                     //   if (e.rowType === "data" && e.data.isActive) {
@@ -261,10 +262,10 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     // }}
                   >
                     <ColumnFixing enabled={true}/>
-                    <Scrolling  mode="virtual" 
-                      scrollByContent={false}
+                    <Scrolling  mode="standard" 
+                      // scrollByContent={true}
                      
-                    rowRenderingMode="virtual" 
+                    // rowRenderingMode="virtual" 
                     />
                     <Paging defaultPageSize={100} />
                     {/* <FilterRow visible={true} applyFilter="auto" />
@@ -277,7 +278,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="branchName"
-                      headerCellRender={renderCellHeader}
+                      // headerCellRender={renderCellHeader}
                       caption="  Branch Name"
                       dataType="string"
                     />
@@ -292,7 +293,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       // )}
                       // sortOrder="asc"
                       caption={"Browser"}
-                      headerCellRender={renderCellHeader}
+                      // headerCellRender={renderCellHeader}
                       dataType="string"
                     />
                     <Column
@@ -300,7 +301,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowFiltering={true}
                       dataField="ipAddress"
                       caption={"IP Address"}
-                      headerCellRender={renderCellHeader}
+                      // headerCellRender={renderCellHeader}
                       dataType="string"
                     />
                     <Column
@@ -309,7 +310,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       dataField="device"
                       cellRender={renderDeviceCell}
                       caption={"Device"}
-                      headerCellRender={renderCellHeader}
+                      // headerCellRender={renderCellHeader}
                       dataType="string"
                     />
                     <Column
@@ -318,7 +319,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       cellRender={renderCountryCell}
                       dataField="location"
                       caption={"Location"}
-                      headerCellRender={renderCellHeader}
+                      // headerCellRender={renderCellHeader}
                       dataType="string"
                     />
 
@@ -327,7 +328,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowFiltering={true}
                       dataField="recentActivity"
                       caption={"Recent Activity"}
-                      headerCellRender={renderCellHeader}
+                      // headerCellRender={renderCellHeader}
                       dataType="datetime"
                     />
                      <Column

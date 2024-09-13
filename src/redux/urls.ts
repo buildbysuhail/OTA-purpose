@@ -52,7 +52,7 @@ const Urls = {
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
   getUserSession: "/Core/LoginSessions/GetAllAsync",
   logoutUserSession: "/Core/LoginSessions/InActiveSession",
-
+     
 
 uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
 changeEmailRequest_workspace : "/Subscription/WorkSpace/ChangeEmailRequest/",

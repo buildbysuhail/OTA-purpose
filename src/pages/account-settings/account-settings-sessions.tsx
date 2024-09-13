@@ -338,22 +338,24 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     
                         <>
                          {data.isActive && 
-                         <ERPButton  title="Logout" 
-                         onClick={()=>
-                         {
-                           // debugger;
-                           handleLogout(data?.deviceId??"")
-                         }
-                         } 
-                         className="p-[5px] m-[0px]"
-                          type="button"
-                          variant="primary"
-                         disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
-                         loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
-                        
-                          >
-     
-                          </ERPButton>
+                         <ERPButton 
+                         title= {loadingLogout.loading == false ?  "Logout" : ''}
+                          
+                    onClick={()=>
+                    {
+                      // debugger;
+                      handleLogout(data?.deviceId??"")
+                    }
+                    } 
+                    className="p-[5px] m-[0px]"
+                     type="button"
+                     variant="primary"
+                    disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
+                    loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
+                   
+                     >
+
+                     </ERPButton>
                        }
                         </>
                        )

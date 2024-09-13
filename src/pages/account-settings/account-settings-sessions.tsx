@@ -337,33 +337,36 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       cellRender={({ data }) => (
                     
                         <>
-                         {!data.isActive && 
+                         {/* {data.isActive &&  */}
                          <ERPButton 
-                         title= {loadingLogout.loading == false ?  "Logout" : ""}
+                         title= {loadingLogout.loading == false ?  "Logout" : "..."}
                           
                     onClick={()=>
                     {
                       // debugger;
-                      handleLogout(data?.deviceId??"")
+                      // if(data.isActive){
+                        handleLogout(data?.deviceId??"")
+                      // }
+                    
                     }
                     } 
                   
                     className="p-[2px] m-[0px] h-8 "
                      type="button"
                      variant="primary"
-                    disabled={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
+                    disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false} 
                     loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
                    
                      >
 
                      </ERPButton>
-                       }
+                      
                         </>
                        )
                          }
                       
                     caption="" 
-                     width={90} 
+                     width={100} 
                     
                      />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}

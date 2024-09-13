@@ -60,8 +60,6 @@ const Login = () => {
     dispatch(setUserSession(userSession));
     
     dispatch(setDirection(res.direction ?? "ltr"));
-
-    dispatch(setDirection(res.direction ?? "ltr"));
     localStorage.setItem("ynexltr", res.direction ?? "ltr");
     localStorage.removeItem("ynexrtl");
 

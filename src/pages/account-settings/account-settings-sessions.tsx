@@ -261,12 +261,11 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     // }}
                   >
                     <ColumnFixing enabled={true}/>
-                    {/* <Scrolling  mode="standard" 
-                      scrollByContent={true}
-                      useNative={false}
-                      scrollByThumb={true}
-                      showScrollbar="always"
-                    rowRenderingMode="virtual" /> */}
+                    <Scrolling  mode="virtual" 
+                      scrollByContent={false}
+                     
+                    rowRenderingMode="virtual" 
+                    />
                     <Paging defaultPageSize={100} />
                     {/* <FilterRow visible={true} applyFilter="auto" />
       <HeaderFilter visible={true} />
@@ -339,7 +338,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                         <>
                          {/* {data.isActive &&  */}
                          <ERPButton 
-                         title= {loadingLogout.loading == false ?  "Logout" : "..."}
+                        //  title= {loadingLogout.loading == false ?  "Logout" : "..."}
                           
                     onClick={()=>
                     {
@@ -350,7 +349,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     
                     }
                     } 
-                  
+                    startIcon= {loadingLogout.loading == false ?  "ri-logout-box-r-line" : ""}
                     className="p-[2px] m-[0px] h-8 "
                      type="button"
                      variant="primary"
@@ -366,7 +365,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                          }
                       
                     caption="" 
-                     width={100} 
+                     width={60} 
                     
                      />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}

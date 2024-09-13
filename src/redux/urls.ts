@@ -32,6 +32,7 @@ const Urls = {
   password_reset: "/passwordReset",
   password_reset_confirm: "/resetPassword/",
   social_signup: "/socialSignup",
+  set_branch:"/Subscription/Auth/SetBranch",
 
   // App
   getUserAppSetting: "/User/getUserAppSetting",

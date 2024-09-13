@@ -11,14 +11,38 @@ import quotes from "../../assets/images/apps/quotes.webp";
 // import SBToast from "../../components/SBComponets/SBToast";
 import SocialLogins from "./SocialLogins";
 import { APIClient } from "../../helpers/api-client";
-import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { StateBase } from "../../base/state-base";
 import { LoginData, loginUser, LoginValidations } from "../../redux/slices/auth/login/thunk";
 import { getUserSession } from "../../redux/slices/auth/profile/thunk";
 import ERPInput from "../../components/ERPComponents/erp-input";
+import { setUserSession, UserModel } from "../../redux/slices/user-session/reducer";
+import { useAppState } from "../../utilities/hooks/useAppState";
+import { Theme } from "../../redux/slices/app/types";
+
+import Themeprimarycolor, * as switcherdata from "../../../src/components/common/switcher/switcherdata/switcherdata";
+
+import {
+  setColorPrimary,
+  setColorPrimaryRgb,
+  setDataHeaderStyles,
+  setDataMenuStyles,
+  setDataNavLayout,
+  setDataNavStyle,
+  setDataPageStyle,
+  setDataVerticalStyle,
+  setDirection,
+  setMode,
+  setToggled,
+} from "../../redux/slices/app/reducer";
+import { RootState } from "../../redux/store";
+import { customJsonParse } from "../../utilities/jsonConverter";
+
+
 
 const Login = () => {
   const navigate = useNavigate();
+  const appState = useAppState();
   const [data, setData] = useState<LoginData>(new LoginData());
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -26,9 +50,216 @@ const Login = () => {
   const [error, setError] = useState<any>();
   const loginData: StateBase = useSelector((state: any) => state.Login);
   const comapanies = useSelector((state: any) => state?.GetUserCompanies);
+  let userSessions = useAppSelector((state: RootState) => state.UserSession);
 
   /* ########################################################################################### */
+  const syncAppStates = async (res: Theme, userSession: UserModel) => {
+    debugger;
+    // setReloading(true);
+    // let res = await api.get(Urls.getUserThemes);
+    dispatch(setUserSession(userSession));
+    
+    dispatch(setDirection(res.direction ?? "ltr"));
 
+    dispatch(setDirection(res.direction ?? "ltr"));
+    localStorage.setItem("ynexltr", res.direction ?? "ltr");
+    localStorage.removeItem("ynexrtl");
+
+    dispatch(setMode(res.mode ?? "light"));
+    if (res.mode == "light") {
+      dispatch(setMode(res.mode ?? "light"));
+      localStorage.setItem("ynexlighttheme", "light");
+      localStorage.removeItem("ynexdarktheme");
+      localStorage.removeItem("Light");
+      localStorage.removeItem("bodyBgRGB");
+      localStorage.removeItem("darkBgRGB");
+    } else {
+      localStorage.setItem("ynexdarktheme", "dark");
+      localStorage.removeItem("ynexlighttheme");
+      localStorage.removeItem("ynexlighttheme");
+      localStorage.removeItem("darkBgRGB");
+    }
+    
+    dispatch(setColorPrimaryRgb(res.colorPrimaryRgb));
+    dispatch(setColorPrimary(res.colorPrimaryRgb));
+    localStorage.setItem("primaryRGB", res.colorPrimaryRgb);
+    localStorage.setItem("primaryRGB1", res.colorPrimaryRgb);
+
+    
+    switch (res.menuStyle) {
+      case "dark":
+        dispatch(setDataMenuStyles("dark"));
+        localStorage.setItem("ynexMenu", "dark");
+        localStorage.removeItem("light");
+        break;
+      case "light":
+        dispatch(setDataMenuStyles("light"));
+        localStorage.setItem("ynexMenu", "light");
+        localStorage.removeItem("light");
+        break;
+      case "color":
+        dispatch(setDataMenuStyles("color"));
+        localStorage.setItem("ynexMenu", "color");
+        localStorage.removeItem("gradient");
+        break;
+      case "gradient":
+        dispatch(setDataMenuStyles("gradient"));
+        localStorage.setItem("ynexMenu", "gradient");
+        localStorage.removeItem("color");
+        break;
+      case "transparent":
+        dispatch(setDataMenuStyles("transparent"));
+        localStorage.setItem("ynexMenu", "transparent");
+        localStorage.removeItem("gradient");
+        break;
+      default:
+        break;
+    }
+    switch (res.headerStyle) {
+      case "dark":
+        dispatch(setDataHeaderStyles("dark"));
+        localStorage.setItem("ynexHeader", "dark");
+        localStorage.removeItem("light");
+        break;
+      case "light":
+        dispatch(setDataHeaderStyles("light"));
+        localStorage.setItem("ynexHeader", "light");
+        localStorage.removeItem("dark");
+        break;
+      case "color":
+        dispatch(setDataHeaderStyles("color"));
+        localStorage.setItem("ynexHeader", "color");
+        localStorage.removeItem("dark");
+        break;
+      case "gradient":
+        dispatch(setDataHeaderStyles("gradient"));
+        localStorage.setItem("ynexHeader", "gradient");
+        localStorage.removeItem("transparent");
+        break;
+      case "transparent":
+        dispatch(setDataHeaderStyles("transparent"));
+        localStorage.removeItem("gradient");
+        localStorage.setItem("ynexHeader", "transparent");
+        break;
+      default:
+        break;
+    }
+    switch (res.pageStyle) {
+      case "regular":
+        dispatch(setDataPageStyle("regular"));
+        localStorage.setItem("ynexregular", "Regular");
+        localStorage.removeItem("ynexclassic");
+        localStorage.removeItem("ynexmodern");
+        break;
+      case "classic":
+        dispatch(setDataPageStyle("classic"));
+        localStorage.setItem("ynexclassic", "Classic");
+        localStorage.removeItem("ynexregular");
+        localStorage.removeItem("ynexmodern");
+        break;
+      case "modern":
+        dispatch(setDataPageStyle("modern"));
+        localStorage.setItem("ynexmodern", "Modern");
+        localStorage.removeItem("ynexregular");
+        localStorage.removeItem("ynexclassic");
+        break;
+      default:
+        break;
+    }
+    /////////////////////////////////
+    switch (res.sidemenuLayoutStyles) {
+      case "defaultmenu":
+        dispatch(setDataVerticalStyle("overlay"));
+        dispatch(setDataNavLayout("vertical"));
+        dispatch(setToggled(""));
+        dispatch(setDataNavStyle(""));
+        localStorage.removeItem("ynexnavstyles");
+        localStorage.setItem("ynexverticalstyles", "default");
+        var icon = document.getElementById(
+          "switcher-default-menu"
+        ) as HTMLInputElement;
+        if (icon) {
+          icon.checked = true;
+        }
+        break;
+      case "closedmenu":
+        dispatch(setDataNavLayout("vertical"));
+        dispatch(setDataVerticalStyle("closed"));
+        dispatch(setToggled("close-menu-close"));
+        dispatch(setDataNavStyle(""));
+        localStorage.setItem("ynexverticalstyles", "closed");
+        localStorage.removeItem("ynexnavstyles");
+        break;
+      case "iconTextfn":
+        dispatch(setDataNavLayout("vertical"));
+        dispatch(setDataVerticalStyle("icontext"));
+        dispatch(setToggled("icon-text-close"));
+        dispatch(setDataNavStyle(""));
+        localStorage.setItem("ynexverticalstyles", "icontext");
+        localStorage.removeItem("ynexnavstyles");
+
+        const MainContent = document.querySelector(".main-content");
+        const appSidebar = document.querySelector(".app-sidebar");
+
+        appSidebar?.addEventListener("click", () => {
+          switcherdata.icontextOpenFn();
+        });
+        MainContent?.addEventListener("click", () => {
+          switcherdata.icontextCloseFn();
+        });
+        break;
+      case "iconOverayFn":
+        dispatch(setDataNavLayout("vertical"));
+        dispatch(setDataVerticalStyle("overlay"));
+        dispatch(setToggled("icon-overlay-close"));
+        dispatch(setDataNavStyle(""));
+        localStorage.setItem("ynexverticalstyles", "overlay");
+        localStorage.removeItem("ynexnavstyles");
+        var icon = document.getElementById(
+          "switcher-icon-overlay"
+        ) as HTMLInputElement;
+        if (icon) {
+          icon.checked = true;
+        }
+        const _MainContent = document.querySelector(".main-content");
+        const _appSidebar = document.querySelector(".app-sidebar");
+        _appSidebar?.addEventListener("click", () => {
+          switcherdata.DetachedOpenFn();
+        });
+        _MainContent?.addEventListener("click", () => {
+          switcherdata.DetachedCloseFn();
+        });
+        break;
+      case "detachedFn":
+        dispatch(setDataNavLayout("vertical"));
+        dispatch(setDataVerticalStyle("detached"));
+        dispatch(setToggled("detached-open"));
+        dispatch(setDataNavStyle(""));
+        localStorage.setItem("ynexverticalstyles", "detached");
+        localStorage.removeItem("ynexnavstyles");
+
+        const __MainContent = document.querySelector(".main-content");
+        const __appSidebar = document.querySelector(".app-sidebar");
+
+        __appSidebar?.addEventListener("click", () => {
+          switcherdata.DetachedOpenFn();
+        });
+        __MainContent?.addEventListener("click", () => {
+          switcherdata.DetachedCloseFn();
+        });
+        break;
+      case "doubletFn":
+        dispatch(setDataNavLayout("vertical"));
+        dispatch(setDataVerticalStyle("doublemenu"));
+        dispatch(setToggled("double-menu-open"));
+        dispatch(setDataNavStyle(""));
+        localStorage.setItem("ynexverticalstyles", "doublemenu");
+        localStorage.removeItem("ynexnavstyles");
+        break;
+      default:
+        break;
+    }
+  };
   const handleSubmit = async (event: any) => {
     
     
@@ -42,10 +273,12 @@ const Login = () => {
         
         if (login.isOk == true) {   
           Cookies.set("token", login.item.token, { expires: 30 }); 
-          if(login.item.permissionToken != undefined && login.item.permissionToken != null && login.item.permissionToken != '') {
-            Cookies.set("permissionToken", login.item.permissionToken, { expires: 30 });         
-          }       
-            navigate("/");
+          const _userProfileDetails = atob(login.item.userProfileDetails);
+          const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
+          const _userThemes = atob(login.item.userThemes);
+          const userThemes: Theme = customJsonParse(_userThemes);
+          syncAppStates(userThemes, userProfileDetails);
+          
         }
         else
         {setError(login.message)}
@@ -56,14 +289,18 @@ const Login = () => {
 
   /* ########################################################################################### */
 
-  const token = Cookies.get("token");
+  
   useEffect(() => {
-    if (token) {
+    debugger;
+    if (userSessions.userId != undefined && userSessions.userId != null && userSessions.userId != 0
+          && userSessions.currentBranchId != undefined && userSessions.currentBranchId != null && userSessions.currentBranchId != 0
+    ) {
       navigate("/");
-    } else {
-      // navigate("/login");
+    } else if(userSessions.userId != undefined && userSessions.userId != null && userSessions.userId != 0
+      && (userSessions.currentBranchId == undefined || userSessions.currentBranchId == null || userSessions.currentBranchId == 0)) {
+      navigate("/select-organization");
     }
-  }, [token]);
+  }, [userSessions]);
 
   return (
 
@@ -114,7 +351,7 @@ new heights</h2>
                 <ERPInput
                   label={t("Email or Phone or Username")}
                   data={data}
-                  onChangeData={(_data: any) => { setData(_data)}}
+                  onChangeData={(_data: any) => {debugger; setData(_data)}}
                   id="userName"
                   autocomplete=""
                   required

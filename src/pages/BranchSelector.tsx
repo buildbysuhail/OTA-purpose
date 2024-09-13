@@ -8,6 +8,7 @@ import { handleResponse } from "../utilities/HandleResponse";
 import { setBranch, userSession } from "../redux/slices/user-session/thunk";
 import { useAppDispatch, useAppSelector } from "../utilities/hooks/useAppDispatch";
 import { RootState } from "../redux/store";
+import { BranchSelectDto } from "../redux/slices/user-session/reducer";
 
 const BranchSelector = ({}) => {
   const { t } = useTranslation();
@@ -15,22 +16,21 @@ const BranchSelector = ({}) => {
   const navigate = useNavigate();
 
   const [selected, setSelected] = useState<number>();
+  const [selectionLoading, setSelectionLoading] = useState<boolean>(false);
 
   const UserSession = useAppSelector((state: RootState) => state?.UserSession);
 
   /* ########################################################################################### */
 
-  const changeHandler = async (item: any) => {
-    const tenant = {
-      user_company_id: item?.id,
-      tenant: {
-        id: item?.id,
-        company: item?.company?.id,
-        branch: item?.branch?.id,
-      },
+  const changeHandler = async (item: BranchSelectDto) => {
+    setSelectionLoading(true);
+    const branch = {
+      branchId: item?.id,
+      companyId: item.clientId
     } as any;
 
-    const response = await dispatch(setBranch(tenant)).unwrap();
+    const response = await dispatch(setBranch(branch)).unwrap();
+    setSelectionLoading(false);
     handleResponse(response, () => {
       navigate("/")
     });
@@ -49,41 +49,47 @@ const BranchSelector = ({}) => {
 
   return (
     <>
-      {/* <div className="flex h-4 flex-col gap-3 sm:col-span-2">
-        {comapanies?.loading && <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>}
-      </div> */}
+      <div className="flex h-4 flex-col gap-3 sm:col-span-2">
+        {selectionLoading && <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>}
+      </div>
      
       <div className="flex flex-col gap-3 sm:col-span-2">
-        {UserSession?.branches?.map((item: any, index: number) => (
+        {UserSession?.branches?.map((item: BranchSelectDto, index: number) => (
           <div
             key={`org-${index}`}
             onClick={() => {
-              setSelected(index);
-              changeHandler(item);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
+              if(item?.isActive == false) {
                 setSelected(index);
                 changeHandler(item);
               }
             }}
+            onKeyDown={(e) => {
+              
+              if(item?.isActive == false) {
+                if (e.key === "Enter") {
+                  setSelected(index);
+                  changeHandler(item);
+                }
+              }
+            }}
             tabIndex={0}
             className={`${
-              item?.is_active ? "bg-gray-50" : "bg-white cursor-pointer hover:bg-gray-50"
+              item?.isActive ? "bg-gray-50 cursor-default" : "bg-white cursor-pointer hover:bg-gray-50"
             } px-4 py-3  rounded-lg flex justify-between border border-gray-200`}
           >
             <div className=" text-xs text-gray-700 flex flex-col">
               <a className=" text-base">
-                {item?.company?.name} <span className="text-gray-500 text-xs">({item?.company?.code})</span>
+                {item?.clientName} 
+                {/* <span className="text-gray-500 text-xs">({item?.clientName})</span> */}
               </a>
               <a className="capitalize text-gray-500 flex gap-2">
-                {item?.branch?.is_default ? <BuildingOfficeIcon className="w-4 aspect-square" /> : <LinkIcon className="w-4 aspect-square" />}
-                {item?.branch?.name}
-                <span className=" lowercase"> • {item?.company?.email}</span>
+                {item?.isActive ? <BuildingOfficeIcon className="w-4 aspect-square" /> : <LinkIcon className="w-4 aspect-square" />}
+                {item?.name}
+                <span className=" lowercase"> • Email@Email</span>
               </a>
             </div>
             <div className="flex items-center">
-              {item?.is_active ? (
+              {item?.isActive ? (
                 <div className="shrink-0 text-blue-500">
                   <CheckIcon className="h-6 w-6 text-gray-50" />
                 </div>

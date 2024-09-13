@@ -45,23 +45,12 @@ import Themeprimarycolor, {
 
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
+import { Theme } from "../../redux/slices/app/types";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
 }
-export interface Theme {
-  direction: "ltr" | "rtl";
-  mode: string | null;
-  navLayout: string | null;
-  navigationMenuStyle: string | null;
-  sidemenuLayoutStyles: string | null;
-  pageStyle: string | null;
-  headerStyle: string | null;
-  menuStyle: string | null;
-  menuPosition: string | null;
-  headerPosition: string | null;
-  colorPrimaryRgb: string | null;
-}
+
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
   let api = new APIClient();
   const [language, setLanguage] = useState<string>("en");
@@ -185,7 +174,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
   headerStyle: 'color',
   menuStyle: 'dark',
     menuPosition: null,
-    headerPosition: null,
+    headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
   });
   const [_theme, _setTheme] = useState<Theme>({
@@ -198,7 +187,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
     headerStyle: 'color',
     menuStyle: 'dark',
     menuPosition: null,
-    headerPosition: null,
+    headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
   });
 

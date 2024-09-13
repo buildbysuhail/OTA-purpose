@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { setBranch, userSession } from "./thunk";
 import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
 export interface BranchSelectDto {
@@ -52,7 +52,9 @@ const userSessionSlice = createSlice({
   name: "userSession",
   initialState,
   reducers: {
-    
+    setUserSession: (state, action: PayloadAction<UserModel>) => {      
+      return action.payload;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(userSession.fulfilled, (state, action) => {
@@ -70,6 +72,7 @@ const userSessionSlice = createSlice({
 });
 
 export const {
+  setUserSession,
   
 } = userSessionSlice.actions
 

@@ -57,7 +57,19 @@ export interface AppState {
   locale: Locale;
   tableState?: TableState;
 }
-
+export interface Theme {
+  direction: "ltr" | "rtl";
+  mode: "light" | "dark";
+  navLayout: string | null;
+  navigationMenuStyle: string | null;
+  sidemenuLayoutStyles: string | null;
+  pageStyle: string | null;
+  headerStyle: string | null;
+  menuStyle: string | null;
+  menuPosition: string | null;
+  headerPosition: string;
+  colorPrimaryRgb: string;
+}
 export interface AppInitialState {
   syncing: boolean;
   appState: AppState;

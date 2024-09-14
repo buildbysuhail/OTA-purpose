@@ -105,9 +105,9 @@ const BranchSelector = ({}) => {
           <span className="lowercase"> • Email@Email</span>
         </a>
       </div>
-            <div className="flex items-center">
+            <div className="flex w-full text-right place-content-end">
               {item?.isActive ? (
-                <div className="shrink-0 text-blue-500">
+                <div className="shrink-0 text-blue-500 content-center">
                   <CheckIcon className="h-6 w-6 text-gray-50" />
                 </div>
               ) : (

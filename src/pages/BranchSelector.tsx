@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,6 +9,7 @@ import { setBranch, userSession } from "../redux/slices/user-session/thunk";
 import { useAppDispatch, useAppSelector } from "../utilities/hooks/useAppDispatch";
 import { RootState } from "../redux/store";
 import { BranchSelectDto } from "../redux/slices/user-session/reducer";
+import ErpAvatar from "../components/ERPComponents/erp-avatar";
 
 const BranchSelector = ({}) => {
   const { t } = useTranslation();
@@ -21,7 +22,9 @@ const BranchSelector = ({}) => {
   const UserSession = useAppSelector((state: RootState) => state?.UserSession);
 
   /* ########################################################################################### */
-
+  const avatarStyle = useMemo(() => {
+    return { width: 40, height: 40 };
+  }, []);
   const changeHandler = async (item: BranchSelectDto) => {
     setSelectionLoading(true);
     const branch = {
@@ -32,7 +35,7 @@ const BranchSelector = ({}) => {
     const response = await dispatch(setBranch(branch)).unwrap();
     setSelectionLoading(false);
     handleResponse(response, () => {
-      navigate("/")
+      // navigate("/")
     });
 
     setSelected(undefined);
@@ -75,22 +78,36 @@ const BranchSelector = ({}) => {
             tabIndex={0}
             className={`${
               item?.isActive ? "bg-gray-50 cursor-default" : "bg-white cursor-pointer hover:bg-gray-50"
-            } px-4 py-3  rounded-lg flex justify-between border border-gray-200`}
+            } px-4 py-3  rounded-lg flex justify-start border border-gray-200`}
           >
-            <div className=" text-xs text-gray-700 flex flex-col">
-              <a className=" text-base">
-                {item?.clientName} 
-                {/* <span className="text-gray-500 text-xs">({item?.clientName})</span> */}
-              </a>
-              <a className="capitalize text-gray-500 flex gap-2">
-                {item?.isActive ? <BuildingOfficeIcon className="w-4 aspect-square" /> : <LinkIcon className="w-4 aspect-square" />}
-                {item?.name}
-                <span className=" lowercase"> • Email@Email</span>
-              </a>
-            </div>
-            <div className="flex items-center">
+            
+      <span className="avatar avatar-md avatar-badge pr-4">
+                            <ErpAvatar
+                              variant="square"
+                              alt=""
+                              src={
+                                item.logo
+                              }
+                              sx={avatarStyle}
+                            />
+                          </span>
+      <div className="text-xs text-gray-700 flex flex-col pl-4">
+        <a className="text-left">
+          {item?.clientName}
+        </a>
+        <a className="capitalize text-gray-500 flex gap-2 items-center">
+          {item?.isActive ? (
+            <span className="text-sm">🏢</span> // Building emoji for active
+          ) : (
+            <span className="text-sm">🔗</span> // Link emoji for inactive
+          )}
+          <span>{item?.name}</span>
+          <span className="lowercase"> • Email@Email</span>
+        </a>
+      </div>
+            <div className="flex w-full text-right place-content-end">
               {item?.isActive ? (
-                <div className="shrink-0 text-blue-500">
+                <div className="shrink-0 text-blue-500 content-center">
                   <CheckIcon className="h-6 w-6 text-gray-50" />
                 </div>
               ) : (

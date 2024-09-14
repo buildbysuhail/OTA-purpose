@@ -109,12 +109,13 @@ function App() {
         />
         <Switcher />
 
-        <div className="page">
+        <div className="page" onClick={Bodyclickk}>
           <Suspense fallback={LoadingAnimation()}>
             <Routes>
               <Route path="login" element={<Login />} />
               <Route path="logout" element={<Logout />} />
               <Route path="select-organization" element={<OrgSelect />} />
+              <Route path="switch-organization" element={<OrgSelect />} />
 
               {/* <Route path="create-organization" element={<Organization />} />
                */}

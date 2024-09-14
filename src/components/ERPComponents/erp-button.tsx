@@ -12,6 +12,7 @@ type ERPButtonProps = {
 	variant?: "primary" | "secondary" | "custom";
 	type?: "button" | "reset" | "submit";
 	tabIndex?: number;
+	
 };
 
 const ERPButton = ({
@@ -25,6 +26,7 @@ const ERPButton = ({
 	variant,
 	type = "button",
 	tabIndex,
+	
 }: ERPButtonProps) => {
 	const [variantType, setVariantType] = useState<any>();
 	useEffect(() => {

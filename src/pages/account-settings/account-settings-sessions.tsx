@@ -235,9 +235,8 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     height={gridHeight}
                     dataSource={
                       store
-                      // "https://localhost:7213/api/Core/LoginSessions/GetAllAsync"
                     }
-                   className="custom-data-grid"
+                    className="custom-data-grid"
                     showBorders={true}
                     // columnAutoWidth={true}
                     // remoteOperations={true}
@@ -328,26 +327,15 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     
                         <>
                          {/* {data.isActive &&  */}
-                         <ERPButton 
-                        //  title= {loadingLogout.loading == false ?  "Logout" : "..."}
-                          
-                    onClick={()=>
-                    {
-                      // debugger;
-                      // if(data.isActive){
-                        handleLogout(data?.deviceId??"")
-                      // }
-                    
-                    }
-                    } 
-                    startIcon= {loadingLogout.loading == false ?  "ri-logout-box-r-line" : ""}
-                    className="p-[2px] m-[0px] h-7 w-7"
-                     type="button"
+                    <ERPButton 
                      variant="primary"
-                   
-                    disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false} 
-                    loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
-                   
+                     className= {`p-[2px] m-[0px] h-7 w-7`}
+                     onClick={() => {
+                       handleLogout(data?.deviceId ?? '');
+                     }}
+                     startIcon={loadingLogout.loading == false ? 'ri-logout-box-r-line' : ''}
+                     disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
+                     loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
                      >
 
                      </ERPButton>
@@ -357,7 +345,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                          }
                       
                     caption="" 
-                     width={60} 
+                     width={50} 
                     
                      />
                     {/* <Column allowSearch={true} allowFiltering={true} dataField="IsActive" caption={'isActive'} dataType="boolean" /> */}

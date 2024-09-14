@@ -28,7 +28,7 @@ const Users = () => {
 
   
   const store = new CustomStore({
-    key: "Id",
+    // key: "Id",
     async load(loadOptions: any) {
       const paramNames = [
         "skip",
@@ -45,12 +45,24 @@ const Users = () => {
             `${paramName}=${JSON.stringify(loadOptions[paramName])}`
         )
         .join("&");
-
+      
       try {
-        const response = await fetch(`https://polosys-001-site1.ctempurl.com/api/Subscription/User/GetUsersForGrid?${queryString}`);
+        const response = await fetch(`https://polosys-001-site1.ctempurl.com/api/Subscription/User/GetUsersForGrid`);
+      
+        console.log("Response status: ", response.status);
 
+        // Check if status is 204 (No Content)
+        if (response.status === 204) {
+            return {
+                data: [],
+                totalCount: 0,
+                summary: {},
+                groupCount: 0,
+            };
+        }
+    
         const result = await response.json();
-
+        console.log("Fetched data: ", result);
         return result !== undefined && result != null
           ? {
               data: result,
@@ -62,7 +74,8 @@ const Users = () => {
               summary: {},
               groupCount: 0,
             };
-      } catch (err) {
+      } catch (err ) {
+        console.error("Data Loading Error: ", err);
         throw new Error("Data Loading Error");
       }
     },
@@ -98,7 +111,7 @@ const Users = () => {
                   }
                  className="custom-data-grid"
                   showBorders={true}
-                  remoteOperations={true}
+                  // remoteOperations={true}
                   showColumnLines={false}
                   showRowLines={true}
                  columnAutoWidth={true}
@@ -107,7 +120,7 @@ const Users = () => {
                   <Scrolling  mode="standard" 
            
                   />
-                  <Paging defaultPageSize={100} />
+                  {/* <Paging defaultPageSize={100} /> */}
      
 
                   <Column
@@ -141,7 +154,7 @@ const Users = () => {
                   <Column
                     allowSearch={true}
                     allowFiltering={true}
-                    dataField= "counterID"
+                    dataField="counterID"
                    
                     caption={"Counter ID"}
                     
@@ -151,7 +164,7 @@ const Users = () => {
                     allowSearch={true}
                     allowFiltering={true}
                     
-                    dataField= "userType"
+                    dataField="userType"
                     caption={"User Type"}
                     
                     dataType="string"
@@ -177,7 +190,7 @@ const Users = () => {
                     <Column
                     allowSearch={true}
                     allowFiltering={true}
-                    dataField=  "modifiedUser"
+                    dataField="modifiedUser"
                     caption={"Modified User"}
                     
                     dataType="string"
@@ -185,7 +198,7 @@ const Users = () => {
                     <Column
                     allowSearch={true}
                     allowFiltering={true}
-                    dataField= "modifiedDate"
+                    dataField="modifiedDate"
                     caption={"Modified Date"}
                     
                     dataType="string"
@@ -201,24 +214,24 @@ const Users = () => {
                     <Column
                     allowSearch={true}
                     allowFiltering={true}
-                    dataField= "employeeID"
-                    caption={ "Employee ID"}
+                    dataField="employeeID"
+                    caption={"Employee ID"}
                     
                     dataType="number"
                   />
                    <Column
                     allowSearch={true}
                     allowFiltering={true}
-                    dataField= "employeeName"
-                    caption={ "Employee Name"}
+                    dataField="employeeName"
+                    caption={"Employee Name"}
                     
                     dataType="string"
                   />
                   <Column
                     allowSearch={true}
                     allowFiltering={true}
-                    dataField=  "maxDiscPercAllowed"
-                    caption={  "maxDiscPercAllowed"}
+                    dataField="maxDiscPercAllowed"
+                    caption={"maxDiscPercAllowed"}
                     
                     dataType="number"
                   />

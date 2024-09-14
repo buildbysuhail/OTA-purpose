@@ -36,15 +36,18 @@ const ERPButton = ({
 			? setVariantType(customVariant)
 			: setVariantType(" bg-slate-100 hover:bg-slate-200 text-black");
 	}, []);
+
+
 	return (
     <button
       tabIndex={tabIndex}
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`ti-btn ti-btn-full m-2 py-2 px-4 text-sm ${disabled && "opacity-60"} rounded-md font-medium ${variantType} ${className}`}
+      className={`ti-btn ti-btn-full m-2 py-2 px-4 text-sm ${disabled && "opacity-40"} rounded-md font-medium ${variantType} ${className}`}
+	  
     >
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         {startIcon && 
 		<i className="ri-logout-box-r-line"></i>
 		}

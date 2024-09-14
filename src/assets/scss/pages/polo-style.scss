@@ -1,0 +1,120 @@
+.box-title-desc {
+    @apply text-defaulttextcolor text-[.75rem] font-[400] me-auto dark:text-defaulttextcolor/70;
+  }
+  // .custom-before {
+  //   @apply before:absolute before:h-4 before:w-[0.2rem] before:top-[0.15rem] before:-start-[0.65rem] before:bg-gradient-to-b before:from-primary/50 before:to-secondary/50 before:rounded-md;
+  // }
+  // .box-title {
+  //   @apply text-[.800rem];
+  // }
+  // .main-content {
+  //   @apply pt-4;
+  // }
+  
+  .custom-data-grid {
+    .dx-datagrid-rowsview {
+      // border: none;
+      border-radius: 3px; // Rounded corners
+    }
+  
+    // Table Header Styling
+    .dx-header-row {
+      background-color: #f4f7fe; // Light gray-blue header background
+      font-weight: 600;
+      color: #4a4a4a; // Darker text color for contrast
+      font-size: 16px;
+      text-align: left;
+      border-bottom: 1px solid #e0e6f5; // Subtle bottom border
+    }
+  
+    // Table Row Styling
+    .dx-row {
+      color: #4a4a4a; // Text color for table rows
+      border-bottom: 1px solid #e0e6f5; // Subtle row separator
+      font-size: 13px;
+  
+      &:nth-child(even) {
+        background-color: #f9fbff; // Light background for even rows
+      }
+  
+      &:nth-child(odd) {
+        background-color: #ffffff; // White background for odd rows
+      }
+  
+      &:hover {
+        background-color: #e6f0ff; // Hover effect with light blue shade
+      }
+    }
+  
+    
+    .dx-datagrid-action {
+      color: #10010b; // Primary blue color for actions
+      font-size: .875rem;
+      font-family: "Roboto," "Open Sans," "Nunito.";
+      background-color: rgb(249 250 251 /1);
+      line-height: 1.25rem;
+  
+      &:hover {
+        color: #010810; // Darker blue on hover
+      }
+    }
+  
+    // Custom Checkbox Styling
+    .dx-checkbox {
+      .dx-checkbox-icon {
+        border-color: #4a90e2;
+        background-color: #ffffff;
+      }
+  
+      &.dx-checkbox-checked .dx-checkbox-icon {
+        background-color: #4a90e2; // Checkbox fill color
+        border-color: #4a90e2;
+      }
+    }
+  
+    // Badge Styling
+    .badge {
+      &.bg-success {
+        background-color: #28a745; // Green for "Active"
+        color: white;
+        border-radius: 12px;
+        padding: 4px 12px;
+      }
+    }
+  
+    // Toolbar Styling
+    .dx-toolbar {
+      background-color: #ffffff;
+      border-bottom: 1px solid #e0e6f5;
+  
+      .dx-toolbar-before {
+        display: flex;
+        align-items: center;
+      }
+  
+      .dx-toolbar-after {
+        display: flex;
+        align-items: center;
+      }
+      .dx-toolbar-before {
+    justify-content: flex-start; /* Align to the left */
+  }
+  
+  .dx-toolbar-after {
+    justify-content: flex-end; /* Align to the right */
+  }
+  
+  
+      // Buttons in the toolbar
+      .dx-button {
+        background-color: #4a90e2; // Primary button color
+        color: #ffffff;
+        border-radius: 6px;
+        padding: 6px 12px;
+  
+        &:hover {
+          background-color: #1e6b99;
+        }
+      }
+    }
+  }

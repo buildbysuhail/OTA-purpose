@@ -141,9 +141,9 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
     return (
       <div className="flex justify-start items-center  gap-1">
         {browserImage && <img src={browserImage} alt={data.data.browser} className=" hover:brightness-150 drop-shadow-md" style={{ width: '15px', height: '15px' }} />}
-        <span className="text-[14px] font-[200] text-black font-sans">{data.data.browser}</span>
-       
-        {data.data.isActive && <i className="ri-checkbox-blank-circle-fill drop-shadow-sm self-center" style={{ color:'#22c55e',fontSize: '7px' }}></i>}
+        <span className=".dx-row">{data.data.browser}{" "}
+        {data.data.isActive && <i className="ri-checkbox-blank-circle-fill drop-shadow-sm " style={{ color:'#22c55e',fontSize: '7px' }}></i>}
+        </span>
       </div>
     );
   };
@@ -156,7 +156,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       className="aspect-square  rounded-full drop-shadow-md hover:brightness-150"
       style={{ width: '15px', height: '15px',}} 
     />
-    <span className="text-[14px] font-[200] text-black font-sans">{`${data.data.country},${data.data.state}`}</span>
+    <span className=".dx-row">{`${data.data.country},${data.data.state}`}</span>
 </div>
  )
 
@@ -194,26 +194,17 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
   return (
     <div className="flex justify-start items-center  gap-1">
       {/* {deviceImage && <img src={deviceImage} alt={data.data.device} className="aspect-square object-contain" style={{ width: '17px', height: '17px' }} />} */}
-      <div className="w-[16px] h-[16px]  flex justify-center ">
+      <div className="w-[16px] h-[16px]  flex justify-center items-start">
       {iconclass  && <i className={`${iconclass} object-contain text-[16px] text-sky-400`} ></i>}
       </div>
-      <span className="text-black font-sans font-[200] text-[14px]">{data.data.device} </span>
+      <span className=".dx-row">{data.data.device} </span>
       
     </div>
   );
  }
 
 
- const renderCellHeader = (data:any) => {
- return  <div className=" font-medium font-sans text-black text-[16px] ">
-  {data.column.caption}
-</div>
- }
- 
- const cellPrepared = (e:any) => {
 
-     e.cellElement.style.cssText = " color: #000000; font-size:14px; font-weight:200;  ";
-}
 //  ==========================================================================================
   return (
     <Fragment>
@@ -246,13 +237,13 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       store
                       // "https://localhost:7213/api/Core/LoginSessions/GetAllAsync"
                     }
-                  
+                   className="custom-data-grid"
                     showBorders={true}
                     // columnAutoWidth={true}
                     // remoteOperations={true}
                     showColumnLines={false}
                     showRowLines={true}
-                    onCellPrepared={cellPrepared}
+                    // onCellPrepared={cellPrepared}
                     // onScroll={handleScroll}
                     // onRowPrepared={(e: any) => {
                     //   if (e.rowType === "data" && e.data.isActive) {
@@ -261,10 +252,10 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     // }}
                   >
                     <ColumnFixing enabled={true}/>
-                    <Scrolling  mode="virtual" 
-                      scrollByContent={false}
+                    <Scrolling  mode="standard" 
+                      // scrollByContent={true}
                      
-                    rowRenderingMode="virtual" 
+                    // rowRenderingMode="virtual" 
                     />
                     <Paging defaultPageSize={100} />
                     {/* <FilterRow visible={true} applyFilter="auto" />
@@ -277,7 +268,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="branchName"
-                      headerCellRender={renderCellHeader}
+                   
                       caption="  Branch Name"
                       dataType="string"
                     />
@@ -292,7 +283,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       // )}
                       // sortOrder="asc"
                       caption={"Browser"}
-                      headerCellRender={renderCellHeader}
+                      
                       dataType="string"
                     />
                     <Column
@@ -300,7 +291,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowFiltering={true}
                       dataField="ipAddress"
                       caption={"IP Address"}
-                      headerCellRender={renderCellHeader}
+                      
                       dataType="string"
                     />
                     <Column
@@ -309,7 +300,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       dataField="device"
                       cellRender={renderDeviceCell}
                       caption={"Device"}
-                      headerCellRender={renderCellHeader}
+                      
                       dataType="string"
                     />
                     <Column
@@ -318,7 +309,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       cellRender={renderCountryCell}
                       dataField="location"
                       caption={"Location"}
-                      headerCellRender={renderCellHeader}
+                      
                       dataType="string"
                     />
 
@@ -327,11 +318,11 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowFiltering={true}
                       dataField="recentActivity"
                       caption={"Recent Activity"}
-                      headerCellRender={renderCellHeader}
+                      
                       dataType="datetime"
                     />
                      <Column
-                       
+                      
                       fixed={true} fixedPosition="right"
                       cellRender={({ data }) => (
                     
@@ -350,9 +341,10 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     }
                     } 
                     startIcon= {loadingLogout.loading == false ?  "ri-logout-box-r-line" : ""}
-                    className="p-[2px] m-[0px] h-8 "
+                    className="p-[2px] m-[0px] h-7 w-7"
                      type="button"
                      variant="primary"
+                   
                     disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false} 
                     loading={loadingLogout.loading && loadingLogout.deviceId ==data.deviceId}
                    

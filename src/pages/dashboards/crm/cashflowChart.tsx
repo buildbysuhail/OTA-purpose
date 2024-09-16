@@ -103,7 +103,7 @@ const CashflowChart: FC<CashflowProps> = (props) => {
         {
             type: 'line',
             name: 'Cash',
-            data: props.cash.summary.map(item => ({
+            data: props?.cash?.summary?.map(item => ({
               x: item.monthAndYear,  
               y: item.amount  
           }))
@@ -111,7 +111,7 @@ const CashflowChart: FC<CashflowProps> = (props) => {
         {
             type: 'line',
             name: 'Bank',                 
-            data: props.bank.summary.map(item => ({
+            data: props?.bank?.summary?.map(item => ({
               x: item.monthAndYear,  
               y: item.amount  
           }))

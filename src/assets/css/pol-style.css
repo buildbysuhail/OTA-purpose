@@ -11,3 +11,10 @@
 .main-content {
   @apply pt-4;
 }
+
+.bg-custom-blue {
+  background-color: rgb(58 88 146);
+}
+.bg-custom-blue:hover {
+  background-color: rgb(45 65 104 / 1);
+}

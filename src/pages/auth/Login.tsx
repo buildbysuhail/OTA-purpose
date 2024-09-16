@@ -25,6 +25,8 @@ const Login = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const [hasToChooseBranch, setHasToChooseBranch] = useState(false);
+  const [isLoggedToBranch, setIsLoggedToBranch] = useState(false);
   const [error, setError] = useState<any>();
   const loginData: StateBase = useSelector((state: any) => state.Login);
   const comapanies = useSelector((state: any) => state?.GetUserCompanies);
@@ -43,6 +45,15 @@ const Login = () => {
         setError('');
         
         if (login.isOk == true) {   
+          if(login.item.hasToChooseBranch) {
+            setHasToChooseBranch(true);
+            setIsLoggedToBranch(false);
+          }
+          else
+          {
+            setIsLoggedToBranch(true);
+            setHasToChooseBranch(false);
+          }
           Cookies.set("token", login.item.token, { expires: 30 }); 
           Cookies.set("up", login.item.userProfileDetails, { expires: 30 }); 
           Cookies.set("ut", login.item.userThemes, { expires: 30 }); 
@@ -64,16 +75,14 @@ const Login = () => {
   
   useEffect(() => {
     debugger;
-    if (userSessions.userId != undefined && userSessions.userId != null && userSessions.userId != 0
-          && userSessions.currentBranchId != undefined && userSessions.currentBranchId != null && userSessions.currentBranchId != 0
+    if (isLoggedToBranch
     ) {
       navigate("/");
-    } else if(userSessions.userId != undefined && userSessions.userId != null && userSessions.userId != 0
-      && (userSessions.currentBranchId == undefined || userSessions.currentBranchId == null || userSessions.currentBranchId == 0)) {
+    } else if(hasToChooseBranch) {
         debugger;
       navigate("/select-organization");
     }
-  }, [userSessions]);
+  }, [hasToChooseBranch]);
 
   return (
 
@@ -164,7 +173,7 @@ new heights</h2>
                 </div>
                 <button
                   type="submit"
-                  className="w-full flex h-9 mt-4 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-primary bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="w-full flex h-9 mt-4 justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-custom-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   {comapanies?.loading || loginData?.loading ? (
                     <div className="true ml-1 h-4 w-4 bg-white rounded-full animate-ping"></div>

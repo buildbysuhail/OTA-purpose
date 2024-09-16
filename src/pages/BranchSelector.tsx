@@ -8,8 +8,12 @@ import { handleResponse } from "../utilities/HandleResponse";
 import { setBranch, userSession } from "../redux/slices/user-session/thunk";
 import { useAppDispatch, useAppSelector } from "../utilities/hooks/useAppDispatch";
 import { RootState } from "../redux/store";
-import { BranchSelectDto } from "../redux/slices/user-session/reducer";
+import { BranchSelectDto, UserModel } from "../redux/slices/user-session/reducer";
 import ErpAvatar from "../components/ERPComponents/erp-avatar";
+import Cookies from "js-cookie";
+import { customJsonParse } from "../utilities/jsonConverter";
+import { Theme } from "../redux/slices/app/types";
+import { syncAppStates } from "./auth/syncSettings";
 
 const BranchSelector = ({}) => {
   const { t } = useTranslation();
@@ -34,6 +38,16 @@ const BranchSelector = ({}) => {
 
     const response = await dispatch(setBranch(branch)).unwrap();
     setSelectionLoading(false);
+    if (response.isOk == true) {   
+      Cookies.set("token", response.item.token, { expires: 30 }); 
+      Cookies.set("up", response.item.userProfileDetails, { expires: 30 }); 
+      Cookies.set("ut", response.item.userThemes, { expires: 30 }); 
+      const _userProfileDetails = atob(response.item.userProfileDetails);
+      const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
+      const _userThemes = atob(response.item.userThemes);
+      const userThemes: Theme = customJsonParse(_userThemes);
+      syncAppStates(dispatch,userThemes, userProfileDetails);          
+    }
     handleResponse(response, () => {
       // navigate("/")
     });

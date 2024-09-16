@@ -81,13 +81,14 @@ const userSessionSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(userSession.fulfilled, (state, action) => {
       if(action.payload.isOk) {        
-      Cookies.set("ut", modelToBase64(action.payload.item), { expires: 30 }); 
+      Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 }); 
         return  action.payload.item;        
       }
     });
     builder.addCase(setBranch.fulfilled, (state, action) => {
       if(action.payload.isOk) {
-        return  action.payload.item;        
+        // Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 }); 
+        // return  action.payload.item;        
       }
     });
   },

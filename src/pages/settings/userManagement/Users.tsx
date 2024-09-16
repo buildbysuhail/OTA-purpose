@@ -94,7 +94,11 @@ const Users = () => {
                 </p>
                 
               </div>
-              <div></div>
+              <div>
+                <button className='ti-btn-primary-full ti-btn ti-btn-full '>
+                  Add
+                </button>
+              </div>
             </div>
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
@@ -108,7 +112,7 @@ const Users = () => {
                  className="custom-data-grid"
                   showBorders={true}
                   remoteOperations={true}
-                  showColumnLines={true}
+                  showColumnLines={false}
                   showRowLines={true}
                  columnAutoWidth={true}
                  allowColumnReordering={true}
@@ -265,7 +269,7 @@ const Users = () => {
                   <div className="action-field">
                  
                   <Link to="#">
-                    <i className="ri-eye-2-line view-icon" title="View"></i>
+                    <i className="ri-eye-2-line  view-icon" title="View"></i>
                   </Link>
                  
                   <Link to="#">

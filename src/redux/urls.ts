@@ -51,6 +51,7 @@ const Urls = {
   getPhone_profile: "/Subscription/Profile/GetPhone/",
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
   getUserSession: "/Core/LoginSessions/GetAllAsync",
+
   logoutUserSession: "/Core/LoginSessions/InActiveSession",
      
 
@@ -87,6 +88,9 @@ get_members:"/Subscription/WorkSpace/GetMembers",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
+
+  //setting/userManagement
+    getUserSubscriped:"/Subscription/User/GetUsersForGrid"
 };
 
 export default Urls;

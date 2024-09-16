@@ -24,6 +24,10 @@
       color: #4a4a4a; // Darker text color for contrast
       font-size: 16px;
       text-align: left;
+      
+      
+      // padding: 20px; 
+      // margin: 20px;
       border-bottom: 1px solid #e0e6f5; // Subtle bottom border
     }
   
@@ -32,7 +36,7 @@
       color: #4a4a4a; // Text color for table rows
       border-bottom: 1px solid #e0e6f5; // Subtle row separator
       font-size: 13px;
-  
+     
       &:nth-child(even) {
         background-color: #f9fbff; // Light background for even rows
       }
@@ -50,6 +54,7 @@
     .dx-datagrid-action {
       color: #10010b; // Primary blue color for actions
       font-size: .875rem;
+      
       font-family: "Roboto," "Open Sans," "Nunito.";
       background-color: rgb(249 250 251 /1);
       line-height: 1.25rem;
@@ -85,7 +90,7 @@
     // Toolbar Styling
     .dx-toolbar {
       background-color: #ffffff;
-      border-bottom: 1px solid #e0e6f5;
+      // border-bottom: 1px solid #e0e6f5;
   
       .dx-toolbar-before {
         display: flex;
@@ -107,15 +112,59 @@
   
       // Buttons in the toolbar
       .dx-button{
-        background-color: #4a90e2; // Primary button color
+        background-color: #72adf1; // Primary button color
         color: #ffffff;
         border-radius: 6px;
-        padding: 6px 12px;
+        // padding: 4px 8px;
   
         &:hover {
-          background-color: #1e6b99;
+          background-color: #30698a;
         }
       }
-
     }
+     //action buttons 
+     .action-field {
+      display: flex;
+      justify-content: center;
+      align-items: start;
+     // Adjust space between icons
+  
+      // Common icon styling
+      i {
+        font-size: .875rem;
+        cursor: pointer;
+        transition: color 0.3s ease, background-color 0.3s ease;
+        padding: 4px;
+        border-radius: 4px;
+  
+        &:hover {
+          color: #ffffff;
+
+        }
+      }
+  
+      // Specific styles for each action
+      .view-icon {
+        color: #00bfff; // Sky blue for view
+        &:hover {
+          background-color: #00bfff;
+        }
+      }
+  
+      .delete-icon {
+        color: #ff4d4f; // Red for delete
+        &:hover {
+          background-color: #ff4d4f;
+        }
+      }
+  
+      .edit-icon {
+        color: #28a745; // Green for edit
+        &:hover {
+          background-color: #28a745;
+        }
+      }
+    }
+
+   
   }

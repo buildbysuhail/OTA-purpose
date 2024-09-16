@@ -89,9 +89,9 @@ const Users = () => {
             <div className="box-header justify-between">
               <div className="box-title">
                 Users{" "}
-                <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                {/* <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
                 View and manage users where you're currently logged in
-                </p>
+                </p> */}
                 
               </div>
               <div>
@@ -116,7 +116,7 @@ const Users = () => {
                   showRowLines={true}
                  columnAutoWidth={true}
                  allowColumnReordering={true}
-                 allowColumnResizing ={true}
+                //  allowColumnResizing ={true}
                 >
                   <ColumnFixing enabled={true}/>
                   <Scrolling  mode="standard" />
@@ -127,7 +127,7 @@ const Users = () => {
                   <ColumnChooser enabled={true} />
                   {/* <LoadPanel enabled={true} /> */}
                   <ColumnFixing enabled={true} />
-                  {/* <Selection mode="single" /> */}
+                  <Selection mode="single" />
                   
                   <Column
                     allowSorting={true}
@@ -136,6 +136,7 @@ const Users = () => {
                     dataField="siNo"
                     caption="SiNo"
                     dataType="number"
+                    width={60}
                   />
                   <Column
                   
@@ -145,7 +146,7 @@ const Users = () => {
                    
                   
                     caption={"User"}
-                    
+                    width={60}
                     dataType="string"
                   />
                   <Column
@@ -153,10 +154,10 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="password"
                     caption={"Password"}
-                    
+                    width={140}
                     dataType="string"
                   />
-                  <Column
+                  {/* <Column
                     allowSearch={true}
                     allowFiltering={true}
                     dataField="counterID"
@@ -164,7 +165,7 @@ const Users = () => {
                     caption={"Counter ID"}
                     
                     dataType="number"
-                  />
+                  /> */}
                  
                   <Column
                     allowSearch={true}
@@ -172,7 +173,7 @@ const Users = () => {
                     dataField="counter"
                    
                     caption={"Counter"}
-                    
+                    width={100}
                     dataType="string"
                   />
                   <Column
@@ -181,7 +182,7 @@ const Users = () => {
                     
                     dataField="userType"
                     caption={"User Type"}
-                    
+                    width={100}
                     dataType="string"
                   />
 
@@ -190,7 +191,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="createdUser"
                     caption={"Created User"}
-                    
+                    width={130}
                     dataType="string"
                   />
                    
@@ -199,7 +200,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="createdDate"
                     caption={"Created Date"}
-                    
+                    width={100}
                     dataType="date"
                   />
                     <Column
@@ -207,7 +208,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="modifiedUser"
                     caption={"Modified User"}
-                    
+                    width={130}
                     dataType="string"
                   />
                     <Column
@@ -215,7 +216,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="modifiedDate"
                     caption={"Modified Date"}
-                    
+                    width={130}
                     dataType="date"
                   />
                     <Column
@@ -223,7 +224,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="id"
                     caption={"Id"}
-                    
+                    width={60}
                     dataType="number"
                   />
                     <Column
@@ -231,7 +232,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="employeeID"
                     caption={"Employee ID"}
-                    
+                    width={100}
                     dataType="number"
                   />
                    <Column
@@ -239,7 +240,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="employeeName"
                     caption={"Employee Name"}
-                    
+                    width={120}
                     dataType="string"
                   />
                   <Column
@@ -247,7 +248,7 @@ const Users = () => {
                     allowFiltering={true}
                     dataField="maxDiscPercAllowed"
                     caption={"maxDiscPercAllowed"}
-                    
+                    width={150}
                     dataType="number"
                   />
                   <Column
@@ -257,13 +258,13 @@ const Users = () => {
                     caption={  "Passkey"}
                     visible={false}
                     dataType='string'
-
+                    width={100}
                   />
                   <Column
                      fixed={true} fixedPosition='right'
                      dataField="actions"
-                     caption=""
-                     width={60}
+                     caption="Actions"
+                     width={100}
                    cellRender={(cellElement, cellInfo) => {
                    return (
                   <div className="action-field">
@@ -274,6 +275,10 @@ const Users = () => {
                  
                   <Link to="#">
                   <i className="ri-edit-line edit-icon" title="Edit"></i>
+                  </Link>
+
+                  <Link to="#">
+                  <i className="ri-delete-bin-5-line delete-icon" title="Edit"></i>
                   </Link>
                   
                   </div>

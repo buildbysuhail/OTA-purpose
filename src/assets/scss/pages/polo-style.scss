@@ -18,18 +18,18 @@
     }
   
     // Table Header Styling
-    .dx-header-row {
-      background-color: #f4f7fe; // Light gray-blue header background
-      font-weight: 600;
-      color: #4a4a4a; // Darker text color for contrast
-      font-size: 16px;
-      text-align: left;
+    // .dx-header-row {
+    //   background-color: #f4f7fe; // Light gray-blue header background
+    //   font-weight: 600;
+    //   color: #4a4a4a; // Darker text color for contrast
+    //   font-size: 16px;
+    //   text-align: left;
       
       
-      // padding: 20px; 
-      // margin: 20px;
-      border-bottom: 1px solid #e0e6f5; // Subtle bottom border
-    }
+    //   // padding: 20px; 
+    //   // margin: 20px;
+    //   border-bottom: 1px solid #e0e6f5; // Subtle bottom border
+    // }
   
     // Table Row Styling
     .dx-row {
@@ -52,30 +52,29 @@
   
     // headz
     .dx-datagrid-action {
-      color: #10010b; // Primary blue color for actions
+      color: rgb(71 85 105 ); // Primary blue color for actions
       font-size: .875rem;
-      
+      padding: 20px;
+      margin: 10px;
       font-family: "Roboto," "Open Sans," "Nunito.";
       background-color: rgb(249 250 251 /1);
       line-height: 1.25rem;
   
-      &:hover {
-        color: #010810; // Darker blue on hover
-      }
+   
     }
   
     // Custom Checkbox Styling
-    .dx-checkbox {
-      .dx-checkbox-icon {
-        border-color: #4a90e2;
-        background-color: #ffffff;
-      }
+    // .dx-checkbox {
+    //   .dx-checkbox-icon {
+    //     border-color: #4a90e2;
+    //     background-color: #ffffff;
+    //   }
   
-      &.dx-checkbox-checked .dx-checkbox-icon {
-        background-color: #4a90e2; // Checkbox fill color
-        border-color: #4a90e2;
-      }
-    }
+    //   &.dx-checkbox-checked .dx-checkbox-icon {
+    //     background-color: #4a90e2; // Checkbox fill color
+    //     border-color: #4a90e2;
+    //   }
+    // }
   
     // Badge Styling
     .badge {

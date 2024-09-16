@@ -14,7 +14,7 @@
   .custom-data-grid {
     .dx-datagrid-rowsview {
       // border: none;
-      border-radius: 3px; // Rounded corners
+      border-radius: px; // Rounded corners
     }
   
     // Table Header Styling
@@ -46,7 +46,7 @@
       }
     }
   
-    
+    // headz
     .dx-datagrid-action {
       color: #10010b; // Primary blue color for actions
       font-size: .875rem;
@@ -106,7 +106,7 @@
   
   
       // Buttons in the toolbar
-      .dx-button {
+      .dx-button{
         background-color: #4a90e2; // Primary button color
         color: #ffffff;
         border-radius: 6px;
@@ -116,5 +116,6 @@
           background-color: #1e6b99;
         }
       }
+
     }
   }

@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react'
-
+import UserManagementApis from './User-Management-api';
 import Urls from '../../../redux/urls'
 import { DataGrid } from "devextreme-react";
 import {
@@ -10,9 +10,18 @@ import {
   Scrolling,
   SearchPanel,
   DataGridTypes,
-  ColumnFixing
+  ColumnFixing,
+  ColumnChooser,
+  Selection,
+  Grouping,
+  Toolbar,
+  Item,
+  LoadPanel
 } from "devextreme-react/cjs/data-grid";
+import Button from 'devextreme-react/button';
 import CustomStore from "devextreme/data/custom_store";
+import { Link } from 'react-router-dom';
+
 
 const Users = () => {
   const [gridHeight, setGridHeight] = useState<number>(500);
@@ -26,7 +35,7 @@ const Users = () => {
     return value !== undefined && value !== null && value !== "";
   }
 
-  
+
   const store = new CustomStore({
     // key: "Id",
     async load(loadOptions: any) {
@@ -45,24 +54,12 @@ const Users = () => {
             `${paramName}=${JSON.stringify(loadOptions[paramName])}`
         )
         .join("&");
-      
-      try {
-        const response = await fetch(`https://polosys-001-site1.ctempurl.com/api/Subscription/User/GetUsersForGrid`);
-      
-        console.log("Response status: ", response.status);
 
-        // Check if status is 204 (No Content)
-        if (response.status === 204) {
-            return {
-                data: [],
-                totalCount: 0,
-                summary: {},
-                groupCount: 0,
-            };
-        }
-    
-        const result = await response.json();
-        console.log("Fetched data: ", result);
+      try {
+        const response = await  UserManagementApis.getSessions(queryString);
+
+        const result = response;
+
         return result !== undefined && result != null
           ? {
               data: result,
@@ -74,8 +71,7 @@ const Users = () => {
               summary: {},
               groupCount: 0,
             };
-      } catch (err ) {
-        console.error("Data Loading Error: ", err);
+      } catch (err) {
         throw new Error("Data Loading Error");
       }
     },
@@ -111,29 +107,34 @@ const Users = () => {
                   }
                  className="custom-data-grid"
                   showBorders={true}
-                  // remoteOperations={true}
-                  showColumnLines={false}
+                  remoteOperations={true}
+                  showColumnLines={true}
                   showRowLines={true}
                  columnAutoWidth={true}
+                 allowColumnReordering={true}
+                 allowColumnResizing ={true}
                 >
                   <ColumnFixing enabled={true}/>
-                  <Scrolling  mode="standard" 
-           
-                  />
-                  {/* <Paging defaultPageSize={100} /> */}
-     
-
+                  <Scrolling  mode="standard" />
+                  {/* <FilterRow visible={true} /> */}
+                  <SearchPanel visible={true} />
+                  {/* <HeaderFilter visible={true} /> */}
+                  <Paging defaultPageSize={100} />
+                  <ColumnChooser enabled={true} />
+                  {/* <LoadPanel enabled={true} /> */}
+                  <ColumnFixing enabled={true} />
+                  {/* <Selection mode="single" /> */}
+                  
                   <Column
-                    
+                    allowSorting={true}
                     allowSearch={true}
                     allowFiltering={true}
                     dataField="siNo"
-                 
                     caption="SiNo"
                     dataType="number"
                   />
                   <Column
-                    // width={110}
+                  
                     allowSearch={true}
                     allowFiltering={true}
                     dataField="user"
@@ -160,6 +161,16 @@ const Users = () => {
                     
                     dataType="number"
                   />
+                 
+                  <Column
+                    allowSearch={true}
+                    allowFiltering={true}
+                    dataField="counter"
+                   
+                    caption={"Counter"}
+                    
+                    dataType="string"
+                  />
                   <Column
                     allowSearch={true}
                     allowFiltering={true}
@@ -185,7 +196,7 @@ const Users = () => {
                     dataField="createdDate"
                     caption={"Created Date"}
                     
-                    dataType="string"
+                    dataType="date"
                   />
                     <Column
                     allowSearch={true}
@@ -201,7 +212,7 @@ const Users = () => {
                     dataField="modifiedDate"
                     caption={"Modified Date"}
                     
-                    dataType="string"
+                    dataType="date"
                   />
                     <Column
                     allowSearch={true}
@@ -235,16 +246,43 @@ const Users = () => {
                     
                     dataType="number"
                   />
-                  {/* <Column
+                  <Column
                     allowSearch={true}
                     allowFiltering={true}
                     dataField=  "passkey"
                     caption={  "Passkey"}
+                    visible={false}
+                    dataType='string'
+
+                  />
+                  <Column
+                     fixed={true} fixedPosition='right'
+                     dataField="actions"
+                     caption=""
+                     width={60}
+                   cellRender={(cellElement, cellInfo) => {
+                   return (
+                  <div className="action-field">
+                 
+                  <Link to="#">
+                    <i className="ri-eye-2-line view-icon" title="View"></i>
+                  </Link>
+                 
+                  <Link to="#">
+                  <i className="ri-edit-line edit-icon" title="Edit"></i>
+                  </Link>
+                  
+                  </div>
+                    );
+                    }}
+                />
+                 <Toolbar>
+                   
+                      <Item name="searchPanel" /> 
+                      {/* <Item name="exportButton" /> */}
+                      <Item name="columnChooserButton" />
                     
-                    dataType="string"
-
-                  /> */}
-
+                </Toolbar>
                 </DataGrid>
               </div>
             </div>

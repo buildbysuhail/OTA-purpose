@@ -262,7 +262,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       <SearchPanel visible={true} width={240} placeholder={'Search...'} /> */}
                     {/* <Column dataField="branchName" caption={'branchName'} dataType="string" /> */}
 
-                    <Column
+                     <Column
                       
                       allowSearch={true}
                       allowFiltering={true}
@@ -270,8 +270,8 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                    
                       caption="  Branch Name"
                       dataType="string"
-                    />
-                    <Column
+                    /> 
+                     <Column
                       // width={110}
                       allowSearch={true}
                       allowFiltering={true}
@@ -284,7 +284,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       caption={"Browser"}
                       
                       dataType="string"
-                    />
+                    /> 
                     <Column
                       allowSearch={true}
                       allowFiltering={true}

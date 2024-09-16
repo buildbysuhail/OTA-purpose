@@ -293,7 +293,7 @@ const Crm: FC<CrmProps> = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {Data.map((idx) => (
+                        {Data && Data.map((idx) => (
                           <tr className="border border-inherit border-solid hover:bg-gray-100 dark:border-defaultborder/10 dark:hover:bg-light" key={Math.random()}>
                             <th scope="row" className="!ps-4 !pe-5"><input className="form-check-input" type="checkbox" defaultChecked={idx.checked === 'defaultChecked'}
                               id="checkboxNoLabel2" defaultValue="" aria-label="..." /></th>

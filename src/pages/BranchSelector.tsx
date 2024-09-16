@@ -14,14 +14,20 @@ import Cookies from "js-cookie";
 import { customJsonParse } from "../utilities/jsonConverter";
 import { Theme } from "../redux/slices/app/types";
 import { syncAppStates } from "./auth/syncSettings";
+import { CircularProgress } from "@mui/material";
 
-const BranchSelector = ({}) => {
+interface ChildComponentProps {
+  onLoadingChange: (isLoading: boolean) => void;
+}
+
+
+const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [selected, setSelected] = useState<number>();
-  const [selectionLoading, setSelectionLoading] = useState<boolean>(false);
+  const [selectionLoading, setSelectionLoading] = useState<{loading: boolean, clientId: number, branchId: number}>({loading: false, clientId: 0, branchId: 0});
 
   const UserSession = useAppSelector((state: RootState) => state?.UserSession);
 
@@ -30,14 +36,17 @@ const BranchSelector = ({}) => {
     return { width: 40, height: 40 };
   }, []);
   const changeHandler = async (item: BranchSelectDto) => {
-    setSelectionLoading(true);
+    onLoadingChange(true);
+    setSelectionLoading({loading: true, clientId: item?.clientId, branchId: item?.id});
     const branch = {
       branchId: item?.id,
       clientId: item.clientId
     } as any;
 
     const response = await dispatch(setBranch(branch)).unwrap();
-    setSelectionLoading(false);
+    setSelectionLoading({loading: false, clientId: 0, branchId: 0});
+    
+    onLoadingChange(false);
     if (response.isOk == true) {   
       Cookies.set("token", response.item.token, { expires: 30 }); 
       Cookies.set("up", response.item.userProfileDetails, { expires: 30 }); 
@@ -66,9 +75,7 @@ const BranchSelector = ({}) => {
 
   return (
     <>
-      <div className="flex h-4 flex-col gap-3 sm:col-span-2">
-        {selectionLoading && <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>}
-      </div>
+      
      
       <div className="flex flex-col gap-3 sm:col-span-2">
         {UserSession?.branches?.map((item: BranchSelectDto, index: number) => (
@@ -91,9 +98,12 @@ const BranchSelector = ({}) => {
             }}
             tabIndex={0}
             className={`${
-              item?.isActive ? "bg-gray-50 cursor-default" : "bg-white cursor-pointer hover:bg-gray-50"
+              item?.isActive ? "bg-gray-50 cursor-default relative" : "bg-white cursor-pointer hover:bg-gray-50 relative"
             } px-4 py-3  rounded-lg flex justify-start border border-gray-200`}
           >
+           {(selectionLoading.loading && selectionLoading.clientId == item?.clientId && selectionLoading.branchId == item?.id) &&  <div className="absolute w-full h-full bg-gray-50/80 z-[1] top-0 left-0 flex items-center justify-center">
+            <CircularProgress className="" color="inherit" size={25} />
+          </div>}
             
       <span className="avatar avatar-md avatar-badge pr-4">
                             <ErpAvatar

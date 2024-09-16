@@ -46,7 +46,7 @@ const SummaryCard: FC<SummaryProps> = (props) => {
                 <div id="crm-total-customers">
                   <ERPReactApexChartForSummaryCard
                     summary={
-                      data.summary != undefined
+                      data && data.summary != undefined
                         ? data.summary.summary.map((x) => x.amount)
                         : []
                     }

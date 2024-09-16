@@ -9,8 +9,12 @@ import BranchSelector from "./BranchSelector";
 import ErpAvatar from "../components/ERPComponents/erp-avatar";
 import ERPSubmitButton from "../components/ERPComponents/erp-submit-button";
 import ERPButton from "../components/ERPComponents/erp-button";
+import { useState } from "react";
+import useGoBack from "../utilities/hooks/useGoBack";
 
 const OrgSelect = ({}) => {
+  
+  const [isLoading, setIsLoading] = useState(false);
   // const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -18,6 +22,7 @@ const OrgSelect = ({}) => {
   const userSession = useAppSelector((state: RootState) => state?.UserSession);
   const handleSubmit = async () => {
     // event.preventDefault();
+    setIsLoading(true);
     const isBranchActive = userSession?.branches?.some(
       (item: BranchSelectDto) => item?.isActive
     );
@@ -26,6 +31,10 @@ const OrgSelect = ({}) => {
     } else {
       ERPToast.show("Please select a branch", "error");
     }
+  };
+
+  const handleLoadingChange = (loadingState: boolean) => {
+    setIsLoading(loadingState);
   };
 
   return (
@@ -57,7 +66,7 @@ const OrgSelect = ({}) => {
                 {"My Organization"}
               </h2>
             </div>
-            <BranchSelector />
+            <BranchSelector onLoadingChange={handleLoadingChange} />
             <div className="grid grid-cols-1 gap-3">
               <ERPButton
                 type="button"
@@ -65,6 +74,15 @@ const OrgSelect = ({}) => {
                 loading={false}
                 title="continue"
                 variant="primary"
+                disabled={isLoading}
+              ></ERPButton>
+               <ERPButton
+                type="button"
+                onClick={useGoBack()}
+                loading={false}
+                title="back"
+                variant="secondary"
+                disabled={isLoading}
               ></ERPButton>
             </div>
           </div>

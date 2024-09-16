@@ -7,6 +7,7 @@ import { CircularProgress } from "@mui/material";
 import { logoutUser } from "../../redux/slices/auth/login/thunk";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { initialUserSessionData, setUserSession } from "../../redux/slices/user-session/reducer";
 
 const Logout = () => {
   const { t } = useTranslation();
@@ -29,6 +30,7 @@ const Logout = () => {
     Cookies.remove("token");
     Cookies.remove("ut");
     Cookies.remove("up");
+    dispatch(setUserSession(initialUserSessionData));
     navigate("/login");
     if (logout.isOk == true) {
      

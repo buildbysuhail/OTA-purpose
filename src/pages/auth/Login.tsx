@@ -82,7 +82,7 @@ const Login = () => {
         debugger;
       navigate("/select-organization");
     }
-  }, [hasToChooseBranch]);
+  }, [hasToChooseBranch, isLoggedToBranch]);
 
   return (
 

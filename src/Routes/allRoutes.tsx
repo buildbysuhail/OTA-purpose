@@ -2,20 +2,27 @@ import { Navigate } from "react-router-dom";
 
 import DashboardCRM from "../pages/dashboards/crm/crm";
 import Login from "../pages/auth/Login";
-
+import { lazy } from "react";
+const Settings = lazy(() => import("../pages/settings/AllSettings/Settings"));
+const Users = lazy(() => import("../pages/settings/userManagement/Users"));
 
 const authProtectedRoutes = [
-  { path: "/app/dashboard", component: <DashboardCRM />, allowedFor:'SuperAdmin,Admin,Client' },
-
-  // this route should be at the end of all other routes
-  // eslint-disable-next-line react/display-name
+  {
+    path: "/dashboard",
+    component: <DashboardCRM />,
+    allowedFor: "SuperAdmin,Admin,Client",
+  },
+  // Settings
+  { path: "/settings", component: Settings },
+  { path: "/settings/preferences", component: Users },
+  // { path: "/settings/preferences/:id", component: PreferencesSection },
   {
     path: "/",
     exact: true,
-    component: <Navigate to="/app/dashboard" />,
+    component: <Navigate to="/dashboard" />,
   },
-  { path: "*", component: <Navigate to="/app/dashboard" /> },
-  { path: "/dashboard", component: <Navigate to="/app/dashboard" /> },
+  { path: "*", component: <Navigate to="/dashboard" /> },
+  { path: "/dashboard", component: <Navigate to="/dashboard" /> },
 ];
 
 const publicRoutes = [
@@ -32,8 +39,6 @@ const publicRoutes = [
     exact: true,
     component: <Navigate to="/login" />,
   },
-
-
 ];
 
 export { authProtectedRoutes, publicRoutes };

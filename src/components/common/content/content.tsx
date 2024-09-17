@@ -8,6 +8,7 @@ import AccountSettingsProfile from '../../../pages/account-settings/account-sett
 import WorkspaceSettingsMembers from '../../../pages/work-space/workspace-settings-members';
 import WorkspaceSettingsSecurity from '../../../pages/work-space/workspace-settings-security';
 import Users from '../../../pages/settings/userManagement/Users';
+import Settings from '../../../pages/settings/AllSettings/Settings';
 
 interface ContentProps { }
 const loading = (
@@ -39,7 +40,9 @@ const Content: FC<ContentProps> = () => {
           <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
           <Route path="/members" element={<WorkspaceSettingsMembers />} />
           {/* settings user */}
-          <Route path="/settings/userManagement/users" element={<Users />} />
+          <Route path="/settings/user-management/users" element={<Users />} />
+          
+          <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {
               return <Route key={idx} path={route.path} element={<route.component />} />;

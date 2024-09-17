@@ -155,7 +155,7 @@ const Users = () => {
                  columnAutoWidth={true}
                  allowColumnReordering={true}
                  onExporting={onExporting}
-                //  allowColumnResizing ={true}
+                 allowColumnResizing ={true}
                 >
                   <ColumnFixing enabled={true}/>
                   <Scrolling  mode="standard" />

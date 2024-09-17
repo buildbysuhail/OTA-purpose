@@ -16,10 +16,16 @@ import {
   Grouping,
   Toolbar,
   Item,
-  LoadPanel
+  LoadPanel,
+  Export,
 } from "devextreme-react/cjs/data-grid";
 import Button from 'devextreme-react/button';
 import CustomStore from "devextreme/data/custom_store";
+import { jsPDF } from 'jspdf';
+import { Workbook } from 'exceljs';
+import { saveAs } from 'file-saver';
+import { exportDataGrid as exportToPdf } from 'devextreme/pdf_exporter';
+import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
 import { Link } from 'react-router-dom';
 
 
@@ -76,7 +82,39 @@ const Users = () => {
       }
     },
   });
+  const exportFormats = ['pdf','excel'];
+  const onExporting = (e: DataGridTypes.ExportingEvent) => {
+
+    if(e.format === 'pdf'){
+      const doc = new jsPDF();
   
+      exportToPdf({
+      jsPDFDocument: doc,
+      component: e.component,
+     columnWidths:[15,20,20,20,20,25,25,25,25,15,25,30,30,0],
+      customizeCell({ gridCell, pdfCell }) {
+       
+      },
+     
+    }).then(() => {
+      doc.save('Users.pdf');
+    });
+    }else if (e.format === 'excel') {
+      const workbook = new Workbook();
+      const worksheet = workbook.addWorksheet('Users');
+    
+      exportToExcel({
+        component: e.component,
+        worksheet,
+        autoFilterEnabled: true,
+      }).then(() => {
+        workbook.xlsx.writeBuffer().then((buffer) => {
+          saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
+        });
+      });
+    }
+    
+  };
  const allowedPageSizes =  [10, 20, 50, 100];
 
   return (
@@ -116,6 +154,7 @@ const Users = () => {
                   showRowLines={true}
                  columnAutoWidth={true}
                  allowColumnReordering={true}
+                 onExporting={onExporting}
                 //  allowColumnResizing ={true}
                 >
                   <ColumnFixing enabled={true}/>
@@ -128,6 +167,7 @@ const Users = () => {
                   {/* <LoadPanel enabled={true} /> */}
                   <ColumnFixing enabled={true} />
                   <Selection mode="single" />
+                  <Export enabled={true} formats={exportFormats} allowExportSelectedData={false} />
                   
                   <Column
                     allowSorting={true}
@@ -286,7 +326,7 @@ const Users = () => {
                     }}
                 />
                  <Toolbar>
-                   
+                      <Item name="exportButton" />
                       <Item name="searchPanel" /> 
                       {/* <Item name="exportButton" /> */}
                       <Item name="columnChooserButton" />

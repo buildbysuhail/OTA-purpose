@@ -22,7 +22,7 @@ export const MENUITEMS = [
     menutitle: "WEB APPS",
   },      
   {
-    icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
+    icon: (<i className="side-menu__icon ri-bar-chart-line"></i>),
     type: 'sub',
     Name: '',
     active: false,
@@ -44,7 +44,7 @@ export const MENUITEMS = [
     ]
   },
   {
-    icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
+    icon: (<i className="side-menu__icon ri-shopping-cart-line"></i>),
     type: 'sub',
     Name: '',
     active: false,
@@ -68,7 +68,7 @@ export const MENUITEMS = [
     ]
   },
   {
-    icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
+    icon: (<i className="side-menu__icon bx bx-transfer-alt"></i>), 
     type: 'sub',
     Name: '',
     active: false,
@@ -88,7 +88,7 @@ export const MENUITEMS = [
     ]
   },
   {
-    icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
+    icon: (<i className="side-menu__icon ri-stock-line"></i>),
     type: 'sub',
     Name: '',
     active: false,
@@ -112,6 +112,45 @@ export const MENUITEMS = [
       { path: `${import.meta.env.BASE_URL}stock-count`, type: 'link', active: false, selected: false, title: 'Stock Count' }
 
     ]
+  },
+  {
+    icon: (<i className="side-menu__icon ri-coins-fill"></i>),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'Accountant',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    children: [
+      { path: `${import.meta.env.BASE_URL}cash-payments`, type: 'link', active: false, selected: false, title: 'Cash Payments' },
+  { path: `${import.meta.env.BASE_URL}cash-receipts`, type: 'link', active: false, selected: false, title: 'Cash Receipts' },
+  { path: `${import.meta.env.BASE_URL}bank-payment-contra`, type: 'link', active: false, selected: false, title: 'Bank Payment | Contra' },
+  { path: `${import.meta.env.BASE_URL}bank-receipt-contra`, type: 'link', active: false, selected: false, title: 'Bank Receipt | Contra' },
+  { path: `${import.meta.env.BASE_URL}opening-balance`, type: 'link', active: false, selected: false, title: 'Opening Balance' },
+  { path: `${import.meta.env.BASE_URL}journal-entry`, type: 'link', active: false, selected: false, title: 'Journal Entry' },
+  { path: `${import.meta.env.BASE_URL}debit-note`, type: 'link', active: false, selected: false, title: 'Debit Note' },
+  { path: `${import.meta.env.BASE_URL}credit-note`, type: 'link', active: false, selected: false, title: 'Credit Note' },
+  { path: `${import.meta.env.BASE_URL}bank-reconciliation`, type: 'link', active: false, selected: false, title: 'Bank Reconciliation' },
+  { path: `${import.meta.env.BASE_URL}closing-balance`, type: 'link', active: false, selected: false, title: 'Closing Balance' },
+  { path: `${import.meta.env.BASE_URL}multi-journal-entry`, type: 'link', active: false, selected: false, title: 'Multi Journal Entry' },
+  { path: `${import.meta.env.BASE_URL}tax-on-expense`, type: 'link', active: false, selected: false, title: 'Tax On Expense' }
+
+
+    ]
+  },
+  
+  {
+    icon: (<i className="side-menu__icon ri-line-chart-line"></i>),
+    type: 'link',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'Reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'
   },
  
 ];

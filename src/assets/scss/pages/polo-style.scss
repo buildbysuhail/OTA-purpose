@@ -12,12 +12,12 @@
   // }
   
   .custom-data-grid {
-    .dx-datagrid-rowsview {
-      // border: none;
-      .dx-datagrid-rowsview {
-        border-radius: px; // Apply rounded corners to the top of the grid
-      }
-    }
+    // .dx-datagrid-rowsview {
+    //   // border: none;
+    //   .dx-datagrid-rowsview {
+    //     border-radius: px; // Apply rounded corners to the top of the grid
+    //   }
+    // }
   
     // Table Header Styling
     .dx-datagrid-headers {
@@ -32,7 +32,7 @@
       color: #4a4a4a; // Darker text color for contrast
       font-size: 16px;
       text-align: left;
-      border-bottom: 2px solid #e0e6f5; // Subtle bottom border
+      // border-bottom: 2px solid #e0e6f5; // Subtle bottom border
       border-radius: inherit; 
   
      }
@@ -42,9 +42,9 @@
    
     .dx-data-row {
       color: #4a4a4a; // Text color for table rows
-      border-bottom: 1px solid #e0e6f5; // Subtle row separator
+      
       font-size: 13px;
-     
+      // line-height: 1rem;
       &:nth-child(even) {
         background-color: #f9fbff; // Light background for even rows
       }
@@ -56,6 +56,7 @@
       &:hover {
         background-color: #e6f0ff; // Hover effect with light blue shade
       }
+      
     }
 
   
@@ -108,14 +109,14 @@
     // }
   
     // Badge Styling
-    .badge {
-      &.bg-success {
-        background-color: #28a745; // Green for "Active"
-        color: white;
-        border-radius: 12px;
-        padding: 4px 12px;
-      }
-    }
+    // .badge {
+    //   &.bg-success {
+    //     background-color: #28a745; // Green for "Active"
+    //     color: white;
+    //     border-radius: 12px;
+    //     padding: 4px 12px;
+    //   }
+    // }
   
     // Toolbar Styling
     .dx-toolbar {

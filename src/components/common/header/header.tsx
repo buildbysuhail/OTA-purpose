@@ -739,7 +739,7 @@ const Header: FC<HeaderProps> = () => {
                 <Link to={'/settings'}
                   className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
                 >
-                  <i className="ri-settings-4-line header-link-icon text-[1.125rem]"></i>
+                  <i className="bx bx-cog header-link-icon text-[1.125rem]"></i>
                 </Link>
 
               </div>

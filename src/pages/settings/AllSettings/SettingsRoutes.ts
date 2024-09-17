@@ -47,16 +47,61 @@ export const SettingsRoutes = [
         routes: [
           { title: "Users", path: "/settings/user-management/users" },
           {
-            title: "Roles",
+            title: "User Types",
             path: "/settings/roles",
           },
           {
-            title: "User Preferences",
+            title: "User Type Privileges",
             path: "",
           },
         ],
       },
     ],
   },
+  {
+  header: "Administration",
+  icon: UserIcon,
+  items: [
+    {
+      routes: [
+        { title: "Company Profile", path: "/settings/user-management/users" },
+        { title: "Branches", path: "/settings/user-management/users" },
+        { title: "Delete Inactive Transactions", path: "/settings/user-management/users" },
+        { title: "Bank POS Settings", path: "/settings/user-management/users" },
+      ],
+    },
+  ],
+},
+{
+header: "System",
+icon: UserIcon,
+items: [
+  {
+    routes: [
+      { title: "Administration Settings", path: "/settings/system/administration-settings" },
+      { title: "Export Import", path: "/settings/system/export-import" },
+      { title: "Reset Database", path: "/settings/system/reset-database" },
+      { title: "Counters", path: "/settings/system/counters" },
+      { title: "Financial Year", path: "/settings/system/financial-year" },
+      { title: "Vouchers", path: "/settings/system/vouchers" },
+      { title: "Barcode Print", path: "/settings/system/barcode-print" },
+      { title: "Headers and Footers", path: "/settings/system/headers-footers" },
+    ],
+  },
+  {
+    routes: [
+     
+        { title: "Invoice Designer", path: "/settings/system/invoice-designer" },
+        { title: "Commands", path: "/settings/system/commands" },
+        { title: "User Action Report", path: "/settings/system/user-action-report" },
+        { title: "Reminders", path: "/settings/system/reminders" },
+        { title: "Exchange Rates", path: "/settings/system/exchange-rates" },
+        { title: "Refresh All Branches", path: "/settings/system/refresh-all-branches" },
+        { title: "Day Close", path: "/settings/system/day-close" },
+        { title: "Advance Options", path: "/settings/system/advance-options" }
+    ],
+  },
+],
+},
   
 ];

@@ -33,9 +33,14 @@ export const MENUITEMS = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { path: `${import.meta.env.BASE_URL}account-settings/profile/avatar`, type: 'link', active: false, selected: false, title: 'Customers' },
-      { path: `${import.meta.env.BASE_URL}account-settings/profile/basic-information`, type: 'link', active: false, selected: false, title: 'Invoice' },
-      { path: `${import.meta.env.BASE_URL}account-settings/profile/email-address`, type: 'link', active: false, selected: false, title: 'Return' },
-      { path: `${import.meta.env.BASE_URL}account-settings/profile/phone-number`, type: 'link', active: false, selected: false, title: 'Sales Order' }
+      { path: `${import.meta.env.BASE_URL}sales`, type: 'link', active: false, selected: false, title: 'Sales' },
+      { path: `${import.meta.env.BASE_URL}vat-sales-invoice`, type: 'link', active: false, selected: false, title: 'VAT Sales Invoice' },
+      { path: `${import.meta.env.BASE_URL}sales-cash-bank-vat`, type: 'link', active: false, selected: false, title: 'Sales Cash/Bank VAT' },
+      { path: `${import.meta.env.BASE_URL}sales-return`, type: 'link', active: false, selected: false, title: 'Sales Return' },
+      { path: `${import.meta.env.BASE_URL}sales-return-credit-note-vat`, type: 'link', active: false, selected: false, title: 'Sales Return/ Credit Note (VAT)' },
+      { path: `${import.meta.env.BASE_URL}sales-quotation`, type: 'link', active: false, selected: false, title: 'Sales Quotation' },
+      { path: `${import.meta.env.BASE_URL}sales-order`, type: 'link', active: false, selected: false, title: 'Sales Order' },
+     
     ]
   },
   {
@@ -49,10 +54,63 @@ export const MENUITEMS = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/workspace-logo`, type: 'link', active: false, selected: false, title: 'Purchase' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/workspace-basic-information`, type: 'link', active: false, selected: false, title: 'Vendor' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/primary-email`, type: 'link', active: false, selected: false, title: 'Return' },
-      { path: `${import.meta.env.BASE_URL}workspace-settings/profile/business-number`, type: 'link', active: false, selected: false, title: 'Order' },
+      { path: `${import.meta.env.BASE_URL}purchase-invoice`, type: 'link', active: false, selected: false, title: 'Purchase Invoice' },
+      { path: `${import.meta.env.BASE_URL}vat-purchase-invoice`, type: 'link', active: false, selected: false, title: 'VAT Purchase Invoice' },
+      { path: `${import.meta.env.BASE_URL}purchase-estimate`, type: 'link', active: false, selected: false, title: 'Purchase Estimate' },
+      { path: `${import.meta.env.BASE_URL}purchase-import`, type: 'link', active: false, selected: false, title: 'Purchase Import' },
+      { path: `${import.meta.env.BASE_URL}purchase-return`, type: 'link', active: false, selected: false, title: 'Purchase Return' },
+      { path: `${import.meta.env.BASE_URL}purchase-return-vat`, type: 'link', active: false, selected: false, title: 'Purchase Return VAT' },
+      { path: `${import.meta.env.BASE_URL}purchase-order`, type: 'link', active: false, selected: false, title: 'Purchase Order' },
+      { path: `${import.meta.env.BASE_URL}request-for-quotation`, type: 'link', active: false, selected: false, title: 'Request For Quotation' },
+      { path: `${import.meta.env.BASE_URL}purchase-quotation`, type: 'link', active: false, selected: false, title: 'Purchase Quotation' },
+      { path: `${import.meta.env.BASE_URL}purchase-order-transit`, type: 'link', active: false, selected: false, title: 'Purchase Order Transit' }
+
+    ]
+  },
+  {
+    icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'Goods',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    children: [
+      { path: `${import.meta.env.BASE_URL}goods-request`, type: 'link', active: false, selected: false, title: 'Goods Request' },
+      { path: `${import.meta.env.BASE_URL}goods-delivery`, type: 'link', active: false, selected: false, title: 'Goods Delivery' },
+      { path: `${import.meta.env.BASE_URL}goods-delivery-return`, type: 'link', active: false, selected: false, title: 'Goods Delivery Return' },
+      { path: `${import.meta.env.BASE_URL}goods-receipt`, type: 'link', active: false, selected: false, title: 'Goods Receipt' },
+      { path: `${import.meta.env.BASE_URL}goods-receipt-return`, type: 'link', active: false, selected: false, title: 'Goods Receipt Return' }
+    
+
+    ]
+  },
+  {
+    icon: (<i className="side-menu__icon ri-user-heart-line"></i>),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'Stock',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    children: [
+      { path: `${import.meta.env.BASE_URL}opening-stock`, type: 'link', active: false, selected: false, title: 'Opening Stock' },
+      { path: `${import.meta.env.BASE_URL}stock-transfer`, type: 'link', active: false, selected: false, title: 'Stock Transfer' },
+      { path: `${import.meta.env.BASE_URL}damage-entry`, type: 'link', active: false, selected: false, title: 'Damage Entry' },
+      { path: `${import.meta.env.BASE_URL}excess-stock`, type: 'link', active: false, selected: false, title: 'Excess Stock/Add Stock' },
+      { path: `${import.meta.env.BASE_URL}shortage-stock`, type: 'link', active: false, selected: false, title: 'Shortage Stock/Less Stock' },
+      { path: `${import.meta.env.BASE_URL}stock-adjuster`, type: 'link', active: false, selected: false, title: 'Stock Adjuster' },
+      { path: `${import.meta.env.BASE_URL}branch-transfer-out`, type: 'link', active: false, selected: false, title: 'Branch Transfer Out' },
+      { path: `${import.meta.env.BASE_URL}branch-transfer-in`, type: 'link', active: false, selected: false, title: 'Branch Transfer In' },
+      { path: `${import.meta.env.BASE_URL}stock-transfer-to-branch`, type: 'link', active: false, selected: false, title: 'Stock Transfer To Branch' },
+      { path: `${import.meta.env.BASE_URL}stock-transfer-from-branch`, type: 'link', active: false, selected: false, title: 'Stock Transfer From Branch' },
+      { path: `${import.meta.env.BASE_URL}item-load-request`, type: 'link', active: false, selected: false, title: 'Item Load Request' },
+      { path: `${import.meta.env.BASE_URL}stock-count`, type: 'link', active: false, selected: false, title: 'Stock Count' }
+
     ]
   },
  

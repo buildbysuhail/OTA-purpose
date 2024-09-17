@@ -321,7 +321,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       dataType="datetime"
                     />
                      <Column
-                      
+                      dataField="actions"
                       fixed={true} fixedPosition="right"
                       cellRender={({ data }) => (
                     
@@ -329,7 +329,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                          {/* {data.isActive &&  */}
                     <ERPButton 
                      variant="primary"
-                     className= {`p-[2px] m-[0px] h-7 w-7`}
+                     className= {`p-[1px] m-[0px] h-7 w-7`}
                      onClick={() => {
                        handleLogout(data?.deviceId ?? '');
                      }}

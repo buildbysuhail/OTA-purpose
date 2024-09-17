@@ -31,30 +31,30 @@ const Crm: FC<CrmProps> = () => {
     api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
       setSalesSummary(res);
     });
-    // api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res =>{
-    //   setPurchaseSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res =>{
-    //   setIncomeSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res =>{
-    //   setExpenseSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res =>{
-    //   setReceivableSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetPayableMonthly').then(res =>{
-    //   setPayableSummary(res);
-    // });
-    // api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
-    //   setTopExpenses(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res =>{
-    //   setCashSummary(res);
-    // });
-    // api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res =>{
-    //   setBankSummary(res);
-    // });
+    api.get('/Inventory/Dashboard/GetPurchaseMonthwiseSummary').then(res =>{
+      setPurchaseSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetIncomeMonthly').then(res =>{
+      setIncomeSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetExpenseMonthly').then(res =>{
+      setExpenseSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetReceivableMonthly').then(res =>{
+      setReceivableSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetPayableMonthly').then(res =>{
+      setPayableSummary(res);
+    });
+    api.post('/Accounts/Dashboard/GetTopExpense',{offset: 0,pageSize: 6}).then(res =>{
+      setTopExpenses(res);
+    });
+    api.get('/Accounts/Dashboard/GetCashMonthwiseSummary').then(res =>{
+      setCashSummary(res);
+    });
+    api.get('/Accounts/Dashboard/GetBankMonthwiseSummary').then(res =>{
+      setBankSummary(res);
+    });
     ///////
     // load();
   }, []);

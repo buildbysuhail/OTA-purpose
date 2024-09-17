@@ -31,8 +31,8 @@ axios.interceptors.response.use(
  * @param {*} token
  */
 const setAuthorization = () => {
-  let token = Cookies.get("token");
-  axios.defaults.headers.common["Authorization"] = "Bearer " + token;
+  const token = Cookies.get("token");
+if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 };
 
 class APIClient {
@@ -40,6 +40,7 @@ class APIClient {
    * Fetches data from the given URL
    */
   get = (url: string, queryString: string = ""): Promise<any> => {
+    setAuthorization();
     let response: Promise<any>;
     response =
       queryString !== ""
@@ -48,6 +49,7 @@ class APIClient {
     return response;
   };
   getAsync = async (url: string, queryString: string = ""): Promise<any> => {
+    setAuthorization();
     let response: any;
     response =
       queryString !== ""
@@ -66,6 +68,7 @@ class APIClient {
    * Posts the given data to the URL
    */
   post = (url: string, data: any): Promise<any> => {
+    setAuthorization();
     console.log("create ", data);
 
     return axios.post(url, data);
@@ -75,10 +78,12 @@ class APIClient {
    * Updates data
    */
   patch = (url: string, data: any): Promise<AxiosResponse> => {
+    setAuthorization();
     return axios.patch(url, data);
   };
 
   put = (url: string, data: any): Promise<AxiosResponse> => {
+    setAuthorization();
     return axios.put(url, data);
   };
 
@@ -89,6 +94,7 @@ class APIClient {
     url: string,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse> => {
+    setAuthorization();
     return axios.delete(url, { ...config });
   };
 }

@@ -66,7 +66,8 @@
       font-size: .875rem;
       font-family: "Roboto," "Open Sans," "Nunito.";
       background-color: rgb(249 250 251 /1);
-      border-right: white solid 0.5px;
+      border-right: rgb(249 250 251 /1) solid 0.1px;
+      
       line-height: 2rem;
       position: relative; // Needed for positioning the pseudo-element
 
@@ -79,9 +80,19 @@
         width: 0.5px; // Border thickness
         height: 1.3rem; // Adjust height as needed
         background-color: #d7dbdd; // Border color
+      //  display: block;
       }
+     }
+      // Remove border for last two columns (assuming they are actions column)
+    .dx-datagrid-action:last-child,
+    .dx-datagrid-action:nth-last-child(2) {
+    border-right: none;
+    &::after {
+        display: none; 
+    }
    
     }
+  
   
     // Custom Checkbox Styling
     // .dx-checkbox {

@@ -1,5 +1,5 @@
 import config from "../config";
-import { getUserSession } from "./slices/auth/profile/thunk";
+import { getUserSession } from "./slices/auth/UserRights/thunk";
 
 export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;

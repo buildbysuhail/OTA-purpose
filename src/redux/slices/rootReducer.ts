@@ -2,7 +2,7 @@
 import LoginReducer from "./auth/login/reducer";
 import AccountReducer from "./auth/register/reducer";
 import ForgetPasswordReducer from "./auth/forgetpwd/reducer";
-import ProfileReducer from "./auth/profile/reducer";
+import UserRightsReducer from "./auth/UserRights/reducer";
 import AppStateReducer from "./app/reducer";
 import { CreateCrudModuleSlices } from "./crud-slices";
 import { CrudConfig } from "../../configs/crud-config";
@@ -28,7 +28,7 @@ const rootReducer = {
   Login: LoginReducer,
   Account: AccountReducer,
   ForgetPassword: ForgetPasswordReducer,
-  Profile: ProfileReducer,
+  UserRights: UserRightsReducer,
   AppState: AppStateReducer,
   CountriesData: CountriesDataReducer,
   Industries: IndustriesReducer,

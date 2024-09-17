@@ -24,6 +24,7 @@ import { initialUserSessionData, UserModel } from "./redux/slices/user-session/r
 import { customJsonParse } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
 import { initialThemeData, Theme } from "./redux/slices/app/types";
+import Settings from "./pages/settings/AllSettings/Settings";
 
 export const LoadingAnimation = () => {
   return (
@@ -116,7 +117,6 @@ function App() {
               <Route path="logout" element={<Logout />} />
               <Route path="select-organization" element={<OrgSelect />} />
               <Route path="switch-organization" element={<OrgSelect />} />
-
               {/* <Route path="create-organization" element={<Organization />} />
                */}
               <Route

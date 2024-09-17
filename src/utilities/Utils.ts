@@ -7,13 +7,6 @@ import { thisYear } from "../utilities/ERPDateFilterData";
 import { RootState } from "../redux/store";
 import { AppState } from "../redux/slices/app/types";
 
-// Name
-type Name = "John" | "Jane" | "Joe" | "Jill" | "Jack";
-
-export default function getUtil(name: Name) {
-  return ["John", "Jane", "Joe", "Jill", "Jack"];
-}
-
 export function capitalizeFirstLetter(text: string) {
   return text.charAt(0)?.toUpperCase() + text.slice(1);
 }
@@ -300,7 +293,7 @@ export const warning = () => {
 
 // Get User Currency symbol
 export const getCurrentCurrencySymbol = () => {
-  const profileState = useSelector((state: RootState) => state.Profile) ;
+  const profileState = useSelector((state: RootState) => state.UserSession) ;
   return profileState.currencySymbol;
 };
 

@@ -96,7 +96,7 @@ const Users = () => {
               </div>
               <div>
                 <button className='ti-btn-primary-full ti-btn ti-btn-full '>
-                  Add
+                <i className="ri-user-add-line"></i>
                 </button>
               </div>
             </div>

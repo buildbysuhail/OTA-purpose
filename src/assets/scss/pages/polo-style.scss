@@ -18,18 +18,18 @@
     }
   
     // Table Header Styling
-    // .dx-header-row {
-    //   background-color: #f4f7fe; // Light gray-blue header background
-    //   font-weight: 600;
-    //   color: #4a4a4a; // Darker text color for contrast
-    //   font-size: 16px;
-    //   text-align: left;
+    .dx-header-row {
+      background-color: #f4f7fe; // Light gray-blue header background
+      font-weight: 600;
+      color: #4a4a4a; // Darker text color for contrast
+      font-size: 16px;
+      text-align: left;
       
       
-    //   // padding: 20px; 
-    //   // margin: 20px;
-    //   border-bottom: 1px solid #e0e6f5; // Subtle bottom border
-    // }
+      // padding: 20px; 
+      // margin: 20px;
+      border-bottom: 1px solid #e0e6f5; // Subtle bottom border
+    }
   
     // Table Row Styling
     .dx-row {
@@ -54,11 +54,10 @@
     .dx-datagrid-action {
       color: rgb(71 85 105 ); // Primary blue color for actions
       font-size: .875rem;
-      padding: 20px;
-      margin: 10px;
+      
       font-family: "Roboto," "Open Sans," "Nunito.";
       background-color: rgb(249 250 251 /1);
-      line-height: 1.25rem;
+      line-height: 2rem;
   
    
     }

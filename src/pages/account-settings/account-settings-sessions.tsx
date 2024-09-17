@@ -238,17 +238,12 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     }
                     className="custom-data-grid"
                     showBorders={true}
-                    // columnAutoWidth={true}
+                    columnAutoWidth={true}
+                    // columnMinWidth={100}
                     // remoteOperations={true}
                     showColumnLines={false}
                     showRowLines={true}
-                    // onCellPrepared={cellPrepared}
-                    // onScroll={handleScroll}
-                    // onRowPrepared={(e: any) => {
-                    //   if (e.rowType === "data" && e.data.isActive) {
-                    //     e.rowElement.style.backgroundColor = "#90ee90"; // Apply green background for active rows
-                    //   }
-                    // }}
+                   
                   >
                     <ColumnFixing enabled={true}/>
                     <Scrolling  mode="standard" 
@@ -267,12 +262,13 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="branchName"
-                   
+                     width={140}
                       caption="  Branch Name"
                       dataType="string"
                     /> 
                      <Column
-                      // width={110}
+                    
+                      width={140}
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="browser"
@@ -286,6 +282,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       dataType="string"
                     /> 
                     <Column
+                    width={140}
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="ipAddress"
@@ -294,6 +291,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       dataType="string"
                     />
                     <Column
+                    width={140}
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="device"
@@ -303,6 +301,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       dataType="string"
                     />
                     <Column
+                    width={200}
                       allowSearch={true}
                       allowFiltering={true}
                       cellRender={renderCountryCell}
@@ -317,11 +316,12 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowFiltering={true}
                       dataField="recentActivity"
                       caption={"Recent Activity"}
-                      
+                      width={200}
                       dataType="datetime"
                     />
                      <Column
                       dataField="actions"
+                      caption={' '}
                       fixed={true} fixedPosition="right"
                       cellRender={({ data }) => (
                     
@@ -344,7 +344,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                        )
                          }
                       
-                    caption="" 
+                   
                      width={50} 
                     
                      />

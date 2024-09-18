@@ -90,7 +90,7 @@ const UserTypes = () => {
         exportToPdf({
         jsPDFDocument: doc,
         component: e.component,
-    //    columnWidths:[15,20,20,20,20,25,25,25,25,15,25,30,30,0],
+    
         customizeCell({ gridCell, pdfCell }) {
          
         },

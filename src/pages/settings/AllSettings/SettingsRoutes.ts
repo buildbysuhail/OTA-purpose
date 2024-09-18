@@ -48,7 +48,7 @@ export const SettingsRoutes = [
           { title: "Users", path: "/settings/user-management/users" },
           {
             title: "User Types",
-            path: "/settings/roles",
+            path: "/settings/user-management/userstypes",
           },
           {
             title: "User Type Privileges",

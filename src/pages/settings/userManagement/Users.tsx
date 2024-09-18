@@ -133,9 +133,10 @@ const Users = () => {
                 
               </div>
               <div>
-                <button className='ti-btn-primary-full ti-btn ti-btn-full '>
-                <i className="ri-user-add-line"></i>
-                </button>
+                <Link to="#" className='ti-btn-primary-full ti-btn ti-btn-full '>
+                 users <i className="ri-user-add-line"></i>
+                </Link>
+                
               </div>
             </div>
             <div className="box-body">
@@ -159,12 +160,12 @@ const Users = () => {
                 >
                   <ColumnFixing enabled={true}/>
                   <Scrolling  mode="standard" />
-                  {/* <FilterRow visible={true} /> */}
+                  <FilterRow visible={true} />
                   <SearchPanel visible={true} />
                   {/* <HeaderFilter visible={true} /> */}
                   <Paging defaultPageSize={100} />
                   <ColumnChooser enabled={true} />
-                  {/* <LoadPanel enabled={true} /> */}
+                  <LoadPanel enabled={false} />
                   <ColumnFixing enabled={true} />
                   <Selection mode="single" />
                   <Export enabled={true} formats={exportFormats} allowExportSelectedData={false} />
@@ -172,7 +173,7 @@ const Users = () => {
                   <Column
                     allowSorting={true}
                     allowSearch={true}
-                    allowFiltering={true}
+                    allowFiltering={false}
                     dataField="siNo"
                     caption="SiNo"
                     dataType="number"
@@ -186,7 +187,8 @@ const Users = () => {
                    
                   
                     caption={"User"}
-                    width={60}
+                    
+                    minWidth={200}
                     dataType="string"
                   />
                   <Column
@@ -301,6 +303,8 @@ const Users = () => {
                     width={100}
                   />
                   <Column
+                      allowSearch={false}
+                      allowFiltering={false}
                      fixed={true} fixedPosition='right'
                      dataField="actions"
                      caption="Actions"

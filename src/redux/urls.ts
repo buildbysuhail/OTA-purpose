@@ -90,7 +90,8 @@ get_members:"/Subscription/WorkSpace/GetMembers",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
 
   //setting/userManagement
-    getUserSubscriped:"/Subscription/User/GetUsersForGrid"
+    getUserSubscriped:"/Subscription/User/GetUsersForGrid",
+    getUserTypes:"Core/UserType/GetUsersTypeForGrid"
 };
 
 export default Urls;

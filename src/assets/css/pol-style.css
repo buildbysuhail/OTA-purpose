@@ -18,3 +18,6 @@
 .bg-custom-blue:hover {
   background-color: rgb(45 65 104 / 1);
 }
+/* .dx-datagrid-rowsview .dx-datagrid-content .dx-row-lines > td {
+  border-bottom: 0px solid #ddd !important;
+} */

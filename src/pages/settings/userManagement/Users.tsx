@@ -51,6 +51,7 @@ const Users = () => {
         "requireTotalCount",
         "sort",
         "filter",
+        "search",
       ];
 
       const queryString = paramNames

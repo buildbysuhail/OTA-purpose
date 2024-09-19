@@ -19,7 +19,8 @@ import {
   Scrolling,
   SearchPanel,
   DataGridTypes,
-  ColumnFixing
+  ColumnFixing,
+  LoadPanel
 } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import AccountSettingsApis from "./account-settings-apis";
@@ -243,7 +244,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                     // remoteOperations={true}
                     showColumnLines={false}
                     showRowLines={true}
-                   
+                
                   >
                     <ColumnFixing enabled={true}/>
                     <Scrolling  mode="standard" 
@@ -251,6 +252,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                      
                     // rowRenderingMode="virtual" 
                     />
+                    <LoadPanel enabled={false} />
                     <Paging defaultPageSize={100} />
                     {/* <FilterRow visible={true} applyFilter="auto" />
       <HeaderFilter visible={true} />

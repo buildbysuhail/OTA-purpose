@@ -14,6 +14,17 @@ const UserManagementApis = {
       return {};
     }
   },
+
+  getUserTypeSessions: async (loadOptions: any) => {
+    try {
+      
+      const responseData = await api.get(Urls.getUserTypes, loadOptions);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return {};
+    }
+  },
 //   getPhone: async () => {
 //     try {
 //       const responseData = await api.getAsync(Urls.getPhone_profile);

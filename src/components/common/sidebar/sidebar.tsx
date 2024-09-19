@@ -680,7 +680,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       >
         <div className="main-sidebar-header">
           <a
-            href={`${import.meta.env.BASE_URL}dashboards/crm/`}
+            href={`${import.meta.env.BASE_URL}`}
             className="header-logo"
           >
             <img src={logo1} alt="logo" className="desktop-logo" />

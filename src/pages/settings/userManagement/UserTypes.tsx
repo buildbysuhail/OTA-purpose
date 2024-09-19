@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import UserManagementApis from './User-Management-api';
 import Urls from '../../../redux/urls'
+import ERPGridpreference from '../../../components/ERPComponents/erp-gridpreference';
 import { DataGrid } from "devextreme-react";
 import {
   Column,
@@ -30,6 +31,7 @@ import { Link } from 'react-router-dom';
 
 const UserTypes = () => {
     const [gridHeight, setGridHeight] = useState<number>(500);
+    const [showGridPreference,setShowGridPreference] = useState<boolean>(false)
     useEffect(() => {
       let wh = window.innerHeight;
       let gridHeight = wh - 180;
@@ -229,10 +231,16 @@ const UserTypes = () => {
                 />
                  <Toolbar>
                  <Item location="before">
+                    <div className='flex  flex-col'>
+                   <div>
+                    <button onClick={()=>setShowGridPreference(true)} className='ti-btn-primary-full rounded-[2px] '>
+                        <i className="ri-arrow-right-s-fill  "></i>
+                    </button>
+                    </div>
                    <div className="box-title">
                     UserType{" "}
-                
-                
+                   </div>
+                  
                    </div>
                 </Item>
                       <Item name="exportButton" />
@@ -255,6 +263,8 @@ const UserTypes = () => {
      
       </div>
     </div>
+       {/* Render ERPGridpreference modal if showGridPreference is true */}
+       {showGridPreference && <ERPGridpreference onClose={() => setShowGridPreference(false)} />}
   </Fragment>
   )
 }

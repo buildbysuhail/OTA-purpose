@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import UserManagementApis from './User-Management-api';
 import Urls from '../../../redux/urls'
+import ERPGridpreference from '../../../components/ERPComponents/erp-gridpreference';
 import { DataGrid } from "devextreme-react";
 import {
   Column,
@@ -29,8 +30,10 @@ import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
 import { Link } from 'react-router-dom';
 
 
+
 const Users = () => {
   const [gridHeight, setGridHeight] = useState<number>(500);
+  const [gridpreference,setGridpreference] = useState<boolean>(false)
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeight = wh - 180;

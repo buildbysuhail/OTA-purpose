@@ -18,7 +18,6 @@ import { languagesData, Locale, Theme } from "../../redux/slices/app/types";
 import { RootState } from "../../redux/store";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { syncAppStates } from "./syncSettings";
-import LanguageSwitcher from "../../components/common/header/language-switcher";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -35,10 +34,7 @@ const Login = () => {
   const { appState, updateAppState } = useAppState();
 
   /* ########################################################################################### */
-  const handleLanguageSelect = (language: Locale) => {
-    LanguageSwitcher.handleLanguageSelect(updateAppState, appState,language);
-
-  };
+  
   const handleSubmit = async (event: any) => {
     
     event.preventDefault();

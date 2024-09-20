@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppInitialState, AppState, Locale, TableState } from './types';
 import { getAppState, uploadAppState } from './thunk';
+import usFlag from '../../../assets/images/flags/us_flag.png'
 
 // Define the initial state
 const initialState: AppInitialState = {
@@ -66,7 +67,7 @@ const initialState: AppInitialState = {
       _purchase_recurring_bills: { last_bill_date: false },
       _purchase_recurring_expenses: { last_bill_date: false, next_bill_date: false },
     },
-    locale: { code: 'en', name: 'English', rtl: false },
+    locale: { code: 'en', name: 'English', rtl: false, flag:usFlag },
   },
 };
 

@@ -12,9 +12,9 @@ import { initialUserSessionData, UserModel } from "../../../redux/slices/user-se
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 import usFlag from "../../../assets/images/flags/us_flag.png";
 
-interface HeaderProps {}
+interface HeaderProps {className: string}
 
-const LanguageSwitcher: FC<HeaderProps> = () => {
+const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
     const [languages, setLanguages] = useState<Locale[]>(languagesData);
   
   const { t } = useTranslation();
@@ -68,7 +68,7 @@ const setLocaleInStorage = (locale: Locale) => {
 
 }
   return (
-    <div className="header-element py-[1rem] md:px-[0.65rem] px-2  header-country hs-dropdown ti-dropdown  hidden sm:block [--placement:bottom-left]">
+    <div  className={`header-element py-[1rem] md:px-[0.65rem] px-2 header-country hs-dropdown ti-dropdown hidden sm:block [--placement:bottom-left] ${className || ''}`}>
     <button id="dropdown-flag" type="button"
       className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0  !border-0 !rounded-full !shadow-none">
       <img src={appState.locale.flag} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />

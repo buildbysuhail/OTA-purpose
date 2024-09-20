@@ -109,8 +109,8 @@ new heights</h2>
       </div>
     </div>
 
-    <div className="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
-    <LanguageSwitcher></LanguageSwitcher>
+    <div className="flex relative items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
+    <LanguageSwitcher className="!absolute top-0 right-0"></LanguageSwitcher>
       <div className="flex-1">
         <div className="text-center">
           <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-white">

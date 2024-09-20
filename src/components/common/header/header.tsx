@@ -5,24 +5,7 @@ import product3 from "../../../assets/images/ecommerce/jpg/3.jpg";
 import product5 from "../../../assets/images/ecommerce/jpg/5.jpg";
 import product4 from "../../../assets/images/ecommerce/jpg/4.jpg";
 import product6 from "../../../assets/images/ecommerce/jpg/6.jpg";
-import store, { RootState } from "../../../redux/store";
-import { connect } from "react-redux";
-import us from "../../../assets/images/flags/us_flag.jpg";
-import spain from "../../../assets/images/flags/spain_flag.jpg";
-import french from "../../../assets/images/flags/french_flag.jpg";
-import germany from "../../../assets/images/flags/germany_flag.jpg";
-import italy from "../../../assets/images/flags/italy_flag.jpg";
-import russia from "../../../assets/images/flags/russia_flag.jpg";
-import figma from "../../../assets/images/apps/figma.png";
-import powerpoint from "../../../assets/images/apps/microsoft-powerpoint.png";
-import word from "../../../assets/images/apps/microsoft-word.png";
-import calender from "../../../assets/images/apps/calender.png";
-import sketch from "../../../assets/images/apps/sketch.png";
-import googledocs from "../../../assets/images/apps/google-docs.png";
-import google from "../../../assets/images/apps/google.png";
-import translate from "../../../assets/images/apps/translate.png";
-import googlesheets from "../../../assets/images/apps/google-sheets.png";
-import face9 from "../../../assets/images/faces/9.jpg";
+import { RootState } from "../../../redux/store";
 import desktoplogo from "../../../assets/images/brand-logos/desktop-logo.png";
 import togglelogo from "../../../assets/images/brand-logos/toggle-logo.png";
 import desktopdark from "../../../assets/images/brand-logos/desktop-dark.png";
@@ -32,23 +15,22 @@ import togglewhite from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from "simplebar-react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Cookies from "js-cookie";
 import { useAppState } from "../../../utilities/hooks/useAppState";
-import { AppState } from "../../../redux/slices/app/types";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { AppState, languagesData, Locale } from "../../../redux/slices/app/types";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import LanguageSwitcher from "./language-switcher";
 
 interface HeaderProps {}
 
 const Header: FC<HeaderProps> = () => {
+    const [languages, setLanguages] = useState<Locale[]>(languagesData);
+  
   const { t } = useTranslation();
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const [reloading, setReloading] = useState(false);
   const { appState, updateAppState } = useAppState();
+  let dispatch = useAppDispatch();
 
   //Fullscvreen
   const [fullScreen, setFullScreen] = useState(false);
-
   const toggleFullScreen = () => {
     const elem = document.documentElement;
 
@@ -625,6 +607,7 @@ const Header: FC<HeaderProps> = () => {
 
                   </div>
               </div> */}
+             <LanguageSwitcher></LanguageSwitcher>
               <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown !hidden md:!block [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
                   id="dropdown-notification"
@@ -736,12 +719,12 @@ const Header: FC<HeaderProps> = () => {
                 </div>
               </div>
               <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">
-                <Link to={'/settings'}
+                <Link
+                  to={"/settings"}
                   className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
                 >
                   <i className="bx bx-cog header-link-icon text-[1.125rem]"></i>
                 </Link>
-
               </div>
               {/* <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">
 
@@ -852,6 +835,7 @@ const Header: FC<HeaderProps> = () => {
                   )}
                 </Link>
               </div>
+              
               <div
                 id="dropdown-profile"
                 className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] min-w-[150px]"

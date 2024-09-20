@@ -1,14 +1,14 @@
 import { Fragment } from 'react'
 import { Link } from 'react-router-dom'
 
-function Menuloop({ MENUITEMS, toggleSidemenu , level}: any) {
+function Menuloop({ MENUITEMS, toggleSidemenu , level, t}: any) {
   
     return (
         <Fragment>
             <Link to="#!" className={`side-menu__item ${MENUITEMS?.selected ? 'active' : ''}`} onClick={(event) => {event.preventDefault();toggleSidemenu(event, MENUITEMS); }}>
                 {MENUITEMS.icon}
                 <span className={`${level == 1 ? "side-menu__label" :"" }`}>
-                    {MENUITEMS.title}
+                    {t(MENUITEMS.title)}
                     {MENUITEMS.badgetxt ? (
                         <span className={MENUITEMS.class}>
                             {MENUITEMS.badgetxt}
@@ -25,7 +25,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu , level}: any) {
                     : { display: "none" }
             }>
                {level <= 1 ? <li className='slide side-menu__label1'>
-                   <Link to="#">{MENUITEMS.title}</Link> 
+                   <Link to="#">{t(MENUITEMS.title)}</Link> 
                 </li> :""}
                 {MENUITEMS.children.map((firstlevel:any)=>
                     <li className={`${firstlevel.menutitle ? 'slide__category' :firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
@@ -33,7 +33,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu , level}: any) {
                         <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''}`}>
                           {firstlevel.icon}
                           <span className="">
-                            {firstlevel.title}
+                            {t(firstlevel.title)}
                             {firstlevel.badgetxt ? (
                               <span className={firstlevel.class}>
                                 {firstlevel.badgetxt}
@@ -48,7 +48,7 @@ function Menuloop({ MENUITEMS, toggleSidemenu , level}: any) {
                         <Link to="#" className='side-menu__item'>
                           {firstlevel.icon}
                           <span className="">
-                            {firstlevel.title}
+                            {t(firstlevel.title)}
                             {firstlevel.badgetxt ? (
                               <span className={firstlevel.class}>
                                 {firstlevel.badgetxt}

@@ -41,8 +41,8 @@ const Content: FC<ContentProps> = () => {
           <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
           <Route path="/members" element={<WorkspaceSettingsMembers />} />
           {/* settings user */}
-          <Route path="/settings/user-management/users" element={<Users />} />
-          <Route path="/settings/user-management/userstypes" element={<UserTypes/>} />
+          <Route path="/user-management/users" element={<Users />} />
+          {/* <Route path="/settings/#/user-management/userstypes" element={<UserTypes/>} /> */}
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {

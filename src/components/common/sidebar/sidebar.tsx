@@ -14,32 +14,32 @@ import { useAppState } from "../../../utilities/hooks/useAppState";
 import { MENUITEMS } from "./sidemenu/sidemenu";
 import { AccountSettingsMenuItems } from "./sidemenu/account-settings";
 import { WorkspaceSettingsMenuItems } from "./sidemenu/workspace-settings";
+import { SettingsMenuItems } from "./sidemenu/settings";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import ErpAvatar from "../../ERPComponents/erp-avatar";
+import { useTranslation } from "react-i18next";
 interface SidebarProps {
-  type: "erp" | "account-settings" | "workspace-settings";
+  type: "erp" | "account-settings" | "workspace-settings" | "settings";
 }
 
 const Sidebar: FC<SidebarProps> = ({ type }) => {
-  const [menuitems, setMenuitems] = useState<any>([]);
-  const [companyLogo, setCompanyLogo] = useState<string>('');
-  let userSession = useAppSelector((state: RootState) => state.UserSession);
-  useEffect(() => {
-    
+  const [menuitems, setMenuitems] = useState<any>(() => {
     switch (type) {
       case "erp":
-        setMenuitems(MENUITEMS);
-        break;
+        return MENUITEMS;
       case "account-settings":
-        setMenuitems(AccountSettingsMenuItems);
-        break;
+        return AccountSettingsMenuItems;
       case "workspace-settings":
-        setMenuitems(WorkspaceSettingsMenuItems);
-        break;
+        return WorkspaceSettingsMenuItems;
+      case "settings":
+        return SettingsMenuItems;
       default:
-        setMenuitems([]);
+        return []; // or some default menu items
     }
-  }, [type]);
+  });
+  const {t} = useTranslation();
+  const [companyLogo, setCompanyLogo] = useState<string>("");
+  let userSession = useAppSelector((state: RootState) => state.UserSession);
   const { appState, updateAppState } = useAppState();
 
   const local_varaiable = appState;
@@ -67,8 +67,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   const avatarStyle = useMemo(() => {
     return { width: 40, height: 40 };
   }, []);
-  
-  
+
   function Onhover() {
     const theme = appState;
     if (
@@ -437,13 +436,14 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   }
   //
   function setMenuUsingUrl(currentPath: any) {
+    debugger;
     hasParent = false;
     hasParentLevel = 1;
     // Check current url and trigger the setSidemenu method to active the menu.
     const setSubmenuRecursively = (items: any) => {
       items?.forEach((item: any) => {
         if (item.path == "") {
-        } else if (item.path === currentPath) {
+        } else if (currentPath.includes(item.path) ) {
           setSubmenu(null, item);
         }
         setSubmenuRecursively(item.children);
@@ -454,7 +454,6 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   const [previousUrl, setPreviousUrl] = useState("/");
 
   useEffect(() => {
-    
     if (
       userSession &&
       userSession.companies &&
@@ -468,7 +467,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         setCompanyLogo(company.logo);
       }
     }
-}, [userSession.companies]);
+  }, [userSession.companies]);
   useEffect(() => {
     // Select the target element
     const targetElement = document.documentElement;
@@ -679,10 +678,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
         onMouseLeave={() => Outhover()}
       >
         <div className="main-sidebar-header">
-          <a
-            href={`${import.meta.env.BASE_URL}`}
-            className="header-logo"
-          >
+          <a href={`${import.meta.env.BASE_URL}`} className="header-logo">
             <img src={logo1} alt="logo" className="desktop-logo" />
             <img src={logo2} alt="logo" className="toggle-logo" />
             <img src={logo3} alt="logo" className="desktop-dark" />
@@ -753,7 +749,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                       >
                         {levelone.icon}
                         <span className="side-menu__label">
-                          {levelone.title}
+                          {t(levelone.title)}
                           {levelone.badgetxt ? (
                             <span className={levelone.class}>
                               {levelone.badgetxt}
@@ -770,7 +766,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                       <Link to="#" className="side-menu__item">
                         {levelone.icon}
                         <span className="">
-                          {levelone.title}
+                        {t(levelone.title)}
                           {levelone.badgetxt ? (
                             <span className={levelone.class}>
                               {levelone.badgetxt}
@@ -788,6 +784,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         MENUITEMS={levelone}
                         level={level + 1}
                         toggleSidemenu={toggleSidemenu}
+                        t={t}
                       />
                     ) : (
                       ""
@@ -808,7 +805,9 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         <div className="flex-grow p-2">
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
-                              <p className="mb-1  text-[.8rem]">{userSession.displayName}</p>
+                              <p className="mb-1  text-[.8rem]">
+                                {userSession.displayName}
+                              </p>
                               <p>{userSession.email}</p>
                             </h6>
                           </div>
@@ -824,9 +823,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                             <ErpAvatar
                               variant="square"
                               alt={userSession.currentClientName}
-                              src={
-                                companyLogo
-                              }
+                              src={companyLogo}
                               sx={avatarStyle}
                             />
                           </span>
@@ -834,7 +831,9 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         <div className="flex-grow p-2">
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
-                              <p className="mb-1  text-[.8rem]">{userSession.currentClientName }</p>
+                              <p className="mb-1  text-[.8rem]">
+                                {userSession.currentClientName}
+                              </p>
                               <p>Branch: {userSession.currentBranchName}</p>
                             </h6>
                           </div>

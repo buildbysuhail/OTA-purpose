@@ -5,19 +5,36 @@ import ERPToast from "../../../../components/ERPComponents/erp-toast";
 
 const SettingsCard = ({ data }: any) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+  const columns = Math.max(1, data.columns || 1);
+  const children = data.children || [];
+
+  const distributeItems = (): any => {
+    const result: any = Array.from({ length: columns }, () => []);
+    const itemsPerColumn = Math.ceil(children.length / columns);
+
+    children.forEach((item: any, index: any) => {
+      const columnIndex = Math.floor(index / itemsPerColumn);
+      result[columnIndex].push(item);
+    });
+
+    return result;
+  };
+
+  const distributedItems = distributeItems();
   return (
     <div className="w-auto bg-gray-50 rounded-lg p-5 border flex flex-grow ">
       <div className="flex flex-col gap-5">
         <div className="flex gap-2 items-center">
-          <data.icon className="w-4 aspect-square stroke-gray-600" />
-          <p className="text-sm font-medium">{data?.header}</p>
+          {/* <data.icon className="w-4 aspect-square stroke-gray-600" /> */}
+          <p className="text-sm font-medium">{data?.title}</p>
         </div>
-        <div className={`grid grid-cols-${data?.items?.length} gap-24`}>
-          {data?.items?.map((item: any, idx: number) => {
+        <div className={`grid grid-cols-${data?.columns ? data?.columns : 1} gap-24`}>
+        {distributedItems.map((columnItems: any, idx: number) => {
             return (
-              <div className="flex flex-col gap-3" key={`QQEO39_${idx}`}>
-                {item?.routes?.map((route: any, routeIdx: number) => {
+               
+        <div className="flex flex-col gap-3" key={`QQEO39_${idx}`}>
+          {columnItems.map((route: any, routeIdx: number) => {
                   return (
                     <p
                       className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out"
@@ -32,8 +49,9 @@ const SettingsCard = ({ data }: any) => {
                   );
                 })}
               </div>
-            );
-          })}
+              )
+            }
+          )}
         </div>
       </div>
     </div>

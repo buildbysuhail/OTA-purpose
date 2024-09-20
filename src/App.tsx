@@ -13,7 +13,9 @@ import Switcher from "./components/common/switcher/switcher";
 import Layout from "./components/common/layout/layout";
 import Login from "./pages/auth/Login";
 import Cookies from "js-cookie";
+import usFlag from "./assets/images/flags/us_flag.png";
 import { useAppDispatch } from "./utilities/hooks/useAppDispatch";
+import "./i18n/config";
 
 import { APIClient } from "./helpers/api-client";
 import AccountSettingsLayout from "./components/common/layout/account-settings-layout";
@@ -23,8 +25,10 @@ import OrgSelect from "./pages/OrgSelect";
 import { initialUserSessionData, UserModel } from "./redux/slices/user-session/reducer";
 import { customJsonParse } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
-import { initialThemeData, Theme } from "./redux/slices/app/types";
+import { initialThemeData, languagesData, Theme } from "./redux/slices/app/types";
 import Settings from "./pages/settings/AllSettings/Settings";
+import SettingsLayout from "./components/common/layout/settings-layout";
+import { useTranslation } from "react-i18next";
 
 export const LoadingAnimation = () => {
   return (
@@ -66,8 +70,19 @@ function App() {
   } catch (error) {
     
   }
-  syncAppStates(dispatch,userThemes, userProfileDetails);
-
+  const { i18n } = useTranslation();
+  debugger;
+  let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false }
+  syncAppStates(dispatch,userThemes, userProfileDetails, locale);
+  const language = userProfileDetails?.language;
+  
+  useEffect(() => {
+    if (locale && i18n && typeof i18n.changeLanguage === 'function') {
+      i18n.changeLanguage(language);
+    } else {
+      console.error('i18n is not properly initialized:', i18n);
+    }
+  }, [i18n, language, locale]);
   useEffect(() => {
     
     if (!token && pathname !== "/shared-view") {
@@ -122,6 +137,11 @@ function App() {
               <Route
                 path="account-settings/*"
                 element={<AccountSettingsLayout setMyClass={setMyClass} />}
+              />
+              
+              <Route
+                path="settings/_/*"
+                element={<SettingsLayout setMyClass={setMyClass} />}
               />
               <Route
                 path="workspace-settings/*"

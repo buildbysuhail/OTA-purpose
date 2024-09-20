@@ -1,20 +1,26 @@
 
+import { linkClasses } from "@mui/material";
 import * as switcherdata from "../../../src/components/common/switcher/switcherdata/switcherdata";
-import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle } from "../../redux/slices/app/reducer";
-import { Theme } from "../../redux/slices/app/types";
+import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle, setLocale } from "../../redux/slices/app/reducer";
+import { Locale, Theme } from "../../redux/slices/app/types";
 import { UserModel, setUserSession } from "../../redux/slices/user-session/reducer";
 import { AppDispatch } from "../../redux/store";
+export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
+  dispatch(setDirection(locale.rtl ? "rtl" : "ltr"));
+  dispatch(setLocale(locale));
 
-export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSession: UserModel) => {
+  localStorage.setItem("ynexltr", locale.rtl ? "rtl" : "ltr");
+  localStorage.removeItem(locale.rtl ? "ynexltr" :"ynexrtl");
+
+}
+export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSession: UserModel, locale: Locale) => {
   debugger;
   // setReloading(true);
   // let res = await api.get(Urls.getUserThemes);
   dispatch(setUserSession(userSession));
   
-  dispatch(setDirection(res.direction ?? "ltr"));
-  localStorage.setItem("ynexltr", res.direction ?? "ltr");
-  localStorage.removeItem(res.direction == "rtl" ? "ynexltr" :"ynexrtl");
-
+  setLanguage(dispatch,locale);
+  
   dispatch(setMode(res.mode ?? "light"));
   if (res.mode == "light") {
     dispatch(setMode(res.mode ?? "light"));

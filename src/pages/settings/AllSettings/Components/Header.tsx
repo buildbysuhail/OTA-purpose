@@ -2,10 +2,10 @@ import { Cog6ToothIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { SettingsRoutes } from "../SettingsRoutes";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
+import { SettingsMenuItems } from "../../../../components/common/sidebar/sidemenu/settings";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const Header = () => {
   const [search, setSearch] = useState<any>(null);
   const [open, setIsOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<any>();
-  const [routes, setRoutes] = useState(SettingsRoutes);
+  const [routes, setRoutes] = useState(SettingsMenuItems);
 
 
   useEffect(() => {

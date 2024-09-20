@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 
+import usFlag from "../assets/images/flags/us_flag.png";
 import { useNavigate } from "react-router-dom";
 import { BuildingOfficeIcon, LinkIcon } from "@heroicons/react/24/outline";
 import { handleResponse } from "../utilities/HandleResponse";
@@ -12,7 +13,7 @@ import { BranchSelectDto, UserModel } from "../redux/slices/user-session/reducer
 import ErpAvatar from "../components/ERPComponents/erp-avatar";
 import Cookies from "js-cookie";
 import { customJsonParse } from "../utilities/jsonConverter";
-import { Theme } from "../redux/slices/app/types";
+import { languagesData, Theme } from "../redux/slices/app/types";
 import { syncAppStates } from "./auth/syncSettings";
 import { CircularProgress } from "@mui/material";
 
@@ -55,7 +56,8 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
       const _userThemes = atob(response.item.userThemes);
       const userThemes: Theme = customJsonParse(_userThemes);
-      syncAppStates(dispatch,userThemes, userProfileDetails);          
+      let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
+      syncAppStates(dispatch,userThemes, userProfileDetails, locale);          
     }
     handleResponse(response, () => {
       // navigate("/")

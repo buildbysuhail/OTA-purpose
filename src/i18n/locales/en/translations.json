@@ -19,7 +19,7 @@
 
   "banking": "Banking",
 
-  "sales": "Sales",
+  "Sales": "Sales",
   "customers": "Customers",
   "estimates": "Estimates",
   "retainer_invoice": "Retainer Invoices",
@@ -124,5 +124,6 @@
   "this-is-page2": "This is <strong>page 2</strong>",
   "go-to-home": "Go to <0>the home page</0>",
   "change-username": "Change your username:",
-  "submit": "Submit"
+  "submit": "Submit",
+  "Email or Phone or Username": "Email or Phone or Username"
 }

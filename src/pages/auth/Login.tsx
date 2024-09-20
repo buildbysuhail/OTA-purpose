@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { EyeSlashIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Cookies from "js-cookie";
+import usFlag from "../../assets/images/flags/us_flag.png";
 
 // import SBToast from "../../components/SBComponets/SBToast";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
@@ -12,15 +13,15 @@ import { LoginData, loginUser } from "../../redux/slices/auth/login/thunk";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import { UserModel } from "../../redux/slices/user-session/reducer";
 import { useAppState } from "../../utilities/hooks/useAppState";
-import { Theme } from "../../redux/slices/app/types";
+import { languagesData, Locale, Theme } from "../../redux/slices/app/types";
 
 import { RootState } from "../../redux/store";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { syncAppStates } from "./syncSettings";
+import LanguageSwitcher from "../../components/common/header/language-switcher";
 
 const Login = () => {
   const navigate = useNavigate();
-  const appState = useAppState();
   const [data, setData] = useState<LoginData>(new LoginData());
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -31,9 +32,13 @@ const Login = () => {
   const loginData: StateBase = useSelector((state: any) => state.Login);
   const comapanies = useSelector((state: any) => state?.GetUserCompanies);
   let userSessions = useAppSelector((state: RootState) => state.UserSession);
+  const { appState, updateAppState } = useAppState();
 
   /* ########################################################################################### */
-  
+  const handleLanguageSelect = (language: Locale) => {
+    LanguageSwitcher.handleLanguageSelect(updateAppState, appState,language);
+
+  };
   const handleSubmit = async (event: any) => {
     
     event.preventDefault();
@@ -62,7 +67,8 @@ const Login = () => {
           const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
           const _userThemes = atob(login.item.userThemes);
           const userThemes: Theme = customJsonParse(_userThemes);
-          syncAppStates(dispatch,userThemes, userProfileDetails);          
+          let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
+          syncAppStates(dispatch,userThemes, userProfileDetails, locale);          
         }
         else
         {setError(login.message)}
@@ -107,6 +113,7 @@ new heights</h2>
     </div>
 
     <div className="flex items-center w-full max-w-md px-6 mx-auto lg:w-2/6">
+    <LanguageSwitcher></LanguageSwitcher>
       <div className="flex-1">
         <div className="text-center">
           <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-white">

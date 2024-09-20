@@ -124,29 +124,7 @@ const Users = () => {
   return (
     <Fragment>
       
-    <div className="grid grid-cols-12 gap-x-6">
-      <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-        
-          <div className="box custom-box">
-            <div className="box-header justify-between">
-              <div className="box-title">
-                Users{" "}
-                {/* <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                View and manage users where you're currently logged in
-                </p> */}
-                
-              </div>
-              <div>
-                <Link to="#" className='ti-btn-primary-full ti-btn ti-btn-full '>
-                 users <i className="ri-user-add-line"></i>
-                </Link>
-                
-              </div>
-            </div>
-            <div className="box-body">
-              <div className="grid grid-cols-1 gap-3">
-
-                <DataGrid
+      <DataGrid
                   height={gridHeight}
                   dataSource={
                     store
@@ -341,12 +319,6 @@ const Users = () => {
                     
                 </Toolbar>
                 </DataGrid>
-              </div>
-            </div>
-          </div>
-     
-      </div>
-    </div>
   </Fragment>
   )
 }

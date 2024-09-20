@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import jwtHelper from "../../../helpers/jwt_helper";
-import { SettingsRoutes } from "./SettingsRoutes";
+// import { SettingsRoutes } from "./SettingsRoutes";
 import Header from "./Components/Header";
 import SettingsCard from "./Components/SettingsCard";
+import { SettingsMenuItems } from "../../../components/common/sidebar/sidemenu/settings";
 
 const Settings = () => {
-  const [settingsRoutes, setSettingRoutes] = useState(SettingsRoutes);
+  const [settingsRoutes, setSettingRoutes] = useState(SettingsMenuItems);
   let sds = jwtHelper.getLoggedInUserRole();
 
   debugger;

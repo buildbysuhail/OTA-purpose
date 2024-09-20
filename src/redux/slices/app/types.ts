@@ -1,9 +1,19 @@
+
+import usFlag from "../../../assets/images/flags/us_flag.png";
+import arFlag from "../../../assets/images/flags/ar_flag.png";
+
 export interface Locale {
   code: string;
   name: string;
   rtl: boolean;
+  flag: string;
 }
 
+
+export const languagesData: Locale[] = [
+  { code: 'en', name: 'English', flag: usFlag, rtl: false },
+  { code: 'ar', name: 'Arabic', flag: arFlag, rtl: true},
+]
 export interface TableState {
   _items_items: Record<string, boolean>;
   _sales_customers: Record<string, boolean>;

@@ -82,13 +82,13 @@ const ERPGridpreference = ({ onClose }:any) => {
         </div>
 
         {/* textpreference form */}
-        <div className='flex flex-col mb-4'>
-        <div className='flex justify-start items-center gap-2 mb-2'>
+        <div className='grid  justify-start gap-y-0 gap-x-3 justify-items-start content-start items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-4'>
+        
         <div className='flex justify-start items-center'>
         <label htmlFor="headerText" className="text-xs font-medium mr-1">Font</label>
         <select
         id="headerText"
-        className="appearance-none border border-gray-400 rounded text-[11px] leading-3  py-0 pr-5 pl-2 bg-slate-50 shadow-sm h-5 focus:outline-none focus:ring focus:border-blue-500"
+        className="appearance-none border border-gray-400 rounded text-[11px] leading-3  py-0 pr-5 pl-2 bg-slate-50 shadow-sm h-6 focus:outline-none focus:ring focus:border-blue-500"
        >
         <option value="Arial">Arial</option>
        <option value="Times New Roman">Times New Roman</option>
@@ -102,7 +102,7 @@ const ERPGridpreference = ({ onClose }:any) => {
         <input
           type="number"
           id="number"
-          className="border border-gray-400 rounded w-16 h-5 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500 "
+          className="border border-gray-400 rounded w-16 h-6 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500 "
           // placeholder="Enter width"
         />
         </div>
@@ -112,25 +112,25 @@ const ERPGridpreference = ({ onClose }:any) => {
           <input
             type="checkbox"
             id="boldText"
-            className="form-checkbox h-3 w-3  rounded text-blue-500"
+            className="form-checkbox h-4 w-4  rounded text-blue-500"
           />
         </div>  
-       </div>
-       <div className='flex justify-start items-start gap-2 '>
+      
+       
         <div className='flex justify-start items-center'>
         <label htmlFor="fontSize" className="text-xs font-medium mr-1">RowHeight</label>
         <input
           type="number"
           id="fontSize"
-          className="border border-gray-400 rounded w-16 h-5 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+          className="border border-gray-400 rounded w-16 h-6 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500"
          
         />
         </div>
-        <div className="grid grid-cols-3 gap-y-0">
-                    <div className='flex justify-start justify-items-start gap-0 '>
+        {/* <div className="grid grid-cols-3 gap-y-0"> */}
+                    <div className='flex justify-start items-center '>
                         <label htmlFor="fontSize" className="text-xs font-medium m-0">Alternative Colour</label>
                          
-                         <div className="pickr-container-primary  scale-[0.6] hover:scale-[0.7] -translate-y-1.5 " >
+                         <div className="pickr-container-primary  scale-[0.6] hover:scale-[0.7] translate-y-1" >
                               <div className="pickr " >
                                 <button
                                   className="pcr-button "
@@ -166,9 +166,9 @@ const ERPGridpreference = ({ onClose }:any) => {
                         </div>
 
 
-                        <div className='flex justify-start justify-items-start'>
+                        <div className='flex justify-start items-center'>
                         <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour Head</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -201,9 +201,9 @@ const ERPGridpreference = ({ onClose }:any) => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start justify-items-start'>
+                        <div className='flex justify-start items-center'>
                         <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour Head</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -236,9 +236,9 @@ const ERPGridpreference = ({ onClose }:any) => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start justify-items-start'>
+                        <div className='flex justify-start items-center'>
                         <label htmlFor="fontSize" className="text-xs  font-medium mr-0">Grid Line Colour</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -271,9 +271,9 @@ const ERPGridpreference = ({ onClose }:any) => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start justify-items-start'>
+                        <div className='flex justify-start items-center'>
                         <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -306,9 +306,9 @@ const ERPGridpreference = ({ onClose }:any) => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start justify-items-start'>
+                        <div className='flex justify-start items-center'>
                         <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5 ">
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1 ">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -342,8 +342,8 @@ const ERPGridpreference = ({ onClose }:any) => {
                         </div>
 
  
-              </div>
-      </div>
+              {/* </div> */}
+     
      </div>
 
 

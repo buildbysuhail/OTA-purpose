@@ -54,7 +54,7 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/user-management/users`, type: 'link', active: false, selected: false, title: 'Users' },
-      { path: `${import.meta.env.BASE_URL}settings/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'User Types' },
+      { path: `${import.meta.env.BASE_URL}settings/_/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'User Types' },
       { path: `${import.meta.env.BASE_URL}settings/user-management/user-type-privileges`, type: 'link', active: false, selected: false, title: 'User Type Privileges' },
     ]
   },

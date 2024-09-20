@@ -12,7 +12,7 @@ import { initialUserSessionData, UserModel } from "../../../redux/slices/user-se
 import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 import usFlag from "../../../assets/images/flags/us_flag.png";
 
-interface HeaderProps {className: string}
+interface HeaderProps {className?: string}
 
 const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
     const [languages, setLanguages] = useState<Locale[]>(languagesData);

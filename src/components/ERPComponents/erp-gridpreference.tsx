@@ -61,14 +61,14 @@ const ERPGridpreference = ({ onClose }:any) => {
   // ==================================================================
    
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
-  //   const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target.value;
-  //   setTableBody(prevState => {
-  //     const updatedTableBody = [...prevState];
-  //     updatedTableBody[rowIndex] = { ...updatedTableBody[rowIndex], [field]: newValue };
-  //     return updatedTableBody;
-  //   });
-  // };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
+    const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target.value;
+    setTableBody(prevState => {
+      const updatedTableBody = [...prevState];
+      updatedTableBody[rowIndex] = { ...updatedTableBody[rowIndex], [field]: newValue };
+      return updatedTableBody;
+    });
+  };
 
   return (
     <Fragment>
@@ -83,12 +83,12 @@ const ERPGridpreference = ({ onClose }:any) => {
 
         {/* textpreference form */}
         <div className='flex flex-col mb-4'>
-        <div className='flex justify-start items-center gap-4 mb-4'>
-        <div>
-        <label htmlFor="headerText" className="text-sm font-extralight mr-1">Font</label>
+        <div className='flex justify-start items-center gap-2 mb-2'>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="headerText" className="text-xs font-medium mr-1">Font</label>
         <select
         id="headerText"
-        className="border border-gray-400 rounded-sm text-xs  py-0 h-7 focus:outline-none focus:ring focus:border-blue-500"
+        className="border border-gray-400 rounded text-[11px] leading-3  py-0 pr-5 pl-2 bg-slate-50 shadow-sm h-5 focus:outline-none focus:ring focus:border-blue-500"
        >
         <option value="Arial">Arial</option>
        <option value="Times New Roman">Times New Roman</option>
@@ -97,41 +97,41 @@ const ERPGridpreference = ({ onClose }:any) => {
        <option value="Georgia">Georgia</option>
       </select>
       </div>
-        <div>
-        <label htmlFor="width" className="text-sm font-extralight mr-1">Font Size</label>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="number" className="text-xs font-medium mr-1">Font Size</label>
         <input
           type="number"
-          id="width"
-          className="border border-gray-400 rounded-sm w-16 h-7 text-xs focus:outline-none focus:ring focus:border-blue-500 "
+          id="number"
+          className="border border-gray-400 rounded w-16 h-5 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500 "
           // placeholder="Enter width"
         />
         </div>
-        <div>
-        <label htmlFor="fontColor" className="text-sm font-extralight mr-1">Bold</label>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="fontColor" className="text-xs font-medium mr-1">Bold</label>
         
           <input
             type="checkbox"
             id="boldText"
-            className="form-checkbox h-4 w-4 ml-2 text-blue-500"
+            className="form-checkbox h-3 w-3  rounded text-blue-500"
           />
         </div>  
        </div>
-       <div className='flex justify-start items-start gap-4 '>
-        <div>
-        <label htmlFor="fontSize" className="text-sm font-extralight mr-1">RowHeight</label>
+       <div className='flex justify-start items-start gap-2 '>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="fontSize" className="text-xs font-medium mr-1">RowHeight</label>
         <input
           type="number"
           id="fontSize"
-          className="border border-gray-400 rounded-sm w-16 h-7 text-xs focus:outline-none focus:ring focus:border-blue-500 "
+          className="border border-gray-400 rounded w-16 h-5 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500"
          
         />
         </div>
-        <div className="grid grid-cols-3 gap-4">
-                    <div className='flex justify-start justify-items-start'>
-                        <label htmlFor="fontSize" className="text-sm font-extralight mr-1">Alternative Colour</label>
+        <div className="grid grid-cols-3 gap-y-0">
+                    <div className='flex justify-start justify-items-start gap-0 '>
+                        <label htmlFor="fontSize" className="text-xs font-medium m-0">Alternative Colour</label>
                          
-                         <div className="pickr-container-primary">
-                              <div className="pickr">
+                         <div className="pickr-container-primary  scale-[0.6] -translate-y-1.5 " >
+                              <div className="pickr " >
                                 <button
                                   className="pcr-button "
                                   onClick={(ele: any) => {
@@ -140,7 +140,8 @@ const ERPGridpreference = ({ onClose }:any) => {
                                     }
                                   }}
                                 >
-                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
+                                
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary ">
                                     <ColorPicker
                                       onChange={(e: any) => {
                                         const rgb = hexToRgb(e.target.value);
@@ -165,9 +166,9 @@ const ERPGridpreference = ({ onClose }:any) => {
                         </div>
 
 
-                        <div className='flex justify-start justify-items-startr'>
-                        <label htmlFor="fontSize" className="text-sm font-extralight mr-1">Back Colour Head</label>
-                         <div className="pickr-container-primary ">
+                        <div className='flex justify-start justify-items-start'>
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour Head</label>
+                         <div className="pickr-container-primary scale-[0.6] -translate-y-1.5">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -201,8 +202,8 @@ const ERPGridpreference = ({ onClose }:any) => {
                         </div>
 
                         <div className='flex justify-start justify-items-start'>
-                        <label htmlFor="fontSize" className="text-sm font-extralight mr-1">Fore Colour Head</label>
-                         <div className="pickr-container-primary ">
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour Head</label>
+                         <div className="pickr-container-primary scale-[0.6] -translate-y-1.5">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -236,8 +237,8 @@ const ERPGridpreference = ({ onClose }:any) => {
                         </div>
 
                         <div className='flex justify-start justify-items-start'>
-                        <label htmlFor="fontSize" className="text-sm  font-extralight mr-1">Grid Line Colour</label>
-                         <div className="pickr-container-primary ">
+                        <label htmlFor="fontSize" className="text-xs  font-medium mr-0">Grid Line Colour</label>
+                         <div className="pickr-container-primary scale-[0.6] -translate-y-1.5">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -271,8 +272,8 @@ const ERPGridpreference = ({ onClose }:any) => {
                         </div>
 
                         <div className='flex justify-start justify-items-start'>
-                        <label htmlFor="fontSize" className="text-sm font-extralight mr-1">Back Colour</label>
-                         <div className="pickr-container-primary ">
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour</label>
+                         <div className="pickr-container-primary scale-[0.6] -translate-y-1.5">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -306,8 +307,8 @@ const ERPGridpreference = ({ onClose }:any) => {
                         </div>
 
                         <div className='flex justify-start justify-items-start'>
-                        <label htmlFor="fontSize" className="text-sm font-extralight mr-1">Fore Colour</label>
-                         <div className="pickr-container-primary ">
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour</label>
+                         <div className="pickr-container-primary scale-[0.6] -translate-y-1.5 ">
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
@@ -339,6 +340,8 @@ const ERPGridpreference = ({ onClose }:any) => {
                               </div>
                             </div>
                         </div>
+
+ 
               </div>
       </div>
      </div>
@@ -393,6 +396,23 @@ const ERPGridpreference = ({ onClose }:any) => {
               </tbody>
       </table>
     </div>
+
+    <div className="flex space-x-2 mt-4 justify-end items-center">
+  <button className="bg-gray-100 hover:bg-slate-200 border  border-gray-400 rounded-sm text-black text-[10px] font-semibold py-1 px-3 shadow-sm ">
+    Apply
+  </button>
+  
+  <button className="bg-gray-100 hover:bg-slate-200 border border-gray-400 rounded-sm text-black text-[10px] font-semibold py-1 px-2 shadow-sm ">
+    Reset
+  </button>
+  
+  <button onClick={onClose}
+  className="bg-gray-100 hover:bg-slate-200 border border-gray-400 rounded-sm text-black text-[10px] font-semibold py-1 px-2 shadow-sm ">
+    Close
+  </button>
+</div>
+
+
       </div>
     </div>
     </Fragment>

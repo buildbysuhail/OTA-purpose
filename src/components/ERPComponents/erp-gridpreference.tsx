@@ -1,56 +1,419 @@
+import { Width } from 'devextreme-react/cjs/chart'
 import React, { Fragment, useEffect, useState } from 'react'
+import Themeprimarycolor, {
+  ColorPicker,
+  hexToRgb,
+} from "../../components/common/switcher/switcherdata/switcherdata";
 
 const ERPGridpreference = ({ onClose }:any) => {
-    // const [gridHeight, setGridHeight] = useState<number>(500);
+   const tableHeaders= ['HeaderText',"Width",'Align','Visible','ReadOnly','FontBold','FontColour','FontSize','DisplayOrder']
+
+  //  ===========demo data for chosser===========================
+  const [tableBody, setTableBody] = useState([
+    {
+      HeaderText: 'userTypeName',
+      Width:100,
+      Align:'left',
+      Visible:true,
+      ReadOnly:false,
+      FontBold:false,
+      FontColour:'#000000',
+      FontSize:0,
+      DisplayOrder:1
+    },
+    {
+      HeaderText: 'userCode',
+      Width:60,
+      Align:'left',
+      Visible:true,
+      ReadOnly:true,
+      FontBold:false,
+      FontColour:'#000000',
+      FontSize:0,
+      DisplayOrder:2
+    },
+    {
+      HeaderText: 'remark',
+      Width:45,
+      Align:'left',
+      Visible:true,
+      ReadOnly:true,
+      FontBold:false,
+      FontColour:'#000000',
+      FontSize:0,
+      DisplayOrder:3
+    },
+    {
+      HeaderText: 'action',
+      Width:45,
+      Align:'left',
+      Visible:false,
+      ReadOnly:true,
+      FontBold:false,
+      FontColour:'#000000',
+      FontSize:0,
+      DisplayOrder:4
+    },
+  ]
+  )
    
-    // useEffect(() => {
-    //   let wh = window.innerHeight;
-    //   let gridHeight = wh - 180;
-    //   setGridHeight(gridHeight);
-    // }, []);
+  
+  // ==================================================================
+   
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
+    const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target.value;
+    setTableBody(prevState => {
+      const updatedTableBody = [...prevState];
+      updatedTableBody[rowIndex] = { ...updatedTableBody[rowIndex], [field]: newValue };
+      return updatedTableBody;
+    });
+  };
+
   return (
     <Fragment>
     <div className="fixed inset-0 z-50 flex justify-center items-center bg-gray-900 bg-opacity-50">
-      <div className="bg-white p-6 rounded-sm shadow-lg w-auto">
+      <div className=" bg-white p-6 rounded-sm shadow-lg w-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">DataGrid Preference</h2>
           <button onClick={onClose} className="text-red-500">
             <i className="ri-close-line text-xl"></i>
           </button>
         </div>
-        <div className="grid grid-cols-12 gap-x-6">
-          <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-            <div className="box custom-box">
-            <div className="table w-full ...">
-  <div className="table-header-group ...">
-    <div className="table-row">
-      <div className="table-cell text-left ...">Song</div>
-      <div className="table-cell text-left ...">Artist</div>
-      <div className="table-cell text-left ...">Year</div>
-    </div>
-  </div>
-  <div className="table-row-group">
-    <div className="table-row">
-      <div className="table-cell ...">The Sliding Mr. Bones (Next Stop, Pottersville)</div>
-      <div className="table-cell ...">Malcolm Lockyer</div>
-      <div className="table-cell ...">1961</div>
-    </div>
-    <div className="table-row">
-      <div className="table-cell ...">Witchy Woman</div>
-      <div className="table-cell ...">The Eagles</div>
-      <div className="table-cell ...">1972</div>
-    </div>
-    <div className="table-row">
-      <div className="table-cell ...">Shining Star</div>
-      <div className="table-cell ...">Earth, Wind, and Fire</div>
-      <div className="table-cell ...">1975</div>
-    </div>
-  </div>
-</div>
-              {/* Add your preference content here */}
-            </div>
-          </div>
+
+        {/* textpreference form */}
+        <div className='flex flex-col mb-4'>
+        <div className='flex justify-start items-center gap-2 mb-2'>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="headerText" className="text-xs font-medium mr-1">Font</label>
+        <select
+        id="headerText"
+        className="appearance-none border border-gray-400 rounded text-[11px] leading-3  py-0 pr-5 pl-2 bg-slate-50 shadow-sm h-5 focus:outline-none focus:ring focus:border-blue-500"
+       >
+        <option value="Arial">Arial</option>
+       <option value="Times New Roman">Times New Roman</option>
+       <option value="Helvetica">Helvetica</option>
+       <option value="Courier New">Courier New</option>
+       <option value="Georgia">Georgia</option>
+      </select>
+      </div>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="number" className="text-xs font-medium mr-1">Font Size</label>
+        <input
+          type="number"
+          id="number"
+          className="border border-gray-400 rounded w-16 h-5 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500 "
+          // placeholder="Enter width"
+        />
         </div>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="fontColor" className="text-xs font-medium mr-1">Bold</label>
+        
+          <input
+            type="checkbox"
+            id="boldText"
+            className="form-checkbox h-3 w-3  rounded text-blue-500"
+          />
+        </div>  
+       </div>
+       <div className='flex justify-start items-start gap-2 '>
+        <div className='flex justify-start items-center'>
+        <label htmlFor="fontSize" className="text-xs font-medium mr-1">RowHeight</label>
+        <input
+          type="number"
+          id="fontSize"
+          className="border border-gray-400 rounded w-16 h-5 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500"
+         
+        />
+        </div>
+        <div className="grid grid-cols-3 gap-y-0">
+                    <div className='flex justify-start justify-items-start gap-0 '>
+                        <label htmlFor="fontSize" className="text-xs font-medium m-0">Alternative Colour</label>
+                         
+                         <div className="pickr-container-primary  scale-[0.6] hover:scale-[0.7] -translate-y-1.5 " >
+                              <div className="pickr " >
+                                <button
+                                  className="pcr-button "
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary ">
+                                    <ColorPicker
+                                      onChange={(e: any) => {
+                                        const rgb = hexToRgb(e.target.value);
+
+                                        if (rgb !== null) {
+                                          const { r, g, b } = rgb;
+                                         
+                                          // setTheme((prevTheme) => ({
+                                          //   ...prevTheme,
+                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
+                                          // }));
+                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                        }
+                                      }}
+                                      value={"#FFFFFF"}
+                                    />
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                          
+                        </div>
+
+
+                        <div className='flex justify-start justify-items-start'>
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour Head</label>
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                              <div className="pickr">
+                                <button
+                                  className="pcr-button"
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
+                                    <ColorPicker
+                                      onChange={(e: any) => {
+                                        const rgb = hexToRgb(e.target.value);
+
+                                        if (rgb !== null) {
+                                          const { r, g, b } = rgb;
+                                         
+                                          // setTheme((prevTheme) => ({
+                                          //   ...prevTheme,
+                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
+                                          // }));
+                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                        }
+                                      }}
+                                      value={"#FFFFFF"}
+                                    />
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                        </div>
+
+                        <div className='flex justify-start justify-items-start'>
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour Head</label>
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                              <div className="pickr">
+                                <button
+                                  className="pcr-button"
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
+                                    <ColorPicker
+                                      onChange={(e: any) => {
+                                        const rgb = hexToRgb(e.target.value);
+
+                                        if (rgb !== null) {
+                                          const { r, g, b } = rgb;
+                                         
+                                          // setTheme((prevTheme) => ({
+                                          //   ...prevTheme,
+                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
+                                          // }));
+                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                        }
+                                      }}
+                                      value={"#FFFFFF"}
+                                    />
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                        </div>
+
+                        <div className='flex justify-start justify-items-start'>
+                        <label htmlFor="fontSize" className="text-xs  font-medium mr-0">Grid Line Colour</label>
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                              <div className="pickr">
+                                <button
+                                  className="pcr-button"
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
+                                    <ColorPicker
+                                      onChange={(e: any) => {
+                                        const rgb = hexToRgb(e.target.value);
+
+                                        if (rgb !== null) {
+                                          const { r, g, b } = rgb;
+                                         
+                                          // setTheme((prevTheme) => ({
+                                          //   ...prevTheme,
+                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
+                                          // }));
+                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                        }
+                                      }}
+                                      value={"#FFFFFF"}
+                                    />
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                        </div>
+
+                        <div className='flex justify-start justify-items-start'>
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour</label>
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5">
+                              <div className="pickr">
+                                <button
+                                  className="pcr-button"
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
+                                    <ColorPicker
+                                      onChange={(e: any) => {
+                                        const rgb = hexToRgb(e.target.value);
+
+                                        if (rgb !== null) {
+                                          const { r, g, b } = rgb;
+                                         
+                                          // setTheme((prevTheme) => ({
+                                          //   ...prevTheme,
+                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
+                                          // }));
+                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                        }
+                                      }}
+                                      value={"#FFFFFF"}
+                                    />
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                        </div>
+
+                        <div className='flex justify-start justify-items-start'>
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour</label>
+                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] -translate-y-1.5 ">
+                              <div className="pickr">
+                                <button
+                                  className="pcr-button"
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
+                                    <ColorPicker
+                                      onChange={(e: any) => {
+                                        const rgb = hexToRgb(e.target.value);
+
+                                        if (rgb !== null) {
+                                          const { r, g, b } = rgb;
+                                         
+                                          // setTheme((prevTheme) => ({
+                                          //   ...prevTheme,
+                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
+                                          // }));
+                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                        }
+                                      }}
+                                      value={"#FFFFFF"}
+                                    />
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                        </div>
+
+ 
+              </div>
+      </div>
+     </div>
+
+
+        <div className=" overflow-x-auto">
+      <table className="min-w-full table-auto border-collapse overscroll-auto ">
+        <thead >
+        <tr className="bg-gray-50 ">
+            {tableHeaders.map((header, index) => (
+              <th key={index} className="px-2 border border-gray-400">
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+                {tableBody.map((row, rowIndex) => (
+                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-sky-100':'bg-gray-50'}>
+                    <td className="px-2 border border-gray-400 ">{row.HeaderText}</td>
+                    <td className="px-2 border border-gray-400">{row.Width}</td>
+                    <td className="px-2 border border-gray-400">{row.Align}</td>
+                    <td className="px-2 border border-gray-400 text-center">
+        <input
+          type="checkbox"
+          checked={row.Visible}
+          readOnly
+          className="form-checkbox h-3 w-3  text-blue-500 "
+        />
+      </td>
+      <td className="px-2 border border-gray-400 text-center">
+        <input
+          type="checkbox"
+          checked={row.ReadOnly}
+          readOnly
+          className="form-checkbox h-3 w-3  text-blue-500"
+        />
+      </td>
+      <td className="px-2 border border-gray-400 text-center">
+        <input
+          type="checkbox"
+          checked={row.FontBold}
+          readOnly
+          className="form-checkbox h-3 w-3  text-blue-500"
+        />
+      </td>
+                    <td className="px-2 border border-gray-400">{row.FontColour}</td>
+                    <td className="px-2 border border-gray-400">{row.FontSize}</td>
+                    <td className="px-2 border border-gray-400">{row.DisplayOrder}</td>
+                  </tr>
+                ))}
+              </tbody>
+      </table>
+    </div>
+
+    <div className="flex space-x-2 mt-4 justify-end items-center">
+  <button className=" text-white text-[10px] font-semibold py-1 px-3 rounded-[4px] 
+  transition ease-in-out delay-150 bg-sky-500 hover:-translate-y-0.5 hover:scale-110 hover:bg-[#1e40af] duration-300 ">
+    Apply
+  </button>
+  
+  <button className="bg-gray-100 hover:bg-slate-200 border border-gray-400 rounded-sm text-black text-[10px] font-semibold py-1 px-2 shadow-sm ">
+    Reset
+  </button>
+  
+  <button onClick={onClose}
+  className="bg-gray-100 hover:bg-slate-200 border border-gray-400 rounded-sm text-black text-[10px] font-semibold py-1 px-2 shadow-sm ">
+    Close
+  </button>
+</div>
+
+
       </div>
     </div>
     </Fragment>
@@ -58,3 +421,60 @@ const ERPGridpreference = ({ onClose }:any) => {
 }
 
 export default ERPGridpreference
+
+
+{/* <tbody>
+                {tableBody.map((row, rowIndex) => (
+                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-sky-100':'bg-gray-50'}>
+                    <td className="px-2 border border-gray-400 ">{row.HeaderText}</td>
+                    <td className="px-2 border border-gray-400">{row.Width}</td>
+                    <td className="px-2 border border-gray-400">{row.Align}</td>
+                    <td className="px-2 border border-gray-400 text-center">
+        <input
+          type="checkbox"
+          checked={row.Visible}
+          readOnly
+          className="form-checkbox h-3 w-3  text-blue-500 "
+        />
+      </td>
+      <td className="px-2 border border-gray-400 text-center">
+        <input
+          type="checkbox"
+          checked={row.ReadOnly}
+          readOnly
+          className="form-checkbox h-3 w-3  text-blue-500"
+        />
+      </td>
+      <td className="px-2 border border-gray-400 text-center">
+        <input
+          type="checkbox"
+          checked={row.FontBold}
+          readOnly
+          className="form-checkbox h-3 w-3  text-blue-500"
+        />
+      </td>
+                    <td className="px-2 border border-gray-400">{row.FontColour}</td>
+                    <td className="px-2 border border-gray-400">{row.FontSize}</td>
+                    <td className="px-2 border border-gray-400">{row.DisplayOrder}</td>
+                  </tr>
+                ))}
+              </tbody> */}
+
+
+              
+
+
+
+              // const [theme, setTheme] = useState<Theme>({
+              //   direction: "ltr",
+              //   mode: "light",
+              //   navLayout: null,
+              //   navigationMenuStyle: null,
+              //   sidemenuLayoutStyles: null,
+              //   pageStyle: null,    
+              // headerStyle: 'color',
+              // menuStyle: 'dark',
+              //   menuPosition: null,
+              //   headerPosition: "",
+              //   colorPrimaryRgb: "rgb(25,118,210,1)",
+              // });

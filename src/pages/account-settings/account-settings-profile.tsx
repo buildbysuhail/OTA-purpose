@@ -177,7 +177,6 @@ const updateBasicInfo = useCallback(async () => {
       appDispatch(userSession());
     };
   }, []);
-  
   useEffect(() => {
     getBasicInfo();
     getEmail();
@@ -475,7 +474,7 @@ const updateBasicInfo = useCallback(async () => {
                 <div></div>
               </div>
               <div className="box-body">
-                <div className="grid grid-cols-1  gap-3">
+                <div className="grid grid-cols-1 gap-3">
                   <ERPInput
                     id="displayName"
                     label="Display Name"

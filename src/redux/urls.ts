@@ -95,7 +95,10 @@ get_members:"/Subscription/WorkSpace/GetMembers",
 
     //setting/Administrations
     getCompayProfiles:"/Core/CompanyProfile/GetCompanyProfile",
-    postCompayProfiles:"/Core/CompanyProfile/AddCompanyProfile"
+    postCompayProfiles:"/Core/CompanyProfile/AddCompanyProfile",
+
+    //setting/deleteinactive transactions
+    deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
 };
 
 export default Urls;

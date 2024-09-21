@@ -644,7 +644,7 @@ export const backgroundColor5 = (actionfunction: any, appState: any) => {
 export const ColorPicker = (props: any) => {
     return (
         <div className="color-picker-input">
-            <input type="color" {...props} />
+            <input  type="color" {...props} />
         </div>
     );
 };

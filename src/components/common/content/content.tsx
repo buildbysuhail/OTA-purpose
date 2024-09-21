@@ -10,7 +10,8 @@ import WorkspaceSettingsSecurity from '../../../pages/work-space/workspace-setti
 import Users from '../../../pages/settings/userManagement/Users';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserTypes from '../../../pages/settings/userManagement/UserTypes';
-
+import CompanyProfile from '../../../pages/settings/Administration/Company-Profile';
+import Branches from '../../../pages/settings/Administration/Branches';
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -43,6 +44,10 @@ const Content: FC<ContentProps> = () => {
           {/* settings user */}
           <Route path="/user-management/users" element={<Users />} />
           <Route path="/user-management/userstypes" element={<UserTypes/>} />
+
+          {/* settings Administration */}
+          <Route path="/administration/company-profile" element={<CompanyProfile/>} />
+          <Route path="administration/branches" element={<Branches/>} />
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {

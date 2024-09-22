@@ -69,9 +69,9 @@ export const SettingsMenuItems = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/administration/company-profile`, type: 'link', active: false, selected: false, title: 'Company Profile' },
-      { path: `${import.meta.env.BASE_URL}settings/administration/branches`, type: 'link', active: false, selected: false, title: 'Branches' },
-      { path: `${import.meta.env.BASE_URL}settings/administration/delete-inactive-transactions`, type: 'link', active: false, selected: false, title: 'Delete Inactive Transactions' },
+      { path: `${import.meta.env.BASE_URL}settings/_/administration/company-profile`, type: 'link', active: false, selected: false, title: 'Company Profile' },
+      { path: `${import.meta.env.BASE_URL}settings/_/administration/branches`, type: 'link', active: false, selected: false, title: 'Branches' },
+      { path: `${import.meta.env.BASE_URL}settings/_/administration/delete-inactive-transactions`, type: 'link', active: false, selected: false, title: 'Delete Inactive Transactions' },
       { path: `${import.meta.env.BASE_URL}settings/administration/bank-pos-settings`, type: 'link', active: false, selected: false, title: 'Bank POS Settings' },
     ]
   },

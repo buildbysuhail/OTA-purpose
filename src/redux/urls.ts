@@ -88,10 +88,17 @@ get_members:"/Subscription/WorkSpace/GetMembers",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
-
-  //setting/userManagement
+ //setting
+    //setting/userManagement
     getUserSubscriped:"/Subscription/User/GetUsersForGrid",
-    getUserTypes:"Core/UserType/GetUsersTypeForGrid"
+    getUserTypes:"/Core/UserType/GetUsersTypeForGrid",
+
+    //setting/Administrations
+    getCompayProfiles:"/Core/CompanyProfile/GetCompanyProfile",
+    postCompayProfiles:"/Core/CompanyProfile/AddCompanyProfile",
+
+    //setting/deleteinactive transactions
+    deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
 };
 
 export default Urls;

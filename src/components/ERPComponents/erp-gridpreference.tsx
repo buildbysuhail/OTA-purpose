@@ -135,8 +135,8 @@ const onClose = () => {
 
   return (
     <Fragment>
-    <div className="fixed inset-0 z-50 flex justify-center items-center bg-gray-900 bg-opacity-50">
-      <div className=" bg-white p-6 rounded-sm shadow-lg w-auto">
+    <div className=" fixed inset-0 z-50 flex justify-center items-center bg-gray-900 bg-opacity-50">
+      <div className=" container bg-white p-6 rounded-sm shadow-lg lg:w-auto lg:max-w-none">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">DataGrid Preference</h2>
           <button onClick={onClose} className="text-red-500">
@@ -145,9 +145,9 @@ const onClose = () => {
         </div>
 
         {/* textpreference form */}
-        <div className='grid  justify-start gap-y-0 gap-x-3 justify-items-start content-start items-center sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mb-4'>
+        <div className='grid  justify-start sm:gap-3 lg:gap-y-0 lg:gap-x-3 justify-items-start content-start items-center sm:grid-cols-3 md:grid-cols-4 m-0 p-0 box-border lg:grid-cols-5 mb-4' >
         
-        <div className='flex justify-start items-center'>
+        <div className='flex justify-start items-center m-0 p-0 box-border'>
         <label htmlFor="headerText" className="text-xs font-medium mr-1">Font</label>
         <select
         id="headerText"
@@ -160,7 +160,7 @@ const onClose = () => {
        <option value="Georgia">Georgia</option>
       </select>
       </div>
-        <div className='flex justify-start items-center'>
+        <div className='flex justify-start items-center m-0 p-0 box-border'>
         <label htmlFor="number" className="text-xs font-medium mr-1">Font Size</label>
         <input
           type="number"
@@ -169,7 +169,7 @@ const onClose = () => {
           // placeholder="Enter width"
         />
         </div>
-        <div className='flex justify-start items-center'>
+        <div className='flex justify-start items-center m-0 p-0 box-border'>
         <label htmlFor="fontColor" className="text-xs font-medium mr-1">Bold</label>
         
           <input
@@ -180,7 +180,7 @@ const onClose = () => {
         </div>  
       
        
-        <div className='flex justify-start items-center'>
+        <div className='flex justify-start items-center m-0 p-0 box-border'>
         <label htmlFor="fontSize" className="text-xs font-medium mr-1">RowHeight</label>
         <input
           type="number"
@@ -190,13 +190,17 @@ const onClose = () => {
         />
         </div>
         {/* <div className="grid grid-cols-3 gap-y-0"> */}
-                    <div className='flex justify-start items-center '>
+                    <div className='flex justify-start items-center m-0 p-0 box-border'>
                         <label htmlFor="fontSize" className="text-xs font-medium m-0">Alternative Colour</label>
                          
-                         <div className="pickr-container-primary  scale-[0.6] hover:scale-[0.7] translate-y-1" >
-                              <div className="pickr " >
+                         <div className="pickr-container-primary  scale-[0.6] hover:scale-[0.7] translate-y-1"  >
+                              <div className="pickr "  >
                                 <button
-                                  className="pcr-button "
+                                 
+                                  className="pcr-button " //dynamic  background color
+                                  style={{
+                                    backgroundColor: gridPreference.alternativeColour + ' !important',
+                                  }}
                                   onClick={(ele: any) => {
                                     if (ele.target.querySelector("input")) {
                                       ele.target.querySelector("input").click();
@@ -207,19 +211,22 @@ const onClose = () => {
                                   <div className="Themeprimarycolor theme-container-primary pickr-container-primary ">
                                     <ColorPicker
                                       onChange={(e: any) => {
+                                       
                                         const rgb = hexToRgb(e.target.value);
-
+                                     
                                         if (rgb !== null) {
                                           const { r, g, b } = rgb;
+                                          setGridPreference((state:any) => ({
+                                            
+                                            ...state,
+                                            alternativeColour:  `rgb(${r} ${g} ${b})`,
+                                          }));
+                                        
                                          
-                                          // setTheme((prevTheme) => ({
-                                          //   ...prevTheme,
-                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
-                                          // }));
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
                                         }
+                                        
                                       }}
-                                      value={"#FFFFFF"}
+                                      value={"#ffff"}
                                     />
                                   </div>
                                 </button>
@@ -229,8 +236,9 @@ const onClose = () => {
                         </div>
 
 
-                        <div className='flex justify-start items-center'>
-                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour Head</label>
+                        <div className='flex justify-start items-center m-0 p-0 box-border'>
+                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">BackHeadColour</label>
+
                          <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
                                 <button
@@ -264,7 +272,7 @@ const onClose = () => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start items-center'>
+                        <div className='flex justify-start items-center m-0 p-0 box-border'>
                         <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour Head</label>
                          <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
@@ -299,7 +307,7 @@ const onClose = () => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start items-center'>
+                        <div className='flex justify-start items-center m-0 p-0 box-border'>
                         <label htmlFor="fontSize" className="text-xs  font-medium mr-0">Grid Line Colour</label>
                          <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
@@ -334,7 +342,7 @@ const onClose = () => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start items-center'>
+                        <div className='flex justify-start items-center m-0 p-0 box-border'>
                         <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour</label>
                          <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
                               <div className="pickr">
@@ -369,7 +377,7 @@ const onClose = () => {
                             </div>
                         </div>
 
-                        <div className='flex justify-start items-center'>
+                        <div className='flex justify-start items-center m-0 p-0 box-border'>
                         <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour</label>
                          <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1 ">
                               <div className="pickr">
@@ -524,20 +532,20 @@ export default GridPreferenceChooser
               </tbody> */}
 
 
-              
+              // if (rgb !== null) {
+              //   const { r, g, b } = rgb;
+              //   switcherdata.primaryColorCustom(
+              //     updateAppState,
+              //     appState,
+              //     `${r},  ${g},  ${b}`
+              //   );
+              //   setTheme((prevTheme) => ({
+              //     ...prevTheme,
+              //     colorPrimaryRgb: `${r},  ${g},  ${b}`,
+              //   }));
+              //   // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+              // }    
 
 
 
-              // const [theme, setTheme] = useState<Theme>({
-              //   direction: "ltr",
-              //   mode: "light",
-              //   navLayout: null,
-              //   navigationMenuStyle: null,
-              //   sidemenuLayoutStyles: null,
-              //   pageStyle: null,    
-              // headerStyle: 'color',
-              // menuStyle: 'dark',
-              //   menuPosition: null,
-              //   headerPosition: "",
-              //   colorPrimaryRgb: "rgb(25,118,210,1)",
-              // });
+             

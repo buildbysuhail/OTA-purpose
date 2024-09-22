@@ -1,74 +1,137 @@
 import { Width } from 'devextreme-react/cjs/chart'
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { FC, Fragment, useEffect, useState } from 'react'
 import Themeprimarycolor, {
   ColorPicker,
   hexToRgb,
 } from "../../components/common/switcher/switcherdata/switcherdata";
+import { DataGrid } from 'devextreme-react';
+import { Column } from 'devextreme-react/cjs/data-grid';
+import { Checkbox, Select } from '@headlessui/react';
+import ERPInput from './erp-input';
+import ERPButton from './erp-button';
+interface GridPreferenceChooserProps {
+  gridId: string;
+  columns: any;
+  onApplyPreferences: any
 
-const ERPGridpreference = ({ onClose }:any) => {
+}
+interface Preferences {
+  [dataField: string]: ColumnPreference;
+}
+interface ColumnPreference {
+  visible: boolean;
+  width: number;
+  showInPdf: boolean;
+  alignment: 'left' | 'center' | 'right';
+}
+const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns, onApplyPreferences }) => {
+  const [preferences, setPreferences] = useState({});
+  useEffect(() => {
+    // Load saved preferences from localStorage
+    const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
+    if (savedPreferences) {
+      setPreferences(JSON.parse(savedPreferences));
+    } else {
+      // Initialize preferences if not saved
+      const initialPreferences = columns?.reduce((acc: any, column: any) => {
+        acc[column.dataField] = {
+          visible: true,
+          width: column.width || 100,
+          showInPdf: true,
+          fontColor: 'black',
+        };
+        return acc;
+      }, {});
+      setPreferences(initialPreferences);
+    }
+  }, [gridId, columns]);
+
+  const handlePreferenceChange = (dataField: string, key: keyof ColumnPreference, value: any) => {
+    setPreferences((prev: Preferences) => ({
+      ...prev,
+      [dataField]: {
+        ...prev[dataField],
+        [key]: value,
+      },
+    }));
+  };
+
+  const handleApplyPreferences = () => {
+    // Save preferences to localStorage
+    localStorage.setItem(`gridPreferences_${gridId}`, JSON.stringify(preferences));
+    // Call the callback function to apply preferences
+    onApplyPreferences(preferences);
+  };
+
+
    const tableHeaders= ['HeaderText',"Width",'Align','Visible','ReadOnly','FontBold','FontColour','FontSize','DisplayOrder']
 
   //  ===========demo data for chosser===========================
-  const [tableBody, setTableBody] = useState([
-    {
-      HeaderText: 'userTypeName',
-      Width:100,
-      Align:'left',
-      Visible:true,
-      ReadOnly:false,
-      FontBold:false,
-      FontColour:'#000000',
-      FontSize:0,
-      DisplayOrder:1
-    },
-    {
-      HeaderText: 'userCode',
-      Width:60,
-      Align:'left',
-      Visible:true,
-      ReadOnly:true,
-      FontBold:false,
-      FontColour:'#000000',
-      FontSize:0,
-      DisplayOrder:2
-    },
-    {
-      HeaderText: 'remark',
-      Width:45,
-      Align:'left',
-      Visible:true,
-      ReadOnly:true,
-      FontBold:false,
-      FontColour:'#000000',
-      FontSize:0,
-      DisplayOrder:3
-    },
-    {
-      HeaderText: 'action',
-      Width:45,
-      Align:'left',
-      Visible:false,
-      ReadOnly:true,
-      FontBold:false,
-      FontColour:'#000000',
-      FontSize:0,
-      DisplayOrder:4
-    },
-  ]
-  )
+  // const [tableBody, setTableBody] = useState([
+  //   {
+  //     HeaderText: 'userTypeName',
+  //     Width:100,
+  //     Align:'left',
+  //     Visible:true,
+  //     ReadOnly:false,
+  //     FontBold:false,
+  //     FontColour:'#000000',
+  //     FontSize:0,
+  //     DisplayOrder:1
+  //   },
+  //   {
+  //     HeaderText: 'userCode',
+  //     Width:60,
+  //     Align:'left',
+  //     Visible:true,
+  //     ReadOnly:true,
+  //     FontBold:false,
+  //     FontColour:'#000000',
+  //     FontSize:0,
+  //     DisplayOrder:2
+  //   },
+  //   {
+  //     HeaderText: 'remark',
+  //     Width:45,
+  //     Align:'left',
+  //     Visible:true,
+  //     ReadOnly:true,
+  //     FontBold:false,
+  //     FontColour:'#000000',
+  //     FontSize:0,
+  //     DisplayOrder:3
+  //   },
+  //   {
+  //     HeaderText: 'action',
+  //     Width:45,
+  //     Align:'left',
+  //     Visible:false,
+  //     ReadOnly:true,
+  //     FontBold:false,
+  //     FontColour:'#000000',
+  //     FontSize:0,
+  //     DisplayOrder:4
+  //   },
+  // ]
+  // )
    
   
   // ==================================================================
-   
+  const preferencesArray = Object.entries(preferences).map(([dataField, pref]) => ({
+    dataField,
+    ...(pref as ColumnPreference),
+  }));
+const onClose = () => {
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
-    const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target.value;
-    setTableBody(prevState => {
-      const updatedTableBody = [...prevState];
-      updatedTableBody[rowIndex] = { ...updatedTableBody[rowIndex], [field]: newValue };
-      return updatedTableBody;
-    });
-  };
+}
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
+  //   const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target.value;
+  //   setTableBody(prevState => {
+  //     const updatedTableBody = [...prevState];
+  //     updatedTableBody[rowIndex] = { ...updatedTableBody[rowIndex], [field]: newValue };
+  //     return updatedTableBody;
+  //   });
+  // };
 
   return (
     <Fragment>
@@ -348,53 +411,53 @@ const ERPGridpreference = ({ onClose }:any) => {
 
 
         <div className=" overflow-x-auto">
-      <table className="min-w-full table-auto border-collapse overscroll-auto ">
-        <thead >
-        <tr className="bg-gray-50 ">
-            {tableHeaders.map((header, index) => (
-              <th key={index} className="px-2 border border-gray-400">
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-                {tableBody.map((row, rowIndex) => (
-                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-sky-100':'bg-gray-50'}>
-                    <td className="px-2 border border-gray-400 ">{row.HeaderText}</td>
-                    <td className="px-2 border border-gray-400">{row.Width}</td>
-                    <td className="px-2 border border-gray-400">{row.Align}</td>
-                    <td className="px-2 border border-gray-400 text-center">
-        <input
-          type="checkbox"
-          checked={row.Visible}
-          readOnly
-          className="form-checkbox h-3 w-3  text-blue-500 "
+      <div className="p-4 border rounded-lg shadow-sm">
+      <h2 className="text-xl font-bold mb-4">Grid Preferences</h2>
+      <DataGrid
+         dataSource={preferencesArray}
+        showBorders={true}
+        columnAutoWidth={true}
+      >
+        <Column dataField="dataField" caption="Column" />
+        <Column
+          dataField="visible"
+          caption="Visible"
+          cellRender={({ data }) => (
+            <Checkbox
+              checked={data.visible}
+              onChange={(checked) => handlePreferenceChange(data.dataField, 'visible', checked)}
+            />
+          )}
         />
-      </td>
-      <td className="px-2 border border-gray-400 text-center">
-        <input
-          type="checkbox"
-          checked={row.ReadOnly}
-          readOnly
-          className="form-checkbox h-3 w-3  text-blue-500"
+        <Column
+          dataField="width"
+          caption="Width"
+          cellRender={({ data }) => (
+            <ERPInput
+              id="width"
+              type="number"
+              value={data.width}
+              onChange={(e) => handlePreferenceChange(data.dataField, 'width', parseInt(e.target.value, 10))}
+              className="w-20"
+            />
+          )}
         />
-      </td>
-      <td className="px-2 border border-gray-400 text-center">
-        <input
-          type="checkbox"
-          checked={row.FontBold}
-          readOnly
-          className="form-checkbox h-3 w-3  text-blue-500"
+        <Column
+          dataField="showInPdf"
+          caption="Show in PDF"
+          cellRender={({ data }) => (
+            <Checkbox
+              checked={data.showInPdf}
+              onChange={(checked) => handlePreferenceChange(data.dataField, 'showInPdf', checked)}
+            />
+          )}
         />
-      </td>
-                    <td className="px-2 border border-gray-400">{row.FontColour}</td>
-                    <td className="px-2 border border-gray-400">{row.FontSize}</td>
-                    <td className="px-2 border border-gray-400">{row.DisplayOrder}</td>
-                  </tr>
-                ))}
-              </tbody>
-      </table>
+       
+      </DataGrid>
+      <ERPButton onClick={handleApplyPreferences} className="mt-4" title='Apply Preferences'>
+        
+      </ERPButton>
+    </div>
     </div>
 
     <div className="flex space-x-2 mt-4 justify-end items-center">
@@ -420,7 +483,7 @@ const ERPGridpreference = ({ onClose }:any) => {
   )
 }
 
-export default ERPGridpreference
+export default GridPreferenceChooser
 
 
 {/* <tbody>

@@ -20,6 +20,8 @@ import {
   LoadPanel,
   Export,
 } from "devextreme-react/cjs/data-grid";
+
+import { Column as DevColumn } from 'devextreme-react/data-grid';
 import Button from 'devextreme-react/button';
 import CustomStore from "devextreme/data/custom_store";
 import { jsPDF } from 'jspdf';
@@ -28,6 +30,7 @@ import { saveAs } from 'file-saver';
 import { exportDataGrid as exportToPdf } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
 import { Link } from 'react-router-dom';
+import GridPreferenceChooser from '../../../components/ERPComponents/erp-gridpreference';
 
 const UserTypes = () => {
     const [gridHeight, setGridHeight] = useState<number>(500);
@@ -41,6 +44,56 @@ const UserTypes = () => {
     function isNotEmpty(value: any) {
       return value !== undefined && value !== null && value !== "";
     }
+    const columns: DevGridColumn[] = [
+      {
+        dataField: 'userTypeName',
+        caption: 'User Type Name',
+        dataType: 'string',
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 200,
+      },
+      {
+        dataField: 'userTypeCode',
+        caption: 'User Type Code',
+        dataType: 'string',
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: 'remarks',
+        caption: 'Remarks',
+        dataType: 'string',
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: 'actions',
+        caption: 'Actions',
+        allowSearch: false,
+        allowFiltering: false,
+        fixed: true,
+        fixedPosition: 'right',
+        width: 100,
+        cellRender: (cellElement: any, cellInfo: any) => (
+          <div className="action-field">
+            <Link to="#">
+              <i className="ri-eye-2-line view-icon" title="View"></i>
+            </Link>
+            <Link to="#">
+              <i className="ri-edit-line edit-icon" title="Edit"></i>
+            </Link>
+            <Link to="#">
+              <i className="ri-delete-bin-5-line delete-icon" title="Delete"></i>
+            </Link>
+          </div>
+        ),
+      }
+    ];
+    
   
     const store = new CustomStore({
       // key: "Id",
@@ -154,6 +207,7 @@ const UserTypes = () => {
                  allowColumnReordering={true}
                  onExporting={onExporting}
                  allowColumnResizing ={true}
+                 columns={columns}
                 >
                   <ColumnFixing enabled={true}/>
                   <Scrolling  mode="standard" />
@@ -167,74 +221,11 @@ const UserTypes = () => {
                   <Selection mode="single" />
                   <Export enabled={true} formats={exportFormats} allowExportSelectedData={false} />
                   
-                  <Column
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="userTypeName"
-                    caption="userTypeName"
-                    dataType="string"
-                    minWidth={200}
-                  />
-                  <Column
-                  
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField= "userTypeCode"
-                   
-                  
-                    caption={"userTypeCode"}
-                    
-                    minWidth={100}
-                    dataType="string"
-                  />
-                  
-            
-                 
-                  <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="remarks"
-                   
-                    caption={"remarks"}
-                    minWidth={100}
-                    dataType="string"
-                  />
-                  
-                  <Column
-                      allowSearch={false}
-                      allowFiltering={false}
-                     fixed={true} fixedPosition='right'
-                     dataField="actions"
-                     caption="Actions"
-                     width={100}
-                   cellRender={(cellElement, cellInfo) => {
-                   return (
-                  <div className="action-field">
-                 
-                  <Link to="#">
-                    <i className="ri-eye-2-line  view-icon" title="View"></i>
-                  </Link>
-                 
-                  <Link to="#">
-                  <i className="ri-edit-line edit-icon" title="Edit"></i>
-                  </Link>
-
-                  <Link to="#">
-                  <i className="ri-delete-bin-5-line delete-icon" title="Edit"></i>
-                  </Link>
-                  
-                  </div>
-                    );
-                    }}
-                />
                  <Toolbar>
                  <Item location="before">
                     <div className='flex  flex-col'>
                    <div>
-                    <button onClick={()=>setShowGridPreference(true)} className='ti-btn-primary-full rounded-[2px] '>
-                        <i className="ri-arrow-right-s-fill  "></i>
-                    </button>
+                   <GridPreferenceChooser columns={columns} gridId='ds' onApplyPreferences={() => {}}></GridPreferenceChooser>
                     </div>
                    <div className="box-title">
                     UserType{" "}

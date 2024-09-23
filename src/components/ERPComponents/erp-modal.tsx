@@ -39,7 +39,7 @@ const ERPModal = ({
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={disableOutsideClickClose ? () => {} : closeModal} // Disable outside click close
+        <Dialog as="div" className="relative z-50" onClose={disableOutsideClickClose ? () => {} : closeModal} // Disable outside click close
         >
           <Transition.Child
             as={Fragment}

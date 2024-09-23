@@ -15,6 +15,42 @@ export function camelize(str: string) {
   return str.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
 }
 
+/**
+ * Capitalizes the first letter of a string and adds a space before each capital letter (except the first).
+ * @param input - The input string to transform.
+ * @returns A transformed string with the first letter capitalized and spaces before each subsequent capital letter.
+ */
+export const capitalizeAndAddSpace = (input: string): string => {
+  if (!input) return '';
+
+  // Capitalize the first letter of the string
+  const capitalized = input.charAt(0).toUpperCase() + input.slice(1);
+
+  // Add space before each subsequent capital letter (except the first)
+  const result = capitalized.replace(/([A-Z])/g, ' $1').trim();
+
+  return result;
+}
+
+/**
+ * Removes spaces and capitalizes the first letter of each word (after the first word), converting to camelCase.
+ * @param input - The input string to transform.
+ * @returns A camelCase or PascalCase string with no spaces.
+ */
+export const removeSpacesAndCapitalize =(input: string): string =>   {
+  if (!input) return '';
+
+  return input
+    .split(' ') // Split the string by spaces
+    .map((word, index) => {
+      // Capitalize first letter of each word, except the first one
+      return index === 0
+        ? word.toLowerCase() // Keep the first word lowercase for camelCase
+        : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(''); // Join the words back together without spaces
+}
+
 export const Decode = (token: string) => {
   var base64Url = token?.split(".")[1];
   var base64 = base64Url?.replace(/-/g, "+").replace(/_/g, "/");

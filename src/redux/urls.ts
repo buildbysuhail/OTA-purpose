@@ -92,7 +92,7 @@ get_members:"/Subscription/WorkSpace/GetMembers",
     //setting/userManagement
     getUserSubscriped:"/Subscription/User/GetUsersForGrid",
     getUserTypes:"/Core/UserType/GetUsersTypeForGrid",
-
+    postUserTypes:"/Core/UserType/AddUserType",
     //setting/Administrations
     getCompayProfiles:"/Core/CompanyProfile/GetCompanyProfile",
     postCompayProfiles:"/Core/CompanyProfile/AddCompanyProfile",

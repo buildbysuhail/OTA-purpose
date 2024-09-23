@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 
-import SystemSettingsApi from './system-settings-apis';
+import SystemSettingsApi from './settings-apis';
 import Urls from '../../../redux/urls'
 import ERPGridpreference from '../../../components/ERPComponents/erp-gridpreference';
 import { DataGrid } from "devextreme-react";
@@ -29,8 +29,12 @@ import { saveAs } from 'file-saver';
 import { exportDataGrid as exportToPdf } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
 import { Link } from 'react-router-dom';
+import ERPModal from '../../../components/ERPComponents/erp-modal';
+import { CounterManage } from './counters-manage';
+import { useTranslation } from 'react-i18next';
 
-const SystemCounters = () => {
+const Counters = () => {
+  const {t} = useTranslation();
   const [gridHeight, setGridHeight] = useState<number>(500);
   const [showGridPreference,setShowGridPreference] = useState<boolean>(false)
   useEffect(() => {
@@ -315,7 +319,7 @@ const SystemCounters = () => {
                 <Item >
                 <div>
                 <Link to="#" className='ti-btn-primary-full ti-btn ti-btn-full '>
-                 Add<i className="ri-user-add-line"></i>
+                 {t('Add')}<i className="ri-user-add-line"></i>
                 </Link>
                 
               </div>
@@ -328,10 +332,18 @@ const SystemCounters = () => {
      
       </div>
     </div>
-       {/* Render ERPGridpreference modal if showGridPreference is true */}
-       {/* {showGridPreference && <ERPGridpreference onClose={() => setShowGridPreference(false)} />} */}
+    <ERPModal
+                isOpen={false}
+                title={"Update Email"}
+                isForm={true}
+                closeModal={() => {
+                  // setPostDataEmail(initialEmailData);
+                  // setIsOpenEmailChange(false);
+                }}
+                content={CounterManage()}
+              />
   </Fragment>
   )
 }
 
-export default SystemCounters
+export default Counters

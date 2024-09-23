@@ -279,7 +279,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
           />
           {
-          (preferences != undefined && preferences != null && preferences?.columnPreferences != undefined && preferences?.columnPreferences != null)  && preferences?.columnPreferences?.filter((item: any) => item.label?.toLowerCase()
+          (preferences != undefined && preferences != null && preferences?.columnPreferences != undefined && preferences?.columnPreferences != null)  && preferences?.columnPreferences?.filter((item: any) => item.caption?.toLowerCase()
                 .includes(searchCols.toLowerCase())
             )
           ?.map((column: ColumnPreference) => {

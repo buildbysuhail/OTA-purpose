@@ -99,6 +99,9 @@ get_members:"/Subscription/WorkSpace/GetMembers",
 
     //setting/deleteinactive transactions
     deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
+
+    //setting/system
+    getSystemCounters:"/Core/Counter/GetCounterForGrid"
 };
 
 export default Urls;

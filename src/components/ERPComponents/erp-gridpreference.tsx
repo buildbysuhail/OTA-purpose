@@ -198,9 +198,7 @@ const onClose = () => {
                                 <button
                                  
                                   className="pcr-button " //dynamic  background color
-                                  style={{
-                                    backgroundColor: gridPreference.alternativeColour + ' !important',
-                                  }}
+                                 
                                   onClick={(ele: any) => {
                                     if (ele.target.querySelector("input")) {
                                       ele.target.querySelector("input").click();

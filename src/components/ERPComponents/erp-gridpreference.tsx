@@ -1,129 +1,252 @@
-import { Width } from 'devextreme-react/cjs/chart'
-import React, { FC, Fragment, useEffect, useState } from 'react'
-import Themeprimarycolor, {
-  ColorPicker,
-  hexToRgb,
-} from "../../components/common/switcher/switcherdata/switcherdata";
-import { DataGrid } from 'devextreme-react';
-import { Column } from 'devextreme-react/cjs/data-grid';
-import { Checkbox, Select } from '@headlessui/react';
-import ERPInput from './erp-input';
-import ERPButton from './erp-button';
+import React, { FC, Fragment, useEffect, useRef, useState } from "react";
+import ERPInput from "./erp-input";
+import { ArrowLongDownIcon, ArrowLongUpIcon, LockClosedIcon, MagnifyingGlassIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { capitalizeAndAddSpace, moveArrayElement, removeSpacesAndCapitalize } from "../../utilities/Utils";
+import ERPSubmitButton from "./erp-submit-button";
+import ERPModal from "./erp-modal";
 interface GridPreferenceChooserProps {
   gridId: string;
-  columns: any;
-  onApplyPreferences: any
-
+  columns: DevGridColumn[];
+  onApplyPreferences: any;
 }
+const initialColumnPreference: ColumnPreference = {
+  dataField: '',
+  isLocked: false,
+  caption: "Column Header",        // string: the text to display in the header
+  width: 150,                         // number: column width in pixels
+  alignment: 'left',                      // 'left' | 'center' | 'right': text alignment
+  visible: true,                      // boolean: whether the column is visible
+  readOnly: false,                    // boolean: whether the column is read-only
+  fontBold: false,                    // boolean: whether the font is bold
+  fontColor: "#000000",               // string: font color in hex
+  fontSize: 12,   
+  showInPdf: true,                    // number: font size
+  displayOrder: 1                     // number: the order in which the column appears
+};
 interface Preferences {
   [dataField: string]: ColumnPreference;
 }
 interface ColumnPreference {
-  visible: boolean;
+  caption: string;
+  isLocked: boolean;
+  dataField: string;
   width: number;
-  showInPdf: boolean;
   alignment: 'left' | 'center' | 'right';
+  visible: boolean;
+  readOnly: boolean;
+  fontBold: boolean;
+  fontColor: string;
+  fontSize: number;
+  showInPdf: boolean;
+  displayOrder: number;
 }
-const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({ gridId, columns, onApplyPreferences }) => {
-  const [preferences, setPreferences] = useState({});
+interface GridPreference {
+  font: string;
+  fontSize: number;
+  bold: boolean;
+  rowHeigh: number;
+  alternativeColor: string;
+  backgroundHeadColor: string;
+  foreHeadColor: string;
+  gridLine: string;
+  backgroundColor: string;
+  foreColor: string;
+  columnPreferences: Array<ColumnPreference>;
+}
+
+
+const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
+  gridId,
+  columns,
+  onApplyPreferences,
+}) => {
+  
+  const dragItem = useRef(null);
+  const dragOverItem = useRef(null);
+
+  const [remodal, setReModal] = useState<any>();
+  const [searchCols, setSearchCols] = useState<String>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  
+  /* ########################################################################################### */
+
+  // const updateData = () => {
+  //   setReModal(
+  //     columns
+  //       ?.filter((col) => {
+  //         return fields?.find((h: any) => keyConverter(h.key) === col?.id)?.label?.toLowerCase();
+  //         // .includes(searchCols.toLowerCase());
+  //       })
+  //       ?.map((column) => ({ id: column.id, getCanHide: column.getCanHide(), checked: column.getIsVisible() }))
+  //   );
+  // };
+
+  // useEffect(() => {
+  //   updateData();
+  // }, [searchCols, visibilityValues]);
+  /* ########################################################################################### */
+
+  const handleDragStart = (e: any) => {
+    dragItem.current = e.target.id;
+  };
+
+  const handleDragEnd = (e: any) => {
+    e.preventDefault();
+    dragOverItem.current = e.currentTarget.id;
+  };
+
+  const handleDropping = (e: any) => {
+    let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragItem.current);
+    let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragOverItem.current);
+
+    setPreferences((prevPreferences: any) => {
+      return {
+        ...prevPreferences,
+        columnPreferences: (moveArrayElement(preferences.columnPreferences, startIndex, endIndex))
+      };
+    });
+    dragItem.current = null;
+    dragOverItem.current = null;
+  };
+
+  /* ########################################################################################### */
+  const handleSaveCustomization = () => {
+    if (preferences) {
+      preferences.columnPreferences = preferences?.columnPreferences;
+    }
+    setIsOpen(false);
+  };
+
+  /* ########################################################################################### */
+  const initialGridPreference: GridPreference = {
+    font: "",
+    fontSize: 10,
+    bold: false,
+    rowHeigh: 5,
+    alternativeColor: "rgb(25,118,210,1)",
+    backgroundHeadColor: "rgb(25,118,210,1)",
+    foreHeadColor: "rgb(25,118,210,1)",
+    gridLine: "rgb(25,118,210,1)",
+    backgroundColor: "rgb(25,118,210,1)",
+    foreColor: "rgb(25,118,210,1)",
+    columnPreferences: []
+  };
+  
+  const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
   useEffect(() => {
-    // Load saved preferences from localStorage
+    debugger;
     const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
     if (savedPreferences) {
-      setPreferences(JSON.parse(savedPreferences));
-    } else {
-      // Initialize preferences if not saved
-      const initialPreferences = columns?.reduce((acc: any, column: any) => {
-        acc[column.dataField] = {
-          visible: true,
-          width: column.width || 100,
-          showInPdf: true,
-          fontColor: 'black',
+      const parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
+      const mergedPreferences = new Array<ColumnPreference>();
+       columns ? columns?.forEach((column: DevGridColumn, index: number) => {
+        let columnPreference = parsedPreferences.columnPreferences?.find(c => c.dataField == column.dataField) || getDefaultColumnPreference(column, index)
+        columnPreference.dataField = column.dataField?? removeSpacesAndCapitalize(column.caption??"");
+        mergedPreferences.push(columnPreference)
+      }):new Array<ColumnPreference>();
+      setPreferences((prevPreferences: any) => {
+        return {
+          ...prevPreferences,
+          ...parsedPreferences,
+          columnPreferences: mergedPreferences
         };
-        return acc;
-      }, {});
-      setPreferences(initialPreferences);
+      });
+    } else {
+      const initialPreferences = new Array<ColumnPreference>();
+      columns? columns?.forEach((column: DevGridColumn, index: number) => {
+        let columnPreference = getDefaultColumnPreference(column, index);
+        columnPreference.dataField = column.dataField?? removeSpacesAndCapitalize(column.caption??"");
+        initialPreferences.push(columnPreference);
+      }): new Array<ColumnPreference>();
+      
+      setPreferences((prevPreferences: any) => {
+        const updatedPreferences = {
+          ...prevPreferences,
+          columnPreferences: initialPreferences
+        };
+        console.log('updatedPreferences');
+        console.log(updatedPreferences);
+        
+        
+        return updatedPreferences;
+      });
     }
+    console.log('preferences');    
+    console.log(preferences);
+    
   }, [gridId, columns]);
+  useEffect(() => {
+    console.log('Updated preferences:', preferences);
+  }, [preferences]);
+  
+  const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({
+    dataField: column.dataField??"",
+    isLocked: column.isLocked??false,    
+    caption: column.caption || capitalizeAndAddSpace(column.dataField??""),
+    width: column.width || 100,
+    alignment: column.alignment || 'left',
+    visible: true,
+    readOnly: false,
+    fontBold: false,
+    fontColor: '',
+    fontSize: 0,
+    displayOrder: index,
+    showInPdf: column.showInPdf || false
+  });
 
-  const handlePreferenceChange = (dataField: string, key: keyof ColumnPreference, value: any) => {
-    setPreferences((prev: Preferences) => ({
-      ...prev,
-      [dataField]: {
-        ...prev[dataField],
-        [key]: value,
-      },
-    }));
+  const handlePreferenceChange = (
+    key: string,
+    value: any
+  ) => {
+    setPreferences((prevPreferences: any) => {
+    return {
+      ...prevPreferences,
+      [key]: value
+    };
+  });
+  };
+  const handleColumnPreferenceChange = (
+    dataField: string,
+    key: string, // Ensure `key` is a valid property of `ColumnPreference`
+    value: any
+  ) => {
+    debugger;
+    setPreferences((prevPreferences: any) => {
+      if (!prevPreferences) return prevPreferences;
+  
+      const updatedColumnPreferences = prevPreferences.columnPreferences.map(
+        (column: ColumnPreference) => {
+          if (column.dataField === dataField) {
+            // Create a new column object with the updated value
+            return {
+              ...column,
+              [key]: value
+            };
+          }
+          return column; // Return the original column if no changes
+        }
+      );
+  
+      return {
+        ...prevPreferences,
+        columnPreferences: updatedColumnPreferences
+      };
+    });
   };
 
   const handleApplyPreferences = () => {
     // Save preferences to localStorage
-    localStorage.setItem(`gridPreferences_${gridId}`, JSON.stringify(preferences));
+    localStorage.setItem(
+      `gridPreferences_${gridId}`,
+      JSON.stringify(preferences)
+    );
     // Call the callback function to apply preferences
     onApplyPreferences(preferences);
   };
 
 
-   const tableHeaders= ['HeaderText',"Width",'Align','Visible','ReadOnly','FontBold','FontColour','FontSize','DisplayOrder']
-
-  //  ===========demo data for chosser===========================
-  // const [tableBody, setTableBody] = useState([
-  //   {
-  //     HeaderText: 'userTypeName',
-  //     Width:100,
-  //     Align:'left',
-  //     Visible:true,
-  //     ReadOnly:false,
-  //     FontBold:false,
-  //     FontColour:'#000000',
-  //     FontSize:0,
-  //     DisplayOrder:1
-  //   },
-  //   {
-  //     HeaderText: 'userCode',
-  //     Width:60,
-  //     Align:'left',
-  //     Visible:true,
-  //     ReadOnly:true,
-  //     FontBold:false,
-  //     FontColour:'#000000',
-  //     FontSize:0,
-  //     DisplayOrder:2
-  //   },
-  //   {
-  //     HeaderText: 'remark',
-  //     Width:45,
-  //     Align:'left',
-  //     Visible:true,
-  //     ReadOnly:true,
-  //     FontBold:false,
-  //     FontColour:'#000000',
-  //     FontSize:0,
-  //     DisplayOrder:3
-  //   },
-  //   {
-  //     HeaderText: 'action',
-  //     Width:45,
-  //     Align:'left',
-  //     Visible:false,
-  //     ReadOnly:true,
-  //     FontBold:false,
-  //     FontColour:'#000000',
-  //     FontSize:0,
-  //     DisplayOrder:4
-  //   },
-  // ]
-  // )
-   
-  
   // ==================================================================
-  const preferencesArray = Object.entries(preferences).map(([dataField, pref]) => ({
-    dataField,
-    ...(pref as ColumnPreference),
-  }));
-const onClose = () => {
-
-}
+  const onClose = () => {};
   // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>, rowIndex: number, field: string) => {
   //   const newValue = field === 'Visible' || field === 'ReadOnly' || field === 'FontBold' ? e.target.checked : e.target.value;
   //   setTableBody(prevState => {
@@ -135,417 +258,86 @@ const onClose = () => {
 
   return (
     <Fragment>
-    <div className=" fixed inset-0 z-50 flex justify-center items-center bg-gray-900 bg-opacity-50">
-      <div className=" container bg-white p-6 rounded-sm shadow-lg lg:w-auto lg:max-w-none">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">DataGrid Preference</h2>
-          <button onClick={onClose} className="text-red-500">
-            <i className="ri-close-line text-xl"></i>
-          </button>
-        </div>
-
-        {/* textpreference form */}
-        <div className='grid  justify-start sm:gap-3 lg:gap-y-0 lg:gap-x-3 justify-items-start content-start items-center sm:grid-cols-3 md:grid-cols-4 m-0 p-0 box-border lg:grid-cols-5 mb-4' >
-        
-        <div className='flex justify-start items-center m-0 p-0 box-border'>
-        <label htmlFor="headerText" className="text-xs font-medium mr-1">Font</label>
-        <select
-        id="headerText"
-        className="appearance-none border border-gray-400 rounded text-[11px] leading-3  py-0 pr-5 pl-2 bg-slate-50 shadow-sm h-6 focus:outline-none focus:ring focus:border-blue-500"
-       >
-        <option value="Arial">Arial</option>
-       <option value="Times New Roman">Times New Roman</option>
-       <option value="Helvetica">Helvetica</option>
-       <option value="Courier New">Courier New</option>
-       <option value="Georgia">Georgia</option>
-      </select>
-      </div>
-        <div className='flex justify-start items-center m-0 p-0 box-border'>
-        <label htmlFor="number" className="text-xs font-medium mr-1">Font Size</label>
-        <input
-          type="number"
-          id="number"
-          className="border border-gray-400 rounded w-16 h-6 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500 "
-          // placeholder="Enter width"
-        />
-        </div>
-        <div className='flex justify-start items-center m-0 p-0 box-border'>
-        <label htmlFor="fontColor" className="text-xs font-medium mr-1">Bold</label>
-        
-          <input
-            type="checkbox"
-            id="boldText"
-            className="form-checkbox h-4 w-4  rounded text-blue-500"
+      <button onClick={()=>setIsOpen(true)} className='ti-btn-primary-full rounded-[2px] '>
+                        <i className="ri-arrow-right-s-fill  "></i>
+                    </button>
+       <ERPModal
+        isForm
+        isOpen={isOpen}
+        hasSubmit={false}
+        closeTitle="Close"
+        title={"Customize Columns"}
+        closeModal={() => setIsOpen(false)}
+        content={( <div className="px-1 py-3 flex flex-col gap-1">
+          <ERPInput
+            noLabel
+            className="mb-3"
+            id="search_cols"
+            value={searchCols}
+            placeholder="Search"
+            onChange={(e: any) => setSearchCols(e?.target?.value)}
+            prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
           />
-        </div>  
-      
-       
-        <div className='flex justify-start items-center m-0 p-0 box-border'>
-        <label htmlFor="fontSize" className="text-xs font-medium mr-1">RowHeight</label>
-        <input
-          type="number"
-          id="fontSize"
-          className="border border-gray-400 rounded w-16 h-6 text-[11px] leading-3 bg-slate-50 shadow-sm focus:outline-none focus:ring focus:border-blue-500"
-         
-        />
-        </div>
-        {/* <div className="grid grid-cols-3 gap-y-0"> */}
-                    <div className='flex justify-start items-center m-0 p-0 box-border'>
-                        <label htmlFor="fontSize" className="text-xs font-medium m-0">Alternative Colour</label>
-                         
-                         <div className="pickr-container-primary  scale-[0.6] hover:scale-[0.7] translate-y-1"  >
-                              <div className="pickr "  >
-                                <button
-                                 
-                                  className="pcr-button " //dynamic  background color
-                                  style={{
-                                    backgroundColor: gridPreference.alternativeColour + ' !important',
-                                  }}
-                                  onClick={(ele: any) => {
-                                    if (ele.target.querySelector("input")) {
-                                      ele.target.querySelector("input").click();
-                                    }
-                                  }}
-                                >
-                                
-                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary ">
-                                    <ColorPicker
-                                      onChange={(e: any) => {
-                                       
-                                        const rgb = hexToRgb(e.target.value);
-                                     
-                                        if (rgb !== null) {
-                                          const { r, g, b } = rgb;
-                                          setGridPreference((state:any) => ({
-                                            
-                                            ...state,
-                                            alternativeColour:  `rgb(${r} ${g} ${b})`,
-                                          }));
-                                        
-                                         
-                                        }
-                                        
-                                      }}
-                                      value={"#ffff"}
-                                    />
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                          
-                        </div>
-
-
-                        <div className='flex justify-start items-center m-0 p-0 box-border'>
-                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">BackHeadColour</label>
-
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
-                              <div className="pickr">
-                                <button
-                                  className="pcr-button"
-                                  onClick={(ele: any) => {
-                                    if (ele.target.querySelector("input")) {
-                                      ele.target.querySelector("input").click();
-                                    }
-                                  }}
-                                >
-                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
-                                    <ColorPicker
-                                      onChange={(e: any) => {
-                                        const rgb = hexToRgb(e.target.value);
-
-                                        if (rgb !== null) {
-                                          const { r, g, b } = rgb;
-                                         
-                                          // setTheme((prevTheme) => ({
-                                          //   ...prevTheme,
-                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
-                                          // }));
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
-                                        }
-                                      }}
-                                      value={"#FFFFFF"}
-                                    />
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                        </div>
-
-                        <div className='flex justify-start items-center m-0 p-0 box-border'>
-                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour Head</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
-                              <div className="pickr">
-                                <button
-                                  className="pcr-button"
-                                  onClick={(ele: any) => {
-                                    if (ele.target.querySelector("input")) {
-                                      ele.target.querySelector("input").click();
-                                    }
-                                  }}
-                                >
-                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
-                                    <ColorPicker
-                                      onChange={(e: any) => {
-                                        const rgb = hexToRgb(e.target.value);
-
-                                        if (rgb !== null) {
-                                          const { r, g, b } = rgb;
-                                         
-                                          // setTheme((prevTheme) => ({
-                                          //   ...prevTheme,
-                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
-                                          // }));
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
-                                        }
-                                      }}
-                                      value={"#FFFFFF"}
-                                    />
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                        </div>
-
-                        <div className='flex justify-start items-center m-0 p-0 box-border'>
-                        <label htmlFor="fontSize" className="text-xs  font-medium mr-0">Grid Line Colour</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
-                              <div className="pickr">
-                                <button
-                                  className="pcr-button"
-                                  onClick={(ele: any) => {
-                                    if (ele.target.querySelector("input")) {
-                                      ele.target.querySelector("input").click();
-                                    }
-                                  }}
-                                >
-                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
-                                    <ColorPicker
-                                      onChange={(e: any) => {
-                                        const rgb = hexToRgb(e.target.value);
-
-                                        if (rgb !== null) {
-                                          const { r, g, b } = rgb;
-                                         
-                                          // setTheme((prevTheme) => ({
-                                          //   ...prevTheme,
-                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
-                                          // }));
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
-                                        }
-                                      }}
-                                      value={"#FFFFFF"}
-                                    />
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                        </div>
-
-                        <div className='flex justify-start items-center m-0 p-0 box-border'>
-                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Back Colour</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1">
-                              <div className="pickr">
-                                <button
-                                  className="pcr-button"
-                                  onClick={(ele: any) => {
-                                    if (ele.target.querySelector("input")) {
-                                      ele.target.querySelector("input").click();
-                                    }
-                                  }}
-                                >
-                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
-                                    <ColorPicker
-                                      onChange={(e: any) => {
-                                        const rgb = hexToRgb(e.target.value);
-
-                                        if (rgb !== null) {
-                                          const { r, g, b } = rgb;
-                                         
-                                          // setTheme((prevTheme) => ({
-                                          //   ...prevTheme,
-                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
-                                          // }));
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
-                                        }
-                                      }}
-                                      value={"#FFFFFF"}
-                                    />
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                        </div>
-
-                        <div className='flex justify-start items-center m-0 p-0 box-border'>
-                        <label htmlFor="fontSize" className="text-xs font-medium mr-0">Fore Colour</label>
-                         <div className="pickr-container-primary scale-[0.6] hover:scale-[0.7] translate-y-1 ">
-                              <div className="pickr">
-                                <button
-                                  className="pcr-button"
-                                  onClick={(ele: any) => {
-                                    if (ele.target.querySelector("input")) {
-                                      ele.target.querySelector("input").click();
-                                    }
-                                  }}
-                                >
-                                  <div className="Themeprimarycolor theme-container-primary pickr-container-primary">
-                                    <ColorPicker
-                                      onChange={(e: any) => {
-                                        const rgb = hexToRgb(e.target.value);
-
-                                        if (rgb !== null) {
-                                          const { r, g, b } = rgb;
-                                         
-                                          // setTheme((prevTheme) => ({
-                                          //   ...prevTheme,
-                                          //   colorPrimaryRgb: `${r},  ${g},  ${b}`,
-                                          // }));
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
-                                        }
-                                      }}
-                                      value={"#FFFFFF"}
-                                    />
-                                  </div>
-                                </button>
-                              </div>
-                            </div>
-                        </div>
-
- 
-              {/* </div> */}
+          {
+          (preferences != undefined && preferences != null && preferences?.columnPreferences != undefined && preferences?.columnPreferences != null)  && preferences?.columnPreferences?.filter((item: any) => item.label?.toLowerCase()
+                .includes(searchCols.toLowerCase())
+            )
+          ?.map((column: ColumnPreference) => {
+              return (
+                <div
+                  key={column.dataField}
+                  id={column.dataField}
+                  className="px-1"
+                  draggable
+                  onDragStart={handleDragStart}
+                  onDragEnter={handleDragEnd}
+                  onDragEnd={handleDropping}
+                >
+                  {column?.isLocked ? (
+                    <div className="bg-[#F9F9FB] w-full px-1 rounded cursor-move">
+                      <div className="flex gap-2 py-1 text-sm capitalize text-slate-800 items-center ">
+                        ⋮⋮
+                        <LockClosedIcon className=" h-3 w-3" />
+                        <span className="cursor-pointer">{column?.caption}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={`bg-[#F9F9FB] w-full px-1 rounded `}>
+                      <label className="flex gap-2 items-center py-1 capitalize text-sm text-slate-800 cursor-move">
+                        ⋮⋮
+                        <input
+                          type="checkbox"
+                          className="cursor-pointer"
+                          disabled={!column?.isLocked}
+                          onChange={(e) => handleColumnPreferenceChange(column.dataField, 'visible' ,e.target.checked)}
+                          checked={column?.visible}
+                          // {...{
+                          //   type: "checkbox",
+                          //   // checked: column.getIsVisible(),
+                          //   // onChange: column.getToggleVisibilityHandler(),
+                          //   // disabled: !column.getCanHide(),
+                          // }}
+                        />
+                        <span className="cursor-pointer">{column?.caption}</span>
+                      </label>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          <div className="flex gap-10 justify-between py-3 border-t mt-5">
+            <ERPSubmitButton type="button" onClick={handleSaveCustomization}>
+              Save
+            </ERPSubmitButton>
+            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28" varient="outline">
+              Cancel
+            </ERPSubmitButton>
+          </div>
+        </div>)}
+      />
      
-     </div>
-
-
-        <div className=" overflow-x-auto">
-      <div className="p-4 border rounded-lg shadow-sm">
-      <h2 className="text-xl font-bold mb-4">Grid Preferences</h2>
-      <DataGrid
-         dataSource={preferencesArray}
-        showBorders={true}
-        columnAutoWidth={true}
-      >
-        <Column dataField="dataField" caption="Column" />
-        <Column
-          dataField="visible"
-          caption="Visible"
-          cellRender={({ data }) => (
-            <Checkbox
-              checked={data.visible}
-              onChange={(checked) => handlePreferenceChange(data.dataField, 'visible', checked)}
-            />
-          )}
-        />
-        <Column
-          dataField="width"
-          caption="Width"
-          cellRender={({ data }) => (
-            <ERPInput
-              id="width"
-              type="number"
-              value={data.width}
-              onChange={(e) => handlePreferenceChange(data.dataField, 'width', parseInt(e.target.value, 10))}
-              className="w-20"
-            />
-          )}
-        />
-        <Column
-          dataField="showInPdf"
-          caption="Show in PDF"
-          cellRender={({ data }) => (
-            <Checkbox
-              checked={data.showInPdf}
-              onChange={(checked) => handlePreferenceChange(data.dataField, 'showInPdf', checked)}
-            />
-          )}
-        />
-       
-      </DataGrid>
-      <ERPButton onClick={handleApplyPreferences} className="mt-4" title='Apply Preferences'>
-        
-      </ERPButton>
-    </div>
-    </div>
-
-    <div className="flex space-x-2 mt-4 justify-end items-center">
-  <button className=" text-white text-[10px] font-semibold py-1 px-3 rounded-[4px] 
-  transition ease-in-out delay-150 bg-sky-500 hover:-translate-y-0.5 hover:scale-110 hover:bg-[#1e40af] duration-300 ">
-    Apply
-  </button>
-  
-  <button className="bg-gray-100 hover:bg-slate-200 border border-gray-400 rounded-sm text-black text-[10px] font-semibold py-1 px-2 shadow-sm ">
-    Reset
-  </button>
-  
-  <button onClick={onClose}
-  className="bg-gray-100 hover:bg-slate-200 border border-gray-400 rounded-sm text-black text-[10px] font-semibold py-1 px-2 shadow-sm ">
-    Close
-  </button>
-</div>
-
-
-      </div>
-    </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default GridPreferenceChooser
-
-
-{/* <tbody>
-                {tableBody.map((row, rowIndex) => (
-                  <tr key={rowIndex} className={rowIndex % 2 === 0 ? 'bg-sky-100':'bg-gray-50'}>
-                    <td className="px-2 border border-gray-400 ">{row.HeaderText}</td>
-                    <td className="px-2 border border-gray-400">{row.Width}</td>
-                    <td className="px-2 border border-gray-400">{row.Align}</td>
-                    <td className="px-2 border border-gray-400 text-center">
-        <input
-          type="checkbox"
-          checked={row.Visible}
-          readOnly
-          className="form-checkbox h-3 w-3  text-blue-500 "
-        />
-      </td>
-      <td className="px-2 border border-gray-400 text-center">
-        <input
-          type="checkbox"
-          checked={row.ReadOnly}
-          readOnly
-          className="form-checkbox h-3 w-3  text-blue-500"
-        />
-      </td>
-      <td className="px-2 border border-gray-400 text-center">
-        <input
-          type="checkbox"
-          checked={row.FontBold}
-          readOnly
-          className="form-checkbox h-3 w-3  text-blue-500"
-        />
-      </td>
-                    <td className="px-2 border border-gray-400">{row.FontColour}</td>
-                    <td className="px-2 border border-gray-400">{row.FontSize}</td>
-                    <td className="px-2 border border-gray-400">{row.DisplayOrder}</td>
-                  </tr>
-                ))}
-              </tbody> */}
-
-
-              // if (rgb !== null) {
-              //   const { r, g, b } = rgb;
-              //   switcherdata.primaryColorCustom(
-              //     updateAppState,
-              //     appState,
-              //     `${r},  ${g},  ${b}`
-              //   );
-              //   setTheme((prevTheme) => ({
-              //     ...prevTheme,
-              //     colorPrimaryRgb: `${r},  ${g},  ${b}`,
-              //   }));
-              //   // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
-              // }    
-
-
-
-             
+export default GridPreferenceChooser;

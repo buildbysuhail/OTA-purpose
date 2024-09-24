@@ -12,12 +12,7 @@
   // }
   
   .custom-data-grid {
-    // .dx-datagrid-rowsview {
-    //   // border: none;
-    //   .dx-datagrid-rowsview {
-    //     border-radius: px; // Apply rounded corners to the top of the grid
-    //   }
-    // }
+  
   
     // Table Header Styling
     .dx-datagrid-headers {
@@ -157,18 +152,21 @@
      .action-field {
       display: flex;
       justify-content: space-evenly;
-      align-items: start;
+      align-items: center;
+      
+      
     
      // Adjust space between icons
-  
+   
       // Common icon styling
-      i {
+       i  {
         font-size: .875rem;
         cursor: pointer;
+        
         transition: color 0.3s ease, background-color 0.3s ease;
         padding: 4px;
         border-radius: 4px;
-  
+      
         &:hover {
           color: #ffffff;
 

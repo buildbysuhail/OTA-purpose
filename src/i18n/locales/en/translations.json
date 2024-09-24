@@ -125,5 +125,8 @@
   "go-to-home": "Go to <0>the home page</0>",
   "change-username": "Change your username:",
   "submit": "Submit",
-  "Email or Phone or Username": "Email or Phone or Username"
+  "Email or Phone or Username": "Email or Phone or Username",
+    "Add": "Add",
+    "User Type": "User Type "
+
 }

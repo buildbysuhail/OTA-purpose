@@ -25,6 +25,16 @@ const UserManagementApis = {
       return {};
     }
   },
+
+    addUserTypeInfo: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.postUserTypes, data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
 //   getPhone: async () => {
 //     try {
 //       const responseData = await api.getAsync(Urls.getPhone_profile);
@@ -52,14 +62,7 @@ const UserManagementApis = {
 //       return '';
 //     }
 //   },
-//   updateUserBasicInfo: async (data: any) => {
-//     try {
-//       const responseData = await api.post(Urls.updateUserBasicInfo, data);
-//       return responseData;
-//     } catch (error) {
-//       console.error("Failed to get available agents for DX Grid:", error);
-//       return '';
-//     }
+
 //   },
 //   verifyEmail_profile: async (data: any) => {
 //     try {

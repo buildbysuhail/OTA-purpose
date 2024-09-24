@@ -495,30 +495,30 @@ const updateBasicInfo = useCallback(async () => {
                         : ""
                     }
                   />
-                  <ERPDataCombobox
-                    id="nationality"
-                    field={{
-                      id: "nationality",
-                      required: true,
-                      getListUrl: Urls.country,
-                      valueKey: "id",
-                      labelKey: "name",
-                    }}
-                    thunkAction= {countries}
-                    reducer="CountriesData"
-                    onChangeData={(data: any) => {
-                      
-                      setBasicInfo((prev: any) => ({
-                        ...prev,
-                        data: data
-                      }))
-                    }}
-                    validation={basicInfo.validations.nationality}
-                    data={basicInfo?.data}
-                    defaultData={basicInfo?.data}
-                    value={basicInfo != undefined && basicInfo?.data != undefined && basicInfo?.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
-                    label="Country"
-                  />
+                    <ERPDataCombobox
+                      id="nationality"
+                      field={{
+                        id: "nationality",
+                        required: true,
+                        getListUrl: Urls.country,
+                        valueKey: "id",
+                        labelKey: "name",
+                      }}
+                      thunkAction= {countries}
+                      reducer="CountriesData"
+                      onChangeData={(data: any) => {
+                        
+                        setBasicInfo((prev: any) => ({
+                          ...prev,
+                          data: data
+                        }))
+                      }}
+                      validation={basicInfo.validations.nationality}
+                      data={basicInfo?.data}
+                      defaultData={basicInfo?.data}
+                      value={basicInfo != undefined && basicInfo?.data != undefined && basicInfo?.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
+                      label="Country"
+                    />
                   <ERPDateInput
                     id="dob"
                     field={{ type: "date", id: "dob", required: true }}

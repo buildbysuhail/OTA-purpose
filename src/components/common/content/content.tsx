@@ -13,6 +13,7 @@ import UserTypes from '../../../pages/settings/userManagement/UserTypes';
 import CompanyProfile from '../../../pages/settings/Administration/Company-Profile';
 import Branches from '../../../pages/settings/Administration/Branches';
 import DeleteInactiveTransactions from '../../../pages/settings/Administration/delete-inactive-transactions';
+import SystemCounters from '../../../pages/settings/system/counters';
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -50,6 +51,9 @@ const Content: FC<ContentProps> = () => {
           <Route path="/administration/company-profile" element={<CompanyProfile/>} />
           <Route path="administration/branches" element={<Branches/>} />
           <Route path="administration/delete-inactive-transactions" element={<DeleteInactiveTransactions/>} />
+
+          {/* settings Systems */}
+          <Route path="settings/system/counters" element={<SystemCounters/>} />
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {

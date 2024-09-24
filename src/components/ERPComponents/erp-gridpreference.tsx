@@ -221,16 +221,16 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                         )}
                       </label>
                    
-                        <input className="mh-[27px]"
+                        <input 
                           type="number"
                           value={column.width || ''}
                           onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target.value) || undefined)}
                           disabled={column.isLocked}
-                          className="border rounded p-1 w-16"
+                          className="border rounded p-1 w-16 mh-[27px]"
                         />
-                         <input className="mh-[27px]"
+                         <input 
             type="checkbox"
-            className="cursor-pointer"
+            className="cursor-pointer mh-[27px]"
             disabled={column.isLocked}
             checked={column.readOnly}
             onChange={(e) => handleColumnPreferenceChange(column.dataField, 'readOnly', e.target.checked)}
@@ -251,19 +251,19 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontBold', e.target.checked)}
             disabled={column.isLocked}
           />
-          <input className="mh-[27px]"
+          <input 
             type="color"
             value={column.fontColor}
             onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontColor', e.target.value)}
             disabled={column.isLocked}
-            className="w-8 h-8"
+            className="w-8 h-8 mh-[27px]"
           />
-          <input className="mh-[27px]"
+          <input 
             type="number"
             value={column.fontSize}
             onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontSize', parseInt(e.target.value) || 12)}
             disabled={column.isLocked}
-            className="border rounded p-1 w-12"
+            className="border rounded p-1 w-12 mh-[27px]"
           />
           <input className="mh-[27px]"
             type="checkbox"

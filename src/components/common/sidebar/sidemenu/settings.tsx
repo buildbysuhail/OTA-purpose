@@ -72,7 +72,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/administration/company-profile`, type: 'link', active: false, selected: false, title: 'Company Profile' },
       { path: `${import.meta.env.BASE_URL}settings/_/administration/branches`, type: 'link', active: false, selected: false, title: 'Branches' },
       { path: `${import.meta.env.BASE_URL}settings/_/administration/delete-inactive-transactions`, type: 'link', active: false, selected: false, title: 'Delete Inactive Transactions' },
-      { path: `${import.meta.env.BASE_URL}settings/administration/bank-pos-settings`, type: 'link', active: false, selected: false, title: 'Bank POS Settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/administration/bank-pos-settings`, type: 'link', active: false, selected: false, title: 'Bank POS Settings' },
     ]
   },
   {

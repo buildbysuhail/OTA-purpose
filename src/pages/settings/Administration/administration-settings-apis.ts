@@ -24,6 +24,15 @@ const AdministrationSettingsApis = {
     }
   },
 
+  addBankPosInfo: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.postBankPosSettings, data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
 
 };
 

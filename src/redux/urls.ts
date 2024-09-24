@@ -96,7 +96,7 @@ get_members:"/Subscription/WorkSpace/GetMembers",
     //setting/Administrations
     getCompayProfiles:"/Core/CompanyProfile/GetCompanyProfile",
     postCompayProfiles:"/Core/CompanyProfile/AddCompanyProfile",
-
+    postBankPosSettings:"/Core/BankPOS/AddCounter",
     //setting/deleteinactive transactions
     deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
 

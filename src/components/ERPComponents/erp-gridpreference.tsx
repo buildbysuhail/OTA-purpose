@@ -4,54 +4,13 @@ import { ArrowLongDownIcon, ArrowLongUpIcon, LockClosedIcon, MagnifyingGlassIcon
 import { capitalizeAndAddSpace, moveArrayElement, removeSpacesAndCapitalize } from "../../utilities/Utils";
 import ERPSubmitButton from "./erp-submit-button";
 import ERPModal from "./erp-modal";
+import { json } from "react-router-dom";
+import { ColumnPreference, DevGridColumn, GridPreference, initialGridPreference } from "../types/dev-grid-column";
+import { getInitialPreference } from "../../utilities/dx-grid-preference-updater";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
-  onApplyPreferences: any;
-}
-const initialColumnPreference: ColumnPreference = {
-  dataField: '',
-  isLocked: false,
-  caption: "Column Header",        // string: the text to display in the header
-  width: 150,                         // number: column width in pixels
-  alignment: 'left',                      // 'left' | 'center' | 'right': text alignment
-  visible: true,                      // boolean: whether the column is visible
-  readOnly: false,                    // boolean: whether the column is read-only
-  fontBold: false,                    // boolean: whether the font is bold
-  fontColor: "#000000",               // string: font color in hex
-  fontSize: 12,   
-  showInPdf: true,                    // number: font size
-  displayOrder: 1                     // number: the order in which the column appears
-};
-interface Preferences {
-  [dataField: string]: ColumnPreference;
-}
-interface ColumnPreference {
-  caption: string;
-  isLocked: boolean;
-  dataField: string;
-  width: number;
-  alignment: 'left' | 'center' | 'right';
-  visible: boolean;
-  readOnly: boolean;
-  fontBold: boolean;
-  fontColor: string;
-  fontSize: number;
-  showInPdf: boolean;
-  displayOrder: number;
-}
-interface GridPreference {
-  font: string;
-  fontSize: number;
-  bold: boolean;
-  rowHeigh: number;
-  alternativeColor: string;
-  backgroundHeadColor: string;
-  foreHeadColor: string;
-  gridLine: string;
-  backgroundColor: string;
-  foreColor: string;
-  columnPreferences: Array<ColumnPreference>;
+  onApplyPreferences: (pref: any) => void;
 }
 
 
@@ -68,24 +27,13 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   const [searchCols, setSearchCols] = useState<String>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   
+
   /* ########################################################################################### */
 
-  // const updateData = () => {
-  //   setReModal(
-  //     columns
-  //       ?.filter((col) => {
-  //         return fields?.find((h: any) => keyConverter(h.key) === col?.id)?.label?.toLowerCase();
-  //         // .includes(searchCols.toLowerCase());
-  //       })
-  //       ?.map((column) => ({ id: column.id, getCanHide: column.getCanHide(), checked: column.getIsVisible() }))
-  //   );
-  // };
-
-  // useEffect(() => {
-  //   updateData();
-  // }, [searchCols, visibilityValues]);
-  /* ########################################################################################### */
-
+  const onChange = (e: any) => {
+    debugger;
+    onApplyPreferences(e);
+  };
   const handleDragStart = (e: any) => {
     dragItem.current = e.target.id;
   };
@@ -96,6 +44,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   };
 
   const handleDropping = (e: any) => {
+    debugger;
     let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragItem.current);
     let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragOverItem.current);
 
@@ -110,75 +59,18 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   };
 
   /* ########################################################################################### */
-  const handleSaveCustomization = () => {
-    if (preferences) {
-      preferences.columnPreferences = preferences?.columnPreferences;
-    }
-    setIsOpen(false);
-  };
+ 
 
   /* ########################################################################################### */
-  const initialGridPreference: GridPreference = {
-    font: "",
-    fontSize: 10,
-    bold: false,
-    rowHeigh: 5,
-    alternativeColor: "rgb(25,118,210,1)",
-    backgroundHeadColor: "rgb(25,118,210,1)",
-    foreHeadColor: "rgb(25,118,210,1)",
-    gridLine: "rgb(25,118,210,1)",
-    backgroundColor: "rgb(25,118,210,1)",
-    foreColor: "rgb(25,118,210,1)",
-    columnPreferences: []
-  };
+  
   
   const [preferences, setPreferences] = useState<GridPreference>(initialGridPreference);
-  useEffect(() => {
-    debugger;
-    const savedPreferences = localStorage.getItem(`gridPreferences_${gridId}`);
-    if (savedPreferences) {
-      const parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
-      const mergedPreferences = new Array<ColumnPreference>();
-       columns ? columns?.forEach((column: DevGridColumn, index: number) => {
-        let columnPreference = parsedPreferences.columnPreferences?.find(c => c.dataField == column.dataField) || getDefaultColumnPreference(column, index)
-        columnPreference.dataField = column.dataField?? removeSpacesAndCapitalize(column.caption??"");
-        mergedPreferences.push(columnPreference)
-      }):new Array<ColumnPreference>();
-      setPreferences((prevPreferences: any) => {
-        return {
-          ...prevPreferences,
-          ...parsedPreferences,
-          columnPreferences: mergedPreferences
-        };
-      });
-    } else {
-      const initialPreferences = new Array<ColumnPreference>();
-      columns? columns?.forEach((column: DevGridColumn, index: number) => {
-        let columnPreference = getDefaultColumnPreference(column, index);
-        columnPreference.dataField = column.dataField?? removeSpacesAndCapitalize(column.caption??"");
-        initialPreferences.push(columnPreference);
-      }): new Array<ColumnPreference>();
-      
-      setPreferences((prevPreferences: any) => {
-        const updatedPreferences = {
-          ...prevPreferences,
-          columnPreferences: initialPreferences
-        };
-        console.log('updatedPreferences');
-        console.log(updatedPreferences);
-        
-        
-        return updatedPreferences;
-      });
-    }
-    console.log('preferences');    
-    console.log(preferences);
-    
-  }, [gridId, columns]);
-  useEffect(() => {
-    console.log('Updated preferences:', preferences);
-  }, [preferences]);
   
+  useEffect(() => {
+    setPreferences(getInitialPreference(gridId,columns));
+
+  }, [gridId, columns, onApplyPreferences]);
+
   const getDefaultColumnPreference = (column: DevGridColumn, index: number): ColumnPreference => ({
     dataField: column.dataField??"",
     isLocked: column.isLocked??false,    
@@ -240,8 +132,10 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
       `gridPreferences_${gridId}`,
       JSON.stringify(preferences)
     );
+    setIsOpen(false);
+    debugger
     // Call the callback function to apply preferences
-    onApplyPreferences(preferences);
+    onChange(preferences);
   };
 
 
@@ -258,8 +152,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
   return (
     <Fragment>
-      <button onClick={()=>setIsOpen(true)} className='ti-btn-primary-full rounded-[2px] '>
-                        <i className="ri-arrow-right-s-fill  "></i>
+      <button onClick={()=>setIsOpen(true)} className='ti-btn rounded-[2px] '>
+                        <i className="ri-apps-line"></i>
                     </button>
        <ERPModal
         isForm
@@ -267,6 +161,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         hasSubmit={false}
         closeTitle="Close"
         title={"Customize Columns"}
+        width="max-w-[80rem]"
         closeModal={() => setIsOpen(false)}
         content={( <div className="px-1 py-3 flex flex-col gap-1">
           <ERPInput
@@ -278,66 +173,129 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             onChange={(e: any) => setSearchCols(e?.target?.value)}
             prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
           />
+            <div className="grid-preference-form">
+            <div className="header-row bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-10 gap-2 items-center">
+            <span className="col-span-3">Column</span>
+            <span>Width</span>
+            <span>Read Only</span>
+            <span>Alignment</span>
+            <span>Font</span>
+            <span>Color</span>
+            <span>Size</span>
+            <span>PDF</span>
+          </div>
           {
           (preferences != undefined && preferences != null && preferences?.columnPreferences != undefined && preferences?.columnPreferences != null)  && preferences?.columnPreferences?.filter((item: any) => item.caption?.toLowerCase()
                 .includes(searchCols.toLowerCase())
-            )
-          ?.map((column: ColumnPreference) => {
+            )?.map((column: ColumnPreference) => {
               return (
                 <div
                   key={column.dataField}
                   id={column.dataField}
-                  className="px-1"
+                  className="px-1 py-1"
                   draggable
                   onDragStart={handleDragStart}
                   onDragEnter={handleDragEnd}
                   onDragEnd={handleDropping}
                 >
+                  
+                  <div className={`bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-10 gap-2 !items-center`}>
+                  <label className="col-span-3 items-center py-1 capitalize text-sm text-slate-800 cursor-move">
+                  ⋮⋮
                   {column?.isLocked ? (
                     <div className="bg-[#F9F9FB] w-full px-1 rounded cursor-move">
                       <div className="flex gap-2 py-1 text-sm capitalize text-slate-800 items-center ">
-                        ⋮⋮
-                        <LockClosedIcon className=" h-3 w-3" />
+                         <LockClosedIcon className=" h-3 w-3" />
                         <span className="cursor-pointer">{column?.caption}</span>
                       </div>
                     </div>
                   ) : (
-                    <div className={`bg-[#F9F9FB] w-full px-1 rounded `}>
-                      <label className="flex gap-2 items-center py-1 capitalize text-sm text-slate-800 cursor-move">
-                        ⋮⋮
+                      
                         <input
                           type="checkbox"
                           className="cursor-pointer"
-                          disabled={!column?.isLocked}
-                          onChange={(e) => handleColumnPreferenceChange(column.dataField, 'visible' ,e.target.checked)}
+                          disabled={column?.isLocked}
+                          onChange={(e) => {debugger; handleColumnPreferenceChange(column.dataField, 'visible' ,e.target.checked)}}
                           checked={column?.visible}
-                          // {...{
-                          //   type: "checkbox",
-                          //   // checked: column.getIsVisible(),
-                          //   // onChange: column.getToggleVisibilityHandler(),
-                          //   // disabled: !column.getCanHide(),
-                          // }}
                         />
-                        <span className="cursor-pointer">{column?.caption}</span>
+                        )}
                       </label>
-                    </div>
-                  )}
+                   
+                        <input 
+                          type="number"
+                          value={column.width || ''}
+                          onChange={(e) => handleColumnPreferenceChange(column.dataField, 'width', parseInt(e.target.value) || undefined)}
+                          disabled={column.isLocked}
+                          className="border rounded p-1 w-16 mh-[27px]"
+                        />
+                         <input 
+            type="checkbox"
+            className="cursor-pointer mh-[27px]"
+            disabled={column.isLocked}
+            checked={column.readOnly}
+            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'readOnly', e.target.checked)}
+          />
+          <select
+            value={column.alignment}
+            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'alignment', e.target.value as 'left' | 'center' | 'right')}
+            disabled={column.isLocked}
+            className="border rounded p-1 mh-[27px] !text-sm"
+          >
+            <option value="left">Left</option>
+            <option value="center">Center</option>
+            <option value="right">Right</option>
+          </select>
+          <input className="mh-[27px]"
+            type="checkbox"
+            checked={column.fontBold}
+            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontBold', e.target.checked)}
+            disabled={column.isLocked}
+          />
+          <input 
+            type="color"
+            value={column.fontColor}
+            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontColor', e.target.value)}
+            disabled={column.isLocked}
+            className="w-8 h-8 mh-[27px]"
+          />
+          <input 
+            type="number"
+            value={column.fontSize}
+            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontSize', parseInt(e.target.value) || 12)}
+            disabled={column.isLocked}
+            className="border rounded p-1 w-12 mh-[27px]"
+          />
+          <input className="mh-[27px]"
+            type="checkbox"
+            checked={column.showInPdf}
+            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'showInPdf', e.target.checked)}
+            disabled={column.isLocked}
+          />
+                      
+                 
+                </div>
                 </div>
               );
-            })}
+              
+              })
+            }
+              
           <div className="flex gap-10 justify-between py-3 border-t mt-5">
-            <ERPSubmitButton type="button" onClick={handleSaveCustomization}>
+            <ERPSubmitButton type="button" onClick={handleApplyPreferences}>
               Save
             </ERPSubmitButton>
             <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28" varient="outline">
               Cancel
             </ERPSubmitButton>
           </div>
-        </div>)}
+        </div>
+        </div>
+      )}
       />
+      
      
     </Fragment>
   );
 };
 
-export default GridPreferenceChooser;
+export default React.memo(GridPreferenceChooser);

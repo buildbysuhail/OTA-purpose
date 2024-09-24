@@ -25,3 +25,10 @@
   padding-left: .5rem !important;
   padding-right: .5rem !important;
 }
+
+.grid-preference-form input {
+  max-height: 27px !important;
+}
+.grid-preference-form select {
+  max-height: 27px !important;
+}

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import UserManagementApis from './User-Management-api';
 import Urls from '../../../redux/urls'
 import ERPGridpreference from '../../../components/ERPComponents/erp-gridpreference';
@@ -31,9 +31,12 @@ import { exportDataGrid as exportToPdf } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
 import { Link } from 'react-router-dom';
 import GridPreferenceChooser from '../../../components/ERPComponents/erp-gridpreference';
+import { applyGridColumnPreferences, getInitialPreference } from '../../../utilities/dx-grid-preference-updater';
+import { DevGridColumn, GridPreference } from '../../../components/types/dev-grid-column';
 
 const UserTypes = () => {
     const [gridHeight, setGridHeight] = useState<number>(500);
+    const [gridId, setGridId] = useState<string>('userTypes');
     const [showGridPreference,setShowGridPreference] = useState<boolean>(false)
     useEffect(() => {
       let wh = window.innerHeight;
@@ -47,16 +50,17 @@ const UserTypes = () => {
     const columns: DevGridColumn[] = [
       {
         dataField: 'userTypeName',
-        caption: 'User Type Name',
+        caption: 'User Type',
         dataType: 'string',
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 200,
+        minWidth: 200, 
+        isLocked : true
       },
       {
         dataField: 'userTypeCode',
-        caption: 'User Type Code',
+        caption: 'Code',
         dataType: 'string',
         allowSearch: true,
         allowFiltering: true,
@@ -94,7 +98,23 @@ const UserTypes = () => {
       }
     ];
     
-  
+    const [gridCols, setGridCols] = useState<DevGridColumn[]>();
+    const [preferences, setPreferences] = useState<GridPreference>();
+    useEffect(() => {
+      debugger;
+      if(gridId != '' && columns != undefined && columns != null)
+      {
+        onApplyPreferences(getInitialPreference(gridId,columns));
+      }
+    },[gridId])
+    const onApplyPreferences = useCallback((pref: GridPreference) => {
+      debugger;
+      // Your logic to handle preference changes
+      // For example:
+      setPreferences(pref);
+      const updatedColumns = applyGridColumnPreferences(columns, pref);
+      setGridCols(updatedColumns);
+    }, [columns]); // Add any other dependencies here
     const store = new CustomStore({
       // key: "Id",
       async load(loadOptions: any) {
@@ -168,7 +188,7 @@ const UserTypes = () => {
       }
       
     };
-   const allowedPageSizes =  [10, 20, 50, 100];
+   
    return (
     <Fragment>
       
@@ -207,7 +227,7 @@ const UserTypes = () => {
                  allowColumnReordering={true}
                  onExporting={onExporting}
                  allowColumnResizing ={true}
-                 columns={columns}
+                 columns={gridCols}
                 >
                   <ColumnFixing enabled={true}/>
                   <Scrolling  mode="standard" />
@@ -224,10 +244,7 @@ const UserTypes = () => {
                  <Toolbar>
                  <Item location="before">
                     <div className='flex  flex-col'>
-                   <div>
-                   <GridPreferenceChooser columns={columns} gridId='ds' onApplyPreferences={() => {}}></GridPreferenceChooser>
-                    </div>
-                   <div className="box-title">
+                   <div className="box-title !text-xl !font-medium">
                     UserType{" "}
                    </div>
                   
@@ -236,8 +253,15 @@ const UserTypes = () => {
                       <Item name="exportButton" />
                       <Item name="searchPanel" /> 
                       {/* <Item name="exportButton" /> */}
-                      <Item name="columnChooserButton" />
+                      <Item>
+                    <div className='flex  flex-col'>
+                   <div>
+                   <GridPreferenceChooser columns={columns} gridId={gridId} onApplyPreferences={(pref: any) => {onApplyPreferences(pref)}}></GridPreferenceChooser>
+                    </div>
+                    </div>
+                </Item>
                 <Item >
+                  
                 <div>
                 <Link to="#" className='ti-btn-primary-full ti-btn ti-btn-full '>
                  Add<i className="ri-user-add-line"></i>
@@ -254,7 +278,7 @@ const UserTypes = () => {
       </div>
     </div>
        {/* Render ERPGridpreference modal if showGridPreference is true */}
-       {showGridPreference && <ERPGridpreference onClose={() => setShowGridPreference(false)} />}
+       {/* {showGridPreference && <ERPGridpreference onClose={() => setShowGridPreference(false)} />} */}
   </Fragment>
   )
 }

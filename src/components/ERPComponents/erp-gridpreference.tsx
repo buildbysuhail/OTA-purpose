@@ -174,14 +174,10 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
           />
             <div className="grid-preference-form">
-            <div className="header-row bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-10 gap-2 items-center">
-            <span className="col-span-3">Column</span>
+            <div className="header-row bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-5 gap-2 items-center">
+            <span className="col-span-2">Column</span>
             <span>Width</span>
             <span>Read Only</span>
-            <span>Alignment</span>
-            <span>Font</span>
-            <span>Color</span>
-            <span>Size</span>
             <span>PDF</span>
           </div>
           {
@@ -199,8 +195,8 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                   onDragEnd={handleDropping}
                 >
                   
-                  <div className={`bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-10 gap-2 !items-center`}>
-                  <label className="col-span-3 items-center py-1 capitalize text-sm text-slate-800 cursor-move">
+                  <div className={`bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 gap-2 !items-center`}>
+                  <label className="col-span-2 items-center py-1 capitalize text-sm text-slate-800 cursor-move">
                   ⋮⋮
                   {column?.isLocked ? (
                     <div className="bg-[#F9F9FB] w-full px-1 rounded cursor-move">
@@ -211,13 +207,16 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                     </div>
                   ) : (
                       
+                        <>
                         <input
                           type="checkbox"
-                          className="cursor-pointer"
+                          className="cursor-pointer  pl-2"
                           disabled={column?.isLocked}
                           onChange={(e) => {debugger; handleColumnPreferenceChange(column.dataField, 'visible' ,e.target.checked)}}
                           checked={column?.visible}
                         />
+                        <span className="cursor-pointer pl-2">{column?.caption}</span>
+                        </>
                         )}
                       </label>
                    
@@ -234,36 +233,6 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             disabled={column.isLocked}
             checked={column.readOnly}
             onChange={(e) => handleColumnPreferenceChange(column.dataField, 'readOnly', e.target.checked)}
-          />
-          <select
-            value={column.alignment}
-            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'alignment', e.target.value as 'left' | 'center' | 'right')}
-            disabled={column.isLocked}
-            className="border rounded p-1 mh-[27px] !text-sm"
-          >
-            <option value="left">Left</option>
-            <option value="center">Center</option>
-            <option value="right">Right</option>
-          </select>
-          <input className="mh-[27px]"
-            type="checkbox"
-            checked={column.fontBold}
-            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontBold', e.target.checked)}
-            disabled={column.isLocked}
-          />
-          <input 
-            type="color"
-            value={column.fontColor}
-            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontColor', e.target.value)}
-            disabled={column.isLocked}
-            className="w-8 h-8 mh-[27px]"
-          />
-          <input 
-            type="number"
-            value={column.fontSize}
-            onChange={(e) => handleColumnPreferenceChange(column.dataField, 'fontSize', parseInt(e.target.value) || 12)}
-            disabled={column.isLocked}
-            className="border rounded p-1 w-12 mh-[27px]"
           />
           <input className="mh-[27px]"
             type="checkbox"

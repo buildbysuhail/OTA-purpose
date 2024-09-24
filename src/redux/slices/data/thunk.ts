@@ -15,3 +15,8 @@ export const currencies = createAsyncThunk('app/currencies', async () => {
   const response = await api.get(Urls.currency);  
   return response;
 });
+
+export const usertypecompo = createAsyncThunk('app/usertypecompo', async () => {
+  const response = await api.get(Urls.getUserTypeCompo);  
+  return response;
+});

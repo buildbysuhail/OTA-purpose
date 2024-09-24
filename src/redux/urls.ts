@@ -91,6 +91,9 @@ get_members:"/Subscription/WorkSpace/GetMembers",
  //setting
     //setting/userManagement
     getUserSubscriped:"/Subscription/User/GetUsersForGrid",
+    postUserSubscriped:'/Subscription/User/AddUser',
+    getUserTypeCompo:'/Subscription/User/GetUserTypeCombo',
+    getUserSubscripeByName:'/Subscription/User/GetUser/:id?',
     getUserTypes:"/Core/UserType/GetUsersTypeForGrid",
     postUserTypes:"/Core/UserType/AddUserType",
     //setting/Administrations

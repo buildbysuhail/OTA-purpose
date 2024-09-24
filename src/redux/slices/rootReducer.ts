@@ -10,6 +10,7 @@ import CountriesDataReducer from "./data/country-reducer";
 import IndustriesReducer from "./data/industry-reducer";
 import CurenciesReducer from "./data/currency-reducer";
 import UserSessionReducer from "./user-session/reducer";
+import usertypecompoReducer from "./data/usertypecompo-reducer";
 const crudModuleSlices = CreateCrudModuleSlices(CrudConfig);
 
 // const rootReducer = combineReducers({
@@ -33,6 +34,7 @@ const rootReducer = {
   CountriesData: CountriesDataReducer,
   Industries: IndustriesReducer,
   Curencies: CurenciesReducer,
+  Usertypecompo: usertypecompoReducer,
   UserSession: UserSessionReducer
 };
 

@@ -28,12 +28,18 @@ import { saveAs } from 'file-saver';
 import { exportDataGrid as exportToPdf } from 'devextreme/pdf_exporter';
 import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import ERPModal from '../../../components/ERPComponents/erp-modal';
+import { PopUpModalAddUser, PopUpModalEditUser } from './userManagement-manage';
 
 
 
 const Users = () => {
   const [gridHeight, setGridHeight] = useState<number>(500);
+  const {t} = useTranslation();
   const [gridpreference,setGridpreference] = useState<boolean>(false)
+  const [isOpenAddUser,setIsOpenAddUser] =useState<boolean>(false)
+  const [isOpenEditUser,setIsOpenEditUser] =useState<boolean>(false)
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeight = wh - 180;
@@ -295,30 +301,74 @@ const Users = () => {
                    return (
                   <div className="action-field">
                  
-                  <Link to="#">
+                  <span >
                     <i className="ri-eye-2-line  view-icon" title="View"></i>
-                  </Link>
+                  </span>
                  
-                  <Link to="#">
+                  <span onClick={()=>setIsOpenEditUser(!isOpenEditUser)}>
                   <i className="ri-edit-line edit-icon" title="Edit"></i>
-                  </Link>
+                  </span>
 
-                  <Link to="#">
+                  <span >
                   <i className="ri-delete-bin-5-line delete-icon" title="Edit"></i>
-                  </Link>
+                  </span>
                   
                   </div>
                     );
                     }}
                 />
                  <Toolbar>
+                 <Item location="before">
+                    <div className='flex  flex-col'>
+                   <div className="box-title !text-xl !font-medium">
+                    User{" "}
+                   </div>
+                  
+                   </div>
+                </Item>
                       <Item name="exportButton" />
                       <Item name="searchPanel" /> 
                       {/* <Item name="exportButton" /> */}
                       <Item name="columnChooserButton" />
-                    
+                <Item >
+                <div>
+                <span onClick={()=>setIsOpenAddUser(!isOpenAddUser)}
+                 className='ti-btn-primary-full ti-btn ti-btn-full '>
+                {t('Add')}<i className="ri-user-add-line"></i>
+                </span>
+              </div>
+                </Item>  
                 </Toolbar>
                 </DataGrid>
+
+                <ERPModal
+                isOpen={isOpenAddUser}
+                title={"Add Users"}
+
+                isForm={true}
+                closeModal={() => {
+                  // setPostDataEmail(initialEmailData);
+                  setIsOpenAddUser(false);
+                }}
+                 content={
+                  <PopUpModalAddUser setIsOpenAddUser={setIsOpenAddUser} />
+                }
+              />
+
+                <ERPModal
+                isOpen={isOpenEditUser}
+                title={"Add Users"}
+                width="!max-w-[80rem]"
+                isForm={true}
+                closeTitle="Close"
+                closeModal={() => {
+                  // setPostDataEmail(initialEmailData);
+                  setIsOpenEditUser(false);
+                }}
+                 content={
+                  <PopUpModalEditUser setIsOpenEditUser={setIsOpenEditUser} />
+                }
+              />
   </Fragment>
   )
 }

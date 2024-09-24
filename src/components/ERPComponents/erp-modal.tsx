@@ -34,7 +34,7 @@ const ERPModal = ({
   hasTopCloseButton = false,
   closeTitle = "Cancel",
   className,
-  width,
+  width = "w-full",
   closeOnSubmit = true,
   disableOutsideClickClose = true, // Default to true
 }: ERPModalProps) => {
@@ -67,7 +67,7 @@ const ERPModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 <DialogPanel
-                  className={`w-full transform rounded-md bg-white px-5 py-3 text-left align-middle shadow-xl transition-all ${width}`}
+                  className={`transform rounded-md bg-white px-5 py-3 text-left align-middle shadow-xl transition-all ${width}`}
                 >
                   <DialogTitle as="h3" className="text-lg border-b py-3 font-medium leading-6 text-gray-900 flex justify-between">
                     {title}{" "}

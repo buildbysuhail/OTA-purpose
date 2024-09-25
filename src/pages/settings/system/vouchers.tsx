@@ -1,28 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import UserManagementApis from './User-Management-api';
-import Urls from '../../../redux/urls'
-import ERPGridpreference from '../../../components/ERPComponents/erp-gridpreference';
-import { DataGrid } from "devextreme-react";
-import {
-  Column,
-  FilterRow,
-  HeaderFilter,
-  Paging,
-  Scrolling,
-  SearchPanel,
-  DataGridTypes,
-  ColumnFixing,
-  ColumnChooser,
-  Selection,
-  Grouping,
-  Toolbar,
-  Item,
-  LoadPanel,
-  Export,
-} from "devextreme-react/cjs/data-grid";
-
-import { Column as DevColumn } from 'devextreme-react/data-grid';
-import Button from 'devextreme-react/button';
+import React, { useCallback, useEffect, useState } from 'react'
 import CustomStore from "devextreme/data/custom_store";
 import { jsPDF } from 'jspdf';
 import { Workbook } from 'exceljs';
@@ -34,10 +10,30 @@ import GridPreferenceChooser from '../../../components/ERPComponents/erp-gridpre
 import { applyGridColumnPreferences, getInitialPreference } from '../../../utilities/dx-grid-preference-updater';
 import { DevGridColumn, GridPreference } from '../../../components/types/dev-grid-column';
 import ERPModal from '../../../components/ERPComponents/erp-modal';
-import { PopUpModalAddUserTypes } from './userManagement-manage';
+import UserManagementApis from '../userManagement/User-Management-api';
+import {
+    Column,
+    FilterRow,
+    HeaderFilter,
+    Paging,
+    Scrolling,
+    SearchPanel,
+    DataGridTypes,
+    ColumnFixing,
+    ColumnChooser,
+    Selection,
+    Grouping,
+    Toolbar,
+    Item,
+    LoadPanel,
+    Export,
+  } from "devextreme-react/cjs/data-grid";
+import { DataGrid } from '@mui/x-data-grid';
+import { useTranslation } from 'react-i18next';
 
-const UserTypes = () => {
+const SystemVoucher = () => {
     const [gridHeight, setGridHeight] = useState<number>(500);
+    const {t} = useTranslation();
     const [gridId, setGridId] = useState<string>('userTypes');
     const [isOpenAddPop,setIsOpenAddPop] = useState<boolean>(false)
     useEffect(() => {
@@ -117,6 +113,7 @@ const UserTypes = () => {
       const updatedColumns = applyGridColumnPreferences(columns, pref);
       setGridCols(updatedColumns);
     }, [columns]); // Add any other dependencies here
+
     const store = new CustomStore({
       // key: "Id",
       async load(loadOptions: any) {
@@ -190,111 +187,94 @@ const UserTypes = () => {
       }
       
     };
-   
-   return (
-    <Fragment>
-      
-    <div className="grid grid-cols-12 gap-x-6">
-      <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-        
-          <div className="box custom-box">
-            {/* <div className="box-header justify-between">
-              <div className="box-title">
-                UserType{" "}
-              
-                
+    return (
+        <>
+          
+        <div className="grid grid-cols-12 gap-x-6">
+          <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+            
+              <div className="box custom-box">
+               
+                <div className="box-body">
+                  <div className="grid grid-cols-1 gap-3">
+    
+                    <DataGrid
+                       height={gridHeight}
+                       dataSource={store}
+                       className="custom-data-grid"
+                       showBorders={true}
+                       remoteOperations={true}
+                       showColumnLines={false}
+                       showRowLines={true}
+                       allowColumnReordering={true}
+                       onExporting={onExporting}
+                       allowColumnResizing={true}
+                       columns={gridCols}
+                    >
+                      
+                      <Scrolling  mode="standard" />
+                      <FilterRow visible={true} />
+                      <SearchPanel visible={true} />
+                      {/* <HeaderFilter visible={true} /> */}
+                      <Paging defaultPageSize={100} />
+                      <ColumnChooser enabled={true} />
+                      {/* <LoadPanel enabled={false} /> */}
+                      <ColumnFixing enabled={true} />
+                      <Selection mode="single" />
+                      <Export enabled={true} formats={exportFormats} allowExportSelectedData={false} />
+                      
+                     <Toolbar>
+                     <Item location="before">
+                        <div className='flex  flex-col'>
+                       <div className="box-title !text-xl !font-medium">
+                       {t('Voucher')}{" "}
+                       </div>
+                      
+                       </div>
+                    </Item>
+                          <Item name="exportButton" />
+                          <Item name="searchPanel" /> 
+                          {/* <Item name="exportButton" /> */}
+                          <Item>
+                        <div className='flex  flex-col'>
+                       <div>
+                       <GridPreferenceChooser columns={columns} gridId={gridId} onApplyPreferences={(pref: any) => {onApplyPreferences(pref)}}></GridPreferenceChooser>
+                        </div>
+                        </div>
+                    </Item>
+                    <Item >
+                      
+                    <div>
+                    <span  onClick={()=>setIsOpenAddPop(!isOpenAddPop)}
+                    className='ti-btn-primary-full ti-btn ti-btn-full '>
+                      {t('Add')}<i className="ri-user-add-line"></i>
+                    </span>
+                    
+                  </div>
+                    </Item>   
+                    </Toolbar>
+                    </DataGrid>
+                  </div>
+                </div>
               </div>
-              <div>
-                <Link to="#" className='ti-btn-primary-full ti-btn ti-btn-full '>
-                 usertype <i className="ri-user-add-line"></i>
-                </Link>
-                
-              </div>
-            </div> */}
-            <div className="box-body">
-              <div className="grid grid-cols-1 gap-3">
-
-                <DataGrid
-                  height={gridHeight}
-                  dataSource={
-                    store
-                  
-                  }
-                 className="custom-data-grid"
-                  showBorders={true}
-                  remoteOperations={true}
-                  showColumnLines={false}
-                  showRowLines={true}
-                //  columnAutoWidth={true}
-                 allowColumnReordering={true}
-                 onExporting={onExporting}
-                 allowColumnResizing ={true}
-                 columns={gridCols}
-                >
-                  <ColumnFixing enabled={true}/>
-                  <Scrolling  mode="standard" />
-                  <FilterRow visible={true} />
-                  <SearchPanel visible={true} />
-                  {/* <HeaderFilter visible={true} /> */}
-                  <Paging defaultPageSize={100} />
-                  <ColumnChooser enabled={true} />
-                  <LoadPanel enabled={false} />
-                  <ColumnFixing enabled={true} />
-                  <Selection mode="single" />
-                  <Export enabled={true} formats={exportFormats} allowExportSelectedData={false} />
-                  
-                 <Toolbar>
-                 <Item location="before">
-                    <div className='flex  flex-col'>
-                   <div className="box-title !text-xl !font-medium">
-                    UserType{" "}
-                   </div>
-                  
-                   </div>
-                </Item>
-                      <Item name="exportButton" />
-                      <Item name="searchPanel" /> 
-                      {/* <Item name="exportButton" /> */}
-                      <Item>
-                    <div className='flex  flex-col'>
-                   <div>
-                   <GridPreferenceChooser columns={columns} gridId={gridId} onApplyPreferences={(pref: any) => {onApplyPreferences(pref)}}></GridPreferenceChooser>
-                    </div>
-                    </div>
-                </Item>
-                <Item >
-                  
-                <div>
-                <span  onClick={()=>setIsOpenAddPop(!isOpenAddPop)}
-                className='ti-btn-primary-full ti-btn ti-btn-full '>
-                 Add<i className="ri-user-add-line"></i>
-                </span>
-                
-              </div>
-                </Item>   
-                </Toolbar>
-                </DataGrid>
-              </div>
-            </div>
+         
           </div>
-     
-      </div>
-    </div>
-             <ERPModal
-                isOpen={isOpenAddPop}
-                title={"Add UserType"}
-                width='max-w-[800px]'
-                isForm={true}
-                closeModal={() => {
-                  
-                  setIsOpenAddPop(false);
-                }}
-                 content={
-                  <PopUpModalAddUserTypes setIsOpenAddPop={setIsOpenAddPop} />
-                }
-              />
-  </Fragment>
-  )
+        </div>
+                 <ERPModal
+                    isOpen={isOpenAddPop}
+                    title={"Add UserType"}
+                    width='max-w-[800px]'
+                    isForm={true}
+                    closeModal={() => {
+                      
+                      setIsOpenAddPop(false);
+                    }}
+                     content={'hello'
+                    //   <PopUpModalAddUserTypes setIsOpenAddPop={setIsOpenAddPop} />
+                    }
+                  />
+      </>
+      )
 }
 
-export default UserTypes
+export default SystemVoucher

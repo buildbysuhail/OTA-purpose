@@ -24,7 +24,7 @@ const Urls = {
   currency: "/core/data/Currencies/",
   industry: "/core/data/Industries/",
   state: "/Subscription/auth/MigrateCRMDb/",
-
+  Ledger:"/Core/Counter/SelectAccLedgersForComboByAccType",
   // Auth
 
   login: "/login/",
@@ -93,7 +93,9 @@ get_members:"/Subscription/WorkSpace/GetMembers",
     getUserSubscriped:"/Subscription/User/GetUsersForGrid",
     postUserSubscriped:'/Subscription/User/AddUser',
     getUserTypeCompo:'/Subscription/User/GetUserTypeCombo',
-    getUserSubscripeByName:'/Subscription/User/GetUser/:id?',
+    getEmployeeCompo:'/Subscription/User/GetEmployeeCombo',
+    getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
+    patchUserSubscriped:'/Subscription/User/EditUser',
     getUserTypes:"/Core/UserType/GetUsersTypeForGrid",
     postUserTypes:"/Core/UserType/AddUserType",
     //setting/Administrations
@@ -104,7 +106,9 @@ get_members:"/Subscription/WorkSpace/GetMembers",
     deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
 
     //setting/system
-    getSystemCounters:"/Core/Counter/GetCounterForGrid"
+    getSystemCounters:"/Core/Counter/GetCounterForGrid",
+    postSystemCounters:"/Core/Counter/AddCounter",
+   
 };
 
 export default Urls;

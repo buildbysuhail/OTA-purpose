@@ -6,7 +6,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import UserManagementApis from './User-Management-api';
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
-import { countries, usertypecompo } from "../../../redux/slices/data/thunk";
+import { countries, employeecompo, usertypecompo } from "../../../redux/slices/data/thunk";
 
 //add popup for userType grid
 export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
@@ -17,7 +17,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
     const [postUserType,setPostUserType]= useState(initaialUserTypeData);
     const [postUserTypeLoading, setPostUserTypeLoading] = useState<boolean>(false);
 
-    const addUserType =useCallback(async () => {
+ const addUserType =useCallback(async () => {
   
   setPostUserTypeLoading(true);
 
@@ -37,7 +37,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
 }, [ postUserType?.data]);
 
     return (
-      <div className="w-full pt-4">
+      <div className="w-full p-8">
        
           <div className="grid grid-cols-1 gap-3">
             <ERPInput
@@ -108,7 +108,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
             setIsOpenAddPop(false);
             //   setPostDataEmail({initialEmailData});
             }}
-            // disabled={emailLoading}
+            disabled={postUserTypeLoading}
           ></ERPButton>
           <ERPButton
             type="button"
@@ -156,7 +156,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
 }, [ postUser?.data]);
 
     return (
-      <div className="p-10">
+      <div className="w-full p-5">
        
           <div className="grid  grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
             <ERPInput
@@ -192,12 +192,12 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                           ...prev,
                           data: {
                             ...data,
-                            counterID: Number(data.counterID),
+                            counterID: data.counterID,
                            
                           },
                         }))
                       }}
-                    //   validation={postsetPostUser.validations.machineBrand}
+                      validation={postUser.validations.counterID}
                       data={postUser?.data}
                       defaultData={postUser?.data}
                       value={postUser != undefined && postUser?.data != undefined && postUser?.data?.counterID != undefined ? postUser?.data?.counterID : 0}
@@ -253,16 +253,21 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       thunkAction= {usertypecompo}
                       reducer="Usertypecompo"
                       onChangeData={(data: any) => {
-                        
-                        setPostUser((prev: any) => ({
-                          ...prev,
-                          data: data
-                        }))
+                        // Update only the userTypeCode field
+                        setPostUser((prevData: any) => ({
+                          
+                          ...prevData,
+                          data: {
+                            ...prevData.data,
+                            
+                            userTypeCode: data.value,
+                          },
+                        }));
                       }}
-                    //   validation={postsetPostUser.validations.machineBrand}
+                      // validation={postUser.validations.userTypeCode}
                       data={postUser?.data}
                       defaultData={postUser?.data}
-                      value={postUser != undefined && postUser?.data != undefined && postUser?.data?.userTypeCode != undefined ? postUser?.data?.userTypeCode : 0}
+                      value={postUser?.data?.userTypeCode || ""} 
                       label="userTypeCode"
                     />
 
@@ -273,24 +278,20 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       field={{
                         id: "employeeID",
                         required: true,
-                        getListUrl: Urls.country,
-                        valueKey: "id",
-                        labelKey: "name",
+                        getListUrl: Urls.getEmployeeCompo,
+                        valueKey: "employeeID",
+                        labelKey: "employeeName",
                       }}
-                      thunkAction= {countries}
-                      reducer="CountriesData"
+                      thunkAction= {employeecompo}
+                      reducer="Employeecompo"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({
                           ...prev,
-                          data: {
-                            ...data,
-                            employeeID: Number(data.employeeID),
-                           
-                          },
+                          data: data,
                         }))
                       }}
-                    //   validation={postsetPostUser.validations.machineBrand}
+                      // validation={postUser.validations.employeeID}
                       data={postUser?.data}
                       defaultData={postUser?.data}
                       value={postUser != undefined && postUser?.data != undefined && postUser?.data?.employeeID != undefined ? postUser?.data?.employeeID : 0}
@@ -440,7 +441,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
 }, [ postUser?.data]);
 
     return (
-      <div className="max-w-[300px] p-5">
+      <div className="w-full p-5">
        
           <div className="grid  grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
             <ERPInput
@@ -525,17 +526,17 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
               validation={postUser?.validations?.confromPassword}
             />
 
-                  < ERPDataCombobox
+                    < ERPDataCombobox
                       id="userTypeCode"
                       field={{
                         id: "userTypeCode",
                         required: true,
                         getListUrl: Urls.getUserTypeCompo,
-                        valueKey: "id",
-                        labelKey: "name",
+                        valueKey: "userTypeCode",
+                        labelKey: "userTypeName",
                       }}
                       thunkAction= {usertypecompo}
-                      reducer="CountriesData"
+                      reducer="Usertypecompo"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({
@@ -550,18 +551,19 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       label="userTypeCode"
                     />
 
+
                     
                   < ERPDataCombobox
                       id="employeeID"
                       field={{
                         id: "employeeID",
                         required: true,
-                        getListUrl: Urls.country,
-                        valueKey: "id",
-                        labelKey: "name",
+                        getListUrl: Urls.getEmployeeCompo,
+                        valueKey: "employeeID",
+                        labelKey: "employeeName",
                       }}
-                      thunkAction= {countries}
-                      reducer="CountriesData"
+                      thunkAction= {employeecompo}
+                      reducer="Employeecompo"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({
@@ -579,7 +581,6 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       value={postUser != undefined && postUser?.data != undefined && postUser?.data?.employeeID != undefined ? postUser?.data?.employeeID : 0}
                       label="employeeID"
                     />
-
               <ERPInput
               id="maxDecimalPerAllowed"
               label="maxDecimalPerAllowed"

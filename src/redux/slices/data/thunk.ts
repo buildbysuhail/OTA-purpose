@@ -20,3 +20,13 @@ export const usertypecompo = createAsyncThunk('app/usertypecompo', async () => {
   const response = await api.get(Urls.getUserTypeCompo);  
   return response;
 });
+
+export const employeecompo = createAsyncThunk('app/employeecompo', async () => {
+  const response = await api.get(Urls.getEmployeeCompo);  
+  return response;
+});
+
+export const ledgercompo = createAsyncThunk('app/ledgercompo', async () => {
+  const response = await api.get(Urls.Ledger);  
+  return response;
+});

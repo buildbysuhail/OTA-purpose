@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { usertypecompo } from "./thunk";
+import { employeecompo } from "./thunk";
 
 
 interface Country {
@@ -13,29 +13,29 @@ interface Country {
 // Define the initial state
 const initialState: Country[] = [];
 
-const userTypeDataSlice = createSlice({
-  name: 'userTypeData',
+const employeeDataSlice = createSlice({
+  name: 'employeeData',
   initialState,
   reducers: {
     // You can add any synchronous reducers here if needed
   },
   extraReducers: (builder) => {
     builder
-      .addCase( usertypecompo.pending, (state) => {
+      .addCase( employeecompo.pending, (state) => {
         // You can set a loading state here if needed
       })
-      .addCase( usertypecompo.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase( employeecompo.fulfilled, (state, action: PayloadAction<any>) => {
         
         // Replace the entire state with the new data
         return action.payload;
         
       })
-      .addCase( usertypecompo.rejected, (state, action) => {
+      .addCase( employeecompo.rejected, (state, action) => {
         // Handle the error state here if needed
       });
   },
 });
 
-export const {} = userTypeDataSlice.actions;
+export const {} = employeeDataSlice.actions;
 
-export default userTypeDataSlice.reducer;
+export default employeeDataSlice.reducer;

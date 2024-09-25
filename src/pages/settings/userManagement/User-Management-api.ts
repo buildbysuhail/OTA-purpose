@@ -3,7 +3,7 @@ import Urls from "../../../redux/urls";
 
 const api = new APIClient();
 const UserManagementApis = {
-
+//user grid
   getSessions: async (loadOptions: any) => {
     try {
       
@@ -23,7 +23,28 @@ const UserManagementApis = {
       return '';
     }
   },
+  getUserSessionsByName: async (loadOptions: any) => {
+    try {
+      
+      const responseData = await api.get(Urls. getUserSubscripeByName+name);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return {};
+    }
+  },
 
+  editUserSessions: async (data: any) => {
+    try {
+      const responseData = await api.patch(Urls.patchUserSubscriped, data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
+
+  //user type grid
   getUserTypeSessions: async (loadOptions: any) => {
     try {
       
@@ -44,24 +65,7 @@ const UserManagementApis = {
       return '';
     }
   },
-//   getPhone: async () => {
-//     try {
-//       const responseData = await api.getAsync(Urls.getPhone_profile);
-//       return responseData;
-//     } catch (error) {
-//       console.error("Failed to get available agents for DX Grid:", error);
-//       return '';
-//     }
-//   },
-//   getEmail: async () => {
-//     try {
-//       const responseData = await api.getAsync(Urls.getEmail_profile);
-//       return responseData;
-//     } catch (error) {
-//       console.error("Failed to get available agents for DX Grid:", error);
-//       return '';
-//     }
-//   },
+
 //   getUserBasicInfo: async () => {
 //     try {
 //       const responseData = await api.getAsync(Urls.getUserBasicInfo);

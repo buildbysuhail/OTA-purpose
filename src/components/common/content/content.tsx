@@ -18,6 +18,7 @@ import BankPosSettings from '../../../pages/settings/Administration/bank-pos-set
 import SystemVoucher from '../../../pages/settings/system/vouchers';
 import ImportExport from '../../../pages/settings/system/import-export';
 import ResetDatabase from '../../../pages/settings/system/reset-database';
+import FinancialYear from '../../../pages/settings/system/financial-year';
 
 interface ContentProps { }
 const loading = (
@@ -62,6 +63,7 @@ const Content: FC<ContentProps> = () => {
           <Route path="settings/system/vouchers" element={<SystemVoucher/>} />
           <Route path="settings/system/export-import" element={<ImportExport/>} />
           <Route path="settings/system/reset-database"element={<ResetDatabase/>} />
+          <Route path="settings/system/financial-year"element={<FinancialYear/>} />
          
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {

@@ -13,7 +13,7 @@ import UserSessionReducer from "./user-session/reducer";
 import usertypecompoReducer from "./data/usertypecompo-reducer";
 import employeeReducer from "./data/employee-reducer";
 import ledgerReducer from "./data/ledger-reducer";
-const crudModuleSlices = CreateCrudModuleSlices(CrudConfig);
+import PopupDataReducer from "./popup-reducer";
 
 // const rootReducer = combineReducers({
 //     Login: LoginReducer,
@@ -39,7 +39,8 @@ const rootReducer = {
   Usertypecompo: usertypecompoReducer,
   Employeecompo:employeeReducer,
   Ledgercompo:ledgerReducer,
-  UserSession: UserSessionReducer
+  UserSession: UserSessionReducer,
+  PopupData: PopupDataReducer
 };
 
 export default rootReducer;

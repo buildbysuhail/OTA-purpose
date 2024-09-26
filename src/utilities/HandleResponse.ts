@@ -1,7 +1,7 @@
 import { ResponseModel } from "../base/response-model";
 import SBToast from "../components/ERPComponents/erp-toast";
 
-export const handleResponse = (res: any, action?: () => void) => {
+export const handleResponse = (res: any, action?: () => void, failAction?: () => void) => {
   if (res != undefined && res != null) {
     if (res?.isOk != undefined && res?.isOk != null) {
       if (res.isOk) {
@@ -9,6 +9,7 @@ export const handleResponse = (res: any, action?: () => void) => {
         action && action();
       } else {
         SBToast.showWith(res?.message, "warning");
+        failAction && failAction();
       }
     }
     else
@@ -16,9 +17,11 @@ export const handleResponse = (res: any, action?: () => void) => {
       if (res.message) {
         SBToast.showWith(res?.message, "warning");
       }
+      failAction && failAction();
     }
   }
   else {
+    failAction && failAction();
     SBToast.showWith("Somthing went wrong", "warning");
   }
   

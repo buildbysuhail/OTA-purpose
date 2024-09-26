@@ -10,6 +10,11 @@ import { countries, employeecompo, usertypecompo } from "../../../redux/slices/d
 
 //add popup for userType grid
 export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
+  const dispatch = useDispatch();
+  const onClose = useCallback(async () => {
+    debugger;
+    dispatch(toggleUserTypePopup(false));
+  },[]);
     const initaialUserTypeData = {
         data:{userTypeName:'',userTypeCode:'',remark:''},
         validations:{userTypeName:'',userTypeCode:'',remark:''}
@@ -125,6 +130,11 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
 
   //add page popup for user grid
   export const PopUpModalAddUser = ({ setIsOpenAddUser}:any) => {
+    const onClose = useCallback(async () => {
+      debugger;
+      dispatch(toggleUserTypePopup(false));
+    },[]);
+    const dispatch = useDispatch();
     const initaialUserData = {
         data:{userName:'',counterID:0,Password:'',
           confromPassword:'',userTypeCode:'',
@@ -148,6 +158,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
     ...prevData,
     validations: response.validations
   }));
+  
   // appDispatch(userSession());
   handleResponse(response, () => {});
   if(response.isOk){
@@ -388,10 +399,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
             type="reset"
             title="Cancel"
             variant="secondary"
-            onClick={() => {
-              setIsOpenAddUser(false);
-            //   setPostDataEmail({initialEmailData});
-            }}
+            onClick={onClose}
             // disabled={emailLoading}
           ></ERPButton>
           <ERPButton
@@ -406,8 +414,6 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
       </div>
     );
   };
-
-  //edit page popup for usergrid
 
   export const PopUpModalEditUser = ({ setIsOpenEditUser}:any) => {
     const initaialUserData = {

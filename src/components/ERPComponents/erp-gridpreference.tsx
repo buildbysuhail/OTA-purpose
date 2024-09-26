@@ -161,7 +161,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
         hasSubmit={false}
         closeTitle="Close"
         title={"Customize Columns"}
-        width="max-w-[80rem]"
+        width="!w-[80rem] !max-w-[60rem]"
         closeModal={() => setIsOpen(false)}
         content={( <div className="px-1 py-3 flex flex-col gap-1">
           <ERPInput
@@ -195,11 +195,11 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                   onDragEnd={handleDropping}
                 >
                   
-                  <div className={`bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 gap-2 !items-center`}>
+                  <div className={`bg-[#F9F9FB] w-full px-1 rounded grid grid-cols-5 !items-center pl-4`}>
                   <label className="col-span-2 items-center py-1 capitalize text-sm text-slate-800 cursor-move">
                   ⋮⋮
                   {column?.isLocked ? (
-                    <div className="bg-[#F9F9FB] w-full px-1 rounded cursor-move">
+                    <div className="bg-[#F9F9FB] w-full px-2 rounded cursor-move">
                       <div className="flex gap-2 py-1 text-sm capitalize text-slate-800 items-center ">
                          <LockClosedIcon className=" h-3 w-3" />
                         <span className="cursor-pointer">{column?.caption}</span>
@@ -210,7 +210,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                         <>
                         <input
                           type="checkbox"
-                          className="cursor-pointer  pl-2"
+                          className="cursor-pointer  ml-[.6rem]"
                           disabled={column?.isLocked}
                           onChange={(e) => {debugger; handleColumnPreferenceChange(column.dataField, 'visible' ,e.target.checked)}}
                           checked={column?.visible}

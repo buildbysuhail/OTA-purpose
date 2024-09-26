@@ -15,6 +15,8 @@ import Branches from '../../../pages/settings/Administration/Branches';
 import DeleteInactiveTransactions from '../../../pages/settings/Administration/delete-inactive-transactions';
 import SystemCounters from '../../../pages/settings/system/counters';
 import BankPosSettings from '../../../pages/settings/Administration/bank-pos-settings';
+import SystemVoucher from '../../../pages/settings/system/vouchers';
+import ImportExport from '../../../pages/settings/system/import-export';
 
 interface ContentProps { }
 const loading = (
@@ -56,6 +58,8 @@ const Content: FC<ContentProps> = () => {
           <Route path="administration/bank-pos-settings" element={<BankPosSettings/>} />
           {/* settings Systems */}
           <Route path="settings/system/counters" element={<SystemCounters/>} />
+          <Route path="settings/system/vouchers" element={<SystemVoucher/>} />
+          <Route path="settings/system/export-import" element={<ImportExport/>} />
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {

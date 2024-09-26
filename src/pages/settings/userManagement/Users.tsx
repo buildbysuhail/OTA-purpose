@@ -40,6 +40,7 @@ const Users = () => {
   const [gridpreference,setGridpreference] = useState<boolean>(false)
   const [isOpenAddUser,setIsOpenAddUser] =useState<boolean>(false)
   const [isOpenEditUser,setIsOpenEditUser] =useState<boolean>(false)
+  const [userName,setUserName]=useState<string>('')
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeight = wh - 180;
@@ -50,6 +51,12 @@ const Users = () => {
     return value !== undefined && value !== null && value !== "";
   }
 
+ const handleEdit = (name:any)=>(
+
+  setIsOpenEditUser(!isOpenEditUser),
+  setUserName(name)
+  
+ ) 
 
   const store = new CustomStore({
     // key: "Id",
@@ -297,7 +304,8 @@ const Users = () => {
                      dataField="actions"
                      caption="Actions"
                      width={100}
-                   cellRender={(cellElement, cellInfo) => {
+                   cellRender={({data}) => {
+                    
                    return (
                   <div className="action-field">
                  
@@ -305,12 +313,12 @@ const Users = () => {
                     <i className="ri-eye-2-line  view-icon" title="View"></i>
                   </span>
                  
-                  <span onClick={()=>setIsOpenEditUser(!isOpenEditUser)}>
+                  <span onClick={()=>handleEdit(data.user)}>
                   <i className="ri-edit-line edit-icon" title="Edit"></i>
                   </span>
 
                   <span >
-                  <i className="ri-delete-bin-5-line delete-icon" title="Edit"></i>
+                  <i className="ri-delete-bin-5-line delete-icon" title="Delete"></i>
                   </span>
                   
                   </div>
@@ -344,7 +352,7 @@ const Users = () => {
                 <ERPModal
                 isOpen={isOpenAddUser}
                 title={"Add Users"}
-
+                 width="max-w-[600px]"
                 isForm={true}
                 closeModal={() => {
                   // setPostDataEmail(initialEmailData);
@@ -357,8 +365,8 @@ const Users = () => {
 
                 <ERPModal
                 isOpen={isOpenEditUser}
-                title={"Add Users"}
-                width="!max-w-[80rem]"
+                title={"Edit Users"}
+                width="max-w-[600px]"
                 isForm={true}
                 closeTitle="Close"
                 closeModal={() => {

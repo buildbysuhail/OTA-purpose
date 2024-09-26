@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react'
 
-import SystemSettingsApi from './settings-apis';
+import SystemSettingsApi from './system-apis';
 import Urls from '../../../redux/urls'
 import ERPGridpreference from '../../../components/ERPComponents/erp-gridpreference';
 import { DataGrid } from "devextreme-react";
@@ -37,6 +37,7 @@ const Counters = () => {
   const {t} = useTranslation();
   const [gridHeight, setGridHeight] = useState<number>(500);
   const [showGridPreference,setShowGridPreference] = useState<boolean>(false)
+  const [isOpenAddPop,setIsOpenAddPop]=useState<boolean>(false)
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeight = wh - 180;
@@ -71,7 +72,7 @@ const Counters = () => {
         const response = await  SystemSettingsApi.getSystemCounters(queryString);
         console.log('response',response);
         debugger
-        const result = response;
+        const result = response.data;
 
         return result !== undefined && result != null
           ? {
@@ -307,7 +308,7 @@ const Counters = () => {
                     </button>
                     </div>
                    <div className="box-title">
-                    UserType{" "}
+                    Counter{" "}
                    </div>
                   
                    </div>
@@ -318,9 +319,10 @@ const Counters = () => {
                       <Item name="columnChooserButton" />
                 <Item >
                 <div>
-                <Link to="#" className='ti-btn-primary-full ti-btn ti-btn-full '>
+                <span onClick={()=>setIsOpenAddPop(!isOpenAddPop)}
+                  className='ti-btn-primary-full ti-btn ti-btn-full '>
                  {t('Add')}<i className="ri-user-add-line"></i>
-                </Link>
+                </span>
                 
               </div>
                 </Item>   
@@ -333,14 +335,15 @@ const Counters = () => {
       </div>
     </div>
     <ERPModal
-                isOpen={false}
-                title={"Update Email"}
+                isOpen={isOpenAddPop}
+                title={"Add Counter"}
                 isForm={true}
+                width='w-[600px] max-w-[800px]'
                 closeModal={() => {
-                  // setPostDataEmail(initialEmailData);
-                  // setIsOpenEmailChange(false);
+                  
+                  setIsOpenAddPop(false)
                 }}
-                content={CounterManage()}
+                content={<CounterManage setIsOpenAddPop={setIsOpenAddPop}/>}
               />
   </Fragment>
   )

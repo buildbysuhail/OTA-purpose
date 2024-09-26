@@ -48,9 +48,7 @@ const ERPButton = ({
 	  
     >
       <div className="flex gap-2 items-center">
-        {startIcon && 
-		<i className="ri-logout-box-r-line"></i>
-		}
+	  {typeof startIcon === 'string' && <i className={startIcon}></i>}
         {title}
         {loading && (
           <div className="flex items-center">

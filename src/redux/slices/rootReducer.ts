@@ -11,6 +11,8 @@ import IndustriesReducer from "./data/industry-reducer";
 import CurenciesReducer from "./data/currency-reducer";
 import UserSessionReducer from "./user-session/reducer";
 import usertypecompoReducer from "./data/usertypecompo-reducer";
+import employeeReducer from "./data/employee-reducer";
+import ledgerReducer from "./data/ledger-reducer";
 import PopupDataReducer from "./popup-reducer";
 
 // const rootReducer = combineReducers({
@@ -35,6 +37,8 @@ const rootReducer = {
   Industries: IndustriesReducer,
   Curencies: CurenciesReducer,
   Usertypecompo: usertypecompoReducer,
+  Employeecompo:employeeReducer,
+  Ledgercompo:ledgerReducer,
   UserSession: UserSessionReducer,
   PopupData: PopupDataReducer
 };

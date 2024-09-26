@@ -7,10 +7,12 @@ import UserManagementApis from './User-Management-api';
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import { countries, employeecompo, usertypecompo } from "../../../redux/slices/data/thunk";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
 
 //add popup for userType grid
 export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const onClose = useCallback(async () => {
     debugger;
     dispatch(toggleUserTypePopup(false));
@@ -110,7 +112,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
             title="Cancel"
             variant="secondary"
             onClick={() => {
-            setIsOpenAddPop(false);
+            // setIsOpenAddPop(false);
             //   setPostDataEmail({initialEmailData});
             }}
             disabled={postUserTypeLoading}
@@ -134,7 +136,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
       debugger;
       dispatch(toggleUserTypePopup(false));
     },[]);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const initaialUserData = {
         data:{userName:'',counterID:0,Password:'',
           confromPassword:'',userTypeCode:'',

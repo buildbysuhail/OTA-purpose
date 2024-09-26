@@ -9,6 +9,7 @@ import ERPModal from '../../../components/ERPComponents/erp-modal';
 import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
 import { useRootState } from '../../../utilities/hooks/useRootState';
 import { PopUpModalAddUserTypes } from './userManagement-manage';
+import { UserTypeManage } from './user-type-manage';
 
 const UserTypes = () => {
   const dispatch = useAppDispatch();
@@ -70,19 +71,6 @@ const UserTypes = () => {
       <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
         
           <div className="box custom-box">
-            {/* <div className="box-header justify-between">
-              <div className="box-title">
-                UserType{" "}
-              
-                
-              </div>
-              <div>
-                <Link to="#" className='ti-btn-primary-full ti-btn ti-btn-full '>
-                 usertype <i className="ri-user-add-line"></i>
-                </Link>
-                
-              </div>
-            </div> */}
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid columns={columns} gridHeader="User Type" dataUrl= {Urls.getUserTypes} gridId='grd_user_type' popupAction={toggleUserTypePopup} gridAddButtonType='popup' gridAddButtonIcon=''></ERPDevGrid>               
@@ -93,16 +81,15 @@ const UserTypes = () => {
       </div>
     </div>
     <ERPModal
-                isOpen={rootState.PopupData.userType}
-                title={"Add New UserType"}
-                isForm={true}
-                closeModal={() => {
-                  // setPostDataEmail(initialEmailData);
-                  dispatch(toggleUserTypePopup(false))
-                }}
-                content={ <PopUpModalAddUserTypes></PopUpModalAddUserTypes>}
-              />
-  </Fragment>
+      isOpen={rootState.PopupData.userType}
+      title={"Add New UserType"}
+      isForm={true}
+      closeModal={() => {
+        dispatch(toggleUserTypePopup(false))
+      }}
+      content={<UserTypeManage/>}
+    />
+   </Fragment>
   )
 }
 

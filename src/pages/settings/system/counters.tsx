@@ -340,7 +340,7 @@ const Counters = () => {
                 isForm={true}
                 width='w-[600px] max-w-[800px]'
                 closeModal={() => {
-                  // setPostDataEmail(initialEmailData);
+                  
                   setIsOpenAddPop(false)
                 }}
                 content={<CounterManage setIsOpenAddPop={setIsOpenAddPop}/>}

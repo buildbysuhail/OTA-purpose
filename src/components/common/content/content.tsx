@@ -7,7 +7,7 @@ import AccountSettingsSessions from '../../../pages/account-settings/account-set
 import AccountSettingsProfile from '../../../pages/account-settings/account-settings-profile';
 import WorkspaceSettingsMembers from '../../../pages/work-space/workspace-settings-members';
 import WorkspaceSettingsSecurity from '../../../pages/work-space/workspace-settings-security';
-import Users from '../../../pages/settings/userManagement/Users';
+// import Users from '../../../pages/settings/userManagement/Users';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserTypes from '../../../pages/settings/userManagement/UserTypes';
 import CompanyProfile from '../../../pages/settings/Administration/Company-Profile'
@@ -49,7 +49,7 @@ const Content: FC<ContentProps> = () => {
           <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
           <Route path="/members" element={<WorkspaceSettingsMembers />} />
           {/* settings user */}
-          <Route path="/user-management/users" element={<Users />} />
+          {/* <Route path="/user-management/users" element={<Users />} /> */}
           <Route path="/user-management/userstypes" element={<UserTypes/>} />
 
           {/* settings Administration */}

@@ -24,7 +24,7 @@ const UserManagementApis = {
     }
   },
 
-  getUserTypeSessions: async (loadOptions: any) => {
+  getUserTypes: async (loadOptions: any) => {
     try {
       
       const responseData = await api.get(Urls.getUserTypes, loadOptions);

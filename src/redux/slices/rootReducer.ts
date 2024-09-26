@@ -11,7 +11,7 @@ import IndustriesReducer from "./data/industry-reducer";
 import CurenciesReducer from "./data/currency-reducer";
 import UserSessionReducer from "./user-session/reducer";
 import usertypecompoReducer from "./data/usertypecompo-reducer";
-const crudModuleSlices = CreateCrudModuleSlices(CrudConfig);
+import PopupDataReducer from "./popup-reducer";
 
 // const rootReducer = combineReducers({
 //     Login: LoginReducer,
@@ -35,7 +35,8 @@ const rootReducer = {
   Industries: IndustriesReducer,
   Curencies: CurenciesReducer,
   Usertypecompo: usertypecompoReducer,
-  UserSession: UserSessionReducer
+  UserSession: UserSessionReducer,
+  PopupData: PopupDataReducer
 };
 
 export default rootReducer;

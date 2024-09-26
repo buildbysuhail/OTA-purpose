@@ -7,9 +7,16 @@ import UserManagementApis from './User-Management-api';
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import { countries, usertypecompo } from "../../../redux/slices/data/thunk";
+import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
+import { useDispatch } from "react-redux";
 
 //add popup for userType grid
 export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
+  const dispatch = useDispatch();
+  const onClose = useCallback(async () => {
+    debugger;
+    dispatch(toggleUserTypePopup(false));
+  },[]);
     const initaialUserTypeData = {
         data:{userTypeName:'',userTypeCode:'',remark:''},
         validations:{userTypeName:'',userTypeCode:'',remark:''}
@@ -104,10 +111,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
             type="reset"
             title="Cancel"
             variant="secondary"
-            onClick={() => {
-            setIsOpenAddPop(false);
-            //   setPostDataEmail({initialEmailData});
-            }}
+            onClick={onClose}
             // disabled={emailLoading}
           ></ERPButton>
           <ERPButton
@@ -125,6 +129,11 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
 
   //add page popup for user grid
   export const PopUpModalAddUser = ({ setIsOpenAddUser}:any) => {
+    const onClose = useCallback(async () => {
+      debugger;
+      dispatch(toggleUserTypePopup(false));
+    },[]);
+    const dispatch = useDispatch();
     const initaialUserData = {
         data:{userName:'',counterID:0,Password:'',
           confromPassword:'',userTypeCode:'',
@@ -148,6 +157,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
     ...prevData,
     validations: response.validations
   }));
+  
   // appDispatch(userSession());
   handleResponse(response, () => {});
   if(response.isOk){
@@ -387,10 +397,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
             type="reset"
             title="Cancel"
             variant="secondary"
-            onClick={() => {
-              setIsOpenAddUser(false);
-            //   setPostDataEmail({initialEmailData});
-            }}
+            onClick={onClose}
             // disabled={emailLoading}
           ></ERPButton>
           <ERPButton
@@ -405,8 +412,6 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
       </div>
     );
   };
-
-  //edit page popup for usergrid
 
   export const PopUpModalEditUser = ({ setIsOpenEditUser}:any) => {
     const initaialUserData = {

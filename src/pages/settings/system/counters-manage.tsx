@@ -12,12 +12,12 @@ import SystemSettingsApi from "./system-apis";
 
 export const CounterManage = ({setIsOpenAddPop}:any) => {
   const initaialCounterData = {
-      data:{counterName:'',descriptions:'',cashLedgerID:0,warehouseID:0,maintainShift:false,},
+      data:{counterName:'',descriptions:'',cashLedgerID:0,warehouseID:null,maintainShift:false,},
       validations:{counterName:'',descriptions:'',cashLedgerID:'',warehouseID:'',maintainShift:'',}
   }
   const [postCounter,setPostCounter]= useState(initaialCounterData);
   const [postCounterLoading, setPostCounterLoading] = useState<boolean>(false);
-
+;
 const addCounter =useCallback(async () => {
 
 setPostCounterLoading(true);
@@ -40,7 +40,7 @@ setIsOpenAddPop(false);
   return (
     <div className="w-full p-10">
      
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <ERPInput
             id="counterName"
              label="User type Name"
@@ -136,7 +136,7 @@ setIsOpenAddPop(false);
                       label="warehouseID"
                     />
 
-         <div className="my-2">
+          <div className="">
          <input
           id="maintainShift"
           type="checkbox"
@@ -156,11 +156,11 @@ setIsOpenAddPop(false);
            Manitain Shift
           </label>
         </div> 
+      
 
         </div>
    
        
-      
       
       <div className="w-full p-2 flex justify-end">
         <ERPButton

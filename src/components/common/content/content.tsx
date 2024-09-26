@@ -17,6 +17,7 @@ import SystemCounters from '../../../pages/settings/system/counters';
 import BankPosSettings from '../../../pages/settings/Administration/bank-pos-settings';
 import SystemVoucher from '../../../pages/settings/system/vouchers';
 import ImportExport from '../../../pages/settings/system/import-export';
+import ResetDatabase from '../../../pages/settings/system/reset-database';
 
 interface ContentProps { }
 const loading = (
@@ -60,6 +61,8 @@ const Content: FC<ContentProps> = () => {
           <Route path="settings/system/counters" element={<SystemCounters/>} />
           <Route path="settings/system/vouchers" element={<SystemVoucher/>} />
           <Route path="settings/system/export-import" element={<ImportExport/>} />
+          <Route path="settings/system/reset-database"element={<ResetDatabase/>} />
+         
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {
             if (route.path) {

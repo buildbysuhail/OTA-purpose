@@ -28,5 +28,6 @@ export const employeecompo = createAsyncThunk('app/employeecompo', async () => {
 
 export const ledgercompo = createAsyncThunk('app/ledgercompo', async () => {
   const response = await api.get(Urls.Ledger);  
+  console.log(response.data);
   return response;
 });

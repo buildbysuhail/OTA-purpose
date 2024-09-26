@@ -338,7 +338,7 @@ const Counters = () => {
                 isOpen={isOpenAddPop}
                 title={"Add Counter"}
                 isForm={true}
-                width='w-[600px] max-w-[800px]'
+                width='w-full max-w-[600px]'
                 closeModal={() => {
                   
                   setIsOpenAddPop(false)

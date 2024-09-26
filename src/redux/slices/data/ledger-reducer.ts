@@ -27,7 +27,7 @@ const ledgerSlice = createSlice({
       .addCase(ledgercompo.pending, (state) => {
         // You can set a loading state here if needed
       })
-      .addCase(ledgercompo.fulfilled, (state, action: PayloadAction<any>) => {
+      .addCase(ledgercompo.fulfilled, (state, action: PayloadAction<ledger[]>) => {
         
         // Replace the entire state with the new data
         return action.payload;

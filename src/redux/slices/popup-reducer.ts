@@ -6,13 +6,21 @@ interface popupData {
   counter:boolean
   voucher:boolean
   financialYear:boolean
+  deleteInactiveTransactions:boolean
+  companyProfile:boolean
+  bankPos:boolean
+  branch:boolean
 }
 const initialState: popupData = {
   userType: false,
   user:false,
   counter:false,
   voucher:false,
-  financialYear:false
+  financialYear:false,
+  deleteInactiveTransactions:false,
+  companyProfile:false,
+  bankPos:false,
+  branch:false,
 };
 
 const popupDataSlice = createSlice({
@@ -39,6 +47,22 @@ const popupDataSlice = createSlice({
       debugger;     
       state.financialYear= action.payload;
     },
+    toggleDeleteInactiveTransactionPopup: (state, action: PayloadAction<boolean>) => { 
+      debugger;     
+      state.deleteInactiveTransactions= action.payload;
+    },
+    toggleCompanyProfilePopup: (state, action: PayloadAction<boolean>) => { 
+      debugger;     
+      state.companyProfile= action.payload;
+    },
+    toggleBankPosPopup: (state, action: PayloadAction<boolean>) => { 
+      debugger;     
+      state.bankPos= action.payload;
+    },
+    toggleBranchPopup: (state, action: PayloadAction<boolean>) => { 
+      debugger;     
+      state.branch= action.payload;
+    },
   },
 });
 
@@ -49,6 +73,10 @@ export const {
   toggleCounterPopup,
   toggleVoucherPopup,
   toggleFinancialYearPopup,
+  toggleDeleteInactiveTransactionPopup,
+  toggleCompanyProfilePopup,
+  toggleBankPosPopup,
+  toggleBranchPopup,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

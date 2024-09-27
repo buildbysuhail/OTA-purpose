@@ -8,7 +8,6 @@ import { toggleUserTypePopup } from '../../../redux/slices/popup-reducer';
 import ERPModal from '../../../components/ERPComponents/erp-modal';
 import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
 import { useRootState } from '../../../utilities/hooks/useRootState';
-import { PopUpModalAddUserTypes } from './userManagement-manage';
 import { UserTypeManage } from './user-type-manage';
 
 const UserTypes = () => {
@@ -83,6 +82,7 @@ const UserTypes = () => {
     <ERPModal
       isOpen={rootState.PopupData.userType}
       title={"Add New UserType"}
+      width='w-full max-w[600px]'
       isForm={true}
       closeModal={() => {
         dispatch(toggleUserTypePopup(false))

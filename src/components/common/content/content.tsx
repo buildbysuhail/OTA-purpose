@@ -9,15 +9,11 @@ const WorkspaceSettingsMembers = lazy(() => import('../../../pages/work-space/wo
 const WorkspaceSettingsSecurity = lazy(() => import('../../../pages/work-space/workspace-settings-security'));
 const Settings = lazy(() => import('../../../pages/settings/AllSettings/Settings'));
 const UserTypes = lazy(() => import('../../../pages/settings/userManagement/user-types'));
-const CompanyProfile = lazy(() => import('../../../pages/settings/Administration/Company-Profile'));
-const Branches = lazy(() => import('../../../pages/settings/Administration/Branches'));
-const DeleteInactiveTransactions = lazy(() => import('../../../pages/settings/Administration/delete-inactive-transactions'));
 const SystemCounters = lazy(() => import('../../../pages/settings/system/counters'));
-const BankPosSettings = lazy(() => import('../../../pages/settings/Administration/bank-pos-settings'));
 const SystemVoucher = lazy(() => import('../../../pages/settings/system/vouchers'));
 const ImportExport = lazy(() => import('../../../pages/settings/system/import-export'));
 const ResetDatabase = lazy(() => import('../../../pages/settings/system/reset-database'));
-const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));;
+const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 
 // Inventory Starts
@@ -57,11 +53,6 @@ const Content: FC<ContentProps> = () => {
           {/* <Route path="/user-management/users" element={<Users />} /> */}
           <Route path="/user-management/userstypes" element={<UserTypes/>} />
 
-          {/* settings Administration */}
-          <Route path="/administration/company-profile" element={<CompanyProfile/>} />
-          <Route path="administration/branches" element={<Branches/>} />
-          <Route path="administration/delete-inactive-transactions" element={<DeleteInactiveTransactions/>} />
-          <Route path="administration/bank-pos-settings" element={<BankPosSettings/>} />
           {/* settings Systems */}
           <Route path="settings/system/counters" element={<SystemCounters/>} />
           <Route path="settings/system/vouchers" element={<SystemVoucher/>} />

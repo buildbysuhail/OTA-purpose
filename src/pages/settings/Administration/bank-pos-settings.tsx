@@ -6,21 +6,21 @@ const BankPosSettings = () => {
     const [isOpenBankPos,setIsOpenBankPos] = useState<boolean>(true);
     return (
         <>
-    <ERPModal
-                 isOpen={isOpenBankPos}
-                 title={"Bank POS Settings"}
- 
-                 isForm={true}
-                 closeModal={() => {
-                   // setPostDataEmail(initialEmailData);
-                   setIsOpenBankPos(false);
-                 }}
-                  content={
-                   <PopUpModalBankPos
-                     setIsOpenBankPos={setIsOpenBankPos}
-                   />
-                 }
-               />
+          <ERPModal
+            isOpen={isOpenBankPos}
+            title={"Bank POS Settings"}
+
+            isForm={true}
+            closeModal={() => {
+              // setPostDataEmail(initialEmailData);
+              setIsOpenBankPos(false);
+            }}
+            content={
+              <PopUpModalBankPos
+                setIsOpenBankPos={setIsOpenBankPos}
+              />
+            }
+          />
    </>
     )
   

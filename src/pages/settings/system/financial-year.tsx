@@ -8,6 +8,7 @@ import { toggleFinancialYearPopup } from '../../../redux/slices/popup-reducer';
 import ERPModal from '../../../components/ERPComponents/erp-modal';
 import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
 import { useRootState } from '../../../utilities/hooks/useRootState';
+import { FinancialYearManage } from './financial-year-manage';
 
 // import { UserTypeManage } from './user-type-manage';
 
@@ -157,7 +158,7 @@ const FinancialYear = () => {
             <div className="box custom-box">
               <div className="box-body">
                 <div className="grid grid-cols-1 gap-3">
-                  <ERPDevGrid columns={columns} gridHeader="Financial Year" dataUrl= {Urls.getFinanCialYear} gridId='grd_financial_year' popupAction={ toggleFinancialYearPopup} gridAddButtonType='popup' gridAddButtonIcon=''></ERPDevGrid>               
+                  <ERPDevGrid columns={columns} gridHeader="Financial Year" dataUrl= {Urls.FinancialYear} gridId='grd_financial_year' popupAction={ toggleFinancialYearPopup} gridAddButtonType='popup' gridAddButtonIcon="ri-add-line"></ERPDevGrid>               
                 </div>
               </div>
             </div>
@@ -167,11 +168,12 @@ const FinancialYear = () => {
       <ERPModal
         isOpen={rootState.PopupData.financialYear}
         title={"Financial Year"}
+        width='w-full max-w-[60rem]'
         isForm={true}
         closeModal={() => {
           dispatch( toggleFinancialYearPopup(false))
         }}
-        // content={<UserTypeManage/>}
+        content={<FinancialYearManage/>}
       />
      </Fragment>
     )

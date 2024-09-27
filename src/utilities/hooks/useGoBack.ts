@@ -5,7 +5,7 @@ const useGoBack = (fallbackUrl = '/') => {
   const location = useLocation();
 
   const goBack = () => {
-    debugger;
+    
     if (location.state && location.state.from) {
       navigate(location.state.from);
     } else {

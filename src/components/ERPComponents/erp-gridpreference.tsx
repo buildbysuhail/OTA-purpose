@@ -31,7 +31,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   /* ########################################################################################### */
 
   const onChange = (e: any) => {
-    debugger;
+    
     onApplyPreferences(e);
   };
   const handleDragStart = (e: any) => {
@@ -44,7 +44,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   };
 
   const handleDropping = (e: any) => {
-    debugger;
+    
     let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragItem.current);
     let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragOverItem.current);
 
@@ -102,7 +102,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
     key: string, // Ensure `key` is a valid property of `ColumnPreference`
     value: any
   ) => {
-    debugger;
+    
     setPreferences((prevPreferences: any) => {
       if (!prevPreferences) return prevPreferences;
   
@@ -212,7 +212,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
                           type="checkbox"
                           className="cursor-pointer  ml-[.6rem]"
                           disabled={column?.isLocked}
-                          onChange={(e) => {debugger; handleColumnPreferenceChange(column.dataField, 'visible' ,e.target.checked)}}
+                          onChange={(e) => { handleColumnPreferenceChange(column.dataField, 'visible' ,e.target.checked)}}
                           checked={column?.visible}
                         />
                         <span className="cursor-pointer pl-2">{column?.caption}</span>

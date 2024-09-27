@@ -47,11 +47,11 @@ function App() {
   const { pathname } = useLocation();
   const token = Cookies.get("token");
   
-  debugger;
+  
   let upt = Cookies.get("up");
   let utt = Cookies.get("ut");
 
-  debugger;
+  
 
   let userProfileDetails: UserModel = initialUserSessionData;
   try {
@@ -71,7 +71,7 @@ function App() {
     
   }
   const { i18n } = useTranslation();
-  debugger;
+  
   let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false }
   syncAppStates(dispatch,userThemes, userProfileDetails, locale);
   const language = userProfileDetails?.language;

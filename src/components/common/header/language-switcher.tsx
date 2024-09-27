@@ -25,7 +25,7 @@ const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
   let dispatch = useAppDispatch();
 
   const handleLanguageSelect = (language: Locale) => {
-    debugger;
+    
     language.rtl ? switcherdata.Rtl(updateAppState, appState): switcherdata.Ltr(updateAppState, appState);
     changeLanguage(language.code);
 
@@ -60,7 +60,7 @@ const setLocaleInStorage = (locale: Locale) => {
   } catch (error) {
     
   }
-  debugger;
+  
   userProfileDetails.language = locale.code;
   userThemes.direction = locale.rtl ? "rtl" : "ltr";
   Cookies.set("up", modelToBase64(userProfileDetails), { expires: 30 });

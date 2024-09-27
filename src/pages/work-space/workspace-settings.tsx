@@ -92,7 +92,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
       _userSession.companies &&
       Array.isArray(_userSession.companies)
     ) {
-      debugger;
+      
       const company = _userSession.companies.find(
         (x) => x.name === _userSession.currentClientName
       );

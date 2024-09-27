@@ -198,7 +198,7 @@ const updateBasicInfo = useCallback(async () => {
               required={true}
               data={postDataEmail?.data}
               onChangeData={(data: any) => {
-                debugger;
+                
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
@@ -218,7 +218,7 @@ const updateBasicInfo = useCallback(async () => {
                   ...prevData,
                   data: data,
                 }))
-                debugger;
+                
               }
                 
               }
@@ -231,7 +231,7 @@ const updateBasicInfo = useCallback(async () => {
               data={postDataEmail?.data}
               onChangeData={(data: any) =>
                {
-                debugger;
+                
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,

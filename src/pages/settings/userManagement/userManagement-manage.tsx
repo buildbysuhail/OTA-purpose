@@ -14,7 +14,7 @@ import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
 export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
   const dispatch = useAppDispatch();
   const onClose = useCallback(async () => {
-    debugger;
+    
     dispatch(toggleUserTypePopup(false));
   },[]);
     const initaialUserTypeData = {
@@ -133,7 +133,7 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
   //add page popup for user grid
   export const PopUpModalAddUser = ({ setIsOpenAddUser}:any) => {
     const onClose = useCallback(async () => {
-      debugger;
+      
       dispatch(toggleUserTypePopup(false));
     },[]);
     const dispatch = useAppDispatch();

@@ -124,7 +124,7 @@ const Branches = () => {
         const res = await AdministrationSettingsApis.getCompayProfileInfo();    
         console.log("Fetched Data: ", res); // Add this to check the fetched data    
         // Update the basicInfo state with fetched data
-        debugger;
+        
         setBasicInfo((prev: BasicInfo) => ({
           ...prev,
           data: res

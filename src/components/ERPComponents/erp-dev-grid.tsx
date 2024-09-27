@@ -23,6 +23,7 @@ import {
   Export,
   Editing,
   StateStoring,
+  Column,
 } from "devextreme-react/cjs/data-grid";
 
 import CustomStore from "devextreme/data/custom_store";
@@ -331,7 +332,7 @@ const store = useMemo(() => createStore(keyExpr, dataUrl, allowEditing), [
           allowColumnResizing={allowColumnResizing}
           columnAutoWidth={columnAutoWidth}
           columnHidingEnabled={columnHidingEnabled}
-          columns={gridCols}
+          // columns={gridCols}
           onRowClick={onRowClick}
           onSelectionChanged={onSelectionChanged}
           onExporting={onExportingHandler}
@@ -429,6 +430,22 @@ const store = useMemo(() => createStore(keyExpr, dataUrl, allowEditing), [
               </Item>
             ))}
           </Toolbar>
+          {gridCols?.map((column) => (
+          <Column
+            key={column.dataField}
+            dataField={column.dataField}
+            caption={column.caption}
+            dataType={column.dataType}
+            allowSorting={column.allowSorting}
+            allowSearch={column.allowSearch}
+            allowFiltering={column.allowFiltering}
+            minWidth={column.minWidth}
+            fixed={column.fixed}
+            fixedPosition={column.fixedPosition}
+            width={column.width}
+            cellRender={column.cellRender}
+          />
+        ))}
         </DataGrid>
       </div>
     </Fragment>

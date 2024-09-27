@@ -17,7 +17,7 @@ const Settings = () => {
   const [settingsRoutes, setSettingRoutes] = useState(SettingsMenuItems);
   let sds = jwtHelper.getLoggedInUserRole();
 
-  debugger;
+  
 
   return (
     <Fragment>

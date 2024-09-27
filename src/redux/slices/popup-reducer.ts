@@ -20,23 +20,23 @@ const popupDataSlice = createSlice({
   initialState,
   reducers: {
     toggleUserTypePopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.userType = action.payload;
     },
     toggleUserPopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.user = action.payload;
     },
     toggleCounterPopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.counter = action.payload;
     },
     toggleVoucherPopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.voucher= action.payload;
     },
     toggleFinancialYearPopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.financialYear= action.payload;
     },
   },

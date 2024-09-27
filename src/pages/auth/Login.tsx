@@ -42,9 +42,9 @@ const Login = () => {
     if (data?.userName && data?.password) {
       setError(null);
       
-      debugger;
+      
         const login = await dispatch(loginUser(data)).unwrap();
-        debugger;
+        
         setError('');
         
         if (login.isOk == true) {   
@@ -78,12 +78,12 @@ const Login = () => {
 
   
   useEffect(() => {
-    debugger;
+    
     if (isLoggedToBranch
     ) {
       navigate("/");
     } else if(hasToChooseBranch) {
-        debugger;
+        
       navigate("/select-organization");
     }
   }, [hasToChooseBranch, isLoggedToBranch]);
@@ -138,7 +138,7 @@ new heights</h2>
                 <ERPInput
                   label={t("Email or Phone or Username")}
                   data={data}
-                  onChangeData={(_data: any) => {debugger; setData(_data)}}
+                  onChangeData={(_data: any) => { setData(_data)}}
                   id="userName"
                   autocomplete=""
                   required

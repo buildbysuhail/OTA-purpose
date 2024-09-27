@@ -15,7 +15,7 @@ export const handleResponse = (res: any, action?: () => void, failAction?: () =>
     else
     {
       if (res.message) {
-        SBToast.showWith(res?.message, "warning");
+        SBToast.showWith(res?.message, "warning"); 
       }
       failAction && failAction();
     }

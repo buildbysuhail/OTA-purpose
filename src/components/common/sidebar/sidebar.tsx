@@ -436,7 +436,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   }
   //
   function setMenuUsingUrl(currentPath: any) {
-    debugger;
+    
     hasParent = false;
     hasParentLevel = 1;
     // Check current url and trigger the setSidemenu method to active the menu.
@@ -459,7 +459,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       userSession.companies &&
       Array.isArray(userSession.companies)
     ) {
-      debugger;
+      
       const company = userSession.companies.find(
         (x) => x.name === userSession.currentClientName
       );

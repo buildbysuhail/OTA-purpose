@@ -6,9 +6,11 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import UserManagementApis from "./User-Management-api";
 import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 
 export const UserTypeManage = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const onClose = useCallback(async () => {
     dispatch(toggleUserTypePopup(false));
   }, []);
@@ -18,6 +20,10 @@ export const UserTypeManage = () => {
   };
   const [postData, setPostData] = useState(initialUserTypeData);
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
+
+  const queryParams = new URLSearchParams(location.search);
+  
+  const [key, setKey] = useState<any>(queryParams.get('key'));
 
   const addUserType = useCallback(async () => {
     setPostUserTypeLoading(true);
@@ -97,7 +103,7 @@ export const UserTypeManage = () => {
           variant="primary"
           onClick={addUserType}
           loading={postDataLoading}
-          title={"Submit"}
+          title={key != undefined && key != null ? 'Update':'Cancel'}
         ></ERPButton>
       </div>
     </div>

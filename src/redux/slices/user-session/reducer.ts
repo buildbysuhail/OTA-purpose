@@ -74,7 +74,7 @@ const userSessionSlice = createSlice({
   initialState,
   reducers: {
     setUserSession: (state, action: PayloadAction<UserModel>) => {   
-      debugger;   
+         
       return action.payload;
     }
   },

@@ -98,7 +98,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
 
   const handleLogout = async (deviceId:string) => {
     setLoadingLogout({loading: true, deviceId: deviceId});
-    // debugger;
+    // 
     const response: ResponseModelWithValidation<any, any> = await dispatch(
       postAction({
         apiUrl: Urls.logoutUserSession,
@@ -107,7 +107,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
            },
       }) as any
     ).unwrap();
-    // debugger;
+    // 
     setLoadingLogout({loading: false, deviceId: deviceId});
     handleResponse(response, () => {
       store.load();

@@ -9,7 +9,8 @@ import {
   UserIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline";
-import { toggleUserTypePopup } from "../../../../redux/slices/popup-reducer";
+import {toggleBankPosPopup, toggleBranchPopup, toggleCompanyProfilePopup, 
+        toggleDeleteInactiveTransactionPopup } from "../../../../redux/slices/popup-reducer";
 
 export const SettingsMenuItems = [
   // {
@@ -70,10 +71,10 @@ export const SettingsMenuItems = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/administration/company-profile`, type: 'link', active: false, selected: false, title: 'Company Profile' },
-      { path: `${import.meta.env.BASE_URL}settings/_/administration/branches`, type: 'link', active: false, selected: false, title: 'Branches' },
-      { action: toggleUserTypePopup, type: 'popup', active: false, selected: false, title: 'Delete Inactive Transactions' },
-      { path: `${import.meta.env.BASE_URL}settings/_/administration/bank-pos-settings`, type: 'link', active: false, selected: false, title: 'Bank POS Settings' },
+      { action:toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'Company Profile' },
+      { action:toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'Branches' },
+      { action:toggleDeleteInactiveTransactionPopup, type: 'popup', active: false, selected: false, title: 'Delete Inactive Transactions' },
+      { action:toggleBankPosPopup, type: 'popup', active: false, selected: false, title: 'Bank POS Settings' },
     ]
   },
   {

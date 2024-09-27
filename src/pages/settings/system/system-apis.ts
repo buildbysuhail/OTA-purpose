@@ -4,20 +4,19 @@ import Urls from "../../../redux/urls";
 const api = new APIClient();
 const SystemSettingsApi = {
 
-    getSystemCounters: async (loadOptions: any) => {
+  addFinancialYearInfo: async (data: any) => {
     try {
-      
-      const responseData = await api.get(Urls.getSystemCounters, loadOptions);
+      const responseData = await api.post(Urls.FinancialYear,data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
-      return {};
+      return '';
     }
   },
 
   addCounterInfo: async (data: any) => {
     try {
-      const responseData = await api.post(Urls. postSystemCounters, data);
+      const responseData = await api.post(Urls.postSystemCounters, data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);

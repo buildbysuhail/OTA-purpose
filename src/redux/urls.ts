@@ -99,17 +99,17 @@ get_members:"/Subscription/WorkSpace/GetMembers",
     getUserTypes:"/Core/UserType/GetUsersTypeForGrid",
     postUserTypes:"/Core/UserType/AddUserType",
     //setting/Administrations
-    getCompayProfiles:"/Core/CompanyProfile/GetCompanyProfile",
-    postCompayProfiles:"/Core/CompanyProfile/AddCompanyProfile",
-    postBankPosSettings:"/Core/BankPOS/AddCounter",
-    //setting/deleteinactive transactions
+    CompanyProfiles:"/Core/CompanyProfile",
+    Branch:'/Core/Branch',
+    BankPosSettings:"/Core/BankPOS/AddCounter",
     deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
 
     //setting/system
     getSystemCounters:"/Core/Counter/GetCounterForGrid",
     postSystemCounters:"/Core/Counter/AddCounter",
-    getSystemVoucher:"/Core/Vouchers/GetCounterForGrid",
-    getFinanCialYear:"/Core/FinancialYear/GetFinanCialYearForGrid",
+    getSystemVoucher:"/Core/Vouchers",
+    FinancialYear:"/Core/FinancialYear",
+   
 };
 
 export default Urls;

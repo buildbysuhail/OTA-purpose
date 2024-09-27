@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import Urls from "../../../redux/urls";
 
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
@@ -11,6 +12,16 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import { PopUpModalAddUserTypes } from "./userManagement-manage";
 import { UserTypeManage } from "./user-type-manage";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+=======
+import { Link } from 'react-router-dom';
+import { DevGridColumn } from '../../../components/types/dev-grid-column';
+import ERPDevGrid from '../../../components/ERPComponents/erp-dev-grid';
+import { toggleUserTypePopup } from '../../../redux/slices/popup-reducer';
+import ERPModal from '../../../components/ERPComponents/erp-modal';
+import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
+import { useRootState } from '../../../utilities/hooks/useRootState';
+import { UserTypeManage } from './user-type-manage';
+>>>>>>> e0ffb80e77faf84e23f1f0a0666b8dbd0a0ca0e6
 
 const UserTypes = () => {
   const dispatch = useAppDispatch();
@@ -84,6 +95,7 @@ const UserTypes = () => {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
       <ERPModal
         isOpen={rootState.PopupData.userType}
         title={"Add New UserType"}
@@ -96,5 +108,21 @@ const UserTypes = () => {
     </Fragment>
   );
 };
+=======
+    </div>
+    <ERPModal
+      isOpen={rootState.PopupData.userType}
+      title={"Add New UserType"}
+      width='w-full max-w[600px]'
+      isForm={true}
+      closeModal={() => {
+        dispatch(toggleUserTypePopup(false))
+      }}
+      content={<UserTypeManage/>}
+    />
+   </Fragment>
+  )
+}
+>>>>>>> e0ffb80e77faf84e23f1f0a0666b8dbd0a0ca0e6
 
 export default UserTypes;

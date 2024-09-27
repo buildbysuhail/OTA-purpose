@@ -264,7 +264,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
                       allowSearch={true}
                       allowFiltering={true}
                       dataField="branchName"
-                     width={140}
+                     
                       caption="  Branch Name"
                       dataType="string"
                     /> 

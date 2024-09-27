@@ -9,6 +9,7 @@ import {
   UserIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline";
+import { toggleUserTypePopup } from "../../../../redux/slices/popup-reducer";
 
 export const SettingsMenuItems = [
   // {
@@ -71,7 +72,7 @@ export const SettingsMenuItems = [
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/administration/company-profile`, type: 'link', active: false, selected: false, title: 'Company Profile' },
       { path: `${import.meta.env.BASE_URL}settings/_/administration/branches`, type: 'link', active: false, selected: false, title: 'Branches' },
-      { path: `${import.meta.env.BASE_URL}settings/_/administration/delete-inactive-transactions`, type: 'link', active: false, selected: false, title: 'Delete Inactive Transactions' },
+      { action: toggleUserTypePopup, type: 'popup', active: false, selected: false, title: 'Delete Inactive Transactions' },
       { path: `${import.meta.env.BASE_URL}settings/_/administration/bank-pos-settings`, type: 'link', active: false, selected: false, title: 'Bank POS Settings' },
     ]
   },

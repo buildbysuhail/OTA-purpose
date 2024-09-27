@@ -1,31 +1,29 @@
 import { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import AccountSettingsSecurity from '../../../pages/account-settings/account-settings-security';
-import AccountSettingsPreference from '../../../pages/account-settings/account-settings-preference';
-import WorkSpaceSettings from '../../../pages/work-space/workspace-settings';
-import AccountSettingsSessions from '../../../pages/account-settings/account-settings-sessions';
-import AccountSettingsProfile from '../../../pages/account-settings/account-settings-profile';
-import WorkspaceSettingsMembers from '../../../pages/work-space/workspace-settings-members';
-import WorkspaceSettingsSecurity from '../../../pages/work-space/workspace-settings-security';
-// import Users from '../../../pages/settings/userManagement/Users';
-import Settings from '../../../pages/settings/AllSettings/Settings';
-import UserTypes from '../../../pages/settings/userManagement/UserTypes';
-import CompanyProfile from '../../../pages/settings/Administration/Company-Profile'
-import Branches from '../../../pages/settings/Administration/Branches';
-import DeleteInactiveTransactions from '../../../pages/settings/Administration/delete-inactive-transactions';
-import SystemCounters from '../../../pages/settings/system/counters';
-import BankPosSettings from '../../../pages/settings/Administration/bank-pos-settings';
-import SystemVoucher from '../../../pages/settings/system/vouchers';
-import ImportExport from '../../../pages/settings/system/import-export';
-import ResetDatabase from '../../../pages/settings/system/reset-database';
-
+const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
+const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
+const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
+const AccountSettingsSessions = lazy(() => import('../../../pages/account-settings/account-settings-sessions'));
+const AccountSettingsProfile = lazy(() => import('../../../pages/account-settings/account-settings-profile'));
+const WorkspaceSettingsMembers = lazy(() => import('../../../pages/work-space/workspace-settings-members'));
+const WorkspaceSettingsSecurity = lazy(() => import('../../../pages/work-space/workspace-settings-security'));
+const Settings = lazy(() => import('../../../pages/settings/AllSettings/Settings'));
+const UserTypes = lazy(() => import('../../../pages/settings/userManagement/user-types'));
+const CompanyProfile = lazy(() => import('../../../pages/settings/Administration/Company-Profile'));
+const Branches = lazy(() => import('../../../pages/settings/Administration/Branches'));
+const DeleteInactiveTransactions = lazy(() => import('../../../pages/settings/Administration/delete-inactive-transactions'));
+const SystemCounters = lazy(() => import('../../../pages/settings/system/counters'));
+const BankPosSettings = lazy(() => import('../../../pages/settings/Administration/bank-pos-settings'));
+const SystemVoucher = lazy(() => import('../../../pages/settings/system/vouchers'));
+const ImportExport = lazy(() => import('../../../pages/settings/system/import-export'));
+const ResetDatabase = lazy(() => import('../../../pages/settings/system/reset-database'));
+const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
   </div>
 );
-const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Content: FC<ContentProps> = () => {
   
   return (
@@ -62,6 +60,7 @@ const Content: FC<ContentProps> = () => {
           <Route path="settings/system/vouchers" element={<SystemVoucher/>} />
           <Route path="settings/system/export-import" element={<ImportExport/>} />
           <Route path="settings/system/reset-database"element={<ResetDatabase/>} />
+          
          
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {

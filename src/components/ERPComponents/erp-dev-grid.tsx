@@ -2,6 +2,7 @@ import React, {
   Fragment,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
@@ -38,6 +39,7 @@ import GridPreferenceChooser from "../../components/ERPComponents/erp-gridprefer
 import { APIClient } from "../../helpers/api-client";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import ERPButton from "./erp-button";
+import { AppDispatch } from "../../redux/store";
 
 interface ERPDevGridProps {
   columns: DevGridColumn[];
@@ -76,6 +78,8 @@ interface ERPDevGridProps {
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
   gridAddButtonText?: string | "Add"
+  heightToAdjustOnWindows?: number;
+  heightToAdjustOnMobile?: number;
   popupAction: (value: boolean) => { type: string; payload: boolean };
   defaultColumnWidth?: number;
   columnAutoWidth?: boolean;
@@ -107,9 +111,62 @@ interface ERPDevGridProps {
   initialPreferences?: GridPreference;
   paramNames?: string[];
 }
-
 const api = new APIClient();
+const createStore = (
+  keyExpr: string | string[] | undefined,
+  dataUrl: string,
+  allowEditing?: boolean,
+  paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"]
+) => {
+  return new CustomStore({
+    key: keyExpr,
+    load: async (loadOptions: any) => {
+      const queryString = paramNames
+        .filter((paramName) => isNotEmpty(loadOptions[paramName]))
+        .map(
+          (paramName) =>
+            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
+        )
+        .join("&");
 
+      try {
+        const result = await api.get(dataUrl, loadOptions);
+        return result
+          ? {
+              data: result,
+              totalCount: result.length,
+            }
+          : {
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
+      } catch (err) {
+        return {
+          data: [],
+          totalCount: 0,
+          summary: {},
+          groupCount: 0,
+        };
+      }
+    },
+    ...(allowEditing && {
+      insert: async (values) => {
+        // Implement insert logic
+      },
+      update: async (key, values) => {
+        // Implement update logic
+      },
+      remove: async (key) => {
+        // Implement remove logic
+      },
+    }),
+  });
+};
+
+const isNotEmpty = (value: any) =>
+  value !== undefined && value !== null && value !== "";
 const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   columns,
   gridId,
@@ -145,6 +202,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   gridAddButtonType = "link",
   gridAddButtonIcon = "ri-add-line",
   gridAddButtonText = "Add",
+  heightToAdjustOnMobile = 200,
+  heightToAdjustOnWindows = 200,
   popupAction, 
   defaultColumnWidth,
   columnAutoWidth = true,
@@ -175,16 +234,27 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
+  // const memoizedOnPopupOpenClick = useCallback(() => {
+  //   onPopupOpenClick(dispatch, popupAction)();
+  // }, [dispatch, popupAction]);
+  
+const onPopupOpenClick = useCallback(() => {
+  dispatch(popupAction(true));
+}, [dispatch, popupAction]);
   useEffect(() => {
+    console.log('height');
+    
     let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = wh - 100; // Assuming 100px is the height to minus for windows
+    let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
+    let gridHeightWindows = wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 
   const [gridCols, setGridCols] = useState<DevGridColumn[]>();
   const [preferences, setPreferences] = useState<GridPreference>();
   useEffect(() => {
+    console.log('preferer useeff');
+    
     if (gridId != "" && columns != undefined && columns != null) {
       onApplyPreferences(getInitialPreference(gridId, columns));
     }
@@ -202,57 +272,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
   const isNotEmpty = (value: any) =>
     value !== undefined && value !== null && value !== "";
+console.log("store:" );
+const store = useMemo(() => createStore(keyExpr, dataUrl, allowEditing), [
+  keyExpr,
+  dataUrl,
+  allowEditing,
+]);
 
-  const store = new CustomStore({
-    key: keyExpr,
-    load: async (loadOptions: any) => {
-      const queryString = paramNames
-        .filter((paramName) => isNotEmpty(loadOptions[paramName]))
-        .map(
-          (paramName) =>
-            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
-        )
-        .join("&");
-
-      try {
-        const result = await api.get(dataUrl, loadOptions);
-
-        return result !== undefined && result != null
-          ? {
-              data: result,
-              totalCount: result.length,
-            }
-          : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
-      } catch (err) {
-        return {
-          data: [],
-          totalCount: 0,
-          summary: {},
-          groupCount: 0,
-        };
-      }
-    },
-    ...(allowEditing && {
-      insert: async (values) => {
-        // Implement insert logic
-      },
-      update: async (key, values) => {
-        // Implement update logic
-      },
-      remove: async (key) => {
-        // Implement remove logic
-      },
-    }),
-  });
-const onPopupOpenClick = () => {
-  debugger;
-  dispatch(popupAction(true));
-}
   const onExportingHandler = (e: any) => {
     if (onExporting) {
       onExporting(e);
@@ -389,7 +415,7 @@ const onPopupOpenClick = () => {
                     </Link>
                   )}
                    {gridAddButtonType == "popup" && (
-                    <ERPButton variant="primary" onClick={onPopupOpenClick} title={gridAddButtonText} startIcon={gridAddButtonIcon}>
+                    <ERPButton variant="primary" onClick={onPopupOpenClick}  title={gridAddButtonText} startIcon={gridAddButtonIcon}>
                     </ERPButton>
                       
                   )}
@@ -409,4 +435,4 @@ const onPopupOpenClick = () => {
   );
 };
 
-export default ERPDevGrid;
+export default React.memo(ERPDevGrid);

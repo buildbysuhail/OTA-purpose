@@ -17,6 +17,7 @@ const BankPosSettings = lazy(() => import('../../../pages/settings/Administratio
 const SystemVoucher = lazy(() => import('../../../pages/settings/system/vouchers'));
 const ImportExport = lazy(() => import('../../../pages/settings/system/import-export'));
 const ResetDatabase = lazy(() => import('../../../pages/settings/system/reset-database'));
+const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));;
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 interface ContentProps { }
 const loading = (
@@ -61,6 +62,7 @@ const Content: FC<ContentProps> = () => {
           <Route path="settings/system/export-import" element={<ImportExport/>} />
           <Route path="settings/system/reset-database"element={<ResetDatabase/>} />
           
+          <Route path="settings/system/financial-year"element={<FinancialYear/>} />
          
           <Route path="settings" element={<Settings />} />
           {/* {routes.map((route, idx) => {

@@ -3,10 +3,16 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface popupData {
   userType: boolean
   user:boolean
+  counter:boolean
+  voucher:boolean
+  financialYear:boolean
 }
 const initialState: popupData = {
   userType: false,
   user:false,
+  counter:false,
+  voucher:false,
+  financialYear:false
 };
 
 const popupDataSlice = createSlice({
@@ -19,7 +25,19 @@ const popupDataSlice = createSlice({
     },
     toggleUserPopup: (state, action: PayloadAction<boolean>) => { 
       debugger;     
-      state.userType = action.payload;
+      state.user = action.payload;
+    },
+    toggleCounterPopup: (state, action: PayloadAction<boolean>) => { 
+      debugger;     
+      state.counter = action.payload;
+    },
+    toggleVoucherPopup: (state, action: PayloadAction<boolean>) => { 
+      debugger;     
+      state.voucher= action.payload;
+    },
+    toggleFinancialYearPopup: (state, action: PayloadAction<boolean>) => { 
+      debugger;     
+      state.financialYear= action.payload;
     },
   },
 });
@@ -28,6 +46,9 @@ const popupDataSlice = createSlice({
 export const {
   toggleUserTypePopup,
   toggleUserPopup,
+  toggleCounterPopup,
+  toggleVoucherPopup,
+  toggleFinancialYearPopup,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

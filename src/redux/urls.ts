@@ -108,7 +108,8 @@ get_members:"/Subscription/WorkSpace/GetMembers",
     //setting/system
     getSystemCounters:"/Core/Counter/GetCounterForGrid",
     postSystemCounters:"/Core/Counter/AddCounter",
-   
+    getSystemVoucher:"/Core/Vouchers/GetCounterForGrid",
+    getFinanCialYear:"/Core/FinancialYear/GetFinanCialYearForGrid",
 };
 
 export default Urls;

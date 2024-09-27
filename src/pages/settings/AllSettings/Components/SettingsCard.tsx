@@ -2,10 +2,11 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 
 const SettingsCard = ({ data }: any) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const columns = Math.max(1, data.columns || 1);
   const children = data.children || [];
 
@@ -40,7 +41,7 @@ const SettingsCard = ({ data }: any) => {
                       className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out"
                       onClick={() => {
                         // dispatch({ type: "minimize", minimize: false });
-                        route?.path ? navigate(route?.path) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
+                        route?.path && route?.type == 'link' ? navigate(route?.path) : route?.action && route?.type == 'popup' ? dispatch(route?.action(true)) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
                       }}
                       key={`JPKNE84_${routeIdx}`}
                     >

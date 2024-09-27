@@ -16,22 +16,22 @@ export const UserTypeManage = () => {
     data: { userTypeName: "", userTypeCode: "", remark: "" },
     validations: { userTypeName: "", userTypeCode: "", remark: "" },
   };
-  const [postUserType, setPostUserType] = useState(initialUserTypeData);
-  const [postUserTypeLoading, setPostUserTypeLoading] = useState<boolean>(false);
+  const [postData, setPostData] = useState(initialUserTypeData);
+  const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
 
   const addUserType = useCallback(async () => {
     setPostUserTypeLoading(true);
     const response: ResponseModelWithValidation<any, any> =
-      await UserManagementApis.addUserTypeInfo(postUserType?.data);
+      await UserManagementApis.addUserTypeInfo(postData?.data);
       setPostUserTypeLoading(false);
     handleResponse(response, 
       () => {dispatch(toggleUserTypePopup(false));},
-      () => {setPostUserType((prevData: any) => ({
+      () => {setPostData((prevData: any) => ({
                 ...prevData,
                 validations: response.validations,
               }));
             });
-  }, [postUserType?.data]);
+  }, [postData?.data]);
 
   return (
     <div className="w-full pt-4">
@@ -41,45 +41,45 @@ export const UserTypeManage = () => {
           label="User type Name"
           placeholder="User Type Name"
           required={true}
-          data={postUserType?.data}
+          data={postData?.data}
           onChangeData={(data: any) => {
-            setPostUserType((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
           }}
-          value={postUserType?.data?.userTypeName}
-          validation={postUserType?.validations?.userTypeName}
+          value={postData?.data?.userTypeName}
+          validation={postData?.validations?.userTypeName}
         />
         <ERPInput
           id="userTypeCode"
           label="user type code"
           placeholder="user type code"
           required={true}
-          data={postUserType?.data}
+          data={postData?.data}
           onChangeData={(data: any) => {
-            setPostUserType((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
           }}
-          value={postUserType?.data?.userTypeCode}
-          validation={postUserType?.validations?.userTypeCode}
+          value={postData?.data?.userTypeCode}
+          validation={postData?.validations?.userTypeCode}
         />
         <ERPInput
           id="remark"
           label="Remark"
           placeholder="remark"
           required={true}
-          data={postUserType?.data}
+          data={postData?.data}
           onChangeData={(data: any) => {
-            setPostUserType((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
           }}
-          value={postUserType?.data?.remark}
-          validation={postUserType?.validations?.remark}
+          value={postData?.data?.remark}
+          validation={postData?.validations?.remark}
         />
       </div>
 
@@ -93,10 +93,10 @@ export const UserTypeManage = () => {
         ></ERPButton>
         <ERPButton
           type="button"
-          disabled={postUserTypeLoading}
+          disabled={postDataLoading}
           variant="primary"
           onClick={addUserType}
-          loading={postUserTypeLoading}
+          loading={postDataLoading}
           title={"Submit"}
         ></ERPButton>
       </div>

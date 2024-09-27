@@ -1,17 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import jwtHelper from "../../../helpers/jwt_helper";
 // import { SettingsRoutes } from "./SettingsRoutes";
 import Header from "./Components/Header";
 import SettingsCard from "./Components/SettingsCard";
 import { SettingsMenuItems } from "../../../components/common/sidebar/sidemenu/settings";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
+import { UserTypeManage } from "../userManagement/user-type-manage";
 
 const Settings = () => {
+  
+  const rootState = useRootState();
+  const dispatch = useAppDispatch();
   const [settingsRoutes, setSettingRoutes] = useState(SettingsMenuItems);
   let sds = jwtHelper.getLoggedInUserRole();
 
   debugger;
 
   return (
+    <Fragment>
     <div className="flex flex-col w-full h-full">
       <div className="bg-[url('/settings_bg.png')]">
         <div className="max-w-4xl mx-auto w-full h-full">
@@ -26,6 +35,17 @@ const Settings = () => {
         </div>
       </div>
     </div>
+
+<ERPModal
+isOpen={rootState.PopupData.userType}
+title={"Add New UserType"}
+isForm={true}
+closeModal={() => {
+  dispatch(toggleUserTypePopup(false))
+}}
+content={<UserTypeManage/>}
+/>
+</Fragment>
   );
 };
 

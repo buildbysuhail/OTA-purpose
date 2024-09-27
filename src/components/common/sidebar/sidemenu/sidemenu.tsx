@@ -33,7 +33,7 @@ export const MENUITEMS = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { path: `${import.meta.env.BASE_URL}account-settings/profile/avatar`, type: 'link', active: false, selected: false, title: 'Customers' },
-      { path: `${import.meta.env.BASE_URL}sales`, type: 'link', active: false, selected: false, title: 'Sales' },
+      { path: `${import.meta.env.BASE_URL}sales/new`, type: 'link', active: false, selected: false, title: 'Sales' },
       { path: `${import.meta.env.BASE_URL}vat-sales-invoice`, type: 'link', active: false, selected: false, title: 'VAT Sales Invoice' },
       { path: `${import.meta.env.BASE_URL}sales-cash-bank-vat`, type: 'link', active: false, selected: false, title: 'Sales Cash/Bank VAT' },
       { path: `${import.meta.env.BASE_URL}sales-return`, type: 'link', active: false, selected: false, title: 'Sales Return' },

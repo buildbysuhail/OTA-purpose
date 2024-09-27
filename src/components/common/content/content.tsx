@@ -19,6 +19,12 @@ const ImportExport = lazy(() => import('../../../pages/settings/system/import-ex
 const ResetDatabase = lazy(() => import('../../../pages/settings/system/reset-database'));
 const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));;
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
+
+// Inventory Starts
+
+const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transaction"));
+
+// Inventory End
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -60,11 +66,17 @@ const Content: FC<ContentProps> = () => {
           <Route path="settings/system/counters" element={<SystemCounters/>} />
           <Route path="settings/system/vouchers" element={<SystemVoucher/>} />
           <Route path="settings/system/export-import" element={<ImportExport/>} />
-          <Route path="settings/system/reset-database"element={<ResetDatabase/>} />
-          
-          <Route path="settings/system/financial-year"element={<FinancialYear/>} />
-         
+          <Route path="settings/system/reset-database"element={<ResetDatabase/>} />          
+          <Route path="settings/system/financial-year"element={<FinancialYear/>} />         
           <Route path="settings" element={<Settings />} />
+
+          {/* Inventory Starts */}
+
+          <Route path="sales/new"element={<InvTransaction/>} />  
+
+          
+          {/* Inventory End */}
+
           {/* {routes.map((route, idx) => {
             if (route.path) {
               return <Route key={idx} path={route.path} element={<route.component />} />;

@@ -32,7 +32,7 @@ import Cookies from "js-cookie";
 import { modelToBase64 } from "../../utilities/jsonConverter";
 import ERPSelect from "../../components/ERPComponents/erp-select";
 import { useAppDynamicSelector } from "../../utilities/hooks/useAppDispatch";
-import { Fragment, useEffect, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;

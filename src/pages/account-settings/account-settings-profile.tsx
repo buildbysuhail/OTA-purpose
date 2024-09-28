@@ -500,12 +500,10 @@ const updateBasicInfo = useCallback(async () => {
                       field={{
                         id: "nationality",
                         required: true,
-                        getListUrl: Urls.country,
+                        getListUrl: Urls.data_countries,
                         valueKey: "id",
                         labelKey: "name",
                       }}
-                      thunkAction= {countries}
-                      reducer="CountriesData"
                       onChangeData={(data: any) => {
                         
                         setBasicInfo((prev: any) => ({

@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import DashboardCRM from "../pages/dashboards/crm/crm";
 import Login from "../pages/auth/Login";
 import { lazy } from "react";
+import UserTypes from "../pages/settings/userManagement/user-types";
 const Settings = lazy(() => import("../pages/settings/AllSettings/Settings"));
 const Users = lazy(() => import("../pages/settings/userManagement/Users"));
 const authProtectedRoutes = [
@@ -14,7 +15,7 @@ const authProtectedRoutes = [
   // Settings
   { path: "/settings", component: Settings },
   { path: "/settings/preferences", component: Users },
-  { path: "/settings/preferencestype", component: Usertypes },
+  { path: "/settings/preferencestype", component: UserTypes },
   // { path: "/settings/preferences/:id", component: PreferencesSection },
   {
     path: "/",

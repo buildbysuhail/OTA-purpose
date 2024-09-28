@@ -1,0 +1,45 @@
+import { Autocomplete, TextField } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { getOptions } from "../../utils/Utils";
+
+const SBMultipleDataList = ({ handleChange, field, defaultData, data, label }: any) => {
+  const dispatch = useDispatch();
+  const GetReducerName = reducerNameFromUrl(field?.getListUrl, "GET");
+  const dataList = useSelector((state: any) => state?.[GetReducerName]);
+
+  const onChange = (value: any) => {
+    handleChange(
+      field?.id,
+      value?.map((value: any) => {
+        return {
+          [field?.multiKey]: value?.value,
+        };
+      })
+    );
+  };
+
+  useEffect(() => {
+    field?.getListUrl && dispatch(getAction(field?.getListUrl));
+  }, []);
+
+  return (
+    <div>
+      <Autocomplete
+        onChange={({ target }, value) => onChange(value)}
+        options={getOptions(dataList?.data?.results, field?.getListUrl) || []}
+        multiple
+        className={`${field?.style} border-gray-200 bg-gray-50 rounded-md focus:ring-1 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
+        // isOptionEqualToValue={(option, value) => option.value === value.value}
+        renderInput={(params) => <TextField {...params} label={label} size="small" />}
+        loading={dataList?.loading}
+        // style={{
+        //   background: "rgb(241,245,249,0.4)",
+        // }}
+      />
+    </div>
+  );
+};
+
+export default SBMultipleDataList;

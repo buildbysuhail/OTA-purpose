@@ -1,5 +1,6 @@
 import config from "../config";
 import { getUserSession } from "./slices/auth/UserRights/thunk";
+import { countries } from "./slices/data/thunk";
 
 export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;
@@ -19,12 +20,10 @@ const Urls = {
   baseUrl: `${domain}/api`,
 
   // Dropdown
-  language: "/settings/language/",
-  country: "/core/data/countries/",
-  currency: "/core/data/Currencies/",
-  industry: "/core/data/Industries/",
-  state: "/Subscription/auth/MigrateCRMDb/",
-  Ledger:"/Core/Counter/SelectAccLedgersForComboByAccType",
+  languages: "/settings/language/",
+  countries: "/core/data/countries/",
+  currencies: "/core/data/Currencies/",
+  industries: "/core/data/Industries/",
   // Auth
 
   login: "/login/",

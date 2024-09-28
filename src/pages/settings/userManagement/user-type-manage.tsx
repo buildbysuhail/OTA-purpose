@@ -8,6 +8,30 @@ import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 
+type PrimitiveFormField = string | number | boolean | Date | null | undefined;
+type ArrayFormField = PrimitiveFormField[];
+type ObjectFormField = { [key: string]: FormField };
+type FormField = PrimitiveFormField | ArrayFormField | ObjectFormField;
+
+interface FormDataStructure {
+  [key: string]: FormField;
+}
+
+interface Validations {
+  [key: string]: string;
+}
+
+interface FormState {
+  data: FormDataStructure;
+  validations: Validations;
+}
+
+interface DynamicFormProps {
+  initialData: FormState;
+  onSubmit: (data: FormDataStructure) => void;
+  onCancel: () => void;
+}
+
 export const UserTypeManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -18,11 +42,12 @@ export const UserTypeManage = () => {
     data: { userTypeName: "", userTypeCode: "", remark: "" },
     validations: { userTypeName: "", userTypeCode: "", remark: "" },
   };
-  const [postData, setPostData] = useState(initialUserTypeData);
+  const [postData, setPostData] = useState<FormState>(initialUserTypeData);
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
 
   const queryParams = new URLSearchParams(location.search);
   
+  //key : used for route parm for edit or view 
   const [key, setKey] = useState<any>(queryParams.get('key'));
 
   const handleSubmit = useCallback(async () => {
@@ -39,6 +64,29 @@ export const UserTypeManage = () => {
             });
   }, [postData?.data]);
 
+  const handleChange = useCallback((id: string, value: FormField) => {
+    try {
+      setPostData(prevData => {
+        const newData = { ...prevData.data };
+
+        if (id.includes(".")) {
+          const [fieldParent, fieldChild] = id.split(".");
+          if (typeof newData[fieldParent] === 'object' && newData[fieldParent] !== null && !Array.isArray(newData[fieldParent])) {
+            (newData[fieldParent] as { [key: string]: FormField })[fieldChild] = value;
+          }
+        } else {
+          newData[id] = value;
+        }
+
+        return {
+          ...prevData,
+          data: newData
+        };
+      });
+    } catch (error) {
+      console.log(`DynamicForm, Error: `, error);
+    }
+  }, []);
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">

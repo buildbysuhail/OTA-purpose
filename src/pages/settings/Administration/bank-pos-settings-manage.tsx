@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { ResponseModelWithValidation } from "../../../base/response-model";
 import { handleResponse } from "../../../utilities/HandleResponse";
-import { toggleBankPosPopup, toggleCompanyProfilePopup } from "../../../redux/slices/popup-reducer";
+import { toggleBankPosPopup } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import AdministrationSettingsApis from "./administration-settings-apis";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { countries } from "../../../redux/slices/data/thunk";
 import Urls from "../../../redux/urls";
 
 const BankPosSettingsManage = () => {
@@ -66,12 +65,10 @@ const BankPosSettingsManage = () => {
             field={{
               id: "machineBrand",
               required: true,
-              getListUrl: Urls.country,
+              getListUrl: Urls.data_countries,
               valueKey: "id",
               labelKey: "name",
             }}
-            thunkAction={countries}
-            reducer="CountriesData"
             onChangeData={(data: any) => {
               setPostData((prev: any) => ({
                 ...prev,
@@ -96,12 +93,10 @@ const BankPosSettingsManage = () => {
             field={{
               id: "model",
               required: true,
-              getListUrl: Urls.country,
+              getListUrl: Urls.data_countries,
               valueKey: "id",
               labelKey: "name",
             }}
-            thunkAction={countries}
-            reducer="CountriesData"
             onChangeData={(data: any) => {
               setPostData((prev: any) => ({
                 ...prev,
@@ -126,12 +121,10 @@ const BankPosSettingsManage = () => {
             field={{
               id: "comPort",
               required: true,
-              getListUrl: Urls.country,
+              getListUrl: Urls.data_countries,
               valueKey: "id",
               labelKey: "name",
             }}
-            thunkAction={countries}
-            reducer="CountriesData"
             onChangeData={(data: any) => {
               setPostData((prev: any) => ({
                 ...prev,

@@ -15,7 +15,7 @@
 // import ERPModal from "../../components/ERPComponents/erp-modal";
 // import { handleResponse } from "../../utilities/HandleResponse";
 // import { APIClient } from "../../helpers/api-client";
-// import { postAction } from "../../redux/app-actions";
+// import { postAction } from "../../redux/slices/app-thunks";
 // import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 // import AccountSettingsApis from "./workspace-settings-apis";
 // import { Validation } from "devextreme-react/cjs/gantt";

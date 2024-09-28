@@ -25,7 +25,7 @@ import "./profile.css";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
-import { postAction } from "../../redux/app-actions";
+import { postAction } from "../../redux/slices/app-thunks";
 
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";

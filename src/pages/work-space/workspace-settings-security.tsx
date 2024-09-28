@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { ResponseModelWithValidation } from "../../base/response-model";
 import "./profile.css";
 import { APIClient } from "../../helpers/api-client";
-import { getAction, postAction } from "../../redux/app-actions";
+import { getAction, postAction } from "../../redux/slices/app-thunks";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { useLocation, useNavigate } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";

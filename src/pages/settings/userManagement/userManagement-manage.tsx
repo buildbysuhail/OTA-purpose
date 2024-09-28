@@ -6,17 +6,12 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import UserManagementApis from './User-Management-api';
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
-import { countries, employeecompo, usertypecompo } from "../../../redux/slices/data/thunk";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
 
 //add popup for userType grid
 export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
   const dispatch = useAppDispatch();
-  const onClose = useCallback(async () => {
-    
-    dispatch(toggleUserTypePopup(false));
-  },[]);
     const initaialUserTypeData = {
         data:{userTypeName:'',userTypeCode:'',remark:''},
         validations:{userTypeName:'',userTypeCode:'',remark:''}
@@ -193,12 +188,10 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       field={{
                         id: "counterID",
                         required: true,
-                        getListUrl: Urls.country,
+                        getListUrl: Urls.data_countries,
                         valueKey: "id",
                         labelKey: "name",
                       }}
-                      thunkAction= {countries}
-                      reducer="CountriesData"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({
@@ -259,12 +252,10 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       field={{
                         id: "userTypeCode",
                         required: true,
-                        getListUrl: Urls.getUserTypeCompo,
+                        getListUrl: Urls.data_user_types,
                         valueKey: "userTypeCode",
                         labelKey: "userTypeName",
                       }}
-                      thunkAction= {usertypecompo}
-                      reducer="Usertypecompo"
                       onChangeData={(data: any) => {
                         // Update only the userTypeCode field
                         setPostUser((prevData: any) => ({
@@ -291,12 +282,10 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       field={{
                         id: "employeeID",
                         required: true,
-                        getListUrl: Urls.getEmployeeCompo,
+                        getListUrl: Urls.data_employees,
                         valueKey: "employeeID",
                         labelKey: "employeeName",
                       }}
-                      thunkAction= {employeecompo}
-                      reducer="Employeecompo"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({
@@ -473,12 +462,10 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       field={{
                         id: "counterID",
                         required: true,
-                        getListUrl: Urls.country,
+                        getListUrl: Urls.data_countries,
                         valueKey: "id",
                         labelKey: "name",
                       }}
-                      thunkAction= {countries}
-                      reducer="CountriesData"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({
@@ -539,12 +526,10 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       field={{
                         id: "userTypeCode",
                         required: true,
-                        getListUrl: Urls.getUserTypeCompo,
+                        getListUrl: Urls.data_user_types,
                         valueKey: "userTypeCode",
                         labelKey: "userTypeName",
                       }}
-                      thunkAction= {usertypecompo}
-                      reducer="Usertypecompo"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({
@@ -566,12 +551,10 @@ export const PopUpModalAddUserTypes = ({setIsOpenAddPop}:any) => {
                       field={{
                         id: "employeeID",
                         required: true,
-                        getListUrl: Urls.getEmployeeCompo,
+                        getListUrl: Urls.data_employees,
                         valueKey: "employeeID",
                         labelKey: "employeeName",
                       }}
-                      thunkAction= {employeecompo}
-                      reducer="Employeecompo"
                       onChangeData={(data: any) => {
                         
                         setPostUser((prev: any) => ({

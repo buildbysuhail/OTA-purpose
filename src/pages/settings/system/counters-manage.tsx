@@ -1,12 +1,10 @@
 import { useCallback, useState } from "react";
 import { ResponseModelWithValidation } from "../../../base/response-model";
-import UserManagementApis from "../userManagement/User-Management-api";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
-import { ledgercompo, usertypecompo } from "../../../redux/slices/data/thunk";
 import SystemSettingsApi from "./system-apis";
 
 
@@ -82,12 +80,10 @@ setIsOpenAddPop(false);
                       field={{
                         id: "cashLedgerID",
                         required: true,
-                        getListUrl: Urls.Ledger,
+                        getListUrl: Urls.data_acc_ledgers,
                         valueKey:"ledgerID",
                         labelKey:"ledgerName",
                       }}
-                      thunkAction= {ledgercompo}
-                      reducer="Ledgercompo"
                       onChangeData={(data: any) => {
                         // Update only the cashLedgerID field
                         setPostCounter((prevData: any) => ({
@@ -111,12 +107,10 @@ setIsOpenAddPop(false);
                       field={{
                         id: "warehouseID",
                         required: true,
-                        getListUrl: Urls.getUserTypeCompo,
+                        getListUrl: Urls.data_user_types,
                         valueKey: "warehouseID",
                         labelKey: "userTypeName",
                       }}
-                      thunkAction= {usertypecompo}
-                      reducer="Usertypecompo"
                       onChangeData={(data: any) => {
                         // Update only the warehouseID field
                         setPostCounter((prevData: any) => ({
@@ -153,7 +147,7 @@ setIsOpenAddPop(false);
          }}
            />
           <label htmlFor="agreement" className="text-gray-700">
-           Manitain Shift
+           Maintain Shift
           </label>
         </div> 
       

@@ -1,21 +1,15 @@
 import {
   FC,
   Fragment,
-  useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
 import Urls from "../../redux/urls";
-import ERPInput from "../../components/ERPComponents/erp-input";
-import ERPButton from "../../components/ERPComponents/erp-button";
 import { useDispatch } from "react-redux";
 import { ResponseModelWithValidation } from "../../base/response-model";
 import "./profile.css";
 import { APIClient } from "../../helpers/api-client";
-import { getAction, postAction } from "../../redux/app-actions";
-import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { Link, useLocation } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DataGrid, Toolbar } from "devextreme-react";
@@ -23,15 +17,14 @@ import {
   Column,
   DataGridRef,
   FilterRow,
-  HeaderFilter,
   Item,
   Paging,
-  Scrolling,
   SearchPanel,
 } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import WorkspaceSettingsApis from "./workspace-settings-apis";
 import ErpAvatar from "../../components/ERPComponents/erp-avatar";
+import { postAction } from "../../redux/slices/app-thunks";
 
 interface WorkspaceSettingsMembersProps {}
 

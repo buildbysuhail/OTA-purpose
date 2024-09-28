@@ -102,8 +102,8 @@ const Urls = {
     //setting/userManagement
     getUserSubscriped:"/Subscription/User/GetUsersForGrid",
     postUserSubscriped:'/Subscription/User/AddUser',
-    getUserTypeCompo:'/Subscription/User/GetUserTypeCombo',
-    getEmployeeCompo:'/Subscription/User/GetEmployeeCombo',
+    data_user_types:'/Subscription/User/GetUserTypeCombo',
+    data_employees:'/Subscription/User/GetEmployeeCombo',
     getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
     patchUserSubscriped:'/Subscription/User/EditUser',
     getUserTypes:"/Core/UserType/GetUsersTypeForGrid",

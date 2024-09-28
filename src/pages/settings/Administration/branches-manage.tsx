@@ -12,6 +12,7 @@ import AdministrationSettingsApis from "./administration-settings-apis";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { countries } from "../../../redux/slices/data/thunk";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
+import Urls from "../../../redux/urls";
 
 const BranchManage = () => {
   const dispatch = useDispatch();
@@ -124,12 +125,10 @@ const BranchManage = () => {
             field={{
               id: " companyID",
               required: true,
-              getListUrl: "your-api-url",
+              getListUrl: Urls.data_countries,
               valueKey: "id",
               labelKey: "name",
             }}
-            thunkAction={countries}
-            reducer="CountriesData"
             onChange={(data: any) => {
               debugger;
               setPostData((prev: any) => ({
@@ -289,12 +288,10 @@ const BranchManage = () => {
             field={{
               id: "cId",
               required: true,
-              getListUrl: "your-api-url",
+              getListUrl: Urls.data_countries,
               valueKey: "id",
               labelKey: "name",
             }}
-            thunkAction={countries}
-            reducer="CountriesData"
             onChange={(data: any) => {
               debugger;
               setPostData((prev: any) => ({

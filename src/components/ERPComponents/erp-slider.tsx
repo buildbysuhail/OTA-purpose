@@ -1,4 +1,4 @@
-interface SBSliderProps {
+interface ERPSliderProps {
   id?: string;
   label?: string;
   placeholder?: string;
@@ -15,7 +15,7 @@ interface SBSliderProps {
   max?: number;
 }
 
-const SBSlider = ({ id, label, placeholder, required, noLabel, min, max, value, defaultValue, disabled, onChange }: SBSliderProps) => {
+const ERPSlider = ({ id, label, placeholder, required, noLabel, min, max, value, defaultValue, disabled, onChange }: ERPSliderProps) => {
   const iLabel = label || id?.replaceAll("_", " ");
   return (
     <div>
@@ -41,4 +41,4 @@ const SBSlider = ({ id, label, placeholder, required, noLabel, min, max, value, 
   );
 };
 
-export default SBSlider;
+export default ERPSlider;

@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-interface SBTabProps {
+interface ERPTabProps {
   tabs?: Array<string>;
   activeTab?: number;
   onClickTabAt?: (index: number) => void;
 }
 
-const SBTab = ({ tabs, activeTab, onClickTabAt }: SBTabProps) => {
+const ERPTab = ({ tabs, activeTab, onClickTabAt }: ERPTabProps) => {
   return (
     <div className="flex border text-center rounded-md overflow-hidden">
       {tabs?.map((tab, index) => (
@@ -22,4 +22,4 @@ const SBTab = ({ tabs, activeTab, onClickTabAt }: SBTabProps) => {
   );
 };
 
-export default SBTab;
+export default ERPTab;

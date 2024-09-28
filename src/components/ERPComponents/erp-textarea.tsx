@@ -1,4 +1,4 @@
-interface SBInputProps {
+interface ERPInputProps {
   id: string;
   data?: any;
   value?: string;
@@ -19,7 +19,7 @@ interface SBInputProps {
   noLabel?: boolean;
 }
 
-const SBTextarea = ({
+const ERPTextarea = ({
   id,
   onChangeData,
   onChange,
@@ -38,7 +38,7 @@ const SBTextarea = ({
   rows,
   cols,
   noLabel,
-}: SBInputProps) => {
+}: ERPInputProps) => {
   const iLabel = label || id?.replaceAll("_", " ");
   return (
     <div>
@@ -78,4 +78,4 @@ const SBTextarea = ({
   );
 };
 
-export default SBTextarea;
+export default ERPTextarea;

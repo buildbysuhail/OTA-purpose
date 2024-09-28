@@ -2,9 +2,9 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
-import { getOptions } from "../../utils/Utils";
+import { getOptions } from "../../utilities/Utils";
 
-const SBMultipleDataList = ({ handleChange, field, defaultData, data, label }: any) => {
+const ERPMultipleDataList = ({ handleChange, field, defaultData, data, label }: any) => {
   const dispatch = useDispatch();
   const GetReducerName = reducerNameFromUrl(field?.getListUrl, "GET");
   const dataList = useSelector((state: any) => state?.[GetReducerName]);
@@ -42,4 +42,4 @@ const SBMultipleDataList = ({ handleChange, field, defaultData, data, label }: a
   );
 };
 
-export default SBMultipleDataList;
+export default ERPMultipleDataList;

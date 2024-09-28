@@ -4,19 +4,14 @@ import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOption
 import { Fragment, useEffect, useRef, useState } from "react";
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
 
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useLocation } from "react-router-dom";
 import { getCurrentCurrencySymbol, getPriceListOptions } from "../../utilities/Utils";
-import { ActionType } from "../../redux/types";
-import { getThunkAndSlice } from "../../redux/slices/dynamicThunkAndSlice";
-import { useAppDispatch, useAppDynamicSelector, useAppSelector } from "../../utilities/hooks/useAppDispatch";
-import { AppState } from "../../redux/slices/app/types";
 import { RootState } from "../../redux/store";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import showForm from "./erp-popup-model-form";
-import { getAction } from "../../redux/app-actions";
+import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
 type ReducerName = keyof RootState;
-interface SBDataComboboxProps {
+interface ERPDataComboboxProps {
   id: string;
   label?: string;
   options?: any[];
@@ -42,8 +37,6 @@ interface SBDataComboboxProps {
   isPaginated?: boolean;
   disabledApiCall?: boolean;
   validation?: string;
-  reducer: ReducerName;
-  thunkAction?: () => any;
 }
 
 export const getOptions = (data: any, keyLabel: string) => {
@@ -67,7 +60,7 @@ export const getOptions = (data: any, keyLabel: string) => {
   }
 };
 
-export default function SBDataCombobox({
+export default function ERPDataCombobox({
   id,
   label,
   handleChange,
@@ -89,12 +82,10 @@ export default function SBDataCombobox({
   initialValue,
   isPaginated = false,
   disabledApiCall = false,
-  validation,
-  reducer,
-  thunkAction
-}: SBDataComboboxProps) {
+  validation
+}: ERPDataComboboxProps) {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const { pathname } = useLocation();
 
   const comboboxRef = useRef<any>(null);
@@ -104,23 +95,24 @@ export default function SBDataCombobox({
   const [localValue, setLocalValue] = useState<any>();
   const [hasValue, setHasValue] = useState<boolean>(false);
 
-  const dataList: any = useAppSelector((state: RootState) => state[reducer] );
+  const GetReducerName = reducerNameFromUrl(field?.getListUrl, "GET");
+  const dataList = useSelector((state: any) => state?.[GetReducerName]);
 
   const listData = isPaginated ? dataList?.results : dataList;
 
-  console.log(`SBDataCombobox,  : data_list_data`, id, dataList);
+  console.log(`ERPDataCombobox,  : data_list_data`, id, dataList);
 
   useEffect(() => {
     
     if (!disabledApiCall) {
-      thunkAction  != undefined && dispatch(thunkAction());
+      field?.getListUrl && dispatch(getAction(field?.getListUrl));
     }
   }, []);
 
   const iLabel = label || id?.replaceAll("_", " ");
   const fieldKey = field?.id?.replaceAll("_id", "");
   const defaultValueKey = defaultData?.[fieldKey]?.[field?.valueKey];
-  console.log(`SBDataCombobox,  : default_value_key`, defaultValueKey);
+  console.log(`ERPDataCombobox,  : default_value_key`, defaultValueKey);
 
   let value = field?.labelKey ? defaultData?.[field?.id]?.[field?.labelKey] : defaultData?.[field?.id];
   if (data !== undefined && data?.[field?.id] !== undefined) {
@@ -139,7 +131,7 @@ export default function SBDataCombobox({
         "is_for"
       )?.filter((item: any) => item?.is_for == field?.filterKey)
     : options;
-  console.log(`SBDataCombobox,  : options_data_value`, options, excludeOptions);
+  console.log(`ERPDataCombobox,  : options_data_value`, options, excludeOptions);
   options = options?.filter((option: any) => !excludeOptions?.includes(option?.value));
   options = includeOptions ? [...includeOptions, ...options] : options;
 
@@ -151,7 +143,7 @@ export default function SBDataCombobox({
   const defualt = options?.find((option: any) => option?.value === defaultValueKey);
   const selected = options?.find((option: any) => option?.value === data?.[field?.id]);
 
-  console.log(`SBDataCombobox,  : default_data_value`, defaultData, options, defualt);
+  console.log(`ERPDataCombobox,  : default_data_value`, defaultData, options, defualt);
 
   const exceptional =
     (defaultData && fieldKey === "payment_terms" && options[0]) ||
@@ -180,7 +172,7 @@ export default function SBDataCombobox({
 
   return (
     <div className="relative">
-      {/* <SBModelForm formFields={field?.formFields} show={showForm} onClose={() => setShowForm(false)} title={iLabel} /> */}
+      {/* <ERPModelForm formFields={field?.formFields} show={showForm} onClose={() => setShowForm(false)} title={iLabel} /> */}
       <Combobox
         disabled={disableCombobox()}
         value={selected || defualt || exceptional || initialValue || ""}
@@ -216,8 +208,8 @@ export default function SBDataCombobox({
                   autoComplete="off"
                   spellCheck={false}
                   onKeyDown={(e: any) => {
-                    console.log(`SBDataCombobox,  : e `, e);
-                    console.log(`SBDataCombobox,  : e `, e.target.value);
+                    console.log(`ERPDataCombobox,  : e `, e);
+                    console.log(`ERPDataCombobox,  : e `, e.target.value);
                   }}
                   //   autoComplete={false}
                   autoFocus={autoFocus}

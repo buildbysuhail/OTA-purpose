@@ -2,7 +2,7 @@ import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
 
-interface SBSelectProps {
+interface ERPSelectProps {
   id: string;
   label?: string;
   options?: any[];
@@ -17,7 +17,7 @@ interface SBSelectProps {
   noLabel?: boolean;
 }
 
-export default function SBSelect({
+export default function ERPSelect({
   id,
   label,
   handleChange,
@@ -28,7 +28,7 @@ export default function SBSelect({
   options,
   required,
   noLabel = false,
-}: SBSelectProps) {
+}: ERPSelectProps) {
   const [selected, setSelected] = useState();
   const [query, setQuery] = useState("");
   const [localValue, setLocalValue] = useState<any>();

@@ -19,13 +19,26 @@ const Urls = {
   host: `${domain}/`, 
   baseUrl: `${domain}/api`,
 
-  // Dropdown
-  languages: "/settings/language/",
-  countries: "/core/data/countries/",
-  currencies: "/core/data/Currencies/",
-  industries: "/core/data/Industries/",
-  // Auth
+  // Dropdown - core
+  data_languages: "/settings/language/",
+  data_countries: "/data/Countries/",
+  data_currencies: "/data/Currencies/",
+  data_industries: "/data/Industries/",
+  data_stock_valuation_methods: "/data/StockValuationMethods/",
+  data_salesRoute: "/data/SalesRoute/",
 
+  // Dropdown - accounts
+  data_acc_groups: "/Accounts/Data/AccGroups/",
+  data_acc_ledgers: "/Accounts/Data/AccLedgers/",
+  data_costcentres: "/Accounts/Data/CostCentres/",
+  data_parties: "/Accounts/Data/Parties/",
+  data_party_categories: "/Accounts/Data/PartyCategories/",
+  data_privilage_cards: "/Accounts/Data/PrivilageCards/",
+  data_projects: "/Accounts/Data/Projects/",
+  data_upis: "/Accounts/Data/UPIs/",
+
+
+  // Auth
   login: "/login/",
   logout: "/logout/",
   password_reset: "/passwordReset",
@@ -50,27 +63,25 @@ const Urls = {
   getPhone_profile: "/Subscription/Profile/GetPhone/",
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
   getUserSession: "/Core/LoginSessions/GetAllAsync",
-
   logoutUserSession: "/Core/LoginSessions/InActiveSession",
-     
+  uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
+  changeEmailRequest_workspace : "/Subscription/WorkSpace/ChangeEmailRequest/",
+  verifyEmail_workspace : "/Subscription/WorkSpace/VerifyEmail/",
+  updateCompanyEmail_workspace : "/Subscription/WorkSpace/UpdateCompanyEmailAsync/",
+  UpdateCompanyPhone_workspace: "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
+  changePhoneRequest_workspace : "/Subscription/WorkSpace/ChangePhoneRequest/",
+  changePhone_workspace : "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
+  verifyPhone_workspace : "/Subscription/WorkSpace/VerifyPhone/",
+  changeBasicInfo_workspace : "/Subscription/WorkSpace/ChangeBasicInfo/",
+  changeAddress_workspace : "/Subscription/WorkSpace/ChangeAddress/",
+  getBasicInfo_workspace : "/Subscription/WorkSpace/GetBasicInfo/",
+  getEmail_workspace : "/Subscription/WorkSpace/GetEmail/",
+  getPhone_workspace : "/Subscription/WorkSpace/GetPhone/",
+  getLogo_workspace : "/Subscription/WorkSpace/GetLogo/",
+  getAddress_workspace : "/Subscription/WorkSpace/GetAddress/",
+  delete_workspace:"/Subscription/WorkSpace/DeleteWorkspace",
+  get_members:"/Subscription/WorkSpace/GetMembers",
 
-uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
-changeEmailRequest_workspace : "/Subscription/WorkSpace/ChangeEmailRequest/",
-verifyEmail_workspace : "/Subscription/WorkSpace/VerifyEmail/",
-updateCompanyEmail_workspace : "/Subscription/WorkSpace/UpdateCompanyEmailAsync/",
-UpdateCompanyPhone_workspace: "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
-changePhoneRequest_workspace : "/Subscription/WorkSpace/ChangePhoneRequest/",
-changePhone_workspace : "/Subscription/WorkSpace/UpdateCompanyPhoneAsync/",
-verifyPhone_workspace : "/Subscription/WorkSpace/VerifyPhone/",
-changeBasicInfo_workspace : "/Subscription/WorkSpace/ChangeBasicInfo/",
-changeAddress_workspace : "/Subscription/WorkSpace/ChangeAddress/",
-getBasicInfo_workspace : "/Subscription/WorkSpace/GetBasicInfo/",
-getEmail_workspace : "/Subscription/WorkSpace/GetEmail/",
-getPhone_workspace : "/Subscription/WorkSpace/GetPhone/",
-getLogo_workspace : "/Subscription/WorkSpace/GetLogo/",
-getAddress_workspace : "/Subscription/WorkSpace/GetAddress/",
-delete_workspace:"/Subscription/WorkSpace/DeleteWorkspace",
-get_members:"/Subscription/WorkSpace/GetMembers",
   // AccountSettings/Security
   updatePassword: "/Subscription/AccountSettings/Security/ResetPassword/",
 
@@ -87,7 +98,7 @@ get_members:"/Subscription/WorkSpace/GetMembers",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
- //setting
+  //setting
     //setting/userManagement
     getUserSubscriped:"/Subscription/User/GetUsersForGrid",
     postUserSubscriped:'/Subscription/User/AddUser',

@@ -13,7 +13,7 @@ import {
   Paging,
   Scrolling,
   DataGridTypes,
-  ColumnFixing,
+  ColumnFixing, 
   LoadPanel
 } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
@@ -23,7 +23,7 @@ import firefox from '../../assets/images/browser-logos/firefox.png';
 import microsoft from '../../assets/images/browser-logos/microsoft.png';
 import safari from '../../assets/images/browser-logos/safari.png';
 import { postAction } from "../../redux/slices/app-thunks";
-// import { deviceLogos } from "../../assets/images/device-logos";
+// import { deviceLogos } from "../../assets/images/device-logos"; 
 
 interface AccountSettingsProps {}
 

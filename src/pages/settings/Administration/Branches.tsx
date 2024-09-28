@@ -1,18 +1,13 @@
 import { Fragment } from "react/jsx-runtime"
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPAvatar from "../../../components/ERPComponents/erp-avatar";
-import ERPCropper from "../../../components/ERPComponents/erp-cropper";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../redux/urls";
 import { countries } from "../../../redux/slices/data/thunk";
 import { ResponseModelWithValidation } from "../../../base/response-model";
 import AdministrationSettingsApis from "./administration-settings-apis";
-import { useDispatch } from "react-redux";
-import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import Urls from "../../../redux/urls";
 type Data={
   registeredName:string;
   registeredNameArabic: string;
@@ -121,7 +116,7 @@ const Branches = () => {
     
     const getBasicInfo = async () => {
       try {
-        const res = await AdministrationSettingsApis.getCompayProfileInfo();    
+        const res = await AdministrationSettingsApis.getCompanyProfileInfo();    
         console.log("Fetched Data: ", res); // Add this to check the fetched data    
         // Update the basicInfo state with fetched data
         
@@ -313,12 +308,10 @@ const Branches = () => {
         field={{
           id: "cId",
           required: true,
-          getListUrl: "your-api-url",
+          getListUrl: Urls.data_countries,
           valueKey: "id",
           labelKey: "name",
         }}
-        thunkAction={countries}
-        reducer="CountriesData"
         onChange={(data: any) => {
           debugger
           setBasicInfo((prev: any) => ({

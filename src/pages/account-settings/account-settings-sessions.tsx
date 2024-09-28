@@ -1,34 +1,28 @@
-import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useEffect, useState } from "react";
 import Urls from "../../redux/urls";
-import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import { useDispatch } from "react-redux";
 import { ResponseModelWithValidation } from "../../base/response-model";
 import "./profile.css";
 import { APIClient } from "../../helpers/api-client";
-import { getAction, postAction } from "../../redux/app-actions";
-import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { useLocation } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DataGrid } from "devextreme-react";
 import {
   Column,
-  FilterRow,
-  HeaderFilter,
   Paging,
   Scrolling,
-  SearchPanel,
   DataGridTypes,
   ColumnFixing,
   LoadPanel
 } from "devextreme-react/cjs/data-grid";
 import CustomStore from "devextreme/data/custom_store";
 import AccountSettingsApis from "./account-settings-apis";
-import Pageheader from "../../components/common/pageheader/pageheader";
 import chrome from '../../assets/images/browser-logos/chrome.png';
 import firefox from '../../assets/images/browser-logos/firefox.png';
 import microsoft from '../../assets/images/browser-logos/microsoft.png';
 import safari from '../../assets/images/browser-logos/safari.png';
+import { postAction } from "../../redux/slices/app-thunks";
 // import { deviceLogos } from "../../assets/images/device-logos";
 
 interface AccountSettingsProps {}

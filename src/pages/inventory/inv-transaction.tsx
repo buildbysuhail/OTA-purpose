@@ -81,36 +81,29 @@ const InvTransaction = () => {
       {/* Sale Header */}
       <div className="flex items-center bg-white shadow-sm p-4 border-b-2">
         {/* <ArrowLeft className="mr-4 text-zinc-800" size={24} />*/}
-        <i className="ri-arrow-left-linemr-4 text-zinc-800 size={24} "></i>
+        <i className="ri-arrow-left-linemr-4 text-zinc "></i>
         <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
         <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
           <button
             className={`px-4 py-2 text-sm transition-colors duration-200 ${
               activeButton === "credit"
-                ? "bg-green-500 text-white rounded-full"
-                : "bg-transparent text-zinc-600"
+                ? " bg-red text-white rounded-full"
+                : "bg-transparent text-zinc"
             }`}
             onClick={() => setActiveButton("credit")}
           >
             Credit
           </button>
-          {/* <button
+          <button
             className={`px-4 py-2 text-sm transition-colors duration-200 ${
               activeButton === "cash"
-                ? "bg-green-500 text-white rounded-full"
-                : "bg-transparent text-zinc-600"
+                ? "bg-green text-white rounded-full"
+                : "bg-transparent text-zinc"
             }`}
             onClick={() => setActiveButton("cash")}
           >
             Cash
-          </button> */}
-          <ERPButton
-                      title="Delete Workspace"
-                      onClick={() => {
-                        // deleteWorkspacePopup();
-                      }}
-                      variant="primary"
-                    ></ERPButton>
+          </button>
         </div>
         {/* <Settings className="text-zinc-800" size={24} /> */}
         <i className="ri-settings-3-line"></i>

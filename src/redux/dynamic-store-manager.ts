@@ -1,15 +1,14 @@
 import {
-  combineReducers,
-  Reducer,
-  AnyAction,
   ThunkAction,
   Action,
   Middleware,
+  combineReducers,
+  Reducer,
+  AnyAction,
 } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
-
+import rootReducer from './slices/root-reducer';
 import thunk from "redux-thunk";
-import rootReducer from "./slices/rootReducer";
 
 type ReducerMap = {
   [key: string]: Reducer<any, AnyAction>;
@@ -17,20 +16,18 @@ type ReducerMap = {
 
 class DynamicReducerManager {
   private reducers: ReducerMap;
-
-  private middlewares: Middleware[] = [thunk];
-  private store = configureStore({
-    reducer: {},
-    middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware({
-        // serializableCheck: false,
-        // immutableCheck: { warnAfter: 128 },
-      }).concat(this.middlewares),
-  });;
+  private store;
 
   constructor(initialReducers: ReducerMap) {
     this.reducers = { ...initialReducers };
-    this.store.replaceReducer(combineReducers(rootReducer));
+    this.store = configureStore({
+      reducer: combineReducers(this.reducers),
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+          // serializableCheck: false,
+          // immutableCheck: { warnAfter: 128 },
+        }).concat(thunk),
+    });
   }
 
   getStore() {
@@ -52,5 +49,5 @@ class DynamicReducerManager {
   }
 }
 
-export const reducerManager = new DynamicReducerManager(rootReducer);
-
+// Initialize the DynamicReducerManager with the root reducer
+export const reducerManager = new DynamicReducerManager({ root: rootReducer });

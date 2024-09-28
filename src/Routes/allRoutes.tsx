@@ -5,7 +5,6 @@ import Login from "../pages/auth/Login";
 import { lazy } from "react";
 const Settings = lazy(() => import("../pages/settings/AllSettings/Settings"));
 const Users = lazy(() => import("../pages/settings/userManagement/Users"));
-const Usertypes = lazy(()=>import("../pages/settings/userManagement/UserTypes"))
 const authProtectedRoutes = [
   {
     path: "/dashboard",

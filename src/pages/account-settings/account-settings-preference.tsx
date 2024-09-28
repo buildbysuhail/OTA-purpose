@@ -1,7 +1,7 @@
-import { FC, Fragment, useEffect, useState } from "react";
-import {
-  useAppDynamicSelector,
-} from "../../utilities/hooks/useAppDispatch";
+// import { FC, Fragment, useEffect, useState } from "react";
+// import {
+//   useAppDynamicSelector,
+// } from "../../utilities/hooks/useAppDispatch";
 import Urls from "../../redux/urls";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import {
@@ -31,12 +31,14 @@ import { Theme } from "../../redux/slices/app/types";
 import Cookies from "js-cookie";
 import { modelToBase64 } from "../../utilities/jsonConverter";
 import ERPSelect from "../../components/ERPComponents/erp-select";
+import { useAppDynamicSelector } from "../../utilities/hooks/useAppDispatch";
+import { Fragment, useEffect, useState } from "react";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
 }
 
-const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
+const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let api = new APIClient();
   const [language, setLanguage] = useState<string>("en");
   const [_language, _setLanguage] = useState<string>("en");
@@ -44,7 +46,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
     { value: "ar", label: "العربية" },
     { value: "en", label: "English" },
   ]);
-  const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
@@ -82,33 +83,16 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
     data: { userName: "", password: "", newValue: "" },
     loading: false,
   });
-  const updatedFormDataEmail: any = useAppDynamicSelector(
-    Urls.verifyEmail_profile,
-    ActionType.POST
-  );
+  // const updatedFormDataEmail: any = useAppDynamicSelector(
+  //   Urls.verifyEmail_profile,
+  //   ActionType.POST
+  // );
 
   const { thunk: getFormEmailThunk } = getThunkAndSliceWithValidation<any, any>(
     Urls.getEmail_profile,
     ActionType.GET,
     false
   );
-  const formDataEmail: any = useAppDynamicSelector(
-    Urls.getEmail_profile,
-    ActionType.GET
-  );
-
-  const { thunk: postFormEmailTokenThunk } = getThunkAndSliceWithValidation<
-    any,
-    any
-  >(Urls.changeEmailRequest_profile, ActionType.POST, false, {
-    data: { userName: "", password: "", newValue: "" },
-    loading: false,
-  });
-  const updatedFormDataEmailToken: any = useAppDynamicSelector(
-    Urls.changeEmailRequest_profile,
-    ActionType.POST
-  );
-
   const { thunk: updateUserLanguageThunk } = getThunkAndSlice<UserLanguage>(
     Urls.updateLanguage,
     ActionType.POST,
@@ -199,7 +183,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
     });
   };
   const handleThemeChange = (key: string, mode: string) => {
-    setTheme((prevTheme) => ({
+    setTheme((prevTheme: any) => ({
       ...prevTheme,
       [key]: mode,
     }));

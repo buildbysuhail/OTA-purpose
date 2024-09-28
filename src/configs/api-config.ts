@@ -1,5 +1,5 @@
 import Urls from "../redux/urls";
 
-const ApiConfig: Array<string> = [
-  Urls.country
-]
+// const ApiConfig: Array<string> = [
+//   Urls.country
+// ]

@@ -461,7 +461,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
     ) {
       
       const company = userSession.companies.find(
-        (x) => x.name === userSession.currentClientName
+        (x: any) => x.name === userSession.currentClientName
       );
       if (company && company.logo) {
         setCompanyLogo(company.logo);

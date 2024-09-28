@@ -18,11 +18,11 @@ import ERPModal from "./erp-modal";
 import ERPSubmitButton from "./erp-submit-button";
 import ERPButton from "./erp-button";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
-import { postAction } from "../../redux/app-actions";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { ResponseModel } from "../../base/response-model";
 import { onSuccess } from "redux-axios-middleware";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
+import { postAction } from "../../redux/slices/app-thunks";
 
 export function useDebounceEffect(
   fn: () => void,

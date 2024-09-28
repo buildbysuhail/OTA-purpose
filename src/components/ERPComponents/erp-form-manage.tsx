@@ -1,108 +1,221 @@
-// import { useCallback, useState } from "react";
-// import { useDispatch } from "react-redux";
-// import { ResponseModelWithValidation } from "../../base/response-model";
-// import { handleResponse } from "../../utilities/HandleResponse";
-// import { APIClient } from "../../helpers/api-client";
+import { useCallback, useState } from "react";
+import ERPButton from "../../components/ERPComponents/erp-button";
+import ERPInput from "../../components/ERPComponents/erp-input";
+import { ResponseModelWithValidation } from "../../base/response-model";
+import { handleResponse } from "../../utilities/HandleResponse";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { APIClient } from "../../helpers/api-client";
 
-// interface ERPFormManageProps {
-//   popupAction: (value: boolean) => { type: string; payload: boolean };
-//   url: string;
-//   initialData: {data: any, validations:any };
-// }
-// let api = new APIClient();
-// export const ERPFormManage: React.FC<ERPFormManageProps> = ({
-//   popupAction,
-//   url,
-//   initialData
-// }) => {
-//   const dispatch = useDispatch();
-//   const onClose = useCallback(async () => {
-//     dispatch(popupAction(false));
-//   }, []);
-//   const [postData, setPostData] = useState<{data: any, validations:any }>(initialData);
-//   const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
+type PrimitiveFormField = string | number | boolean | Date | null | undefined;
+type ArrayFormField = PrimitiveFormField[];
+type ObjectFormField = { [key: string]: FormField };
+type FormField = PrimitiveFormField | ArrayFormField | ObjectFormField;
+export interface fieldType {
+    id: string;
+    type:
+      | "slider"
+      | "switch"
+      | "rating"
+      | "image"
+      | "select"
+      | "list"
+      | "button"
+      | "checkbox"
+      | "color"
+      | "date"
+      | "datetime-local"
+      | "email"
+      | "month"
+      | "number"
+      | "password"
+      | "radio"
+      | "range"
+      | "reset"
+      | "search"
+      | "submit"
+      | "tel"
+      | "time"
+      | "url"
+      | "week"
+      | "text"
+      | "textarea"
+      | "img-upload"
+      | "file"
+      | "uniqueId"
+      | "ChartCode"
+      | "dataList"
+      | "multipleList"
+      | "sales_person"
+      | "payment_terms"
+      | "peopleList"
+      | "actionTextExpense"
+      | "accountList"
+      | "itemsList"
+      | "barcode"
+      | "tax_number"
+      | "multiUnit"
+      | "discountInput"
+      | "accountsListWithCode"
+      | "exchange_rate"
+      | "accountsWithType"
+      | "moreDetails"
+      | "state"
+      | "customFilter"
+      | "ExpenseVendor"
+      | "currency"
+      | "customCombobox"
+      | "assignOwnerDropDown";
+    items?: any[];
+    /**
+     * @description title for field
+     */
+    title?: string;
+    /**
+     * @description label for field
+     */
+    label?: string;
+    /**
+     * @description The label to display when the switch is on.
+     */
+    onLabel?: string;
+    /**
+     * @description The label to display when the switch is off.
+     */
+    offLabel?: string;
+    multiple?: boolean;
+    row?: boolean;
+    required?: boolean;
+    minLength?: number;
+    maxLength?: number;
+    min?: number;
+    max?: number;
+    pattern?: string;
+    defaultValue?: any;
+    placeholder?: string;
+    disabled?: boolean;
+    style?: string;
+    value?: any;
+    readOnlyValue?: any;
+    getter?: string;
+    noLabel?: boolean;
+    showWhen?: string;
+    hideWhen?: string;
+    disableWhen?: string;
+    isBoolean?: boolean;
+    peopleType?: string;
+    accountCode?: number;
+    hasDueDate?: boolean;
+    includeOptions?: any[];
+    initialValue?: any;
+    showFirstItem?: boolean;
+    hintAvailable?: boolean;
+    hintMessage?: string;
+    isPaginated?: boolean;
+    should_track_inventory?: boolean;
+    module?: "all" | "sales" | "purchase";
+  }
+interface FormDataStructure {
+  [key: string]: FormField;
+}
 
-//   const addUserType = useCallback(async () => {
-//     setPostDataLoading(true);
-//     const response: ResponseModelWithValidation<any, any> =
-//       await api.post(url ,postData?.data);
-//       setPostDataLoading(false);
-//     handleResponse(response, 
-//       () => {dispatch(popupAction(false));},
-//       () => {setPostData((prevData: any) => ({
-//                 ...prevData,
-//                 validations: response.validations,
-//               }));
-//             });
-//   }, [postData?.data]);
+interface Validations {
+  [key: string]: string;
+}
 
-//   return (
-//     <div className="w-full pt-4">
-//       <div className="grid grid-cols-1 gap-3">
-//         <ERPInput
-//           id="userTypeName"
-//           label="User type Name"
-//           placeholder="User Type Name"
-//           required={true}
-//           data={postUserType?.data}
-//           onChangeData={(data: any) => {
-//             setPostUserType((prevData: any) => ({
-//               ...prevData,
-//               data: data,
-//             }));
-//           }}
-//           value={postUserType?.data?.userTypeName}
-//           validation={postUserType?.validations?.userTypeName}
-//         />
-//         <ERPInput
-//           id="userTypeCode"
-//           label="user type code"
-//           placeholder="user type code"
-//           required={true}
-//           data={postUserType?.data}
-//           onChangeData={(data: any) => {
-//             setPostUserType((prevData: any) => ({
-//               ...prevData,
-//               data: data,
-//             }));
-//           }}
-//           value={postUserType?.data?.userTypeCode}
-//           validation={postUserType?.validations?.userTypeCode}
-//         />
-//         <ERPInput
-//           id="remark"
-//           label="Remark"
-//           placeholder="remark"
-//           required={true}
-//           data={postUserType?.data}
-//           onChangeData={(data: any) => {
-//             setPostUserType((prevData: any) => ({
-//               ...prevData,
-//               data: data,
-//             }));
-//           }}
-//           value={postUserType?.data?.remark}
-//           validation={postUserType?.validations?.remark}
-//         />
-//       </div>
+interface FormState {
+  data: FormDataStructure;
+  validations: Validations;
+}
 
-//       <div className="w-full p-2 flex justify-end">
-//         <ERPButton
-//           type="reset"
-//           title="Cancel"
-//           variant="secondary"
-//           onClick={onClose}
-//           // disabled={emailLoading}
-//         ></ERPButton>
-//         <ERPButton
-//           type="button"
-//           disabled={postUserTypeLoading}
-//           variant="primary"
-//           onClick={addUserType}
-//           loading={postUserTypeLoading}
-//           title={"Submit"}
-//         ></ERPButton>
-//       </div>
-//     </div>
-//   );
-// };
+interface SBTableProps {
+    fieldClass: string;
+    fields: Array<any>;
+    loading?: boolean;
+    data?: any;
+    defaultData?: any;
+    onChangeData?: (data: any) => void;
+    path?: any;
+    onChangeDefaultData?: any;
+    onSubmit: (data: FormDataStructure) => void;
+  onCancel: () => void;
+  }
+  
+const api = new APIClient();
+export const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...props }: SBTableProps) => {
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const onClose = useCallback(async () => {
+    closeAction();
+  }, []);
+  const [postData, setPostData] = useState<FormState>(initialData);
+  const [postDataLoading, setPostLoading] = useState<boolean>(false);
+
+  const queryParams = new URLSearchParams(location.search);
+  
+  //key : used for route parm for edit or view 
+  const [key, setKey] = useState<any>(queryParams.get('key'));
+
+  const handleSubmit = useCallback(async () => {
+    setPostLoading(true);
+    const response: ResponseModelWithValidation<any, any> =
+      key != undefined && key != null ? await api.post("",postData?.data) : await api.put("",postData?.data);
+      setPostLoading(false);
+    handleResponse(response, 
+      () => {closeAction();},
+      () => {setPostData((prevData: any) => ({
+                ...prevData,
+                validations: response.validations,
+              }));
+            });
+  }, [postData?.data]);
+
+  const handleChange = useCallback((id: string, value: FormField) => {
+    try {
+      setPostData(prevData => {
+        const newData = { ...prevData.data };
+
+        if (id.includes(".")) {
+          const [fieldParent, fieldChild] = id.split(".");
+          if (typeof newData[fieldParent] === 'object' && newData[fieldParent] !== null && !Array.isArray(newData[fieldParent])) {
+            (newData[fieldParent] as { [key: string]: FormField })[fieldChild] = value;
+          }
+        } else {
+          newData[id] = value;
+        }
+
+        return {
+          ...prevData,
+          data: newData
+        };
+      });
+    } catch (error) {
+      console.log(`DynamicForm, Error: `, error);
+    }
+  }, []);
+  return (
+    <div className="w-full pt-4">
+     
+    {/* bind dynamic form fields */}
+      <div className="w-full p-2 flex justify-end">
+        <ERPButton
+          type="reset"
+          title="Cancel"
+          variant="secondary"
+          onClick={onClose}
+          // disabled={emailLoading}
+        ></ERPButton>
+        <ERPButton
+          type="button"
+          disabled={postDataLoading}
+          variant="primary"
+          onClick={handleSubmit}
+          loading={postDataLoading}
+          title={key != undefined && key != null ? 'Update':'Cancel'}
+        ></ERPButton>
+      </div>
+    </div>
+  );
+};
+
+

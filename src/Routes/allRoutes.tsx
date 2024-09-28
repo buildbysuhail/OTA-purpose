@@ -13,7 +13,7 @@ const authProtectedRoutes = [
     allowedFor: "SuperAdmin,Admin,Client",
   },
   // Settings
-  { path: "/settings", component: Settings },
+  { path: "/settings", component: Settings }, 
   { path: "/settings/preferences", component: Users },
   { path: "/settings/preferencestype", component: UserTypes },
   // { path: "/settings/preferences/:id", component: PreferencesSection },

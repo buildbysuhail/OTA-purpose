@@ -25,7 +25,7 @@ export const UserTypeManage = () => {
   
   const [key, setKey] = useState<any>(queryParams.get('key'));
 
-  const addUserType = useCallback(async () => {
+  const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
     const response: ResponseModelWithValidation<any, any> =
       await UserManagementApis.addUserTypeInfo(postData?.data);
@@ -101,7 +101,7 @@ export const UserTypeManage = () => {
           type="button"
           disabled={postDataLoading}
           variant="primary"
-          onClick={addUserType}
+          onClick={handleSubmit}
           loading={postDataLoading}
           title={key != undefined && key != null ? 'Update':'Cancel'}
         ></ERPButton>

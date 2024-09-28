@@ -1,4 +1,4 @@
-import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
@@ -6,10 +6,9 @@ import { useDispatch } from "react-redux";
 import { ResponseModelWithValidation } from "../../base/response-model";
 import "./profile.css";
 import { APIClient } from "../../helpers/api-client";
-import { getAction, postAction } from "../../redux/app-actions";
-import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import { useLocation } from "react-router-dom";
 import { handleResponse } from "../../utilities/HandleResponse";
+import { postAction } from "../../redux/slices/app-thunks";
 
 interface AccountSettingsProps {}
 

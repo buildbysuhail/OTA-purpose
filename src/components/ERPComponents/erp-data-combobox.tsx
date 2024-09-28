@@ -6,11 +6,8 @@ import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid
 
 import { useLocation } from "react-router-dom";
 import { getCurrentCurrencySymbol, getPriceListOptions } from "../../utilities/Utils";
-import { RootState } from "../../redux/store";
 import ERPElementValidationMessage from "./erp-element-validation-message";
-import showForm from "./erp-popup-model-form";
 import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
-type ReducerName = keyof RootState;
 interface ERPDataComboboxProps {
   id: string;
   label?: string;
@@ -271,14 +268,14 @@ export default function ERPDataCombobox({
                 ))
               )}
               <div className="flex justify-center gap-5 sticky bottom-0 bg-white">
-                {field?.formFields?.length > 0 && (
+                {/* {field?.formFields?.length > 0 && (
                   <div
                     onClick={() => showForm(iLabel, field?.getListUrl, field?.formFields, undefined, field?.postUrl)}
                     className="p-2 w-full hover:bg-gray-100 text-accent text-center cursor-pointer border-t "
                   >
                     <a>Create {iLabel}</a>
                   </div>
-                )}
+                )} */}
               </div>
             </ComboboxOptions>
           </Transition>

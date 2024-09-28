@@ -1,15 +1,8 @@
-import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
-import ERPAvatar from "../../components/ERPComponents/erp-avatar";
+import { FC, Fragment, useEffect, useState } from "react";
 import {
-  useAppDispatch,
   useAppDynamicSelector,
 } from "../../utilities/hooks/useAppDispatch";
-import ERPCropper from "../../components/ERPComponents/erp-cropper";
-import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../redux/urls";
-import ERPInput from "../../components/ERPComponents/erp-input";
-import ERPDatePicker from "../../components/ERPComponents/erp-date-picker";
-import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import {
   getThunkAndSlice,
@@ -17,28 +10,17 @@ import {
 } from "../../redux/slices/dynamicThunkAndSlice";
 import {
   ActionType,
-  ApiState,
-  ApiStateWithValidation,
 } from "../../redux/types";
 import { useDispatch } from "react-redux";
-import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
-import phoneImage from "../../assets/images/apps/phone.png";
 import {
   ResponseModel,
-  ResponseModelWithValidation,
 } from "../../base/response-model";
 import { useLocation } from "react-router-dom";
 import "./profile.css";
-import SBModelForm from "../../components/common/polosys/sb-model-form";
-import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
-import ERPModal from "../../components/ERPComponents/erp-modal";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
-import { getAction, postAction } from "../../redux/app-actions";
-import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
-import SBDataCombobox from "../../components/ERPComponents/erp-data-combobox";
-import SBSelect from "../../components/common/polosys/SBSelect";
-import Themeprimarycolor, {
+import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
+import {
   ColorPicker,
   hexToRgb,
 } from "../../components/common/switcher/switcherdata/switcherdata";
@@ -48,6 +30,7 @@ import { useAppState } from "../../utilities/hooks/useAppState";
 import { Theme } from "../../redux/slices/app/types";
 import Cookies from "js-cookie";
 import { modelToBase64 } from "../../utilities/jsonConverter";
+import ERPSelect from "../../components/ERPComponents/erp-select";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -247,7 +230,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props) => {
                 </div>
                 <div className="box-body">
                   <div className="items-start mb-6">
-                    <SBSelect
+                    <ERPSelect
                       id="language"
                       options={languages}
                       handleChange={(id: any, value: any) => {

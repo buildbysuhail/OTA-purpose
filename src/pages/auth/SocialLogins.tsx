@@ -4,7 +4,7 @@
 
 // // import { auth } from "../../App";
 // import Urls from "../../redux/actions/Urls";
-// import SBToast from "../../components/SBComponets/SBToast";
+// import ERPToast from "../../components/ERPComponets/ERPToast";
 // import { setToken } from "../../redux/actions/CommonActons";
 // import { postAction } from "../../redux/actions/AppActions";
 // import { getUserComapanies } from "../../redux/actions/NetworkActions";
@@ -32,7 +32,7 @@ const SocialLogins = () => {
   //     //   companyResp?.payload?.data?.length > 0 ? navigate("/select-organization") : navigate("/create-organization");
   //     // }
   //   } catch (error) {
-  //     SBToast.showWith("Google Authentication Failed", "error");
+  //     ERPToast.showWith("Google Authentication Failed", "error");
   //     console.log(error);
   //   }
   // };

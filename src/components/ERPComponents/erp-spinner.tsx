@@ -1,4 +1,4 @@
-const SBSpinner = ({}) => {
+const ERPSpinner = ({}) => {
   return (
     <div role="status">
       <svg
@@ -22,4 +22,4 @@ const SBSpinner = ({}) => {
   );
 };
 
-export default SBSpinner;
+export default ERPSpinner;

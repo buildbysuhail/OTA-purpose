@@ -6,7 +6,7 @@ import { EyeSlashIcon, EyeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Cookies from "js-cookie";
 import usFlag from "../../assets/images/flags/us_flag.png";
 
-// import SBToast from "../../components/SBComponets/SBToast";
+// import ERPToast from "../../components/ERPComponets/ERPToast";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { StateBase } from "../../base/state-base";
 import { LoginData, loginUser } from "../../redux/slices/auth/login/thunk";

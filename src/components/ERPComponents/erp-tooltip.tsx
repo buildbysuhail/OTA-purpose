@@ -1,10 +1,10 @@
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
-interface SBTooltipProps {
+interface ERPTooltipProps {
   message?: string;
 }
 
-const ERPTooltip = ({ message }: SBTooltipProps) => {
+const ERPTooltip = ({ message }: ERPTooltipProps) => {
   return (
     <div className=" relative group ">
       <InformationCircleIcon className="h-5 relative stroke-slate-400" />

@@ -29,15 +29,15 @@ import {
 } from "../../base/response-model";
 import { useLocation } from "react-router-dom";
 import "./profile.css";
-import SBModelForm from "../../components/common/polosys/sb-model-form";
+import ERPModelForm from "../../components/common/polosyserp-model-form";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
 import { getAction, postAction } from "../../redux/app-actions";
 import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
-import SBDataCombobox from "../../components/ERPComponents/erp-data-combobox";
-import SBSelect from "../../components/common/polosys/SBSelect";
+import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
+import ERPSelect from "../../components/common/polosys/ERPSelect";
 import Themeprimarycolor, { ColorPicker, hexToRgb } from "../../components/common/switcher/switcherdata/switcherdata";
 
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
@@ -256,7 +256,7 @@ const userTheme = () => {
                 </div>
                 <div className="box-body">
                   <div className="items-start mb-6">
-                    <SBSelect
+                    <ERPSelect
                       id="language"
                       options={languages}
                       handleChange={(id: any ,value: any) => {

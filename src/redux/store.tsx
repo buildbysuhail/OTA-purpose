@@ -1,15 +1,11 @@
 
 import {
-  combineReducers,
-  Reducer,
-  AnyAction,
   ThunkAction,
   Action,
   Middleware,
 } from "@reduxjs/toolkit";
 import { configureStore } from "@reduxjs/toolkit";
-import { reducerManager } from './dynamic-store-manager';
-import rootReducer from './slices/rootReducer';
+import rootReducer from './slices/root-reducer';
 import thunk from "redux-thunk";
 const middlewares: Middleware[] = [thunk];
 const store = configureStore({

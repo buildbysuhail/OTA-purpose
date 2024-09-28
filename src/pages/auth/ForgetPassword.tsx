@@ -38,7 +38,7 @@ const ForgetPasswordForm = () => {
             <div className="flex flex-col ">
               <form autoComplete="off" onSubmit={handleForgotPassword} className="mt-10 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2">
                 <div className="col-span-full ">
-                  {/* <SBInput label={t("email") || "email"} data={data} onChangeData={(data) => setData(data)} id="email" required type="email" /> */}
+                  {/* <ERPInput label={t("email") || "email"} data={data} onChangeData={(data) => setData(data)} id="email" required type="email" /> */}
                 </div>
 
                 <div className="col-span-full">

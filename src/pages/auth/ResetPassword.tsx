@@ -22,7 +22,7 @@ const ResetPasswordForm = () => {
     event.preventDefault();
     if (resetPassswordData?.password && resetPassswordData?.token) {
       if (/\s/.test(resetPassswordData?.password)) {
-        // SBToast.show("Password must not contain any whitespace characters.", "error");
+        // ERPToast.show("Password must not contain any whitespace characters.", "error");
       } else if (confirmPassword?.confirmPassword === resetPassswordData?.password) {
         setIsLoading(true);
         // const response = (await dispatch(passwordResetConfirm({ ...resetPassswordData, email: data?.email }))) as any;
@@ -73,7 +73,7 @@ const ResetPasswordForm = () => {
               <form onSubmit={submitResetPassword} className="mt-5 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2">
                 <div className="col-span-full "></div>
                 <div className="col-span-full ">
-                  {/* <SBInput
+                  {/* <ERPInput
                     label={t("new-password")}
                     autocomplete="off"
                     data={resetPassswordData}
@@ -84,7 +84,7 @@ const ResetPasswordForm = () => {
                   /> */}
                 </div>
                 <div className="col-span-full ">
-                  {/* <SBInput
+                  {/* <ERPInput
                     label={t("new-password-confirm")}
                     autocomplete="off"
                     data={confirmPassword}
@@ -99,7 +99,7 @@ const ResetPasswordForm = () => {
                 </div>
                 {ResetError ? <div className="col-span-full text-xs text-red-500">{t("new-password-confirm-error")}</div> : null}
                 <div className="col-span-full ">
-                  {/* <SBInput
+                  {/* <ERPInput
                     label={t("secret-code")}
                     data={resetPassswordData}
                     onChangeData={(data) => setResetPassswordData(data)}

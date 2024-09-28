@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import SBToast from "../components/ERPComponents/erp-toast";
+import ERPToast from "../components/ERPComponents/erp-toast";
 import HttpCodeMessages from "./HttpCodeMessages";
 
 const ErrorManager = {
@@ -9,7 +9,7 @@ const ErrorManager = {
     var msg = "";
     console.log(`ErrorManager,  : error?.response `, error?.response);
     if (error.toJSON().message === "Network Error") {
-      SBToast.show("Network Error, No Internet Connection", "error");
+      ERPToast.show("Network Error, No Internet Connection", "error");
       return;
     }
 
@@ -20,7 +20,7 @@ const ErrorManager = {
       if (error?.response?.status >= 500) {
         const codeMsg = HttpCodeMessages[error?.response?.status] || "Servre Error";
         msg = error?.response?.data?.message || `${codeMsg}: Something went wrong, Please try again later`;
-        SBToast.show(msg, "error");
+        ERPToast.show(msg, "error");
         return;
       }
 
@@ -33,11 +33,11 @@ const ErrorManager = {
           msgKeys.forEach((key) => {
             const msgData = error?.response?.data?.[key];
             const msg = typeof msgData === "string" ? msgData : (msgData?.[0] as string);
-            msg?.toLowerCase()?.includes(key?.toLowerCase()) ? SBToast.show(msg, "error") : SBToast.show(`${key} : ${msg}`, "error");
+            msg?.toLowerCase()?.includes(key?.toLowerCase()) ? ERPToast.show(msg, "error") : ERPToast.show(`${key} : ${msg}`, "error");
           });
           return;
         }
-        SBToast.show(msg, "error");
+        ERPToast.show(msg, "error");
         return;
       }
 
@@ -49,13 +49,13 @@ const ErrorManager = {
           msg = "Invalid Username or Password";
           msg = error?.response?.data?.detail || msg;
         }
-        SBToast.show(msg, "error");
+        ERPToast.show(msg, "error");
         Cookies.remove("token");
         return;
       }
 
       if (error?.response?.status === 404) {
-        SBToast.show(`Resource doesn't exist`, "error");
+        ERPToast.show(`Resource doesn't exist`, "error");
         return;
       }
 
@@ -66,21 +66,21 @@ const ErrorManager = {
         if (msgKeys?.length > 0) {
           msgKeys.forEach((key) => {
             const msg = error?.response?.data?.[key];
-            msg.includes(key) ? SBToast.show(msg, "error") : SBToast.show(`${key} : ${msg}`, "error");
+            msg.includes(key) ? ERPToast.show(msg, "error") : ERPToast.show(`${key} : ${msg}`, "error");
           });
           return;
         }
-        SBToast.show(msg, "error");
+        ERPToast.show(msg, "error");
         return;
       }
 
       msg = error?.response?.data?.message;
-      msg && SBToast.show(msg, "error");
+      msg && ERPToast.show(msg, "error");
 
       if (error?.response?.status >= 300) {
         const codeMsg = HttpCodeMessages[error?.response?.status] || "Bad Request";
         const msg = error?.response?.statusText || `${codeMsg}: Something went wrong, Please try again later`;
-        SBToast.show(msg, "error");
+        ERPToast.show(msg, "error");
       }
     } else if (error.request) {
       // The request was made but no response was received
@@ -88,10 +88,10 @@ const ErrorManager = {
       // Something happened in setting up the request that triggered an Error
       msg = error?.message;
       if (error.toJSON().message === "Network Error") {
-        SBToast.show("Network Error, Something went wrong", "error");
+        ERPToast.show("Network Error, Something went wrong", "error");
         return;
       }
-      SBToast.show(msg, "error");
+      ERPToast.show(msg, "error");
       return;
     }
   },

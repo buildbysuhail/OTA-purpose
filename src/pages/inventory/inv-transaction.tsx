@@ -82,12 +82,14 @@ const InvTransaction = () => {
       <div className="flex items-center bg-white shadow-sm p-4 border-b-2">
         {/* <ArrowLeft className="mr-4 text-zinc-800" size={24} />*/}
         <i className="ri-arrow-left-linemr-4 text-zinc "></i>
+        {/* <i className="ri-arrow-left-line"></i> */}
+        <i className="ri-arrow-left-line mr-2" style={{ fontSize: '23px' }}></i>
         <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
         <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
           <button
             className={`px-4 py-2 text-sm transition-colors duration-200 ${
               activeButton === "credit"
-                ? " bg-red text-white rounded-full"
+                ? " bg-green text-white rounded-full"
                 : "bg-transparent text-zinc"
             }`}
             onClick={() => setActiveButton("credit")}
@@ -106,7 +108,7 @@ const InvTransaction = () => {
           </button>
         </div>
         {/* <Settings className="text-zinc-800" size={24} /> */}
-        <i className="ri-settings-3-line"></i>
+        <i className="ri-settings-3-line" style={{ fontSize: '23px' }}></i>
       </div>
 
       {/* Invoice and Date Section */}
@@ -254,11 +256,20 @@ const InvTransaction = () => {
                         // deleteWorkspacePopup();
                       }}
                       variant="primary"
+                      className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
                     ></ERPButton>
             
-            <button className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white">
+            {/* <button className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white">
               Save
-            </button>
+            </button> */}
+            <ERPButton
+                      title="Save"
+                      onClick={() => {
+                        // deleteWorkspacePopup();
+                      }}
+                      variant="primary"
+                      className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
+                    ></ERPButton>
           </div>
         </div>
       </div>

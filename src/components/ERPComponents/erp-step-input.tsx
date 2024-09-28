@@ -1,8 +1,8 @@
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/solid";
-import SBInput from "./SBInput";
+import ERPInput from "./erp-input";
 import { useState } from "react";
 
-interface SBStepInputProps {
+interface ERPStepInputProps {
   id: string;
   data?: any;
   value?: any;
@@ -28,7 +28,7 @@ interface SBStepInputProps {
   accept?: string;
 }
 
-const SBStepInput = ({
+const ERPStepInput = ({
   id,
   onChangeData,
   onChange,
@@ -53,7 +53,7 @@ const SBStepInput = ({
   step,
   accept,
   ...props
-}: SBStepInputProps) => {
+}: ERPStepInputProps) => {
   //   const iLabel = label || id?.replaceAll("_", " ");
   //   let labeText = noLabel ? "" : iLabel;
   //   if (min !== undefined) {
@@ -63,7 +63,7 @@ const SBStepInput = ({
   //     labeText = `${labeText}, max: ${max})`;
   //   }
   return (
-    <SBInput
+    <ERPInput
       defaultValue={defaultValue}
       disabled={true}
       type="number"
@@ -83,7 +83,7 @@ const SBStepInput = ({
         onChange?.((value || defaultValue) + addValue);
       }}
       onChange={(e) => {
-        console.log(`SBStepInput,  : `);
+        console.log(`ERPStepInput,  : `);
         const nValue = parseInt(e.target.value);
         onChange?.(nValue);
       }}
@@ -94,4 +94,4 @@ const SBStepInput = ({
   );
 };
 
-export default SBStepInput;
+export default ERPStepInput;

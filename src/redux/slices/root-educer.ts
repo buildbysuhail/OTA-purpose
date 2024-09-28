@@ -14,18 +14,22 @@ import usertypecompoReducer from "./data/usertypecompo-reducer";
 import employeeReducer from "./data/employee-reducer";
 import ledgerReducer from "./data/ledger-reducer";
 import PopupDataReducer from "./popup-reducer";
+import { DataConfig } from "../../configs/data-config";
+import { actionTypeFromUrl, reducerNameFromUrl } from "../actions/AppActions";
+import NetworkReducer from "./network-reducer";
 
-// const rootReducer = combineReducers({
-//     Login: LoginReducer,
-//     Account: AccountReducer,
-//     ForgetPassword: ForgetPasswordReducer,
-//     Profile: ProfileReducer,
-//     AppState: AppStateReducer,
-//     ...Object.keys(crudModuleSlices).reduce((acc: any, key: string) => {
-//         acc[key] = crudModuleSlices[key].reducer;
-//         return acc;
-//       }, {}),
-// });
+const dataConfigReducers = DataConfig?.reduce((prv: any, api: string, idx: number) => {
+  
+  const GetType = actionTypeFromUrl(api, "GET");
+  const GetName = reducerNameFromUrl(api, "GET");
+
+  return {
+    ...prv,
+    ...{
+      [GetName]: NetworkReducer(GetType),
+    },
+  };
+}, {});
 
 const rootReducer = {
   Login: LoginReducer,
@@ -40,7 +44,9 @@ const rootReducer = {
   Employeecompo:employeeReducer,
   Ledgercompo:ledgerReducer,
   UserSession: UserSessionReducer,
-  PopupData: PopupDataReducer
+  PopupData: PopupDataReducer,
+
+  ...dataConfigReducers,
 };
 
 export default rootReducer;

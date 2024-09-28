@@ -1,4 +1,4 @@
-interface SBZoneInputProps {
+interface ERPZoneInputProps {
 	onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 	onChangeData?: (data: any) => void;
 	data?: any;
@@ -7,7 +7,7 @@ interface SBZoneInputProps {
 	required?: boolean;
 }
 
-const SBZoneInput = ({ onChange, label, id, required, onChangeData, data }: SBZoneInputProps) => {
+const ERPZoneInput = ({ onChange, label, id, required, onChangeData, data }: ERPZoneInputProps) => {
 	const iLabel = label || id?.replaceAll("_", " ");
 	return (
 		<div>
@@ -71,4 +71,4 @@ const SBZoneInput = ({ onChange, label, id, required, onChangeData, data }: SBZo
 	);
 };
 
-export default SBZoneInput;
+export default ERPZoneInput;

@@ -5,7 +5,7 @@ function SlideTransition(props: SlideProps) {
 	return <Slide {...props} direction="left" />;
 }
 
-interface SBSnakbarProps {
+interface ERPSnackbarProps {
 	open: boolean;
 	onClose: () => void;
 	message: string;
@@ -13,7 +13,7 @@ interface SBSnakbarProps {
 	duration?: number;
 }
 
-const SBSnakbar = (props: SBSnakbarProps) => {
+const ERPSnackbar = (props: ERPSnackbarProps) => {
 	return (
 		<Snackbar
 			open={props.open}
@@ -30,4 +30,4 @@ const SBSnakbar = (props: SBSnakbarProps) => {
 	);
 };
 
-export default SBSnakbar;
+export default ERPSnackbar;

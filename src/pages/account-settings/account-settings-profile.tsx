@@ -18,6 +18,7 @@ import AccountSettingsApis from "./account-settings-apis";
 import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
+import { postAction } from "../../redux/slices/app-thunks";
 
 interface AccountSettingsProps {}
 interface UserProfileBasicInfo {

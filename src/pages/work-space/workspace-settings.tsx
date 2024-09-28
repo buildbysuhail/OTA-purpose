@@ -94,7 +94,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     ) {
       
       const company = _userSession.companies.find(
-        (x) => x.name === _userSession.currentClientName
+        (x: any) => x?.name === _userSession?.currentClientName
       );
       if (company && company.logo) {
         setImage(company.logo);
@@ -470,7 +470,7 @@ Recommended size: 300 x 300 pixels. */}
                     field={{
                       id: "countryId",
                       required: true,
-                      getListUrl: Urls.country,
+                      getListUrl: Urls.data_countries,
                       valueKey: "id",
                       labelKey: "name",
                     }}
@@ -482,8 +482,6 @@ Recommended size: 300 x 300 pixels. */}
                       }))
                     }}
                     validation={basicInfo.validations?.countryId}
-                    thunkAction= {countries}
-                    reducer="CountriesData"
                     data={basicInfo.data}
                     defaultData={basicInfo.data}
                     value={basicInfo.data.countryId}
@@ -494,12 +492,10 @@ Recommended size: 300 x 300 pixels. */}
                     field={{
                       id: "currencyId",
                    
-                      getListUrl: Urls.currency,
+                      getListUrl: Urls.data_currencies,
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    thunkAction= {currencies}
-                    reducer="Curencies"
                     onChangeData={(data: any) => {
                       
                       setBasicInfo((prev: any) => ({
@@ -518,12 +514,10 @@ Recommended size: 300 x 300 pixels. */}
                     field={{
                       id: "industry",
                       required: true,
-                      getListUrl: Urls.industry,
+                      getListUrl: Urls.data_industries,
                       valueKey: "id",
                       labelKey: "name",
                     }}
-                    thunkAction= {industries}
-                    reducer="Industries"
                     onChangeData={(data: any) => {
                       
                       setBasicInfo((prev: any) => ({

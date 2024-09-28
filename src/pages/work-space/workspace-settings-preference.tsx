@@ -23,12 +23,13 @@ import { ColorPicker, hexToRgb } from "../../components/common/switcher/switcher
 
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
+import ERPSelect from "../../components/ERPComponents/erp-select";
 interface WorkSpaceSettingsProps {}
 interface UserLanguage {
   language?: string | null; 
 }
 
-const WorkSpaceSettingsPreference: FC<WorkSpaceSettingsProps> = (props) => {
+const WorkSpaceSettingsPreference: FC<WorkSpaceSettingsProps> = () => {
   let api = new APIClient();  
   const [language, setLanguage] = useState<string>("en");
   const [_language, _setLanguage] = useState<string>("en");
@@ -36,69 +37,11 @@ const WorkSpaceSettingsPreference: FC<WorkSpaceSettingsProps> = (props) => {
     { value: "ar", label: "العربية" },
     { value: "en", label: "English" },
   ]);
-  const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");
-  const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
-  const [isOpenPhoneChange, setIsOpenPhoneChange] = useState<boolean>(false);
-  const [postDataEmail, setPostDataEmail] = useState<any>({
-    data: { userName: "", password: "", newValue: "" },
-    validations: { userName: "", password: "", newValue: "" },
-    tokenSend: false,
-  });
-  const [postDataEmailTokenVerify, setPostDataEmailTokenVerify] = useState<any>(
-    { userName: "", newValue: "", otp: "", confirToken: "" }
-  );
-  const [postDataPhone, setPostDataPhone] = useState<any>();
-  const initialBasicInfoWithValidation = {
-    data: {
-      countryCode: null,
-      dob: null,
-      fullName: null,
-    },
-    validations: {
-      countryCode: "",
-      dob: "",
-      fullName: "",
-    },
-  };
   const dispatch = useDispatch();
 
   ////////////email change
-  const { thunk: postFormEmailThunk } = getThunkAndSliceWithValidation<
-    any,
-    any
-  >(Urls.verifyEmail_profile, ActionType.POST, false, {
-    data: { userName: "", password: "", newValue: "" },
-    loading: false,
-  });
-  const updatedFormDataEmail: any = useAppDynamicSelector(
-    Urls.verifyEmail_profile,
-    ActionType.POST
-  );
-
-  const { thunk: getFormEmailThunk } = getThunkAndSliceWithValidation<any, any>(
-    Urls.getEmail_profile,
-    ActionType.GET,
-    false
-  );
-  const formDataEmail: any = useAppDynamicSelector(
-    Urls.getEmail_profile,
-    ActionType.GET
-  );
-  
-  const { thunk: postFormEmailTokenThunk } = getThunkAndSliceWithValidation<
-    any,
-    any
-  >(Urls.changeEmailRequest_profile, ActionType.POST, false, {
-    data: { userName: "", password: "", newValue: "" },
-    loading: false,
-  });
-  const updatedFormDataEmailToken: any = useAppDynamicSelector(
-    Urls.changeEmailRequest_profile,
-    ActionType.POST
-  );
-
  
   const { thunk: updateUserLanguageThunk } =
     getThunkAndSlice<UserLanguage>(
@@ -201,15 +144,6 @@ const userTheme = () => {
     handleResponse(res, ()=> {
       userTheme();
     });
-  };
-  const handleThemeChange = (key: string, mode: string) => {
-    
-    setTheme((prevTheme) => ({
-      ...prevTheme,
-      [key]: mode,
-    }));
-    console.log(theme);
-    
   };
   
   const { appState, updateAppState } = useAppState();
@@ -359,8 +293,8 @@ const userTheme = () => {
                               className="ti-form-radio"
                               id="switcher-ltr"
                               checked={theme.direction != "rtl"}
-                              onChange={(e) => {}}
-                              onClick={(e) => {
+                              onChange={() => {}}
+                              onClick={() => {
                                 switcherdata.Ltr(updateAppState,appState); ; setTheme((prevTheme) => ({
                                   ...prevTheme,
                                   direction: 'ltr',
@@ -381,8 +315,8 @@ const userTheme = () => {
                               className="ti-form-radio"
                               id="switcher-rtl"
                               checked={theme.direction == "rtl"}
-                              onChange={(e) => {}}
-                              onClick={(e) => {
+                              onChange={() => {}}
+                              onClick={() => {
                                 
                                 if(true == true) { 
                                 switcherdata.Rtl(updateAppState,appState);; setTheme((prevTheme) => ({

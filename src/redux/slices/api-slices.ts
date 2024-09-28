@@ -1,11 +1,10 @@
-import { ActionType, CrudConfigType } from '../types';
-import { reducerNameFromUrl } from '../utils';
+import { CrudConfigType } from '../types';
 
 export const CreateApiModuleSlices = (CrudConfig: CrudConfigType) => {
   return Object.keys(CrudConfig).reduce((acc: any, key: string) => {
-    const url = CrudConfig[key].endpointUrl;
+    // const url = CrudConfig[key].endpointUrl;
     
-    const methods = ['GET', 'POST', 'PATCH', 'DELETE'];
+    // const methods = ['GET', 'POST', 'PATCH', 'DELETE'];
 
     // methods.forEach((_method) => {
     //   let method = _method as ActionType;

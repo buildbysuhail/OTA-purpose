@@ -1,4 +1,4 @@
-import { dateTrimmer } from "../../../../utils/Utils";
+import { dateTrimmer } from "../../../../utilities/Utils";
 import { DownloadPreviewProps } from "./DownloadPreview";
 import { Text, View, StyleSheet } from "@react-pdf/renderer";
 

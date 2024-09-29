@@ -1,6 +1,6 @@
 import { View, Text, Image } from "@react-pdf/renderer";
 import { DNSPTEmpProps } from ".";
-import { dateTrimmer } from "../../../../utils/Utils";
+import { dateTrimmer } from "../../../../utilities/Utils";
 
 const Header = ({ data, template, preference, company, addressTemplates }: DNSPTEmpProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;

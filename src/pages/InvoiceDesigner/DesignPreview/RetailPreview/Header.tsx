@@ -1,4 +1,4 @@
-import { dateTrimmer } from "../../../../utils/Utils";
+import { dateTrimmer } from "../../../../utilities/Utils";
 import { RetailPreviewProps } from "./PreviewWrapper";
 
 const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency, addressTemplates, company }: RetailPreviewProps) => {

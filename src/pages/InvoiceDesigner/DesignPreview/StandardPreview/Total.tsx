@@ -3,9 +3,9 @@ import { useLocation } from "react-router-dom";
 
 import { StandardPreviewProps } from ".";
 import Urls from "../../../../redux/actions/Urls";
-import { getAmountInWords } from "../../../../utils/Utils";
 import { reducerNameFromUrl } from "../../../../redux/actions/AppActions";
-import { isTaxApplicable, taxListFinder, taxListFinderInclusive } from "../../../../utils/ERPUtils";
+import { getAmountInWords } from "../../../../utilities/Utils";
+import { isTaxApplicable, taxListFinder, taxListFinderInclusive } from "../../../../utilities/ERPUtils";
 
 const Total = ({ template, data, templateGroupId, currency }: StandardPreviewProps) => {
   const backgroundColor = template?.totalState?.showTotalBgColor ? template?.totalState?.totalBgColor : "#fff";

@@ -1,6 +1,6 @@
 import { StyleSheet } from "@react-pdf/renderer";
 import { StandardPreviewProps } from ".";
-import { dateTrimmer } from "../../../../utils/Utils";
+import { dateTrimmer } from "../../../../utilities/Utils";
 
 const ItemTable = ({ template, data, templateGroupId, preferences, currency }: StandardPreviewProps) => {
   //   /// Font

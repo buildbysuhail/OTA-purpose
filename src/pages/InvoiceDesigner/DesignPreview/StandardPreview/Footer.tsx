@@ -1,6 +1,4 @@
-import { useSelector } from "react-redux";
 import { StandardPreviewProps } from ".";
-import { TemplateReducerState } from "../../../../redux/reducers/TemplateReducer";
 
 const Footer = ({ template, data, templateGroupId, templateImages }: StandardPreviewProps) => {
   /// font size and color

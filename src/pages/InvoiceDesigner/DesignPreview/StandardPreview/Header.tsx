@@ -1,7 +1,5 @@
-import { useSelector } from "react-redux";
 import { StandardPreviewProps } from ".";
-import { dateTrimmer, getAmountInWords } from "../../../../utils/Utils";
-import { TemplateReducerState } from "../../../../redux/reducers/TemplateReducer";
+import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
 
 const Header = ({ template, data, docTitle, docIDKey, templateGroupId, addressTemplates, currency, company, templateImages }: StandardPreviewProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;

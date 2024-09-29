@@ -37,7 +37,7 @@ class DynamicReducerManager {
   add(name: string, reducer: Reducer<any, AnyAction>) {
     if (!this.reducers[name]) {
       this.reducers[name] = reducer;
-      this.store.replaceReducer(combineReducers(this.reducers));
+      this.store.replaceReducer(combineReducers(this.reducers));  
     }
   }
 

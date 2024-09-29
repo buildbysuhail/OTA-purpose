@@ -49,8 +49,8 @@ const OrgSelect = ({}) => {
               <ErpAvatar
                 alt="Remy Sharp"
                 src={
-                  typeof userSession.userimage === "string"
-                    ? userSession.userimage
+                  typeof userSession?.userimage === "string"
+                    ? userSession?.userimage
                     : ""
                 }
                 sx={{ width: 75, height: 75 }}

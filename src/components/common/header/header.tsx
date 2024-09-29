@@ -853,7 +853,7 @@ const Header: FC<HeaderProps> = () => {
                     {userSession?.displayName}
                   </p>
                   <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
-                    {userSession.userTypeName}
+                    {userSession?.userTypeName}
                   </span>
                 </div>
 

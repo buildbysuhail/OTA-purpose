@@ -180,7 +180,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       let mainContainer1Width = mainContainer1.offsetWidth;
 
       if (menuNav.scrollWidth > mainContainer1.offsetWidth) {
-        if (!(local_varaiable.dir === "rtl")) {
+        if (!(local_varaiable?.dir === "rtl")) {
           if (Math.abs(check) > Math.abs(marginLeftValue)) {
             menuNav.style.marginInlineEnd = "0";
 
@@ -276,7 +276,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       let mainContainer1Width = mainContainer1.offsetWidth;
 
       if (menuNav.scrollWidth > mainContainer1.offsetWidth) {
-        if (!(local_varaiable.dir === "rtl")) {
+        if (!(local_varaiable?.dir === "rtl")) {
           if (Math.abs(check) <= Math.abs(marginLeftValue)) {
             menuNav.style.marginInlineStart = "0px";
           }
@@ -456,18 +456,18 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
   useEffect(() => {
     if (
       userSession &&
-      userSession.companies &&
-      Array.isArray(userSession.companies)
+      userSession?.companies &&
+      Array.isArray(userSession?.companies)
     ) {
       
-      const company = userSession.companies.find(
-        (x: any) => x.name === userSession.currentClientName
+      const company = userSession?.companies.find(
+        (x: any) => x.name === userSession?.currentClientName
       );
       if (company && company.logo) {
         setCompanyLogo(company.logo);
       }
     }
-  }, [userSession.companies]);
+  }, [userSession?.companies]);
   useEffect(() => {
     // Select the target element
     const targetElement = document.documentElement;
@@ -797,8 +797,8 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                         <div>
                           <span className="avatar avatar-md avatar-rounded ">
                             <img
-                              alt={userSession.displayName}
-                              src={userSession.userimage}
+                              alt={userSession?.displayName}
+                              src={userSession?.userimage}
                             />
                           </span>
                         </div>
@@ -806,9 +806,9 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
                               <p className="mb-1  text-[.8rem]">
-                                {userSession.displayName}
+                                {userSession?.displayName}
                               </p>
-                              <p>{userSession.email}</p>
+                              <p>{userSession?.email}</p>
                             </h6>
                           </div>
                         </div>
@@ -822,7 +822,7 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                           <span className="avatar avatar-md avatar-badge ">
                             <ErpAvatar
                               variant="square"
-                              alt={userSession.currentClientName}
+                              alt={userSession?.currentClientName}
                               src={companyLogo}
                               sx={avatarStyle}
                             />
@@ -832,9 +832,9 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
                           <div className="flex items-center !justify-between">
                             <h6 className="mb-1  text-[.6rem]">
                               <p className="mb-1  text-[.8rem]">
-                                {userSession.currentClientName}
+                                {userSession?.currentClientName}
                               </p>
-                              <p>Branch: {userSession.currentBranchName}</p>
+                              <p>Branch: {userSession?.currentBranchName}</p>
                             </h6>
                           </div>
                         </div>

@@ -82,18 +82,18 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
     
     if (
       _userSession &&
-      _userSession.companies &&
-      Array.isArray(_userSession.companies)
+      _userSession?.companies &&
+      Array.isArray(_userSession?.companies)
     ) {
       
-      const company = _userSession.companies.find(
+      const company = _userSession?.companies.find(
         (x: any) => x?.name === _userSession?.currentClientName
       );
       if (company && company.logo) {
         setImage(company.logo);
       }
     }
-}, [_userSession.companies]);
+}, [_userSession?.companies]);
   const getPhone = async () => {
     
     let res = await WorkspaceSettingsApis.getPhone();
@@ -271,7 +271,7 @@ const updateBasicInfo = useCallback(async () => {
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
                           <h6 className="font-semibold mb-1  text-[1rem]">
-                            {_userSession.currentClientName}
+                            {_userSession?.currentClientName}
                           </h6>
                         </div>
                         {/* <p className="mb-1 opacity-[0.7]">

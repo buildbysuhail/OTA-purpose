@@ -97,7 +97,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/system/vouchers`, type: 'link', active: false, selected: false, title: 'Vouchers' },
       { path: `${import.meta.env.BASE_URL}settings/system/barcode-print`, type: 'link', active: false, selected: false, title: 'Barcode Print' },
       { path: `${import.meta.env.BASE_URL}settings/system/headers-footers`, type: 'link', active: false, selected: false, title: 'Headers and Footers' },
-      { path: `${import.meta.env.BASE_URL}settings/system/invoice-designer`, type: 'link', active: false, selected: false, title: 'Invoice Designer' },
+      { path: `${import.meta.env.BASE_URL}settings/templates`, type: 'link', active: false, selected: false, title: 'Invoice Designer' },
       { path: `${import.meta.env.BASE_URL}settings/system/commands`, type: 'link', active: false, selected: false, title: 'Commands' },
       { path: `${import.meta.env.BASE_URL}settings/system/user-action-report`, type: 'link', active: false, selected: false, title: 'User Action Report' },
       { path: `${import.meta.env.BASE_URL}settings/system/reminders`, type: 'link', active: false, selected: false, title: 'Reminders' },

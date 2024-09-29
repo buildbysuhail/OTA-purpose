@@ -117,6 +117,9 @@ const Urls = {
     postSystemCounters:"/Core/Counter/AddCounter",
     getSystemVoucher:"/Core/Vouchers",
     FinancialYear:"/Core/FinancialYear",
+
+    //Templates
+    templates: ""
    
 };
 

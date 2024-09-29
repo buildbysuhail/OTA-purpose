@@ -19,6 +19,7 @@ class DynamicReducerManager {
   private store;
 
   constructor(initialReducers: ReducerMap) {
+    debugger;
     this.reducers = { ...initialReducers };
     this.store = configureStore({
       reducer: combineReducers(this.reducers),
@@ -50,4 +51,4 @@ class DynamicReducerManager {
 }
 
 // Initialize the DynamicReducerManager with the root reducer
-export const reducerManager = new DynamicReducerManager({ root: rootReducer });
+export const reducerManager = new DynamicReducerManager(rootReducer);

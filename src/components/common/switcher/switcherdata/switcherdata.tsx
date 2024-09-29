@@ -28,7 +28,7 @@ export function Light(actionfunction: any, appState: any) {
         "bodyBg": "",
         "inputBorder": "",
         "Light": "",
-        "dataMenuStyles": appState.dataNavLayout == 'horizontal' ? 'light' : "dark"
+        "dataMenuStyles": appState?.dataNavLayout == 'horizontal' ? 'light' : "dark"
 
     });
     localStorage.setItem("ynexlighttheme", "light");

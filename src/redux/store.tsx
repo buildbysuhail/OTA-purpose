@@ -16,7 +16,7 @@ const store = reducerManager.getStore();
 export default store;
 
 // Export the reducer manager for use in other parts of your application
-export { reducerManager };
+// export { reducerManager };
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

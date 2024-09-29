@@ -1,4 +1,6 @@
+import { TemplateState } from "../../pages/InvoiceDesigner/Designer/interfaces";
 import { camelize, capitalizeFirstLetter } from "../../utilities/Utils";
+import ActionTypes from "./ActionTypes";
 
 
 const AppActions = {};
@@ -100,6 +102,14 @@ export function deleteAction(apiUrl: string, id: string, params = "") {
   return {
     type,
     payload: { request: { url, method } },
+  };
+}
+
+export function setActiveTemplate(template: TemplateState, data?: any) {
+  return {
+    type: ActionTypes.SET_ACTIVE_TEMPLATE,
+    payload: template,
+    data: data,
   };
 }
 

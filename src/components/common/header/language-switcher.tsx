@@ -71,7 +71,7 @@ const setLocaleInStorage = (locale: Locale) => {
     <div  className={`header-element py-[1rem] md:px-[0.65rem] px-2 header-country hs-dropdown ti-dropdown hidden sm:block [--placement:bottom-left] ${className || ''}`}>
     <button id="dropdown-flag" type="button"
       className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0  !border-0 !rounded-full !shadow-none">
-      <img src={appState.locale.flag} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
+      <img src={appState?.locale.flag} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
     </button>
 
     <div className="hs-dropdown-menu ti-dropdown-menu min-w-[10rem] hidden !-mt-3" aria-labelledby="dropdown-flag">

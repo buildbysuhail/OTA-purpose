@@ -16,6 +16,9 @@ const ResetDatabase = lazy(() => import('../../../pages/settings/system/reset-da
 const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 
+const Templates = lazy(() => import("../../../pages/InvoiceDesigner/Templates"));
+const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
+
 // Inventory Starts
 
 const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transaction"));
@@ -67,6 +70,11 @@ const Content: FC<ContentProps> = () => {
 
           
           {/* Inventory End */}
+
+          {/* Templates starts */}
+          <Route path="/settings/templates" element={<Templates />} />
+          <Route path="/invoice_designer/:id" element={<InvoiceDesigner />} />
+          {/* Templates ends */}
 
           {/* {routes.map((route, idx) => {
             if (route.path) {

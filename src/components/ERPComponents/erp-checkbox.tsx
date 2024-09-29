@@ -1,36 +1,30 @@
 import ERPTooltip from "./erp-tooltip";
 
 type ERPCheckboxProps = {
+  checked?: boolean;
+  id?: string;
   label?: string;
-  items?: any;
-  field?: any;
-  handleChange?: any;
-  data?: any;
-  defaultData?: any;
+  onChange?: (e: any) => void;
+  className?: string;
+  disabled?: boolean;
 };
 
-const ERPCheckbox = ({ label, items, field, handleChange, data, defaultData }: ERPCheckboxProps) => {
-  const onCheck = () => {
-    defaultData && field?.disableWhen ? null : handleChange(field?.id, data?.[field?.id] == `true` ? `false` : `true`);
-  };
-
-  let value = defaultData?.[field.id];
-  if (data !== undefined && data?.[field.id] !== undefined) {
-    value = data?.[field.id];
-  }
-
+const ERPCheckbox = ({ checked, id, label, onChange, disabled }: ERPCheckboxProps) => {
   return (
-    <div className="flex flex-col gap-2">
-      <label className="text-xs py-1">{label}</label>
-      {items?.map((item: any, idx: number) => (
-        <div className="flex gap-2 cursor-pointer w-fit" key={`CB_${item?.id}_${idx}`}>
-          <div className="flex gap-2" onClick={onCheck}>
-            <label className=" text-xs cursor-pointer ">{item}</label>
-            <input type="checkbox" checked={value == true || value == `true` ? true : false} disabled={defaultData && field?.disableWhen} />
-          </div>
-          {field?.hasInfoMark && <ERPTooltip message={field?.message} />}
-        </div>
-      ))}
+    <div className="flex gap-1">
+      <input
+        disabled={disabled}
+        onChange={onChange}
+        type="checkbox"
+        id={id}
+        checked={checked}
+        className=" rounded-sm overflow-hidden checked:bg-accent active:bg-accent w-4 h-4 border-2  border-gray-300 disabled:cursor-not-allowed"
+      />
+      {label && (
+        <label htmlFor={id} className="text-xs capitalize block text-gray-700">
+          {label}
+        </label>
+      )}
     </div>
   );
 };

@@ -192,7 +192,7 @@ const Header: FC<HeaderProps> = () => {
     if (window.innerWidth >= 992) {
       updateAppState({
         ...theme,
-        toggled: appState.toggled ? appState.toggled : "",
+        toggled: appState?.toggled ? appState?.toggled : "",
       });
     }
   }
@@ -338,12 +338,12 @@ const Header: FC<HeaderProps> = () => {
   const updateAppStateValues = (appState: AppState): AppState => {
     return {
       ...appState,
-      mode: appState.mode === "dark" ? "light" : "dark",
-      class: appState.class === "dark" ? "light" : "dark",
-      dataHeaderStyles: appState.class === "dark" ? "light" : "dark",
+      mode: appState?.mode === "dark" ? "light" : "dark",
+      class: appState?.class === "dark" ? "light" : "dark",
+      dataHeaderStyles: appState?.class === "dark" ? "light" : "dark",
       dataMenuStyles:
-        appState.dataNavLayout === "horizontal"
-          ? appState.class === "dark"
+        appState?.dataNavLayout === "horizontal"
+          ? appState?.class === "dark"
             ? "light"
             : "dark"
           : "dark",

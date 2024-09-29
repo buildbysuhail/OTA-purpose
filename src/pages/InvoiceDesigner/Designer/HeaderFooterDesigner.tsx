@@ -1,0 +1,288 @@
+import { useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
+
+import { FooterState, HeaderState } from "./interfaces";
+import { TemplateImagesTypes } from "../InvoiceDesigner";
+import { isFile } from "../../../utilities/Utils";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import ERPSelect from "../../../components/ERPComponents/erp-select";
+import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
+import { setActiveTemplate } from "../../../redux/actions/AppActions";
+
+interface TempImageProps {
+    setTemplateImages: Dispatch<SetStateAction<TemplateImagesTypes>>,
+    templateImages: TemplateImagesTypes,
+}
+
+interface FooterDesignerProps {
+    footerState?: FooterState;
+    headerState?: HeaderState;
+    tempImages: TempImageProps;
+}
+
+
+const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDesignerProps) => {
+
+    const inputFile = useRef<HTMLInputElement>(null);
+    const inputFooterFile = useRef<HTMLInputElement>(null);
+    const [searchParams] = useSearchParams();
+    const [currentTab, setTab] = useState<"header" | "footer" | "">("header");
+
+    const templateGroup = searchParams?.get("template_group");
+    const { templateImages, setTemplateImages } = tempImages
+
+
+    /* ######################################################################################### */
+
+    const bgHeaderImage = templateImages?.background_image_header
+    let bgHeaderThumbnail: string | null = null;
+
+    if (bgHeaderImage && isFile(bgHeaderImage)) {
+        if (bgHeaderImage.size < 1e6) { bgHeaderThumbnail = URL.createObjectURL(bgHeaderImage) }
+    } else {
+        bgHeaderThumbnail = bgHeaderImage;
+    }
+
+    const bgFooterImage = templateImages?.background_image_footer
+    let bgFooterThumbnail: string | null = null;
+
+    if (bgFooterImage && isFile(bgFooterImage)) {
+        if (bgFooterImage.size < 1e6) { bgFooterThumbnail = URL.createObjectURL(bgFooterImage) }
+    } else {
+        bgFooterThumbnail = bgFooterImage;
+    }
+
+    /* ######################################################################################### */
+
+    const dispatch = useDispatch();
+    const templateData = useSelector((state: any) => state?.TemplateReducer) as TemplateReducerState;
+
+    const handleChange = (type: "header" | "footer", key: keyof HeaderState | keyof FooterState, value: string | number | boolean) => {
+        if (type === "header") {
+            dispatch(setActiveTemplate({ ...templateData.activeTemplate, headerState: { ...headerState, [key]: value } }))
+        } else {
+            dispatch(setActiveTemplate({ ...templateData.activeTemplate, footerState: { ...footerState, [key]: value } }))
+        }
+    }
+
+    return (
+        <div className="flex h-full overflow-auto flex-col gap-1 bg-[#F9F9FB]">
+            <div
+                className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
+                onClick={() => setTab(currentTab === "header" ? "" : "header")}
+            >
+                Header <ChevronDownIcon className={`h-5  ${currentTab === "header" ? "" : "-rotate-90"} transition-all`} />
+            </div>
+
+            {currentTab === "header" && <div className="transition-all  flex flex-col gap-5 bg-white p-4">
+                {/* */}
+                <ERPInput
+                    id="bgColor"
+                    type="color"
+                    label="Background Color"
+                    value={headerState?.bgColor}
+                    onChange={(e) => handleChange("header", "bgColor", e.target.value)}
+                />
+
+                <div className="flex flex-col gap-3">
+                    <div className="text-xs">Background Image</div>
+                    <ERPInput
+                        type="file"
+                        ref={inputFile}
+                        onChange={(e: any) => {
+                            if (e.target.files[0].size > 2097152) {
+                                ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
+                            } else {
+                                setTemplateImages((prevData) => ({ ...prevData, background_image_header: e.target.files[0] }))
+                            }
+                        }}
+                        className={"hidden"}
+                        accept="image/png,image/jpeg"
+                        label="Image"
+                        id="background_image "
+                        placeholder=" "
+                    />
+                    <label htmlFor="background_image">
+                        <div
+                            onClick={() => inputFile?.current?.click()}
+                            className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${bgHeaderImage ? "hidden" : ""}`}
+                        >
+                            Choose from Desktop</div>
+                    </label>
+
+                    {bgHeaderImage &&
+                        <>
+                            <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
+                            {bgHeaderThumbnail && <img
+                                draggable={false}
+                                src={bgHeaderThumbnail}
+                                alt="background_image"
+                                height={100} width={100}
+                                className="size-5" />
+                            }
+                            <div
+                                className="text-accent text-xs cursor-pointer  max-w-min"
+                                onClick={() => setTemplateImages((prevData) => ({ ...prevData, background_image_header: null }))}
+                            >
+                                Remove
+                            </div>
+                            <div className="font-light text-sm">Image Position</div>
+                            <ERPSelect
+                                noLabel
+                                id="position"
+                                defaultValue={headerState?.bg_image_header_position ?? "top left"}
+                                handleChange={(id, value) => handleChange("header", "bg_image_header_position", value?.value)}
+                                options={[
+                                    { label: "Top Left", value: "top left" },
+                                    { label: "Top Center", value: "top center" },
+                                    { label: "Top Right", value: "top right" },
+                                    { label: "Center Left", value: "center left" },
+                                    { label: "Center Center", value: "center center" },
+                                    { label: "Center Right", value: "center right" },
+                                    { label: "Bottom Left", value: "bottom left" },
+                                    { label: "Bottom Center", value: "bottom center" },
+                                    { label: "Bottom Right", value: "bottom right" },
+                                ]}
+                            />
+                        </>}
+                </div>
+
+                <ERPCheckbox
+                    checked={headerState?.isFirstOnly}
+                    id="isFirstOnlyHeader"
+                    label="Apply to first page only"
+                    onChange={(e) => handleChange("header", "isFirstOnly", e.target.checked)}
+                />
+
+                {headerState?.isFirstOnly &&
+                    <ERPInput
+                        value={headerState?.headerHeight ?? 20}
+                        onChange={(e) => {
+                            if (!(e.target.valueAsNumber > 60)) {
+                                handleChange("header", "headerHeight", e.target.valueAsNumber)
+                            }
+                        }}
+                        label="Header height for first page"
+                        type="number"
+                        id="headerHeight"
+                        placeholder=" "
+                        className="w-full"
+                        suffix={"pts"}
+                        min={20}
+                        max={60}
+                    />
+                }
+            </div>}
+
+            <div
+                className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
+                onClick={() => setTab(currentTab === "footer" ? "" : "footer")}
+            >
+                Footer <ChevronDownIcon className={`h-5  ${currentTab === "footer" ? "" : "-rotate-90"} transition-all`} />
+            </div>
+
+
+
+            {/* */}
+            {currentTab === "footer" &&
+                <div className="transition-all  flex flex-col gap-5 bg-white p-4">
+                    <ERPCheckbox
+                        label="Show Show Page Number"
+                        id="showAdditionalPageNumber"
+                        checked={footerState?.show_page_number}
+                        onChange={(e) => handleChange("footer", "show_page_number", e.target.checked)}
+                    />
+                    <ERPStepInput
+                        min={8}
+                        max={28}
+                        step={1}
+                        id="font_size"
+                        placeholder=" "
+                        label="Font Size (pt)"
+                        value={footerState?.footerFontSize ?? 12}
+                        onChange={(font_size) => handleChange("footer", "footerFontSize", font_size)}
+                    />
+                    <ERPInput
+                        type="color"
+                        label="Font Color"
+                        id="footerFontColor"
+                        value={footerState?.footerFontColor}
+                        onChange={(e) => handleChange("footer", "footerFontColor", e.target.value)}
+                    />
+                    <ERPInput
+                        type="color"
+                        id="bg_color"
+                        label="Background Color"
+                        value={footerState?.bg_color}
+                        onChange={(e) => handleChange("footer", "bg_color", e.target.value)}
+                    />
+                    <div className="flex flex-col gap-3">
+                        <div className="text-xs">Background Image</div>
+                        <ERPInput
+                            type="file"
+                            ref={inputFooterFile}
+                            onChange={(e: any) => {
+                                if (e.target.files[0].size > 2097152) {
+                                    ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
+                                } else {
+                                    setTemplateImages((prevData) => ({ ...prevData, background_image_footer: e.target.files[0] }))
+                                }
+                            }}
+                            className={"hidden"}
+                            accept="image/png,image/jpeg"
+                            label="Image"
+                            id="background_image "
+                            placeholder=" "
+                        />
+                        <label htmlFor="background_image">
+                            <div
+                                onClick={() => inputFooterFile?.current?.click()}
+                                className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${bgFooterImage ? "hidden" : ""}`}
+                            >
+                                Choose from Desktop</div>
+                        </label>
+
+                        {bgFooterImage &&
+                            <>
+                                <div className="text-xs bg-[#FEF4EA] px-2 py-2 mb-2 rounded">Click Save to apply the selected background image</div>
+                                {bgFooterThumbnail && <img src={bgFooterThumbnail} alt="background_image" height={100} width={100} className="size-5" />}
+                                <div
+                                    className="text-accent text-xs cursor-pointer  max-w-min"
+                                    onClick={() => setTemplateImages((prevData) => ({ ...prevData, background_image_footer: null }))}
+                                >
+                                    Remove
+                                </div>
+                                <div className="font-light text-sm">Image Position</div>
+                                <ERPSelect
+                                    noLabel
+                                    id="position"
+                                    defaultValue={footerState?.bg_image_footer_position ?? "top left"}
+                                    handleChange={(id, value) => handleChange("header", "bg_image_footer_position", value?.value)}
+                                    options={[
+                                        { label: "Top Left", value: "top left" },
+                                        { label: "Top Center", value: "top center" },
+                                        { label: "Top Right", value: "top right" },
+                                        { label: "Center Left", value: "center left" },
+                                        { label: "Center Center", value: "center center" },
+                                        { label: "Center Right", value: "center right" },
+                                        { label: "Bottom Left", value: "bottom left" },
+                                        { label: "Bottom Center", value: "bottom center" },
+                                        { label: "Bottom Right", value: "bottom right" },
+                                    ]}
+                                />
+                            </>
+                        }
+                    </div>
+                </div>
+            }
+
+        </div>
+    );
+};
+
+export default HeaderFooterDesigner;

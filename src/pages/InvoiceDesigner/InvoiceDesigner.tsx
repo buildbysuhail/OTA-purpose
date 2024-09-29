@@ -1,0 +1,328 @@
+import html2canvas from "html2canvas";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import {
+  TableCellsIcon, BarsArrowUpIcon, CurrencyDollarIcon, DocumentTextIcon,
+  ArrowLeftIcon, TicketIcon, AdjustmentsHorizontalIcon
+} from "@heroicons/react/24/outline";
+
+import Urls from "../../redux/actions/Urls";
+import InvoicePreview from "./InvoicePreview";
+import TotalDesigner from "./Designer/TotalDesigner";
+import FooterDesigner from "./Designer/FooterDesigner";
+import { DummyInvoiceData } from "./constants/DummyData";
+import ItemTableDesigner from "./Designer/ItemTableDesigner";
+import PropertiesDesigner from "./Designer/PropertiesDesigner";
+import HeaderFooterDesigner from "./Designer/HeaderFooterDesigner";
+import { TemplateGroupTypes } from "./constants/TemplateCategories";
+import TransactionDetailsDesigner from "./Designer/TransactionDetailsDesigner";
+import { setActiveTemplate, postAction, getDetailAction, patchAction } from "../../redux/actions/AppActions";
+import ERPToast from "../../components/ERPComponents/erp-toast";
+import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
+import { handleResponse } from "../../utilities/HandleResponse";
+import { DataToForm, isFile } from "../../utilities/Utils";
+
+interface DesignSectionType {
+  id: number;
+  name: string;
+  type: "properties" | "transactions" | "table" | "total" | "others" | "header&footer";
+  description: string;
+  icon?: JSX.Element;
+}
+
+const designSections: Array<DesignSectionType> = [
+  {
+    id: 1,
+    name: "General",
+    description: "Template 1 description",
+    type: "properties",
+    icon: <DocumentTextIcon />,
+  },
+  {
+    id: 2,
+    name: "Header & Footer",
+    description: "Template 1 description",
+    type: "header&footer",
+    icon: <BarsArrowUpIcon />,
+  },
+  {
+    id: 3,
+    name: "Transaction Details",
+    description: "Template 1 description",
+    type: "transactions",
+    icon: <AdjustmentsHorizontalIcon />,
+  },
+  {
+    id: 4,
+    name: "Table",
+    description: "Template 1 description",
+    type: "table",
+  },
+  {
+    id: 5,
+    name: "Total",
+    description: "Template 1 description",
+    type: "total",
+    icon: <CurrencyDollarIcon />,
+  },
+  {
+    id: 6,
+    name: "Other Details",
+    description: "Template 1 description",
+    type: "others",
+    icon: <TicketIcon />,
+  },
+];
+
+
+export interface TemplateImagesTypes {
+  signature_image: File | string | null;
+  background_image: File | string | null;
+  background_image_header: File | string | null;
+  background_image_footer: File | string | null;
+}
+
+
+const InvoiceDesigner = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+
+  const [loading, setLoading] = useState(false);
+  const [templateImages, setTemplateImages] = useState<TemplateImagesTypes>({
+    signature_image: null, background_image: null,
+    background_image_footer: null, background_image_header: null,
+  });
+
+
+  const [designTabs, setDesignTabs] = useState(designSections);
+  const [currentSection, setSection] = useState(designSections[0]);
+  const templateData = useSelector((state: any) => state?.TemplateReducer) as TemplateReducerState;
+
+  const templateGroup = searchParams?.get("template_group")! as TemplateGroupTypes;
+
+  /* ####################################################################### */
+
+  const getPDFTemplateData = () => {
+    (dispatch(getDetailAction(Urls.templates, id)) as any).then((res: any) => {
+      setTemplateImages({
+        background_image: res?.payload?.data?.background_image as string | null,
+        background_image_header: res?.payload?.data?.background_image_header as string | null,
+        background_image_footer: res?.payload?.data?.background_image_footer as string | null,
+        signature_image: res?.payload?.data?.signature_image as string | null,
+      })
+
+      res?.payload?.data?.content && dispatch(setActiveTemplate(res?.payload?.data?.content, res?.payload?.data));
+    });
+  };
+
+  /* ########################################################################################### */
+
+  //  Handling View Design Tab Category
+  useEffect(() => {
+    if (templateGroup && (["payment_receipts", "retainer_payment_receipts", "payment_made"]?.includes(templateGroup)))
+      setDesignTabs(designSections?.filter((tab) => tab.id !== 4 && tab.id !== 5));
+
+    if (templateGroup && (["journal_entry"]?.includes(templateGroup)))
+      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 6));
+
+    if (templateGroup && (["customer", "vendor"]?.includes(templateGroup)))
+      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 6));
+
+    if (templateGroup && (["qty_adjustment", "value_adjustment"]?.includes(templateGroup)))
+      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5));
+
+  }, [templateGroup]);
+  //
+
+  useEffect(() => {
+    if (id !== "new") getPDFTemplateData();
+  }, []);
+
+  /* ########################################################################################### */
+
+  const handleSave = (dataUrl: string) => {
+    const postData = {
+      content: JSON.stringify(templateData?.activeTemplate),
+      is_default: false, is_primary: false,
+      voucher_type: templateGroup, preview: dataUrl,
+    };
+    const postFormData = DataToForm(postData);
+
+    if (templateImages?.background_image) postFormData?.append("background_image", templateImages?.background_image);
+    if (templateImages?.background_image_header) postFormData?.append("background_image_header", templateImages?.background_image_header);
+    if (templateImages?.background_image_footer) postFormData?.append("background_image_footer", templateImages?.background_image_footer);
+    if (templateImages?.signature_image) postFormData?.append("signature_image", templateImages?.signature_image);
+
+    setLoading(true);
+    (dispatch(postAction(Urls.templates, postFormData)) as any).then((res: any) => {
+      handleResponse(res, () => {
+        ERPToast.show("Template saved successfully", "success");
+        navigate(`/templates?template_group=${templateGroup}`);
+      });
+      setLoading(false);
+    });
+  };
+
+  /* ########################################################################################### */
+
+  const handleUpdate = (dataUrl: string, id: string) => {
+    const postData = {
+      content: JSON.stringify(templateData?.activeTemplate),
+      voucher_type: templateGroup, preview: dataUrl,
+    };
+    const postFormData = DataToForm(postData);
+
+    if (templateImages?.background_image && isFile(templateImages?.background_image))
+      postFormData?.append("background_image", templateImages?.background_image);
+    if (templateImages?.background_image_header && isFile(templateImages?.background_image_header))
+      postFormData?.append("background_image_header", templateImages?.background_image_header);
+    if (templateImages?.background_image_footer && isFile(templateImages?.background_image_footer))
+      postFormData?.append("background_image_footer", templateImages?.background_image_footer);
+    if (templateImages?.signature_image && isFile(templateImages?.signature_image))
+      postFormData?.append("signature_image", templateImages?.signature_image);
+
+    setLoading(true);
+    (dispatch(patchAction(Urls.templates, postFormData, id)) as any).then((res: any) => {
+      handleResponse(res, () => {
+        ERPToast.show("Template updated successfully", "success");
+        navigate(`/templates?template_group=${templateGroup}`);
+      })
+      setLoading(false);
+    });
+  };
+
+  /* ########################################################################################### */
+
+  const manageSaveTemplate = async () => {
+    if (!templateData.activeTemplate?.propertiesState?.templateName) {
+      ERPToast.show("Template name is required", "error");
+    } else {
+      const node = document.getElementById("invoicePreview");
+      if (node) {
+        try {
+          const canvas = await html2canvas(node);
+          const dataUrl = canvas.toDataURL("image/png");
+          if (templateData?.activeTemplate && id === "new") handleSave(dataUrl);
+          if (templateData?.activeTemplate && id && id !== "new") handleUpdate(dataUrl, id);
+        } catch (error) {
+          console.error("Error capturing canvas:", error);
+        }
+      }
+    }
+  };
+
+  /* ####################################################################### */
+
+  // console.log(`InvoiceDesigner,  : templateData `, tempDetails);
+
+  /* ####################################################################### */
+
+  return (
+    <div className="flex h-full text-black dark:text-white bg-white dark:bg-body_dark ">
+      {/* Mini Tab Icons */}
+
+      <div className="w-[70px] border-r h-full print:hidden">
+        <div className="flex flex-col">
+          <div className=" flex items-center justify-center border-b h-[69px]  ">
+            <button
+              onClick={() => templateGroup ? navigate(`/templates?template_group=${templateGroup}`) : navigate("/templates?template_group=sales_invoice")}
+              className=" bg-gray-100 hover:bg-gray-50 p-2 rounded-full ">
+              <ArrowLeftIcon className=" w-5 h-5" />
+            </button>
+          </div>
+          {designTabs?.map((val, index) => (
+            <div
+              key={`dSec${index}`}
+              onClick={() => setSection(val)}
+              className={` ${currentSection.type == val.type ? "text-accent" : "text-gray-600"
+                } cursor-pointer hover:bg-gray-100 flex flex-col p-2 py-3 border-b text-center items-center gap-1`}
+            >
+              <div className="w-5 h-5 ">{val.icon ? val.icon : <TableCellsIcon />}</div>
+              <div className="text-[10px]">
+                {["payment_receipts", "retainer_payment_receipts", "payment_made"]?.includes(templateGroup!) && val.id === 3 ? " Receipt Information" : val.name}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* */}
+
+      <div className="flex flex-col border-r min-w-[280px] w-[500px] h-full print:hidden ">
+        {/* Save Template Option  */}
+        <div className="flex justify-between items-center border-b p-4">
+          <h1 className="text-base">{currentSection.name}</h1>
+          <div>
+            <button
+              title="Save Template"
+              onClick={manageSaveTemplate}
+              className="flex gap-1 text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
+            >
+              <img src="/svg/save.svg" className="w-5 h-5 text-red-500" /> <span className="text-sm">Save</span>
+              {loading && <div className=" bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>}
+            </button>
+          </div>
+        </div>
+        {/* */}
+
+        {currentSection.type == "properties" && (
+          <PropertiesDesigner
+            templateGroup={templateGroup}
+            tempImages={{ templateImages, setTemplateImages }}
+            propertiesState={templateData.activeTemplate?.propertiesState}
+            onChange={(propertiesState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, propertiesState: propertiesState }))}
+          />
+        )}
+
+        {currentSection.type == "header&footer" && (
+          <HeaderFooterDesigner
+            tempImages={{ templateImages, setTemplateImages }}
+            footerState={templateData.activeTemplate?.footerState}
+            headerState={templateData.activeTemplate?.headerState}
+          // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, footerState: footerState }))}
+          />
+        )}
+
+        {currentSection.type == "transactions" && (
+          <TransactionDetailsDesigner
+            template={templateData.activeTemplate}
+            headerState={templateData.activeTemplate?.headerState}
+            onChange={(headerState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, headerState: headerState }))}
+          />
+        )}
+
+        {currentSection.type == "table" && (
+          <ItemTableDesigner
+            template={templateData.activeTemplate}
+            itemTableState={templateData.activeTemplate?.itemTableState}
+            onChange={(itemTableState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, itemTableState: itemTableState }))}
+          />
+        )}
+
+        {currentSection.type == "total" && (
+          <TotalDesigner
+            totalState={templateData.activeTemplate?.totalState}
+            onChange={(totalState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, totalState: totalState }))}
+          />
+        )}
+
+        {currentSection.type == "others" && (
+          <FooterDesigner
+            tempImages={{ templateImages, setTemplateImages }}
+            footerState={templateData.activeTemplate?.footerState}
+            onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, footerState: footerState }))}
+          />
+        )}
+      </div>
+
+      {/* Preview  */}
+      <InvoicePreview templateGroupId={templateGroup} data={DummyInvoiceData} />
+      {/* */}
+    </div >
+  );
+};
+
+export default InvoiceDesigner;

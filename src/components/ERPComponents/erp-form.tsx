@@ -17,7 +17,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useSearchParams, useParams } from "react-router-dom";
-import ERPCheckbox from "./erp-checkbox";
 import ERPDateInput from "./erp-date-input";
 import ERPInput from "./erp-input";
 import ERPMultipleDataList from "./erp-multiple-data-list";
@@ -26,6 +25,7 @@ import ERPTooltip from "./erp-tooltip";
 import ERPDataCombobox from "./erp-data-combobox";
 import ERPSelect from "./erp-select";
 import ERPTextarea from "./erp-textarea";
+import ERPCheckboxes from "./erp-checkboxes";
 
 export interface fieldType {
   id: string;
@@ -245,7 +245,7 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
         switch (fieldType) {
           case "checkbox":
             return (
-              <ERPCheckbox label={field?.label} items={field?.items} field={field} data={data} defaultData={defaultData} handleChange={handleChange} />
+              <ERPCheckboxes label={field?.label} items={field?.items} field={field} data={data} defaultData={defaultData} handleChange={handleChange} />
             );
           case "slider":
             return (

@@ -3,8 +3,8 @@ import { createSlice, createAsyncThunk, PayloadAction, Draft } from '@reduxjs/to
 import axios from 'axios';
 import { reducerManager } from '../dynamic-store-manager';
 import { APIClient } from '../../helpers/api-client';
-import { reducerNameFromUrl } from '../utils';
 import { ActionType, ApiState, ApiStateWithValidation } from '../types';
+import { reducerNameFromUrl } from '../actions/AppActions';
 
 
 

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
-import stdTempImage from "../../assets/templates/Invoice_std.png";
-import retailStdTempImage from "../../assets/templates/Retail_stadard.png";
+import stdTempImage from "../../assets/images/templates/Invoice_std.png";
+import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
 import { TemplateGroupTypes } from "../../pages/InvoiceDesigner/constants/TemplateCategories";
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import { TemplateState } from "../../pages/InvoiceDesigner/Designer/interfaces";

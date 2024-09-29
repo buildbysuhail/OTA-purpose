@@ -6,8 +6,8 @@ import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/
 
 import Urls from "../../redux/actions/Urls";
 
-import stdTempImage from "../../assets/templates/Invoice_std.png";
-import retailStdTempImage from "../../assets/templates/Retail_stadard.png";
+import stdTempImage from "../../assets/images/templates/Invoice_std.png";
+import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
 
 import { parseAddressTemplate } from "./utils";
 import { TemplateState } from "./Designer/interfaces";

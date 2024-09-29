@@ -1,6 +1,4 @@
 import config from "../config";
-import { getUserSession } from "./slices/auth/UserRights/thunk";
-import { countries } from "./slices/data/thunk";
 
 export const domain = config.api.APP_API_URL;
 export const signupUrl = import.meta.env.VITE_SIGNUP;

@@ -2,7 +2,6 @@ import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import ERPAvatar from "../../components/ERPComponents/erp-avatar";
 import {
   useAppDispatch,
-  useAppDynamicSelector,
   useAppSelector,
 } from "../../utilities/hooks/useAppDispatch";
 import ERPCropper from "../../components/ERPComponents/erp-cropper";
@@ -11,11 +10,6 @@ import Urls from "../../redux/urls";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPButton from "../../components/ERPComponents/erp-button";
 
-import { countries, currencies, industries } from "../../redux/slices/data/thunk";
-import {
-  ActionType,
-  ApiStateWithValidation,
-} from "../../redux/types";
 import { useDispatch } from "react-redux";
 import {
   ResponseModelWithValidation,
@@ -28,7 +22,6 @@ import { APIClient } from "../../helpers/api-client";
 import { postAction } from "../../redux/slices/app-thunks";
 
 import emailImage from "../../assets/images/apps/email-us.44dad893243c82213359c6d8c7c8f201.svg";
-import { handleAxiosResponse } from "../../utilities/HandleAxiosResponse";
 import WorkspaceSettingsApis from "./workspace-settings-apis";
 import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";

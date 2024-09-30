@@ -1,17 +1,19 @@
 import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { useSelector } from "react-redux";
 import { getOptions } from "../../utilities/Utils";
+import { reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { getAction } from "../../redux/slices/app-thunks";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 
 const ERPDataList = ({ handleChange, field, defaultData, data, label }: any) => {
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const GetReducerName = reducerNameFromUrl(field?.getListUrl, "GET");
 	const dataList = useSelector((state: any) => state?.[GetReducerName]);
 	const [localValue, setLocalValue] = useState<any>();
 
 	useEffect(() => {
-		field?.getListUrl && dispatch(getAction(field?.getListUrl));
+		field?.getListUrl && dispatch(getAction({apiUrl: field?.getListUrl}));
 	}, []);
 
 	let value = field?.getter ? defaultData?.[field?.id]?.[field?.getter] : defaultData?.[field?.id];

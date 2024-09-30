@@ -22,6 +22,7 @@ import ERPToast from "../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DataToForm, isFile } from "../../utilities/Utils";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 
 interface DesignSectionType {
   id: number;
@@ -88,6 +89,7 @@ const InvoiceDesigner = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
 
   const [loading, setLoading] = useState(false);
@@ -106,7 +108,7 @@ const InvoiceDesigner = () => {
   /* ####################################################################### */
 
   const getPDFTemplateData = () => {
-    (dispatch(getDetailAction(Urls.templates, id)) as any).then((res: any) => {
+    (appDispatch(getDetailAction(Urls.templates, id)) as any).then((res: any) => {
       setTemplateImages({
         background_image: res?.payload?.data?.background_image as string | null,
         background_image_header: res?.payload?.data?.background_image_header as string | null,
@@ -157,7 +159,7 @@ const InvoiceDesigner = () => {
     if (templateImages?.signature_image) postFormData?.append("signature_image", templateImages?.signature_image);
 
     setLoading(true);
-    (dispatch(postAction(Urls.templates, postFormData)) as any).then((res: any) => {
+    (appDispatch(postAction(Urls.templates, postFormData)) as any).then((res: any) => {
       handleResponse(res, () => {
         ERPToast.show("Template saved successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);
@@ -185,7 +187,7 @@ const InvoiceDesigner = () => {
       postFormData?.append("signature_image", templateImages?.signature_image);
 
     setLoading(true);
-    (dispatch(patchAction(Urls.templates, postFormData, id)) as any).then((res: any) => {
+    (appDispatch(patchAction(Urls.templates, postFormData, id)) as any).then((res: any) => {
       handleResponse(res, () => {
         ERPToast.show("Template updated successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);

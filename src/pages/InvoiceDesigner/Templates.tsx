@@ -15,13 +15,14 @@ import { DummyInvoiceData } from "./constants/DummyData";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
 import { TemplateGroupTypes, TemplateTypes } from "./constants/TemplateCategories";
-import { deleteAction, getAction, patchAction, setActiveTemplate } from "../../redux/actions/AppActions";
+import { deleteAction, getAction, patchAction, setActiveTemplate } from "../../redux/app-actions";
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { showAlert } from "../../components/ERPComponents/erp-alert";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import PSModel from "../../components/common/polosys/ps-modal";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 
 interface previewState {
   show: boolean;
@@ -30,7 +31,7 @@ interface previewState {
 
 const Templates = ({ }) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
 
   const [searchParams, setSearchParams] = useSearchParams();
   const currencySymbol = getCurrentCurrencySymbol();
@@ -77,16 +78,17 @@ const Templates = ({ }) => {
 
   /* ########################################################################################### */
 
-  const setDefaultTemplate = (id: any) => {
-    (dispatch(patchAction(Urls.templates, { is_default: true }, id)) as any).then((res: any) => {
-      handleResponse(res, () => {
-        getTemplates();
+  const setDefaultTemplate = async (id: any) => {
+    const res = await appDispatch(
+      patchAction({apiUrl: Urls.templates, data:{ is_default: true }, id}) as any
+    ).unwrap();
+      handleResponse(res, async() => {
+        await getTemplates();
         ERPToast.show("Selected template has been set as default.", "success");
       });
-    });
   };
 
-  const handleDeleteTemplate = (temp: any) => {
+  const handleDeleteTemplate = async (temp: any) => {
     if (temp?.is_default) {
       ERPToast.show("Default template cannot be deleted.", "warning");
     } else if (temp?.is_primary) {
@@ -96,14 +98,13 @@ const Templates = ({ }) => {
         "Delete",
         "Are you sure about deleting the template ?",
         [{ text: "Delete", type: "danger" }, "Cancel"],
-        (index: any) => {
+        async(index: any) => {
           if (index == 0) {
-            (dispatch(deleteAction(Urls.templates, temp?.id)) as any).then((res: any) => {
+            var res = await appDispatch(deleteAction({apiUrl:Urls.templates, id:temp?.id}) as any).unwrap();
               handleResponse(res, () => {
                 getTemplates();
                 ERPToast.show("Template deleted successfully", "success");
               });
-            });
           }
         },
         null,
@@ -115,12 +116,11 @@ const Templates = ({ }) => {
     }
   };
 
-  const getTemplates = () => {
+  const getTemplates = async () => {
     setLoading(true);
-    (dispatch(getAction(Urls.templates, `voucher_type=${templateGroup}`)) as any).then((res: any) => {
+    var res = await appDispatch(getAction({apiUrl: Urls.templates, params:`voucher_type=${templateGroup}`}) as any).unwrap();
       setTempData(res?.payload?.data);
       setLoading(false);
-    });
   };
 
   useEffect(() => {
@@ -257,7 +257,7 @@ const Templates = ({ }) => {
                     <h2 className="text-[11px] capitalize break-words py-2">
                       Click to add a template from our gallery. You can customize the template title, columns, and headers in line item table.
                     </h2>
-                    <ERPSubmitButton onClick={() => setShowTemplateListing(false)} className="max-w-min">
+                    <ERPSubmitButton onClick={() => setShowTemplateListing(false)} className="max-w-min" variant="primary">
                       <PlusIcon className=" w-4 h-4" />
                       New
                     </ERPSubmitButton>
@@ -340,10 +340,10 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     }
 
     dispatch(
-      setActiveTemplate({
+      setActiveTemplate({template:{
         ...template,
         propertiesState: { ...template.propertiesState, templateName: "Untitled Template " + (length + 1) },
-      }, newTData)
+      }, data:newTData})
     );
     navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };

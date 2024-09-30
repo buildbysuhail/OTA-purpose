@@ -28,12 +28,12 @@ import { userSession } from "../../redux/slices/user-session/thunk";
 
 interface WorkSpaceSettingsProps {}
 interface ProfileBasicInfo {
- 
+ UserSession
 
 }
 
 const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
-  let _userSession = useAppSelector((state: RootState) => state.UserSession);
+  let _userSession = useAppSelector((state: RootState) => state) as any;
   let api = new APIClient();
   const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");

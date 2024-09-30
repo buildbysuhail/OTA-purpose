@@ -4,14 +4,12 @@ import {
   Action,
   Middleware,
 } from "@reduxjs/toolkit";
-import { configureStore } from "@reduxjs/toolkit";
-import rootReducer from './slices/root-reducer';
 import thunk from "redux-thunk";
-import { reducerManager } from "./dynamic-store-manager";
+import { reduxManager } from "./dynamic-store-manager-pro";
 const middlewares: Middleware[] = [thunk];
 
 // Get the store from the manager
-const store = reducerManager.getStore();
+const store =  reduxManager.store;
 
 export default store;
 

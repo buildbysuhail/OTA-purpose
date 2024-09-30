@@ -32,7 +32,7 @@ const rootReducer = {
   UserSession: UserSessionReducer,
   PopupData: PopupDataReducer,
 
-  ...dataConfigReducers,
+  // ...dataConfigReducers,
 };
 
 export default rootReducer;

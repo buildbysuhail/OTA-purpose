@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
@@ -8,9 +8,6 @@ import { useLocation } from "react-router-dom";
 import { getCurrentCurrencySymbol, getPriceListOptions } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
-import { getThunkAndSlice } from "../../redux/slices/dynamicThunkAndSlice";
-import Urls from "../../redux/urls";
-import { ActionType } from "../../redux/types";
 import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 interface ERPDataComboboxProps {

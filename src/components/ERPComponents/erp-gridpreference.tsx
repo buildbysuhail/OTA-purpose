@@ -1,10 +1,9 @@
 import React, { FC, Fragment, useEffect, useRef, useState } from "react";
 import ERPInput from "./erp-input";
-import { ArrowLongDownIcon, ArrowLongUpIcon, LockClosedIcon, MagnifyingGlassIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { capitalizeAndAddSpace, moveArrayElement, removeSpacesAndCapitalize } from "../../utilities/Utils";
+import { LockClosedIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { capitalizeAndAddSpace, moveArrayElement } from "../../utilities/Utils";
 import ERPSubmitButton from "./erp-submit-button";
 import ERPModal from "./erp-modal";
-import { json } from "react-router-dom";
 import { ColumnPreference, DevGridColumn, GridPreference, initialGridPreference } from "../types/dev-grid-column";
 import { getInitialPreference } from "../../utilities/dx-grid-preference-updater";
 interface GridPreferenceChooserProps {
@@ -23,7 +22,6 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   const dragItem = useRef(null);
   const dragOverItem = useRef(null);
 
-  const [remodal, setReModal] = useState<any>();
   const [searchCols, setSearchCols] = useState<String>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   
@@ -253,7 +251,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
             <ERPSubmitButton type="button" onClick={handleApplyPreferences}>
               Save
             </ERPSubmitButton>
-            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28" varient="outline">
+            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28" variant="outline">
               Cancel
             </ERPSubmitButton>
           </div>

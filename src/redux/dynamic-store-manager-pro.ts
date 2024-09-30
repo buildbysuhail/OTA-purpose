@@ -92,7 +92,7 @@ function createApiSlice<T>(endpoint: ApiEndpoint<T>) {
 class DynamicReduxManager {
   private slices: Record<string, Slice>;
   private thunks: Record<string, AsyncThunk<any, void, { rejectValue: string }>>;
-  public store: ReturnType<typeof configureStore>;
+  public store;
 
   constructor(endpoints: typeof API_ENDPOINTS) {
     this.slices = {};
@@ -111,7 +111,7 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
 
     // Create the store
     this.store = configureStore({
-      reducer: rootReducer,
+      reducer: combineReducers(rootReducer),
     });
   }
 
@@ -131,7 +131,7 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
     
       ...reducerMap,
     };
-    return combineReducers(red);
+    return red;
   }
 
   getThunk(name: string) {

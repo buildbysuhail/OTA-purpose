@@ -19,7 +19,7 @@ const Urls = {
 
   // Dropdown - core
   data_languages: "/settings/language/",
-  data_countries: "/Core/Data/Countries",
+  data_countries: "/Data/Countries",
   data_currencies: "/data/Currencies/",
   data_industries: "/data/Industries/",
   data_stock_valuation_methods: "/data/StockValuationMethods/",

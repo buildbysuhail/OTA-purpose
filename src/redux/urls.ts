@@ -19,7 +19,7 @@ const Urls = {
 
   // Dropdown - core
   data_languages: "/settings/language/",
-  data_countries: "/data/Countries/",
+  data_countries: "/Core/Data/Countries",
   data_currencies: "/data/Currencies/",
   data_industries: "/data/Industries/",
   data_stock_valuation_methods: "/data/StockValuationMethods/",
@@ -98,14 +98,14 @@ const Urls = {
   deleteUserBranches: "/Core/UserBranches/{Id}/",
   //setting
     //setting/userManagement
-    getUserSubscriped:"/Subscription/User/GetUsersForGrid",
-    postUserSubscriped:'/Subscription/User/AddUser',
+    UserSubscription:"/api/Subscription/User",
+    // postUserSubscriped:'/Subscription/User/AddUser',
     data_user_types:'/Subscription/User/GetUserTypeCombo',
     data_employees:'/Subscription/User/GetEmployeeCombo',
     getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
     patchUserSubscriped:'/Subscription/User/EditUser',
     getUserTypes:"/Core/UserType/GetUsersTypeForGrid",
-    postUserTypes:"/Core/UserType/AddUserType",
+    postUserTypes:"/Core/UserType",
     //setting/Administrations
     CompanyProfiles:"/Core/CompanyProfile",
     Branch:'/Core/Branch',
@@ -113,11 +113,13 @@ const Urls = {
     deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
 
     //setting/system
-    getSystemCounters:"/Core/Counter/GetCounterForGrid",
-    postSystemCounters:"/Core/Counter/AddCounter",
-    getSystemVoucher:"/Core/Vouchers",
+    Counter:"/Core/Counter",
+    Voucher:"/Core/Vouchers",
     FinancialYear:"/Core/FinancialYear",
-
+    DayClose:"/Core/DayClose/DayClose",
+    Remainder:"/Core/Remainder",
+    userActionReport:"/Core/UserAction",
+    currencyExchange:"/Accounts/Currency",
     //Templates
     templates: ""
    

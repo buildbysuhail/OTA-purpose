@@ -10,7 +10,10 @@ import {
   WrenchIcon,
 } from "@heroicons/react/24/outline";
 import {toggleBankPosPopup, toggleBranchPopup, toggleCompanyProfilePopup, 
-        toggleDeleteInactiveTransactionPopup } from "../../../../redux/slices/popup-reducer";
+        toggleDayClosePopup, 
+        toggleDeleteInactiveTransactionPopup, 
+        toggleImportExportPopup, 
+        toggleUserActionPopup} from "../../../../redux/slices/popup-reducer";
 
 export const SettingsMenuItems = [
   // {
@@ -90,7 +93,7 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { path: `${import.meta.env.BASE_URL}settings/system/administration-settings`, type: 'link', active: false, selected: false, title: 'Administration Settings' },
-      { path: `${import.meta.env.BASE_URL}settings/system/export-import`, type: 'link', active: false, selected: false, title: 'Export Import' },
+      { action:toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'Export Import' },
       { path: `${import.meta.env.BASE_URL}settings/system/reset-database`, type: 'link', active: false, selected: false, title: 'Reset Database' },
       { path: `${import.meta.env.BASE_URL}settings/system/counters`, type: 'link', active: false, selected: false, title: 'Counters' },
       { path: `${import.meta.env.BASE_URL}settings/system/financial-year`, type: 'link', active: false, selected: false, title: 'Financial Year' },
@@ -99,11 +102,11 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/system/headers-footers`, type: 'link', active: false, selected: false, title: 'Headers and Footers' },
       { path: `${import.meta.env.BASE_URL}settings/templates`, type: 'link', active: false, selected: false, title: 'Invoice Designer' },
       { path: `${import.meta.env.BASE_URL}settings/system/commands`, type: 'link', active: false, selected: false, title: 'Commands' },
-      { path: `${import.meta.env.BASE_URL}settings/system/user-action-report`, type: 'link', active: false, selected: false, title: 'User Action Report' },
+      { action:toggleUserActionPopup, type: 'popup', active: false, selected: false, title: 'User Action Report' },
       { path: `${import.meta.env.BASE_URL}settings/system/reminders`, type: 'link', active: false, selected: false, title: 'Reminders' },
       { path: `${import.meta.env.BASE_URL}settings/system/exchange-rates`, type: 'link', active: false, selected: false, title: 'Exchange Rates' },
       { path: `${import.meta.env.BASE_URL}settings/system/refresh-all-branches`, type: 'link', active: false, selected: false, title: 'Refresh All Branches' },
-      { path: `${import.meta.env.BASE_URL}settings/system/day-close`, type: 'link', active: false, selected: false, title: 'Day Close' },
+      {action:toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'Day Close' },
       { path: `${import.meta.env.BASE_URL}settings/system/advance-options`, type: 'link', active: false, selected: false, title: 'Advance Options' },
     ]
   },

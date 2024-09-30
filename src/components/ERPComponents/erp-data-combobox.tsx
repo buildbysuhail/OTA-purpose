@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { getCurrentCurrencySymbol, getPriceListOptions } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 interface ERPDataComboboxProps {
   id: string;
   label?: string;
@@ -100,7 +101,7 @@ export default function ERPDataCombobox({
   console.log(`ERPDataCombobox,  : data_list_data`, id, dataList);
 
   useEffect(() => {
-    
+    debugger;
     if (!disabledApiCall) {
       field?.getListUrl && dispatch(getAction(field?.getListUrl));
     }

@@ -1,5 +1,6 @@
 import { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import Reminders from '../../../pages/settings/system/remainder';
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -11,7 +12,6 @@ const Settings = lazy(() => import('../../../pages/settings/AllSettings/Settings
 const UserTypes = lazy(() => import('../../../pages/settings/userManagement/user-types'));
 const SystemCounters = lazy(() => import('../../../pages/settings/system/counters'));
 const SystemVoucher = lazy(() => import('../../../pages/settings/system/vouchers'));
-const ImportExport = lazy(() => import('../../../pages/settings/system/import-export'));
 const ResetDatabase = lazy(() => import('../../../pages/settings/system/reset-database'));
 const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
@@ -59,9 +59,10 @@ const Content: FC<ContentProps> = () => {
           {/* settings Systems */}
           <Route path="settings/system/counters" element={<SystemCounters/>} />
           <Route path="settings/system/vouchers" element={<SystemVoucher/>} />
-          <Route path="settings/system/export-import" element={<ImportExport/>} />
           <Route path="settings/system/reset-database"element={<ResetDatabase/>} />          
-          <Route path="settings/system/financial-year"element={<FinancialYear/>} />         
+          <Route path="settings/system/financial-year"element={<FinancialYear/>} /> 
+          <Route path="settings/system/reminders"element={<Reminders/>} />    
+               
           <Route path="settings" element={<Settings />} />
 
           {/* Inventory Starts */}

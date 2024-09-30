@@ -7,7 +7,7 @@ const UserManagementApis = {
   getSessions: async (loadOptions: any) => {
     try {
       
-      const responseData = await api.get(Urls. getUserSubscriped, loadOptions);
+      const responseData = await api.get(Urls.UserSubscription, loadOptions);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -16,22 +16,11 @@ const UserManagementApis = {
   },
   addUserSessions: async (data: any) => {
     try {
-      const responseData = await api.post(Urls.postUserSubscriped,data);
+      const responseData = await api.post(Urls.UserSubscription,data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
       return '';
-    }
-  },
-
-  getUserTypes: async (loadOptions: any) => {
-    try {
-      
-      const responseData = await api.get(Urls.getUserTypes, loadOptions);
-      return responseData;
-    } catch (error) {
-      console.error("Failed to get available agents for DX Grid:", error);
-      return {};
     }
   },
 
@@ -45,35 +34,7 @@ const UserManagementApis = {
     }
   },
 
-//   getUserBasicInfo: async () => {
-//     try {
-//       const responseData = await api.getAsync(Urls.getUserBasicInfo);
-//       return responseData;
-//     } catch (error) {
-//       console.error("Failed to get available agents for DX Grid:", error);
-//       return '';
-//     }
-//   },
 
-//   },
-//   verifyEmail_profile: async (data: any) => {
-//     try {
-//       const responseData = await api.post(Urls.verifyEmail_profile, data);
-//       return responseData;
-//     } catch (error) {
-//       console.error("Failed to get available agents for DX Grid:", error);
-//       return '';
-//     }
-//   },
-//   changeEmailRequest_profile: async (data: any) => {
-//     try {
-//       const responseData = await api.post(Urls.changeEmailRequest_profile, data);
-//       return responseData;
-//     } catch (error) {
-//       console.error("Failed to get available agents for DX Grid:", error);
-//       return '';
-//     }
-//   },
 
 };
 

@@ -7,10 +7,10 @@ import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { UserTypeManage } from "./user-type-manage";
+import { UserTypeManage } from "../userManagement/user-type-manage";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 
-const UserTypes = () => {
+const Remainders = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -96,4 +96,4 @@ const UserTypes = () => {
   );
 };
 
-export default UserTypes;
+export default Remainders;

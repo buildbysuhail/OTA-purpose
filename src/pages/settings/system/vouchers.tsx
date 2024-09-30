@@ -1,15 +1,14 @@
 import React, { Fragment, useEffect, useState } from 'react'
-// import UserManagementApis from './User-Management-api';
+
 import Urls from '../../../redux/urls'
-import { Link } from 'react-router-dom';
 import { DevGridColumn } from '../../../components/types/dev-grid-column';
 import ERPDevGrid from '../../../components/ERPComponents/erp-dev-grid';
-import { toggleCounterPopup, toggleVoucherPopup} from '../../../redux/slices/popup-reducer';
+import {toggleVoucherPopup} from '../../../redux/slices/popup-reducer';
 import ERPModal from '../../../components/ERPComponents/erp-modal';
 import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
 import { useRootState } from '../../../utilities/hooks/useRootState';
-// import { PopUpModalAddUserTypes } from './userManagement-manage';
-// import { UserTypeManage } from './user-type-manage';
+import ERPGridActions from '../../../components/ERPComponents/erp-grid-actions';
+
 
 
 const SystemVoucher = () => {
@@ -136,27 +135,25 @@ const SystemVoucher = () => {
       },
     
       {
-        dataField: 'actions',
-        caption: 'Actions',
+        dataField: "actions",
+        caption: "Actions",
         allowSearch: false,
         allowFiltering: false,
         fixed: true,
-        fixedPosition: 'right',
+        fixedPosition: "right",
         width: 100,
         cellRender: (cellElement: any, cellInfo: any) => (
-          <div className="action-field">
-            <Link to="#">
-              <i className="ri-eye-2-line view-icon" title="View"></i>
-            </Link>
-            <Link to="#">
-              <i className="ri-edit-line edit-icon" title="Edit"></i>
-            </Link>
-            <Link to="#">
-              <i className="ri-delete-bin-5-line delete-icon" title="Delete"></i>
-            </Link>
-          </div>
+          <ERPGridActions
+            view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
+            edit={{ type: "popup", action: () => toggleVoucherPopup(cellInfo?.data?.id) }}
+            delete={{
+              confirmationRequired: true,
+              confirmationMessage: "Are you sure you want to delete this item?",
+              // action: () => handleDelete(cellInfo?.data?.id),
+            }}
+          />
         ),
-      }
+      },
       ];
   
       return (
@@ -168,7 +165,7 @@ const SystemVoucher = () => {
                   <div className="box custom-box">
                     <div className="box-body">
                       <div className="grid grid-cols-1 gap-3">
-                        <ERPDevGrid columns={columns} gridHeader="Voucher" dataUrl= {Urls.getSystemVoucher} gridId='grd_voucher' popupAction={toggleVoucherPopup} gridAddButtonType='popup' gridAddButtonIcon='ri-add-line'></ERPDevGrid>               
+                        <ERPDevGrid columns={columns} gridHeader="Voucher" dataUrl= {Urls.Voucher} gridId='grd_voucher' popupAction={toggleVoucherPopup} gridAddButtonType='popup' gridAddButtonIcon='ri-add-line'></ERPDevGrid>               
                       </div>
                     </div>
                   </div>

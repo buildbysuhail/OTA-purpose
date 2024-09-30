@@ -151,7 +151,7 @@ export const UserTypeManage = () => {
           variant="primary"
           onClick={handleSubmit}
           loading={postDataLoading}
-          title={key != undefined && key != null ? 'Update':'Cancel'}
+          title={key != undefined && key != null ? 'Update':'Submit'}
         ></ERPButton>
       </div>
     </div>

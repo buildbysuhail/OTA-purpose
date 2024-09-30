@@ -12,7 +12,6 @@ import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
-import { setActiveTemplate } from "../../../redux/actions/AppActions";
 
 interface TempImageProps {
     setTemplateImages: Dispatch<SetStateAction<TemplateImagesTypes>>,

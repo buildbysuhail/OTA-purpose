@@ -39,14 +39,14 @@ const Urls = {
   // Auth
   login: "/login/",
   logout: "/logout/",
-  password_reset: "/passwordReset",
+  password_reset: "/passwordReset/",
   password_reset_confirm: "/resetPassword/",
-  social_signup: "/socialSignup",
-  set_branch:"/Subscription/Auth/SetBranch",
+  social_signup: "/socialSignup/",
+  set_branch:"/Subscription/Auth/SetBranch/",
 
   // App
-  getUserAppSetting: "/User/getUserAppSetting",
-  updateUserAppSetting: "/User/updateUserAppSetting",
+  getUserAppSetting: "/User/getUserAppSetting/",
+  updateUserAppSetting: "/User/updateUserAppSetting/",
 
   // AccountSettings/Profile
   uploadUserImage: "/Subscription/Profile/UploadUserImage/",
@@ -60,8 +60,8 @@ const Urls = {
   getEmail_profile: "/Subscription/Profile/GetEmail/",
   getPhone_profile: "/Subscription/Profile/GetPhone/",
   getImage_profile: "/Subscription/Profile/GetProfileImage/",
-  getUserSession: "/Core/LoginSessions/GetAllAsync",
-  logoutUserSession: "/Core/LoginSessions/InActiveSession",
+  getUserSession: "/Core/LoginSessions/GetAllAsync/",
+  logoutUserSession: "/Core/LoginSessions/InActiveSession/",
   uploadCompanyLogo: "/Subscription/WorkSpace/UploadCompanyLogo/",
   changeEmailRequest_workspace : "/Subscription/WorkSpace/ChangeEmailRequest/",
   verifyEmail_workspace : "/Subscription/WorkSpace/VerifyEmail/",
@@ -77,8 +77,8 @@ const Urls = {
   getPhone_workspace : "/Subscription/WorkSpace/GetPhone/",
   getLogo_workspace : "/Subscription/WorkSpace/GetLogo/",
   getAddress_workspace : "/Subscription/WorkSpace/GetAddress/",
-  delete_workspace:"/Subscription/WorkSpace/DeleteWorkspace",
-  get_members:"/Subscription/WorkSpace/GetMembers",
+  delete_workspace:"/Subscription/WorkSpace/DeleteWorkspace/",
+  get_members:"/Subscription/WorkSpace/GetMembers/",
 
   // AccountSettings/Security
   updatePassword: "/Subscription/AccountSettings/Security/ResetPassword/",
@@ -98,31 +98,33 @@ const Urls = {
   deleteUserBranches: "/Core/UserBranches/{Id}/",
   //setting
     //setting/userManagement
-    UserSubscription:"/api/Subscription/User",
-    // postUserSubscriped:'/Subscription/User/AddUser',
-    data_user_types:'/Subscription/User/GetUserTypeCombo',
-    data_employees:'/Subscription/User/GetEmployeeCombo',
-    getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
-    patchUserSubscriped:'/Subscription/User/EditUser',
-    getUserTypes:"/Core/UserType/GetUsersTypeForGrid",
-    postUserTypes:"/Core/UserType",
+    UserSubscription:"/api/Subscription/User/",
+    // postUserSubscriped:'/Subscription/User/AddUser/',
+    data_user_types:'/Subscription/User/GetUserTypeCombo/',
+    data_employees:'/Subscription/User/GetEmployeeCombo/',
+    // getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
+    patchUserSubscriped:'/Subscription/User/EditUser/',
+    getUserTypes:"/Core/UserType/GetUsersTypeForGrid/",
+    postUserTypes:"/Core/UserType/",
     //setting/Administrations
-    CompanyProfiles:"/Core/CompanyProfile",
-    Branch:'/Core/Branch',
-    BankPosSettings:"/Core/BankPOS/AddCounter",
-    deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive",
+    CompanyProfiles:"/Core/CompanyProfile/",
+    Branch:'/Core/Branch/',
+    BankPosSettings:"/Core/BankPOS/AddCounter/",
+    deleteInactiveTransactions:"/Core/DeleteInActive/DeleteInActive/",
 
     //setting/system
-    Counter:"/Core/Counter",
-    Voucher:"/Core/Vouchers",
-    FinancialYear:"/Core/FinancialYear",
-    DayClose:"/Core/DayClose/DayClose",
-    Remainder:"/Core/Remainder",
-    userActionReport:"/Core/UserAction",
-    currencyExchange:"/Accounts/Currency",
+    Counter:"/Core/Counter/",
+    Voucher:"/Core/Vouchers/",
+    FinancialYear:"/Core/FinancialYear/",
+    DayClose:"/Core/DayClose/DayClose/",
+    Remainder:"/Core/Remainder/",
+    userActionReport:"/Core/UserAction/",
+    currencyExchange:"/Accounts/Currency/",
     //Templates
-    templates: ""
+    templates: "/Core/Template/",
    
+    // Tax Treatments
+    tax_treatment: 'api/tax_treatment/'
 };
 
 export default Urls;

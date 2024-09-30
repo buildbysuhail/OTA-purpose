@@ -30,7 +30,7 @@ import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import ERPModal from '../../../components/ERPComponents/erp-modal';
-import { PopUpModalAddUser, PopUpModalEditUser } from './userManagement-manage';
+import { PopUpModalAddUser, PopUpModalEditUser } from './user-manage';
 
 
 
@@ -182,16 +182,7 @@ const Users = () => {
                     width={140}
                     dataType="string"
                   />
-                  {/* <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="counterID"
-                   
-                    caption={"Counter ID"}
-                    
-                    dataType="number"
-                  /> */}
-                 
+                
                   <Column
                     allowSearch={true}
                     allowFiltering={true}

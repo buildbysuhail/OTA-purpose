@@ -20,6 +20,7 @@
     "@mui/material": "^5.16.6",
     "@mui/x-data-grid": "^7.12.0",
     "@mui/x-date-pickers": "^7.12.0",
+    "@react-pdf/renderer": "^3.4.5",
     "@reduxjs/toolkit": "^1.9.7",
     "@simonwep/pickr": "^1.9.0",
     "@tailwindcss/forms": "^0.5.7",
@@ -31,6 +32,7 @@
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "i18next": "^23.12.2",
+    "i18next-browser-languagedetector": "^7.2.0",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",
     "jwt-decode": "^4.0.0",
@@ -56,9 +58,7 @@
     "simplebar-react": "^3.2.4",
     "tailwind": "^4.0.0",
     "tailwind-clip-path": "^1.0.0",
-    "to-words": "^4.1.0",
-    "i18next-browser-languagedetector": "^7.2.0",
-    "@react-pdf/renderer": "^3.1.12"
+    "to-words": "^4.1.0"
   },
   "devDependencies": {
     "@types/file-saver": "^2.0.7",

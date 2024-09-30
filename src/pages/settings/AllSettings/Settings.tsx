@@ -11,19 +11,24 @@ import {
   toggleCompanyProfilePopup,
   toggleBankPosPopup,
   toggleBranchPopup,
+  toggleDayClosePopup,
+  toggleUserActionPopup,
+  toggleImportExportPopup,
 } from "../../../redux/slices/popup-reducer";
 
-const DeleteInactiveTransactionManage = lazy( () => import("../Administration/delete-inactive-transactions-manage"));
+const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
-const BankPosSettingsManage = lazy(() => import("../Administration/bank-pos-settings-manage"));
+const BankPosSettingsManage = lazy( () => import("../Administration/bank-pos-settings-manage"));
 const BranchManage = lazy(() => import("../Administration/branches-manage"));
+const DayCloseManage = lazy(() => import("../system/day-close-manage"));
+const UserActionReport = lazy(() => import("../system/user-action-report-manage"));
+const ImportExportManage = lazy(() => import("../system/import-export"));
+
 const Settings = () => {
   const rootState = useRootState();
   const dispatch = useAppDispatch();
   const [settingsRoutes, setSettingRoutes] = useState(SettingsMenuItems);
   let sds = jwtHelper.getLoggedInUserRole();
-
-  
 
   return (
     <Fragment>
@@ -81,6 +86,36 @@ const Settings = () => {
           dispatch(toggleBranchPopup(false));
         }}
         content={<BranchManage />}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.dayClose}
+        title={"Day Close"}
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleDayClosePopup(false));
+        }}
+        content={<DayCloseManage />}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.userActionReport}
+        title="User Action Report"
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleUserActionPopup(false));
+        }}
+        content={<UserActionReport/>}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.importExport}
+        title="Import Export"
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleImportExportPopup(false));
+        }}
+        content={<ImportExportManage/>}
       />
     </Fragment>
   );

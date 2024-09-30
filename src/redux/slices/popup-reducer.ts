@@ -10,6 +10,11 @@ interface popupData {
   companyProfile:boolean
   bankPos:boolean
   branch:boolean
+  dayClose:boolean
+  reminder:boolean
+  userActionReport:boolean
+  importExport:boolean
+  currencyExchange:boolean
 }
 const initialState: popupData = {
   userType: false,
@@ -21,6 +26,11 @@ const initialState: popupData = {
   companyProfile:false,
   bankPos:false,
   branch:false,
+  dayClose:false,
+  reminder:false,
+  userActionReport:false,
+  importExport:false,
+  currencyExchange:false,
 };
 
 const popupDataSlice = createSlice({
@@ -48,20 +58,39 @@ const popupDataSlice = createSlice({
       state.financialYear= action.payload;
     },
     toggleDeleteInactiveTransactionPopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.deleteInactiveTransactions= action.payload;
     },
     toggleCompanyProfilePopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.companyProfile= action.payload;
     },
     toggleBankPosPopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.bankPos= action.payload;
     },
     toggleBranchPopup: (state, action: PayloadAction<boolean>) => { 
-      debugger;     
+           
       state.branch= action.payload;
+    },
+    toggleDayClosePopup: (state, action: PayloadAction<boolean>) => { 
+           
+      state.dayClose = action.payload;
+    },
+    toggleRemainderPopup: (state, action: PayloadAction<boolean>) => { 
+           
+      state.reminder = action.payload;
+    },
+    toggleUserActionPopup: (state, action: PayloadAction<boolean>) => { 
+           
+      state.userActionReport = action.payload;
+    },
+    toggleImportExportPopup: (state, action: PayloadAction<boolean>) => { 
+           
+      state.importExport = action.payload;
+    },
+    toggleCurrencyExchangePopup: (state, action: PayloadAction<boolean>) => {     
+      state.currencyExchange = action.payload;
     },
   },
 });
@@ -77,6 +106,11 @@ export const {
   toggleCompanyProfilePopup,
   toggleBankPosPopup,
   toggleBranchPopup,
+  toggleDayClosePopup,
+  toggleRemainderPopup,
+  toggleUserActionPopup,
+  toggleImportExportPopup,
+  toggleCurrencyExchangePopup,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

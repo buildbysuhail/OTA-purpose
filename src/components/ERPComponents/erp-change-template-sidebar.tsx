@@ -16,6 +16,8 @@ import RetailPreviewWrapper from "../../pages/InvoiceDesigner/DesignPreview/Reta
 import StandardPreviewWrapper from "../../pages/InvoiceDesigner/DesignPreview/StandardPreview";
 import ERPToast from "./erp-toast";
 import PSModel from "../common/polosys/ps-modal";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { ResponseModel } from "../../base/response-model";
 
 interface previewState {
   show: boolean;
@@ -46,6 +48,7 @@ const ERPChangeTemplateSidebar = ({
   type = "detail_page",
 }: ERPChangeTemplateSidebarProps) => {
   const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
   const currencySymbol = getCurrentCurrencySymbol();
 
   const [tempData, setTempData] = useState<any>();
@@ -84,24 +87,21 @@ const ERPChangeTemplateSidebar = ({
 
   /* ########################################################################################### */
 
-  const getTemplates = () => {
-    (dispatch(getAction(Urls.templates, `voucher_type=${templateId}`)) as any).then((res: any) => {
-      setTempData(res?.payload?.data);
-    });
+  const getTemplates = async () => {
+    var res: ResponseModel<any> = await appDispatch(getAction(Urls.templates, `voucher_type=${templateId}`) as any).unwrap();
+      setTempData(res?.items);
   };
 
-  const setDefaultTemplate = (id: string) => {
+  const setDefaultTemplate = async (id: string) => {
     if (type === "detail_page" && endpointUrl) {
-      (
-        dispatch(patchAction(endpointUrl, { template_id: id, items: [], addresses: [], contact_person: [], additional_charge: [] }, data?.id)) as any
-      ).then((res: any) => {
-        handleResponse(res, () => {
+      
+        let res = await appDispatch(patchAction(endpointUrl, { template_id: id, items: [], addresses: [], contact_person: [], additional_charge: [] }, data?.id) as any).unwrap();
+        handleResponse(res, async () => {
           onClose();
-          getTemplates();
-          dispatch(getDetailAction(endpointUrl, data?.id));
+          await getTemplates();
+          appDispatch(getDetailAction(endpointUrl, data?.id));
           ERPToast.show("Template information has been updated.", "success");
         });
-      });
     } else if (type === "form") {
       onClose();
       onChangeData?.({ template_id: id });

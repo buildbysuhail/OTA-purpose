@@ -26,6 +26,7 @@ import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPPopover from "../../components/ERPComponents/erp-popover";
 import ERPSideView from "../../components/ERPComponents/erp-side-view";
 import ERPChangeTemplateSidebar from "../../components/ERPComponents/erp-change-template-sidebar";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -51,7 +52,7 @@ const AssociatedCustomerPDFList = [
 const AssociatedVendorPDFList = ["purchase_invoice", "purchase_order"];
 
 const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_invoice", showOptions = true, endpointUrl }: InvoicePreviewProps) => {
-  const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -307,16 +308,16 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
   useEffect(() => {
     if (data) {
       if (AssociatedCustomerPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
-        (dispatch(getAction(Urls.customer_templates, `customer=${data?.customer?.id}`)) as any).then((res: any) => {
+        (appDispatch(getAction(Urls.customer_templates, `customer=${data?.customer?.id}`)) as any).then((res: any) => {
           setAssociatedTempInfo(res?.payload?.data[0]);
         });
       }
       if (AssociatedVendorPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
-        (dispatch(getAction(Urls.vendor_templates, `vendor=${data?.vendor?.id}`)) as any).then((res: any) => {
+        (appDispatch(getAction(Urls.vendor_templates, `vendor=${data?.vendor?.id}`)) as any).then((res: any) => {
           setAssociatedTempInfo(res?.payload?.data[0]);
         });
       }
-      dispatch(getAction(Urls.templates, `voucher_type=${templateGroupId}`));
+      appDispatch(getAction(Urls.templates, `voucher_type=${templateGroupId}`));
     }
   }, [data]);
 

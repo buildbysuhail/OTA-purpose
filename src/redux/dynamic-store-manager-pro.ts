@@ -22,6 +22,8 @@ import { APIClient } from "../helpers/api-client";
 import { reducerNameFromUrl } from "./actions/AppActions";
 import Urls from "./urls";
 import { ActionType } from "./types";
+import { ApiEndpoint } from "../configs/types";
+import { DATA_ENDPOINTS } from "../configs/data-config";
 
 // Define a generic type for API response data
 type ApiResponse<T> = {
@@ -30,20 +32,9 @@ type ApiResponse<T> = {
   error: string | null;
 };
 
-// Type for our API endpoints
-type ApiEndpoint = {
-  url: string;
-  method: ActionType;
-  initialData?: any;
-};
+
 
 const apiClient = new APIClient
-// List of API endpoints (example)
-const API_ENDPOINTS: ApiEndpoint[] = [
-  { url: Urls.data_countries, method: ActionType.GET as const, initialData: { language: 'en' } },
-  { url: '/api/posts', method: ActionType.GET as const },
-  // Add more endpoints as needed
-] as const;
 type ThunkPayload = {
   params?: string;
   data?: any;
@@ -199,7 +190,7 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
 }
 
 // Create an instance of the manager
-export const reduxManager = new DynamicReduxManager(API_ENDPOINTS);
+export const reduxManager = new DynamicReduxManager(DATA_ENDPOINTS);
 
 // Export the store
 // export const store = reduxManager.store;

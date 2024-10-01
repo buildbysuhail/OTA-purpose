@@ -136,8 +136,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     // }));
   };
   const updatedUserThemeRName = reducerNameFromUrl(Urls.updateUserThemes,ActionType.POST);
-  let updatedUserTheme = useAppSelector((state: any) => state?.[userLanguageRName]);
-  let updatedUserThemeAction = reduxManager.getTypedThunk(userLanguageRName);
+  let updatedUserTheme = useAppSelector((state: any) => state?.[updatedUserThemeRName]);
+  let updatedUserThemeAction = reduxManager.getTypedThunk(updatedUserThemeRName);
 
   const saveThemeChange = async () => {
     const res = await dispatch(updatedUserThemeAction({data: theme}) as any).unwrap();

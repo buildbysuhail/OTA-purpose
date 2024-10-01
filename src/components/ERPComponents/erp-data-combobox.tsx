@@ -101,11 +101,11 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
 
   console.log(`ERPDataCombobox,  : data_list_data`, id, dataList);
 
-  let dfd = reduxManager.getThunk(reducerName);
+  let getListAction = reduxManager.getTypedThunk(reducerName);
   debugger;
   useEffect(() => {
     if (!disabledApiCall) {
-      field?.getListUrl && dispatch(dfd() as any).unwrap();
+      field?.getListUrl && dispatch(getListAction({}) as any).unwrap();
     }
   }, []);
 

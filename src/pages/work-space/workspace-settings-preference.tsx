@@ -1,13 +1,10 @@
 import { FC, Fragment, useEffect, useState } from "react";
 import {
   useAppDynamicSelector,
+  useAppSelector,
 } from "../../utilities/hooks/useAppDispatch";
 import Urls from "../../redux/urls";
 import ERPButton from "../../components/ERPComponents/erp-button";
-import {
-  getThunkAndSlice,
-  getThunkAndSliceWithValidation,
-} from "../../redux/slices/dynamicThunkAndSlice";
 import {
   ActionType,
 } from "../../redux/types";
@@ -24,6 +21,8 @@ import { ColorPicker, hexToRgb } from "../../components/common/switcher/switcher
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPSelect from "../../components/ERPComponents/erp-select";
+import { reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 interface WorkSpaceSettingsProps {}
 interface UserLanguage {
   language?: string | null; 
@@ -42,22 +41,13 @@ const WorkSpaceSettingsPreference: FC<WorkSpaceSettingsProps> = () => {
   const dispatch = useDispatch();
 
   ////////////email change
- 
-  const { thunk: updateUserLanguageThunk } =
-    getThunkAndSlice<UserLanguage>(
-      Urls.updateLanguage,
-      ActionType.POST,
-      false,
-      { data: { language: language }, loading: false }
-    );
-  const updatedUserLanguage: any = useAppDynamicSelector(
-    Urls.updateLanguage,
-    ActionType.POST
-  );
+  const updateUserLanguageRName = reducerNameFromUrl(Urls.updateLanguage,ActionType.POST);
+  let updateUserLanguage = useAppSelector((state: any) => state?.[updateUserLanguageRName]);
+  let updateUserLanguageAction = reduxManager.getTypedThunk(updateUserLanguageRName);
   const updateLanguage = async () => {
     
     const response: ResponseModel<any> = await dispatch(
-      updateUserLanguageThunk({language: language})
+      updateUserLanguageAction({data: {language: language}}) as any
     ).unwrap();
     
     handleResponse(response, () => {
@@ -127,20 +117,12 @@ const userTheme = () => {
     //   ..._theme
     // }));
   };
-  const { thunk: updateUserThemeThunk } =
-    getThunkAndSlice<Theme>(
-      Urls.updateUserThemes,
-      ActionType.POST,
-      false,
-      { }
-    );
-  const updatedUserTheme: any = useAppDynamicSelector(
-    Urls.updateUserThemes,
-    ActionType.POST
-  );
+  const updateUserThemeRNem = reducerNameFromUrl(Urls.updateUserThemes,ActionType.POST);
+  let updateUserTheme = useAppSelector((state: any) => state?.[updateUserThemeRNem]);
+  let updateUserThemeAction = reduxManager.getTypedThunk(updateUserThemeRNem);
   const saveThemeChange = async () => {
     
-    const res = await dispatch(updateUserThemeThunk(theme) as any).unwrap();
+    const res = await dispatch(updateUserThemeAction({data: theme}) as any).unwrap();
     handleResponse(res, ()=> {
       userTheme();
     });
@@ -192,8 +174,8 @@ const userTheme = () => {
                         title="Save Changes"
                         onClick={updateLanguage}
                         variant="primary"
-                        loading={updatedUserLanguage.loading}
-                        disabled={updatedUserLanguage.loading}
+                        loading={updateUserLanguage.loading}
+                        disabled={updateUserLanguage.loading}
                       ></ERPButton>
                     </div>
                   </div>
@@ -477,8 +459,8 @@ const userTheme = () => {
                       title="Save Changes"
                       onClick={saveThemeChange}
                       variant="primary"
-                      loading={updatedUserTheme.loading}
-                      disabled={updatedUserTheme.loading}
+                      loading={updateUserTheme.loading}
+                      disabled={updateUserTheme.loading}
                     ></ERPButton>
                   </div>
                 </div>

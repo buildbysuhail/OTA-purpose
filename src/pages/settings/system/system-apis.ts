@@ -16,7 +16,8 @@ const SystemSettingsApi = {
 
   addCounterInfo: async (data: any) => {
     try {
-      const responseData = await api.post(Urls.postSystemCounters, data);
+      //modified safvan  -- "" replace by url
+      const responseData = await api.post("", data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);

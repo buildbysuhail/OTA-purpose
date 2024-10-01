@@ -204,7 +204,7 @@ const InvTransaction = () => {
                     ₹ {item.price * item.quantity}
                   </span>
                 </div>
-                <h3 className="mb-2 font-bold text-x">{item.name}</h3>
+                <h3 className="mb-2 font-bold text-[20px]">{item.name}</h3>
                 <p className="mb-2 text-gray text-sm">
                   Item Subtotal: {item.quantity} x ₹{item.price} = ₹
                   {item.price * item.quantity}

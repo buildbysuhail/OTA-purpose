@@ -21,6 +21,7 @@ import PopupDataReducer from "../redux/slices/popup-reducer";
 import { APIClient } from "../helpers/api-client";
 import { reducerNameFromUrl } from "./actions/AppActions";
 import Urls from "./urls";
+import { ActionType } from "./types";
 
 // Define a generic type for API response data
 type ApiResponse<T> = {
@@ -30,43 +31,73 @@ type ApiResponse<T> = {
 };
 
 // Type for our API endpoints
-type ApiEndpoint<T> = {
-  name: string;
+type ApiEndpoint = {
   url: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: ActionType;
+  initialData?: any;
 };
 
 const apiClient = new APIClient
 // List of API endpoints (example)
-const API_ENDPOINTS = [
-  { name: 'fetchUsers', url: Urls.data_countries, method: 'GET' as const },
-  { name: 'fetchPosts', url: '/api/posts', method: 'GET' as const },
+const API_ENDPOINTS: ApiEndpoint[] = [
+  { url: Urls.data_countries, method: ActionType.GET as const, initialData: { language: 'en' } },
+  { url: '/api/posts', method: ActionType.GET as const },
   // Add more endpoints as needed
 ] as const;
-
+type ThunkPayload = {
+  params?: string;
+  data?: any;
+  id?: string | number;
+};
 // Function to create a slice and thunk for an endpoint
-function createApiSlice<T>(endpoint: ApiEndpoint<T>) {
+function createApiSlice(endpoint: ApiEndpoint) {
   let name = reducerNameFromUrl(endpoint.url,endpoint.method);
   debugger;
-  const thunk = createAsyncThunk<T, void, { rejectValue: string }>(
+  const thunk = createAsyncThunk<any, ThunkPayload, { rejectValue: string }>(
     `${name}`,
-    async (_, { rejectWithValue }) => {
+    async (payload: ThunkPayload, { rejectWithValue }) => {
       try {
-        const response = apiClient.get(endpoint.url);
+        let response;
+        const { params, data, id } = payload;
+        let url = endpoint.url;
+        
+        // If there's an ID, append it to the URL
+        if (id !== undefined) {
+          url = `${url}/${id}`;
+        }
+
+        switch (endpoint.method) {
+          case 'GET':
+            response = params != undefined && params != null ? await apiClient.get(url, params) : await apiClient.get(url);
+            break;
+          case 'POST':
+            response = await apiClient.post(url, data);
+            break;
+          case 'PATCH':
+            response = await apiClient.patch(url, { params });
+            break;
+          case 'PUT':
+            response = await apiClient.put(url, data);
+            break;
+          case 'DELETE':
+            response = await apiClient.delete(url);
+            break;
+          default:
+            throw new Error(`Unsupported method: ${endpoint.method}`);
+        }
         return response;
       } catch (error: any) {
         return rejectWithValue(error.response?.data || 'An error occurred');
       }
     }
   );
-
   const slice = createSlice({
     name: name,
     initialState: {
-      data: null,
+      data: endpoint.initialData,
       loading: false,
       error: null,
-    } as ApiResponse<T>,
+    } as ApiResponse<any>,
     reducers: {},
     extraReducers: (builder) => {
       builder
@@ -74,10 +105,10 @@ function createApiSlice<T>(endpoint: ApiEndpoint<T>) {
           state.loading = true;
           state.error = null;
         })
-        .addCase(thunk.fulfilled, (state, action: PayloadAction<T>) => {
+        .addCase(thunk.fulfilled, (state, action: PayloadAction<any>) => {
           debugger;
           state.loading = false;
-          state.data = action.payload as Draft<T>;
+          state.data = action.payload as Draft<any>;
         })
         .addCase(thunk.rejected, (state, action) => {
           state.loading = false;
@@ -91,10 +122,10 @@ function createApiSlice<T>(endpoint: ApiEndpoint<T>) {
 
 class DynamicReduxManager {
   private slices: Record<string, Slice>;
-  private thunks: Record<string, AsyncThunk<any, void, { rejectValue: string }>>;
+  private thunks: Record<string, AsyncThunk<any, ThunkPayload, { rejectValue: string }>>;
   public store;
 
-  constructor(endpoints: typeof API_ENDPOINTS) {
+  constructor(endpoints: ApiEndpoint[]) {
     this.slices = {};
     this.thunks = {};
     // Create slices and thunks for each endpoint
@@ -138,7 +169,15 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
     debugger;
     return this.thunks[name];
   }
-
+  getTypedThunk<ReturnType = any>(name: string): AsyncThunk<ReturnType, ThunkPayload, { rejectValue: string }> {
+    const thunk = this.thunks[name];
+    if (!thunk) {
+      throw new Error(`Thunk "${name}" not found`);
+    }
+    return thunk as AsyncThunk<ReturnType, ThunkPayload, { rejectValue: string }>;
+  }
+  
+  
   // addEndpoint<T>(endpoint: ApiEndpoint<T>) {
   //   const { slice, thunk } = createApiSlice(endpoint);
   //   this.slices[endpoint.name] = slice;

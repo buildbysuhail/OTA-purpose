@@ -1,25 +1,13 @@
-// import { FC, Fragment, useEffect, useState } from "react";
-// import {
-//   useAppDynamicSelector,
-// } from "../../utilities/hooks/useAppDispatch";
 import Urls from "../../redux/urls";
 import ERPButton from "../../components/ERPComponents/erp-button";
-import {
-  getThunkAndSlice,
-  getThunkAndSliceWithValidation,
-} from "../../redux/slices/dynamicThunkAndSlice";
 import {
   ActionType,
 } from "../../redux/types";
 import { useDispatch } from "react-redux";
-import {
-  ResponseModel,
-} from "../../base/response-model";
 import { useLocation } from "react-router-dom";
 import "./profile.css";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
-import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import {
   ColorPicker,
   hexToRgb,
@@ -31,8 +19,10 @@ import { Theme } from "../../redux/slices/app/types";
 import Cookies from "js-cookie";
 import { modelToBase64 } from "../../utilities/jsonConverter";
 import ERPSelect from "../../components/ERPComponents/erp-select";
-import { useAppDynamicSelector } from "../../utilities/hooks/useAppDispatch";
+import { useAppDynamicSelector, useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { FC, Fragment, useEffect, useState } from "react";
+import { reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -75,40 +65,19 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   };
   const dispatch = useDispatch();
 
-  ////////////email change
-  const { thunk: postFormEmailThunk } = getThunkAndSliceWithValidation<
-    any,
-    any
-  >(Urls.verifyEmail_profile, ActionType.POST, false, {
-    data: { userName: "", password: "", newValue: "" },
-    loading: false,
-  });
-  // const updatedFormDataEmail: any = useAppDynamicSelector(
-  //   Urls.verifyEmail_profile,
-  //   ActionType.POST
-  // );
-
-  const { thunk: getFormEmailThunk } = getThunkAndSliceWithValidation<any, any>(
-    Urls.getEmail_profile,
-    ActionType.GET,
-    false
-  );
-  const { thunk: updateUserLanguageThunk } = getThunkAndSlice<UserLanguage>(
-    Urls.updateLanguage,
-    ActionType.POST,
-    false,
-    { data: { language: language }, loading: false }
-  );
-  const updatedUserLanguage: any = useAppDynamicSelector(
-    Urls.updateLanguage,
-    ActionType.POST
-  );
+  const userLanguageRName = reducerNameFromUrl(Urls.updateLanguage,ActionType.POST);
+  let userLanguage = useAppSelector((state: any) => state?.[userLanguageRName]);
+  let userLanguageAction = reduxManager.getTypedThunk(userLanguageRName);
   const updateLanguage = async () => {
-    const response: ResponseModel<any> = await dispatch(
-      updateUserLanguageThunk({ language: language })
-    ).unwrap();
+    debugger;
+    try {
+      const response = await dispatch(userLanguageAction({ data: { language },
+        params: 'userId=123' }) as any).unwrap();
+      handleResponse(response, () => {});
+    } catch (error) {
+      console.error('Error updating language:', error);
+    }
 
-    handleResponse(response, () => {});
   };
   const restLanguage = async () => {
     setLanguage(_language);
@@ -166,18 +135,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     //   ..._theme
     // }));
   };
-  const { thunk: updateUserThemeThunk } = getThunkAndSlice<Theme>(
-    Urls.updateUserThemes,
-    ActionType.POST,
-    false,
-    {}
-  );
-  const updatedUserTheme: any = useAppDynamicSelector(
-    Urls.updateUserThemes,
-    ActionType.POST
-  );
+  const updatedUserThemeRName = reducerNameFromUrl(Urls.updateUserThemes,ActionType.POST);
+  let updatedUserTheme = useAppSelector((state: any) => state?.[userLanguageRName]);
+  let updatedUserThemeAction = reduxManager.getTypedThunk(userLanguageRName);
+
   const saveThemeChange = async () => {
-    const res = await dispatch(updateUserThemeThunk(theme) as any).unwrap();
+    const res = await dispatch(updatedUserThemeAction({data: theme}) as any).unwrap();
     handleResponse(res, () => {
       userTheme();
     });
@@ -234,8 +197,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         title="Save Changes"
                         onClick={updateLanguage}
                         variant="primary"
-                        loading={updatedUserLanguage.loading}
-                        disabled={updatedUserLanguage.loading}
+                        loading={userLanguage.loading}
+                        disabled={userLanguage.loading}
                       ></ERPButton>
                     </div>
                   </div>

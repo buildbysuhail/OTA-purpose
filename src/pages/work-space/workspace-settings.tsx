@@ -27,10 +27,6 @@ import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
 
 interface WorkSpaceSettingsProps {}
-interface ProfileBasicInfo {
- UserSession
-
-}
 
 const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   let _userSession = useAppSelector((state: RootState) => state) as any;

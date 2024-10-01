@@ -100,7 +100,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
     
     setIsLoading(false);
     
-    handleAxiosResponse(res, () => {
+    handleResponse(res, () => {
       setIsOpen(false);
       setImgSrc("");
 

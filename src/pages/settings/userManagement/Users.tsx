@@ -159,7 +159,7 @@ const Users = () => {
                 <ERPDevGrid
                   columns={columns}
                   gridHeader="User"
-                  dataUrl={Urls.UserSubscription}
+                  dataUrl={Urls.Users}
                   gridId="grd_user"
                   popupAction={toggleUserPopup}
                   gridAddButtonType="popup"

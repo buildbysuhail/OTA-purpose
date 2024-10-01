@@ -71,7 +71,7 @@ const UserTypes = () => {
                 <ERPDevGrid
                   columns={columns}
                   gridHeader="User Type"
-                  dataUrl={Urls.getUserTypes}
+                  dataUrl={Urls.UserTypes}
                   gridId="grd_user_type"
                   popupAction={toggleUserTypePopup}
                   gridAddButtonType="popup"

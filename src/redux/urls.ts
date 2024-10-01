@@ -35,6 +35,8 @@ const Urls = {
   data_projects: "/Accounts/Data/Projects/",
   data_upis: "/Accounts/Data/UPIs/",
 
+//Dropdown - settings
+base_currency:"/Core/ExchangeRates/GetExchangeRatesData/",
 
   // Auth
   login: "/login/",
@@ -98,8 +100,7 @@ const Urls = {
   deleteUserBranches: "/Core/UserBranches/{Id}/",
   //setting
     //setting/userManagement
-    UserSubscription:"/api/Subscription/User/",
-    // postUserSubscriped:'/Subscription/User/AddUser/',
+    UserSubscription:"/Subscription/User/",
     data_user_types:'/Subscription/User/GetUserTypeCombo/',
     data_employees:'/Subscription/User/GetEmployeeCombo/',
     // getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
@@ -119,7 +120,8 @@ const Urls = {
     DayClose:"/Core/DayClose/DayClose/",
     Remainder:"/Core/Remainder/",
     userActionReport:"/Core/UserAction/",
-    currencyExchange:"/Accounts/Currency/",
+    currencyExchange:"/Core/ExchangeRates",
+    postCurrency:"/Accounts/Currency",
     //Templates
     templates: "/Core/Template/",
    

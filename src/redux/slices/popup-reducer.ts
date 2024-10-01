@@ -15,6 +15,8 @@ interface popupData {
   userActionReport:boolean
   importExport:boolean
   currencyExchange:boolean
+  resetDataBase:boolean
+  commands:boolean
 }
 const initialState: popupData = {
   userType: false,
@@ -31,6 +33,8 @@ const initialState: popupData = {
   userActionReport:false,
   importExport:false,
   currencyExchange:false,
+  resetDataBase:false,
+  commands:false,
 };
 
 const popupDataSlice = createSlice({
@@ -92,6 +96,12 @@ const popupDataSlice = createSlice({
     toggleCurrencyExchangePopup: (state, action: PayloadAction<boolean>) => {     
       state.currencyExchange = action.payload;
     },
+    toggleResetDataBasePopup: (state, action: PayloadAction<boolean>) => {     
+      state.resetDataBase = action.payload;
+    },
+    toggleCommandsPopup: (state, action: PayloadAction<boolean>) => {     
+      state.commands = action.payload;
+    },
   },
 });
 
@@ -111,6 +121,8 @@ export const {
   toggleUserActionPopup,
   toggleImportExportPopup,
   toggleCurrencyExchangePopup,
+  toggleResetDataBasePopup,
+  toggleCommandsPopup
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

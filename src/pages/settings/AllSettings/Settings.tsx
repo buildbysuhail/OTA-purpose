@@ -14,6 +14,8 @@ import {
   toggleDayClosePopup,
   toggleUserActionPopup,
   toggleImportExportPopup,
+  toggleResetDataBasePopup,
+  toggleCommandsPopup,
 } from "../../../redux/slices/popup-reducer";
 
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
@@ -23,6 +25,7 @@ const BranchManage = lazy(() => import("../Administration/branches-manage"));
 const DayCloseManage = lazy(() => import("../system/day-close-manage"));
 const UserActionReport = lazy(() => import("../system/user-action-report-manage"));
 const ImportExportManage = lazy(() => import("../system/import-export"));
+const CommandsManage = lazy(() => import("../system/commands"));
 
 const Settings = () => {
   const rootState = useRootState();
@@ -116,6 +119,27 @@ const Settings = () => {
           dispatch(toggleImportExportPopup(false));
         }}
         content={<ImportExportManage/>}
+      />
+       <ERPModal
+        isOpen={rootState.PopupData.resetDataBase}
+        title="Reset DataBase"
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleResetDataBasePopup(false));
+        }}
+        // content={<ImportExportManage/>}
+      />
+  
+       <ERPModal
+        isOpen={rootState.PopupData.commands}
+        title= "Sql Commands"
+        width="w-full max-w-[800px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleCommandsPopup(false));
+        }}
+        content={<CommandsManage/>}
       />
     </Fragment>
   );

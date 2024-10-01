@@ -3,20 +3,29 @@ import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
+import { toggleRemainderPopup} from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { UserTypeManage } from "../userManagement/user-type-manage";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { RemainderManage } from "./remainder-manage";
 
 const Remainders = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "userTypeName",
-      caption: "User Type",
+      dataField: "remaindersID",
+      caption: "Remainder ID",
+      dataType: "number",
+      allowSorting: true,
+      allowFiltering: true,
+      minWidth: 150,
+      isLocked: true,
+    },
+    {
+      dataField: "remainderName",
+      caption: "Remainder Name",
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -25,21 +34,32 @@ const Remainders = () => {
       isLocked: true,
     },
     {
-      dataField: "userTypeCode",
-      caption: "Code",
+      dataField: "descriptions",
+      caption: "Descriptions",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      minWidth: 200,
     },
     {
-      dataField: "remarks",
-      caption: "Remarks",
-      dataType: "string",
+      dataField: "remaindingDate",
+      caption: "Remainding Date",
+      dataType: "date",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      minWidth: 200,
     },
+    {
+      dataField: "numberOfDays",
+      caption: "Number of Days",
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+  
     {
       dataField: "actions",
       caption: "Actions",
@@ -51,7 +71,7 @@ const Remainders = () => {
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
           view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
+          edit={{ type: "popup", action: () => toggleRemainderPopup(cellInfo?.data?.id) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -70,12 +90,12 @@ const Remainders = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
                   columns={columns}
-                  gridHeader="User Type"
-                  dataUrl={Urls.getUserTypes}
-                  gridId="grd_user_type"
-                  popupAction={toggleUserTypePopup}
+                  gridHeader="Remainders"
+                  dataUrl={Urls.Remainder}
+                  gridId="grd_remainder"
+                  popupAction={toggleRemainderPopup}
                   gridAddButtonType="popup"
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>
               </div>
             </div>
@@ -83,14 +103,14 @@ const Remainders = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.userType}
-        title={"Add New UserType"}
+        isOpen={rootState.PopupData.reminder}
+        title={"Remainders"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserTypePopup(false));
+          dispatch(toggleRemainderPopup(false));
         }}
-        content={<UserTypeManage />}
+        content={<RemainderManage/>}
       />
     </Fragment>
   );

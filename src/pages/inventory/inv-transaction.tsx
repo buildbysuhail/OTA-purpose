@@ -249,7 +249,9 @@ const InvTransaction = () => {
                 className="ri-add-circle-fill pr-2"
                 style={{ fontSize: "18px" }}
               ></i>
-              <div className="mr-2 text-amber-700" size={16}>
+              <div className="mr-2 text-amber-700" 
+              // size={16}
+              >
                 {" "}
                 Add Items{" "}
               </div>

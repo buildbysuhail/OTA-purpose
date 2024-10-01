@@ -461,7 +461,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
                 content={printModal(voucherType)}
                 className="!min-w-max"
                 isOpen={showPrintModal}
-                hasTopCloseButton={true}
+                closeButton="Button"
                 closeModal={() => {
                   setShowPrintModal(false);
                   // setSearchParams({});

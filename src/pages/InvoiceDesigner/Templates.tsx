@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
-import Urls from "../../redux/actions/Urls";
 
 import stdTempImage from "../../assets/images/templates/Invoice_std.png";
 import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
@@ -15,7 +14,6 @@ import { DummyInvoiceData } from "./constants/DummyData";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
 import { TemplateGroupTypes, TemplateTypes } from "./constants/TemplateCategories";
-import { deleteAction, getAction, patchAction, setActiveTemplate } from "../../redux/app-actions";
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../utilities/HandleResponse";
@@ -23,6 +21,9 @@ import { showAlert } from "../../components/ERPComponents/erp-alert";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import PSModel from "../../components/common/polosys/ps-modal";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { patchAction, deleteAction, getAction } from "../../redux/slices/app-thunks";
+import Urls from "../../redux/urls";
+import { setTemplatePropertiesState } from "../../redux/slices/templates/reducer";
 
 interface previewState {
   show: boolean;
@@ -80,7 +81,7 @@ const Templates = ({ }) => {
 
   const setDefaultTemplate = async (id: any) => {
     const res = await appDispatch(
-      patchAction({apiUrl: Urls.templates, data:{ is_default: true }, id}) as any
+      patchAction({apiUrl: Urls.templates, params:{ is_default: true }, id}) as any
     ).unwrap();
       handleResponse(res, async() => {
         await getTemplates();
@@ -287,7 +288,7 @@ const Templates = ({ }) => {
                           <RetailPreviewWrapper
                             data={DummyInvoiceData}
                             template={showPreview.template}
-                            currency={currencySymbol}
+                            currency={currencySymbol || undefined}
                             company={ActiveBranch?.company}
                             templateGroupId={templateGroup}
                             addressTemplates={{ orgAddressTemplate }}
@@ -297,7 +298,7 @@ const Templates = ({ }) => {
                             data={DummyInvoiceData}
                             template={showPreview.template}
                             company={ActiveBranch?.company}
-                            currency={currencySymbol}
+                            currency={currencySymbol || undefined}
                             templateGroupId={templateGroup}
                             addressTemplates={{ orgAddressTemplate }}
                           />
@@ -340,11 +341,15 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     }
 
     dispatch(
-      setActiveTemplate({template:{
-        ...template,
-        propertiesState: { ...template.propertiesState, templateName: "Untitled Template " + (length + 1) },
-      }, data:newTData})
-    );
+      setTemplatePropertiesState(
+        { ...template.propertiesState, templateName: "Untitled Template " + (length + 1) }
+    ));
+    // dispatch(
+    //   setActiveTemplate({template:{
+    //     ...template,
+    //     propertiesState: { ...template.propertiesState, templateName: "Untitled Template " + (length + 1) },
+    //   }, data:newTData})
+    // );
     navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };
 

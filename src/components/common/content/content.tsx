@@ -1,6 +1,6 @@
 import { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Reminders from '../../../pages/settings/system/remainder';
+
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -10,12 +10,13 @@ const WorkspaceSettingsMembers = lazy(() => import('../../../pages/work-space/wo
 const WorkspaceSettingsSecurity = lazy(() => import('../../../pages/work-space/workspace-settings-security'));
 const Settings = lazy(() => import('../../../pages/settings/AllSettings/Settings'));
 const UserTypes = lazy(() => import('../../../pages/settings/userManagement/user-types'));
+const Users = lazy(() => import('../../../pages/settings/userManagement/Users'));
 const SystemCounters = lazy(() => import('../../../pages/settings/system/counters'));
 const SystemVoucher = lazy(() => import('../../../pages/settings/system/vouchers'));
-const ResetDatabase = lazy(() => import('../../../pages/settings/system/reset-database'));
 const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
-
+const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
+const ExchangeRates = lazy(() => import("../../../pages/settings/system/exchange-rates"));
 const Templates = lazy(() => import("../../../pages/InvoiceDesigner/Templates"));
 const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
 
@@ -53,16 +54,15 @@ const Content: FC<ContentProps> = () => {
           <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
           <Route path="/members" element={<WorkspaceSettingsMembers />} />
           {/* settings user */}
-          {/* <Route path="/user-management/users" element={<Users />} /> */}
+          <Route path="/user-management/users" element={<Users />} />
           <Route path="/user-management/userstypes" element={<UserTypes/>} />
 
           {/* settings Systems */}
           <Route path="settings/system/counters" element={<SystemCounters/>} />
-          <Route path="settings/system/vouchers" element={<SystemVoucher/>} />
-          <Route path="settings/system/reset-database"element={<ResetDatabase/>} />          
+          <Route path="settings/system/vouchers" element={<SystemVoucher/>} />          
           <Route path="settings/system/financial-year"element={<FinancialYear/>} /> 
           <Route path="settings/system/reminders"element={<Reminders/>} />    
-               
+          <Route path="settings/system/exchange-rates"element={<ExchangeRates/>} />  
           <Route path="settings" element={<Settings />} />
 
           {/* Inventory Starts */}

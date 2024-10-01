@@ -9,10 +9,11 @@ import {
   UserIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline";
-import {toggleBankPosPopup, toggleBranchPopup, toggleCompanyProfilePopup, 
+import {toggleBankPosPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
         toggleDayClosePopup, 
         toggleDeleteInactiveTransactionPopup, 
         toggleImportExportPopup, 
+        toggleResetDataBasePopup, 
         toggleUserActionPopup} from "../../../../redux/slices/popup-reducer";
 
 export const SettingsMenuItems = [
@@ -94,14 +95,14 @@ export const SettingsMenuItems = [
     children: [
       { path: `${import.meta.env.BASE_URL}settings/system/administration-settings`, type: 'link', active: false, selected: false, title: 'Administration Settings' },
       { action:toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'Export Import' },
-      { path: `${import.meta.env.BASE_URL}settings/system/reset-database`, type: 'link', active: false, selected: false, title: 'Reset Database' },
+      { action:toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'Reset Database' },
       { path: `${import.meta.env.BASE_URL}settings/system/counters`, type: 'link', active: false, selected: false, title: 'Counters' },
       { path: `${import.meta.env.BASE_URL}settings/system/financial-year`, type: 'link', active: false, selected: false, title: 'Financial Year' },
       { path: `${import.meta.env.BASE_URL}settings/system/vouchers`, type: 'link', active: false, selected: false, title: 'Vouchers' },
       { path: `${import.meta.env.BASE_URL}settings/system/barcode-print`, type: 'link', active: false, selected: false, title: 'Barcode Print' },
       { path: `${import.meta.env.BASE_URL}settings/system/headers-footers`, type: 'link', active: false, selected: false, title: 'Headers and Footers' },
       { path: `${import.meta.env.BASE_URL}settings/templates`, type: 'link', active: false, selected: false, title: 'Invoice Designer' },
-      { path: `${import.meta.env.BASE_URL}settings/system/commands`, type: 'link', active: false, selected: false, title: 'Commands' },
+      { action:toggleCommandsPopup, type: 'popup', active: false, selected: false, title: 'Commands' },
       { action:toggleUserActionPopup, type: 'popup', active: false, selected: false, title: 'User Action Report' },
       { path: `${import.meta.env.BASE_URL}settings/system/reminders`, type: 'link', active: false, selected: false, title: 'Reminders' },
       { path: `${import.meta.env.BASE_URL}settings/system/exchange-rates`, type: 'link', active: false, selected: false, title: 'Exchange Rates' },

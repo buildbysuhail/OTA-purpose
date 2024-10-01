@@ -105,29 +105,4 @@ export const PopUpModalResetDatabase = ({setIsOpenRD}:any) => {
   };
   
 
-                                //   <div className="flex items-center">
-                                            //                             <input
-                                            //                               type="radio"
-                                            //                               name="theme-style"
-                                            //                               className="ti-form-radio"
-                                            //                               id="switcher-dark-theme"
-                                            //                               defaultChecked={theme.mode === "dark"}
-                                            //                               onChange={(e) => {
-                                            //                                 if (e.target.checked == true) {
-                                            //                                   switcherdata.Dark(updateAppState, appState);
-                                            //                                   setTheme((prevTheme) => ({
-                                            //                                     ...prevTheme,
-                                            //                                     mode: "dark",
-                                            //                                   }));
-                                            //                                 }
-                                            //                                 console.log(theme);
-                                            //                               }}
-                                            //                               // onClick={() => { handleThemeChange("mode", "dark")}}
-                                            //                             />
-                                            //                             <label
-                                //                               htmlFor="switcher-dark-theme"
-                                //                               className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                                //                             >
-                                //                               Dark
-                                //                             </label>
-                                //                           </div>
+                           

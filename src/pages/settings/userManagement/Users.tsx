@@ -1,363 +1,192 @@
-import React, { Fragment, useEffect, useState } from 'react'
-import UserManagementApis from './User-Management-api';
-import Urls from '../../../redux/urls'
-import ERPGridpreference from '../../../components/ERPComponents/erp-gridpreference';
-import { DataGrid } from "devextreme-react";
-import {
-  Column,
-  FilterRow,
-  HeaderFilter,
-  Paging,
-  Scrolling,
-  SearchPanel,
-  DataGridTypes,
-  ColumnFixing,
-  ColumnChooser,
-  Selection,
-  Grouping,
-  Toolbar,
-  Item,
-  LoadPanel,
-  Export,
-} from "devextreme-react/cjs/data-grid";
-import Button from 'devextreme-react/button';
-import CustomStore from "devextreme/data/custom_store";
-import { jsPDF } from 'jspdf';
-import { Workbook } from 'exceljs';
-import { saveAs } from 'file-saver';
-import { exportDataGrid as exportToPdf } from 'devextreme/pdf_exporter';
-import { exportDataGrid as exportToExcel } from 'devextreme/excel_exporter';
-import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import ERPModal from '../../../components/ERPComponents/erp-modal';
-import { PopUpModalAddUser, PopUpModalEditUser } from './user-manage';
+import { Fragment } from "react";
+import Urls from "../../../redux/urls";
 
-
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import { toggleUserPopup, toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { UserTypeManage } from "./user-type-manage";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { UserManage } from "./user-manage";
 
 const Users = () => {
-  const [gridHeight, setGridHeight] = useState<number>(500);
-  const {t} = useTranslation();
-  const [gridpreference,setGridpreference] = useState<boolean>(false)
-  const [isOpenAddUser,setIsOpenAddUser] =useState<boolean>(false)
-  const [isOpenEditUser,setIsOpenEditUser] =useState<boolean>(false)
-  useEffect(() => {
-    let wh = window.innerHeight;
-    let gridHeight = wh - 180;
-    setGridHeight(gridHeight);
-  }, []);
-  const createQueryParams = (loadOptions: any) => {
-    const params = new URLSearchParams();
-  
-    // List of options to include in the query parameters
-    ["skip", "take", "requireTotalCount", "sort", "filter", "search"].forEach((i) => {
-      if (i in loadOptions && loadOptions[i] !== undefined && loadOptions[i] !== null && loadOptions[i] !== '') {
-        params.set(i, JSON.stringify(loadOptions[i]));
-      }
-    });
-  
-    return params.toString(); // Return the complete query string
-  };
-  function isNotEmpty(value: string | undefined | null) {
-    return value !== undefined && value !== null && value !== "";
-  }
-
-
-  const store = new CustomStore({
-    // key: "Id",
-    async load(loadOptions: any) {
-      debugger;
-      const params = createQueryParams(loadOptions);
-      try {
-        const response = await  UserManagementApis.getSessions(params);
-
-        const result = response;
-
-        return result !== undefined && result != null
-          ? {
-              data: result,
-              totalCount: result.length,
-            }
-          : {
-              data: [],
-              totalCount: 0,
-            };
-      } catch (err) {
-        throw new Error("Data Loading Error");
-      }
+  const dispatch = useAppDispatch();
+  const rootState = useRootState();
+  const columns: DevGridColumn[] = [
+    {
+      dataField: "siNo",
+      caption: "SiNo",
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: false,
+      width: 60,
     },
-  });
-  const exportFormats = ['pdf','excel'];
-  const onExporting = (e: DataGridTypes.ExportingEvent) => {
-
-    if(e.format === 'pdf'){
-      const doc = new jsPDF();
-  
-      exportToPdf({
-      jsPDFDocument: doc,
-      component: e.component,
-     columnWidths:[15,20,20,20,20,25,25,25,25,15,25,30,30,0],
-      customizeCell({ gridCell, pdfCell }) {
-       
-      },
-     
-    }).then(() => {
-      doc.save('Users.pdf');
-    });
-    }else if (e.format === 'excel') {
-      const workbook = new Workbook();
-      const worksheet = workbook.addWorksheet('Users');
-    
-      exportToExcel({
-        component: e.component,
-        worksheet,
-        autoFilterEnabled: true,
-      }).then(() => {
-        workbook.xlsx.writeBuffer().then((buffer) => {
-          saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'DataGrid.xlsx');
-        });
-      });
-    }
-    
-  };
- const allowedPageSizes =  [10, 20, 50, 100];
-
+    {
+      dataField: "user",
+      caption: "User",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 200,
+    },
+    {
+      dataField: "password",
+      caption: "Password",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 140,
+    },
+    {
+      dataField: "counter",
+      caption: "Counter",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "userType",
+      caption: "UsersType",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "createdUser",
+      caption: "Created User",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "createdDate",
+      caption: "Created Date",
+      dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "modifiedUser",
+      caption: "Modified User",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "modifiedDate",
+      caption: "Modified Date",
+      dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 130,
+    },
+    {
+      dataField: "id",
+      caption: "Id",
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 60,
+    },
+    {
+      dataField: "employeeID",
+      caption: "Employee ID",
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "employeeName",
+      caption: "Employee Name",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
+    {
+      dataField: "maxDiscPercAllowed",
+      caption: "maxDiscPercAllowed",
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "passkey",
+      caption: "Passkey",
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "actions",
+      caption: "Actions",
+      allowSearch: false,
+      allowFiltering: false,
+      fixed: true,
+      fixedPosition: "right",
+      width: 100,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <ERPGridActions
+          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
+          edit={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
+          delete={{
+            confirmationRequired: true,
+            confirmationMessage: "Are you sure you want to delete this item?",
+            // action: () => handleDelete(cellInfo?.data?.id),
+          }}
+        />
+      ),
+    },
+  ];
   return (
     <Fragment>
-      
-      <DataGrid
-                  height={gridHeight}
-                  dataSource={
-                    store
-                  
-                  }
-                 className="custom-data-grid"
-                  showBorders={true}
-                  remoteOperations={{paging: true, filtering:true}}
-                  
-                  showColumnLines={false}
-                  showRowLines={true}
-                 columnAutoWidth={true}
-                 allowColumnReordering={true}
-                 onExporting={onExporting}
-                 allowColumnResizing ={true}
-                >
-                  <ColumnFixing enabled={true}/>
-                  <Scrolling  mode="virtual" />
-                  <FilterRow visible={true} />
-                  <SearchPanel visible={true} />
-                  {/* <HeaderFilter visible={true} /> */}
-                  <Paging defaultPageSize={100} />
-                  <ColumnChooser enabled={true} />
-                  <LoadPanel enabled={false} />
-                  <ColumnFixing enabled={true} />
-                  <Selection mode="single" />
-                  <Export enabled={true} formats={exportFormats} allowExportSelectedData={false} />
-                  
-                  <Column
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={false}
-                    dataField="siNo"
-                    caption="SiNo"
-                    dataType="number"
-                    width={60}
-                  />
-                  <Column
-                  
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="user"
-                   
-                  
-                    caption={"User"}
-                    
-                    minWidth={200}
-                    dataType="string"
-                  />
-                  <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="password"
-                    caption={"Password"}
-                    width={140}
-                    dataType="string"
-                  />
-                
-                  <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="counter"
-                   
-                    caption={"Counter"}
-                    width={100}
-                    dataType="string"
-                  />
-                  <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    
-                    dataField="userType"
-                    caption={"User Type"}
-                    width={100}
-                    dataType="string"
-                  />
-
-                  <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="createdUser"
-                    caption={"Created User"}
-                    width={130}
-                    dataType="string"
-                  />
-                   
-                   <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="createdDate"
-                    caption={"Created Date"}
-                    width={100}
-                    dataType="date"
-                  />
-                    <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="modifiedUser"
-                    caption={"Modified User"}
-                    width={130}
-                    dataType="string"
-                    filterType='include'
-                  />
-                    <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="modifiedDate"
-                    caption={"Modified Date"}
-                    width={130}
-                    dataType="date"
-                  />
-                    <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="id"
-                    caption={"Id"}
-                    width={60}
-                    dataType="number"
-                  />
-                    <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="employeeID"
-                    caption={"Employee ID"}
-                    width={100}
-                    dataType="number"
-                  />
-                   <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="employeeName"
-                    caption={"Employee Name"}
-                    width={120}
-                    dataType="string"
-                  />
-                  <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField="maxDiscPercAllowed"
-                    caption={"maxDiscPercAllowed"}
-                    width={150}
-                    dataType="number"
-                  />
-                  <Column
-                    allowSearch={true}
-                    allowFiltering={true}
-                    dataField=  "passkey"
-                    caption={  "Passkey"}
-                    visible={false}
-                    dataType='string'
-                    width={100}
-                  />
-                  <Column
-                      allowSearch={false}
-                      allowFiltering={false}
-                     fixed={true} fixedPosition='right'
-                     dataField="actions"
-                     caption="Actions"
-                     width={100}
-                   cellRender={(cellElement, cellInfo) => {
-                   return (
-                  <div className="action-field">
-                 
-                  <span >
-                    <i className="ri-eye-2-line  view-icon" title="View"></i>
-                  </span>
-                 
-                  <span onClick={()=>setIsOpenEditUser(!isOpenEditUser)}>
-                  <i className="ri-edit-line edit-icon" title="Edit"></i>
-                  </span>
-
-                  <span >
-                  <i className="ri-delete-bin-5-line delete-icon" title="Edit"></i>
-                  </span>
-                  
-                  </div>
-                    );
-                    }}
-                />
-                 <Toolbar>
-                 <Item location="before">
-                    <div className='flex  flex-col'>
-                   <div className="box-title !text-xl !font-medium">
-                    User{" "}
-                   </div>
-                  
-                   </div>
-                </Item>
-                      <Item name="exportButton" />
-                      <Item name="searchPanel" /> 
-                      {/* <Item name="exportButton" /> */}
-                      <Item name="columnChooserButton" />
-                <Item >
-                <div>
-                <span onClick={()=>setIsOpenAddUser(!isOpenAddUser)}
-                 className='ti-btn-primary-full ti-btn ti-btn-full '>
-                {t('Add')}<i className="ri-user-add-line"></i>
-                </span>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+          <div className="box custom-box">
+            <div className="box-body">
+              <div className="grid grid-cols-1 gap-3">
+                <ERPDevGrid
+                  columns={columns}
+                  gridHeader="User"
+                  dataUrl={Urls.UserSubscription}
+                  gridId="grd_user"
+                  popupAction={toggleUserPopup}
+                  gridAddButtonType="popup"
+                  gridAddButtonIcon=""
+                ></ERPDevGrid>
               </div>
-                </Item>  
-                </Toolbar>
-                </DataGrid>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ERPModal
+        isOpen={rootState.PopupData.user}
+        title={"Add New User"}
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleUserPopup(false));
+        }}
+        content={<UserManage />}
+      />
+    </Fragment>
+  );
+};
 
-                <ERPModal
-                isOpen={isOpenAddUser}
-                title={"Add Users"}
+export default Users;
 
-                isForm={true}
-                closeModal={() => {
-                  // setPostDataEmail(initialEmailData);
-                  setIsOpenAddUser(false);
-                }}
-                 content={
-                  <PopUpModalAddUser setIsOpenAddUser={setIsOpenAddUser} />
-                }
-              />
 
-                <ERPModal
-                isOpen={isOpenEditUser}
-                title={"Add Users"}
-                width="!max-w-[80rem]"
-                isForm={true}
-                closeTitle="Close"
-                closeModal={() => {
-                  // setPostDataEmail(initialEmailData);
-                  setIsOpenEditUser(false);
-                }}
-                 content={
-                  <PopUpModalEditUser setIsOpenEditUser={setIsOpenEditUser} />
-                }
-              />
-  </Fragment>
-  )
-}
 
-export default Users
+
+

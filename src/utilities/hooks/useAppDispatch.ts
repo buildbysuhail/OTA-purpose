@@ -8,5 +8,5 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const useAppDynamicSelector = <T>(url: string,method: ActionType, isDetail = false): T  => {
   
   let sliceName = reducerNameFromUrl(url, method, isDetail);
-    return useAppSelector((state: RootState) => state[sliceName]) as T;
+    return useAppSelector((state: any) => state?.[sliceName]) as T;
   };

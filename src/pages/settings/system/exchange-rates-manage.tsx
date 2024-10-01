@@ -3,12 +3,12 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ResponseModelWithValidation } from "../../../base/response-model";
 import { handleResponse } from "../../../utilities/HandleResponse";
-import { toggleRemainderPopup } from "../../../redux/slices/popup-reducer";
+import { toggleCurrencyExchangePopup } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import SystemSettingsApi from "./system-apis";
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -34,24 +34,28 @@ interface DynamicFormProps {
   onCancel: () => void;
 }
 
-export const RemainderManage = () => {
+export const CurrencyExchangeManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const onClose = useCallback(async () => {
-    dispatch(toggleRemainderPopup(false));
+    dispatch(toggleCurrencyExchangePopup(false));
   }, []);
   const initialUserTypeData = {
     data: {
-      remainderName: "",
-      descriptions: "",
-      remaindingDate: "",
-      noOfDay: 0,
+      countryID: 1,
+      currencyName: "",
+      currencySymbol: "",
+      currencyCode: "",
+      subUnit: "",
+      subUnitSymbol: "",
     },
     validations: {
-      remainderName: "",
-      descriptions: "",
-      remaindingDate: "",
-      noOfDay: "",
+      countryID: "",
+      currencyName: "",
+      currencySymbol: "",
+      currencyCode: "",
+      subUnit: "",
+      subUnitSymbol: "",
     },
   };
   const [postData, setPostData] = useState<FormState>(initialUserTypeData);
@@ -65,12 +69,12 @@ export const RemainderManage = () => {
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
     const response: ResponseModelWithValidation<any, any> =
-      await SystemSettingsApi.postRemainder(postData?.data);
+      await SystemSettingsApi.postCurrencyExchange(postData?.data);
     setPostUserTypeLoading(false);
     handleResponse(
       response,
       () => {
-        dispatch(toggleRemainderPopup(false));
+        dispatch(toggleCurrencyExchangePopup(false));
       },
       () => {
         setPostData((prevData: any) => ({
@@ -113,56 +117,37 @@ export const RemainderManage = () => {
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <ERPInput
-          id="remainderName"
-          label="Remainder Name"
-          placeholder="remainderName"
-          required={true}
-          data={postData?.data}
-          onChangeData={(data: any) => {
-            setPostData((prevData: any) => ({
-              ...prevData,
-              data: data,
-            }));
+        <ERPDataCombobox
+          id="countryID"
+          field={{
+            id: "countryID",
+            required: true,
+            getListUrl: Urls.data_countries,
+            valueKey: "id",
+            labelKey: "name",
           }}
-          value={postData?.data?.remainderName}
-          validation={postData?.validations?.remainderName}
-        />
-        <ERPInput
-          id="descriptions"
-          label="Descriptions"
-          placeholder="descriptions"
-          required={true}
-          data={postData?.data}
           onChangeData={(data: any) => {
-            setPostData((prevData: any) => ({
-              ...prevData,
-              data: data,
-            }));
-          }}
-          value={postData?.data?.descriptions}
-          validation={postData?.validations?.descriptions}
-        />
-        <ERPDateInput
-          id="remaindingDate"
-          field={{ type: "date", id:"remaindingDate", required: true }}
-          label={"From"}
-          data={postData?.data}
-          handleChange={(id: any, value: any) => {
             setPostData((prev: any) => ({
               ...prev,
-              data: {
-                ...prev.data,
-                [id]: value,
-              },
+              data: data,
             }));
           }}
-          validation={postData.validations.remaindingDate}
+          validation={postData.validations.countryID}
+          data={postData?.data}
+          defaultData={postData?.data}
+          value={
+            postData != undefined &&
+            postData?.data != undefined &&
+            postData?.data?.countryID != undefined
+              ? postData?.data?.countryID
+              : 0
+          }
+          label="Country"
         />
         <ERPInput
-          id="noOfDay"
-          label="NoOf Day"
-          placeholder="NoOf Day"
+          id="currencyName"
+          label="Currency Name"
+          placeholder="currency Name"
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
@@ -171,9 +156,70 @@ export const RemainderManage = () => {
               data: data,
             }));
           }}
-          value={postData?.data?.noOfDay}
-          validation={postData?.validations?.noOfDay}
+          value={postData?.data?.currencyName}
+          validation={postData?.validations?.currencyName}
         />
+        <ERPInput
+          id="currencySymbol"
+          label="Currency Symbol"
+          placeholder="currency Symbol"
+          required={true}
+          data={postData?.data}
+          onChangeData={(data: any) => {
+            setPostData((prevData: any) => ({
+              ...prevData,
+              data: data,
+            }));
+          }}
+          value={postData?.data?.currencySymbol}
+          validation={postData?.validations?.currencySymbol}
+        />
+        <ERPInput
+          id="currencyCode"
+          label="currency Code"
+          placeholder="currency Code"
+          required={true}
+          data={postData?.data}
+          onChangeData={(data: any) => {
+            setPostData((prevData: any) => ({
+              ...prevData,
+              data: data,
+            }));
+          }}
+          value={postData?.data?.currencyCode}
+          validation={postData?.validations?.currencyCode}
+        />
+        <ERPInput
+          id="subUnit"
+          label="Sub Unit"
+          placeholder="sub Unit"
+          required={true}
+          data={postData?.data}
+          onChangeData={(data: any) => {
+            setPostData((prevData: any) => ({
+              ...prevData,
+              data: data,
+            }));
+          }}
+          value={postData?.data?.subUnit}
+          validation={postData?.validations?.subUnit}
+        />
+          <ERPInput
+          id="subUnitSymbol"
+          label="SubUnit Symbol"
+          placeholder="subUnit Symbol"
+          required={true}
+          data={postData?.data}
+          onChangeData={(data: any) => {
+            setPostData((prevData: any) => ({
+              ...prevData,
+              data: data,
+            }));
+          }}
+          value={postData?.data?.subUnitSymbol}
+          validation={postData?.validations?.subUnitSymbol}
+        />
+          
       </div>
 
       <div className="w-full p-2 flex justify-end">

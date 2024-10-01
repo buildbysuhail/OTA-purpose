@@ -16,8 +16,7 @@ const SystemSettingsApi = {
 
   addCounterInfo: async (data: any) => {
     try {
-      //modified safvan  -- "" replace by url
-      const responseData = await api.post("", data);
+      const responseData = await api.post(Urls.Counter, data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -45,7 +44,25 @@ const SystemSettingsApi = {
       return '';
     }
   },
+  postCurrencyExchange: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.postCurrency,data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
 
+  postRemainder: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.Remainder,data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
 };
 
 export default SystemSettingsApi;

@@ -91,7 +91,7 @@ class APIClient {
    * Deletes data
    */
   delete = (
-    url: string,
+    url: string ,
     config?: AxiosRequestConfig
   ): Promise<AxiosResponse> => {
     setAuthorization();

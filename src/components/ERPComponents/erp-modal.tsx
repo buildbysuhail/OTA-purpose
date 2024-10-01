@@ -15,6 +15,7 @@ type ERPModalProps = {
   isForm?: boolean;
   closeTitle?: string;
   className?: string;
+  isFullHeight?: boolean;
   width?: string;
   closeOnSubmit?: boolean;
   hasTopCloseButton?: boolean;
@@ -34,6 +35,7 @@ const ERPModal = ({
   hasTopCloseButton = false,
   closeTitle = "Cancel",
   className,
+  isFullHeight = false,
   width = "w-full",
   closeOnSubmit = true,
   disableOutsideClickClose = true, // Default to true
@@ -41,7 +43,7 @@ const ERPModal = ({
   return (
     <div>
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-50" onClose={disableOutsideClickClose ? () => {} : closeModal} // Disable outside click close
+        <Dialog as="div" className={`relative z-50 `} onClose={disableOutsideClickClose ? () => {} : closeModal} // Disable outside click close
         >
           <Transition.Child
             as={Fragment}
@@ -56,7 +58,7 @@ const ERPModal = ({
           </Transition.Child>
 
           <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
+            <div className={`flex min-h-full items-center justify-center text-center${isFullHeight ? '' : 'p-4'}`}>
               <TransitionChild
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -67,7 +69,7 @@ const ERPModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 <DialogPanel
-                  className={`transform rounded-md bg-white px-5 py-3 text-left align-middle shadow-xl transition-all ${width}`}
+                  className={`transform bg-white px-5 py-3 text-left align-middle shadow-xl transition-all ${width} ${isFullHeight ? 'min-h-full h-screen' : 'rounded-md'}`}
                 >
                   <DialogTitle as="h3" className="text-lg border-b py-3 font-medium leading-6 text-gray-900 flex justify-between">
                     {title}{" "}

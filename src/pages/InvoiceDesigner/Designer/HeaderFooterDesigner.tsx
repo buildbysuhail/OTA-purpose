@@ -12,7 +12,7 @@ import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
-import { setActiveTemplate } from "../../../redux/actions/AppActions";
+import { setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
 
 interface TempImageProps {
     setTemplateImages: Dispatch<SetStateAction<TemplateImagesTypes>>,
@@ -64,9 +64,9 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
 
     const handleChange = (type: "header" | "footer", key: keyof HeaderState | keyof FooterState, value: string | number | boolean) => {
         if (type === "header") {
-            dispatch(setActiveTemplate({ ...templateData.activeTemplate, headerState: { ...headerState, [key]: value } }))
+            dispatch(setTemplateHeaderState({ ...headerState, [key]: value }));
         } else {
-            dispatch(setActiveTemplate({ ...templateData.activeTemplate, footerState: { ...footerState, [key]: value } }))
+            dispatch(setTemplateFooterState({ ...footerState, [key]: value } ));
         }
     }
 

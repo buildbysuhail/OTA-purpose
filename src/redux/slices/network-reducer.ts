@@ -15,8 +15,8 @@ export default function NetworkReducer(TYPE: string) {
 					data: action.payload?.data,
 				};
 			case FAIL:
-				return { ...state, loading: false, error: action.error };
-			default:
+				return { ...state, loading: false, error: action.error }; 
+			default: 
 				return state;
 		}
 	};

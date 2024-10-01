@@ -1,13 +1,13 @@
-import { 
-  configureStore, 
-  createAsyncThunk, 
-  createSlice, 
-  combineReducers, 
+import {
+  configureStore,
+  createAsyncThunk,
+  createSlice,
+  combineReducers,
   PayloadAction,
   AsyncThunk,
   Slice,
   SliceCaseReducers,
-  Draft
+  Draft,
 } from "@reduxjs/toolkit";
 
 import LoginReducer from "../redux/slices/auth/login/reducer";
@@ -21,6 +21,10 @@ import PopupDataReducer from "../redux/slices/popup-reducer";
 import { APIClient } from "../helpers/api-client";
 import { reducerNameFromUrl } from "./actions/AppActions";
 import Urls from "./urls";
+import { ActionType } from "./types";
+import { ApiEndpoint } from "../configs/types";
+import { DATA_ENDPOINTS } from "../configs/data-config";
+import { FORM_ENDPOINTS } from "../configs/form-config";
 
 // Define a generic type for API response data
 type ApiResponse<T> = {
@@ -29,44 +33,69 @@ type ApiResponse<T> = {
   error: string | null;
 };
 
-// Type for our API endpoints
-type ApiEndpoint<T> = {
-  name: string;
-  url: string;
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+const apiClient = new APIClient();
+type ThunkPayload = {
+  params?: string;
+  data?: any;
+  id?: string | number;
 };
-
-const apiClient = new APIClient
-// List of API endpoints (example)
-const API_ENDPOINTS = [
-  { name: 'fetchUsers', url: Urls.data_countries, method: 'GET' as const },
-  { name: 'fetchPosts', url: '/api/posts', method: 'GET' as const },
-  // Add more endpoints as needed
-] as const;
-
 // Function to create a slice and thunk for an endpoint
-function createApiSlice<T>(endpoint: ApiEndpoint<T>) {
-  let name = reducerNameFromUrl(endpoint.url,endpoint.method);
+function createApiSlice(endpoint: ApiEndpoint, method?: ActionType | null, isDetails?: boolean | false) {
+  let _method = method != undefined && method != null  ? method :  endpoint.method;
+
+  let name = reducerNameFromUrl(
+    endpoint.url,
+    _method ?? ActionType.GET,isDetails
+  );
   debugger;
-  const thunk = createAsyncThunk<T, void, { rejectValue: string }>(
+  const thunk = createAsyncThunk<any, ThunkPayload, { rejectValue: string }>(
     `${name}`,
-    async (_, { rejectWithValue }) => {
+    async (payload: ThunkPayload, { rejectWithValue }) => {
       try {
-        const response = apiClient.get(endpoint.url);
+        let response;
+        const { params, data, id } = payload;
+        let url = endpoint.url;
+
+        // If there's an ID, append it to the URL
+        if (id !== undefined) {
+          url = `${url}/${id}`;
+        }
+
+        switch (_method) {
+          case "GET":
+            response =
+              params != undefined && params != null
+                ? await apiClient.get(url, params)
+                : await apiClient.get(url);
+            break;
+          case "POST":
+            response = await apiClient.post(url, data);
+            break;
+          case "PATCH":
+            response = await apiClient.patch(url, { params });
+            break;
+          case "PUT":
+            response = await apiClient.put(url, data);
+            break;
+          case "DELETE":
+            response = await apiClient.delete(url);
+            break;
+          default:
+            throw new Error(`Unsupported method: ${_method}`);
+        }
         return response;
       } catch (error: any) {
-        return rejectWithValue(error.response?.data || 'An error occurred');
+        return rejectWithValue(error.response?.data || "An error occurred");
       }
     }
   );
-
   const slice = createSlice({
     name: name,
     initialState: {
-      data: null,
+      data: endpoint.initialData,
       loading: false,
       error: null,
-    } as ApiResponse<T>,
+    } as ApiResponse<any>,
     reducers: {},
     extraReducers: (builder) => {
       builder
@@ -74,36 +103,63 @@ function createApiSlice<T>(endpoint: ApiEndpoint<T>) {
           state.loading = true;
           state.error = null;
         })
-        .addCase(thunk.fulfilled, (state, action: PayloadAction<T>) => {
+        .addCase(thunk.fulfilled, (state, action: PayloadAction<any>) => {
           debugger;
           state.loading = false;
-          state.data = action.payload as Draft<T>;
+          state.data = action.payload as Draft<any>;
         })
         .addCase(thunk.rejected, (state, action) => {
           state.loading = false;
-          state.error = action.payload || 'An error occurred';
+          state.error = action.payload || "An error occurred";
         });
     },
   });
 
-  return { slice, thunk };
+  return { slice, thunk, name };
 }
 
 class DynamicReduxManager {
   private slices: Record<string, Slice>;
-  private thunks: Record<string, AsyncThunk<any, void, { rejectValue: string }>>;
+  private thunks: Record<
+    string,
+    AsyncThunk<any, ThunkPayload, { rejectValue: string }>
+  >;
   public store;
 
-  constructor(endpoints: typeof API_ENDPOINTS) {
+  constructor(dataEndpoints: ApiEndpoint[], formEndpoints: ApiEndpoint[]) {
     this.slices = {};
     this.thunks = {};
     // Create slices and thunks for each endpoint
-    endpoints.forEach(endpoint => {
-      
-let name = reducerNameFromUrl(endpoint.url, endpoint.method);
+    dataEndpoints.forEach((endpoint) => {
+      let name = reducerNameFromUrl(
+        endpoint.url,
+        endpoint.method ?? ActionType.GET
+      );
       const { slice, thunk } = createApiSlice(endpoint);
       this.slices[name] = slice;
       this.thunks[name] = thunk;
+    });
+    formEndpoints.forEach((endpoint) => {
+      const { slice:gSlice, thunk:gThunk, name:gName } = createApiSlice(endpoint, ActionType.GET);
+      this.slices[gName] = gSlice;
+      this.thunks[gName] = gThunk;
+
+      
+      const { slice:gdSlice, thunk:gdThunk, name:gdName } = createApiSlice(endpoint, ActionType.GET);
+      this.slices[gdName] = gdSlice;
+      this.thunks[gdName] = gdThunk;
+
+      const { slice:aSlice, thunk:aThunk, name:aName } = createApiSlice(endpoint, ActionType.POST);
+      this.slices[aName] = aSlice;
+      this.thunks[aName] = aThunk;
+
+      const { slice:eSlice, thunk:eThunk, name:eName } = createApiSlice(endpoint, ActionType.PUT);
+      this.slices[eName] = eSlice;
+      this.thunks[eName] = eThunk;
+
+      const { slice:dSlice, thunk:dThunk, name:dName } = createApiSlice(endpoint, ActionType.DELETE);
+      this.slices[dName] = dSlice;
+      this.thunks[dName] = dThunk;
     });
 
     // Create the root reducer
@@ -116,11 +172,14 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
   }
 
   private createRootReducer() {
-    const reducerMap = Object.entries(this.slices).reduce((acc, [name, slice]) => {
-      acc[name] = slice.reducer;
-      return acc;
-    }, {} as Record<string, any>);
-    const red =  {
+    const reducerMap = Object.entries(this.slices).reduce(
+      (acc, [name, slice]) => {
+        acc[name] = slice.reducer;
+        return acc;
+      },
+      {} as Record<string, any>
+    );
+    const red = {
       Login: LoginReducer,
       Account: AccountReducer,
       ForgetPassword: ForgetPasswordReducer,
@@ -128,7 +187,7 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
       AppState: AppStateReducer,
       UserSession: UserSessionReducer,
       PopupData: PopupDataReducer,
-    
+
       ...reducerMap,
     };
     return red;
@@ -137,6 +196,19 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
   getThunk(name: string) {
     debugger;
     return this.thunks[name];
+  }
+  getTypedThunk<ReturnType = any>(
+    name: string
+  ): AsyncThunk<ReturnType, ThunkPayload, { rejectValue: string }> {
+    const thunk = this.thunks[name];
+    if (!thunk) {
+      throw new Error(`Thunk "${name}" not found`);
+    }
+    return thunk as AsyncThunk<
+      ReturnType,
+      ThunkPayload,
+      { rejectValue: string }
+    >;
   }
 
   // addEndpoint<T>(endpoint: ApiEndpoint<T>) {
@@ -160,7 +232,7 @@ let name = reducerNameFromUrl(endpoint.url, endpoint.method);
 }
 
 // Create an instance of the manager
-export const reduxManager = new DynamicReduxManager(API_ENDPOINTS);
+export const reduxManager = new DynamicReduxManager(DATA_ENDPOINTS, FORM_ENDPOINTS);
 
 // Export the store
 // export const store = reduxManager.store;

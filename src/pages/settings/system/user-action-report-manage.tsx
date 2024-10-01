@@ -34,6 +34,7 @@ const UserActionReport = () => {
     },
   };
   const [postData, setPostData] = useState(initialData);
+  const[allUserSelect,setAllUserSelect] = useState<boolean>(false)
   const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
 
   const userActionReport = useCallback(async () => {
@@ -42,6 +43,7 @@ const UserActionReport = () => {
     // const response: ResponseModelWithValidation<any, any> =
     //   await SystemSettingsApi.postUserActionReport(postData?.data);
     setPostDataLoading(false);
+    dispatch(toggleUserActionPopup(false));
     // handleResponse(
     //   response,
     //   () => {
@@ -91,10 +93,10 @@ const UserActionReport = () => {
           }}
           validation={postData.validations.dateTo}
         />
-        <ERPDataCombobox
-          id="userID"
+         <ERPDataCombobox
+          id="action"
           field={{
-            id: "userID",
+            id: "action",
             required: true,
             getListUrl: Urls.data_countries,
             valueKey: "id",
@@ -106,47 +108,19 @@ const UserActionReport = () => {
               data: data,
             }));
           }}
-          validation={postData.validations.userID}
+          validation={postData.validations.action}
           data={postData?.data}
           defaultData={postData?.data}
           value={
             postData != undefined &&
             postData?.data != undefined &&
-            postData?.data?.userID != undefined
-              ? postData?.data?.userID
+            postData?.data?.action != undefined
+              ? postData?.data?.action
               : 0
           }
-          label="userID"
+          label="Action"
         />
-
-        <ERPDataCombobox
-          id="counterID"
-          field={{
-            id: "counterID",
-            required: true,
-            getListUrl: Urls.data_countries,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => {
-            setPostData((prev: any) => ({
-              ...prev,
-              data: data,
-            }));
-          }}
-          validation={postData.validations.counterID}
-          data={postData?.data}
-          defaultData={postData?.data}
-          value={
-            postData != undefined &&
-            postData?.data != undefined &&
-            postData?.data?.counterID != undefined
-              ? postData?.data?.counterID
-              : 0
-          }
-          label="counterID"
-        />
-
+       
         <ERPDataCombobox
           id="transactionType"
           field={{
@@ -174,11 +148,28 @@ const UserActionReport = () => {
           }
           label="Transaction Type"
         />
-
+       <div className="flex items-center">
+          <input
+            type="radio"
+            name="visibleOnStartUp"
+            className="ti-form-checkbox"
+            id="visibleOnStartUp"
+            checked={allUserSelect}
+            onChange={(e) => {
+              setAllUserSelect(e.target.checked);
+            }}
+          />
+          <label
+            htmlFor="switcher-dark-theme"
+            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+          >
+            All User
+          </label>
+        </div>
         <ERPDataCombobox
-          id="action"
+          id="userID"
           field={{
-            id: "action",
+            id: "userID",
             required: true,
             getListUrl: Urls.data_countries,
             valueKey: "id",
@@ -190,43 +181,18 @@ const UserActionReport = () => {
               data: data,
             }));
           }}
-          validation={postData.validations.action}
+          validation={postData.validations.userID}
           data={postData?.data}
           defaultData={postData?.data}
           value={
             postData != undefined &&
             postData?.data != undefined &&
-            postData?.data?.action != undefined
-              ? postData?.data?.action
+            postData?.data?.userID != undefined
+              ? postData?.data?.userID
               : 0
           }
-          label="Action"
+          label="user"
         />
-
-        {/* <div className="flex items-center">
-          <input
-            type="checkbox"
-            name="visibleOnStartUp"
-            className="ti-form-checkbox"
-            id="visibleOnStartUp"
-            checked={postFinancialData?.data.visibleOnStartUp}
-            onChange={(e) => {
-              setPostFinancialData((prev) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  visibleOnStartUp: e.target.checked,
-                },
-              }));
-            }}
-          />
-          <label
-            htmlFor="switcher-dark-theme"
-            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-          >
-            Visible On StartUp
-          </label>
-        </div> */}
       </div>
       <div className="w-full p-2 flex justify-end">
         <ERPButton

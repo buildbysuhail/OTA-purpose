@@ -7,9 +7,9 @@ import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid
 import { useLocation } from "react-router-dom";
 import { getCurrentCurrencySymbol, getPriceListOptions } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
-import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { reduxManager } from "../../redux/dynamic-store-manager-pro";
-import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 interface ERPDataComboboxProps {
   id: string;
   label?: string;
@@ -84,7 +84,7 @@ export default function ERPDataCombobox({
   validation
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { pathname } = useLocation();
 
   const comboboxRef = useRef<any>(null);
@@ -94,20 +94,18 @@ export default function ERPDataCombobox({
   const [localValue, setLocalValue] = useState<any>();
   const [hasValue, setHasValue] = useState<boolean>(false);
 
-  const GetReducerName = reducerNameFromUrl(field?.getListUrl, "GET");
-  const dataList = useAppSelector((state: any) => state?.[GetReducerName]?.data);
+const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
+  const dataList = useAppSelector((state: any) => state?.[reducerName]?.data);
 
   const listData = isPaginated ? dataList?.results : dataList;
 
   console.log(`ERPDataCombobox,  : data_list_data`, id, dataList);
-
-  let dfd = reduxManager.getThunk(GetReducerName);
+debugger;
+  let getListAction = reduxManager.getTypedThunk(reducerName);
   debugger;
   useEffect(() => {
-    debugger;
-    const response = dispatch(dfd() as any).unwrap();
     if (!disabledApiCall) {
-      field?.getListUrl && dispatch(getAction(field?.getListUrl));
+      field?.getListUrl && dispatch(getListAction({}) as any).unwrap();
     }
   }, []);
 

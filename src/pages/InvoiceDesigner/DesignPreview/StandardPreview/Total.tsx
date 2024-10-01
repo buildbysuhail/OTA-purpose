@@ -2,10 +2,10 @@ import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 
 import { StandardPreviewProps } from ".";
-import Urls from "../../../../redux/actions/Urls";
 import { reducerNameFromUrl } from "../../../../redux/actions/AppActions";
 import { getAmountInWords } from "../../../../utilities/Utils";
 import { isTaxApplicable, taxListFinder, taxListFinderInclusive } from "../../../../utilities/ERPUtils";
+import Urls from "../../../../redux/urls";
 
 const Total = ({ template, data, templateGroupId, currency }: StandardPreviewProps) => {
   const backgroundColor = template?.totalState?.showTotalBgColor ? template?.totalState?.totalBgColor : "#fff";

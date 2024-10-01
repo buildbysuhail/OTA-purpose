@@ -7,7 +7,7 @@ const UserManagementApis = {
   getSessions: async (loadOptions: any) => {
     try {
       
-      const responseData = await api.get(Urls.UserSubscription, loadOptions);
+      const responseData = await api.get(Urls.Users, loadOptions);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -16,7 +16,7 @@ const UserManagementApis = {
   },
   addUserSessions: async (data: any) => {
     try {
-      const responseData = await api.post(Urls.UserSubscription,data);
+      const responseData = await api.post(Urls.Users,data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);
@@ -26,7 +26,7 @@ const UserManagementApis = {
 
     addUserTypeInfo: async (data: any) => {
     try {
-      const responseData = await api.post(Urls.postUserTypes, data);
+      const responseData = await api.post(Urls.UserTypes, data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);

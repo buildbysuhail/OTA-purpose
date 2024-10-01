@@ -7,7 +7,6 @@ import {
   ArrowLeftIcon, TicketIcon, AdjustmentsHorizontalIcon
 } from "@heroicons/react/24/outline";
 
-import Urls from "../../redux/actions/Urls";
 import InvoicePreview from "./InvoicePreview";
 import TotalDesigner from "./Designer/TotalDesigner";
 import FooterDesigner from "./Designer/FooterDesigner";
@@ -17,12 +16,14 @@ import PropertiesDesigner from "./Designer/PropertiesDesigner";
 import HeaderFooterDesigner from "./Designer/HeaderFooterDesigner";
 import { TemplateGroupTypes } from "./constants/TemplateCategories";
 import TransactionDetailsDesigner from "./Designer/TransactionDetailsDesigner";
-import { setActiveTemplate, postAction, getDetailAction, patchAction } from "../../redux/actions/AppActions";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DataToForm, isFile } from "../../utilities/Utils";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { getDetailAction, postAction, patchAction } from "../../redux/slices/app-thunks";
+import Urls from "../../redux/urls";
+import { setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 
 interface DesignSectionType {
   id: number;
@@ -108,7 +109,7 @@ const InvoiceDesigner = () => {
   /* ####################################################################### */
 
   const getPDFTemplateData = () => {
-    (appDispatch(getDetailAction(Urls.templates, id)) as any).then((res: any) => {
+    (appDispatch(getDetailAction({apiUrl:Urls.templates, id:id||""})) as any).then((res: any) => {
       setTemplateImages({
         background_image: res?.payload?.data?.background_image as string | null,
         background_image_header: res?.payload?.data?.background_image_header as string | null,
@@ -116,7 +117,7 @@ const InvoiceDesigner = () => {
         signature_image: res?.payload?.data?.signature_image as string | null,
       })
 
-      res?.payload?.data?.content && dispatch(setActiveTemplate(res?.payload?.data?.content, res?.payload?.data));
+      // res?.payload?.data?.content && dispatch(setActiveTemplate(res?.payload?.data?.content, res?.payload?.data));
     });
   };
 
@@ -159,7 +160,7 @@ const InvoiceDesigner = () => {
     if (templateImages?.signature_image) postFormData?.append("signature_image", templateImages?.signature_image);
 
     setLoading(true);
-    (appDispatch(postAction(Urls.templates, postFormData)) as any).then((res: any) => {
+    (appDispatch(postAction({apiUrl:Urls.templates, data:postFormData})) as any).then((res: any) => {
       handleResponse(res, () => {
         ERPToast.show("Template saved successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);
@@ -187,7 +188,7 @@ const InvoiceDesigner = () => {
       postFormData?.append("signature_image", templateImages?.signature_image);
 
     setLoading(true);
-    (appDispatch(patchAction(Urls.templates, postFormData, id)) as any).then((res: any) => {
+    (appDispatch(patchAction({apiUrl:Urls.templates, params:postFormData, id})) as any).then((res: any) => {
       handleResponse(res, () => {
         ERPToast.show("Template updated successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);
@@ -275,7 +276,7 @@ const InvoiceDesigner = () => {
             templateGroup={templateGroup}
             tempImages={{ templateImages, setTemplateImages }}
             propertiesState={templateData.activeTemplate?.propertiesState}
-            onChange={(propertiesState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, propertiesState: propertiesState }))}
+            onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
           />
         )}
 
@@ -292,7 +293,7 @@ const InvoiceDesigner = () => {
           <TransactionDetailsDesigner
             template={templateData.activeTemplate}
             headerState={templateData.activeTemplate?.headerState}
-            onChange={(headerState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, headerState: headerState }))}
+            onChange={(headerState) => dispatch(setTemplateHeaderState( headerState ))}
           />
         )}
 
@@ -300,14 +301,14 @@ const InvoiceDesigner = () => {
           <ItemTableDesigner
             template={templateData.activeTemplate}
             itemTableState={templateData.activeTemplate?.itemTableState}
-            onChange={(itemTableState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, itemTableState: itemTableState }))}
+            onChange={(itemTableState) => dispatch(setTemplateItemTableState(itemTableState))}
           />
         )}
 
         {currentSection.type == "total" && (
           <TotalDesigner
             totalState={templateData.activeTemplate?.totalState}
-            onChange={(totalState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, totalState: totalState }))}
+            onChange={(totalState) => dispatch(setTemplateTotalState(totalState ))}
           />
         )}
 
@@ -315,7 +316,7 @@ const InvoiceDesigner = () => {
           <FooterDesigner
             tempImages={{ templateImages, setTemplateImages }}
             footerState={templateData.activeTemplate?.footerState}
-            onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, footerState: footerState }))}
+            onChange={(footerState) => dispatch(setTemplateFooterState(footerState))}
           />
         )}
       </div>

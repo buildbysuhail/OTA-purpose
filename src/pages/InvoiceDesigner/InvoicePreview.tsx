@@ -6,13 +6,11 @@ import { Cog6ToothIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outli
 import { PDFViewer, PDFDownloadLink, View } from "@react-pdf/renderer";
 import { PrinterIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 
-import Urls from "../../redux/actions/Urls";
-
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
 
 import DownloadStandardPreview from "./DownloadPreview/StandardPreview/DownloadPreview";
 import DownloadRetailPreview from "./DownloadPreview/RetailPreview/DownloadPreview";
-import { getAction, reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { TemplateGroupTypes } from "./constants/TemplateCategories";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import { parseAddressTemplate } from "./utils";
@@ -26,7 +24,10 @@ import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPPopover from "../../components/ERPComponents/erp-popover";
 import ERPSideView from "../../components/ERPComponents/erp-side-view";
 import ERPChangeTemplateSidebar from "../../components/ERPComponents/erp-change-template-sidebar";
-import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { getAction } from "../../redux/slices/app-thunks";
+import Urls from "../../redux/urls";
+import { RootState } from "../../redux/store";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -64,10 +65,9 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
   const packingSlipPrefData = usePreferenceData("PackingSlipPreference");
   const deliveryNotePrefData = usePreferenceData("DeliveryNotePreference");
 
-  const userProfileReducerName = reducerNameFromUrl(Urls.user_profile, "GET");
-  const userProfile = useSelector((state: any) => state?.[userProfileReducerName]);
-  const hasPermissionToUpdateProfile = userProfile?.data?.permissions?.hasOwnProperty("update_org_profile");
-  const hasPermissionForTemplates = userProfile?.data?.permissions?.hasOwnProperty("templates");
+  const userProfile = useAppSelector((state: RootState) => state?.UserRights);
+  const hasPermissionToUpdateProfile = true;
+  const hasPermissionForTemplates = true;
 
   const [showPrintModal, setShowPrintModal] = useState(false);
   const [showChangeTemplate, setShowChangeTemplate] = useState(false);
@@ -86,7 +86,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
   const comapanies = useSelector((state: any) => state?.GetUserCompanies);
   const ActiveBranch = comapanies?.data?.find((item: any) => item?.is_active);
 
-  const totalAmountInwords = getAmountInWords(isNaN(+data?.total_price) ? 0 : +data?.total_price, currencySymbol);
+  const totalAmountInwords = getAmountInWords(isNaN(+data?.total_price) ? 0 : +data?.total_price, currencySymbol||'');
   const orgAddressTemplate = parseAddressTemplate(generalPrefData?.organization_address_format, ActiveBranch?.company);
 
   /* ########################################################################################### */
@@ -257,7 +257,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
           docIDKey={docIDKey}
           docTitle={docTitle}
           ActiveBranch={ActiveBranch}
-          currencySymbol={currencySymbol}
+          currencySymbol={currencySymbol||''}
           totalAmountInwords={totalAmountInwords}
           AddressTemplates={{ orgAddressTemplate }}
         />
@@ -271,7 +271,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
           docTitle={docTitle}
           template={templateData}
           ActiveBranch={ActiveBranch}
-          currencySymbol={currencySymbol}
+          currencySymbol={currencySymbol||''}
           templateImages={templateImages}
           totalAmountInwords={totalAmountInwords}
           templateGroupId={templateGroupId}
@@ -307,17 +307,17 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
 
   useEffect(() => {
     if (data) {
-      if (AssociatedCustomerPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
-        (appDispatch(getAction(Urls.customer_templates, `customer=${data?.customer?.id}`)) as any).then((res: any) => {
-          setAssociatedTempInfo(res?.payload?.data[0]);
-        });
-      }
-      if (AssociatedVendorPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
-        (appDispatch(getAction(Urls.vendor_templates, `vendor=${data?.vendor?.id}`)) as any).then((res: any) => {
-          setAssociatedTempInfo(res?.payload?.data[0]);
-        });
-      }
-      appDispatch(getAction(Urls.templates, `voucher_type=${templateGroupId}`));
+      // if (AssociatedCustomerPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
+      //   (appDispatch(getAction(Urls.customer_templates, `customer=${data?.customer?.id}`)) as any).then((res: any) => {
+      //     setAssociatedTempInfo(res?.payload?.data[0]);
+      //   });
+      // }
+      // if (AssociatedVendorPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
+      //   (appDispatch(getAction(Urls.vendor_templates, `vendor=${data?.vendor?.id}`)) as any).then((res: any) => {
+      //     setAssociatedTempInfo(res?.payload?.data[0]);
+      //   });
+      // }
+      appDispatch(getAction({apiUrl: Urls.templates, params:`voucher_type=${templateGroupId}`}));
     }
   }, [data]);
 
@@ -369,7 +369,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
                 docTitle={docTitle}
                 template={templateData}
                 company={ActiveBranch?.company}
-                currency={currencySymbol}
+                currency={currencySymbol || undefined}
                 templateGroupId={templateGroupId}
                 addressTemplates={{ orgAddressTemplate }}
               />
@@ -380,7 +380,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
                 docTitle={docTitle}
                 template={templateData}
                 company={ActiveBranch?.company}
-                currency={currencySymbol}
+                currency={currencySymbol || undefined}
                 templateGroupId={templateGroupId}
                 addressTemplates={{ orgAddressTemplate }}
                 preferences={{ invoicePreference: invoicePrefData }}
@@ -461,7 +461,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
                 content={printModal(voucherType)}
                 className="!min-w-max"
                 isOpen={showPrintModal}
-                hasTopCloseButton={true}
+                closeButton="Button"
                 closeModal={() => {
                   setShowPrintModal(false);
                   // setSearchParams({});

@@ -8,7 +8,6 @@ import { TemplateGroupTypes } from "../../pages/InvoiceDesigner/constants/Templa
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import { TemplateState } from "../../pages/InvoiceDesigner/Designer/interfaces";
 import { parseAddressTemplate } from "../../pages/InvoiceDesigner/utils";
-import { getAction, getDetailAction, patchAction } from "../../redux/actions/AppActions";
 import Urls from "../../redux/urls";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DummyInvoiceData } from "../../pages/InvoiceDesigner/constants/DummyData";
@@ -17,7 +16,7 @@ import StandardPreviewWrapper from "../../pages/InvoiceDesigner/DesignPreview/St
 import ERPToast from "./erp-toast";
 import PSModel from "../common/polosys/ps-modal";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
-import { ResponseModel } from "../../base/response-model";
+import { getAction, getDetailAction, patchAction } from "../../redux/slices/app-thunks";
 
 interface previewState {
   show: boolean;
@@ -88,18 +87,18 @@ const ERPChangeTemplateSidebar = ({
   /* ########################################################################################### */
 
   const getTemplates = async () => {
-    var res: ResponseModel<any> = await appDispatch(getAction(Urls.templates, `voucher_type=${templateId}`) as any).unwrap();
+    var res: any = await appDispatch(getAction({apiUrl: Urls.templates, params: `voucher_type=${templateId}`}) as any).unwrap();
       setTempData(res?.items);
   };
 
   const setDefaultTemplate = async (id: string) => {
     if (type === "detail_page" && endpointUrl) {
       
-        let res = await appDispatch(patchAction(endpointUrl, { template_id: id, items: [], addresses: [], contact_person: [], additional_charge: [] }, data?.id) as any).unwrap();
+        let res = await appDispatch(patchAction({apiUrl: endpointUrl, params: { template_id: id, items: [], addresses: [], contact_person: [], additional_charge: [] }, id: data?.id}) as any).unwrap();
         handleResponse(res, async () => {
           onClose();
           await getTemplates();
-          appDispatch(getDetailAction(endpointUrl, data?.id));
+          appDispatch(getDetailAction({apiUrl:endpointUrl, id: data?.id}));
           ERPToast.show("Template information has been updated.", "success");
         });
     } else if (type === "form") {
@@ -216,7 +215,7 @@ const ERPChangeTemplateSidebar = ({
                   data={DummyInvoiceData}
                   template={showPreview.template}
                   company={ActiveBranch?.company}
-                  currency={currencySymbol}
+                  currency={currencySymbol || undefined}
                   templateGroupId={templateId}
                   addressTemplates={{ orgAddressTemplate }}
                 />
@@ -225,7 +224,7 @@ const ERPChangeTemplateSidebar = ({
                   data={DummyInvoiceData}
                   template={showPreview.template}
                   company={ActiveBranch?.company}
-                  currency={currencySymbol}
+                  currency={currencySymbol || undefined}
                   templateGroupId={templateId}
                   addressTemplates={{ orgAddressTemplate }}
                 />

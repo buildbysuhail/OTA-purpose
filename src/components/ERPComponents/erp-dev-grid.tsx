@@ -131,11 +131,11 @@ const createStore = (
         .join("&");
 
       try {
-        const result = await api.get(dataUrl, loadOptions);
+        const result = await api.get(dataUrl, queryString);
         return result
           ? {
-              data: result,
-              totalCount: result.length,
+              data: result.data,
+              totalCount: result.totalCount,
             }
           : {
               data: [],
@@ -210,7 +210,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   columnAutoWidth = true,
   columnHidingEnabled = true,
   stateStoring,
-  scrollingMode = "standard",
+  scrollingMode = "virtual",
   allowGrouping = false,
   groupPanelVisible = false,
   allowEditing = false,

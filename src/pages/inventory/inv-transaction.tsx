@@ -271,6 +271,170 @@ const InvTransaction = () => {
                       className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
                     ></ERPButton>
           </div>
+          {/* ======= */}
+          <div>
+            {/* The ERPModal component */}
+            <ERPModal
+              isForm={true}
+              isOpen={isOpen}
+              hasSubmit={false}
+              closeTitle="Close"
+              title="Add Items"
+              closeModal={() => setIsOpen(false)}
+              content={
+                <div
+                  // Inline styles for full screen
+                >
+                  {/* Add your column customization content here */}
+                  {/* <div>
+                    <h1 className="text-gray-600">test</h1>
+                  </div> */}
+
+                  {/* Close button */}
+                  {/* <button
+                    onClick={() => setIsOpen(false)}
+                    className="mt-auto p-2 bg-red-500 text-white rounded"
+                  >
+                    Close
+                  </button> */}
+
+                  <div className="max-w-md mx-auto p-1 bg-white shadow-lg rounded-lg mr-6">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="text-gray-600">
+                        {/* <ArrowLeft size={24} onClick={() => setIsOpen(false)} /> */}
+                      </div>
+                      <h1 className="text-xl font-semibold text-gray-600">
+                        Add Items to Sale
+                      </h1>
+                      <div className="text-gray-600">
+                        {/* <Settings size={24} /> */}
+                      </div>
+                    </div>
+
+                    <form onSubmit={handleSubmit}>
+                      <div className="mb-4">
+                        <label
+                          htmlFor="itemName"
+                          className="block text-sm font-medium text-gray-700 "
+                        >
+                          Item Name
+                        </label>
+                        <input
+                          type="text"
+                          id="itemName"
+                          name="itemName"
+                          value={formData.itemName}
+                          onChange={handleInputChange}
+                          placeholder="e.g. Chocolate Cake"
+                          className=" bg-white p-2 border-2 mt-1  block w-full rounded-md  border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label
+                            htmlFor="quantity"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Quantity
+                          </label>
+                          <input
+                            type="text"
+                            id="quantity"
+                            name="quantity"
+                            value={formData.quantity}
+                            onChange={handleInputChange}
+                            className="bg-white p-2 border-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="unit"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Unit
+                          </label>
+                          <select
+                            id="unit"
+                            name="unit"
+                            value={formData.unit}
+                            onChange={handleInputChange}
+                            className="bg-white p-2 border-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          >
+                            <option value="">Select Unit</option>
+                            <option value="piece">Piece</option>
+                            <option value="kg">Kg</option>
+                            <option value="liter">Liter</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4 mb-6">
+                        <div>
+                          <label
+                            htmlFor="rate"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Rate (Price/Unit)
+                          </label>
+                          <input
+                            type="text"
+                            id="rate"
+                            name="rate"
+                            value={formData.rate}
+                            onChange={handleInputChange}
+                            className="bg-white p-2 border-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          />
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="taxOption"
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            Tax Option
+                          </label>
+                          <select
+                            id="taxOption"
+                            name="taxOption"
+                            value={formData.taxOption}
+                            onChange={handleInputChange}
+                            className="bg-white p-2 border-2 mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                          >
+                            <option value="Without Tax">Without Tax</option>
+                            <option value="With Tax">With Tax</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div className="flex space-x-4">
+                        <button
+                          type="submit"
+                          className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+                        >
+                          Save &amp; New
+                        </button>
+                        <button
+                          type="submit"
+                          className="flex-1 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+
+                  {/* Close button */}
+                  {/* <button
+                    onClick={() => setIsOpen(false)}
+                    className="mt-auto p-2 bg-red-500 text-white rounded"
+                  >
+                    Close
+                  </button> */}
+                </div>
+              }
+            />
+
+          </div>
         </div>
       </div>
     </div>

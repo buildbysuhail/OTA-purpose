@@ -13,6 +13,9 @@
     "sass-min": "sass ./src/assets/scss:./src/assets/css/ --style compressed"
   },
   "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
     "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",

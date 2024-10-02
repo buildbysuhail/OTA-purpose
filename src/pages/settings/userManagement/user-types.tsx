@@ -30,7 +30,7 @@ const UserTypes = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
     {
       dataField: "remarks",

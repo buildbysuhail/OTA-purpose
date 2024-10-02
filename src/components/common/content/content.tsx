@@ -25,6 +25,9 @@ const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/Invoic
 const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transaction"));
 
 // Inventory End
+// Acc Starts
+const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/account-groups/account-group'));
+// Acc End
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -32,7 +35,7 @@ const loading = (
   </div>
 );
 const Content: FC<ContentProps> = () => {
-  
+
   return (
     <Suspense fallback={loading}>
         <Routes>
@@ -71,7 +74,10 @@ const Content: FC<ContentProps> = () => {
 
           
           {/* Inventory End */}
-
+{/* Accounts Start */}
+        {/* Masters */}
+        <Route path="settings/account-masters/account-group" element={<AccountsMasters />} />
+        {/* Accounts End */}
           {/* Templates starts */}
           <Route path="/settings/templates" element={<Templates />} />
           <Route path="/settings/invoice_designer/:id" element={<InvoiceDesigner />} />
@@ -83,9 +89,9 @@ const Content: FC<ContentProps> = () => {
             }
           })} */}
 
-          {/* <Route path="/*" element={<NotFound />} /> */}
-        </Routes>
-      </Suspense>
+        {/* <Route path="/*" element={<NotFound />} /> */}
+      </Routes>
+    </Suspense>
   );
 }
 export default Content;

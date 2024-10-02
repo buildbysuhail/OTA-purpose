@@ -27,7 +27,7 @@ import { DATA_ENDPOINTS } from "../configs/data-config";
 import { FORM_ENDPOINTS } from "../configs/form-config";
 
 // Define a generic type for API response data
-type ApiResponse<T> = {
+export type ApiResponse<T> = {
   data: T;
   loading: boolean;
   error: string | null;
@@ -41,11 +41,11 @@ type ThunkPayload = {
 };
 // Function to create a slice and thunk for an endpoint
 function createApiSlice(endpoint: ApiEndpoint, method?: ActionType | null, isDetails?: boolean | false) {
-  let _method = method != undefined && method != null  ? method :  endpoint.method;
+  let _method = method != undefined && method != null ? method : endpoint.method;
 
   let name = reducerNameFromUrl(
     endpoint.url,
-    _method ?? ActionType.GET,isDetails
+    _method ?? ActionType.GET, isDetails
   );
   debugger;
   const thunk = createAsyncThunk<any, ThunkPayload, { rejectValue: string }>(
@@ -96,7 +96,19 @@ function createApiSlice(endpoint: ApiEndpoint, method?: ActionType | null, isDet
       loading: false,
       error: null,
     } as ApiResponse<any>,
-    reducers: {},
+    reducers: {
+      setState: (state, action: PayloadAction<Partial<ApiResponse<any>>>) => {
+        return {
+          ...state,
+          data: {
+            ...state.data,
+            ...action.payload.data,
+          },
+          ...(action.payload.loading !== undefined && { loading: action.payload.loading }),
+          ...(action.payload.error !== undefined && { error: action.payload.error }),
+        };
+      }
+    },
     extraReducers: (builder) => {
       builder
         .addCase(thunk.pending, (state) => {
@@ -140,24 +152,24 @@ class DynamicReduxManager {
       this.thunks[name] = thunk;
     });
     formEndpoints.forEach((endpoint) => {
-      const { slice:gSlice, thunk:gThunk, name:gName } = createApiSlice(endpoint, ActionType.GET);
+      const { slice: gSlice, thunk: gThunk, name: gName } = createApiSlice(endpoint, ActionType.GET);
       this.slices[gName] = gSlice;
       this.thunks[gName] = gThunk;
 
-      
-      const { slice:gdSlice, thunk:gdThunk, name:gdName } = createApiSlice(endpoint, ActionType.GET);
+
+      const { slice: gdSlice, thunk: gdThunk, name: gdName } = createApiSlice(endpoint, ActionType.GET);
       this.slices[gdName] = gdSlice;
       this.thunks[gdName] = gdThunk;
 
-      const { slice:aSlice, thunk:aThunk, name:aName } = createApiSlice(endpoint, ActionType.POST);
+      const { slice: aSlice, thunk: aThunk, name: aName } = createApiSlice(endpoint, ActionType.POST);
       this.slices[aName] = aSlice;
       this.thunks[aName] = aThunk;
 
-      const { slice:eSlice, thunk:eThunk, name:eName } = createApiSlice(endpoint, ActionType.PUT);
+      const { slice: eSlice, thunk: eThunk, name: eName } = createApiSlice(endpoint, ActionType.PUT);
       this.slices[eName] = eSlice;
       this.thunks[eName] = eThunk;
 
-      const { slice:dSlice, thunk:dThunk, name:dName } = createApiSlice(endpoint, ActionType.DELETE);
+      const { slice: dSlice, thunk: dThunk, name: dName } = createApiSlice(endpoint, ActionType.DELETE);
       this.slices[dName] = dSlice;
       this.thunks[dName] = dThunk;
     });
@@ -210,7 +222,13 @@ class DynamicReduxManager {
       { rejectValue: string }
     >;
   }
-
+  setState(name: string, payload: Partial<ApiResponse<any>>) {
+    const slice = this.slices[name];
+    if (!slice) {
+      throw new Error(`Slice "${name}" not found`);
+    }
+    this.store.dispatch(slice.actions.setState(payload));
+  }
   // addEndpoint<T>(endpoint: ApiEndpoint<T>) {
   //   const { slice, thunk } = createApiSlice(endpoint);
   //   this.slices[endpoint.name] = slice;

@@ -11,11 +11,11 @@ interface FacebookConfig {
 interface ApiConfig {
   APP_API_URL: string;
 }
-
 interface Config {
   google: GoogleConfig;
   facebook: FacebookConfig;
   api: ApiConfig;
+  webDir: string;
 }
 
 const config: Config = {
@@ -32,6 +32,7 @@ const config: Config = {
     //  APP_API_URL: "https://localhost:7213" 
     APP_API_URL: "https://polosys-001-site1.ctempurl.com" 
   },
+  webDir: 'dist/my-app'
 };
 
 export default config;

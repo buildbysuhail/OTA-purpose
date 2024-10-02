@@ -122,7 +122,14 @@ const Urls = {
   Remainder: "/Core/Remainder/",
   userActionReport: "/Core/UserAction/",
   currencyExchange: "/Core/ExchangeRates",
-  postCurrency: "/Accounts/Currency",
+  postCurrency: "/Accounts/Currency/",
+
+  // Accounts Start
+  // Masters
+  
+  account_group: "/Accounts/AccGroup/",
+  //Reports
+  // Accounts End
   //Templates
   templates: "/Core/Template/",
 

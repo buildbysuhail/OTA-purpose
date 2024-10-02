@@ -130,7 +130,7 @@
 
   "actions" : "Actions",
   "users":"Users",
-  "si_no" : "SiNo",
+  "si_no" : "SI",
   "user" : "User",
   "counter" : "Counter" ,
   "user_type" : "User Type",
@@ -145,7 +145,7 @@
   "passkey" : "Passkey",
   "code":"Code",
   "remarks":"Remarks",
-  
+
   "add-new-usertype" : "Add New UserType",
   "add-new-user" : "Add New User"
 }

@@ -138,7 +138,7 @@ const Users = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
+          view={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
           edit={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
           delete={{
             confirmationRequired: true,

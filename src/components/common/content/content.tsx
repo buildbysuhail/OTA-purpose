@@ -74,7 +74,7 @@ const Content: FC<ContentProps> = () => {
 
           {/* Templates starts */}
           <Route path="/settings/templates" element={<Templates />} />
-          <Route path="/invoice_designer/:id" element={<InvoiceDesigner />} />
+          <Route path="/settings/invoice_designer/:id" element={<InvoiceDesigner />} />
           {/* Templates ends */}
 
           {/* {routes.map((route, idx) => {

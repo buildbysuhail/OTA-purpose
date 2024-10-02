@@ -9,14 +9,16 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { UserTypeManage } from "./user-type-manage";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { useTranslation } from "react-i18next";
 
 const UserTypes = () => {
+  const {t}=useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "userTypeName",
-      caption: "User Type",
+      caption: t("user_type"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -26,7 +28,7 @@ const UserTypes = () => {
     },
     {
       dataField: "userTypeCode",
-      caption: "Code",
+      caption: t("code"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -34,7 +36,7 @@ const UserTypes = () => {
     },
     {
       dataField: "remarks",
-      caption: "Remarks",
+      caption: t("remarks"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -42,7 +44,7 @@ const UserTypes = () => {
     },
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -70,7 +72,7 @@ const UserTypes = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
                   columns={columns}
-                  gridHeader="User Type"
+                  gridHeader={t("user_type")}
                   dataUrl={Urls.UserTypes}
                   gridId="grd_user_type"
                   popupAction={toggleUserTypePopup}
@@ -84,7 +86,7 @@ const UserTypes = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.userType.isOpen || false}
-        title={"Add New UserType"}
+        title={t("add-new-usertype")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

@@ -6,4 +6,5 @@ import { ApiEndpoint } from "./types";
 export const FORM_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.Users, initialData: initialDataUser },
   { url: Urls.account_group, initialData: initialDataUser },
+  { url: Urls.account_ledger, initialData: initialDataUser },
 ] as const;

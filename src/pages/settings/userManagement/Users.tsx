@@ -10,6 +10,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import { UserTypeManage } from "./user-type-manage";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
+import { UserManage } from "./user-manage";
 
 const Users = () => {
   const {t}=useTranslation();
@@ -140,7 +141,7 @@ const Users = () => {
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
           view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
+          edit={{ type: "popup", action: () => toggleUserPopup(cellInfo?.data?.id) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -179,7 +180,7 @@ const Users = () => {
         closeModal={() => {
           dispatch(toggleUserPopup({ isOpen: false }));
         }}
-        content={<UserTypeManage />}
+        content={<UserManage />}
       />
     </Fragment>
   );

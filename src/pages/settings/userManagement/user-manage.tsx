@@ -210,8 +210,8 @@ export const UserManage = () => {
             id: "userTypeCode",
             required: true,
             getListUrl: Urls.data_user_types,
-            valueKey: "userTypeCode",
-            labelKey: "userTypeName",
+            valueKey: "UserTypeCode",
+            labelKey: "UserTypeName",
           }}
           onChangeData={(data: any) => {
             // Update only the userTypeCode field

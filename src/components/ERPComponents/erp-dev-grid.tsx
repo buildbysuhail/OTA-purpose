@@ -42,6 +42,7 @@ import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import ERPButton from "./erp-button";
 import { AppDispatch } from "../../redux/store";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
+import { useTranslation } from "react-i18next";
 
 interface ERPDevGridProps {
   columns: DevGridColumn[];
@@ -79,7 +80,7 @@ interface ERPDevGridProps {
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
-  gridAddButtonText?: string | "Add"
+  gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
   heightToAdjustOnMobile?: number;
   popupAction: (value: popupDataProps) => { type: string; payload: popupDataProps };
@@ -231,18 +232,19 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   initialPreferences,
   paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
 }) => {
+  const {t}=useTranslation();
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
 
+  const [addButtonText,setAddButtonText]=useState<string>(gridAddButtonText = "Add" ? t("add") : gridAddButtonText)
   const onPopupOpenClick = useCallback(() => {
     dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
+  
   useEffect(() => {
-    console.log('height');
-
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
     let gridHeightWindows = wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
@@ -414,7 +416,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                     </Link>
                   )}
                   {gridAddButtonType == "popup" && (
-                    <ERPButton variant="primary" onClick={onPopupOpenClick} title={gridAddButtonText} startIcon={gridAddButtonIcon}>
+                    <ERPButton variant="primary" onClick={onPopupOpenClick} title={addButtonText} startIcon={gridAddButtonIcon}>
                     </ERPButton>
 
                   )}

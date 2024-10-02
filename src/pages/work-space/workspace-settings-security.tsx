@@ -152,7 +152,7 @@ const WorkspaceSettingsSecurity: FC<WorkSpaceSettingsProps> = (props) => {
                     <ERPButton
                       title="Delete Workspace"
                       onClick={() => {
-                        deleteWorkspacePopup({ isOpen: false });
+                        deleteWorkspacePopup();
                       }}
                       variant="primary"
                     ></ERPButton>

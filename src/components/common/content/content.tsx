@@ -25,6 +25,9 @@ const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/Invoic
 const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transaction"));
 
 // Inventory End
+// Acc Starts
+const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/account-groups/account-group'));
+// Acc End
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -32,60 +35,65 @@ const loading = (
   </div>
 );
 const Content: FC<ContentProps> = () => {
-  
+
   return (
     <Suspense fallback={loading}>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/profile/avatar" element={<AccountSettingsProfile />} />
-          <Route path="/profile/basic-information" element={<AccountSettingsProfile />} />
-          <Route path="/profile/email-address" element={<AccountSettingsProfile />} />
-          <Route path="/profile/phone-number" element={<AccountSettingsProfile />} />
-          <Route path="/security/password" element={<AccountSettingsSecurity />} />
-          <Route path="/preferences/theme" element={<AccountSettingsPreference />} />
-          <Route path="/preferences/language" element={<AccountSettingsPreference />} />
-          <Route path="/preferences/system-preferences" element={<AccountSettingsPreference />} />
-          <Route path="/sessions" element={<AccountSettingsSessions />} />
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/profile/avatar" element={<AccountSettingsProfile />} />
+        <Route path="/profile/basic-information" element={<AccountSettingsProfile />} />
+        <Route path="/profile/email-address" element={<AccountSettingsProfile />} />
+        <Route path="/profile/phone-number" element={<AccountSettingsProfile />} />
+        <Route path="/security/password" element={<AccountSettingsSecurity />} />
+        <Route path="/preferences/theme" element={<AccountSettingsPreference />} />
+        <Route path="/preferences/language" element={<AccountSettingsPreference />} />
+        <Route path="/preferences/system-preferences" element={<AccountSettingsPreference />} />
+        <Route path="/sessions" element={<AccountSettingsSessions />} />
 
-          <Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
-          <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
-          <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
-          <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
-          <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
-          <Route path="/members" element={<WorkspaceSettingsMembers />} />
-          {/* settings user */}
-          <Route path="/user-management/users" element={<Users />} />
-          <Route path="/user-management/userstypes" element={<UserTypes/>} />
+        <Route path="/profile/workspace-logo" element={<WorkSpaceSettings />} />
+        <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
+        <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
+        <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
+        <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
+        <Route path="/members" element={<WorkspaceSettingsMembers />} />
+        {/* settings user */}
+        <Route path="/user-management/users" element={<Users />} />
+        <Route path="/user-management/userstypes" element={<UserTypes />} />
 
-          {/* settings Systems */}
-          <Route path="settings/system/counters" element={<SystemCounters/>} />
-          <Route path="settings/system/vouchers" element={<SystemVoucher/>} />          
-          <Route path="settings/system/financial-year"element={<FinancialYear/>} /> 
-          <Route path="settings/system/reminders"element={<Reminders/>} />    
-          <Route path="settings/system/exchange-rates"element={<ExchangeRates/>} />  
-          <Route path="settings" element={<Settings />} />
+        {/* settings Systems */}
+        <Route path="settings/system/counters" element={<SystemCounters />} />
+        <Route path="settings/system/vouchers" element={<SystemVoucher />} />
+        <Route path="settings/system/financial-year" element={<FinancialYear />} />
+        <Route path="settings/system/reminders" element={<Reminders />} />
+        <Route path="settings/system/exchange-rates" element={<ExchangeRates />} />
+        <Route path="settings" element={<Settings />} />
 
-          {/* Inventory Starts */}
+        {/* Inventory Starts */}
 
-          <Route path="sales/new"element={<InvTransaction/>} />  
+        <Route path="sales/new" element={<InvTransaction />} />
 
-          
-          {/* Inventory End */}
 
-          {/* Templates starts */}
-          <Route path="/settings/templates" element={<Templates />} />
-          <Route path="/invoice_designer/:id" element={<InvoiceDesigner />} />
-          {/* Templates ends */}
+        {/* Inventory End */}
 
-          {/* {routes.map((route, idx) => {
+        {/* Templates starts */}
+        <Route path="/settings/templates" element={<Templates />} />
+        <Route path="/invoice_designer/:id" element={<InvoiceDesigner />} />
+        {/* Templates ends */}
+
+        {/* Accounts Start */}
+        {/* Masters */}
+        <Route path="settings/account-masters/account-group" element={<AccountsMasters />} />
+        {/* Accounts End */}
+
+        {/* {routes.map((route, idx) => {
             if (route.path) {
               return <Route key={idx} path={route.path} element={<route.component />} />;
             }
           })} */}
 
-          {/* <Route path="/*" element={<NotFound />} /> */}
-        </Routes>
-      </Suspense>
+        {/* <Route path="/*" element={<NotFound />} /> */}
+      </Routes>
+    </Suspense>
   );
 }
 export default Content;

@@ -1,22 +1,21 @@
 import { Fragment } from "react";
-import Urls from "../../../redux/urls";
+import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { toggleAccountTypePopup } from "../../../../redux/slices/popup-reducer";
+import Urls from "../../../../redux/urls";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import { AccountGroupManage } from "./account-group-manage";
 
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { UserTypeManage } from "./user-type-manage";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-
-const UserTypes = () => {
+const AccountGroupType = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "userTypeName",
-      caption: "User Type",
+      dataField: "Account Group",
+      caption: "Account  Group",
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -30,7 +29,7 @@ const UserTypes = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 100,
     },
     {
       dataField: "remarks",
@@ -51,7 +50,7 @@ const UserTypes = () => {
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
           view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
+          edit={{ type: "popup", action: () => toggleAccountTypePopup(cellInfo?.data?.id) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -68,32 +67,32 @@ const UserTypes = () => {
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid
+                <ErpDevGrid
                   columns={columns}
-                  gridHeader="User Type"
-                  dataUrl={Urls.UserTypes}
+                  gridHeader="Account Group"
+                  dataUrl={Urls.account_group}
                   gridId="grd_user_type"
-                  popupAction={toggleUserTypePopup}
+                  popupAction={toggleAccountTypePopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""
-                ></ERPDevGrid>
+                ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.userType}
+        isOpen={rootState.PopupData.accountType}
         title={"Add New UserType"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserTypePopup(false));
+          dispatch(toggleAccountTypePopup(false));
         }}
-        content={<UserTypeManage />}
+        content={<AccountGroupManage />}
       />
     </Fragment>
   );
 };
 
-export default UserTypes;
+export default AccountGroupType;

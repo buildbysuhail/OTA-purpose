@@ -239,13 +239,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     windows: number;
   }>({ mobile: 500, windows: 500 });
 
+  const [addButtonText,setAddButtonText]=useState<string>(gridAddButtonText = "Add" ? t("add") : gridAddButtonText)
   const onPopupOpenClick = useCallback(() => {
     dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
+  
   useEffect(() => {
-    
-    gridAddButtonText = "Add" ?? t("add");
-
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
     let gridHeightWindows = wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
@@ -417,7 +416,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                     </Link>
                   )}
                   {gridAddButtonType == "popup" && (
-                    <ERPButton variant="primary" onClick={onPopupOpenClick} title={gridAddButtonText} startIcon={gridAddButtonIcon}>
+                    <ERPButton variant="primary" onClick={onPopupOpenClick} title={addButtonText} startIcon={gridAddButtonIcon}>
                     </ERPButton>
 
                   )}

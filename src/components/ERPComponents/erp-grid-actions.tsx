@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import { APIClient } from "../../helpers/api-client";
 import { handleResponse } from "../../utilities/HandleResponse";
+import { useDispatch } from 'react-redux';
+import { popupDataProps } from "../../redux/slices/popup-reducer";
 
 type ActionType = {
   type: "link" | "popup";
   path?: string;
-  action?: () => void;
+  action?: (payload: popupDataProps) => void;
 };
 
 type DeleteActionType = {
@@ -36,14 +38,19 @@ type ERPGridActionsProps = {
   edit?: ActionType;
   view?: ActionType;
   delete?: DeleteActionType;
+  itemId?: any; // Add this to pass the item ID
 };
+
 const api = new APIClient();
+
 const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   edit = defaultActionType,
   view = defaultActionType,
-  delete: deleteAction = defaultDeleteAction
+  delete: deleteAction = defaultDeleteAction,
+  itemId
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const dispatch = useDispatch();
 
   const handleDelete = async () => {
     if (deleteAction.confirmationRequired) {
@@ -56,8 +63,8 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
       if (deleteAction.action) {
         await deleteAction.action();
       } else if (deleteAction.url) {
-		let res = await api.delete(`${deleteAction.url}/${deleteAction.key}`)
-		handleResponse(res);
+        let res = await api.delete(`${deleteAction.url}/${deleteAction.key || itemId}`);
+        handleResponse(res);
       }
     } catch (error) {
       console.error("Delete failed:", error);
@@ -80,12 +87,26 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
     };
 
     if (type === "delete" || (action as ActionType).type === "popup") {
+      const handleClick = () => {
+        if (type === "delete") {
+          handleDelete();
+        } else if ((action as ActionType).action) {
+          const payload: popupDataProps = {
+            isOpen: true,
+            key: itemId,
+            mode: type as "view" | "edit"
+          };
+          debugger;
+          dispatch((action as ActionType).action?.(payload) as any);
+        }
+      };
+
       return (
         <button
-          onClick={type === "delete" ? handleDelete : (action as ActionType).action}
+          onClick={handleClick}
           disabled={type === "delete" && isDeleting}
           className="ti-btn-link"
-		  type="button"
+          type="button"
         >
           {isDeleting && type === "delete" ? (
             <CircularProgress size={20} />

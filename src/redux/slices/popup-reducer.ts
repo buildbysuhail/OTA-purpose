@@ -48,7 +48,7 @@ const popupDataSlice = createSlice({
   initialState,
   reducers: {
     toggleUserTypePopup: (state, action: PayloadAction<popupDataProps>) => {
-
+debugger;
       state.userType = action.payload;
     },
     toggleUserPopup: (state, action: PayloadAction<popupDataProps>) => {

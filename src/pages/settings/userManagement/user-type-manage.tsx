@@ -31,8 +31,11 @@ interface DynamicFormProps {
   onSubmit: (data: FormDataStructure) => void;
   onCancel: () => void;
 }
+type ERPModalProps = {
+  itemKey?: string;
+};
 
-export const UserTypeManage = () => {
+export const UserTypeManage = ({itemKey}: ERPModalProps) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const onClose = useCallback(async () => {
@@ -45,11 +48,12 @@ export const UserTypeManage = () => {
   const [postData, setPostData] = useState<FormState>(initialUserTypeData);
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
 
-  const queryParams = new URLSearchParams(location.search);
-
+  // const queryParams = new URLSearchParams(location.search);
   //key : used for route parm for edit or view 
-  const [key, setKey] = useState<any>(queryParams.get('key'));
-
+  // const [key, setKey] = useState<any>(queryParams.get('key'));
+  // Pls Do not copy Commended Code, only for reference
+  const [key, setKey] = useState<any>(itemKey);
+debugger;
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
     const response: ResponseModelWithValidation<any, any> =

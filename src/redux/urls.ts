@@ -126,8 +126,8 @@ const Urls = {
 
   // Accounts Start
   // Masters
-  
   account_group: "/Accounts/AccGroup/",
+  account_ledger: "/Accounts/AccLedger/",
   //Reports
   // Accounts End
   //Templates

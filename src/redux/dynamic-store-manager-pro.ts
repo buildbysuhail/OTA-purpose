@@ -28,6 +28,7 @@ import { FORM_ENDPOINTS } from "../configs/form-config";
 
 // Define a generic type for API response data
 export type ApiResponse<T> = {
+  validations: any;
   data: T;
   loading: boolean;
   error: string | null;

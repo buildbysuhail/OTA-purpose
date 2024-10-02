@@ -3,20 +3,23 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
+import { toggleAccountLedgerPopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { AccountGroupManage } from "../account-groups/account-group-manage";
+import { AccountLedgerManage } from "./account-ledger-manage";
+import { useTranslation } from "react-i18next";
 
 
 const AccountLedgerType = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "Account Group",
-      caption: "Account  Group",
+      dataField: "Account Ledger",
+      caption: "Account  Ledger",
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -50,8 +53,8 @@ const AccountLedgerType = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -70,10 +73,10 @@ const AccountLedgerType = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Account Group"
-                  dataUrl={Urls.account_group}
+                  gridHeader="Account Ledger"
+                  dataUrl={Urls.account_ledger}
                   gridId="grd_user_type"
-                  popupAction={toggleAccountGroupPopup}
+                  popupAction={toggleAccountLedgerPopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
@@ -83,14 +86,14 @@ const AccountLedgerType = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.accountGroup.isOpen || false}
+        isOpen={rootState.PopupData.accountLedger.isOpen || false}
         title={"Add New UserType"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
+          dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));
         }}
-        content={<AccountGroupManage />}
+        content={<AccountLedgerManage />}
       />
     </Fragment>
   );

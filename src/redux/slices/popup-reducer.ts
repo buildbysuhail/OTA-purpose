@@ -22,6 +22,7 @@ interface popupData {
   resetDataBase: popupDataProps
   commands: popupDataProps
   accountGroup: popupDataProps
+  accountLedger: popupDataProps
 }
 const initialState: popupData = {
   userType: { isOpen: false, key: null, mode: "edit" },
@@ -41,6 +42,7 @@ const initialState: popupData = {
   resetDataBase: { isOpen: false, key: null, mode: "edit" },
   commands: { isOpen: false, key: null, mode: "edit" },
   accountGroup: { isOpen: false, key: null, mode: "edit" },
+  accountLedger: { isOpen: false, key: null, mode: "edit" },
 };
 
 const popupDataSlice = createSlice({
@@ -109,7 +111,10 @@ const popupDataSlice = createSlice({
       state.commands = action.payload;
     },
     toggleAccountGroupPopup: (state, action: PayloadAction<popupDataProps>) => {
-      state.commands = action.payload;
+      state.accountGroup = action.payload;
+    },
+    toggleAccountLedgerPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.accountLedger = action.payload;
     },
   },
 });
@@ -132,7 +137,8 @@ export const {
   toggleCurrencyExchangePopup,
   toggleResetDataBasePopup,
   toggleCommandsPopup,
-  toggleAccountGroupPopup
+  toggleAccountGroupPopup,
+  toggleAccountLedgerPopup
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

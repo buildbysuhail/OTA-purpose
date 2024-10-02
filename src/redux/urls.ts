@@ -34,8 +34,8 @@ const Urls = {
   data_privilage_cards: "/Accounts/Data/PrivilageCards/",
   data_projects: "/Accounts/Data/Projects/",
   data_upis: "/Accounts/Data/UPIs/",
-  data_user_types: "/Subscription/User/GetUserTypeCombo/",
-  data_employees: "/Subscription/User/GetEmployeeCombo/",
+  data_user_types: "/Data/UserType/",
+  data_employees: "/Data/Employee",
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",

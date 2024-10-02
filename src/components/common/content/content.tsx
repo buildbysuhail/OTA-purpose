@@ -54,7 +54,7 @@ const Content: FC<ContentProps> = () => {
           <Route path="/profile/workspace-basic-information" element={<WorkSpaceSettings />} />
           <Route path="/profile/primary-email" element={<WorkSpaceSettings />} />
           <Route path="/profile/business-number" element={<WorkSpaceSettings />} />
-          <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} />
+          <Route path="/security/deleteWorkspace" element={<WorkspaceSettingsSecurity />} /> 
           <Route path="/members" element={<WorkspaceSettingsMembers />} />
           {/* settings user */}
           <Route path="/user-management/users" element={<Users />} />

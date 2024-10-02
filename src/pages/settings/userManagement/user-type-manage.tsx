@@ -36,7 +36,7 @@ export const UserTypeManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const onClose = useCallback(async () => {
-    dispatch(toggleUserTypePopup(false));
+    dispatch(toggleUserTypePopup({ isOpen: false }));
   }, []);
   const initialUserTypeData = {
     data: { userTypeName: "", userTypeCode: "", remark: "" },
@@ -46,7 +46,7 @@ export const UserTypeManage = () => {
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
 
   const queryParams = new URLSearchParams(location.search);
-  
+
   //key : used for route parm for edit or view 
   const [key, setKey] = useState<any>(queryParams.get('key'));
 
@@ -54,14 +54,15 @@ export const UserTypeManage = () => {
     setPostUserTypeLoading(true);
     const response: ResponseModelWithValidation<any, any> =
       await UserManagementApis.addUserTypeInfo(postData?.data);
-      setPostUserTypeLoading(false);
-    handleResponse(response, 
-      () => {dispatch(toggleUserTypePopup(false));},
-      () => {setPostData((prevData: any) => ({
-                ...prevData,
-                validations: response.validations,
-              }));
-            });
+    setPostUserTypeLoading(false);
+    handleResponse(response,
+      () => { dispatch(toggleUserTypePopup({ isOpen: false })); },
+      () => {
+        setPostData((prevData: any) => ({
+          ...prevData,
+          validations: response.validations,
+        }));
+      });
   }, [postData?.data]);
 
   const handleChange = useCallback((id: string, value: FormField) => {
@@ -143,7 +144,7 @@ export const UserTypeManage = () => {
           title="Cancel"
           variant="secondary"
           onClick={onClose}
-          // disabled={emailLoading}
+        // disabled={emailLoading}
         ></ERPButton>
         <ERPButton
           type="button"
@@ -151,7 +152,7 @@ export const UserTypeManage = () => {
           variant="primary"
           onClick={handleSubmit}
           loading={postDataLoading}
-          title={key != undefined && key != null ? 'Update':'Submit'}
+          title={key != undefined && key != null ? 'Update' : 'Submit'}
         ></ERPButton>
       </div>
     </div>

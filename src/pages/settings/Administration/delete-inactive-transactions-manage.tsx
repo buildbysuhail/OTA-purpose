@@ -10,7 +10,7 @@ import AdministrationSettingsApis from "./administration-settings-apis";
 const DeleteInactiveTransactionManage = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleDeleteInactiveTransactionPopup(false));
+    dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false }));
   }, []);
   const initialData = {
     data: { date: "", isDelete: false },
@@ -22,7 +22,7 @@ const DeleteInactiveTransactionManage = () => {
   const deleteAll = useCallback(async () => {
     if (postData?.data.isDelete) {
       setPostDataLoading(true);
-      const dataToSend = { date:postData?.data?.date };
+      const dataToSend = { date: postData?.data?.date };
       const response: ResponseModelWithValidation<any, any> =
         await AdministrationSettingsApis.addDeleteInactiveTransaction(
           dataToSend
@@ -31,7 +31,7 @@ const DeleteInactiveTransactionManage = () => {
       handleResponse(
         response,
         () => {
-          dispatch(toggleDeleteInactiveTransactionPopup(false));
+          dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false }));
         },
         () => {
           setPostData((prevData: any) => ({

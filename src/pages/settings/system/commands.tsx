@@ -41,7 +41,7 @@ const CommandsManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const onClose = useCallback(async () => {
-    dispatch(toggleCommandsPopup(false));
+    dispatch(toggleCommandsPopup({ isOpen: false }));
   }, []);
   //   const initialUserTypeData = {
   //     data: {
@@ -77,7 +77,7 @@ const CommandsManage = () => {
   //     handleResponse(
   //       response,
   //       () => {
-  //         dispatch(toggleCommandsPopup(false));
+  //         dispatch(toggleCommandsPopup({isOpen: false}));
   //       },
   //       () => {
   //         setPostData((prevData: any) => ({

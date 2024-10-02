@@ -41,7 +41,7 @@ export const UserManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const onClose = useCallback(async () => {
-    dispatch(toggleUserPopup(false));
+    dispatch(toggleUserPopup({ isOpen: false }));
   }, []);
   const initialData = {
     data: {
@@ -78,14 +78,14 @@ export const UserManage = () => {
   const [key, setKey] = useState<any>(queryParams.get("key"));
 
   const handleSubmit = useCallback(async () => {
-   setPostDataLoading(true);
+    setPostDataLoading(true);
     const response: ResponseModelWithValidation<any, any> =
       await UserManagementApis.addUserTypeInfo(postData?.data);
-   setPostDataLoading(false);
+    setPostDataLoading(false);
     handleResponse(
       response,
       () => {
-        dispatch(toggleUserPopup(false));
+        dispatch(toggleUserPopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({
@@ -127,14 +127,14 @@ export const UserManage = () => {
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <ERPInput
+        <ERPInput
           id="userName"
           label="User Name"
           placeholder="User Name"
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
@@ -152,7 +152,7 @@ export const UserManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-           setPostData((prev: any) => ({
+            setPostData((prev: any) => ({
               ...prev,
               data: {
                 ...data,
@@ -165,8 +165,8 @@ export const UserManage = () => {
           defaultData={postData?.data}
           value={
             postData != undefined &&
-            postData?.data != undefined &&
-            postData?.data?.counterID != undefined
+              postData?.data != undefined &&
+              postData?.data?.counterID != undefined
               ? postData?.data?.counterID
               : 0
           }
@@ -179,7 +179,7 @@ export const UserManage = () => {
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
@@ -195,7 +195,7 @@ export const UserManage = () => {
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
@@ -215,7 +215,7 @@ export const UserManage = () => {
           }}
           onChangeData={(data: any) => {
             // Update only the userTypeCode field
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: {
                 ...prevData.data,
@@ -241,7 +241,7 @@ export const UserManage = () => {
             labelKey: "employeeName",
           }}
           onChangeData={(data: any) => {
-           setPostData((prev: any) => ({
+            setPostData((prev: any) => ({
               ...prev,
               data: data,
             }));
@@ -251,8 +251,8 @@ export const UserManage = () => {
           defaultData={postData?.data}
           value={
             postData != undefined &&
-            postData?.data != undefined &&
-            postData?.data?.employeeID != undefined
+              postData?.data != undefined &&
+              postData?.data?.employeeID != undefined
               ? postData?.data?.employeeID
               : 0
           }
@@ -266,7 +266,7 @@ export const UserManage = () => {
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: {
                 ...data,
@@ -285,7 +285,7 @@ export const UserManage = () => {
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
@@ -301,7 +301,7 @@ export const UserManage = () => {
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
@@ -317,7 +317,7 @@ export const UserManage = () => {
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
-           setPostData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
@@ -333,7 +333,7 @@ export const UserManage = () => {
           title="Cancel"
           variant="secondary"
           onClick={onClose}
-          // disabled={emailLoading}
+        // disabled={emailLoading}
         ></ERPButton>
         <ERPButton
           type="button"

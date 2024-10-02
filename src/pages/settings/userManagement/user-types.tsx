@@ -83,12 +83,12 @@ const UserTypes = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.userType}
+        isOpen={rootState.PopupData.userType.isOpen || false}
         title={"Add New UserType"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserTypePopup(false));
+          dispatch(toggleUserTypePopup({ isOpen: false }));
         }}
         content={<UserTypeManage />}
       />

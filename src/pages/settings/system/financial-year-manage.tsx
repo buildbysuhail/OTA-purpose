@@ -4,7 +4,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ResponseModelWithValidation } from "../../../base/response-model";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { toggleFinancialYearPopup,  } from "../../../redux/slices/popup-reducer";
+import { toggleFinancialYearPopup, } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import SystemSettingsApi from "./system-apis";
@@ -12,7 +12,7 @@ import SystemSettingsApi from "./system-apis";
 export const FinancialYearManage = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleFinancialYearPopup(false));
+    dispatch(toggleFinancialYearPopup({ isOpen: false }));
   }, []);
   const initialFinancialYearData = {
     data: {
@@ -35,46 +35,45 @@ export const FinancialYearManage = () => {
     setPostFinancialDataLoading(true);
     const response: ResponseModelWithValidation<any, any> =
       await SystemSettingsApi.addFinancialYearInfo(postFinancialData?.data);
-      setPostFinancialDataLoading(false);
-    handleResponse(response, 
-      () => {dispatch(toggleFinancialYearPopup(false));},
-      () => {setPostFinancialData((prevData: any) => ({
-                ...prevData,
-                validations: response.validations,
-              }));
-            });
+    setPostFinancialDataLoading(false);
+    handleResponse(response,
+      () => { dispatch(toggleFinancialYearPopup({ isOpen: false })); },
+      () => {
+        setPostFinancialData((prevData: any) => ({
+          ...prevData,
+          validations: response.validations,
+        }));
+      });
   }, [postFinancialData?.data]);
 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <ERPDateInput
+        <ERPDateInput
           id="dateFrom"
-          field={{type: "date", id: "dateFrom", required: true }}
+          field={{ type: "date", id: "dateFrom", required: true }}
           label={"From"}
           data={postFinancialData?.data}
-          handleChange={(id: any, value: any) =>
-            {
-              
-              setPostFinancialData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  [id]: value
-                }
-              }));
-            }
-            }
+          handleChange={(id: any, value: any) => {
+
+            setPostFinancialData((prev: any) => ({
+              ...prev,
+              data: {
+                ...prev.data,
+                [id]: value
+              }
+            }));
+          }
+          }
           validation={postFinancialData.validations.dateFrom}
         />
         <ERPDateInput
           id="dateTo"
-          field={{type: "date", id: "dateTo", required: true }}
+          field={{ type: "date", id: "dateTo", required: true }}
           label={"To"}
           data={postFinancialData?.data}
-          handleChange={(id: any, value: any) =>
-          {
-            
+          handleChange={(id: any, value: any) => {
+
             setPostFinancialData((prev: any) => ({
               ...prev,
               data: {
@@ -86,8 +85,8 @@ export const FinancialYearManage = () => {
           }
           validation={postFinancialData.validations.dateTo}
         />
-      
-        
+
+
         <ERPInput
           id="remarks"
           label="Remarks"
@@ -101,7 +100,7 @@ export const FinancialYearManage = () => {
             }));
           }}
           value={postFinancialData?.data?.remarks}
-        
+
         />
         <ERPInput
           id="openingStockValue"
@@ -119,70 +118,70 @@ export const FinancialYearManage = () => {
           value={postFinancialData?.data?.openingStockValue}
         />
 
-          <div className="w-full">
+        <div className="w-full">
           <label
-          htmlFor="fStatus"
-          className="block text-xs  text-gray-700"
+            htmlFor="fStatus"
+            className="block text-xs  text-gray-700"
           >
-          Status*
+            Status*
           </label>
           <select
-          id="fStatus"
-          name="fStatus"
-          required
-          className="block w-full px-3 py-1 bg-white border border-gray-300  shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          value={postFinancialData?.data?.fStatus || ""}
-          onChange={(e) => {
-          setPostFinancialData((prev: any) => ({
-            ...prev,
-            data: {
-              ...prev.data,
-              fStatus: e.target.value, 
-            },
-          }));
-          }}
+            id="fStatus"
+            name="fStatus"
+            required
+            className="block w-full px-3 py-1 bg-white border border-gray-300  shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            value={postFinancialData?.data?.fStatus || ""}
+            onChange={(e) => {
+              setPostFinancialData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  fStatus: e.target.value,
+                },
+              }));
+            }}
           >
-          <option value="" disabled>Select Status</option>
-          <option value="Active">Active</option> 
-          <option value="Inactive">Inactive</option>
-          <option value="Progress">Progress</option>
+            <option value="" disabled>Select Status</option>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Progress">Progress</option>
           </select>
-          
-          </div>
+
+        </div>
 
 
         <div className="flex items-center">
           <input
-          type="checkbox" 
-          name="visibleOnStartUp"
-          className="ti-form-checkbox" 
-          id="visibleOnStartUp"
-          checked={postFinancialData?.data.visibleOnStartUp} 
-          onChange={(e) => {
-          setPostFinancialData((prev) => ({
-          ...prev,
-          data: {
-            ...prev.data,
-            visibleOnStartUp: e.target.checked, 
-          },
-          }));
-          }}
+            type="checkbox"
+            name="visibleOnStartUp"
+            className="ti-form-checkbox"
+            id="visibleOnStartUp"
+            checked={postFinancialData?.data.visibleOnStartUp}
+            onChange={(e) => {
+              setPostFinancialData((prev) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  visibleOnStartUp: e.target.checked,
+                },
+              }));
+            }}
           />
-        <label
-          htmlFor="switcher-dark-theme"
-          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-        >
-         Visible On StartUp
-        </label>
+          <label
+            htmlFor="switcher-dark-theme"
+            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+          >
+            Visible On StartUp
+          </label>
+        </div>
       </div>
-      </div> 
       <div className="w-full p-2 flex justify-end">
         <ERPButton
           type="reset"
           title="Cancel"
           variant="secondary"
           onClick={onClose}
-          // disabled={emailLoading}
+        // disabled={emailLoading}
         ></ERPButton>
         <ERPButton
           type="button"
@@ -194,6 +193,6 @@ export const FinancialYearManage = () => {
         ></ERPButton>
       </div>
     </div>
- 
+
   );
 };

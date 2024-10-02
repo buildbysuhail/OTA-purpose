@@ -87,21 +87,19 @@ const InvTransaction = () => {
         <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
         <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
           <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${
-              activeButton === "credit"
+            className={`px-4 py-2 text-sm transition-colors duration-200 ${activeButton === "credit"
                 ? " bg-green text-white rounded-full"
                 : "bg-transparent text-zinc rounded-full"
-            }`}
+              }`}
             onClick={() => setActiveButton("credit")}
           >
             Credit
           </button>
           <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${
-              activeButton === "cash"
+            className={`px-4 py-2 text-sm transition-colors duration-200 ${activeButton === "cash"
                 ? "bg-green text-white rounded-full"
                 : "bg-transparent text-zinc rounded-full"
-            }`}
+              }`}
             onClick={() => setActiveButton("cash")}
           >
             Cash
@@ -140,7 +138,7 @@ const InvTransaction = () => {
           </label>
           <div className="relative">
             <input type="date" name="" id=""
-            className="border-none" />
+              className="border-none" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               {/* <DatePicker
                 renderInput={(params) => (
@@ -249,7 +247,7 @@ const InvTransaction = () => {
                 className="ri-add-circle-fill pr-2"
                 style={{ fontSize: "18px" }}
               ></i>
-              <div className="mr-2 text-amber-700" 
+              <div className="mr-2 text-amber-700"
               // size={16}
               >
                 {" "}
@@ -264,7 +262,7 @@ const InvTransaction = () => {
             <ERPButton
               title="Save & New"
               onClick={() => {
-                // deleteWorkspacePopup();
+                // deleteWorkspacePopup({isOpen: false});
               }}
               variant="primary"
               className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
@@ -276,7 +274,7 @@ const InvTransaction = () => {
             <ERPButton
               title="Save"
               onClick={() => {
-                // deleteWorkspacePopup();
+                // deleteWorkspacePopup({isOpen: false});
               }}
               variant="primary"
               className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
@@ -426,7 +424,7 @@ const InvTransaction = () => {
                     <ERPButton
                       title="Save"
                       onClick={() => {
-                        // deleteWorkspacePopup();
+                        // deleteWorkspacePopup({isOpen: false});
                       }}
                       variant="primary"
                       className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"

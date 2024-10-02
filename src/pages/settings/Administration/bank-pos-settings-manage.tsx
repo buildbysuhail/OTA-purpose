@@ -12,7 +12,7 @@ import Urls from "../../../redux/urls";
 const BankPosSettingsManage = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleBankPosPopup(false));
+    dispatch(toggleBankPosPopup({ isOpen: false }));
   }, []);
 
   const initialData = {
@@ -45,7 +45,7 @@ const BankPosSettingsManage = () => {
     handleResponse(
       response,
       () => {
-        dispatch(toggleBankPosPopup(false));
+        dispatch(toggleBankPosPopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({
@@ -80,8 +80,8 @@ const BankPosSettingsManage = () => {
             defaultData={postData?.data}
             value={
               postData != undefined &&
-              postData?.data != undefined &&
-              postData?.data?.machineBrand != undefined
+                postData?.data != undefined &&
+                postData?.data?.machineBrand != undefined
                 ? postData?.data?.machineBrand
                 : 0
             }
@@ -108,8 +108,8 @@ const BankPosSettingsManage = () => {
             defaultData={postData?.data}
             value={
               postData != undefined &&
-              postData?.data != undefined &&
-              postData?.data?.model != undefined
+                postData?.data != undefined &&
+                postData?.data?.model != undefined
                 ? postData?.data?.model
                 : 0
             }
@@ -136,8 +136,8 @@ const BankPosSettingsManage = () => {
             defaultData={postData?.data}
             value={
               postData != undefined &&
-              postData?.data != undefined &&
-              postData?.data?.comPort != undefined
+                postData?.data != undefined &&
+                postData?.data?.comPort != undefined
                 ? postData?.data?.comPort
                 : 0
             }
@@ -156,7 +156,7 @@ const BankPosSettingsManage = () => {
               }));
             }}
             value={postData?.data?.geldeaWsPort}
-            //   validation={postData?.validations?.geldeaWsPort}
+          //   validation={postData?.validations?.geldeaWsPort}
           />
           <ERPInput
             id="gediaService"
@@ -171,7 +171,7 @@ const BankPosSettingsManage = () => {
               }));
             }}
             value={postData?.data?.gediaService}
-            //   validation={postData?.validations?.gediaService}
+          //   validation={postData?.validations?.gediaService}
           />
         </div>
         {/* Buttons */}

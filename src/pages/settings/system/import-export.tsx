@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 const ImportExportManage = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleImportExportPopup(false));
+    dispatch(toggleImportExportPopup({ isOpen: false }));
   }, []);
   const initialData = {
     data: {
@@ -40,23 +40,23 @@ const ImportExportManage = () => {
 
   const Import = useCallback(async () => {
 
-      setPostDataLoading(true);
-      window.alert(JSON.stringify(postData.data, null, 2));
-      // const response: ResponseModelWithValidation<any, any> =
-      //   await AdministrationSettingsApis.addDeleteInactiveTransaction(postData?.data);
-      setPostDataLoading(false);
-      // handleResponse(
-      //   response,
-      //   () => {
-      //     dispatch(toggleDeleteInactiveTransactionPopup(false));
-      //   },
-      //   () => {
-      //     setPostData((prevData: any) => ({
-      //       ...prevData,
-      //       validations: response.validations,
-      //     }));
-      //   }
-      // );
+    setPostDataLoading(true);
+    window.alert(JSON.stringify(postData.data, null, 2));
+    // const response: ResponseModelWithValidation<any, any> =
+    //   await AdministrationSettingsApis.addDeleteInactiveTransaction(postData?.data);
+    setPostDataLoading(false);
+    // handleResponse(
+    //   response,
+    //   () => {
+    //     dispatch(toggleDeleteInactiveTransactionPopup({isOpen: false}));
+    //   },
+    //   () => {
+    //     setPostData((prevData: any) => ({
+    //       ...prevData,
+    //       validations: response.validations,
+    //     }));
+    //   }
+    // );
 
   }, [postData?.data]);
 

@@ -38,7 +38,7 @@ export const RemainderManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const onClose = useCallback(async () => {
-    dispatch(toggleRemainderPopup(false));
+    dispatch(toggleRemainderPopup({ isOpen: false }));
   }, []);
   const initialUserTypeData = {
     data: {
@@ -70,7 +70,7 @@ export const RemainderManage = () => {
     handleResponse(
       response,
       () => {
-        dispatch(toggleRemainderPopup(false));
+        dispatch(toggleRemainderPopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({
@@ -145,7 +145,7 @@ export const RemainderManage = () => {
         />
         <ERPDateInput
           id="remaindingDate"
-          field={{ type: "date", id:"remaindingDate", required: true }}
+          field={{ type: "date", id: "remaindingDate", required: true }}
           label={"From"}
           data={postData?.data}
           handleChange={(id: any, value: any) => {
@@ -182,7 +182,7 @@ export const RemainderManage = () => {
           title="Cancel"
           variant="secondary"
           onClick={onClose}
-          // disabled={emailLoading}
+        // disabled={emailLoading}
         ></ERPButton>
         <ERPButton
           type="button"

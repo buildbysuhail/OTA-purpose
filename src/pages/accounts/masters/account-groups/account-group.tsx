@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { toggleAccountTypePopup } from "../../../../redux/slices/popup-reducer";
+import { popupDataProps, toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
@@ -49,8 +49,8 @@ const AccountGroupType = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{ type: "popup", action: () => toggleAccountTypePopup(cellInfo?.data?.id) }}
+          view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -72,7 +72,7 @@ const AccountGroupType = () => {
                   gridHeader="Account Group"
                   dataUrl={Urls.account_group}
                   gridId="grd_user_type"
-                  popupAction={toggleAccountTypePopup}
+                  popupAction={toggleAccountGroupPopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
@@ -82,12 +82,12 @@ const AccountGroupType = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.accountType}
+        isOpen={rootState.PopupData.accountGroup.isOpen || false}
         title={"Add New UserType"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleAccountTypePopup(false));
+          dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
         }}
         content={<AccountGroupManage />}
       />

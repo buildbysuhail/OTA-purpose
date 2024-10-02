@@ -14,7 +14,7 @@ import SystemSettingsApi from "./system-apis";
 const DayCloseManage = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleDayClosePopup(false));
+    dispatch(toggleDayClosePopup({ isOpen: false }));
   }, []);
 
   const initialData = {
@@ -31,7 +31,7 @@ const DayCloseManage = () => {
       isPurchase: "",
       isAccounts: "",
       passWord: "",
-      isAgree:""
+      isAgree: ""
     },
   };
   const [postData, setPostData] = useState(initialData);
@@ -39,36 +39,36 @@ const DayCloseManage = () => {
   const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
 
   const onSubmit = useCallback(async () => {
-   
-if(isAgree){
-   setPostDataLoading(true);
-    const response: ResponseModelWithValidation<any, any> =
-      await  SystemSettingsApi.addDayColsInfo(postData?.data);
 
-    setPostDataLoading(false);
+    if (isAgree) {
+      setPostDataLoading(true);
+      const response: ResponseModelWithValidation<any, any> =
+        await SystemSettingsApi.addDayColsInfo(postData?.data);
 
-    handleResponse(
-      response,
-      () => {
-        dispatch(toggleDayClosePopup(false));
-      },
-      () => {
-        setPostData((prevData: any) => ({
-          ...prevData,
-          validations: response.validations,
-        }));
-      }
-    );
-  } else {
-    setPostData((prevData: any) => ({
-      ...prevData,
-      validations: {
-        ...prevData.validations,
-        isAgree: "You must agree to close the transactions till the date mentioned.",
-      },
-    }));
-  }
-  }, [isAgree,postData?.data]);
+      setPostDataLoading(false);
+
+      handleResponse(
+        response,
+        () => {
+          dispatch(toggleDayClosePopup({ isOpen: false }));
+        },
+        () => {
+          setPostData((prevData: any) => ({
+            ...prevData,
+            validations: response.validations,
+          }));
+        }
+      );
+    } else {
+      setPostData((prevData: any) => ({
+        ...prevData,
+        validations: {
+          ...prevData.validations,
+          isAgree: "You must agree to close the transactions till the date mentioned.",
+        },
+      }));
+    }
+  }, [isAgree, postData?.data]);
 
   return (
     <>
@@ -107,7 +107,7 @@ if(isAgree){
           />
         </div>
         <div className="flex justify-around items-center mt-4 ">
-            <div className="flex items-center">
+          <div className="flex items-center">
             <input
               type="checkbox"
               name="isSale"
@@ -130,9 +130,9 @@ if(isAgree){
             >
               Sales
             </label>
-            </div>
+          </div>
 
-            <div className="flex items-center">
+          <div className="flex items-center">
             <input
               type="checkbox"
               name="isPurchase"
@@ -155,9 +155,9 @@ if(isAgree){
             >
               Purchase
             </label>
-            </div>
+          </div>
 
-            <div className="flex items-center">
+          <div className="flex items-center">
             <input
               type="checkbox"
               name="isAccounts"
@@ -180,10 +180,10 @@ if(isAgree){
             >
               Accounts
             </label>
-            </div>
           </div>
+        </div>
 
-          <div className="flex justify-start items-center mt-4">
+        <div className="flex justify-start items-center mt-4">
           <input
             type="checkbox"
             name="isAgree"
@@ -191,7 +191,7 @@ if(isAgree){
             id="isAgree"
             checked={isAgree}
             onChange={(e) => {
-             setIsAgree(e.target.checked);
+              setIsAgree(e.target.checked);
             }}
           />
           <label

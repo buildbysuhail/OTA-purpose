@@ -3,7 +3,7 @@ import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleRemainderPopup} from "../../../redux/slices/popup-reducer";
+import { toggleRemainderPopup } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
@@ -59,7 +59,7 @@ const Remainders = () => {
       allowFiltering: true,
       minWidth: 150,
     },
-  
+
     {
       dataField: "actions",
       caption: "Actions",
@@ -103,14 +103,14 @@ const Remainders = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.reminder}
+        isOpen={rootState.PopupData.reminder.isOpen || false}
         title={"Remainders"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleRemainderPopup(false));
+          dispatch(toggleRemainderPopup({ isOpen: false }));
         }}
-        content={<RemainderManage/>}
+        content={<RemainderManage />}
       />
     </Fragment>
   );

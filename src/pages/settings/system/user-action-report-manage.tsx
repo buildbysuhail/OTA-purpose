@@ -13,7 +13,7 @@ import Urls from "../../../redux/urls";
 const UserActionReport = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleUserActionPopup(false));
+    dispatch(toggleUserActionPopup({ isOpen: false }));
   }, []);
   const initialData = {
     data: {
@@ -34,7 +34,7 @@ const UserActionReport = () => {
     },
   };
   const [postData, setPostData] = useState(initialData);
-  const[allUserSelect,setAllUserSelect] = useState<boolean>(false)
+  const [allUserSelect, setAllUserSelect] = useState<boolean>(false)
   const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
 
   const userActionReport = useCallback(async () => {
@@ -43,11 +43,11 @@ const UserActionReport = () => {
     // const response: ResponseModelWithValidation<any, any> =
     //   await SystemSettingsApi.postUserActionReport(postData?.data);
     setPostDataLoading(false);
-    dispatch(toggleUserActionPopup(false));
+    dispatch(toggleUserActionPopup({ isOpen: false }));
     // handleResponse(
     //   response,
     //   () => {
-    //     dispatch(toggleUserActionPopup(false));
+    //     dispatch(toggleUserActionPopup({isOpen: false}));
     //   },
     //   () => {
     //     setPostData((prevData: any) => ({
@@ -93,7 +93,7 @@ const UserActionReport = () => {
           }}
           validation={postData.validations.dateTo}
         />
-         <ERPDataCombobox
+        <ERPDataCombobox
           id="action"
           field={{
             id: "action",
@@ -113,14 +113,14 @@ const UserActionReport = () => {
           defaultData={postData?.data}
           value={
             postData != undefined &&
-            postData?.data != undefined &&
-            postData?.data?.action != undefined
+              postData?.data != undefined &&
+              postData?.data?.action != undefined
               ? postData?.data?.action
               : 0
           }
           label="Action"
         />
-       
+
         <ERPDataCombobox
           id="transactionType"
           field={{
@@ -141,14 +141,14 @@ const UserActionReport = () => {
           defaultData={postData?.data}
           value={
             postData != undefined &&
-            postData?.data != undefined &&
-            postData?.data?.transactionType != undefined
+              postData?.data != undefined &&
+              postData?.data?.transactionType != undefined
               ? postData?.data?.transactionType
               : 0
           }
           label="Transaction Type"
         />
-       <div className="flex items-center">
+        <div className="flex items-center">
           <input
             type="radio"
             name="visibleOnStartUp"
@@ -186,8 +186,8 @@ const UserActionReport = () => {
           defaultData={postData?.data}
           value={
             postData != undefined &&
-            postData?.data != undefined &&
-            postData?.data?.userID != undefined
+              postData?.data != undefined &&
+              postData?.data?.userID != undefined
               ? postData?.data?.userID
               : 0
           }

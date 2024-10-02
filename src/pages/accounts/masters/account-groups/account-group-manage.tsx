@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { toggleAccountTypePopup } from "../../../../redux/slices/popup-reducer";
+import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
@@ -24,11 +24,11 @@ export const AccountGroupManage = () => {
     isLoading
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: () => dispatch(toggleAccountTypePopup(false))
+    onSuccess: () => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }))
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleAccountTypePopup(false));
+    dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
   }, []);
 
   return (

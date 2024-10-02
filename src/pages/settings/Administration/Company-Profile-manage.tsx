@@ -12,7 +12,7 @@ import Urls from "../../../redux/urls";
 const CompanyProfileManage = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleCompanyProfilePopup(false));
+    dispatch(toggleCompanyProfilePopup({ isOpen: false }));
   }, []);
 
   const initialData = {
@@ -79,7 +79,7 @@ const CompanyProfileManage = () => {
     handleResponse(
       response,
       () => {
-        dispatch(toggleCompanyProfilePopup(false));
+        dispatch(toggleCompanyProfilePopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({

@@ -171,12 +171,12 @@ const Users = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.user}
+        isOpen={rootState.PopupData.user.isOpen || false}
         title={"Add New User"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserPopup(false));
+          dispatch(toggleUserPopup({ isOpen: false }));
         }}
         content={<UserManage />}
       />

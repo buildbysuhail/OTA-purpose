@@ -16,7 +16,7 @@ import Urls from "../../../redux/urls";
 const BranchManage = () => {
   const dispatch = useDispatch();
   const onClose = useCallback(async () => {
-    dispatch(toggleBranchPopup(false));
+    dispatch(toggleBranchPopup({ isOpen: false }));
   }, []);
 
   const initialData = {
@@ -88,7 +88,7 @@ const BranchManage = () => {
     handleResponse(
       response,
       () => {
-        dispatch(toggleCompanyProfilePopup(false));
+        dispatch(toggleCompanyProfilePopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({

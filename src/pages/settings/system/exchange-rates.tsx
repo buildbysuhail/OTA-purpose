@@ -18,7 +18,7 @@ const ExchangeRates = () => {
     validations: { baseCurrency: "" },
   };
   const [postData, setPostData] = useState(initialUserTypeData);
-  const [postDataLoading,setPostDataLoading] =useState(false)
+  const [postDataLoading, setPostDataLoading] = useState(false)
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -64,7 +64,7 @@ const ExchangeRates = () => {
       allowFiltering: true,
       minWidth: 150,
     },
-  
+
     {
       dataField: "actions",
       caption: "Actions",
@@ -96,7 +96,7 @@ const ExchangeRates = () => {
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-4 my-4">
-                
+
                 <ERPDataCombobox
                   id="baseCurrency"
                   field={{
@@ -117,18 +117,18 @@ const ExchangeRates = () => {
                   defaultData={postData?.data}
                   value={postData?.data.baseCurrency}
                   label="Base Currency"
-                 
+
                 />
-               <div className="sm:mt-0 mt-4 flex justify-center sm:justify-start items-end">
-                <ERPButton
-                  type="button"
-                  disabled={postDataLoading}
-                  variant="primary"
-                //   onClick={handleSubmit}
-                  loading={postDataLoading}
-                  title={"Load"}
-                ></ERPButton>
-             </div>
+                <div className="sm:mt-0 mt-4 flex justify-center sm:justify-start items-end">
+                  <ERPButton
+                    type="button"
+                    disabled={postDataLoading}
+                    variant="primary"
+                    //   onClick={handleSubmit}
+                    loading={postDataLoading}
+                    title={"Load"}
+                  ></ERPButton>
+                </div>
               </div>
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
@@ -146,14 +146,14 @@ const ExchangeRates = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.currencyExchange}
+        isOpen={rootState.PopupData.currencyExchange.isOpen||false}
         title={"Currencies"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCurrencyExchangePopup(false));
+          dispatch(toggleCurrencyExchangePopup({ isOpen: false }));
         }}
-          content={<CurrencyExchangeManage/>}
+        content={<CurrencyExchangeManage />}
       />
     </Fragment>
   );

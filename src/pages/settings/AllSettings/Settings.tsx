@@ -20,7 +20,7 @@ import {
 
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
-const BankPosSettingsManage = lazy( () => import("../Administration/bank-pos-settings-manage"));
+const BankPosSettingsManage = lazy(() => import("../Administration/bank-pos-settings-manage"));
 const BranchManage = lazy(() => import("../Administration/branches-manage"));
 const DayCloseManage = lazy(() => import("../system/day-close-manage"));
 const UserActionReport = lazy(() => import("../system/user-action-report-manage"));
@@ -51,95 +51,95 @@ const Settings = () => {
       </div>
 
       <ERPModal
-        isOpen={rootState.PopupData.deleteInactiveTransactions}
+        isOpen={rootState.PopupData.deleteInactiveTransactions.isOpen || false}
         title={"Delete In Active Transactions"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleDeleteInactiveTransactionPopup(false));
+          dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false }));
         }}
         content={<DeleteInactiveTransactionManage />}
       />
       <ERPModal
-        isOpen={rootState.PopupData.companyProfile}
+        isOpen={rootState.PopupData.companyProfile.isOpen || false}
         title={"Company Profile"}
         width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCompanyProfilePopup(false));
+          dispatch(toggleCompanyProfilePopup({ isOpen: false }));
         }}
         content={<CompanyProfileManage />}
       />
       <ERPModal
-        isOpen={rootState.PopupData.bankPos}
+        isOpen={rootState.PopupData.bankPos.isOpen || false}
         title={"Bank POS settings"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleBankPosPopup(false));
+          dispatch(toggleBankPosPopup({ isOpen: false }));
         }}
         content={<BankPosSettingsManage />}
       />
       <ERPModal
-        isOpen={rootState.PopupData.branch}
+        isOpen={rootState.PopupData.branch.isOpen || false}
         title={"Branch Info"}
         width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleBranchPopup(false));
+          dispatch(toggleBranchPopup({ isOpen: false }));
         }}
         content={<BranchManage />}
       />
       <ERPModal
-        isOpen={rootState.PopupData.dayClose}
+        isOpen={rootState.PopupData.dayClose.isOpen || false}
         title={"Day Close"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleDayClosePopup(false));
+          dispatch(toggleDayClosePopup({ isOpen: false }));
         }}
         content={<DayCloseManage />}
       />
       <ERPModal
-        isOpen={rootState.PopupData.userActionReport}
+        isOpen={rootState.PopupData.userActionReport.isOpen || false}
         title="User Action Report"
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserActionPopup(false));
+          dispatch(toggleUserActionPopup({ isOpen: false }));
         }}
-        content={<UserActionReport/>}
+        content={<UserActionReport />}
       />
       <ERPModal
-        isOpen={rootState.PopupData.importExport}
+        isOpen={rootState.PopupData.importExport.isOpen || false}
         title="Import Export"
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleImportExportPopup(false));
+          dispatch(toggleImportExportPopup({ isOpen: false }));
         }}
-        content={<ImportExportManage/>}
+        content={<ImportExportManage />}
       />
-       <ERPModal
-        isOpen={rootState.PopupData.resetDataBase}
+      <ERPModal
+        isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title="Reset DataBase"
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleResetDataBasePopup(false));
+          dispatch(toggleResetDataBasePopup({ isOpen: false }));
         }}
-        // content={<ImportExportManage/>}
+      // content={<ImportExportManage/>}
       />
-  
-       <ERPModal
-        isOpen={rootState.PopupData.commands}
-        title= "Sql Commands"
+
+      <ERPModal
+        isOpen={rootState.PopupData.commands.isOpen || false}
+        title="Sql Commands"
         width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCommandsPopup(false));
+          dispatch(toggleCommandsPopup({ isOpen: false }));
         }}
-        content={<CommandsManage/>}
+        content={<CommandsManage />}
       />
     </Fragment>
   );

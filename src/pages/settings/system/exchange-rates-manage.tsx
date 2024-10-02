@@ -38,7 +38,7 @@ export const CurrencyExchangeManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const onClose = useCallback(async () => {
-    dispatch(toggleCurrencyExchangePopup(false));
+    dispatch(toggleCurrencyExchangePopup({ isOpen: false }));
   }, []);
   const initialUserTypeData = {
     data: {
@@ -74,7 +74,7 @@ export const CurrencyExchangeManage = () => {
     handleResponse(
       response,
       () => {
-        dispatch(toggleCurrencyExchangePopup(false));
+        dispatch(toggleCurrencyExchangePopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({
@@ -137,8 +137,8 @@ export const CurrencyExchangeManage = () => {
           defaultData={postData?.data}
           value={
             postData != undefined &&
-            postData?.data != undefined &&
-            postData?.data?.countryID != undefined
+              postData?.data != undefined &&
+              postData?.data?.countryID != undefined
               ? postData?.data?.countryID
               : 0
           }
@@ -204,7 +204,7 @@ export const CurrencyExchangeManage = () => {
           value={postData?.data?.subUnit}
           validation={postData?.validations?.subUnit}
         />
-          <ERPInput
+        <ERPInput
           id="subUnitSymbol"
           label="SubUnit Symbol"
           placeholder="subUnit Symbol"
@@ -219,7 +219,7 @@ export const CurrencyExchangeManage = () => {
           value={postData?.data?.subUnitSymbol}
           validation={postData?.validations?.subUnitSymbol}
         />
-          
+
       </div>
 
       <div className="w-full p-2 flex justify-end">
@@ -228,7 +228,7 @@ export const CurrencyExchangeManage = () => {
           title="Cancel"
           variant="secondary"
           onClick={onClose}
-          // disabled={emailLoading}
+        // disabled={emailLoading}
         ></ERPButton>
         <ERPButton
           type="button"

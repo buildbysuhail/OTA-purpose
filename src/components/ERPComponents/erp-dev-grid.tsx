@@ -42,6 +42,7 @@ import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import ERPButton from "./erp-button";
 import { AppDispatch } from "../../redux/store";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
+import { useTranslation } from "react-i18next";
 
 interface ERPDevGridProps {
   columns: DevGridColumn[];
@@ -79,7 +80,7 @@ interface ERPDevGridProps {
   hideGridAddButton?: boolean;
   gridAddButtonType?: "link" | "popup";
   gridAddButtonIcon?: string | "";
-  gridAddButtonText?: string | "Add"
+  gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
   heightToAdjustOnMobile?: number;
   popupAction: (value: popupDataProps) => { type: string; payload: popupDataProps };
@@ -231,6 +232,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   initialPreferences,
   paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
 }) => {
+  const {t}=useTranslation();
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
@@ -241,7 +243,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
   useEffect(() => {
-    console.log('height');
+    
+    gridAddButtonText = "Add" ?? t("add");
 
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile

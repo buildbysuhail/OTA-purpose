@@ -65,8 +65,8 @@
   "no-account": "Don't have an account?",
   "sign-up": "Sign up",
   "free-signup": "for a free trial.",
-  "email": "email",
-  "password": "password",
+  "email": "Email",
+  "password": "Password",
   "login": "login",
   "remember-me": "remember me",
   "forgot-password": "Forgot password",
@@ -113,6 +113,7 @@
   "go-to-home": "Go to <0>the home page</0>",
   "change-username": "Change your username:",
   "submit": "Submit",
+<<<<<<< HEAD
   "Email or Phone or Username": "Email or Phone or Username",
   "Add": "Add",
   "User Type": "User Type ",
@@ -131,9 +132,35 @@
   "Created Date": "Created Date",
   "Modified User": "Modified User",
   "Modified Date": "Modified Date",
-  "Reason For Modidification": "Reason For Modidification",
+  "Reason For Modification": "Reason For Modification",
   "Parent Group Id": "Parent Group Id",
   "Arabic Name": "Arabic Name",
   "Display Order": "Display Order",
   "Actions": "Actions"
 }
+=======
+  "email-phone-username": "Email or Phone or Username",
+  "voucher":"Voucher",
+
+  "actions" : "Actions",
+  "users":"Users",
+  "si_no" : "SI",
+  "user" : "User",
+  "counter" : "Counter" ,
+  "user_type" : "User Type",
+  "created_user" : "Created User",
+  "created_date" : "Created Date",
+  "modified_user" : "Modified User",
+  "modified_date" : "Modified Date",
+  "id" : "Id",
+  "employee_id" : "Employee ID",
+  "employee_name" : "Employee Name",
+  "max_disc_perc_allowed" : "maxDiscPercAllowed",
+  "passkey" : "Passkey",
+  "code":"Code",
+  "remarks":"Remarks",
+
+  "add-new-usertype" : "Add New UserType",
+  "add-new-user" : "Add New User"
+}
+>>>>>>> 0056f8a74b8fa51350d4c638ea34aacf9a4172d8

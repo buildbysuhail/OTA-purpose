@@ -130,8 +130,8 @@ const AccountGroupType = () => {
       width: 80,
     },
     {
-      dataField: "reasonForModidication",
-      caption: t("Reason For Modidification"),
+      dataField: "reasonForModification",
+      caption: t("Reason For Modification"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

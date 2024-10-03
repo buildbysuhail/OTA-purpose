@@ -9,16 +9,15 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { UserTypeManage } from "./user-type-manage";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import { useTranslation } from "react-i18next";
+import { UserManage } from "./user-manage";
 
-const Users = () => {
-  const {t}=useTranslation();
+const Users1 = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
-      caption: t("si_no"),
+      caption: "SiNo",
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -27,7 +26,7 @@ const Users = () => {
     },
     {
       dataField: "user",
-      caption: t("user"),
+      caption: "User",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -35,7 +34,7 @@ const Users = () => {
     },
     {
       dataField: "password",
-      caption: t("password"),
+      caption: "Password",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -43,7 +42,7 @@ const Users = () => {
     },
     {
       dataField: "counter",
-      caption: t("counter"),
+      caption: "Counter",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -51,7 +50,7 @@ const Users = () => {
     },
     {
       dataField: "userType",
-      caption: t("user_type"),
+      caption: "UsersType",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -59,7 +58,7 @@ const Users = () => {
     },
     {
       dataField: "createdUser",
-      caption: t("created_user"),
+      caption: "Created User",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -67,7 +66,7 @@ const Users = () => {
     },
     {
       dataField: "createdDate",
-      caption: t("created_date"),
+      caption: "Created Date",
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -75,7 +74,7 @@ const Users = () => {
     },
     {
       dataField: "modifiedUser",
-      caption: t("modified_user"),
+      caption: "Modified User",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -83,7 +82,7 @@ const Users = () => {
     },
     {
       dataField: "modifiedDate",
-      caption: t("modified_date"),
+      caption: "Modified Date",
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -91,7 +90,7 @@ const Users = () => {
     },
     {
       dataField: "id",
-      caption: t("id"),
+      caption: "Id",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -99,7 +98,7 @@ const Users = () => {
     },
     {
       dataField: "employeeID",
-      caption: t("employee_id"),
+      caption: "Employee ID",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -107,7 +106,7 @@ const Users = () => {
     },
     {
       dataField: "employeeName",
-      caption: t("employee_name"),
+      caption: "Employee Name",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -115,7 +114,7 @@ const Users = () => {
     },
     {
       dataField: "maxDiscPercAllowed",
-      caption: t("max_disc_perc_allowed"),
+      caption: "maxDiscPercAllowed",
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -123,7 +122,7 @@ const Users = () => {
     },
     {
       dataField: "passkey",
-      caption: t("passkey"),
+      caption: "Passkey",
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -131,7 +130,7 @@ const Users = () => {
     },
     {
       dataField: "actions",
-      caption: t("actions"),
+      caption: "Actions",
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -139,7 +138,7 @@ const Users = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
+          view={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
           edit={{ type: "popup", action: () => toggleUserTypePopup(cellInfo?.data?.id) }}
           delete={{
             confirmationRequired: true,
@@ -159,7 +158,7 @@ const Users = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
                   columns={columns}
-                  gridHeader={t("users")}
+                  gridHeader="User"
                   dataUrl={Urls.Users}
                   gridId="grd_user"
                   popupAction={toggleUserPopup}
@@ -173,16 +172,21 @@ const Users = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.user.isOpen || false}
-        title={t("add-new-user")}
+        title={"Add New User"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleUserPopup({ isOpen: false }));
         }}
-        content={<UserTypeManage />}
+        content={<UserManage />}
       />
     </Fragment>
   );
 };
 
-export default Users;
+export default Users1;
+
+
+
+
+

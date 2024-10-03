@@ -9,7 +9,7 @@ import {
   UserIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline";
-import {toggleBankPosPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
+import {toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
         toggleDayClosePopup, 
         toggleDeleteInactiveTransactionPopup, 
         toggleImportExportPopup, 
@@ -109,6 +109,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/system/refresh-all-branches`, type: 'link', active: false, selected: false, title: 'Refresh All Branches' },
       {action:toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'Day Close' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/advance-options`, type: 'link', active: false, selected: false, title: 'Advance Options' },
+      {action:toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'Authorization Settings' },
     ]
   },
 ];

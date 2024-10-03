@@ -17,7 +17,7 @@ const AccountGroupType = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "s.No",
-      caption: t("S.No"),
+      caption: t("SiNo"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,

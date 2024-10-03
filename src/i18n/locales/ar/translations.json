@@ -150,5 +150,7 @@
      "descriptions":"الأوصاف",
      "SiNo":"رقم سري",
      "ledger_name":"اسم دفتر الأستاذ",
-     "voucher_prefix":"بادئة القسيمة"
+     "voucher_prefix":"بادئة القسيمة",
+     "employee":"موظف"
+
 }

@@ -139,7 +139,7 @@ data_company_id:"/Core/Branch/GetBranchData",
   userActionReport: "/Core/UserAction/",
   currencyExchange: "/Core/ExchangeRates",
   postCurrency: "/Accounts/Currency/",
-
+  authorization_settings:"/Core/Authorization",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

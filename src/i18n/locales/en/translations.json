@@ -141,5 +141,6 @@
   "descriptions":"Descriptions",
   "SiNo":"Serial No",
   "ledger_name":"ledger Name",
-  "voucher_prefix":"Voucher Prefix"
+  "voucher_prefix":"Voucher Prefix",
+ "employee":"Employee"
 }

@@ -8,4 +8,5 @@ export const FORM_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.UserTypes, initialData: initialDataUserType},
   { url: Urls.account_group, initialData: initialDataUser },
   { url: Urls.account_ledger, initialData: initialDataUser },
+  
 ] as const;

@@ -3,9 +3,11 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { useTranslation } from "react-i18next";
 
 const SettingsCard = ({ data }: any) => {
   const navigate = useNavigate();
+  const {t}=useTranslation();
   const dispatch = useAppDispatch()
   const columns = Math.max(1, data.columns || 1);
   const children = data.children || [];
@@ -28,7 +30,7 @@ const SettingsCard = ({ data }: any) => {
       <div className="flex flex-col gap-5">
         <div className="flex gap-2 items-center">
           {/* <data.icon className="w-4 aspect-square stroke-gray-600" /> */}
-          <p className="text-sm font-medium">{data?.title}</p>
+          <p className="text-sm font-medium">{t(data?.title)}</p>
         </div>
         <div className={`grid grid-cols-${data?.columns ? data?.columns : 1} gap-24`}>
         {distributedItems.map((columnItems: any, idx: number) => {
@@ -45,7 +47,7 @@ const SettingsCard = ({ data }: any) => {
                       }}
                       key={`JPKNE84_${routeIdx}`}
                     >
-                      {route?.title}
+                      {t(route?.title)}
                     </p>
                   );
                 })}

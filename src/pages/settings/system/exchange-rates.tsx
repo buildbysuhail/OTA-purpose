@@ -11,8 +11,10 @@ import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { CurrencyExchangeManage } from "./exchange-rates-manage";
+import { useTranslation } from "react-i18next";
 
 const ExchangeRates = () => {
+  const {t}=useTranslation()
   const initialUserTypeData = {
     data: { baseCurrency: 0 },
     validations: { baseCurrency: "" },
@@ -64,29 +66,29 @@ const ExchangeRates = () => {
       allowFiltering: true,
       minWidth: 150,
     },
-
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <ERPGridActions
-          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{
-            type: "popup",
-            action: () => toggleCurrencyExchangePopup(cellInfo?.data?.id),
-          }}
-          delete={{
-            confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
-          }}
-        />
-      ),
+      cellRender: (cellElement: any) => {
+        debugger;
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action:toggleCurrencyExchangePopup}}
+            edit={{ type: "popup", action: toggleCurrencyExchangePopup}}
+            delete={{
+              confirmationRequired: true,
+              confirmationMessage: "Are you sure you want to delete this item?",
+              // action: () => handleDelete(cellInfo?.data?.id),
+            }}
+            itemId={cellElement?.data?.userTypeCode || ""}
+          />
+        )
+      }
     },
   ];
   return (
@@ -95,14 +97,14 @@ const ExchangeRates = () => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="box custom-box">
             <div className="box-body">
-              <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-4 my-4">
-
+              <div className="grid grid-cols-1 sm:grid-cols-2 justify-start items-center gap-4 my-4">
+                <div>
                 <ERPDataCombobox
                   id="baseCurrency"
                   field={{
                     id: "baseCurrency",
                     required: true,
-                    // getListUrl: Urls.base_currency,
+                    getListUrl: Urls. data_base_currency,
                     valueKey: "currencyID",
                     labelKey: "currencyName",
                   }}
@@ -119,7 +121,8 @@ const ExchangeRates = () => {
                   label="Base Currency"
 
                 />
-                <div className="sm:mt-0 mt-4 flex justify-center sm:justify-start items-end">
+                </div>
+                <div className="translate-y-2">
                   <ERPButton
                     type="button"
                     disabled={postDataLoading}

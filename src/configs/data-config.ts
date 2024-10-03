@@ -19,11 +19,12 @@ export const DATA_ENDPOINTS: ApiEndpoint[] = [
    { url: Urls.data_privilage_cards, method: ActionType.GET as const },
    { url: Urls.data_projects, method: ActionType.GET as const },
   { url: Urls.data_upis, method: ActionType.GET as const },
-  { url: Urls.data_user_types, method: ActionType.GET as const },
-  { url: Urls.data_employees, method: ActionType.GET as const },
+
   // settings
   { url: Urls.data_base_currency, method: ActionType.GET as const },
-
+  { url: Urls.data_company_id, method: ActionType.GET as const },
+  { url: Urls.data_user_types, method: ActionType.GET as const },
+  { url: Urls.data_employees, method: ActionType.GET as const },
   ////////
   { url: Urls.updateLanguage, method: ActionType.POST as const },
   { url: Urls.updateUserThemes, method: ActionType.POST as const },

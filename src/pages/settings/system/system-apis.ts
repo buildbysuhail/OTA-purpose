@@ -63,6 +63,16 @@ const SystemSettingsApi = {
       return '';
     }
   },
+
+  postAuthorizationSettings: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.authorization_settings,data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
 };
 
 export default SystemSettingsApi;

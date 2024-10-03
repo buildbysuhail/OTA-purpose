@@ -439,10 +439,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               allowSorting={column.allowSorting}
               allowSearch={column.allowSearch}
               allowFiltering={column.allowFiltering}
+              width={column.width}
               minWidth={column.minWidth}
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
-              width={column.width}
               cellRender={column.cellRender}
             />
           ))}

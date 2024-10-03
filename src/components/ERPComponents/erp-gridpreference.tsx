@@ -131,7 +131,6 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
       JSON.stringify(preferences)
     );
     setIsOpen(false);
-    debugger
     // Call the callback function to apply preferences
     onChange(preferences);
   };

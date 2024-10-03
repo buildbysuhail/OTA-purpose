@@ -2,63 +2,188 @@ import { Fragment } from "react";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { popupDataProps, toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
+import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { AccountGroupManage } from "./account-group-manage";
+import { useTranslation } from "react-i18next";
 
 const AccountGroupType = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "Account Group",
-      caption: "Account  Group",
+      dataField: "s.No",
+      caption: t("SiNo"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 50,
       isLocked: true,
     },
     {
-      dataField: "userTypeCode",
-      caption: "Code",
+      dataField: "id",
+      caption: t('Id'),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 50,
+    },
+    {
+      dataField: "accGroupName",
+      caption: t("Account Group"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "shortName",
+      caption: t("Short Name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "parentGroup",
+      caption: t("parent Group"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
     },
     {
       dataField: "remarks",
-      caption: "Remarks",
+      caption: t("Remarks"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 50,
+    },
+    {
+      dataField: "isEditable",
+      caption: t("Is Editable"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "isDeletable",
+      caption: t("Is Deletable"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "isProtected",
+      caption: t("Is Protected"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "isCommon",
+      caption: t("Is Common"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "createdUser",
+      caption: t("Created User"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "createdDate",
+      caption: t("Created Date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "modifiedUser",
+      caption: t("Modified User"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "modifiedDate",
+      caption: t("Modified Date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+    },
+    {
+      dataField: "reasonForModification",
+      caption: t("Reason For Modification"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "parentGroupId",
+      caption: t("Parent Group Id"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "arabicName",
+      caption: t("Arabic Name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "displayOrder",
+      caption: t("Display Order"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
     },
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("Actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <ERPGridActions
-          view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-          delete={{
-            confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
-          }}
-        />
-      ),
-    },
+      cellRender: (cellElement: any, cellInfo: any) => {
+        
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            delete={{
+              confirmationRequired: true,
+              confirmationMessage: "Are you sure you want to delete this item?",
+              // action: () => handleDelete(cellInfo?.data?.id),
+            }}
+          />
+        )
+      },
+      }
   ];
   return (
     <Fragment>
@@ -89,7 +214,7 @@ const AccountGroupType = () => {
         closeModal={() => {
           dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
         }}
-        content={<AccountGroupManage />}
+        content={<AccountGroupManage/>}
       />
     </Fragment>
   );

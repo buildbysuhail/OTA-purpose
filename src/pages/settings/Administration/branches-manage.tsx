@@ -79,16 +79,16 @@ const BranchManage = () => {
 
   const addBranch = useCallback(async () => {
     setPostDataLoading(true);
-
+    const { cId, ...filteredData } = postData?.data
     const response: ResponseModelWithValidation<any, any> =
-      await AdministrationSettingsApis.addCompanyProfileInfo(postData?.data);
+      await AdministrationSettingsApis.addBranchInfo(filteredData);
 
     setPostDataLoading(false);
 
     handleResponse(
       response,
       () => {
-        dispatch(toggleCompanyProfilePopup({ isOpen: false }));
+        dispatch(toggleBranchPopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({
@@ -102,7 +102,7 @@ const BranchManage = () => {
   return (
     <>
       <div className="w-full pt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <ERPInput
             id="id"
             label="Id"
@@ -124,24 +124,21 @@ const BranchManage = () => {
             field={{
               id: " companyID",
               required: true,
-              getListUrl: Urls.data_countries,
-              valueKey: "id",
-              labelKey: "name",
+              getListUrl: Urls.data_company_id,
+              valueKey: "companyID",
+              labelKey: "companyID",
             }}
             onChange={(data: any) => {
-              debugger;
+              
               setPostData((prev: any) => ({
                 ...prev,
-                data: {
-                  ...prev.data,
-                  companyID: data.id,
-                },
+                data: { ...prev.data, companyID: data.companyID },
               }));
             }}
             validation={postData?.validations?.companyID}
             data={postData?.data}
             defaultData={postData?.data.companyID}
-            value={postData?.data?.companyID}
+            value={postData != undefined && postData?.data != undefined && postData?.data?.companyID != undefined ? postData?.data?.companyID : 0}
             label=" companyID"
           />
 
@@ -292,7 +289,7 @@ const BranchManage = () => {
               labelKey: "name",
             }}
             onChange={(data: any) => {
-              debugger;
+              
               setPostData((prev: any) => ({
                 ...prev,
                 data: {

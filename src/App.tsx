@@ -39,7 +39,7 @@ export const LoadingAnimation = () => {
 };
 
 function App() {
-  debugger;
+  
   // const { appState, updateAppState } = useAppState();
   let api = new APIClient();
   const dispatch = useAppDispatch();

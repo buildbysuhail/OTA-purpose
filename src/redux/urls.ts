@@ -18,28 +18,44 @@ const Urls = {
   baseUrl: `${domain}/api`,
 
   // Dropdown - core
-  data_languages: "/settings/language/",
-  data_countries: "/Data/Countries/",
-  data_currencies: "/data/Currencies/",
-  data_industries: "/data/Industries/",
-  data_stock_valuation_methods: "/data/StockValuationMethods/",
-  data_salesRoute: "/data/SalesRoute/",
+  data_countries : "/Data/Countries/",
+  data_currencies : "/Data/Currencies/",
+  data_industries : "/Data/Industries/",
+  data_stock_valuation_methods : "/Data/StockValuationMethods/",
+  data_salesRoute : "/Data/SalesRoute/",
+  data_formtype : "/Data/FormType/",
+  data_warehouse : "/Data/Warehouse/",
+  data_employees : "/Data/Employee",
+  data_user_types : "/Data/UserType/",
+  data_duties_taxes : "/Data/Duties&Taxes/",
+  data_batchcriteria : "/Data/BatchCriteria/",
+  data_pricectegory : "/Data/PriceCategory/",
+  data_languages : "/Data/Language/",
 
   // Dropdown - accounts
-  data_acc_groups: "/Accounts/Data/AccGroups/",
-  data_acc_ledgers: "/Accounts/Data/AccLedgers/",
-  data_costcentres: "/Accounts/Data/CostCentres/",
-  data_parties: "/Accounts/Data/Parties/",
-  data_party_categories: "/Accounts/Data/PartyCategories/",
-  data_privilage_cards: "/Accounts/Data/PrivilageCards/",
-  data_projects: "/Accounts/Data/Projects/",
-  data_upis: "/Accounts/Data/UPIs/",
-  data_user_types: "/Data/UserType/",
-  data_employees: "/Data/Employee",
+  data_acc_groups : "/Accounts/Data/AccGroups/",
+  data_acc_ledgers : "/Accounts/Data/AccLedgers/",
+  data_costcentres : "/Accounts/Data/CostCentres/",
+  data_parties : "/Accounts/Data/Parties/",
+  data_party_categories : "/Accounts/Data/PartyCategories/",
+  data_privilage_cards : "/Accounts/Data/PrivilageCards/",
+  data_projects : "/Accounts/Data/Projects/{partyID}}",
+  data_upis : "/Accounts/Data/UPIs/",
+  data_bankcards : "/Accounts/Data/BankCards",
+  data_vouchertype : "/Accounts/Data/VoucherType",
+
+  // Dropdown - inventory
+  data_productgroup : "/Inventory/Data/ProductGroup",
+  data_products : "/Inventory/Data/Products",
+  data_brands : "/Inventory/Data/Brands",
+  data_color : "/Inventory/Data/Color",
+  data_warranty : "/Inventory/Data/Warranty",
+  data_sections : "/Inventory/Data/Sections",
+  data_groupcategory : "/Inventory/Data/GroupCategory",
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
-
+data_company_id:"/Core/Branch/GetBranchData",
   // Auth
   login: "/login/",
   logout: "/logout/",
@@ -117,13 +133,13 @@ const Urls = {
   //setting/system
   Counter: "/Core/Counter/",
   Voucher: "/Core/Vouchers/",
-  FinancialYear: "/Core/FinancialYear/",
+  FinancialYear: "/Core/FinancialYear",
   DayClose: "/Core/DayClose/DayClose/",
   Remainder: "/Core/Remainder/",
   userActionReport: "/Core/UserAction/",
   currencyExchange: "/Core/ExchangeRates",
   postCurrency: "/Accounts/Currency/",
-
+  authorization_settings:"/Core/Authorization",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

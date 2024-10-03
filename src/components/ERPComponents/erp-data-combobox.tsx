@@ -100,9 +100,9 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
   const listData = isPaginated ? dataList?.results : dataList;
 
   console.log(`ERPDataCombobox,  : data_list_data`, id, dataList);
-debugger;
+
   let getListAction = reduxManager.getTypedThunk(reducerName);
-  debugger;
+  
   useEffect(() => {
     if (!disabledApiCall) {
       field?.getListUrl && dispatch(getListAction({}) as any).unwrap();

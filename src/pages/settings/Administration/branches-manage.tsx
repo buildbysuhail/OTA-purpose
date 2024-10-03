@@ -129,7 +129,7 @@ const BranchManage = () => {
               labelKey: "name",
             }}
             onChange={(data: any) => {
-              debugger;
+              
               setPostData((prev: any) => ({
                 ...prev,
                 data: {
@@ -292,7 +292,7 @@ const BranchManage = () => {
               labelKey: "name",
             }}
             onChange={(data: any) => {
-              debugger;
+              
               setPostData((prev: any) => ({
                 ...prev,
                 data: {

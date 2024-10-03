@@ -2,9 +2,10 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
+import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 interface AccountGroupData {
   userTypeName: string;
@@ -13,18 +14,19 @@ interface AccountGroupData {
 }
 
 export const AccountGroupManage = () => {
+  const rootState = useRootState();
   const dispatch = useDispatch();
 
   const {
     isEdit,
-    formState,
     handleSubmit,
     handleFieldChange,
     getFieldProps,
     isLoading
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: () => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }))
+    onSuccess: () => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })),
+    key: rootState.PopupData.accountGroup.key
   });
 
   const onClose = useCallback(() => {
@@ -39,7 +41,7 @@ export const AccountGroupManage = () => {
           label="User Type Name"
           placeholder="User Type Name"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('accGroupName', data)}
+          onChangeData={(data: any) => {debugger;handleFieldChange('accGroupName', data)}}
         />
         <ERPInput
           {...getFieldProps('userTypeCode')}
@@ -56,23 +58,12 @@ export const AccountGroupManage = () => {
           onChangeData={(data: any) => handleFieldChange('remark', data)}
         />
       </div>
-
-      <div className="w-full p-2 flex justify-end">
-        <ERPButton
-          type="reset"
-          title="Cancel"
-          variant="secondary"
-          onClick={onClose}
-        />
-        <ERPButton
-          type="button"
-          disabled={isLoading}
-          variant="primary"
-          onClick={handleSubmit}
-          loading={isLoading}
-          title={isEdit ? 'Update' : 'Submit'}
-        />
-      </div>
+      <ERPFormButtons
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={onClose}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };

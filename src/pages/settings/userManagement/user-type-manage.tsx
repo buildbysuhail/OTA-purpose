@@ -53,7 +53,7 @@ export const UserTypeManage = ({itemKey}: ERPModalProps) => {
   // const [key, setKey] = useState<any>(queryParams.get('key'));
   // Pls Do not copy Commended Code, only for reference
   const [key, setKey] = useState<any>(itemKey);
-debugger;
+
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
     const response: ResponseModelWithValidation<any, any> =

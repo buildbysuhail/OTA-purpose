@@ -47,7 +47,7 @@ function createApiSlice(endpoint: ApiEndpoint, method?: ActionType | null, isDet
     endpoint.url,
     _method ?? ActionType.GET, isDetails
   );
-  debugger;
+  
   const thunk = createAsyncThunk<any, ThunkPayload, { rejectValue: string }>(
     `${name}`,
     async (payload: ThunkPayload, { rejectWithValue }) => {
@@ -116,7 +116,7 @@ function createApiSlice(endpoint: ApiEndpoint, method?: ActionType | null, isDet
           state.error = null;
         })
         .addCase(thunk.fulfilled, (state, action: PayloadAction<any>) => {
-          debugger;
+          
           state.loading = false;
           state.data = action.payload as Draft<any>;
         })
@@ -152,15 +152,6 @@ class DynamicReduxManager {
       this.thunks[name] = thunk;
     });
     formEndpoints.forEach((endpoint) => {
-      const { slice: gSlice, thunk: gThunk, name: gName } = createApiSlice(endpoint, ActionType.GET);
-      this.slices[gName] = gSlice;
-      this.thunks[gName] = gThunk;
-
-
-      const { slice: gdSlice, thunk: gdThunk, name: gdName } = createApiSlice(endpoint, ActionType.GET);
-      this.slices[gdName] = gdSlice;
-      this.thunks[gdName] = gdThunk;
-
       const { slice: aSlice, thunk: aThunk, name: aName } = createApiSlice(endpoint, ActionType.POST);
       this.slices[aName] = aSlice;
       this.thunks[aName] = aThunk;
@@ -168,10 +159,6 @@ class DynamicReduxManager {
       const { slice: eSlice, thunk: eThunk, name: eName } = createApiSlice(endpoint, ActionType.PUT);
       this.slices[eName] = eSlice;
       this.thunks[eName] = eThunk;
-
-      const { slice: dSlice, thunk: dThunk, name: dName } = createApiSlice(endpoint, ActionType.DELETE);
-      this.slices[dName] = dSlice;
-      this.thunks[dName] = dThunk;
     });
 
     // Create the root reducer
@@ -206,7 +193,7 @@ class DynamicReduxManager {
   }
 
   getThunk(name: string) {
-    debugger;
+    
     return this.thunks[name];
   }
   getTypedThunk<ReturnType = any>(

@@ -41,7 +41,7 @@ const SettingsCard = ({ data }: any) => {
                       className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out"
                       onClick={() => {
                         // dispatch({ type: "minimize", minimize: false });
-                        route?.path && route?.type == 'link' ? navigate(route?.path) : route?.action && route?.type == 'popup' ? dispatch(route?.action(true)) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
+                        route?.path && route?.type == 'link' ? navigate(route?.path) : route?.action && route?.type == 'popup' ? dispatch(route?.action({isOpen: true})) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
                       }}
                       key={`JPKNE84_${routeIdx}`}
                     >

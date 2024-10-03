@@ -143,6 +143,12 @@
     "max_disc_perc_allowed": "أقصى نسبة خصم مسموح بها",
     "passkey": "مفتاح المرور",
     "code": "الرمز",
-    "remarks": "ملاحظات"
+    "remarks": "ملاحظات",
 
+    "financial_year":"السنة المالية",
+     "maintain_shift":"الحفاظ على التحول",
+     "descriptions":"الأوصاف",
+     "SiNo":"رقم سري",
+     "ledger_name":"اسم دفتر الأستاذ",
+     "voucher_prefix":"بادئة القسيمة"
 }

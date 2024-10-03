@@ -88,7 +88,7 @@ const BranchManage = () => {
     handleResponse(
       response,
       () => {
-        dispatch(toggleCompanyProfilePopup({ isOpen: false }));
+        dispatch(toggleBranchPopup({ isOpen: false }));
       },
       () => {
         setPostData((prevData: any) => ({
@@ -102,7 +102,7 @@ const BranchManage = () => {
   return (
     <>
       <div className="w-full pt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <ERPInput
             id="id"
             label="Id"
@@ -124,9 +124,9 @@ const BranchManage = () => {
             field={{
               id: " companyID",
               required: true,
-              getListUrl: Urls.data_countries,
-              valueKey: "id",
-              labelKey: "name",
+              getListUrl: Urls.data_company_id,
+              valueKey: "companyID",
+              labelKey: "companyID",
             }}
             onChange={(data: any) => {
               debugger;

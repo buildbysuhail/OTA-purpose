@@ -147,5 +147,11 @@
   "remarks":"Remarks",
 
   "add-new-usertype" : "Add New UserType",
-  "add-new-user" : "Add New User"
+  "add-new-user" : "Add New User",
+  "financial_year" : "Financial Year",
+  "maintain_shift":"Maintain Shift",
+  "descriptions":"Descriptions",
+  "SiNo":"Serial No",
+  "ledger_name":"ledger Name",
+  "voucher_prefix":"Voucher Prefix"
 }

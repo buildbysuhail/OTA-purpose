@@ -3,18 +3,51 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ResponseModelWithValidation } from "../../../base/response-model";
 import { handleResponse } from "../../../utilities/HandleResponse";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { toggleFinancialYearPopup, } from "../../../redux/slices/popup-reducer";
+import { toggleFinancialYearPopup} from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
+import { useLocation } from "react-router-dom";
 import SystemSettingsApi from "./system-apis";
+import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 
-export const FinancialYearManage = () => {
+type PrimitiveFormField = string | number | boolean | Date | null | undefined;
+type ArrayFormField = PrimitiveFormField[];
+type ObjectFormField = { [key: string]: FormField };
+type FormField = PrimitiveFormField | ArrayFormField | ObjectFormField;
+
+interface FormDataStructure {
+  [key: string]: FormField;
+}
+
+interface Validations {
+  [key: string]: string;
+}
+
+interface FormState {
+  data: FormDataStructure;
+  validations: Validations;
+}
+
+interface DynamicFormProps {
+  initialData: FormState;
+  onSubmit: (data: FormDataStructure) => void;
+  onCancel: () => void;
+}
+type ERPModalProps = {
+  itemKey?: string;
+};
+
+
+
+
+
+
+export const FinancialYearManage = ({itemKey}: ERPModalProps) => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const onClose = useCallback(async () => {
     dispatch(toggleFinancialYearPopup({ isOpen: false }));
   }, []);
-  const initialFinancialYearData = {
+  const initialData = {
     data: {
       dateFrom: "",
       dateTo: "",
@@ -28,23 +61,23 @@ export const FinancialYearManage = () => {
       dateTo: "",
     },
   };
-  const [postFinancialData, setPostFinancialData] = useState(initialFinancialYearData);
-  const [postFinancialDataLoading, setPostFinancialDataLoading] = useState<boolean>(false);
-
-  const addFinancialData = useCallback(async () => {
-    setPostFinancialDataLoading(true);
+  const [postData, setPostData] = useState(initialData);
+  const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
+  const [key, setKey] = useState<any>(itemKey);
+  const addData = useCallback(async () => {
+    setPostDataLoading(true);
     const response: ResponseModelWithValidation<any, any> =
-      await SystemSettingsApi.addFinancialYearInfo(postFinancialData?.data);
-    setPostFinancialDataLoading(false);
+      await SystemSettingsApi.addFinancialYearInfo(postData?.data);
+    setPostDataLoading(false);
     handleResponse(response,
       () => { dispatch(toggleFinancialYearPopup({ isOpen: false })); },
       () => {
-        setPostFinancialData((prevData: any) => ({
+        setPostData((prevData: any) => ({
           ...prevData,
           validations: response.validations,
         }));
       });
-  }, [postFinancialData?.data]);
+  }, [postData?.data]);
 
   return (
     <div className="w-full pt-4">
@@ -53,10 +86,10 @@ export const FinancialYearManage = () => {
           id="dateFrom"
           field={{ type: "date", id: "dateFrom", required: true }}
           label={"From"}
-          data={postFinancialData?.data}
+          data={postData?.data}
           handleChange={(id: any, value: any) => {
 
-            setPostFinancialData((prev: any) => ({
+            setPostData((prev: any) => ({
               ...prev,
               data: {
                 ...prev.data,
@@ -65,16 +98,16 @@ export const FinancialYearManage = () => {
             }));
           }
           }
-          validation={postFinancialData.validations.dateFrom}
+          validation={postData.validations.dateFrom}
         />
         <ERPDateInput
           id="dateTo"
           field={{ type: "date", id: "dateTo", required: true }}
           label={"To"}
-          data={postFinancialData?.data}
+          data={postData?.data}
           handleChange={(id: any, value: any) => {
 
-            setPostFinancialData((prev: any) => ({
+            setPostData((prev: any) => ({
               ...prev,
               data: {
                 ...prev.data,
@@ -83,7 +116,7 @@ export const FinancialYearManage = () => {
             }));
           }
           }
-          validation={postFinancialData.validations.dateTo}
+          validation={postData.validations.dateTo}
         />
 
 
@@ -92,14 +125,14 @@ export const FinancialYearManage = () => {
           label="Remarks"
           placeholder="Enter Remarks"
           required={false}
-          data={postFinancialData?.data}
+          data={postData?.data}
           onChangeData={(data: any) => {
-            setPostFinancialData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
           }}
-          value={postFinancialData?.data?.remarks}
+          value={postData?.data?.remarks}
 
         />
         <ERPInput
@@ -108,14 +141,14 @@ export const FinancialYearManage = () => {
           placeholder="0.00"
           type="number"
           required={false}
-          data={postFinancialData?.data}
+          data={postData?.data}
           onChangeData={(data: any) => {
-            setPostFinancialData((prevData: any) => ({
+            setPostData((prevData: any) => ({
               ...prevData,
               data: data,
             }));
           }}
-          value={postFinancialData?.data?.openingStockValue}
+          value={postData?.data?.openingStockValue}
         />
 
         <div className="w-full">
@@ -130,9 +163,9 @@ export const FinancialYearManage = () => {
             name="fStatus"
             required
             className="block w-full px-3 py-1 bg-white border border-gray-300  shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            value={postFinancialData?.data?.fStatus || ""}
+            value={postData?.data?.fStatus || ""}
             onChange={(e) => {
-              setPostFinancialData((prev: any) => ({
+              setPostData((prev: any) => ({
                 ...prev,
                 data: {
                   ...prev.data,
@@ -156,9 +189,9 @@ export const FinancialYearManage = () => {
             name="visibleOnStartUp"
             className="ti-form-checkbox"
             id="visibleOnStartUp"
-            checked={postFinancialData?.data.visibleOnStartUp}
+            checked={postData?.data.visibleOnStartUp}
             onChange={(e) => {
-              setPostFinancialData((prev) => ({
+              setPostData((prev) => ({
                 ...prev,
                 data: {
                   ...prev.data,
@@ -185,11 +218,11 @@ export const FinancialYearManage = () => {
         ></ERPButton>
         <ERPButton
           type="button"
-          disabled={postFinancialDataLoading}
+          disabled={postDataLoading}
           variant="primary"
-          onClick={addFinancialData}
-          loading={postFinancialDataLoading}
-          title={"Submit"}
+          onClick={addData}
+          loading={postDataLoading}
+          title={key != undefined && key != null ? 'Update' : 'Submit'}
         ></ERPButton>
       </div>
     </div>

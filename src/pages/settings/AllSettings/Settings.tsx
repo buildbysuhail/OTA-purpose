@@ -50,7 +50,7 @@ const Settings = () => {
         </div>
       </div>
 
-      <ERPModal
+      <ERPModal 
         isOpen={rootState.PopupData.deleteInactiveTransactions.isOpen || false}
         title={"Delete In Active Transactions"}
         width="w-full max-w-[600px]"

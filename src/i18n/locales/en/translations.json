@@ -1,6 +1,5 @@
 {
   "welcome": "Welcome",
-
   "logout": "logout",
   "new": "new",
   "next": "next",
@@ -10,15 +9,12 @@
   "filter": "filter",
   "rows": "rows",
   "updating": "updating",
-
   "SIDE-MENU": "==== SIDE-MENU ====",
   "dashboard": "Dashboard",
   "items": "Items",
   "price_list": "Price List",
   "inventory_adjustments": "Inventory Adjustments",
-
   "banking": "Banking",
-
   "Sales": "Sales",
   "customers": "Customers",
   "estimates": "Estimates",
@@ -30,7 +26,6 @@
   "recurring_invoices": "Recuring Invoices",
   "payments_received": "Payments Received",
   "credit_notes": "Credit Notes",
-
   "purchase": "Purchase",
   "vendors": "Vendors",
   "expenses": "Expenses",
@@ -41,20 +36,17 @@
   "recurring_bills": "Recuring Bills",
   "payments-made": "Payments Made",
   "vendor_credits": "Vendor Credits",
-
   "accountant": "Accountant",
   "manual_journals": "Manual Journals",
   "recurring_journals": "Recuring Journals",
   "bulk_update": "Bulk Update",
   "chart_of_accounts": "Chart of Accounts",
   "transaction_locking": "Trasaction Locking",
-
   "documents": "Documents",
   "reports": "Reports",
   "settings": "settings",
   "testdata": "Testdata",
   "templates": "Templates",
-
   "APP-ACTIONS": "==== APP-ACTIONS ====",
   "select": "Select",
   "edit": "Edit",
@@ -68,7 +60,6 @@
   "reject": "Reject",
   "import": "Import",
   "export": "Export",
-
   "page-logn": "==== Page LOGIN ====",
   "sign-in-message": "Sign in to your account",
   "no-account": "Don't have an account?",
@@ -88,13 +79,11 @@
   "secret-code": "Secret Code",
   "privacy-policy": "Privacy Policy",
   "terms-of-use": "Terms of Use",
-
   "page-organization-select": "==== page-organization-select ====",
   "select-organization": "Select Organization",
   "select-organization-message": "Please Select a Organization you wish to continue.",
   "continue": "Continue",
   "add-organization": "Add Organization",
-
   "page-organization-create": "==== page-organization-create ====",
   "organization": "Organization",
   "create-organization": "Create Organization",
@@ -113,7 +102,6 @@
   "create": "Create",
   "agree-terms": "By clicking the button, you are agreeing to our",
   "terms-service": "Terms and Services",
-
   "sign-in": "sign in",
   "register": "register",
   "contact": "contact",

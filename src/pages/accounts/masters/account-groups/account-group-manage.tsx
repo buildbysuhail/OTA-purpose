@@ -8,9 +8,14 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 interface AccountGroupData {
-  userTypeName: string;
-  userTypeCode: string;
-  remark: string;
+  name: string;
+  nameInArabic: string;
+  shortName: string;
+  groupUnder: string;
+  remarks: string;
+  reasonForEdit: string;
+  isEditable: boolean;
+  isDeletable: boolean;
 }
 
 export const AccountGroupManage = () => {
@@ -33,30 +38,68 @@ export const AccountGroupManage = () => {
     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
   }, []);
 
+  const handleUpdateArabicName = useCallback(() => {
+    // Implementation for updating Arabic name
+  }, []);
+
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps('accGroupName')}
-          label="User Type Name"
-          placeholder="User Type Name"
+          label="Name"
+          placeholder="Enter name"
           required={true}
-          onChangeData={(data: any) => {debugger;handleFieldChange('accGroupName', data)}}
+          onChangeData={(data: any) => { debugger; handleFieldChange('accGroupName', data) }}
         />
         <ERPInput
-          {...getFieldProps('userTypeCode')}
-          label="User Type Code"
-          placeholder="User Type Code"
+          {...getFieldProps('nameInArabic')}
+          label="Name in Arabic"
+          placeholder="Enter name in Arabic"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
+          onChangeData={(data: any) => handleFieldChange('nameInArabic', data)}
         />
         <ERPInput
-          {...getFieldProps('remark')}
-          label="Remark"
-          placeholder="Remark"
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('remark', data)}
+          {...getFieldProps('shortName')}
+          label="Short Name"
+          placeholder="Enter short name"
+          onChangeData={(data: any) => handleFieldChange('shortName', data)}
         />
+        <ERPInput
+          {...getFieldProps('groupUnder')}
+          label="Group(Under)"
+          placeholder="Select group"
+          type="select"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange('groupUnder', data)}
+        />
+        <ERPInput
+          {...getFieldProps('remarks')}
+          label="Remarks"
+          placeholder="Enter remarks"
+          onChangeData={(data: any) => handleFieldChange('remarks', data)}
+        />
+        <ERPInput
+          {...getFieldProps('reasonForEdit')}
+          label="Reason For Edit"
+          placeholder="Enter reason for edit"
+          onChangeData={(data: any) => handleFieldChange('reasonForEdit', data)}
+        />
+
+        <div className="flex space-x-4">
+          <ERPInput
+            {...getFieldProps('isEditable')}
+            type="checkbox"
+            label="Editable"
+            onChangeData={(data: any) => handleFieldChange('isEditable', data)}
+          />
+          <ERPInput
+            {...getFieldProps('isDeletable')}
+            type="checkbox"
+            label="Deletable"
+            onChangeData={(data: any) => handleFieldChange('isDeletable', data)}
+          />
+        </div>
       </div>
       <ERPFormButtons
         isEdit={isEdit}

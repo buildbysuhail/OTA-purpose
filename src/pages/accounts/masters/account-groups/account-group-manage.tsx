@@ -46,7 +46,7 @@ export const AccountGroupManage = () => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
-          {...getFieldProps('name')}
+          {...getFieldProps('accGroupName')}
           label="Name"
           placeholder="Enter name"
           required={true}

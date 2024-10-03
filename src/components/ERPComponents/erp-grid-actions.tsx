@@ -96,7 +96,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
             key: itemId,
             mode: type as "view" | "edit"
           };
-          debugger;
+          
           dispatch((action as ActionType).action?.(payload) as any);
         }
       };

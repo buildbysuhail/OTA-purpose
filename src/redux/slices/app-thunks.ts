@@ -27,6 +27,7 @@ export const getAction = createAsyncThunk(
     try {
       const url = params ? `${apiUrl}?${params}` : apiUrl;
       const response = await api.get(url);
+      debugger;
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -40,7 +41,7 @@ export const getDetailAction = createAsyncThunk(
     try {
       const url = `${apiUrl}${id}/`;
       const response = await api.get(url);
-      return response.data;
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
     }

@@ -48,7 +48,7 @@ const popupDataSlice = createSlice({
   initialState,
   reducers: {
     toggleUserTypePopup: (state, action: PayloadAction<popupDataProps>) => {
-debugger;
+
       state.userType = action.payload;
     },
     toggleUserPopup: (state, action: PayloadAction<popupDataProps>) => {
@@ -109,7 +109,7 @@ debugger;
       state.commands = action.payload;
     },
     toggleAccountGroupPopup: (state, action: PayloadAction<popupDataProps>) => {
-      state.commands = action.payload;
+      state.accountGroup = action.payload;
     },
   },
 });

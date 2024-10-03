@@ -113,32 +113,6 @@
   "go-to-home": "Go to <0>the home page</0>",
   "change-username": "Change your username:",
   "submit": "Submit",
-<<<<<<< HEAD
-  "Email or Phone or Username": "Email or Phone or Username",
-  "Add": "Add",
-  "User Type": "User Type ",
-  "Voucher": "Voucher",
-  "S.No": "S.No",
-  "Id": "Id",
-  "Account Group": "Account Group",
-  "Short Name": "Short Name",
-  "parent Group": "Parent Group",
-  "Remarks": "Remarks",
-  "Is Editable": "Is Editable",
-  "Is Deletable": "Is Deletable",
-  "Is Protected": "Is Protected",
-  "Is Common": "Is Common",
-  "Created User": "Created User",
-  "Created Date": "Created Date",
-  "Modified User": "Modified User",
-  "Modified Date": "Modified Date",
-  "Reason For Modification": "Reason For Modification",
-  "Parent Group Id": "Parent Group Id",
-  "Arabic Name": "Arabic Name",
-  "Display Order": "Display Order",
-  "Actions": "Actions"
-}
-=======
   "email-phone-username": "Email or Phone or Username",
   "voucher":"Voucher",
 
@@ -169,4 +143,3 @@
   "ledger_name":"ledger Name",
   "voucher_prefix":"Voucher Prefix"
 }
->>>>>>> 0056f8a74b8fa51350d4c638ea34aacf9a4172d8

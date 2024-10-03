@@ -79,9 +79,9 @@ const BranchManage = () => {
 
   const addBranch = useCallback(async () => {
     setPostDataLoading(true);
-
+    const { cId, ...filteredData } = postData?.data
     const response: ResponseModelWithValidation<any, any> =
-      await AdministrationSettingsApis.addCompanyProfileInfo(postData?.data);
+      await AdministrationSettingsApis.addBranchInfo(filteredData);
 
     setPostDataLoading(false);
 
@@ -132,16 +132,13 @@ const BranchManage = () => {
               
               setPostData((prev: any) => ({
                 ...prev,
-                data: {
-                  ...prev.data,
-                  companyID: data.id,
-                },
+                data: { ...prev.data, companyID: data.companyID },
               }));
             }}
             validation={postData?.validations?.companyID}
             data={postData?.data}
             defaultData={postData?.data.companyID}
-            value={postData?.data?.companyID}
+            value={postData != undefined && postData?.data != undefined && postData?.data?.companyID != undefined ? postData?.data?.companyID : 0}
             label=" companyID"
           />
 

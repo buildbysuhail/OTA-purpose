@@ -44,28 +44,27 @@ const UserTypes = () => {
     },
     {
       dataField: "actions",
-      caption: t("actions"),
+      caption: "Actions",
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any) => {
+      cellRender: (cellElement: any, cellInfo: any) => {
         
         return (
           <ERPGridActions
-            view={{ type: "popup", action:toggleUserTypePopup }}
-            edit={{ type: "popup", action: toggleUserTypePopup }}
+            view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            edit={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.id }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
               // action: () => handleDelete(cellInfo?.data?.id),
             }}
-            itemId={cellElement?.data?.userTypeCode || ""}
           />
         )
+      },
       }
-    },
   ];
   return (
     <Fragment>
@@ -96,7 +95,7 @@ const UserTypes = () => {
         closeModal={() => {
           dispatch(toggleUserTypePopup({ isOpen: false }));
         }}
-        content={<UserTypeManage  itemKey={rootState.PopupData.userType.key}/>}
+        content={<UserTypeManage />}
       />
     </Fragment>
   );

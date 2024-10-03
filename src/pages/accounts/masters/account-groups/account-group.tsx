@@ -92,7 +92,7 @@ const AccountGroupType = () => {
         closeModal={() => {
           dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
         }}
-        content={<AccountGroupManage />}
+        content={<AccountGroupManage/>}
       />
     </Fragment>
   );

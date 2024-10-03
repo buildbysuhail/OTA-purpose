@@ -24,3 +24,18 @@ export const initialDataUser = {
     displayName: "",
   },
 };
+
+export const initialDataUserType = {
+  data: {
+    userTypeName: "",
+    userTypeCode: "",
+    remarks: "",
+    isEditable: true,
+    isDeletable: true
+  },
+  validations: {
+    userTypeName: "",
+    counterID: "",
+    remarks: "",
+  },
+};

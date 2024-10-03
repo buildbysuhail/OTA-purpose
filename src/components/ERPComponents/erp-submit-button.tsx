@@ -39,7 +39,7 @@ const ERPSubmitButton = ({
   const [variantType, setVariantType] = useState<any>();
   const textBody = children ? children : text;
   useEffect(() => {
-    debugger;
+    
   switch (variant) {
     case  "primary":
       setVariantType("ti-btn-primary-full");

@@ -62,11 +62,11 @@ const Content: FC<ContentProps> = () => {
         <Route path="/user-management/userstypes" element={<UserTypes />} />
 
         {/* settings Systems */}
-        <Route path="settings/system/counters" element={<SystemCounters />} />
-        <Route path="settings/system/vouchers" element={<SystemVoucher />} />
-        <Route path="settings/system/financial-year" element={<FinancialYear />} />
-        <Route path="settings/system/reminders" element={<Reminders />} />
-        <Route path="settings/system/exchange-rates" element={<ExchangeRates />} />
+        <Route path="/system/counters" element={<SystemCounters />} />
+        <Route path="/system/vouchers" element={<SystemVoucher />} />
+        <Route path="/system/financial-year" element={<FinancialYear />} />
+        <Route path="/system/reminders" element={<Reminders />} />
+        <Route path="system/exchange-rates" element={<ExchangeRates />} />
         <Route path="settings" element={<Settings />} />
 
         {/* Inventory Starts */}

@@ -1,17 +1,19 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { ResponseModelWithValidation } from "../../base/response-model";
+import { ResponseModel, ResponseModelWithValidation } from "../../base/response-model";
 import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { ApiResponse, reduxManager } from "../../redux/dynamic-store-manager-pro";
 import { ActionType } from "../../redux/types";
 import { useAppDispatch, useAppSelector } from "./useAppDispatch";
 import { handleResponse } from "../HandleResponse";
+import { getAction, getDetailAction } from "../../redux/slices/app-thunks";
 
 interface UseFormManagerOptions {
   url: string;
   onSuccess?: () => void;
   onError?: (error: any) => void;
+  key?: string;
 }
 
 interface FormField {
@@ -20,18 +22,38 @@ interface FormField {
   validation?: string;
 }
 
-export function useFormManager<T>({ url, onSuccess, onError }: UseFormManagerOptions) {
+export function useFormManager<T>({ url, onSuccess, onError, key }: UseFormManagerOptions) {
+  
   const location = useLocation();
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
 
   const queryParams = new URLSearchParams(location.search);
-  const key = queryParams.get('key');
-  const isEdit = Boolean(key && key !== "0");
+  key = (key == undefined || key == null || key == "0" || key == "" ?  queryParams.get('key'):key)??"";
+  const isEdit = Boolean(key && key !== "0"&& key !== "");
 
   const rName = reducerNameFromUrl(url, isEdit ? ActionType.PUT : ActionType.POST);
   const formState = useAppSelector<ApiResponse<any>>((state: any) => state?.[rName]);
-
+  useEffect(() => {
+    
+    
+    if(isEdit) {
+      loadFormData();
+    }
+  },[isEdit])
+  const loadFormData = useCallback(async () => {
+    const response: any = await  appDispatch(getDetailAction({apiUrl:url,id: key}) as any
+    ).unwrap();
+    debugger;
+    reduxManager.setState(rName, {
+            data: {
+              data:response,
+              validations: {}
+            },
+            loading: false,
+            error: null
+          });
+  },[])
   const handleSubmit = useCallback(async () => {
     const action = reduxManager.getTypedThunk(rName);
 
@@ -57,6 +79,7 @@ export function useFormManager<T>({ url, onSuccess, onError }: UseFormManagerOpt
   }, [formState.data, rName, appDispatch, isEdit, key, onSuccess, onError]);
 
   const handleFieldChange = useCallback((fieldId: string, value: any) => {
+    debugger;
     reduxManager.setState(rName, {
       data: {
         data: {
@@ -68,6 +91,7 @@ export function useFormManager<T>({ url, onSuccess, onError }: UseFormManagerOpt
   }, [formState.data, rName]);
 
   const getFieldProps = useCallback((fieldId: string): FormField => {
+    
     return {
       id: fieldId,
       value: formState.data.data?.[fieldId] || '',

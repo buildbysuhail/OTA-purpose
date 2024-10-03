@@ -2,9 +2,10 @@ import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
+import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 interface AccountGroupData {
   name: string;
@@ -18,18 +19,19 @@ interface AccountGroupData {
 }
 
 export const AccountGroupManage = () => {
+  const rootState = useRootState();
   const dispatch = useDispatch();
 
   const {
     isEdit,
-    formState,
     handleSubmit,
     handleFieldChange,
     getFieldProps,
     isLoading
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: () => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }))
+    onSuccess: () => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })),
+    key: rootState.PopupData.accountGroup.key
   });
 
   const onClose = useCallback(() => {
@@ -48,7 +50,7 @@ export const AccountGroupManage = () => {
           label="Name"
           placeholder="Enter name"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('name', data)}
+          onChangeData={(data: any) => { debugger; handleFieldChange('accGroupName', data) }}
         />
         <ERPInput
           {...getFieldProps('nameInArabic')}
@@ -99,46 +101,12 @@ export const AccountGroupManage = () => {
           />
         </div>
       </div>
-
-      <div className="w-full p-2 flex justify-between">
-        <ERPButton
-          type="button"
-          title="Update Arabic Name"
-          variant="secondary"
-          onClick={handleUpdateArabicName}
-        />
-
-        <div className="flex space-x-2">
-          <ERPButton
-            type="button"
-            title="Save"
-            variant="primary"
-            onClick={handleSubmit}
-            loading={isLoading}
-            disabled={isLoading}
-          />
-          <ERPButton
-            type="button"
-            title="Clear"
-            variant="secondary"
-          />
-          <ERPButton
-            type="reset"
-            title="Close"
-            variant="secondary"
-            onClick={onClose}
-          />
-        </div>
-      </div>
-
-      <div className="text-sm text-blue-600 space-y-1 mt-4">
-        <button type="button" className="block hover:underline">
-          Update Arabic Name from google translate
-        </button>
-        <button type="button" className="block hover:underline">
-          Group Order (In Trial Balance)
-        </button>
-      </div>
+      <ERPFormButtons
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={onClose}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 };

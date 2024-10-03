@@ -136,7 +136,7 @@ new heights</h2>
             <form onSubmit={handleSubmit} className="mt-5 grid grid-cols-1 gap-y-3 gap-x-6 sm:grid-cols-2">
               <div className="col-span-full ">
                 <ERPInput
-                  label={t("Email or Phone or Username")}
+                  label={t("email-phone-username")}
                   data={data}
                   onChangeData={(_data: any) => { setData(_data)}}
                   id="userName"

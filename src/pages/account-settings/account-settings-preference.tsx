@@ -69,7 +69,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let userLanguage = useAppSelector((state: any) => state?.[userLanguageRName]);
   let userLanguageAction = reduxManager.getTypedThunk(userLanguageRName);
   const updateLanguage = async () => {
-    debugger;
+    
     try {
       const response = await dispatch(userLanguageAction({ data: { language },
         params: 'userId=123' }) as any).unwrap();

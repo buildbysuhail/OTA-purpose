@@ -58,7 +58,7 @@ const CompanyProfileManage = () => {
   const getBasicInfo = async () => {
     try {
       const res = await AdministrationSettingsApis.getCompanyProfileInfo();
-      debugger;
+      
       setPostData((prev: any) => ({
         ...prev,
         data: res,
@@ -241,7 +241,7 @@ const CompanyProfileManage = () => {
               labelKey: "name",
             }}
             onChange={(data: any) => {
-              debugger;
+              
               setPostData((prev: any) => ({
                 ...prev,
                 data: {

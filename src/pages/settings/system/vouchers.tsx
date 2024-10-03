@@ -1,17 +1,17 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from "react";
 
-import Urls from '../../../redux/urls'
-import { DevGridColumn } from '../../../components/types/dev-grid-column';
-import ERPDevGrid from '../../../components/ERPComponents/erp-dev-grid';
-import { toggleVoucherPopup } from '../../../redux/slices/popup-reducer';
-import ERPModal from '../../../components/ERPComponents/erp-modal';
-import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
-import { useRootState } from '../../../utilities/hooks/useRootState';
-import ERPGridActions from '../../../components/ERPComponents/erp-grid-actions';
-
-
+import Urls from "../../../redux/urls";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import { toggleVoucherPopup } from "../../../redux/slices/popup-reducer";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { useTranslation } from "react-i18next";
 
 const SystemVoucher = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -22,7 +22,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "voucherType",
@@ -31,7 +31,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "formType",
@@ -40,7 +40,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "lastVoucherPrefix",
@@ -49,7 +49,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
     },
     {
       dataField: "lastVoucherNumber",
@@ -58,7 +58,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
     },
     {
       dataField: "descriptions",
@@ -67,7 +67,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
     },
     {
       dataField: "id",
@@ -76,7 +76,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "printDesignFileName",
@@ -85,7 +85,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
     },
     {
       dataField: "createdUser",
@@ -94,7 +94,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150
+      minWidth: 150,
     },
     {
       dataField: "createdDate",
@@ -103,7 +103,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "modifiedUser",
@@ -112,7 +112,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "modifiedDate",
@@ -121,7 +121,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
 
     {
@@ -131,45 +131,53 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
-
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <ERPGridActions
-          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{ type: "popup", action: () => toggleVoucherPopup(cellInfo?.data?.id) }}
-          delete={{
-            confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
-          }}
-        />
-      ),
+      cellRender: (cellElement: any) => {
+        debugger;
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action: toggleVoucherPopup }}
+            edit={{ type: "popup", action: toggleVoucherPopup }}
+            delete={{
+              confirmationRequired: true,
+              confirmationMessage: "Are you sure you want to delete this item?",
+              // action: () => handleDelete(cellInfo?.data?.id),
+            }}
+            itemId={cellElement?.data?.voucherType || ""}
+          />
+        );
+      },
     },
   ];
 
   return (
     <Fragment>
-
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid columns={columns} gridHeader="Voucher" dataUrl={Urls.Voucher} gridId='grd_voucher' popupAction={toggleVoucherPopup} gridAddButtonType='popup' gridAddButtonIcon='ri-add-line'></ERPDevGrid>
+                <ERPDevGrid
+                  columns={columns}
+                  gridHeader="Voucher"
+                  dataUrl={Urls.Voucher}
+                  gridId="grd_voucher"
+                  popupAction={toggleVoucherPopup}
+                  gridAddButtonType="popup"
+                  gridAddButtonIcon="ri-add-line"
+                ></ERPDevGrid>
               </div>
             </div>
           </div>
-
         </div>
       </div>
       <ERPModal
@@ -177,12 +185,12 @@ const SystemVoucher = () => {
         title={"Add New Voucher"}
         isForm={true}
         closeModal={() => {
-          dispatch(toggleVoucherPopup({ isOpen: false }))
+          dispatch(toggleVoucherPopup({ isOpen: false }));
         }}
-      // content={<UserTypeManage/>}
+        // content={<UserTypeManage/>}
       />
     </Fragment>
-  )
-}
+  );
+};
 
-export default SystemVoucher
+export default SystemVoucher;

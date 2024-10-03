@@ -161,6 +161,12 @@
   "remarks":"Remarks",
 
   "add-new-usertype" : "Add New UserType",
-  "add-new-user" : "Add New User"
+  "add-new-user" : "Add New User",
+  "financial_year" : "Financial Year",
+  "maintain_shift":"Maintain Shift",
+  "descriptions":"Descriptions",
+  "SiNo":"Serial No",
+  "ledger_name":"ledger Name",
+  "voucher_prefix":"Voucher Prefix"
 }
 >>>>>>> 0056f8a74b8fa51350d4c638ea34aacf9a4172d8

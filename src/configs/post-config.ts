@@ -1,3 +1,4 @@
+import { initialBankPoseData } from "../pages/settings/Administration/administration-types";
 import { initialCompanyProfileData } from "../pages/settings/Administration/Company-Profile-manage";
 import { initialDataDeleteInactive } from "../pages/settings/Administration/delete-inactive-transactions-manage";
 import Urls from "../redux/urls";
@@ -9,4 +10,5 @@ export const POST_ENDPOINTS: ApiEndpoint[] = [
   // Urls.updateLanguage,
   { url: Urls.deleteInactiveTransactions, initialData: initialDataDeleteInactive },
   { url: Urls.CompanyProfiles, initialData: initialCompanyProfileData },
+  { url: Urls.BankPosSettings, initialData: initialBankPoseData },
 ]

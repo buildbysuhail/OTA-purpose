@@ -63,7 +63,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
       if (deleteAction.action) {
         await deleteAction.action();
       } else if (deleteAction.url) {
-        let res = await api.delete(`${deleteAction.url}/${deleteAction.key || itemId}`);
+        let res = await api.delete(`${deleteAction.url}${deleteAction.key || itemId}`);
         handleResponse(res);
       }
     } catch (error) {

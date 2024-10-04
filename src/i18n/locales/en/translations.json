@@ -311,7 +311,6 @@
 
   "delete_in_active_transactions":"Delete In Active Transactions",
   "branch_info":"Branch Info",
-  "import_export":"Import Export",
   "reset_dataBase":"Reset DataBase",
   "sql_commands":"Sql Commands",
   "authorization_settings":"Authorization Settings",

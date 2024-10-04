@@ -1,4 +1,5 @@
 import { initialDataCounter } from "../pages/settings/system/counters-manage-type";
+import { initialFinancialYearData } from "../pages/settings/system/financial-year-manage";
 import { initialDataRemainder } from "../pages/settings/system/remainder-manage-type";
 import { initialDataVoucher } from "../pages/settings/system/vouchers-manage-type";
 import { initialDataUser, initialDataUserType } from "../pages/settings/userManagement/user-manage-types";
@@ -8,10 +9,11 @@ import { ApiEndpoint } from "./types";
 
 export const FORM_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.Users, initialData: initialDataUser },
-  { url: Urls.UserTypes, initialData: initialDataUserType},
+  { url: Urls.UserTypes, initialData: initialDataUserType },
   { url: Urls.account_group, initialData: initialDataUser },
   { url: Urls.account_ledger, initialData: initialDataUser },
   { url: Urls.Counter, initialData: initialDataCounter },
   { url: Urls.Voucher, initialData: initialDataVoucher },
-  { url: Urls.Remainder, initialData: initialDataRemainder},
+  { url: Urls.Remainder, initialData: initialDataRemainder },
+  { url: Urls.FinancialYear, initialData: initialFinancialYearData },
 ] as const;

@@ -22,6 +22,35 @@ export interface FinancialYearData {
   modifiedDate?: string;
 }
 
+export const initialFinancialYearData = {
+  data: {
+    dateFrom: "",
+    dateTo: "",
+    remarks: "",
+    openingStockValue: 0,
+    fStatus: 'Active',
+    visibleOnStartUp: false,
+    id: undefined,
+    createdUser: undefined,
+    createdDate: undefined,
+    modifiedUser: undefined,
+    modifiedDate: undefined,
+  },
+  validations: {
+    dateFrom: "",
+    dateTo: "",
+    remarks: "",
+    openingStockValue: 0,
+    fStatus: "",
+    visibleOnStartUp: "",
+    id: undefined,
+    createdUser: "",
+    createdDate: "",
+    modifiedUser: "",
+    modifiedDate: "",
+  },
+};
+
 export const FinancialYearManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();

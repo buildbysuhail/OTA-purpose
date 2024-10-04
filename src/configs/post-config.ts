@@ -7,4 +7,5 @@ export const POST_ENDPOINTS: ApiEndpoint[] = [
   // Urls.updateUserThemes,
   // Urls.updateLanguage,
   { url: Urls.deleteInactiveTransactions, initialData: initialDataUser},
+  { url: Urls.CompanyProfiles, initialData: initialDataUser},
 ]

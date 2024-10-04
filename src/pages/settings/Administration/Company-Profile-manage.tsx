@@ -8,6 +8,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { toggleCompanyProfilePopup } from "../../../redux/slices/popup-reducer";
+import { ActionType } from "../../../redux/types";
 
 export interface CompanyProfileData {
   registeredName: string,
@@ -42,6 +43,8 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     formState
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfiles,
+    onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null })), [dispatch]),
+    method: ActionType.POST
   });
 
   const onClose = useCallback(() => {
@@ -53,7 +56,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("registeredName")}
           label="Registered Name"

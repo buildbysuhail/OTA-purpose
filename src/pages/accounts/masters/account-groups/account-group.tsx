@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useCallback, useMemo } from "react";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -8,13 +8,26 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { AccountGroupManage } from "./account-group-manage";
-import { useTranslation } from "react-i18next";
-
 const AccountGroupType = () => {
+
+  const MemoizedAccountGroupManage = useMemo(() => React.memo(AccountGroupManage), []);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = [
+  const cellRender = useCallback((cellElement: any) => {
+    return (
+      <ERPGridActions
+        view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+        edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+        delete={{
+          confirmationRequired: true,
+          confirmationMessage: "Are you sure you want to delete this item?",
+          // action: () => handleDelete(cellInfo?.data?.id),
+        }}
+      />
+    )
+  }, [toggleAccountGroupPopup]);
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "s.No",
       caption: t("SiNo"),
@@ -220,4 +233,4 @@ const AccountGroupType = () => {
   );
 };
 
-export default AccountGroupType;
+export default React.memo(AccountGroupType);

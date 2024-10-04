@@ -91,6 +91,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         <div className=" flex-1">
           <input
             onChange={(e) => {
+              debugger;
               onChangeData && data && onChangeData({ ...data, [id]: e.target?.value });
               onChange && onChange(e);
             }}

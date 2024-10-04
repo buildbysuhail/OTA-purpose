@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -18,88 +18,62 @@ interface AccountGroupData {
   isDeletable: boolean;
 }
 
-export const AccountGroupManage = () => {
+export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
+  const [localFormData, setLocalFormData] = useState<AccountGroupData>({
+    userTypeName: '',
+    userTypeCode: '',
+    remark: ''
+  });
 
   const {
     isEdit,
     handleSubmit,
     handleFieldChange,
     getFieldProps,
-    isLoading
+    isLoading,
+    formState
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: () => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })),
+    onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.accountGroup.key
   });
+
+  useEffect(() => {
+    if (formState.data.data) {
+      setLocalFormData(formState.data.data);
+    }
+  }, [formState.data.data]);
 
   const onClose = useCallback(() => {
     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
   }, []);
 
-  const handleUpdateArabicName = useCallback(() => {
-    // Implementation for updating Arabic name
-  }, []);
-
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps('accGroupName')}
-          label="Name"
-          placeholder="Enter name"
+          label="User Type Name"
+          placeholder="User Type Name"
           required={true}
-          onChangeData={(data: any) => { debugger; handleFieldChange('accGroupName', data) }}
+          onChangeData={(data: any) => {debugger;handleFieldChange('accGroupName', data)}}
         />
         <ERPInput
-          {...getFieldProps('nameInArabic')}
-          label="Name in Arabic"
-          placeholder="Enter name in Arabic"
+          {...getFieldProps('userTypeCode')}
+          label="User Type Code"
+          placeholder="User Type Code"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('nameInArabic', data)}
+          onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
         />
         <ERPInput
-          {...getFieldProps('shortName')}
-          label="Short Name"
-          placeholder="Enter short name"
-          onChangeData={(data: any) => handleFieldChange('shortName', data)}
-        />
-        <ERPInput
-          {...getFieldProps('groupUnder')}
-          label="Group(Under)"
-          placeholder="Select group"
-          type="select"
+          {...getFieldProps('remark')}
+          label="Remark"
+          placeholder="Remark"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('groupUnder', data)}
+          onChangeData={(data: any) => handleFieldChange('remark', data)}
         />
-        <ERPInput
-          {...getFieldProps('remarks')}
-          label="Remarks"
-          placeholder="Enter remarks"
-          onChangeData={(data: any) => handleFieldChange('remarks', data)}
-        />
-        <ERPInput
-          {...getFieldProps('reasonForEdit')}
-          label="Reason For Edit"
-          placeholder="Enter reason for edit"
-          onChangeData={(data: any) => handleFieldChange('reasonForEdit', data)}
-        />
-
-        <div className="flex space-x-4">
-          <ERPInput
-            {...getFieldProps('isEditable')}
-            type="checkbox"
-            label="Editable"
-            onChangeData={(data: any) => handleFieldChange('isEditable', data)}
-          />
-          <ERPInput
-            {...getFieldProps('isDeletable')}
-            type="checkbox"
-            label="Deletable"
-            onChangeData={(data: any) => handleFieldChange('isDeletable', data)}
-          />
-        </div>
       </div>
       <ERPFormButtons
         isEdit={isEdit}
@@ -109,4 +83,4 @@ export const AccountGroupManage = () => {
       />
     </div>
   );
-};
+});

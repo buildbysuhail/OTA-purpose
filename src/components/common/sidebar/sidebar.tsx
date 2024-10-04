@@ -1,4 +1,4 @@
-import { FC, Fragment, useEffect, useMemo, useState } from "react";
+import React, { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import store, { RootState } from "../../../redux/store";
@@ -22,7 +22,7 @@ interface SidebarProps {
   type: "erp" | "account-settings" | "workspace-settings" | "settings";
 }
 
-const Sidebar: FC<SidebarProps> = ({ type }) => {
+const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
   const [menuitems, setMenuitems] = useState<any>(() => {
     switch (type) {
       case "erp":
@@ -663,210 +663,214 @@ const Sidebar: FC<SidebarProps> = ({ type }) => {
       }
     }
   }
-  return (
-    <Fragment>
-      <div
-        id="responsive-overlay"
-        onClick={() => {
-          menuClose();
-        }}
-      ></div>
-      <aside
-        className="app-sidebar"
-        id="sidebar"
-        onMouseEnter={() => Onhover()}
-        onMouseLeave={() => Outhover()}
-      >
-        <div className="main-sidebar-header">
-          <a href={`${import.meta.env.BASE_URL}`} className="header-logo">
-            <img src={logo1} alt="logo" className="desktop-logo" />
-            <img src={logo2} alt="logo" className="toggle-logo" />
-            <img src={logo3} alt="logo" className="desktop-dark" />
-            <img src={logo4} alt="logo" className="toggle-dark" />
-            <img src={logo5} alt="logo" className="desktop-white" />
-            <img src={logo6} alt="logo" className="toggle-white" />
-          </a>
-        </div>
-        <SimpleBar className="main-sidebar" id="sidebar-scroll">
-          <nav className="main-menu-container nav nav-pills flex-column sub-open">
-            <div
-              className="slide-left"
-              id="slide-left"
-              onClick={() => {
-                slideLeft();
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#7b8191"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
+  const renderNavItems = useMemo(() => {
+    return (
+      <Fragment>
+        <div
+          id="responsive-overlay"
+          onClick={() => {
+            menuClose();
+          }}
+        ></div>
+        <aside
+          className="app-sidebar"
+          id="sidebar"
+          onMouseEnter={() => Onhover()}
+          onMouseLeave={() => Outhover()}
+        >
+          <div className="main-sidebar-header">
+            <a href={`${import.meta.env.BASE_URL}`} className="header-logo">
+              <img src={logo1} alt="logo" className="desktop-logo" />
+              <img src={logo2} alt="logo" className="toggle-logo" />
+              <img src={logo3} alt="logo" className="desktop-dark" />
+              <img src={logo4} alt="logo" className="toggle-dark" />
+              <img src={logo5} alt="logo" className="desktop-white" />
+              <img src={logo6} alt="logo" className="toggle-white" />
+            </a>
+          </div>
+          <SimpleBar className="main-sidebar" id="sidebar-scroll">
+            <nav className="main-menu-container nav nav-pills flex-column sub-open">
+              <div
+                className="slide-left"
+                id="slide-left"
+                onClick={() => {
+                  slideLeft();
+                }}
               >
-                <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
-              </svg>
-            </div>
-            {/* hasTopBorder */}
-            <ul className="main-menu" onClick={() => Sideclick()}>
-              {menuitems.map((levelone: any) => (
-                <Fragment key={Math.random()}>
-                  <li
-                    className={`${
-                      levelone.menutitle
-                        ? "slide__category"
-                        : levelone.menutitle_lg
-                        ? "slide__category slide__category__lg"
-                        : ""
-                    } ${
-                      levelone.hasTopBorder === true
-                        ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
-                        : ""
-                    } ${levelone.type === "link" ? "slide" : ""}
-                       ${levelone.type === "sub" ? "slide has-sub" : ""} ${
-                      levelone?.active ? "open" : ""
-                    } ${levelone?.selected ? "active" : ""}`}
-                  >
-                    {levelone.menutitle ? (
-                      <span className="category-name">
-                        {levelone.menutitle}
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {levelone.menutitle_lg ? (
-                      <span className="category-name">
-                        {levelone.menutitle_lg}
-                      </span>
-                    ) : (
-                      ""
-                    )}
-                    {levelone.type === "link" ? (
-                      <Link
-                        to={levelone.path}
-                        className={`side-menu__item ${
-                          levelone.selected ? "active" : ""
-                        }`}
-                      >
-                        {levelone.icon}
-                        <span className="side-menu__label">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#7b8191"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"></path>
+                </svg>
+              </div>
+              {/* hasTopBorder */}
+              <ul className="main-menu" onClick={() => Sideclick()}>
+                {menuitems.map((levelone: any) => (
+                  <Fragment key={Math.random()}>
+                    <li
+                      className={`${
+                        levelone.menutitle
+                          ? "slide__category"
+                          : levelone.menutitle_lg
+                          ? "slide__category slide__category__lg"
+                          : ""
+                      } ${
+                        levelone.hasTopBorder === true
+                          ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
+                          : ""
+                      } ${levelone.type === "link" ? "slide" : ""}
+                         ${levelone.type === "sub" ? "slide has-sub" : ""} ${
+                        levelone?.active ? "open" : ""
+                      } ${levelone?.selected ? "active" : ""}`}
+                    >
+                      {levelone.menutitle ? (
+                        <span className="category-name">
+                          {levelone.menutitle}
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {levelone.menutitle_lg ? (
+                        <span className="category-name">
+                          {levelone.menutitle_lg}
+                        </span>
+                      ) : (
+                        ""
+                      )}
+                      {levelone.type === "link" ? (
+                        <Link
+                          to={levelone.path}
+                          className={`side-menu__item ${
+                            levelone.selected ? "active" : ""
+                          }`}
+                        >
+                          {levelone.icon}
+                          <span className="side-menu__label">
+                            {t(levelone.title)}
+                            {levelone.badgetxt ? (
+                              <span className={levelone.class}>
+                                {levelone.badgetxt}
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                          </span>
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {levelone.type === "empty" ? (
+                        <Link to="#" className="side-menu__item">
+                          {levelone.icon}
+                          <span className="">
                           {t(levelone.title)}
-                          {levelone.badgetxt ? (
-                            <span className={levelone.class}>
-                              {levelone.badgetxt}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </span>
-                      </Link>
-                    ) : (
-                      ""
-                    )}
-                    {levelone.type === "empty" ? (
-                      <Link to="#" className="side-menu__item">
-                        {levelone.icon}
-                        <span className="">
-                        {t(levelone.title)}
-                          {levelone.badgetxt ? (
-                            <span className={levelone.class}>
-                              {levelone.badgetxt}
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                        </span>
-                      </Link>
-                    ) : (
-                      ""
-                    )}
-                    {levelone.type === "sub" ? (
-                      <Menuloop
-                        MENUITEMS={levelone}
-                        level={level + 1}
-                        toggleSidemenu={toggleSidemenu}
-                        t={t}
-                      />
-                    ) : (
-                      ""
-                    )}
-                  </li>
-
-                  {levelone.menutitle_lg && levelone.showUserMiniCard && (
-                    <li className="slide__category_Detail">
-                      <div className="sm:flex items-start items-center">
-                        <div>
-                          <span className="avatar avatar-md avatar-rounded ">
-                            <img
-                              alt={userSession?.displayName}
-                              src={userSession?.userimage}
-                            />
+                            {levelone.badgetxt ? (
+                              <span className={levelone.class}>
+                                {levelone.badgetxt}
+                              </span>
+                            ) : (
+                              ""
+                            )}
                           </span>
-                        </div>
-                        <div className="flex-grow p-2">
-                          <div className="flex items-center !justify-between">
-                            <h6 className="mb-1  text-[.6rem]">
-                              <p className="mb-1  text-[.8rem]">
-                                {userSession?.displayName}
-                              </p>
-                              <p>{userSession?.email}</p>
-                            </h6>
+                        </Link>
+                      ) : (
+                        ""
+                      )}
+                      {levelone.type === "sub" ? (
+                        <Menuloop
+                          MENUITEMS={levelone}
+                          level={level + 1}
+                          toggleSidemenu={toggleSidemenu}
+                          t={t}
+                        />
+                      ) : (
+                        ""
+                      )}
+                    </li>
+  
+                    {levelone.menutitle_lg && levelone.showUserMiniCard && (
+                      <li className="slide__category_Detail">
+                        <div className="sm:flex items-start items-center">
+                          <div>
+                            <span className="avatar avatar-md avatar-rounded ">
+                              <img
+                                alt={userSession?.displayName}
+                                src={userSession?.userimage}
+                              />
+                            </span>
+                          </div>
+                          <div className="flex-grow p-2">
+                            <div className="flex items-center !justify-between">
+                              <h6 className="mb-1  text-[.6rem]">
+                                <p className="mb-1  text-[.8rem]">
+                                  {userSession?.displayName}
+                                </p>
+                                <p>{userSession?.email}</p>
+                              </h6>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </li>
-                  )}
-                  {levelone.menutitle_lg && levelone.showWorkspaceMiniCard && (
-                    <li className="slide__category_Detail">
-                      <div className="sm:flex items-start items-center">
-                        <div>
-                          <span className="avatar avatar-md avatar-badge ">
-                            <ErpAvatar
-                              variant="square"
-                              alt={userSession?.currentClientName}
-                              src={companyLogo}
-                              sx={avatarStyle}
-                            />
-                          </span>
-                        </div>
-                        <div className="flex-grow p-2">
-                          <div className="flex items-center !justify-between">
-                            <h6 className="mb-1  text-[.6rem]">
-                              <p className="mb-1  text-[.8rem]">
-                                {userSession?.currentClientName}
-                              </p>
-                              <p>Branch: {userSession?.currentBranchName}</p>
-                            </h6>
+                      </li>
+                    )}
+                    {levelone.menutitle_lg && levelone.showWorkspaceMiniCard && (
+                      <li className="slide__category_Detail">
+                        <div className="sm:flex items-start items-center">
+                          <div>
+                            <span className="avatar avatar-md avatar-badge ">
+                              <ErpAvatar
+                                variant="square"
+                                alt={userSession?.currentClientName}
+                                src={companyLogo}
+                                sx={avatarStyle}
+                              />
+                            </span>
+                          </div>
+                          <div className="flex-grow p-2">
+                            <div className="flex items-center !justify-between">
+                              <h6 className="mb-1  text-[.6rem]">
+                                <p className="mb-1  text-[.8rem]">
+                                  {userSession?.currentClientName}
+                                </p>
+                                <p>Branch: {userSession?.currentBranchName}</p>
+                              </h6>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </li>
-                  )}
-                </Fragment>
-              ))}
-            </ul>
-            <div
-              className="slide-right"
-              id="slide-right"
-              onClick={() => {
-                slideRight();
-              }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#7b8191"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
+                      </li>
+                    )}
+                  </Fragment>
+                ))}
+              </ul>
+              <div
+                className="slide-right"
+                id="slide-right"
+                onClick={() => {
+                  slideRight();
+                }}
               >
-                <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
-              </svg>
-            </div>
-          </nav>
-        </SimpleBar>
-      </aside>
-    </Fragment>
-  );
-};
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="#7b8191"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"></path>
+                </svg>
+              </div>
+            </nav>
+          </SimpleBar>
+        </aside>
+      </Fragment>
+    );
+  }, [menuitems]);
+ return renderNavItems
+});
+
 
 const mapStateToProps = (state: any) => ({
   local_varaiable: state,

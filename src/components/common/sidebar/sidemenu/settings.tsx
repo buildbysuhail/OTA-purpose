@@ -9,7 +9,7 @@ import {
   UserIcon,
   WrenchIcon,
 } from "@heroicons/react/24/outline";
-import {toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
+import {toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
         toggleDayClosePopup, 
         toggleDeleteInactiveTransactionPopup, 
         toggleImportExportPopup, 
@@ -99,7 +99,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/system/counters`, type: 'link', active: false, selected: false, title: 'Counters' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/financial-year`, type: 'link', active: false, selected: false, title: 'Financial Year' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/vouchers`, type: 'link', active: false, selected: false, title: 'Vouchers' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/barcode-print`, type: 'link', active: false, selected: false, title: 'Barcode Print' },
+      {action:toggleBarcodePrintPopup, type: 'popup', active: false, selected: false, title: 'Barcode Print' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/headers-footers`, type: 'link', active: false, selected: false, title: 'Headers and Footers' },
       { path: `${import.meta.env.BASE_URL}settings/_/templates`, type: 'link', active: false, selected: false, title: 'Invoice Designer' },
       { action:toggleCommandsPopup, type: 'popup', active: false, selected: false, title: 'Commands' },

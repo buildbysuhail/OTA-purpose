@@ -11,6 +11,7 @@ import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
 import { CounterManage } from "./counters-manage";
 
+
 const Counters = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();

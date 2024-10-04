@@ -139,9 +139,10 @@ const Urls = {
   DayClose: "/Core/DayClose/DayClose/",
   Remainder: "/Core/Remainder/",
   userActionReport: "/Core/UserAction/",
-  currencyExchange: "/Core/ExchangeRates",
+  currencyExchange: "/Core/ExchangeRates/",
   postCurrency: "/Accounts/Currency/",
-  authorization_settings:"/Core/Authorization",
+  authorization_settings:"/Core/Authorization/",
+  reset_data_base:"/Core/ResetDataBase/ResetTransactionTables/",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

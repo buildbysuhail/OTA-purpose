@@ -79,15 +79,15 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("geldeaWsPort")}
           label={t("geldea_ws_port")}
-          placeholder="Geldea Ws Port"
+          placeholder={t("geldea_ws_port")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("geldeaWsPort", data)}
         />
 
         <ERPInput
           {...getFieldProps("gediaService")}
-          label="Gedia Service"
-          placeholder="Gedia Service"
+          label={t("gedia_service")}
+          placeholder={t("gedia_service")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("gediaService", data)}
         />

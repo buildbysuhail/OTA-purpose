@@ -129,7 +129,7 @@ const Urls = {
   CompanyProfiles: "/Core/CompanyProfile/",
   Branch: "/Core/Branch/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
-  deleteInactiveTransactions: "/Core/DeleteInActive/DeleteInActive/",
+  deleteInactiveTransactions: "/Core/DeleteInActive/",
 
   //setting/system
   Counter: "/Core/Counter/",

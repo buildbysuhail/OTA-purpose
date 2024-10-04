@@ -198,7 +198,7 @@ const AccountGroupType = () => {
                   columns={columns}
                   gridHeader="Account Group"
                   dataUrl={Urls.account_group}
-                  gridId="grd_user_type"
+                  gridId="grd_acc_group"
                   popupAction={toggleAccountGroupPopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""

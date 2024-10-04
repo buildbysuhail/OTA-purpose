@@ -2,23 +2,12 @@ import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { UserData } from "./user-manage-types";
 import { toggleAccountGroupPopup, toggleUserPopup } from "../../../redux/slices/popup-reducer";
-import { RootState } from "../../../redux/store";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 
-interface AccountGroupData {
-  name: string;
-  nameInArabic: string;
-  shortName: string;
-  groupUnder: string;
-  remarks: string;
-  reasonForEdit: string;
-  isEditable: boolean;
-  isDeletable: boolean;
-}
 
 export const UserManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -32,7 +21,7 @@ export const UserManage: React.FC = React.memo(() => {
     isLoading,
     formState
   } = useFormManager<UserData>({
-    url: Urls.account_group,
+    url: Urls.Users,
     onSuccess: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.user.key
   });

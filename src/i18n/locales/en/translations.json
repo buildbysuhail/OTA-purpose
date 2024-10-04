@@ -238,5 +238,20 @@
   "SiNo":"Serial No",
   "ledger_name":"ledger Name",
   "voucher_prefix":"Voucher Prefix",
- "employee":"Employee"
+ "employee":"Employee",
+
+ "display_order":"Display Order",
+ "arabic_name":"Arabic Name",
+ "parent_group_id":"Parent Group Id",
+ "reason_for_modification":"Reason For Modification",
+ "is_common":"Is Common",
+ "is_protected":"Is Protected",
+ "is_deletable":"Is Deletable",
+ "is_editable":"Is Editable",
+ "parent_group":"parent Group",
+ "short_name":"Short Name",
+
+ "ledger_code":"Ledger Code",
+ "ledger":"Ledger",
+ "alias_name":"Alias Name"
 }

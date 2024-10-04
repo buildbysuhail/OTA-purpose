@@ -7,7 +7,6 @@ import { toggleAccountLedgerPopup } from "../../../../redux/slices/popup-reducer
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { AccountGroupManage } from "../account-groups/account-group-manage";
 import { AccountLedgerManage } from "./account-ledger-manage";
 import { useTranslation } from "react-i18next";
 
@@ -18,30 +17,110 @@ const AccountLedgerType = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "Account Ledger",
-      caption: "Account  Ledger",
+      dataField: "s.No",
+      caption: t("SiNo"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 50,
       isLocked: true,
     },
     {
-      dataField: "userTypeCode",
-      caption: "Code",
+      dataField: "id",
+      caption: t('id'),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "ledgerCode",
+      caption: t('ledger_code'),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "ledger",
+      caption: t('ledger'),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "accGroupName",
+      caption: t("acc_group"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "aliasName",
+      caption: t("alias_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "remarks",
+      caption: t("remarks"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
     },
     {
-      dataField: "remarks",
-      caption: "Remarks",
+      dataField: "isDeletable",
+      caption: t("is_deletable"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 50,
+    },
+    {
+      dataField: "isEditable",
+      caption: t("is_editable"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "createdUser",
+      caption: t("created_user"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "createdDate",
+      caption: t("created_date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "modifiedUser",
+      caption: t("modified_user"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
     },
     {
       dataField: "actions",

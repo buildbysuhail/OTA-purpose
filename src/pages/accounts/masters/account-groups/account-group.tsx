@@ -27,7 +27,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "id",
-      caption: t('Id'),
+      caption: t('id'),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -35,7 +35,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "accGroupName",
-      caption: t("Account Group"),
+      caption: t("acc_group"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -43,7 +43,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "shortName",
-      caption: t("Short Name"),
+      caption: t("short_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -51,7 +51,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "parentGroup",
-      caption: t("parent Group"),
+      caption: t("parent_group"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -59,7 +59,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "remarks",
-      caption: t("Remarks"),
+      caption: t("remarks"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -67,7 +67,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "isEditable",
-      caption: t("Is Editable"),
+      caption: t("is_editable"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -75,7 +75,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "isDeletable",
-      caption: t("Is Deletable"),
+      caption: t("is_deletable"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -83,7 +83,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "isProtected",
-      caption: t("Is Protected"),
+      caption: t("is_protected"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -91,7 +91,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "isCommon",
-      caption: t("Is Common"),
+      caption: t("is_common"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -99,7 +99,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "createdUser",
-      caption: t("Created User"),
+      caption: t("created_user"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -107,7 +107,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "createdDate",
-      caption: t("Created Date"),
+      caption: t("created_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -115,7 +115,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "modifiedUser",
-      caption: t("Modified User"),
+      caption: t("modified_user"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -123,7 +123,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "modifiedDate",
-      caption: t("Modified Date"),
+      caption: t("modified_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -131,7 +131,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "reasonForModification",
-      caption: t("Reason For Modification"),
+      caption: t("reason_for_modification"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -139,7 +139,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "parentGroupId",
-      caption: t("Parent Group Id"),
+      caption: t("parent_group_id"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -147,7 +147,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "arabicName",
-      caption: t("Arabic Name"),
+      caption: t("arabic_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -155,7 +155,7 @@ const AccountGroupType = () => {
     },
     {
       dataField: "displayOrder",
-      caption: t("Display Order"),
+      caption: t("display_order"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -163,14 +163,14 @@ const AccountGroupType = () => {
     },
     {
       dataField: "actions",
-      caption: t("Actions"),
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => {
-        
+
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
@@ -183,7 +183,7 @@ const AccountGroupType = () => {
           />
         )
       },
-      }
+    }
   ];
   return (
     <Fragment>
@@ -214,7 +214,7 @@ const AccountGroupType = () => {
         closeModal={() => {
           dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
         }}
-        content={<AccountGroupManage/>}
+        content={<AccountGroupManage />}
       />
     </Fragment>
   );

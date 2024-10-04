@@ -313,5 +313,14 @@
     "import_export": "استيراد وتصدير",
     "reset_dataBase": "إعادة تعيين قاعدة البيانات",
     "sql_commands": "أوامر SQL",
-    "authorization_settings": "إعدادات التفويض"
+    "authorization_settings": "إعدادات التفويض",
+
+    "execute": "تنفيذ",
+  "checkbox": "مربع اختيار",
+  "user_id": "معرف المستخدم",
+  "branch_id": "معرف الفرع",
+  "counter_id": "معرف العداد",
+  "user_name": "اسم المستخدم",
+  "user_type_code": "رمز نوع المستخدم",
+  "created_user_id": "معرف المستخدم المنشئ"
 }

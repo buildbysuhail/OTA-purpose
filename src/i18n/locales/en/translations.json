@@ -313,5 +313,14 @@
   "import_export":"Import Export",
   "reset_dataBase":"Reset DataBase",
   "sql_commands":"Sql Commands",
-  "authorization_settings":"Authorization Settings"
+  "authorization_settings":"Authorization Settings",
+
+  "execute":"execute",
+  "checkbox":"Checkbox",
+  "user_id":"userID",
+  "branch_id":"branchID",
+  "counter_id":"counterID",
+  "user_name":"userName",
+  "user_type_code":"UserTypeCode",
+  "created_user_id":"createdUserId"
 }

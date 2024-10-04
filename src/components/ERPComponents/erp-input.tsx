@@ -72,7 +72,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
   return (
     <div className={className}>
       {!noLabel && (
-        <label className={`${labelClassName} capitalize mb-1  block text-xs text-gray-900`}>
+        <label className={`${labelClassName} capitalize mb-1  block text-xs text-gray-900 text-left rtl:text-right`}>
           {iLabel}
           {required && !noLabel && "*"}
         </label>

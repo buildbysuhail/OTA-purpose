@@ -15,19 +15,7 @@ const AccountGroupType = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-  const cellRender = useCallback((cellElement: any) => {
-    return (
-      <ERPGridActions
-        view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-        edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-        delete={{
-          confirmationRequired: true,
-          confirmationMessage: "Are you sure you want to delete this item?",
-          // action: () => handleDelete(cellInfo?.data?.id),
-        }}
-      />
-    )
-  }, [toggleAccountGroupPopup]);
+
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "s.No",
@@ -198,7 +186,7 @@ const AccountGroupType = () => {
         )
       },
     }
-  ], [cellRender]);
+  ], []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

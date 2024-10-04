@@ -8,17 +8,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-
-interface AccountGroupData {
-  name: string;
-  nameInArabic: string;
-  shortName: string;
-  groupUnder: string;
-  remarks: string;
-  reasonForEdit: string;
-  isEditable: boolean;
-  isDeletable: boolean;
-}
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 export const UserManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -32,7 +22,7 @@ export const UserManage: React.FC = React.memo(() => {
     isLoading,
     formState
   } = useFormManager<UserData>({
-    url: Urls.account_group,
+    url: Urls.Users,
     onSuccess: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.user.key
   });
@@ -43,7 +33,7 @@ export const UserManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("counterID")}
           label="Counter ID"
@@ -95,6 +85,18 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder="Display Name"
           required={true}
           onChangeData={(data: any) => handleFieldChange("displayName", data)}
+        />
+        <ERPDataCombobox
+          id="employeeID"
+          field={{
+            id: "employeeID",
+            required: true,
+            getListUrl: Urls.data_employees,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => handleFieldChange("employeeID", data)}
+          label="employeeID"
         />
       </div>
       <ERPFormButtons

@@ -77,7 +77,12 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data)}
         />
-        <ERPCheckbox id="isDefault" label="isDefault" />
+       
+        <ERPCheckbox
+          {...getFieldProps('isDefault')}
+          label="Is Default"
+          onChangeData={(data: any) => handleFieldChange('isDefault', data)}
+        />
       </div>
       <ERPFormButtons
         isEdit={isEdit}

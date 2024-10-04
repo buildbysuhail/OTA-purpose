@@ -28,6 +28,43 @@ export interface CompanyProfileData {
   countrySubEntity: string
 }
 
+export const initialCompanyProfileData = {
+  data: {
+    registeredName: "",
+    registeredNameArabic: "",
+    taxRegNo: "",
+    crNumber: "",
+    buildingNo: "",
+    streetName: "",
+    district: "",
+    city: "",
+    country: "",
+    postalCode: "",
+    additionalNo: "",
+    emailAddress: "",
+    telephone: "",
+    mobile: "",
+    countrySubEntity: ""
+  },
+  validations: {
+    registeredName: "",
+    registeredNameArabic: "",
+    taxRegNo: "",
+    crNumber: "",
+    buildingNo: "",
+    streetName: "",
+    district: "",
+    city: "",
+    country: "",
+    postalCode: "",
+    additionalNo: "",
+    emailAddress: "",
+    telephone: "",
+    mobile: "",
+    countrySubEntity: ""
+  },
+};
+
 
 
 const CompanyProfileManage: React.FC = React.memo(() => {

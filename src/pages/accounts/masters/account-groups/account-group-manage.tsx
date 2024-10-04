@@ -41,27 +41,46 @@ export const AccountGroupManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps('accGroupName')}
-          label="User Type Name"
-          placeholder="User Type Name"
+          label="Name"
+          placeholder="Name"
           required={true}
-          onChangeData={(data: any) => {debugger;handleFieldChange('accGroupName', data)}}
+          onChangeData={(data: any) => { debugger; handleFieldChange('accGroupName', data) }}
         />
         <ERPInput
-          {...getFieldProps('userTypeCode')}
-          label="User Type Code"
-          placeholder="User Type Code"
+          {...getFieldProps('accGroupNameArabic')}
+          label="Name in Arabic"
+          placeholder="Name in Arabic"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
+          onChangeData={(data: any) => handleFieldChange('accGroupNameArabic', data)}
         />
         <ERPInput
-          {...getFieldProps('remark')}
-          label="Remark"
-          placeholder="Remark"
+          {...getFieldProps('shortName')}
+          label="Short Name"
+          placeholder="Short Name"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('remark', data)}
+          onChangeData={(data: any) => handleFieldChange('shortName', data)}
+        />
+        <ERPInput
+          label="Group Under"
+          onChangeData={(data: string) => handleFieldChange('groupUnder', data)}
+          {...getFieldProps('groupUnder')}
+        />
+        <ERPInput
+          {...getFieldProps('remarks')}
+          label="Remarks"
+          placeholder="Remarks"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange('remarks', data)}
+        />
+        <ERPInput
+          {...getFieldProps('reasonForEdit')}
+          label="Reason For Edit"
+          placeholder="Reason For Edit"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange('reasonForEdit', data)}
         />
       </div>
       <ERPFormButtons

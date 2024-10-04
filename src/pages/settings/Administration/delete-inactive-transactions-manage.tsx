@@ -8,10 +8,11 @@ import { toggleDeleteInactiveTransactionPopup } from "../../../redux/slices/popu
 import { ActionType } from "../../../redux/types";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { initialDataCounter } from "../system/counters-manage-type";
+import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 
 interface DeleteInactiveTransactionManageData {
-date:string
-isChecked:boolean
+  date: string;
+  isChecked: boolean;
 }
 export const initialDataDeleteInactive = {
   data: {
@@ -23,34 +24,42 @@ export const initialDataDeleteInactive = {
     isChecked: "",
   },
 };
- const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
- 
+const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
-  const {
-    isEdit,
-    handleSubmit,
-    handleFieldChange,
-    getFieldProps,
-    isLoading,
-   
-  } = useFormManager<DeleteInactiveTransactionManageData>({
-    url: Urls.deleteInactiveTransactions,
-    onSuccess: useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null })), [dispatch]),
-    method: ActionType.POST
-  });
+  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+    useFormManager<DeleteInactiveTransactionManageData>({
+      url: Urls.deleteInactiveTransactions,
+      onSuccess: useCallback(
+        () =>
+          dispatch(
+            toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null })
+          ),
+        [dispatch]
+      ),
+      method: ActionType.POST,
+    });
 
   const onClose = useCallback(() => {
-    dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null }));
+    dispatch(
+      toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null })
+    );
   }, []);
 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
-      <ERPCheckbox
-          {...getFieldProps('isChecked')}
+        <ERPDateInput
+          {...getFieldProps("date")}
+          type="date"
+          id="date"
+          label="Till Date"
+          onChangeData={(data: any) => handleFieldChange("date", data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isChecked")}
           label="I agree to delete all inactive transactions till the selected date"
-          onChangeData={(data: any) => handleFieldChange('isChecked', data)}
+          onChangeData={(data: any) => handleFieldChange("isChecked", data)}
         />
       </div>
       <ERPFormButtons

@@ -148,7 +148,8 @@ const Users = () => {
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
-              // action: () => handleDelete(cellInfo?.data?.id),
+              url:Urls?.UserTypes,key:cellElement?.data?.user
+
             }}
           />
         )

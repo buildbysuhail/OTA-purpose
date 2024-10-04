@@ -12,6 +12,7 @@ import { useLocation } from "react-router-dom";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import SystemSettingsApi from "./system-apis";
+import { useTranslation } from "react-i18next";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -135,6 +136,8 @@ const CommandsManage = () => {
     console.log("Execute button clicked");
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1">
@@ -149,13 +152,13 @@ const CommandsManage = () => {
             <div className="flex gap-4">
               <ERPButton
                 type="reset"
-                title="Select"
+                title={t("select")}
                 variant="primary"
                 onClick={onClose}
               ></ERPButton>
               <ERPButton
                 type="reset"
-                title="Execute"
+                title={t("execute")}
                 variant="secondary"
                 onClick={onClose}
               ></ERPButton>
@@ -178,20 +181,20 @@ const CommandsManage = () => {
             checked={checked}
             onChange={handleCheckboxChange}
           />
-          <label className="text-sm font-semibold">Checkbox</label>
+          <label className="text-sm font-semibold">{t("checkbox")}</label>
         </div>
         {/* Table */}
         <div className="overflow-x-auto mb-8">
           <table className="min-w-full bg-white border border-gray-300">
             <thead>
               <tr className="bg-gray-200">
-                <th className="px-4 py-2 border">UserID</th>
-                <th className="px-4 py-2 border">BranchID</th>
-                <th className="px-4 py-2 border">CounterID</th>
-                <th className="px-4 py-2 border">UserName</th>
-                <th className="px-4 py-2 border">Passwd</th>
-                <th className="px-4 py-2 border">UserTypeCode</th>
-                <th className="px-4 py-2 border">CreatedUserID</th>
+                <th className="px-4 py-2 border">{t("user_id")}</th>
+                <th className="px-4 py-2 border">{t("branch_id")}</th>
+                <th className="px-4 py-2 border">{t("counter_id")}</th>
+                <th className="px-4 py-2 border">{t("user_name")}</th>
+                <th className="px-4 py-2 border">{t("password")}</th>
+                <th className="px-4 py-2 border">{t("user_type_code")}</th>
+                <th className="px-4 py-2 border">{t("created_user_id")}</th>
               </tr>
             </thead>
             <tbody>

@@ -132,7 +132,7 @@ const Counters = () => {
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
-                // action: () => handleDelete(cellInfo?.data?.id),
+                url:Urls?.Counter,key:cellElement?.data?.id
               }}
             />
           )

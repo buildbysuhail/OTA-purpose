@@ -7,6 +7,7 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
 export interface FinancialYearData {
   dateFrom: string;
@@ -119,20 +120,11 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           </select>
         </div>
 
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            className="ti-form-checkbox"
-            {...getFieldProps("visibleOnStartUp")}
-            onChange={(e) => handleFieldChange("visibleOnStartUp", e.target.checked)}
-          />
-          <label
-            htmlFor={getFieldProps("visibleOnStartUp").id}
-            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
-          >
-            Visible On StartUp
-          </label>
-        </div>
+        <ERPCheckbox
+          {...getFieldProps('visibleOnStartUp')}
+          label="Visible On StartUp"
+          onChangeData={(data: any) => handleFieldChange('visibleOnStartUp', data)}
+        />
       </div>
       <ERPFormButtons
         isEdit={isEdit}

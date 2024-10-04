@@ -239,7 +239,7 @@
   "SiNo":"Serial No",
   "ledger_name":"ledger Name",
   "voucher_prefix":"Voucher Prefix",
- "employee":"Employee",
+  "employee":"Employee",
 
  "display_order":"Display Order",
  "arabic_name":"Arabic Name",
@@ -258,5 +258,13 @@
  "account_group_id":"Account Group Id",
  "is_billwise_applicable":"Is Billwise Applicable",
  "is_Active":"Is Active",
- "is_cost_center_applicable":"Is Cost Center Applicable"
+ "is_cost_center_applicable":"Is Cost Center Applicable",
+
+ "from_date":"From Date",
+ "to_date":"To Date",
+ "status":"Status",
+ "visible_on_startup":"Visible on Startup",
+ "created_by":"Created By",
+ "modified_by":"Modified By",
+ "opening_stock_value":"Opening Stock Value"
 }

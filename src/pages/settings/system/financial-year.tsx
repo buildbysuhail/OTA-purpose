@@ -1,133 +1,131 @@
-import { Fragment } from "react";
-import Urls from "../../../redux/urls";
-
-import { Link } from "react-router-dom";
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleFinancialYearPopup } from "../../../redux/slices/popup-reducer";
+import React, { Fragment, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import { toggleFinancialYearPopup } from "../../../redux/slices/popup-reducer";
+import Urls from "../../../redux/urls";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { FinancialYearManage } from "./financial-year-manage";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import { useTranslation } from "react-i18next";
-
-// import { UserTypeManage } from './user-type-manage';
-
 const FinancialYear = () => {
-  const { t } = useTranslation();
+
+  const MemoizedFinancialYearManage = useMemo(() => React.memo(FinancialYearManage), []);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = [
+
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
-      caption: "Serial Number",
+      caption: t("si_no"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 90,
       isLocked: true,
     },
     {
+      dataField: "id",
+      caption: t("id"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 80,
+      isLocked: false,
+    },
+    {
       dataField: "fromDate",
-      caption: "From Date",
+      caption: t("from_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 120,
     },
     {
       dataField: "toDate",
-      caption: "To Date",
+      caption: t("to_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 120,
     },
     {
       dataField: "status",
-      caption: "Status",
+      caption: t("status"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 100,
     },
     {
       dataField: "remarks",
-      caption: "Remarks",
+      caption: t("remarks"),
       dataType: "string",
       allowSorting: false,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 100,
     },
     {
       dataField: "visibleOnStartup",
-      caption: "Visible on Startup",
+      caption: t("visible_on_startup"),
       dataType: "boolean",
       allowSorting: true,
       allowSearch: false,
       allowFiltering: true,
-      minWidth: 150,
+      width: 80,
     },
     {
       dataField: "createdUser",
-      caption: "Created By",
+      caption: t("created_by"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 120,
     },
     {
       dataField: "createdDate",
-      caption: "Created Date",
+      caption: t("created_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 120,
     },
     {
       dataField: "modifiedUser",
-      caption: "Modified By",
+      caption: t("modified_by"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 120,
     },
     {
       dataField: "modifiedDate",
-      caption: "Modified Date",
+      caption: t("modified_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
-    },
-    {
-      dataField: "id",
-      caption: "ID",
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 100,
-      isLocked: true,
+      width: 120,
     },
     {
       dataField: "openingStockValue",
-      caption: "Opening Stock Value",
+      caption: t("opening_stock_value"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 80,
     },
     {
       dataField: "actions",
@@ -137,23 +135,21 @@ const FinancialYear = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any) => {
-        debugger;
+      cellRender: (cellElement: any, cellInfo: any) => {
+
         return (
           <ERPGridActions
-            view={{ type: "popup", action: toggleFinancialYearPopup }}
-            edit={{ type: "popup", action: toggleFinancialYearPopup }}
+            view={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            edit={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
-              // action: () => handleDelete(cellInfo?.data?.id),
             }}
-            itemId={cellElement?.data?.userTypeCode || ""}
           />
-        );
+        )
       },
-    },
-  ];
+    }
+  ], []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -161,15 +157,15 @@ const FinancialYear = () => {
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid
+                <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("financial_year")}
+                  gridHeader="Financial Year"
                   dataUrl={Urls.FinancialYear}
-                  gridId="grd_financial_year"
+                  gridId="grd_fin_year"
                   popupAction={toggleFinancialYearPopup}
                   gridAddButtonType="popup"
-                  gridAddButtonIcon="ri-add-line"
-                ></ERPDevGrid>
+                  gridAddButtonIcon=""
+                ></ErpDevGrid>
               </div>
             </div>
           </div>
@@ -177,16 +173,16 @@ const FinancialYear = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.financialYear.isOpen || false}
-        title={t("financial_year")}
-        width="w-full max-w-[60rem]"
+        title={"Add New UserType"}
+        width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleFinancialYearPopup({ isOpen: false }));
+          dispatch(toggleFinancialYearPopup({ isOpen: false, key: null }));
         }}
-        content={<FinancialYearManage itemKey={rootState.PopupData.financialYear.key}/>}
+        content={<MemoizedFinancialYearManage />}
       />
     </Fragment>
   );
 };
 
-export default FinancialYear;
+export default React.memo(FinancialYear);

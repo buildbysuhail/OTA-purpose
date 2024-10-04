@@ -57,8 +57,8 @@ const ERPModal = ({
             <div className="fixed inset-0 bg-black bg-opacity-25" />
           </Transition.Child>
 
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className={`flex min-h-full items-center justify-center text-center${isFullHeight ? '' : 'p-4 relative'}`}>
+          <div className={`fixed inset-0 ${isFullHeight ? 'overflow-y-inherit ' : ' overflow-y-auto'}`}>
+          <div className={`flex min-h-full items-center justify-center text-center${isFullHeight ? '' : 'p-4 relative'}`}>
               <TransitionChild
                 as={Fragment}
                 enter="ease-out duration-300"

@@ -8,6 +8,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { toggleCompanyProfilePopup } from "../../../redux/slices/popup-reducer";
+import { ActionType } from "../../../redux/types";
 
 export interface CompanyProfileData {
   registeredName: string,
@@ -27,8 +28,46 @@ export interface CompanyProfileData {
   countrySubEntity: string
 }
 
+export const initialCompanyProfileData = {
+  data: {
+    registeredName: "",
+    registeredNameArabic: "",
+    taxRegNo: "",
+    crNumber: "",
+    buildingNo: "",
+    streetName: "",
+    district: "",
+    city: "",
+    country: "",
+    postalCode: "",
+    additionalNo: "",
+    emailAddress: "",
+    telephone: "",
+    mobile: "",
+    countrySubEntity: ""
+  },
+  validations: {
+    registeredName: "",
+    registeredNameArabic: "",
+    taxRegNo: "",
+    crNumber: "",
+    buildingNo: "",
+    streetName: "",
+    district: "",
+    city: "",
+    country: "",
+    postalCode: "",
+    additionalNo: "",
+    emailAddress: "",
+    telephone: "",
+    mobile: "",
+    countrySubEntity: ""
+  },
+};
 
-export const CompanyProfileManage: React.FC = React.memo(() => {
+
+
+const CompanyProfileManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -42,7 +81,7 @@ export const CompanyProfileManage: React.FC = React.memo(() => {
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfiles,
     onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null })), [dispatch]),
-    key: rootState.PopupData.companyProfile.key
+    method: ActionType.POST
   });
 
   const onClose = useCallback(() => {
@@ -54,7 +93,7 @@ export const CompanyProfileManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("registeredName")}
           label="Registered Name"
@@ -180,3 +219,5 @@ export const CompanyProfileManage: React.FC = React.memo(() => {
     </div>
   );
 });
+
+export default CompanyProfileManage;

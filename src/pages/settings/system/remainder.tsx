@@ -71,8 +71,8 @@ const Remainders = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            view={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID }) }}
+            edit={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",

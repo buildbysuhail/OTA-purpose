@@ -145,12 +145,14 @@ const Users = () => {
           <ERPGridActions
             view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
             edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
-            delete={{
-              confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
-              url:Urls?.UserTypes,key:cellElement?.data?.user
+            // delete={{
+            //   confirmationRequired: true,
+            //   confirmationMessage: "Are you sure you want to delete this item?",
+            //   url:Urls?.Users,key:cellElement?.data?.user
 
-            }}
+            // }}
+
+            //user can't delete
           />
         )
       },

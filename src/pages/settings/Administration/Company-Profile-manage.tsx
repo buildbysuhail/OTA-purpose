@@ -68,9 +68,9 @@ export const initialCompanyProfileData = {
 
 
 const CompanyProfileManage: React.FC = React.memo(() => {
-  const rootState = useRootState();
+  const rootState = useRootState()
   const dispatch = useDispatch();
-
+  const { t } = useTranslation();
   const {
     isEdit,
     handleSubmit,
@@ -87,9 +87,6 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   const onClose = useCallback(() => {
     dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null }));
   }, []);
-
-
-  const { t } = useTranslation();
 
   return (
     <div className="w-full pt-4">
@@ -153,7 +150,6 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("city", data)}
         />
-
         <ERPDataCombobox
           {...getFieldProps("cId")}
           field={{

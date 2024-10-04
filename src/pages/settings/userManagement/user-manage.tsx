@@ -41,7 +41,7 @@ export const UserManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => {
             debugger;
-            handleFieldChange("user", data);
+            handleFieldChange("userName", data);
           }}
         />
         <ERPInput
@@ -80,18 +80,21 @@ export const UserManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("displayName", data)}
         />
         <ERPDataCombobox
+          {...getFieldProps("userTypeCode")}
           id="userTypeCode"
           field={{
-            id: "userType",
+            id: "userTypeCode",
             required: true,
             getListUrl: Urls.data_user_types,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => handleFieldChange("userType", data)}
           label={t("usertype")}
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("userTypeCode", data)}
         />
         <ERPDataCombobox
+          {...getFieldProps("counterID")}
           id="counterID"
           field={{
             id: "counterID",
@@ -100,20 +103,23 @@ export const UserManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => handleFieldChange("counterID", data)}
           label={t("counter")}
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("counterID", data)}
         />
         <ERPDataCombobox
+          {...getFieldProps("employeeID")}
           id="employeeID"
           field={{
             id: "employeeID",
-            required: false,
+            required: true,
             getListUrl: Urls.data_employees,
             valueKey: "id",
             labelKey: "name",
           }}
+          label={t("employee")}
+          required={true}
           onChangeData={(data: any) => handleFieldChange("employeeID", data)}
-          label="employeeID"
         />
         <ERPInput
           {...getFieldProps("maxDecimalPerAllowed")}

@@ -289,5 +289,22 @@
   
     "username": "اسم المستخدم",
     "confirm_password": "تأكيد كلمة المرور",
-    "max_dis%": "أقصى نسبة خصم %"
+    "max_dis%": "أقصى نسبة خصم %",
+
+    "enter_id": "أدخل الهوية",
+    "company_id": "هوية الشركة",
+    "date_form": "تاريخ من",
+    "date_to": "تاريخ إلى",
+    "branch_code": "رمز الفرع",
+    "branch_name": "اسم الفرع",
+    "address_line_1": "العنوان سطر 1",
+    "address_line_2": "العنوان سطر 2",
+    "state": "الولاية",
+    "pin_code": "الرمز البريدي",
+    "phone": "الهاتف",
+    "fax": "فاكس",
+    "tin": "الرقم الضريبي",
+    "tax_identification_number": "رقم التعريف الضريبي",
+    "registration_number": "رقم التسجيل",
+    "branch_manager": "مدير الفرع"
 }

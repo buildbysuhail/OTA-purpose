@@ -266,5 +266,19 @@
  "visible_on_startup":"Visible on Startup",
  "created_by":"Created By",
  "modified_by":"Modified By",
- "opening_stock_value":"Opening Stock Value"
+ "opening_stock_value":"Opening Stock Value",
+
+"registered_name":"Registered Name",
+"tax_registration_number":"Tax Registration Number",
+"cr_number":"CR Number",
+"building_number":"Building Number",
+"street":"Street",
+"district":"District",
+"city":"City",
+"postal_code":"Postal Code",
+"additional_number":"Additional Number",
+"region_country_sub_entity":"Region/Country Sub Entity",
+"region":"region",
+"telephone":"Telephone",
+"mobile":"Mobile"
 }

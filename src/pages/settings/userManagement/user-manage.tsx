@@ -24,7 +24,8 @@ export const UserManage: React.FC = React.memo(() => {
   } = useFormManager<UserData>({
     url: Urls.Users,
     onSuccess: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null })), [dispatch]),
-    key: rootState.PopupData.user.key
+    key: rootState.PopupData.user.key,
+    useApiClient:true
   });
 
   const onClose = useCallback(() => {

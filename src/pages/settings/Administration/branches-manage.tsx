@@ -106,7 +106,8 @@ const BranchManage: React.FC = React.memo(() => {
   } = useFormManager<BranchData>({
     url: Urls.Branch,
     onSuccess: useCallback(() => dispatch(toggleBranchPopup({ isOpen: false })), [dispatch]),
-    method: ActionType.POST
+    method: ActionType.POST,
+    useApiClient: true
   });
 
   const onClose = useCallback(() => {

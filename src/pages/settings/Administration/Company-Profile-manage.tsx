@@ -20,6 +20,7 @@ export interface CompanyProfileData {
   district: string,
   city: string,
   country: string,
+  cId:number,
   postalCode: string,
   additionalNo: string,
   emailAddress: string,
@@ -39,6 +40,7 @@ export const initialCompanyProfileData = {
     district: "",
     city: "",
     country: "",
+    cId:0,
     postalCode: "",
     additionalNo: "",
     emailAddress: "",
@@ -81,7 +83,8 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfiles,
     onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null })), [dispatch]),
-    method: ActionType.POST
+    method: ActionType.POST,
+    useApiClient: true
   });
 
   const onClose = useCallback(() => {

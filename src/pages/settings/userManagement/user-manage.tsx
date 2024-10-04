@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { UserData } from "./user-manage-types";
+import { initialDataUser, UserData } from "./user-manage-types";
 import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -25,7 +25,8 @@ export const UserManage: React.FC = React.memo(() => {
     url: Urls.Users,
     onSuccess: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.user.key,
-    useApiClient:true
+    useApiClient:true,
+    initialData:initialDataUser
   });
 
   const onClose = useCallback(() => {

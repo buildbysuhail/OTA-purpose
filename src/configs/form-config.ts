@@ -8,11 +8,8 @@ import Urls from "../redux/urls";
 import { ApiEndpoint } from "./types";
 
 export const FORM_ENDPOINTS: ApiEndpoint[] = [
-  { url: Urls.Users, initialData: initialDataUser },
+
   { url: Urls.account_group, initialData: initialDataUser },
   { url: Urls.account_ledger, initialData: initialDataUser },
-  { url: Urls.Counter, initialData: initialDataCounter },
-  { url: Urls.Voucher, initialData: initialDataVoucher },
-  { url: Urls.Remainder, initialData: initialDataRemainder },
-  { url: Urls.FinancialYear, initialData: initialFinancialYearData },
+
 ] as const;

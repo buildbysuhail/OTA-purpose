@@ -8,7 +8,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import { CounterData } from "./counters-manage-type";
+import { CounterData, initialDataCounter } from "./counters-manage-type";
 
 export const CounterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -28,6 +28,8 @@ export const CounterManage: React.FC = React.memo(() => {
       [dispatch]
     ),
     key: rootState.PopupData.counter.key,
+    useApiClient: true,
+    initialData: initialDataCounter
   });
 
   const onClose = useCallback(() => {

@@ -7,7 +7,7 @@
   import ERPInput from "../../../components/ERPComponents/erp-input";
   import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
   import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-  import { RemainderData } from "./remainder-manage-type";
+  import { initialDataRemainder, RemainderData } from "./remainder-manage-type";
 
   export const RemainderManage: React.FC = React.memo(() => {
     const rootState = useRootState();
@@ -22,7 +22,9 @@
     } = useFormManager<RemainderData>({
       url:Urls.Remainder,
       onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null })), [dispatch]),
-      key: rootState.PopupData.reminder.key
+      key: rootState.PopupData.reminder.key,
+      useApiClient: true,
+      initialData: initialDataRemainder
     });
 
     const onClose = useCallback(() => {

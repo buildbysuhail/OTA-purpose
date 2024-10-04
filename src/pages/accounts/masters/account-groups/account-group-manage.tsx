@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, useEffect } from "react";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -21,11 +21,6 @@ interface AccountGroupData {
 export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const [localFormData, setLocalFormData] = useState<AccountGroupData>({
-    userTypeName: '',
-    userTypeCode: '',
-    remark: ''
-  });
 
   const {
     isEdit,
@@ -39,12 +34,6 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.accountGroup.key
   });
-
-  useEffect(() => {
-    if (formState.data.data) {
-      setLocalFormData(formState.data.data);
-    }
-  }, [formState.data.data]);
 
   const onClose = useCallback(() => {
     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));

@@ -21,10 +21,10 @@ interface FormField {
   value: any;
   data: any;
   validation?: string;
+  checked?: any;
 }
 
 export function useFormManager<T>({ url, onSuccess, onError, key }: UseFormManagerOptions) {
-  debugger
   const location = useLocation();
   const appDispatch = useAppDispatch();
 
@@ -99,7 +99,8 @@ export function useFormManager<T>({ url, onSuccess, onError, key }: UseFormManag
       id: fieldId,
       data: formState.data.data,
       value: formState.data.data?.[fieldId] || '',
-      validation: formState.data.validations?.[fieldId]
+      validation: formState.data.validations?.[fieldId],
+      checked: formState.data.data?.[fieldId] || false
     };
   }, [formState.data]);
 

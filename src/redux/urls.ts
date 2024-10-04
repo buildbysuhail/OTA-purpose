@@ -55,7 +55,8 @@ const Urls = {
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
-data_company_id:"/Core/Branch/GetBranchData",
+  data_company_id:"/Core/Branch/GetBranchData",
+ 
   // Auth
   login: "/login/",
   logout: "/logout/",

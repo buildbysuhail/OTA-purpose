@@ -295,8 +295,8 @@ const BranchManage: React.FC = React.memo(() => {
 
         <ERPInput
           {...getFieldProps("remarks")}
-          label={("remarks")}
-          placeholder={("remarks")}
+          label={t("remarks")}
+          placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data)}
         />
 

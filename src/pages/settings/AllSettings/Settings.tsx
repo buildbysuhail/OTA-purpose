@@ -17,6 +17,7 @@ import {
   toggleResetDataBasePopup,
   toggleCommandsPopup,
   toggleAuthorizationSettingsPopup,
+  toggleBarcodePrintPopup,
 } from "../../../redux/slices/popup-reducer";
 
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
@@ -29,6 +30,7 @@ const ImportExportManage = lazy(() => import("../system/import-export"));
 const CommandsManage = lazy(() => import("../system/commands"));
 const AuthorizationSettings = lazy(() => import("../system/authorization-settings-manage"));
 const  PopUpModalResetDatabase= lazy(() => import("../system/resetDatabase-manage"));
+const Barcodeprint = lazy(() => import("../system/barcode-print"));
 
 const Settings = () => {
   const rootState = useRootState();
@@ -153,6 +155,16 @@ const Settings = () => {
           dispatch(toggleAuthorizationSettingsPopup({ isOpen: false }));
         }}
         content={<AuthorizationSettings/>}
+      />
+        <ERPModal
+        isOpen={rootState.PopupData.barcodeprint.isOpen || false}
+        title="Barcode Print"
+        width="w-full max-w-[800px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleBarcodePrintPopup({ isOpen: false }));
+        }}
+        content={<Barcodeprint/>}
       />
     </Fragment>
   );

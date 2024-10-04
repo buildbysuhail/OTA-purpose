@@ -55,8 +55,8 @@ class APIClient {
       queryString !== ""
         ? axios.get(`${url}?${queryString}`)
         : await axios.get(`${url}`);
-    if (response?.status != undefined && response?.status != null) {
-      return response?.data;
+    if (response != undefined && response != null) {
+      return response;
     }
     else
     {

@@ -133,7 +133,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
         }}
-      content={<PopUpModalResetDatabase/>}
+      content={<ResetDbManage/>}
       />
 
       <ERPModal

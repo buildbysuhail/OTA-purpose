@@ -50,7 +50,7 @@ export function useFormManager<T>({ url, onSuccess, onError, key, method, useApi
   const loadFormData = useCallback(async () => {
     if (useApiClient) {
       try {
-        const response = await apiClient.getAsync(`${url}/${key}`);
+        const response = await apiClient.getAsync(`${url}${key}`);
         setFormState({
           data: {
             data: response,
@@ -84,7 +84,7 @@ export function useFormManager<T>({ url, onSuccess, onError, key, method, useApi
       try {
         let response;
         if (isEdit) {
-          response = await apiClient.put(`${url}/${key}`, formState.data.data);
+          response = await apiClient.put(`${url}${key}`, formState.data.data);
         } else {
           response = await apiClient.post(url, formState.data.data);
         }

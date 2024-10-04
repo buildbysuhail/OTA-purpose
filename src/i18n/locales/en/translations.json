@@ -253,5 +253,9 @@
 
  "ledger_code":"Ledger Code",
  "ledger":"Ledger",
- "alias_name":"Alias Name"
+ "alias_name":"Alias Name",
+ "account_group_id":"Account Group Id",
+ "is_billwise_applicable":"Is Billwise Applicable",
+ "is_Active":"Is Active",
+ "is_cost_center_applicable":"Is Cost Center Applicable"
 }

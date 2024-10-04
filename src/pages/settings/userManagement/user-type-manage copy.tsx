@@ -6,7 +6,6 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import React from "react";
 
 interface UserTypeData {
   userTypeName: string;
@@ -14,7 +13,7 @@ interface UserTypeData {
   remarks: string;
 }
 
-export const UserTypeManage : React.FC = React.memo(() =>  {
+export const UserTypeManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -26,7 +25,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
     isLoading
   } = useFormManager<UserTypeData>({
     url: Urls.UserTypes,
-    onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: () => dispatch(toggleUserTypePopup({ isOpen: false, key: null })),
     key: rootState.PopupData.userType.key
   });
 
@@ -67,5 +66,5 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
       />
     </div>
   );
-});
+};
 

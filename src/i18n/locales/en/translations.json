@@ -231,6 +231,7 @@
   "code":"Code",
   "remarks":"Remarks",
 
+  "usertype":"UserType",
   "add-new-usertype" : "Add New UserType",
   "add-new-user" : "Add New User",
   "maintain_shift":"Maintain Shift",

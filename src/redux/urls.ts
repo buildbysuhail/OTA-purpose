@@ -135,7 +135,7 @@ const Urls = {
   //setting/system
   Counter: "/Core/Counter/",
   Voucher: "/Core/Vouchers/",
-  FinancialYear: "/Core/FinancialYear",
+  FinancialYear: "/Core/FinancialYear/",
   DayClose: "/Core/DayClose/DayClose/",
   Remainder: "/Core/Remainder/",
   userActionReport: "/Core/UserAction/",

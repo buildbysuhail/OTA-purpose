@@ -55,7 +55,7 @@ const Urls = {
 
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
-
+data_company_id:"/Core/Branch/GetBranchData",
   // Auth
   login: "/login/",
   logout: "/logout/",
@@ -133,13 +133,13 @@ const Urls = {
   //setting/system
   Counter: "/Core/Counter/",
   Voucher: "/Core/Vouchers/",
-  FinancialYear: "/Core/FinancialYear/",
+  FinancialYear: "/Core/FinancialYear",
   DayClose: "/Core/DayClose/DayClose/",
   Remainder: "/Core/Remainder/",
   userActionReport: "/Core/UserAction/",
   currencyExchange: "/Core/ExchangeRates",
   postCurrency: "/Accounts/Currency/",
-
+  authorization_settings:"/Core/Authorization",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

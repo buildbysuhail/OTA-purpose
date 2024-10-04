@@ -5,6 +5,8 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { Button, TextField } from "@mui/material";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPButton from "../../components/ERPComponents/erp-button";
+import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
+import Urls from "../../redux/urls";
 
 interface BilledItem {
   id: number;
@@ -22,6 +24,7 @@ interface FormData {
   rate: string;
   taxOption: "Without Tax" | "With Tax";
 }
+
 const InvTransaction = () => {
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([
@@ -29,6 +32,8 @@ const InvTransaction = () => {
     { id: 2, name: "Banana", price: 50, quantity: 3, discount: 0, tax: 0 },
   ]);
   const [isOpen, setIsOpen] = useState(false);
+  const [showPopup, setShowPopup] = React.useState(false);
+
   // const [invoiceNo, setInvoiceNo] = useState<number>(3); // Default Invoice No.
   // const [date, setDate] = useState<string>("2024-09-23"); // Default Date
 
@@ -70,6 +75,29 @@ const InvTransaction = () => {
     }));
   };
 
+  const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (popupRef && !popupRef.contains(event.target as Node)) {
+        setShowPopup(false);
+        setIsHovered(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [popupRef]);
+
+  const [showTotalsPopup, setShowTotalsPopup] = useState(false); // State for showing totals popup
+
+  // const [showPopup, setShowPopup] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
@@ -87,19 +115,21 @@ const InvTransaction = () => {
         <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
         <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
           <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${activeButton === "credit"
+            className={`px-4 py-2 text-sm transition-colors duration-200 ${
+              activeButton === "credit"
                 ? " bg-green text-white rounded-full"
                 : "bg-transparent text-zinc rounded-full"
-              }`}
+            }`}
             onClick={() => setActiveButton("credit")}
           >
             Credit
           </button>
           <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${activeButton === "cash"
+            className={`px-4 py-2 text-sm transition-colors duration-200 ${
+              activeButton === "cash"
                 ? "bg-green text-white rounded-full"
                 : "bg-transparent text-zinc rounded-full"
-              }`}
+            }`}
             onClick={() => setActiveButton("cash")}
           >
             Cash
@@ -137,8 +167,7 @@ const InvTransaction = () => {
             Date
           </label>
           <div className="relative">
-            <input type="date" name="" id=""
-              className="border-none" />
+            <input type="date" name="" id="" className="border-none" />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               {/* <DatePicker
                 renderInput={(params) => (
@@ -247,8 +276,9 @@ const InvTransaction = () => {
                 className="ri-add-circle-fill pr-2"
                 style={{ fontSize: "18px" }}
               ></i>
-              <div className="mr-2 text-amber-700"
-              // size={16}
+              <div
+                className="mr-2 text-amber-700"
+                // size={16}
               >
                 {" "}
                 Add Items{" "}
@@ -312,7 +342,37 @@ const InvTransaction = () => {
 
                     <form onSubmit={handleSubmit}>
                       <div className="mb-4">
-                        <label
+                        <ERPDataCombobox
+                          id="counterID"
+                          field={{
+                            id: "counterID",
+                            required: true,
+                            getListUrl: Urls.data_countries,
+                            valueKey: "id",
+                            labelKey: "name",
+                          }}
+                          // onChangeData={(data: any) => {
+                          //   setPostData((prev: any) => ({
+                          //     ...prev,
+                          //     data: {
+                          //       ...data,
+                          //       counterID: data.counterID,
+                          //     },
+                          //   }));
+                          // }}
+                          // validation={postData.validations.counterID}
+                          // data={postData?.data}
+                          // defaultData={postData?.data}
+                          // value={
+                          //   postData != undefined &&
+                          //     postData?.data != undefined &&
+                          //     postData?.data?.counterID != undefined
+                          //     ? postData?.data?.counterID
+                          //     : 0
+                          // }
+                          label="counterID"
+                        />
+                        {/* <label
                           htmlFor="itemName"
                           className="block font-medium text-gray-700 text-sm"
                         >
@@ -325,8 +385,158 @@ const InvTransaction = () => {
                           value={formData.itemName}
                           onChange={handleInputChange}
                           placeholder="e.g. Chocolate Cake"
+                          onClick={() => setShowPopup(true)}
                           className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
                         />
+                        {showPopup && (
+                            <div 
+                            className="absolute bg-white shadow-md rounded-lg p-4 mt-1"
+                            style={{ top: '100%', zIndex: 10 }}
+                          >
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="text-gray-600 font-medium">
+                                  Showing Saved Items
+                                </span>
+                                <a href="#" className="text-blue font-medium">
+                                  Add New Item
+                                </a>
+                              </div>
+                              <hr className="mb-2" />
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <div className="text-gray-800 font-medium">
+                                    Apple
+                                  </div>
+                                  <div className="text-gray-600">
+                                    Purchase Price: 80.00
+                                  </div>
+                                  <div className="text-gray-600">
+                                    In Stock:{" "}
+                                    <span className="text-red-600">-1</span>
+                                  </div>
+                                </div>
+                                <div>
+                                  <i className="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                              </div>
+                            </div>
+                          )} */}
+                        <div className="relative">
+                          <label
+                            htmlFor="itemName"
+                            className="block font-medium text-gray-700 text-sm"
+                          >
+                            Item Name
+                          </label>
+                          <input
+                            type="text"
+                            id="itemName"
+                            name="itemName"
+                            value={formData.itemName}
+                            onChange={handleInputChange}
+                            placeholder="e.g. Chocolate Cake"
+                            onClick={() => setShowPopup(true)}
+                            onMouseEnter={() => setIsHovered(true)} // Show popup on hover
+                            onMouseLeave={() => {
+                              if (!showPopup) setIsHovered(false); // Only hide if popup is not shown
+                            }}
+                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                            // className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                          />
+                          {(showPopup || isHovered) && (
+                            <div
+                              ref={setPopupRef}
+                              className="absolute bg-white shadow-md rounded-lg p-4 mt-0 w-full border border-gray-300 border-t-0 rounded-tr-none rounded-tl-none"
+                              // style={{ top: "calc(100% + 8px)", zIndex: 10 }}
+                            >
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="text-gray-600 font-medium">
+                                  Showing Saved Items
+                                </span>
+                                <a href="#" className="text-blue font-medium">
+                                  Add New Item
+                                </a>
+                              </div>
+                              <hr className="mb-2" />
+                              <div className="flex justify-between items-center">
+                                <div onClick={() => setShowTotalsPopup(true)}>
+                                  {" "}
+                                  {/* Trigger Totals Popup */}
+                                  <div className="text-gray-800 font-medium">
+                                    Apple
+                                  </div>
+                                  <div className="text-gray-600 flex justify-between">
+                                    <span>Purchase Price: 80.00</span>
+                                    <span className="text-red-600 ml-5">
+                                      In Stock:{" "}
+                                      <span className="text-red">-1</span>
+                                    </span>
+                                  </div>
+                                  {/* <div className="text-gray-600 ">
+                                    In Stock:{" "}
+                                    <span className="text-red-600">-1</span>
+                                  </div> */}
+                                </div>
+                                <div>
+                                  <i className="fas fa-chevron-right text-gray-400"></i>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* <div className="p-4">
+                          <div className="mb-4 relative">
+                            <label className="block text-blue-600 font-medium mb-1">
+                              Item Name
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="e.g. Chocolate Cake"
+                              className="w-full border-b-2 border-blue-600 focus:outline-none py-1"
+                              onClick={() => setShowPopup(true)}
+                            />
+                            {showPopup && (
+                              <div
+                                className="absolute top-0 left-0 right-0 bg-white shadow-md rounded-lg p-4"
+                                style={{
+                                  marginTop: "-1px",
+                                  borderTop: "2px solid blue",
+                                }}
+                              >
+                                <div className="flex justify-between items-center mb-2">
+                                  <span className="text-gray-600 font-medium">
+                                    Showing Saved Items
+                                  </span>
+                                  <a
+                                    href="#"
+                                    className="text-blue-600 font-medium"
+                                  >
+                                    Add New Item
+                                  </a>
+                                </div>
+                                <hr className="mb-2" />
+                                <div className="flex justify-between items-center">
+                                  <div>
+                                    <div className="text-gray-800 font-medium">
+                                      Apple
+                                    </div>
+                                    <div className="text-gray-600">
+                                      Purchase Price: 80.00
+                                    </div>
+                                    <div className="text-gray-600">
+                                      In Stock:{" "}
+                                      <span className="text-red-600">-1</span>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <i className="fas fa-chevron-right text-gray-400"></i>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div> */}
                       </div>
 
                       <div className="gap-4 grid grid-cols-2 mb-4">
@@ -438,6 +648,126 @@ const InvTransaction = () => {
                   >
                     Close
                   </button> */}
+                  <div>
+                    {/* Totals & Taxes Popup */}
+                    {showTotalsPopup && (
+                      <div className="max-w-md mx-auto mt-10 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                        <h2 className="text-lg font-semibold mb-4">
+                          Totals & Taxes
+                        </h2>
+                        <div className="border-t border-gray-200 pt-4">
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-gray-600">
+                              Subtotal{" "}
+                              <span className="text-sm text-gray-500">
+                                (Rate x Qty)
+                              </span>
+                            </span>
+                            <span className="text-gray-600">₹</span>
+                            <span className="text-gray-600">200.00</span>
+                          </div>
+                          {/* <div className="flex justify-between items-center mb-4">
+                            <span className="text-gray-600">Discount</span>
+                            <div className="flex items-center">
+                              <input
+                                type="text"
+                                value="0"
+                                className="w-12 text-center border border-orange-400 rounded-l-md focus:outline-none"
+                              />
+                              <span className="px-2 border-t border-b border-orange-400 text-orange-400">
+                                %
+                              </span>
+                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
+                                ₹
+                              </span>
+                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
+                                0.00
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-gray-600">Tax %</span>
+                            <div className="flex items-center">
+                              <select className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none">
+                                <option>None</option>
+                              </select>
+                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
+                                ₹
+                              </span>
+                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
+                                0.00
+                              </span>
+                            </div>
+                          </div> */}
+
+                          {/* Discount Section */}
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-gray-600">Discount</span>
+                            {/* <div className="flex items-center">
+                              <button className="px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none">
+                                0
+                              </button>
+                              <button className="px-4 py-2 border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
+                                %
+                              </button>
+                              <button className="ml-1 px-4 py-2 border border-gray-300 rounded-r-md text-gray-600 focus:outline-none">
+                                ₹ 0.00
+                              </button>
+                            </div> */}
+                            <div className="flex items-center">
+                              <input
+                                type="number"
+                                defaultValue="0"
+                                className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
+                              />
+                              <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
+                                %
+                              </button>
+                              {/* <button className="ml-1 px-4 py-2 border border-gray-300 rounded-r-md text-gray-600 focus:outline-none">
+                                ₹ 0.00
+                              </button> */}
+                              <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
+                                ₹
+                              </button>
+                              <input
+                                type="number"
+                                defaultValue="0"
+                                className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
+                              />
+                            </div>
+                          </div>
+
+                          {/* Tax Section */}
+                          <div className="flex justify-between items-center mb-4">
+                            <span className="text-gray-600">Tax %</span>
+                            <div className="flex items-center">
+                              <select className="pr-[50px] mr-2 border border-gray-400 rounded-md px-4 py-2 focus:outline-none">
+                                <option>None</option>
+                              </select>
+                              <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
+                                ₹
+                              </button>
+                              <input
+                                type="number"
+                                defaultValue="0"
+                                className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
+                            <span className="text-lg font-semibold">
+                              Total Amount:
+                            </span>
+                            <span className="ml-[206px] text-lg font-semibold">₹</span>
+                            <span className="text-lg font-semibold">
+                              200.00
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               }
             />

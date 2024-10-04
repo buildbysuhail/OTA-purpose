@@ -16,6 +16,7 @@ import {
   toggleImportExportPopup,
   toggleResetDataBasePopup,
   toggleCommandsPopup,
+  toggleAuthorizationSettingsPopup,
 } from "../../../redux/slices/popup-reducer";
 
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
@@ -26,6 +27,8 @@ const DayCloseManage = lazy(() => import("../system/day-close-manage"));
 const UserActionReport = lazy(() => import("../system/user-action-report-manage"));
 const ImportExportManage = lazy(() => import("../system/import-export"));
 const CommandsManage = lazy(() => import("../system/commands"));
+const AuthorizationSettings = lazy(() => import("../system/authorization-settings-manage"));
+const  PopUpModalResetDatabase= lazy(() => import("../system/resetDatabase-manage"));
 
 const Settings = () => {
   const rootState = useRootState();
@@ -50,7 +53,7 @@ const Settings = () => {
         </div>
       </div>
 
-      <ERPModal
+      <ERPModal 
         isOpen={rootState.PopupData.deleteInactiveTransactions.isOpen || false}
         title={"Delete In Active Transactions"}
         width="w-full max-w-[600px]"
@@ -128,7 +131,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
         }}
-      // content={<ImportExportManage/>}
+      content={<PopUpModalResetDatabase/>}
       />
 
       <ERPModal
@@ -140,6 +143,16 @@ const Settings = () => {
           dispatch(toggleCommandsPopup({ isOpen: false }));
         }}
         content={<CommandsManage />}
+      />
+        <ERPModal
+        isOpen={rootState.PopupData.authorizationSettings.isOpen || false}
+        title="Authorization Settings"
+        width="w-full max-w-[800px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleAuthorizationSettingsPopup({ isOpen: false }));
+        }}
+        content={<AuthorizationSettings/>}
       />
     </Fragment>
   );

@@ -1,9 +1,9 @@
 export const initialDataUser = {
   data: {
-    userName: "",
+    branchIDs: "",
     counterID: 0,
-    Password: "",
-    confromPassword: "",
+    Passwd: "",
+   confrimPassword: "",
     userTypeCode: "",
     employeeID: 0,
     maxDecimalPerAllowed: 0,
@@ -12,15 +12,30 @@ export const initialDataUser = {
     displayName: "",
   },
   validations: {
-    userName: "",
+    branchIDs: "",
     counterID: "",
-    Password: "",
-    confromPassword: "",
+    Passwd: "",
+   confrimPassword: "",
     userTypeCode: "",
     employeeID: "",
     maxDecimalPerAllowed: "",
     email: "",
     phoneNumber: "",
     displayName: "",
+  },
+};
+
+export const initialDataUserType = {
+  data: {
+    userTypeName: "",
+    userTypeCode: "",
+    remarks: "",
+    isEditable: true,
+    isDeletable: true
+  },
+  validations: {
+    userTypeName: "",
+    counterID: "",
+    remarks: "",
   },
 };

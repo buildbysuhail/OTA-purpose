@@ -8,9 +8,14 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 interface AccountGroupData {
-  userTypeName: string;
-  userTypeCode: string;
-  remark: string;
+  name: string;
+  nameInArabic: string;
+  shortName: string;
+  groupUnder: string;
+  remarks: string;
+  reasonForEdit: string;
+  isEditable: boolean;
+  isDeletable: boolean;
 }
 
 export const AccountGroupManage: React.FC = React.memo(() => {
@@ -43,48 +48,33 @@ export const AccountGroupManage: React.FC = React.memo(() => {
 
   const onClose = useCallback(() => {
     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
-  }, [dispatch]);
-
-  const handleLocalFieldChange = useCallback((fieldId: string, value: any) => {
-    setLocalFormData(prev => ({
-      ...prev,
-      [fieldId]: value[fieldId]
-    }));
-    handleFieldChange(fieldId, value);
-  }, [handleFieldChange]);
-
-  const memoizedInputs = useMemo(() => (
-    <div className="grid grid-cols-1 gap-3">
-      <ERPInput
-        {...getFieldProps('accGroupName')}
-        label="User Type Name"
-        placeholder="User Type Name"
-        required={true}
-        // value={localFormData.accGroupName}
-        onChangeData={(data: any) => handleLocalFieldChange('accGroupName', data)}
-      />
-      <ERPInput
-        {...getFieldProps('userTypeCode')}
-        label="User Type Code"
-        placeholder="User Type Code"
-        required={true}
-        value={localFormData.userTypeCode}
-        onChangeData={(data: any) => handleLocalFieldChange('userTypeCode', data)}
-      />
-      <ERPInput
-        {...getFieldProps('remark')}
-        label="Remark"
-        placeholder="Remark"
-        required={true}
-        value={localFormData.remark}
-        onChangeData={(data: any) => handleLocalFieldChange('remark', data)}
-      />
-    </div>
-  ), [getFieldProps, handleLocalFieldChange, localFormData]);
+  }, []);
 
   return (
     <div className="w-full pt-4">
-      {memoizedInputs}
+      <div className="grid grid-cols-1 gap-3">
+        <ERPInput
+          {...getFieldProps('accGroupName')}
+          label="User Type Name"
+          placeholder="User Type Name"
+          required={true}
+          onChangeData={(data: any) => {debugger;handleFieldChange('accGroupName', data)}}
+        />
+        <ERPInput
+          {...getFieldProps('userTypeCode')}
+          label="User Type Code"
+          placeholder="User Type Code"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
+        />
+        <ERPInput
+          {...getFieldProps('remark')}
+          label="Remark"
+          placeholder="Remark"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange('remark', data)}
+        />
+      </div>
       <ERPFormButtons
         isEdit={isEdit}
         isLoading={isLoading}

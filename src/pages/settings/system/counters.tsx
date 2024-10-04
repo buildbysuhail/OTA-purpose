@@ -1,90 +1,91 @@
+import React, { Fragment, useEffect, useState } from "react";
 
-import React, { Fragment, useEffect, useState } from 'react'
-
-import Urls from '../../../redux/urls'
-import { DevGridColumn } from '../../../components/types/dev-grid-column';
-import ERPDevGrid from '../../../components/ERPComponents/erp-dev-grid';
-import { toggleCounterPopup } from '../../../redux/slices/popup-reducer';
-import ERPModal from '../../../components/ERPComponents/erp-modal';
-import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
-import { useRootState } from '../../../utilities/hooks/useRootState';
-import ERPGridActions from '../../../components/ERPComponents/erp-grid-actions';
+import Urls from "../../../redux/urls";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import { toggleCounterPopup } from "../../../redux/slices/popup-reducer";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { useTranslation } from "react-i18next";
 
 const Counters = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
-      caption: "Serial No",
+      caption: t("SiNo"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "counter",
-      caption: "Counter",
+      caption: t("counter"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "descriptions",
-      caption: "Descriptions",
+      caption: t("descriptions"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "maintainShift",
-      caption: "Maintain Shift",
+      caption: t("maintain_shift"),
       dataType: "boolean",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 60
+      minWidth: 60,
     },
     {
       dataField: "createdUser",
-      caption: "Created User",
+      caption:t("created_user") ,
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "createdDate",
-      caption: "Created Date",
+      caption:t("created_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "modifiedUser",
-      caption: "Modified User",
+      caption: t("modified_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "modifiedDate",
-      caption: "Modified Date",
+      caption: t("modified_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "cashLedgerID",
@@ -93,62 +94,71 @@ const Counters = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "ledgerName",
-      caption: "Ledger Name",
+      caption: t("ledger_name"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "vrPrefix",
-      caption: "Voucher Prefix",
+      caption: t("voucher_prefix"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100
+      minWidth: 100,
     },
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <ERPGridActions
-          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{ type: "popup", action: () => toggleCounterPopup(cellInfo?.data?.id) }}
-          delete={{
-            confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
-          }}
-        />
-      ),
+      cellRender: (cellElement: any) => {
+        debugger;
+        return (
+          <ERPGridActions
+            view={{ type: "popup", action: toggleCounterPopup }}
+            edit={{ type: "popup", action: toggleCounterPopup }}
+            delete={{
+              confirmationRequired: true,
+              confirmationMessage: "Are you sure you want to delete this item?",
+              // action: () => handleDelete(cellInfo?.data?.id),
+            }}
+            itemId={cellElement?.data?.userTypeCode || ""}
+          />
+        );
+      },
     },
   ];
 
   return (
     <Fragment>
-
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid columns={columns} gridHeader="Counter" dataUrl={Urls.Counter} gridId='grd_counter' popupAction={toggleCounterPopup} gridAddButtonType='popup' gridAddButtonIcon='ri-add-line'></ERPDevGrid>
+                <ERPDevGrid
+                  columns={columns}
+                  gridHeader={t("counter")}
+                  dataUrl={Urls.Counter}
+                  gridId="grd_counter"
+                  popupAction={toggleCounterPopup}
+                  gridAddButtonType="popup"
+                  gridAddButtonIcon="ri-add-line"
+                ></ERPDevGrid>
               </div>
             </div>
           </div>
-
         </div>
       </div>
       <ERPModal
@@ -156,20 +166,13 @@ const Counters = () => {
         title={"Add New Counter"}
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCounterPopup({ isOpen: false }))
+          dispatch(toggleCounterPopup({ isOpen: false }));
         }}
         // content={<UserTypeManage/>}
         content={"nixsgj"}
       />
     </Fragment>
-  )
-}
+  );
+};
 
-export default Counters
-
-
-
-
-
-
-
+export default Counters;

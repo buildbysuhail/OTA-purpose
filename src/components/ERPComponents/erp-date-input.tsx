@@ -22,6 +22,7 @@ interface ERPDateInputProps {
   onChangeData?: (data: any) => void;
   defaultValue?: string;
   value?: string;
+  type?: "date" | "datetime";
   data?: any;
   validation?: string;
   className?: string;
@@ -43,6 +44,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   onChangeData,
   defaultValue,
   value,
+  type = "date",
   data,
   validation,
   className,
@@ -77,7 +79,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
         label={label}
         placeholder={placeholder}
         disabled={disabled}
-        type="date"
+        type={type}
         onChange={handleChange}
         required={required}
         min={minDate ? dateTrimmer(minDate) : minDateKey ? formatDate(data?.[minDateKey]) : undefined}

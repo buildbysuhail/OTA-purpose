@@ -62,12 +62,12 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
         <ERPCheckbox
           {...getFieldProps('isEditable')}
           label="Is Editable"
-          onChange={(data: any) => handleFieldChange('isEditable', data)}
+          onChangeData={(data: any) => handleFieldChange('isEditable', data)}
         />
         <ERPCheckbox
           {...getFieldProps('isDeletable')}
           label="Is Deletable"
-          onChange={(data: any) => handleFieldChange('isDeletable', data)}
+          onChangeData={(data: any) => handleFieldChange('isDeletable', data)}
         />
       </div>
       <ERPFormButtons

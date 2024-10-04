@@ -59,8 +59,8 @@ export function useFormManager<T>({
   );
 
   const [localFormState, setLocalFormState] = useState<ApiResponse<any>>({
-    data: initialData?.data,
-    validations: initialData?.validations,
+    data: initialData?.data || {},
+    validations: initialData?.validations || {},
     loading: false,
     error: null,
   });
@@ -79,7 +79,8 @@ export function useFormManager<T>({
   }, [useApiClient, isEdit]);
 
   const loadFormData = useCallback(async () => {
-    setIsLoading(true);
+    // setIsLoading(true);
+    debugger;
     if (useApiClient) {
       try {
         let response;

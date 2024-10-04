@@ -50,6 +50,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
           label="User Type Code"
           placeholder="User Type Code"
           required={true}
+          disabled={isEdit}
           onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
         />
         <ERPInput

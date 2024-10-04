@@ -61,7 +61,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false }));
         }}
-        content={<DeleteInactiveTransactionManage />}
+        content={<DeleteInactiveTransactionManage/>}
       />
       <ERPModal
         isOpen={rootState.PopupData.companyProfile.isOpen || false}

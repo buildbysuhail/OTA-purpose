@@ -1,181 +1,100 @@
-import { useCallback, useState } from "react";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import { handleResponse } from "../../../utilities/HandleResponse";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import React, { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
-import SystemSettingsApi from "./system-apis";
+import { toggleCounterPopup } from "../../../redux/slices/popup-reducer";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import { CounterData } from "./counters-manage-type";
 
+export const CounterManage: React.FC = React.memo(() => {
+  const rootState = useRootState();
+  const dispatch = useDispatch();
 
-export const CounterManage = ({setIsOpenAddPop}:any) => {
-  const initaialCounterData = {
-      data:{counterName:'',descriptions:'',cashLedgerID:0,warehouseID:null,maintainShift:false,},
-      validations:{counterName:'',descriptions:'',cashLedgerID:'',warehouseID:'',maintainShift:'',}
-  }
-  const [postCounter,setPostCounter]= useState(initaialCounterData);
-  const [postCounterLoading, setPostCounterLoading] = useState<boolean>(false);
-;
-const addCounter =useCallback(async () => {
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+    formState,
+  } = useFormManager<CounterData>({
+    url: Urls.Counter,
+    onSuccess: useCallback(
+      () => dispatch(toggleCounterPopup({ isOpen: false, key: null })),
+      [dispatch]
+    ),
+    key: rootState.PopupData.counter.key,
+  });
 
-setPostCounterLoading(true);
-
-const response: ResponseModelWithValidation<any, any> = await SystemSettingsApi.addCounterInfo(postCounter?.data);
-
-setPostCounterLoading(false);
-
-setPostCounter((prevData: any) => ({
-  ...prevData,
-  validations: response.validations
-}));
-// appDispatch(userSession());
-handleResponse(response, () => {});
-if(response.isOk){
-setIsOpenAddPop(false);
-}
-}, [ postCounter?.data]);
+  const onClose = useCallback(() => {
+    dispatch(toggleCounterPopup({ isOpen: false, key: null }));
+  }, []);
 
   return (
-    <div className="w-full p-10">
-     
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <ERPInput
-            id="counterName"
-             label="User type Name"
-            placeholder="User Type Name"
-            required={true}
-            data={postCounter?.data}
-            onChangeData={(data: any) => {
-            
-              setPostCounter((prevData: any) => ({
-                ...prevData,
-                data: data,
-              }));
-            }}
-            value={postCounter?.data?.counterName}
-            validation={postCounter?.validations?.counterName}
-          />
-          <ERPInput
-            id="descriptions"
-            label="Descriptions"
-            placeholder="descriptions"
-            required={true}
-           
-            data={postCounter?.data}
-            onChangeData={(data: any) =>
-            {
-              setPostCounter((prevData: any) => ({
-                  ...prevData,
-                  data: data,
-                }));
-             
-            }
-              
-            }
-            value={postCounter?.data?.descriptions}
-            validation={postCounter?.validations?.descriptions}
-          />
-                     < ERPDataCombobox
-                      id="cashLedgerID"
-                      field={{
-                        id: "cashLedgerID",
-                        required: true,
-                        getListUrl: Urls.data_acc_ledgers,
-                        valueKey:"ledgerID",
-                        labelKey:"ledgerName",
-                      }}
-                      onChangeData={(data: any) => {
-                        // Update only the cashLedgerID field
-                        setPostCounter((prevData: any) => ({
-                          
-                          ...prevData,
-                          data: {
-                            ...prevData.data,
-                            
-                            cashLedgerID: data.value,
-                          },
-                        }));
-                      }}
-                      // validation={postUser.validations.cashLedgerID}
-                      data={postCounter?.data}
-                      defaultData={postCounter?.data}
-                      value={postCounter?.data?.cashLedgerID || ""} 
-                      label="cashLedgerID"
-                    />
-                    < ERPDataCombobox
-                      id="warehouseID"
-                      field={{
-                        id: "warehouseID",
-                        required: true,
-                        getListUrl: Urls.data_user_types,
-                        valueKey: "warehouseID",
-                        labelKey: "userTypeName",
-                      }}
-                      onChangeData={(data: any) => {
-                        // Update only the warehouseID field
-                        setPostCounter((prevData: any) => ({
-                          
-                          ...prevData,
-                          data: {
-                            ...prevData.data,
-                            
-                            warehouseID: data.value,
-                          },
-                        }));
-                      }}
-                      // validation={postCounter.validations.warehouseID}
-                      data={postCounter?.data}
-                      defaultData={postCounter?.data}
-                      value={postCounter?.data?.warehouseID || ""} 
-                      label="warehouseID"
-                    />
-
-          <div className="">
-         <input
-          id="maintainShift"
-          type="checkbox"
-          className="mr-2"
-          checked={postCounter?.data?.maintainShift} 
-           onChange={(e) => {
-            setPostCounter((prevData: any) => ({
-         ...prevData,
-           data: {
-          ...prevData.data,
-          maintainShift: e.target.checked, 
-         },
-          }));
-         }}
-           />
-          <label htmlFor="agreement" className="text-gray-700">
-           Maintain Shift
-          </label>
-        </div> 
-      
-
-        </div>
-   
-       
-      
-      <div className="w-full p-2 flex justify-end">
-        <ERPButton
-          type="reset"
-          title="Cancel"
-          variant="secondary"
-          onClick={() => {
-          setIsOpenAddPop(false);
-          //   setPostDataEmail({initialEmailData});
+    <div className="w-full pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <ERPInput
+          {...getFieldProps("counterName")}
+          label=" Counter Name"
+          placeholder=" Counter Name"
+          required={true}
+          onChangeData={(data: any) => {
+            debugger;
+            handleFieldChange("counterName", data);
           }}
-          disabled={postCounterLoading}
-        ></ERPButton>
-        <ERPButton
-          type="button"
-          disabled={postCounterLoading}
-          variant="primary"
-          onClick={addCounter}
-          loading={postCounterLoading}
-          title={"Submit"}
-        ></ERPButton>
+        />
+        <ERPInput
+          {...getFieldProps("descriptions")}
+          label="Descriptions"
+          placeholder="Descriptions"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("descriptions", data)}
+        />
+        <ERPDataCombobox
+          {...getFieldProps("warehouseID")}
+          id="warehouseID"
+          field={{
+            id: "warehouseID",
+            required: true,
+            getListUrl: Urls.data_warehouse,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label="Warehouse ID"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("warehouseID", data)}
+        />
+        <ERPDataCombobox
+          {...getFieldProps("cashLedgerID")}
+          id="cashLedgerID"
+          field={{
+            id: "cashLedgerID",
+            required: true,
+            getListUrl: Urls.data_warehouse,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label="cashLedgerID"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("cashLedgerID", data)}
+        />
+         <ERPCheckbox
+           id="maintainShift"
+           label="Maintain Shift"
+         
+         /> 
+
       </div>
+      <ERPFormButtons
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={onClose}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
-};
+});

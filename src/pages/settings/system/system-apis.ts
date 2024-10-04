@@ -14,15 +14,15 @@ const SystemSettingsApi = {
     }
   },
 
-  addCounterInfo: async (data: any) => {
-    try {
-      const responseData = await api.post(Urls.Counter, data);
-      return responseData;
-    } catch (error) {
-      console.error("Failed to get available agents for DX Grid:", error);
-      return '';
-    }
-  },
+  // addCounterInfo: async (data: any) => {
+  //   try {
+  //     const responseData = await api.post(Urls.Counter, data);
+  //     return responseData;
+  //   } catch (error) {
+  //     console.error("Failed to get available agents for DX Grid:", error);
+  //     return '';
+  //   }
+  // },
 
   
   addDayColsInfo: async (data: any) => {

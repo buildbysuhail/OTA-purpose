@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useMemo } from "react";
+import { Fragment } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -10,27 +10,12 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import { UserTypeManage } from "./user-type-manage";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
-import React from "react";
 
 const UserTypes = () => {
-  const MemoizedUserTypeManage = useMemo(() => React.memo(UserTypeManage), []);
-  const dispatch = useAppDispatch();
   const {t}=useTranslation();
+  const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const cellRender = useCallback((cellElement: any) => {
-    return (
-      <ERPGridActions
-        view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.id }) }}
-        edit={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.id }) }}
-        delete={{
-          confirmationRequired: true,
-          confirmationMessage: "Are you sure you want to delete this item?",
-          // action: () => handleDelete(cellInfo?.data?.id),
-        }}
-      />
-    )
-  }, [toggleUserTypePopup]);
-  const columns: DevGridColumn[] = useMemo(() =>[
+  const columns: DevGridColumn[] = [
     {
       dataField: "userTypeName",
       caption: t("user_type"),
@@ -80,7 +65,7 @@ const UserTypes = () => {
         )
       },
       }
-  ],[cellRender]);;
+  ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -116,4 +101,4 @@ const UserTypes = () => {
   );
 };
 
-export default React.memo(UserTypes);
+export default UserTypes;

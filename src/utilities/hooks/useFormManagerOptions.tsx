@@ -14,6 +14,7 @@ interface UseFormManagerOptions {
   onSuccess?: () => void;
   onError?: (error: any) => void;
   key?: string;
+  method?: ActionType;
 }
 
 interface FormField {
@@ -24,7 +25,7 @@ interface FormField {
   checked?: any;
 }
 
-export function useFormManager<T>({ url, onSuccess, onError, key }: UseFormManagerOptions) {
+export function useFormManager<T>({ url, onSuccess, onError, key, method }: UseFormManagerOptions) {
   const location = useLocation();
   const appDispatch = useAppDispatch();
 
@@ -32,11 +33,9 @@ export function useFormManager<T>({ url, onSuccess, onError, key }: UseFormManag
   key = (key == undefined || key == null || key == "0" || key == "" ?  queryParams.get('key'):key)??"";
   const isEdit = Boolean(key && key !== "0"&& key !== "");
 
-  const rName = reducerNameFromUrl(url, isEdit ? ActionType.PUT : ActionType.POST);
+  const rName = reducerNameFromUrl(url, method ? method : isEdit ? ActionType.PUT : ActionType.POST);
   const formState = useAppSelector<ApiResponse<any>>((state: any) => state?.[rName]);
   useEffect(() => {
-    
-    
     if(isEdit) {
       loadFormData();
     }

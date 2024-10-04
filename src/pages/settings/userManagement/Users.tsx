@@ -9,13 +9,14 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
 import { UserManage } from "./user-manage";
-const UsersType = () => {
 
+const Users = () => {
+  
   const MemoizedUsersManage = useMemo(() => React.memo(UserManage), []);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-
+  
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
@@ -24,6 +25,14 @@ const UsersType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: false,
+      width: 60,
+    },
+    {
+      dataField: "id",
+      caption: t("id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
       width: 60,
     },
     {
@@ -91,14 +100,6 @@ const UsersType = () => {
       width: 130,
     },
     {
-      dataField: "id",
-      caption: t("id"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 60,
-    },
-    {
       dataField: "employeeID",
       caption: t("employee_id"),
       dataType: "number",
@@ -164,8 +165,8 @@ const UsersType = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader="Users"
-                  dataUrl={Urls.account_group}
-                  gridId="grd_user_type"
+                  dataUrl={Urls.Users}
+                  gridId="grd_users"
                   popupAction={toggleUserPopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""
@@ -177,7 +178,7 @@ const UsersType = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.user.isOpen || false}
-        title={"Add New Users"}
+        title={"users"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -189,4 +190,4 @@ const UsersType = () => {
   );
 };
 
-export default React.memo(UsersType);
+export default React.memo(Users);

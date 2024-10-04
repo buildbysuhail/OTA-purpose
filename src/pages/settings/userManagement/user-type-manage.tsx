@@ -30,6 +30,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
     url: Urls.UserTypes,
     onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.userType.key,
+    useApiClient: true,
     initialData: initialDataUserType
   });
 

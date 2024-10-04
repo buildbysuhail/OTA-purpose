@@ -25,6 +25,7 @@ import { ActionType } from "./types";
 import { ApiEndpoint } from "../configs/types";
 import { DATA_ENDPOINTS } from "../configs/data-config";
 import { FORM_ENDPOINTS } from "../configs/form-config";
+import { POST_ENDPOINTS } from "../configs/post-config";
 
 // Define a generic type for API response data
 export type ApiResponse<T> = {
@@ -139,7 +140,7 @@ class DynamicReduxManager {
   >;
   public store;
 
-  constructor(dataEndpoints: ApiEndpoint[], formEndpoints: ApiEndpoint[]) {
+  constructor(dataEndpoints: ApiEndpoint[], formEndpoints: ApiEndpoint[], postEndPoints: ApiEndpoint[]) {
     this.slices = {};
     this.thunks = {};
     // Create slices and thunks for each endpoint
@@ -147,6 +148,15 @@ class DynamicReduxManager {
       let name = reducerNameFromUrl(
         endpoint.url,
         endpoint.method ?? ActionType.GET
+      );
+      const { slice, thunk } = createApiSlice(endpoint);
+      this.slices[name] = slice;
+      this.thunks[name] = thunk;
+    });
+    postEndPoints.forEach((endpoint) => {
+      let name = reducerNameFromUrl(
+        endpoint.url,
+        ActionType.POST
       );
       const { slice, thunk } = createApiSlice(endpoint);
       this.slices[name] = slice;
@@ -238,7 +248,7 @@ class DynamicReduxManager {
 }
 
 // Create an instance of the manager
-export const reduxManager = new DynamicReduxManager(DATA_ENDPOINTS, FORM_ENDPOINTS);
+export const reduxManager = new DynamicReduxManager(DATA_ENDPOINTS, FORM_ENDPOINTS, POST_ENDPOINTS);
 
 // Export the store
 // export const store = reduxManager.store;

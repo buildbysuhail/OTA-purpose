@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -13,7 +13,7 @@ import { RemainderManage } from "./remainder-manage";
 const Remainders = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = [
+  const columns: DevGridColumn[] =useMemo( () => [
     {
       dataField: "remaindersID",
       caption: "Remainder ID",
@@ -68,19 +68,21 @@ const Remainders = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <ERPGridActions
-          view={{ type: "link", path: `/view/${cellInfo?.data?.id}` }}
-          edit={{ type: "popup", action: () => toggleRemainderPopup(cellInfo?.data?.id) }}
-          delete={{
-            confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
-          }}
-        />
-      ),
+      cellRender: (cellElement: any) => {
+        return (
+          <ERPGridActions
+            view={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            edit={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            delete={{
+              confirmationRequired: true,
+              confirmationMessage: "Are you sure you want to delete this item?",
+              // action: () => handleDelete(cellInfo?.data?.id),
+            }}
+          />
+        )
+      },
     },
-  ];
+  ],[]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -110,7 +112,7 @@ const Remainders = () => {
         closeModal={() => {
           dispatch(toggleRemainderPopup({ isOpen: false }));
         }}
-        content={<RemainderManage />}
+        content={<RemainderManage/>}
       />
     </Fragment>
   );

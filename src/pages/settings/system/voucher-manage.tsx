@@ -37,7 +37,6 @@ export const VoucherManage: React.FC = React.memo(() => {
           placeholder="Form Type"
           required={true}
           onChangeData={(data: any) => {
-            debugger;
             handleFieldChange("formType", data);
           }}
         />

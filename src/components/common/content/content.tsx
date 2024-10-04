@@ -66,7 +66,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/vouchers" element={<SystemVoucher />} />
         <Route path="/system/financial-year" element={<FinancialYear />} />
         <Route path="/system/reminders" element={<Reminders />} />
-        <Route path="system/exchange-rates" element={<ExchangeRates />} />
+        <Route path="/system/exchange-rates" element={<ExchangeRates />} />
         <Route path="settings" element={<Settings />} />
 
         {/* Inventory Starts */}

@@ -18,6 +18,7 @@ import {
   toggleCommandsPopup,
   toggleAuthorizationSettingsPopup,
 } from "../../../redux/slices/popup-reducer";
+import { useTranslation } from "react-i18next";
 
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
@@ -28,9 +29,11 @@ const UserActionReport = lazy(() => import("../system/user-action-report-manage"
 const ImportExportManage = lazy(() => import("../system/import-export"));
 const CommandsManage = lazy(() => import("../system/commands"));
 const AuthorizationSettings = lazy(() => import("../system/authorization-settings-manage"));
-const  PopUpModalResetDatabase= lazy(() => import("../system/resetDatabase-manage"));
+const PopUpModalResetDatabase = lazy(() => import("../system/resetDatabase-manage"));
+
 
 const Settings = () => {
+  const { t } = useTranslation();
   const rootState = useRootState();
   const dispatch = useAppDispatch();
   const [settingsRoutes, setSettingRoutes] = useState(SettingsMenuItems);
@@ -53,19 +56,19 @@ const Settings = () => {
         </div>
       </div>
 
-      <ERPModal 
+      <ERPModal
         isOpen={rootState.PopupData.deleteInactiveTransactions.isOpen || false}
-        title={"Delete In Active Transactions"}
+        title={t("delete_in_active_transactions")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false }));
         }}
-        content={<DeleteInactiveTransactionManage/>}
+        content={<DeleteInactiveTransactionManage />}
       />
       <ERPModal
         isOpen={rootState.PopupData.companyProfile.isOpen || false}
-        title={"Company Profile"}
+        title={t("company_profile")}
         width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
@@ -75,7 +78,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.bankPos.isOpen || false}
-        title={"Bank POS settings"}
+        title={t("bank_pos_settings")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -85,7 +88,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.branch.isOpen || false}
-        title={"Branch Info"}
+        title={t("branch_info")}
         width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
@@ -95,7 +98,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.dayClose.isOpen || false}
-        title={"Day Close"}
+        title={t("day_close")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -105,7 +108,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.userActionReport.isOpen || false}
-        title="User Action Report"
+        title={("user_action_report")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -115,7 +118,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.importExport.isOpen || false}
-        title="Import Export"
+        title={t("import_export")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -125,18 +128,18 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
-        title="Reset DataBase"
+        title={t("reset_dataBase")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
         }}
-      content={<PopUpModalResetDatabase/>}
+        content={<PopUpModalResetDatabase />}
       />
 
       <ERPModal
         isOpen={rootState.PopupData.commands.isOpen || false}
-        title="Sql Commands"
+        title={t("sql_commands")}
         width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
@@ -144,15 +147,15 @@ const Settings = () => {
         }}
         content={<CommandsManage />}
       />
-        <ERPModal
+      <ERPModal
         isOpen={rootState.PopupData.authorizationSettings.isOpen || false}
-        title="Authorization Settings"
+        title={t("authorization_settings")}
         width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleAuthorizationSettingsPopup({ isOpen: false }));
         }}
-        content={<AuthorizationSettings/>}
+        content={<AuthorizationSettings />}
       />
     </Fragment>
   );

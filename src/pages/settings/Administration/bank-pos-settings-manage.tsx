@@ -9,14 +9,16 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import { BankPoseData } from "./administration-types";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { toggleBankPosPopup } from "../../../redux/slices/popup-reducer";
+import { useTranslation } from "react-i18next";
 
-export const BankPosSettingsManage: React.FC = React.memo(() => {
+const BankPosSettingsManage: React.FC = React.memo(() => {
   const rootState = useRootState();
+  const{t} = useTranslation();
   const dispatch = useDispatch();
 
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BankPoseData>({
-      url: Urls.Remainder,
+      url: Urls.BankPosSettings,
       onSuccess: useCallback(
         () => dispatch(toggleBankPosPopup({ isOpen: false, key: null })),
         [dispatch]
@@ -31,20 +33,45 @@ export const BankPosSettingsManage: React.FC = React.memo(() => {
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        
         <ERPDataCombobox
           {...getFieldProps("machineBrand")}
-          label="Machine Brand"
+          id="employeeID"
+          field={{
+            id: "machineBrand",
+            required: true,
+            getListUrl: Urls.data_languages,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("machine_brand")}
           onChangeData={(data: any) => handleFieldChange("machineBrand", data)}
         />
 
         <ERPDataCombobox
           {...getFieldProps("model")}
-          label="Model"
+          id="model"
+          field={{
+            id: "model",
+            required: true,
+            getListUrl: Urls.data_languages,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("model")}
           onChangeData={(data: any) => handleFieldChange("model", data)}
         />
 
         <ERPDataCombobox
           {...getFieldProps("comPort")}
+          id="comPort"
+          field={{
+            id: "comPort",
+            required: true,
+            getListUrl: Urls.data_employees,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           label="Com Port"
           onChangeData={(data: any) => handleFieldChange("comPort", data)}
         />
@@ -74,3 +101,4 @@ export const BankPosSettingsManage: React.FC = React.memo(() => {
     </div>
   );
 });
+export default BankPosSettingsManage;

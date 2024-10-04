@@ -17,6 +17,7 @@ import {
   toggleResetDataBasePopup,
   toggleCommandsPopup,
   toggleAuthorizationSettingsPopup,
+  toggleBarcodePrintPopup,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 
@@ -30,7 +31,7 @@ const ImportExportManage = lazy(() => import("../system/import-export"));
 const CommandsManage = lazy(() => import("../system/commands"));
 const AuthorizationSettings = lazy(() => import("../system/authorization-settings-manage"));
 const  ResetDbManage= lazy(() => import("../system/reset-database-manage"));
-
+const Barcodeprint = lazy(() => import("../system/barcode-print"));
 const Settings = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -128,7 +129,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title={t("reset_dataBase")}
-        width="w-full max-w-[600px]"
+        width="w-full   max-w-[800px]"
+
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
@@ -155,6 +157,16 @@ const Settings = () => {
           dispatch(toggleAuthorizationSettingsPopup({ isOpen: false }));
         }}
         content={<AuthorizationSettings />}
+      />
+        <ERPModal
+        isOpen={rootState.PopupData.barcodeprint.isOpen || false}
+        title="Barcode Print"
+        width="w-full max-w-[800px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleBarcodePrintPopup({ isOpen: false }));
+        }}
+        content={<Barcodeprint/>}
       />
     </Fragment>
   );

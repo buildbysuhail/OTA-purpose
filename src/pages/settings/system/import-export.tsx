@@ -1,29 +1,60 @@
-import { useCallback, useState } from "react";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import { handleResponse } from "../../../utilities/HandleResponse";
-import { toggleImportExportPopup } from "../../../redux/slices/popup-reducer";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
+import Urls from "../../../redux/urls";
+import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
+import { toggleImportExportPopup,} from "../../../redux/slices/popup-reducer";
+import { ActionType } from "../../../redux/types";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
-const ImportExportManage = () => {
-  const dispatch = useDispatch();
-  const onClose = useCallback(async () => {
-    dispatch(toggleImportExportPopup({ isOpen: false }));
-  }, []);
+interface ImportExportForm {
+  filePath: string;
+  product: boolean;
+  parties: boolean;
+}
+export const initialImportExportData = {
+  data: {
+    filePath: "",
+    product: false,
+    parties: false,
+  },
+  validations: {
+    filePath: "",
+    product: "",
+    parties: "",
+  },
+};
+const ImportExportManage: React.FC = React.memo(() => {
   const initialData = {
     data: {
       filePath: "",
-      product: false,
-      parties: false,
     },
     validations: {
       filePath: "",
-      product: "",
-      parties: "",
     },
   };
   const [postData, setPostData] = useState(initialData);
-  const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+    useFormManager<ImportExportForm>({
+      url: Urls.deleteInactiveTransactions,
+      onSuccess: useCallback(
+        () =>
+          dispatch(
+            toggleImportExportPopup({ isOpen: false, key: null })
+          ),
+        [dispatch]
+      ),
+      method: ActionType.POST,
+    });
+
+  const onClose = useCallback(() => {
+    dispatch(
+      toggleImportExportPopup({ isOpen: false, key: null })
+    );
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -37,28 +68,6 @@ const ImportExportManage = () => {
       }));
     }
   };
-
-  const Import = useCallback(async () => {
-
-    setPostDataLoading(true);
-    window.alert(JSON.stringify(postData.data, null, 2));
-    // const response: ResponseModelWithValidation<any, any> =
-    //   await AdministrationSettingsApis.addDeleteInactiveTransaction(postData?.data);
-    setPostDataLoading(false);
-    // handleResponse(
-    //   response,
-    //   () => {
-    //     dispatch(toggleDeleteInactiveTransactionPopup({isOpen: false}));
-    //   },
-    //   () => {
-    //     setPostData((prevData: any) => ({
-    //       ...prevData,
-    //       validations: response.validations,
-    //     }));
-    //   }
-    // );
-
-  }, [postData?.data]);
 
   return (
     <div className="w-full pt-4">
@@ -77,54 +86,28 @@ const ImportExportManage = () => {
             onChange={handleFileChange}
           />
         </div>
-        <div className="flex justify-around items-center my-2">
-        {/* <ERPCheckbox
-          {...getFieldProps('isDefault')}
-          label="Is Default"
-          onChangeData={(data: any) => handleFieldChange('isDefault', data)}
-        /> */}
-          <div className="">
-            <input
-              id="parties"
-              type="checkbox"
-              className="mr-2"
-              checked={postData?.data?.parties}
-              required
-              onChange={(e) => {
-                setPostData((prevData: any) => ({
-                  ...prevData,
-                  data: {
-                    ...prevData.data,
-                    parties: e.target.checked,
-                  },
-                }));
-              }}
-            />
-            <label htmlFor="parties" className="text-gray-700">
-              Parties
-            </label>
-          </div>
+       <div className="flex justify-around">
+        <ERPCheckbox
+          {...getFieldProps("product")}
+          label="Product"
+          onChangeData={(data: any) => handleFieldChange("product", data)}
+        />
+
+        <ERPCheckbox
+          {...getFieldProps("parties")}
+          label="Parties"
+          onChangeData={(data: any) => handleFieldChange("parties", data)}
+        />
         </div>
       </div>
-      <div className="w-full p-2 flex justify-end">
-        <ERPButton
-          type="reset"
-          title="Cancel"
-          variant="secondary"
-          onClick={onClose}
-          disabled={postDataLoading}
-        ></ERPButton>
-        <ERPButton
-          type="button"
-          disabled={postDataLoading}
-          variant="primary"
-          onClick={Import}
-          loading={postDataLoading}
-          title={"Import"}
-        ></ERPButton>
-      </div>
+      <ERPFormButtons
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={onClose}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
-};
+});
 
 export default ImportExportManage;

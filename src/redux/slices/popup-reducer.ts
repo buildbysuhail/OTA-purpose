@@ -23,7 +23,7 @@ interface popupData {
   commands: popupDataProps
   accountGroup: popupDataProps
   accountLedger: popupDataProps
-  authorizationSettings:popupDataProps
+  authorizationSettings: popupDataProps
 }
 const initialState: popupData = {
   userType: { isOpen: false, key: null, mode: "edit" },
@@ -44,7 +44,7 @@ const initialState: popupData = {
   commands: { isOpen: false, key: null, mode: "edit" },
   accountGroup: { isOpen: false, key: null, mode: "edit" },
   accountLedger: { isOpen: false, key: null, mode: "edit" },
-  authorizationSettings:{ isOpen: false, key: null, mode: "edit" },
+  authorizationSettings: { isOpen: false, key: null, mode: "edit" },
 };
 
 const popupDataSlice = createSlice({

@@ -1,22 +1,22 @@
-import { Fragment } from "react";
-import Urls from "../../../redux/urls";
-
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleUserPopup, toggleUserTypePopup } from "../../../redux/slices/popup-reducer";
+import React, { Fragment, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import Urls from "../../../redux/urls";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { UserTypeManage } from "./user-type-manage";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import { useTranslation } from "react-i18next";
+import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
 import { UserManage } from "./user-manage";
+const UsersType = () => {
 
-const Users = () => {
-  const {t}=useTranslation();
+  const MemoizedUsersManage = useMemo(() => React.memo(UserManage), []);
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = [
+
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
       caption: t("si_no"),
@@ -139,7 +139,7 @@ const Users = () => {
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => {
-        
+
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.id }) }}
@@ -152,8 +152,8 @@ const Users = () => {
           />
         )
       },
-      }
-  ];
+    }
+  ], []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -161,15 +161,15 @@ const Users = () => {
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid
+                <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("users")}
-                  dataUrl={Urls.Users}
-                  gridId="grd_user"
+                  gridHeader="Users"
+                  dataUrl={Urls.account_group}
+                  gridId="grd_user_type"
                   popupAction={toggleUserPopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""
-                ></ERPDevGrid>
+                ></ErpDevGrid>
               </div>
             </div>
           </div>
@@ -177,16 +177,16 @@ const Users = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.user.isOpen || false}
-        title={t("add-new-user")}
+        title={"Add New Users"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserPopup({ isOpen: false }));
+          dispatch(toggleUserPopup({ isOpen: false, key: null }));
         }}
-        content={<UserManage />}
+        content={<MemoizedUsersManage />}
       />
     </Fragment>
   );
 };
 
-export default Users;
+export default React.memo(UsersType);

@@ -72,6 +72,7 @@ export const VoucherManage: React.FC = React.memo(() => {
           <ERPInput
           {...getFieldProps("lastVoucherNumber")}
           label="lastVoucher Number"
+          type="number"
           placeholder="lastVoucherNumber"
           required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data)}

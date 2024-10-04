@@ -78,28 +78,11 @@ const ImportExportManage = () => {
           />
         </div>
         <div className="flex justify-around items-center my-2">
-          <div className="">
-            <input
-              id="product"
-              type="checkbox"
-              className="mr-2"
-              checked={postData?.data?.product}
-              required
-              onChange={(e) => {
-                setPostData((prevData: any) => ({
-                  ...prevData,
-                  data: {
-                    ...prevData.data,
-                    product: e.target.checked,
-                  },
-                }));
-              }}
-            />
-            <label htmlFor="product" className="text-gray-700">
-              Products
-            </label>
-          </div>
-
+        {/* <ERPCheckbox
+          {...getFieldProps('isDefault')}
+          label="Is Default"
+          onChangeData={(data: any) => handleFieldChange('isDefault', data)}
+        /> */}
           <div className="">
             <input
               id="parties"

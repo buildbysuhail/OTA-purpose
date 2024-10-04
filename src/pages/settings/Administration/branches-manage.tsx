@@ -121,7 +121,7 @@ const BranchManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("id")}
           label={t("id")}
-          placeholder="Enter Id"
+          placeholder={t("enter_id")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("id", data)}
         />
@@ -136,19 +136,19 @@ const BranchManage: React.FC = React.memo(() => {
             labelKey: "companyID",
           }}
           onChange={(data: any) => handleFieldChange("companyID", data.companyID)}
-          label="Company ID"
+          label={t("company_id")}
         />
 
         <ERPDateInput
           {...getFieldProps("dateFrom")}
-          label="Date From"
+          label={t("date_form")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
         />
 
         <ERPDateInput
           {...getFieldProps("dateTo")}
-          label="Date To"
+          label={t("date_to")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateTo", data)}
         />
@@ -156,53 +156,53 @@ const BranchManage: React.FC = React.memo(() => {
 
         <ERPInput
           {...getFieldProps("branchCode")}
-          label="Branch Code"
-          placeholder="Branch Code"
+          label={t("branch_code")}
+          placeholder={t("branch_code")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("branchCode", data)}
         />
 
         <ERPInput
           {...getFieldProps("branchName")}
-          label="Branch Name"
-          placeholder="Branch Name"
+          label={t("branch_name")}
+          placeholder={t("branch_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("branchName", data)}
         />
 
         <ERPInput
           {...getFieldProps("address1")}
-          label="Address Line 1"
-          placeholder="Address Line 1"
+          label={t("address_line_1")}
+          placeholder={t("address_line_1")}
           onChangeData={(data: any) => handleFieldChange("address1", data)}
         />
 
         <ERPInput
           {...getFieldProps("address2")}
-          label="Address Line 2"
-          placeholder="Address Line 2"
+          label={t("address_line_2")}
+          placeholder={t("address_line_2")}
           onChangeData={(data: any) => handleFieldChange("address2", data)}
         />
 
         <ERPInput
           {...getFieldProps("city")}
-          label="City"
-          placeholder="City"
+          label={t("city")}
+          placeholder={t("city")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("city", data)}
         />
 
         <ERPInput
           {...getFieldProps("district")}
-          label="District"
-          placeholder="District"
+          label={t("district")}
+          placeholder={t("district")}
           onChangeData={(data: any) => handleFieldChange("district", data)}
         />
 
         <ERPInput
           {...getFieldProps("bState")}
-          label="State"
-          placeholder="State"
+          label={t("state")}
+          placeholder={t("state")}
           onChangeData={(data: any) => handleFieldChange("bState", data)}
         />
 
@@ -219,84 +219,84 @@ const BranchManage: React.FC = React.memo(() => {
             handleFieldChange("country", data.label);
             handleFieldChange("cId", data.value);
           }}
-          label="Country"
+          label={t("country")}
         />
 
         <ERPInput
           {...getFieldProps("pinCode")}
-          label="Pin Code"
-          placeholder="Pin Code"
+          label={t("pin_code")}
+          placeholder={t("pin_code")}
           onChangeData={(data: any) => handleFieldChange("pinCode", data)}
         />
 
         <ERPInput
           {...getFieldProps("phone")}
-          label="Phone"
-          placeholder="Phone"
+          label={t("phone")}
+          placeholder={t("phone")}
           onChangeData={(data: any) => handleFieldChange("phone", data)}
         />
 
         <ERPInput
           {...getFieldProps("mobile")}
-          label="Mobile"
-          placeholder="Mobile"
+          label={t("mobile")}
+          placeholder={t("mobile")}
           onChangeData={(data: any) => handleFieldChange("mobile", data)}
         />
 
         <ERPInput
           {...getFieldProps("fax")}
-          label="Fax"
-          placeholder="Fax"
+          label={t("fax")}
+          placeholder={t("fax")}
           onChangeData={(data: any) => handleFieldChange("fax", data)}
         />
 
         <ERPInput
           {...getFieldProps("email")}
-          label="Email"
-          placeholder="Email"
+          label={t("email")}
+          placeholder={t("email")}
           onChangeData={(data: any) => handleFieldChange("email", data)}
         />
 
         <ERPInput
           {...getFieldProps("tin")}
-          label="TIN"
-          placeholder="Tax Identification Number"
+          label={t("tin")}
+          placeholder={t("tax_identification_number")}
           onChangeData={(data: any) => handleFieldChange("tin", data)}
         />
 
         <ERPInput
           {...getFieldProps("registrationNumber")}
-          label="Registration Number"
-          placeholder="Registration Number"
+          label={t("registration_number")}
+          placeholder={t("registration_number")}
           onChangeData={(data: any) => handleFieldChange("registrationNumber", data)}
         />
 
         <ERPInput
           {...getFieldProps("branchManager")}
-          label="Branch Manager"
-          placeholder="Branch Manager"
+          label={t("branch_manager")}
+          placeholder={t("branch_manager")}
           onChangeData={(data: any) => handleFieldChange("branchManager", data)}
         />
 
         <ERPInput
           {...getFieldProps("userName")}
-          label="Username"
-          placeholder="Username"
+          label={t("username")}
+          placeholder={t("username")}
           onChangeData={(data: any) => handleFieldChange("userName", data)}
         />
 
         <ERPInput
           {...getFieldProps("password")}
-          label="Password"
-          placeholder="Password"
+          label={t("password")}
+          placeholder={t("password")}
           type="password"
           onChangeData={(data: any) => handleFieldChange("password", data)}
         />
 
         <ERPInput
           {...getFieldProps("remarks")}
-          label="Remarks"
-          placeholder="Remarks"
+          label={("remarks")}
+          placeholder={("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data)}
         />
 

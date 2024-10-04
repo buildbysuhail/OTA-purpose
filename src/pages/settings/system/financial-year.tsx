@@ -144,6 +144,7 @@ const FinancialYear = () => {
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
+              url:Urls?.FinancialYear,key:cellElement?.data?.id
             }}
           />
         )

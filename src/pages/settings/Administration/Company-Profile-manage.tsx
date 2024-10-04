@@ -28,7 +28,8 @@ export interface CompanyProfileData {
 }
 
 
-export const CompanyProfileManage: React.FC = React.memo(() => {
+
+const CompanyProfileManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -41,8 +42,6 @@ export const CompanyProfileManage: React.FC = React.memo(() => {
     formState
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfiles,
-    onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null })), [dispatch]),
-    key: rootState.PopupData.companyProfile.key
   });
 
   const onClose = useCallback(() => {
@@ -180,3 +179,5 @@ export const CompanyProfileManage: React.FC = React.memo(() => {
     </div>
   );
 });
+
+export default CompanyProfileManage;

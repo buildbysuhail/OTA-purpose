@@ -128,7 +128,8 @@ const Settings = () => {
       <ERPModal
         isOpen={rootState.PopupData.resetDataBase.isOpen || false}
         title={t("reset_dataBase")}
-        width="w-full max-w-[600px]"
+        width="w-full   max-w-[800px]"
+
         isForm={true}
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));

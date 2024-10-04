@@ -7,67 +7,30 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { toggleCompanyProfilePopup } from "../../../redux/slices/popup-reducer";
+import { toggleResetDataBasePopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
+import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 
 export interface CompanyProfileData {
-  registeredName: string,
-  registeredNameArabic: string,
-  taxRegNo: string,
-  crNumber: string,
-  buildingNo: string,
-  streetName: string,
-  district: string,
-  city: string,
-  country: string,
-  postalCode: string,
-  additionalNo: string,
-  emailAddress: string,
-  telephone: string,
-  mobile: string,
-  countrySubEntity: string
+  from: string;
+  to: string;
+  password: string;
 }
 
 export const initialCompanyProfileData = {
   data: {
-    registeredName: "",
-    registeredNameArabic: "",
-    taxRegNo: "",
-    crNumber: "",
-    buildingNo: "",
-    streetName: "",
-    district: "",
-    city: "",
-    country: "",
-    postalCode: "",
-    additionalNo: "",
-    emailAddress: "",
-    telephone: "",
-    mobile: "",
-    countrySubEntity: ""
+    from: "",
+    to: "",
+    password: "",
   },
   validations: {
-    registeredName: "",
-    registeredNameArabic: "",
-    taxRegNo: "",
-    crNumber: "",
-    buildingNo: "",
-    streetName: "",
-    district: "",
-    city: "",
-    country: "",
-    postalCode: "",
-    additionalNo: "",
-    emailAddress: "",
-    telephone: "",
-    mobile: "",
-    countrySubEntity: ""
+    from: "",
+    to: "",
+    password: "",
   },
 };
 
-
-
-const CompanyProfileManage: React.FC = React.memo(() => {
+const ResetDbManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -77,32 +40,52 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-    formState
+    formState,
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfiles,
-    onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null })), [dispatch]),
-    method: ActionType.POST
+    onSuccess: useCallback(
+      () => dispatch(toggleResetDataBasePopup({ isOpen: false, key: null })),
+      [dispatch]
+    ),
+    method: ActionType.POST,
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null }));
+    dispatch(toggleResetDataBasePopup({ isOpen: false, key: null }));
   }, []);
-
 
   const { t } = useTranslation();
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-        <ERPInput
-          {...getFieldProps("registeredName")}
-          label="Registered Name"
-          placeholder="Registered Name"
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("registeredName", data)}
-        />
+      <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-3 gap-5 ">
+          <ERPDateInput
+            {...getFieldProps("from")}
+            type="date"
+            id="from"
+            label="from"
+            onChangeData={(data: any) => handleFieldChange("from", data)}
+          />
+          <ERPDateInput
+            {...getFieldProps("to")}
+            type="date"
+            id="to"
+            label="to"
+            onChangeData={(data: any) => handleFieldChange("to", data)}
+          />
+          <ERPInput
+            {...getFieldProps("password")}
+            label="password"
+            placeholder="password"
+            required={true}
+            onChangeData={(data: any) =>
+              handleFieldChange("password", data)
+            }
+          />
+        </div>
 
-        <ERPInput
+        {/* <ERPInput
           {...getFieldProps("registeredNameArabic")}
           label={t("registered_name")}
           placeholder={t("registered_name")}
@@ -208,7 +191,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           label={t("mobile")}
           placeholder={t("mobile")}
           onChangeData={(data: any) => handleFieldChange("mobile", data)}
-        />
+        /> */}
       </div>
       <ERPFormButtons
         isEdit={isEdit}
@@ -220,4 +203,4 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   );
 });
 
-export default CompanyProfileManage;
+export default ResetDbManage;

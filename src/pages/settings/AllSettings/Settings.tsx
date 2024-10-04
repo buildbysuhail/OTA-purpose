@@ -28,7 +28,7 @@ const UserActionReport = lazy(() => import("../system/user-action-report-manage"
 const ImportExportManage = lazy(() => import("../system/import-export"));
 const CommandsManage = lazy(() => import("../system/commands"));
 const AuthorizationSettings = lazy(() => import("../system/authorization-settings-manage"));
-const  PopUpModalResetDatabase= lazy(() => import("../system/resetDatabase-manage"));
+const  ResetDbManage= lazy(() => import("../system/reset-database-manage"));
 
 const Settings = () => {
   const rootState = useRootState();
@@ -131,7 +131,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
         }}
-      content={<PopUpModalResetDatabase/>}
+      content={<ResetDbManage/>}
       />
 
       <ERPModal

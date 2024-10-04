@@ -61,7 +61,7 @@ const Users = () => {
     },
     {
       dataField: "userType",
-      caption: t("user_type"),
+      caption: t("usertype"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -117,7 +117,7 @@ const Users = () => {
     },
     {
       dataField: "maxDiscPercAllowed",
-      caption: t("max_disc_perc_allowed"),
+      caption: t("max_dis%"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -143,8 +143,8 @@ const Users = () => {
 
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
+            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
@@ -164,7 +164,7 @@ const Users = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Users"
+                  gridHeader={t("users")}
                   dataUrl={Urls.Users}
                   gridId="grd_users"
                   popupAction={toggleUserPopup}
@@ -178,7 +178,7 @@ const Users = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.user.isOpen || false}
-        title={"users"}
+        title={t("users")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

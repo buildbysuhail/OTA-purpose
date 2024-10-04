@@ -218,7 +218,6 @@
     "si_no": "التسلسلي",
     "user": "المستخدم",
     "counter": "العداد",
-    "user_type": "نوع المستخدم",
     "created_user": "المستخدم المنشئ",
     "created_date": "تاريخ الإنشاء",
     "modified_user": "المستخدم المعدل",
@@ -257,6 +256,28 @@
     "account_group_id": "معرّف مجموعة الحسابات",
     "is_billwise_applicable": "قابل لتطبيق الفاتورة الحكيمة",
     "is_active": "نشط",
-    "is_cost_center_applicable": "قابل لتطبيق مركز التكلفة"
+    "is_cost_center_applicable": "قابل لتطبيق مركز التكلفة",
+
+    "from_date": "من التاريخ",
+    "to_date": "إلى التاريخ",
+    "status": "الحالة",
+    "visible_on_startup": "مرئي عند بدء التشغيل",
+    "created_by": "تم الإنشاء بواسطة",
+    "modified_by": "تم التعديل بواسطة",
+    "opening_stock_value": "قيمة المخزون الافتتاحي",
+  
+    "registered_name": "الاسم المسجل",
+    "tax_registration_number": "رقم التسجيل الضريبي",
+    "cr_number": "رقم السجل التجاري",
+    "building_number": "رقم المبنى",
+    "street": "الشارع",
+    "district": "الحي",
+    "city": "المدينة",
+    "postal_code": "الرمز البريدي",
+    "additional_number": "الرقم الإضافي",
+    "region_country_sub_entity": "المنطقة/التقسيم الإداري",
+    "region": "المنطقة",
+    "telephone": "الهاتف",
+    "mobile": "الجوال"
 
 }

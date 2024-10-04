@@ -9,6 +9,7 @@ export const DATA_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.data_industries, method: ActionType.GET as const },
   { url: Urls.data_stock_valuation_methods, method: ActionType.GET as const },
   { url: Urls.data_salesRoute, method: ActionType.GET as const },
+  { url: Urls.data_counters, method: ActionType.GET as const },
 
   // Dropdown - accounts
   { url: Urls.data_acc_groups, method: ActionType.GET as const },

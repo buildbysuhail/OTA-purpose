@@ -5,6 +5,7 @@ import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../redux/urls";
+import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
 
 interface BilledItem {
   id: number;
@@ -102,11 +103,21 @@ const InvTransaction = () => {
     // Here you would typically send the data to a server or perform other actions
   };
 
+  const [isPageVisible, setIsPageVisible] = useState(true);
+
+  const closePage = () => {
+    setIsPageVisible(false);
+  };
+
+  if (!isPageVisible) {
+    return null; // Don't render anything if the page is hidden
+  }
+
   return (
     <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
       {/* Sale Header */}
       <div className="flex items-center bg-white shadow-sm p-4 border-b-2">
-        <i className="ri-arrow-left-line mr-2" style={{ fontSize: "23px" }}></i>
+       <ERPPreviousUrlButton></ERPPreviousUrlButton>
         <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
         <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
           <button
@@ -168,14 +179,16 @@ const InvTransaction = () => {
             <input
               type="text"
               placeholder="Customer *"
-              className="bg-white p-2 border rounded w-full"
+              // className="bg-white p-2 border rounded w-full"
+              className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
             />
           </div>
           <div className="mb-4">
             <input
               type="number"
               placeholder="Phone Number"
-              className="bg-white p-2 border rounded w-full"
+              className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+              // className="bg-white p-2 border rounded w-full"
             />
           </div>
 
@@ -252,7 +265,7 @@ const InvTransaction = () => {
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10">
+          <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
             <ERPButton
               title="Save & New"
               onClick={() => {
@@ -289,18 +302,14 @@ const InvTransaction = () => {
               closeModal={() => setIsOpen(false)}
               content={
                 <div
-                  className="flex flex-col gap-0 px-0 py-0 pb-[60px] "
+                  className="flex flex-col gap-0 px-0 py-0 pb-[60px]   "
                   style={{}} // Inline styles for full screen
                 >
                   <div className="mx-auto max-w-md flex-grow h-full">
                     <div className="flex justify-between items-center mb-6">
-                      <div className="text-gray-600">
-                        
-                      </div>
+                      <div className="text-gray-600"></div>
 
-                      <div className="text-gray-600">
-                        
-                      </div>
+                      <div className="text-gray-600"></div>
                     </div>
 
                     <form onSubmit={handleSubmit}>
@@ -398,8 +407,6 @@ const InvTransaction = () => {
                             </div>
                           )}
                         </div>
-
-                      
                       </div>
 
                       <div className="gap-4 grid grid-cols-2 mb-4">
@@ -479,7 +486,7 @@ const InvTransaction = () => {
                       </div>
                     </form>
                   </div>
-                  <div className=" flex space-x-4 fixed bottom-0 w-full z-10 p-2">
+                  <div className=" flex space-x-4 fixed bottom-0 w-full z-10 p-2 pr-[52px]">
                     <ERPButton
                       title="Save &amp; New"
                       onClick={() => {
@@ -529,7 +536,6 @@ const InvTransaction = () => {
                             <span className="text-gray-600">₹</span>
                             <span className="text-gray-600">200.00</span>
                           </div>
-                          
 
                           {/* Discount Section */}
                           <div className="flex justify-between items-center mb-4">
@@ -590,7 +596,9 @@ const InvTransaction = () => {
                             <span className="text-lg font-semibold">
                               Total Amount:
                             </span>
-                            <span className="ml-[206px] text-lg font-semibold">₹</span>
+                            <span className="ml-[206px] text-lg font-semibold">
+                              ₹
+                            </span>
                             <span className="text-lg font-semibold">
                               200.00
                             </span>

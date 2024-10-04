@@ -48,13 +48,13 @@ export const RemainderManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("descriptions", data)}
         />
-        {/* <ERPDateInput
+        <ERPDateInput
           {...getFieldProps("remaindingDate")}
+          type = "date"
+          id = "remaindingDate"
           label="Date of Remainds"
-
-          required={true}
           onChangeData={(data: any) => handleFieldChange("remaindingDate", data)}
-        /> */}
+        />
        
           <ERPInput
           {...getFieldProps("noOfDays")}

@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
-import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import { toggleDeleteInactiveTransactionPopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
@@ -11,10 +10,19 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { initialDataCounter } from "../system/counters-manage-type";
 
 interface DeleteInactiveTransactionManageData {
-// date:string
+date:string
 isChecked:boolean
 }
-// export initialDataDeleteInactive:
+export const initialDataDeleteInactive = {
+  data: {
+    date: "",
+    isChecked: false,
+  },
+  validations: {
+    date: "",
+    isChecked: "",
+  },
+};
  const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
  
   const dispatch = useDispatch();

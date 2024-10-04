@@ -75,7 +75,7 @@ export const UserManage: React.FC = React.memo(() => {
           field={{
             id: "counterID",
             required: true,
-            getListUrl: Urls.data_employees,
+            getListUrl: Urls.data_counters,
             valueKey: "id",
             labelKey: "name",
           }}

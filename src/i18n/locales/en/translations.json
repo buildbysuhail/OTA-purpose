@@ -61,9 +61,10 @@
   "company_profile":"Company Profile",
   "branches" : "Branches",
   "bank_pos_settings" : "Bank POS Settings",
+
   "system":"System",
   "app_settings" : "Application Settings",
-  "export-import":"Export Import",
+  "export_import":"Export Import",
   "reset_db":"Reset Database",
   "counters":"Counters",
   "financial_year": "Financial Year",

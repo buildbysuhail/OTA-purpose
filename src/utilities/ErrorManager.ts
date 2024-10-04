@@ -9,27 +9,28 @@ const ErrorManager = {
     var msg = "";
     console.log(`ErrorManager,  : error?.response `, error?.response);
     if (error.toJSON().message === "Network Error") {
-      const json=JSON.stringify(error.toJSON());
-      ERPToast.show(json);
-      ERPToast.show(error, "error");
+      ERPToast.show("Network Error, No Internet Connection", "error");
+      // const json=JSON.stringify(error.toJSON());
+      // ERPToast.show(json);
+      // ERPToast.show(error, "error");
 
-      const blob=new Blob([json],{type:'application/json'})
-      const href =  URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = href;
-      link.download = "file.xlsx";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      const json1=JSON.stringify(error);
-      const blob1=new Blob([json1],{type:'application/json'})
-      const href1 =  URL.createObjectURL(blob1);
-      const link1 = document.createElement('a');
-      link1.href = href1;
-      link1.download = "file.xlsx";
-      document.body.appendChild(link1);
-      link1.click();
-      document.body.removeChild(link1);
+      // const blob=new Blob([json],{type:'application/json'})
+      // const href =  URL.createObjectURL(blob);
+      // const link = document.createElement('a');
+      // link.href = href;
+      // link.download = "file.xlsx";
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+      // const json1=JSON.stringify(error);
+      // const blob1=new Blob([json1],{type:'application/json'})
+      // const href1 =  URL.createObjectURL(blob1);
+      // const link1 = document.createElement('a');
+      // link1.href = href1;
+      // link1.download = "file.xlsx";
+      // document.body.appendChild(link1);
+      // link1.click();
+      // document.body.removeChild(link1);
       return;
     }
 

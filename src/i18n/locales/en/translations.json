@@ -239,7 +239,7 @@
   "SiNo":"Serial No",
   "ledger_name":"ledger Name",
   "voucher_prefix":"Voucher Prefix",
- "employee":"Employee",
+  "employee":"Employee",
 
  "display_order":"Display Order",
  "arabic_name":"Arabic Name",

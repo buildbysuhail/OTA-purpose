@@ -284,8 +284,8 @@
     "machine_brand": "علامة الجهاز التجارية",
     "model": "الطراز",
     "com_port": "منفذ الاتصال",
-    "geldea_ws_port": "منفذ Geldea Ws",
-    "gedia_service": "خدمة Gedia",
+    "geldea_ws_port": "منفذ جيلديا ويب",
+    "gedia_service": "خدمة جيديا",
   
     "username": "اسم المستخدم",
     "confirm_password": "تأكيد كلمة المرور",

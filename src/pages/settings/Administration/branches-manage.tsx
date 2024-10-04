@@ -1,518 +1,331 @@
-import { useCallback, useEffect, useState } from "react";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import { handleResponse } from "../../../utilities/HandleResponse";
-import {
-  toggleBranchPopup,
-  toggleCompanyProfilePopup,
-} from "../../../redux/slices/popup-reducer";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import AdministrationSettingsApis from "./administration-settings-apis";
+import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
+import { toggleBranchPopup } from "../../../redux/slices/popup-reducer";
+import { ActionType } from "../../../redux/types";
+import { useTranslation } from "react-i18next";
 
-const BranchManage = () => {
+export interface BranchData {
+  id: number;
+  companyID: number;
+  dateFrom: string;
+  dateTo: string;
+  branchCode: string;
+  branchName: string;
+  address1: string;
+  address2: string;
+  city: string;
+  district: string;
+  bState: string;
+  country: string;
+  cId: number;
+  pinCode: string;
+  phone: string;
+  mobile: string;
+  fax: string;
+  email: string;
+  tin: string;
+  registrationNumber: string;
+  branchManager: string;
+  remarks: string;
+  userName: string;
+  password: string;
+  useMainBranchInventory: boolean;
+}
+
+export const initialBranchData = {
+  data: {
+    id: 0,
+    companyID: 0,
+    dateFrom: "",
+    dateTo: "",
+    branchCode: "",
+    branchName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    district: "",
+    bState: "",
+    country: "",
+    cId: 0,
+    pinCode: "",
+    phone: "",
+    mobile: "",
+    fax: "",
+    email: "",
+    tin: "",
+    registrationNumber: "",
+    branchManager: "",
+    remarks: "",
+    userName: "",
+    password: "",
+    useMainBranchInventory: false,
+  },
+  validations: {
+    id: "",
+    companyID: "",
+    dateFrom: "",
+    dateTo: "",
+    branchCode: "",
+    branchName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    district: "",
+    bState: "",
+    country: "",
+    pinCode: "",
+    phone: "",
+    mobile: "",
+    fax: "",
+    email: "",
+    tin: "",
+    registrationNumber: "",
+    branchManager: "",
+    remarks: "",
+    userName: "",
+    password: "",
+    useMainBranchInventory: "",
+  },
+};
+
+const BranchManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-  const onClose = useCallback(async () => {
+
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+  } = useFormManager<BranchData>({
+    url: Urls.Branch,
+    onSuccess: useCallback(() => dispatch(toggleBranchPopup({ isOpen: false })), [dispatch]),
+    method: ActionType.POST
+  });
+
+  const onClose = useCallback(() => {
     dispatch(toggleBranchPopup({ isOpen: false }));
-  }, []);
+  }, [dispatch]);
 
-  const initialData = {
-    data: {
-      id: 0,
-      companyID: 0,
-      dateFrom: "",
-      dateTo: "",
-      branchCode: "",
-      branchName: "",
-      address1: "",
-      address2: "",
-      city: "",
-      district: "",
-      bState: "",
-      country: "",
-      cId: 0,
-      pinCode: "",
-      phone: "",
-      mobile: "",
-      fax: "",
-      email: "",
-      tin: "",
-      registrationNumber: "",
-      branchManager: "",
-      remarks: "",
-      userName: "",
-      password: "",
-      useMainBranchInventory: false,
-    },
-    validations: {
-      id: "",
-      companyID: "",
-      dateFrom: "",
-      dateTo: "",
-      branchCode: "",
-      branchName: "",
-      address1: "",
-      address2: "",
-      city: "",
-      district: "",
-      bState: "",
-      country: "",
-      pinCode: "",
-      phone: "",
-      mobile: "",
-      fax: "",
-      email: "",
-      tin: "",
-      registrationNumber: "",
-      branchManager: "",
-      remarks: "",
-      userName: "",
-      password: "",
-      useMainBranchInventory: "",
-    },
-  };
-  const [postData, setPostData] = useState(initialData);
-  const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
-
-  const addBranch = useCallback(async () => {
-    setPostDataLoading(true);
-    const { cId, ...filteredData } = postData?.data
-    const response: ResponseModelWithValidation<any, any> =
-      await AdministrationSettingsApis.addBranchInfo(filteredData);
-
-    setPostDataLoading(false);
-
-    handleResponse(
-      response,
-      () => {
-        dispatch(toggleBranchPopup({ isOpen: false }));
-      },
-      () => {
-        setPostData((prevData: any) => ({
-          ...prevData,
-          validations: response.validations,
-        }));
-      }
-    );
-  }, [postData?.data]);
+  const { t } = useTranslation();
 
   return (
-    <>
-      <div className="w-full pt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <ERPInput
-            id="id"
-            label="Id"
-            placeholder="Enter Id"
-            required={true}
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.id}
-            value={postData?.data?.id}
-          />
+    <div className="w-full pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <ERPInput
+          {...getFieldProps("id")}
+          label={t("id")}
+          placeholder="Enter Id"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("id", data)}
+        />
 
-          <ERPDataCombobox
-            id=" companyID"
-            field={{
-              id: " companyID",
-              required: true,
-              getListUrl: Urls.data_company_id,
-              valueKey: "companyID",
-              labelKey: "companyID",
-            }}
-            onChange={(data: any) => {
-              
-              setPostData((prev: any) => ({
-                ...prev,
-                data: { ...prev.data, companyID: data.companyID },
-              }));
-            }}
-            validation={postData?.validations?.companyID}
-            data={postData?.data}
-            defaultData={postData?.data.companyID}
-            value={postData != undefined && postData?.data != undefined && postData?.data?.companyID != undefined ? postData?.data?.companyID : 0}
-            label=" companyID"
-          />
+        <ERPDataCombobox
+          {...getFieldProps("companyID")}
+          field={{
+            id: "companyID",
+            required: true,
+            getListUrl: Urls.data_company_id,
+            valueKey: "companyID",
+            labelKey: "companyID",
+          }}
+          onChange={(data: any) => handleFieldChange("companyID", data.companyID)}
+          label="Company ID"
+        />
 
-          <ERPDateInput
-            id="dateFrom"
-            field={{ type: "date", id: "dateFrom", required: true }}
-            label={"dateFrom"}
-            data={postData?.data}
-            handleChange={(id: any, value: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  [id]: value,
-                },
-              }));
-            }}
-            validation={postData.validations.dateFrom}
-          />
-          <ERPDateInput
-            id="dateTo"
-            field={{ type: "date", id: "dateTo", required: true }}
-            label={"dateTo"}
-            data={postData?.data}
-            handleChange={(id: any, value: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data,
-                  [id]: value,
-                },
-              }));
-            }}
-            validation={postData.validations.dateTo}
-          />
-          {/* Branch Information */}
-          <ERPInput
-            id="branchCode"
-            label="Branch Code"
-            placeholder="Branch Code"
-            required={true}
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.branchCode}
-            value={postData?.data?.branchCode}
-          />
-          <ERPInput
-            id="branchName"
-            label="Branch Name"
-            placeholder="Branch Name"
-            required={true}
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.branchName}
-            value={postData?.data?.branchName}
-          />
+        <ERPDateInput
+          {...getFieldProps("dateFrom")}
+          label="Date From"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
+        />
 
-          {/* Address Information */}
-          <ERPInput
-            id="address1"
-            label="Address Line 1"
-            placeholder="Address Line 1"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.address1}
-            value={postData?.data?.address1}
-          />
-          <ERPInput
-            id="address2"
-            label="Address Line 2"
-            placeholder="Address Line 2"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.address2}
-            value={postData?.data?.address2}
-          />
-          <ERPInput
-            id="city"
-            label="City"
-            placeholder="City"
-            required={true}
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.city}
-            value={postData?.data?.city}
-          />
-          <ERPInput
-            id="district"
-            label="District"
-            placeholder="District"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.district}
-            value={postData?.data?.district}
-          />
-          <ERPInput
-            id="bState"
-            label="State"
-            placeholder="State"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.bState}
-            value={postData?.data?.bState}
-          />
-          {/* Country */}
-          <ERPDataCombobox
-            id="cId"
-            field={{
-              id: "cId",
-              required: true,
-              getListUrl: Urls.data_countries,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChange={(data: any) => {
-              
-              setPostData((prev: any) => ({
-                ...prev,
-                data: {
-                  ...prev.data, // Ensure to preserve existing properties in data
-                  country: data.label,
-                  cId: data.value, // Update or add the val property
-                },
-              }));
-            }}
-            validation={postData?.validations?.country}
-            data={postData?.data}
-            defaultData={postData?.data.cId}
-            value={postData?.data?.cId || 0}
-            label="Country"
-          />
-          <ERPInput
-            id="pinCode"
-            label="pinCode"
-            placeholder="pinCode"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.pinCode}
-            value={postData?.data?.pinCode}
-          />
-          {/* Contact Information */}
-          <ERPInput
-            id="phone"
-            label="Phone"
-            placeholder="Phone"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.phone}
-            value={postData?.data?.phone}
-          />
-          <ERPInput
-            id="mobile"
-            label="Mobile"
-            placeholder="Mobile"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.mobile}
-            value={postData?.data?.mobile}
-          />
-          <ERPInput
-            id="fax"
-            label="Fax"
-            placeholder="Fax"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.fax}
-            value={postData?.data?.fax}
-          />
+        <ERPDateInput
+          {...getFieldProps("dateTo")}
+          label="Date To"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("dateTo", data)}
+        />
 
-          <ERPInput
-            id="email"
-            label="email"
-            placeholder="email"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.email}
-            value={postData?.data?.email}
-          />
 
-          <ERPInput
-            id="tin"
-            label="tin"
-            placeholder="tin"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.tin}
-            value={postData?.data?.tin}
-          />
+        <ERPInput
+          {...getFieldProps("branchCode")}
+          label="Branch Code"
+          placeholder="Branch Code"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("branchCode", data)}
+        />
 
-          <ERPInput
-            id="registrationNumber"
-            label="registrationNumber"
-            placeholder="registrationNumber"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.registrationNumber}
-            value={postData?.data?.registrationNumber}
-          />
+        <ERPInput
+          {...getFieldProps("branchName")}
+          label="Branch Name"
+          placeholder="Branch Name"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("branchName", data)}
+        />
 
-          <ERPInput
-            id="branchManager"
-            label="branchManager"
-            placeholder="branchManager"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.branchManager}
-            value={postData?.data?.branchManager}
-          />
+        <ERPInput
+          {...getFieldProps("address1")}
+          label="Address Line 1"
+          placeholder="Address Line 1"
+          onChangeData={(data: any) => handleFieldChange("address1", data)}
+        />
 
-          <ERPInput
-            id="userName"
-            label="userName"
-            placeholder="userName"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.userName}
-            value={postData?.data?.userName}
-          />
+        <ERPInput
+          {...getFieldProps("address2")}
+          label="Address Line 2"
+          placeholder="Address Line 2"
+          onChangeData={(data: any) => handleFieldChange("address2", data)}
+        />
 
-          <ERPInput
-            id="password"
-            label="password"
-            placeholder="password"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.password}
-            value={postData?.data?.password}
-          />
+        <ERPInput
+          {...getFieldProps("city")}
+          label="City"
+          placeholder="City"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("city", data)}
+        />
 
-          <ERPInput
-            id="remarks"
-            label="Remarks"
-            placeholder="Remarks"
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            validation={postData?.validations?.remarks}
-            value={postData?.data?.remarks}
-          />
+        <ERPInput
+          {...getFieldProps("district")}
+          label="District"
+          placeholder="District"
+          onChangeData={(data: any) => handleFieldChange("district", data)}
+        />
 
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              name="isDelete"
-              className="ti-form-checkbox"
-              id="isDelete"
-              checked={postData?.data.useMainBranchInventory}
-              onChange={(e) => {
-                setPostData((prev) => ({
-                  ...prev,
-                  data: {
-                    ...prev.data,
-                    useMainBranchInventory: e.target.checked,
-                  },
-                }));
-              }}
-            />
-            <label
-              htmlFor="switcher-dark-theme"
-              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-            >
-              useMainBranchInventory
-            </label>
-          </div>
-        </div>
-        {/* Buttons */}
-        <div className="w-full p-2 flex justify-center md:justify-end space-x-4">
-          <ERPButton
-            type="reset"
-            title="Cancel"
-            variant="secondary"
-            onClick={onClose}
-          ></ERPButton>
-          <ERPButton
-            type="button"
-            disabled={postDataLoading}
-            variant="primary"
-            onClick={addBranch}
-            loading={postDataLoading}
-            title={"Submit"}
-          ></ERPButton>
+        <ERPInput
+          {...getFieldProps("bState")}
+          label="State"
+          placeholder="State"
+          onChangeData={(data: any) => handleFieldChange("bState", data)}
+        />
+
+        <ERPDataCombobox
+          {...getFieldProps("cId")}
+          field={{
+            id: "cId",
+            required: true,
+            getListUrl: Urls.data_countries,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChange={(data: any) => {
+            handleFieldChange("country", data.label);
+            handleFieldChange("cId", data.value);
+          }}
+          label="Country"
+        />
+
+        <ERPInput
+          {...getFieldProps("pinCode")}
+          label="Pin Code"
+          placeholder="Pin Code"
+          onChangeData={(data: any) => handleFieldChange("pinCode", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("phone")}
+          label="Phone"
+          placeholder="Phone"
+          onChangeData={(data: any) => handleFieldChange("phone", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("mobile")}
+          label="Mobile"
+          placeholder="Mobile"
+          onChangeData={(data: any) => handleFieldChange("mobile", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("fax")}
+          label="Fax"
+          placeholder="Fax"
+          onChangeData={(data: any) => handleFieldChange("fax", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("email")}
+          label="Email"
+          placeholder="Email"
+          onChangeData={(data: any) => handleFieldChange("email", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("tin")}
+          label="TIN"
+          placeholder="Tax Identification Number"
+          onChangeData={(data: any) => handleFieldChange("tin", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("registrationNumber")}
+          label="Registration Number"
+          placeholder="Registration Number"
+          onChangeData={(data: any) => handleFieldChange("registrationNumber", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("branchManager")}
+          label="Branch Manager"
+          placeholder="Branch Manager"
+          onChangeData={(data: any) => handleFieldChange("branchManager", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("userName")}
+          label="Username"
+          placeholder="Username"
+          onChangeData={(data: any) => handleFieldChange("userName", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("password")}
+          label="Password"
+          placeholder="Password"
+          type="password"
+          onChangeData={(data: any) => handleFieldChange("password", data)}
+        />
+
+        <ERPInput
+          {...getFieldProps("remarks")}
+          label="Remarks"
+          placeholder="Remarks"
+          onChangeData={(data: any) => handleFieldChange("remarks", data)}
+        />
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            name="useMainBranchInventory"
+            className="ti-form-checkbox"
+            id="useMainBranchInventory"
+            checked={getFieldProps("useMainBranchInventory").value}
+            onChange={(e) => handleFieldChange("useMainBranchInventory", e.target.checked)}
+          />
+          <label
+            htmlFor="useMainBranchInventory"
+            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
+          >
+            Use Main Branch Inventory
+          </label>
         </div>
       </div>
-    </>
+
+      <ERPFormButtons
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={onClose}
+        onSubmit={handleSubmit}
+      />
+    </div>
   );
-};
+});
 
 export default BranchManage;

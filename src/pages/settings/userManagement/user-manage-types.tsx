@@ -3,7 +3,7 @@ export const initialDataUser = {
     branchIDs: "",
     counterID: 0,
     Passwd: "",
-   confrimPassword: "",
+    confrimPassword: "",
     userTypeCode: "",
     employeeID: 0,
     maxDecimalPerAllowed: 0,
@@ -15,7 +15,7 @@ export const initialDataUser = {
     branchIDs: "",
     counterID: "",
     Passwd: "",
-   confrimPassword: "",
+    confrimPassword: "",
     userTypeCode: "",
     employeeID: "",
     maxDecimalPerAllowed: "",
@@ -39,3 +39,15 @@ export const initialDataUserType = {
     remarks: "",
   },
 };
+export interface UserData {
+  branchIDs: string;
+  counterID: number;
+  Passwd: string;
+  confrimPassword: string;
+  userTypeCode: string;
+  employeeID: number;
+  maxDecimalPerAllowed: number;
+  email: string;
+  phoneNumber: string;
+  displayName: string;
+}

@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-// import { Button, TextField } from "@mui/material";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
@@ -108,9 +106,6 @@ const InvTransaction = () => {
     <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
       {/* Sale Header */}
       <div className="flex items-center bg-white shadow-sm p-4 border-b-2">
-        {/* <ArrowLeft className="mr-4 text-zinc-800" size={24} />*/}
-        {/* <i className="ri-arrow-left-linemr-4 text-zinc"></i> */}
-        {/* <i className="ri-arrow-left-line"></i> */}
         <i className="ri-arrow-left-line mr-2" style={{ fontSize: "23px" }}></i>
         <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
         <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
@@ -135,7 +130,6 @@ const InvTransaction = () => {
             Cash
           </button>
         </div>
-        {/* <Settings className="text-zinc-800" size={24} /> */}
         <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i>
       </div>
 
@@ -151,10 +145,6 @@ const InvTransaction = () => {
               defaultValue="3"
               className="bg-transparent px-3 py-0 w-full text-center border-none focus:outline-none"
             />
-            {/* <ChevronDown
-              className="top-1/2 right-3 absolute text-gray-400 transform -translate-y-1/2"
-              size={20}
-            /> */}
             <i className="ri-arrow-down-s-line"></i>
           </div>
         </div>
@@ -168,37 +158,11 @@ const InvTransaction = () => {
           </label>
           <div className="relative">
             <input type="date" name="" id="" className="border-none" />
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              {/* <DatePicker
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    InputProps={{
-                      ...params.InputProps,
-                      disableUnderline: true, // Disable underline if needed
-                    }}
-                    className="border-none"
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        "& fieldset": {
-                          border: "none", // Removes the border
-                        },
-                      },
-                    }}
-                  />
-                )}
-              /> */}
-            </LocalizationProvider>
-
-            {/* <ChevronDown
-              className="top-1/2 right-3 absolute text-gray-400 transform -translate-y-1/2"
-              size={20}
-            /> */}
           </div>
         </div>
       </div>
 
-      <div className="pt-1">
+      <div className="pt-1 pb-20">
         <div className="bg-white mb-0 p-4 rounded-lg text-zinc-800 ">
           <div className="mb-4">
             <input
@@ -288,7 +252,7 @@ const InvTransaction = () => {
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex bg-white mt-auto p-2 absolute bottom-0 w-full left-0">
+          <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10">
             <ERPButton
               title="Save & New"
               onClick={() => {
@@ -325,18 +289,17 @@ const InvTransaction = () => {
               closeModal={() => setIsOpen(false)}
               content={
                 <div
-                  className="flex flex-col gap-0 px-0 py-0"
+                  className="flex flex-col gap-0 px-0 py-0 pb-[60px] "
                   style={{}} // Inline styles for full screen
                 >
                   <div className="mx-auto max-w-md flex-grow h-full">
                     <div className="flex justify-between items-center mb-6">
                       <div className="text-gray-600">
-                        {/* <ArrowLeft size={24} onClick={() => setIsOpen(false)} /> */}
-                        {/* <i className="ri-arrow-left-line mr-2" style={{ fontSize: '23px' }}></i> */}
+                        
                       </div>
 
                       <div className="text-gray-600">
-                        {/* <Settings size={24} /> */}
+                        
                       </div>
                     </div>
 
@@ -372,55 +335,6 @@ const InvTransaction = () => {
                           // }
                           label="counterID"
                         />
-                        {/* <label
-                          htmlFor="itemName"
-                          className="block font-medium text-gray-700 text-sm"
-                        >
-                          Item Name
-                        </label>
-                        <input
-                          type="text"
-                          id="itemName"
-                          name="itemName"
-                          value={formData.itemName}
-                          onChange={handleInputChange}
-                          placeholder="e.g. Chocolate Cake"
-                          onClick={() => setShowPopup(true)}
-                          className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
-                        />
-                        {showPopup && (
-                            <div 
-                            className="absolute bg-white shadow-md rounded-lg p-4 mt-1"
-                            style={{ top: '100%', zIndex: 10 }}
-                          >
-                              <div className="flex justify-between items-center mb-2">
-                                <span className="text-gray-600 font-medium">
-                                  Showing Saved Items
-                                </span>
-                                <a href="#" className="text-blue font-medium">
-                                  Add New Item
-                                </a>
-                              </div>
-                              <hr className="mb-2" />
-                              <div className="flex justify-between items-center">
-                                <div>
-                                  <div className="text-gray-800 font-medium">
-                                    Apple
-                                  </div>
-                                  <div className="text-gray-600">
-                                    Purchase Price: 80.00
-                                  </div>
-                                  <div className="text-gray-600">
-                                    In Stock:{" "}
-                                    <span className="text-red-600">-1</span>
-                                  </div>
-                                </div>
-                                <div>
-                                  <i className="fas fa-chevron-right text-gray-400"></i>
-                                </div>
-                              </div>
-                            </div>
-                          )} */}
                         <div className="relative">
                           <label
                             htmlFor="itemName"
@@ -485,58 +399,7 @@ const InvTransaction = () => {
                           )}
                         </div>
 
-                        {/* <div className="p-4">
-                          <div className="mb-4 relative">
-                            <label className="block text-blue-600 font-medium mb-1">
-                              Item Name
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="e.g. Chocolate Cake"
-                              className="w-full border-b-2 border-blue-600 focus:outline-none py-1"
-                              onClick={() => setShowPopup(true)}
-                            />
-                            {showPopup && (
-                              <div
-                                className="absolute top-0 left-0 right-0 bg-white shadow-md rounded-lg p-4"
-                                style={{
-                                  marginTop: "-1px",
-                                  borderTop: "2px solid blue",
-                                }}
-                              >
-                                <div className="flex justify-between items-center mb-2">
-                                  <span className="text-gray-600 font-medium">
-                                    Showing Saved Items
-                                  </span>
-                                  <a
-                                    href="#"
-                                    className="text-blue-600 font-medium"
-                                  >
-                                    Add New Item
-                                  </a>
-                                </div>
-                                <hr className="mb-2" />
-                                <div className="flex justify-between items-center">
-                                  <div>
-                                    <div className="text-gray-800 font-medium">
-                                      Apple
-                                    </div>
-                                    <div className="text-gray-600">
-                                      Purchase Price: 80.00
-                                    </div>
-                                    <div className="text-gray-600">
-                                      In Stock:{" "}
-                                      <span className="text-red-600">-1</span>
-                                    </div>
-                                  </div>
-                                  <div>
-                                    <i className="fas fa-chevron-right text-gray-400"></i>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div> */}
+                      
                       </div>
 
                       <div className="gap-4 grid grid-cols-2 mb-4">
@@ -616,7 +479,7 @@ const InvTransaction = () => {
                       </div>
                     </form>
                   </div>
-                  <div className=" flex space-x-4 absolute bottom-0 w-full left-0 p-2">
+                  <div className=" flex space-x-4 fixed bottom-0 w-full z-10 p-2">
                     <ERPButton
                       title="Save &amp; New"
                       onClick={() => {
@@ -666,39 +529,7 @@ const InvTransaction = () => {
                             <span className="text-gray-600">₹</span>
                             <span className="text-gray-600">200.00</span>
                           </div>
-                          {/* <div className="flex justify-between items-center mb-4">
-                            <span className="text-gray-600">Discount</span>
-                            <div className="flex items-center">
-                              <input
-                                type="text"
-                                value="0"
-                                className="w-12 text-center border border-orange-400 rounded-l-md focus:outline-none"
-                              />
-                              <span className="px-2 border-t border-b border-orange-400 text-orange-400">
-                                %
-                              </span>
-                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
-                                ₹
-                              </span>
-                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
-                                0.00
-                              </span>
-                            </div>
-                          </div>
-                          <div className="flex justify-between items-center mb-4">
-                            <span className="text-gray-600">Tax %</span>
-                            <div className="flex items-center">
-                              <select className="border border-gray-300 rounded-md px-2 py-1 focus:outline-none">
-                                <option>None</option>
-                              </select>
-                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
-                                ₹
-                              </span>
-                              <span className="px-2 border border-gray-300 rounded-r-md text-gray-600">
-                                0.00
-                              </span>
-                            </div>
-                          </div> */}
+                          
 
                           {/* Discount Section */}
                           <div className="flex justify-between items-center mb-4">

@@ -288,6 +288,23 @@
 
   "username" : "User Name",
   "confirm_password":"Confirm Password",
-  "max_dis%":"Maximum Discount %"
+  "max_dis%":"Maximum Discount %",
 
+
+  "enter_id":"Enter Id",
+  "company_id":"Company Id",
+  "date_form":"Date Form",
+  "date_to":"Date To",
+  "branch_code":"Branch Code",
+  "branch_name":"Branch Name",
+  "address_line_1":"Address Line 1",
+  "address_line_2":"Address Line 2",
+  "state":"State",
+  "pin_code":"Pin Code",
+  "phone":"Phone",
+  "fax":"Fax",
+  "tin":"Tin",
+  "tax_identification_number":"Tax Identification Number",
+  "registration_number":"Registration Number",
+  "branch_manager":"Branch Manager"
 }

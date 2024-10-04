@@ -1,5 +1,6 @@
+import * as React from "react";
+import { forwardRef, useEffect } from "react";
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
 import utc from "dayjs/plugin/utc";
 import ERPInput from "./erp-input";
 import { dateTrimmer } from "../../utilities/Utils";
@@ -7,51 +8,88 @@ import ERPElementValidationMessage from "./erp-element-validation-message";
 
 dayjs.extend(utc);
 
-const ERPDateInput = ({ field, label, disabled, handleChange, defaultData, data,
-  validation }: any) => {
-  // let currentDate = dayjs().format("YYYY-MM-DD");
+interface ERPDateInputProps {
+  id: string;
+  label?: string;
+  placeholder?: string;
+  disabled?: boolean;
+  required?: boolean;
+  minDate?: string;
+  maxDate?: string;
+  minDateKey?: string;
+  maxDateKey?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeData?: (data: any) => void;
+  defaultValue?: string;
+  value?: string;
+  data?: any;
+  validation?: string;
+  className?: string;
+  labelClassName?: string;
+  inputClassName?: string;
+}
 
-  let value: any = dayjs(defaultData?.[field?.id]).format("YYYY-MM-DD");
-  if (defaultData?.[field?.id] === undefined && data?.[field?.id] === undefined) {
-    value = undefined;
-  }
-  if (data !== undefined && data?.[field?.id] !== undefined) {
-    value = dayjs(data?.[field?.id]).format("YYYY-MM-DD");
-  }
+const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
+  id,
+  label,
+  placeholder,
+  disabled,
+  required,
+  minDate,
+  maxDate,
+  minDateKey,
+  maxDateKey,
+  onChange,
+  onChangeData,
+  defaultValue,
+  value,
+  data,
+  validation,
+  className,
+  labelClassName,
+  inputClassName,
+  ...props
+}, ref) => {
+  const formatDate = (date: string | undefined) => {
+    if (!date) return undefined;
+    return dayjs(date).format("YYYY-MM-DD");
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value === "" ? null : dayjs(e.target.value).utc(true).format();
+    
+    if (onChange) {
+      onChange(e);
+    }
+
+    if (onChangeData && data) {
+      onChangeData({ ...data, [id]: newValue });
+    }
+  };
+
+  const displayValue = formatDate(value) || formatDate(defaultValue) || "";
+
   return (
-    <>
-    <ERPInput
-      id={field?.id}
-      label={label}
-      placeholder={field?.placeholder}
-      disabled={disabled}
-      // variant={variant}
-      type={field.type}
-      onChange={({ target }) => {
-        if (target.value === "") {
-          handleChange(target?.id, null);
-        } else {
-          handleChange(target?.id, dayjs(target.value).utc(true)?.format());
-        }
-      }}
-      required={field?.required}
-      min={
-        field?.minDate
-          ? dateTrimmer(field?.minDate)
-          : field?.minDateKey
-          ? dayjs(data?.[field?.minDateKey] ?? defaultData?.[field?.minDateKey]).format("YYYY-MM-DD")
-          : ""
-      }
-      max={field?.maxDate && dateTrimmer(field?.maxDate)}
-      // defaultValue={dayjs(defaultData?.[field?.id]).format("YYYY-MM-DD")}
-      // value={dayjs(data?.[field?.id]).format("YYYY-MM-DD") || dayjs(defaultData?.[field?.id]).format("YYYY-MM-DD") || undefined}
-
-      // defaultValue={value == undefined ? "" : value}
-      value={value == undefined ? "" : value}
-    />
-    <ERPElementValidationMessage validation={validation}></ERPElementValidationMessage>
-    </>
+    <div className={className}>
+      <ERPInput
+        ref={ref}
+        id={id}
+        label={label}
+        placeholder={placeholder}
+        disabled={disabled}
+        type="date"
+        onChange={handleChange}
+        required={required}
+        min={minDate ? dateTrimmer(minDate) : minDateKey ? formatDate(data?.[minDateKey]) : undefined}
+        max={maxDate ? dateTrimmer(maxDate) : maxDateKey ? formatDate(data?.[maxDateKey]) : undefined}
+        value={displayValue}
+        labelClassName={labelClassName}
+        inputClassName={inputClassName}
+        {...props}
+      />
+      <ERPElementValidationMessage validation={validation} />
+    </div>
   );
-};
+});
 
 export default ERPDateInput;

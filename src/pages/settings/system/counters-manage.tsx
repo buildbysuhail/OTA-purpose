@@ -82,11 +82,11 @@ export const CounterManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("cashLedgerID", data)}
         />
-         <ERPCheckbox
-           id="maintainShift"
-           label="Maintain Shift"
-         
-         /> 
+           <ERPCheckbox
+          {...getFieldProps('maintainShift')}
+          label="Maintain Shift"
+          onChangeData={(data: any) => handleFieldChange('maintainShift', data)}
+        />
 
       </div>
       <ERPFormButtons

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 
 import Urls from "../../../redux/urls";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -9,12 +9,13 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
+import { VoucherManage } from "./voucher-manage";
 
 const SystemVoucher = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = [
+  const columns: DevGridColumn[] = useMemo( () => [
     {
       dataField: "siNo",
       caption: "Serial No",
@@ -142,22 +143,20 @@ const SystemVoucher = () => {
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any) => {
-        debugger;
         return (
           <ERPGridActions
-            view={{ type: "popup", action: toggleVoucherPopup }}
-            edit={{ type: "popup", action: toggleVoucherPopup }}
+            view={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            edit={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
               // action: () => handleDelete(cellInfo?.data?.id),
             }}
-            itemId={cellElement?.data?.voucherType || ""}
           />
-        );
+        )
       },
     },
-  ];
+  ],[]);
 
   return (
     <Fragment>
@@ -184,10 +183,11 @@ const SystemVoucher = () => {
         isOpen={rootState.PopupData.voucher.isOpen || false}
         title={"Add New Voucher"}
         isForm={true}
+        width="w-full max-w-[600px]"
         closeModal={() => {
           dispatch(toggleVoucherPopup({ isOpen: false }));
         }}
-        // content={<UserTypeManage/>}
+        content={<VoucherManage/>}
       />
     </Fragment>
   );

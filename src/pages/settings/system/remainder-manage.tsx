@@ -1,198 +1,76 @@
-import { useCallback, useState } from "react";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import { handleResponse } from "../../../utilities/HandleResponse";
-import { toggleRemainderPopup } from "../../../redux/slices/popup-reducer";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
-import SystemSettingsApi from "./system-apis";
+import { toggleRemainderPopup, } from "../../../redux/slices/popup-reducer";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
+import { RemainderData } from "./remainder-manage-type";
 
-type PrimitiveFormField = string | number | boolean | Date | null | undefined;
-type ArrayFormField = PrimitiveFormField[];
-type ObjectFormField = { [key: string]: FormField };
-type FormField = PrimitiveFormField | ArrayFormField | ObjectFormField;
-
-interface FormDataStructure {
-  [key: string]: FormField;
-}
-
-interface Validations {
-  [key: string]: string;
-}
-
-interface FormState {
-  data: FormDataStructure;
-  validations: Validations;
-}
-
-interface DynamicFormProps {
-  initialData: FormState;
-  onSubmit: (data: FormDataStructure) => void;
-  onCancel: () => void;
-}
-
-export const RemainderManage = () => {
+export const RemainderManage: React.FC = React.memo(() => {
+  const rootState = useRootState();
   const dispatch = useDispatch();
-  const location = useLocation();
-  const onClose = useCallback(async () => {
-    dispatch(toggleRemainderPopup({ isOpen: false }));
-  }, []);
-  const initialUserTypeData = {
-    data: {
-      remainderName: "",
-      descriptions: "",
-      remaindingDate: "",
-      noOfDay: 0,
-    },
-    validations: {
-      remainderName: "",
-      descriptions: "",
-      remaindingDate: "",
-      noOfDay: "",
-    },
-  };
-  const [postData, setPostData] = useState<FormState>(initialUserTypeData);
-  const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
+ 
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading
+  } = useFormManager<RemainderData>({
+    url:Urls.Remainder,
+    onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null })), [dispatch]),
+    key: rootState.PopupData.reminder.key
+  });
 
-  const queryParams = new URLSearchParams(location.search);
-
-  //key : used for route parm for edit or view
-  const [key, setKey] = useState<any>(queryParams.get("key"));
-
-  const handleSubmit = useCallback(async () => {
-    setPostUserTypeLoading(true);
-    const response: ResponseModelWithValidation<any, any> =
-      await SystemSettingsApi.postRemainder(postData?.data);
-    setPostUserTypeLoading(false);
-    handleResponse(
-      response,
-      () => {
-        dispatch(toggleRemainderPopup({ isOpen: false }));
-      },
-      () => {
-        setPostData((prevData: any) => ({
-          ...prevData,
-          validations: response.validations,
-        }));
-      }
-    );
-  }, [postData?.data]);
-
-  const handleChange = useCallback((id: string, value: FormField) => {
-    try {
-      setPostData((prevData) => {
-        const newData = { ...prevData.data };
-
-        if (id.includes(".")) {
-          const [fieldParent, fieldChild] = id.split(".");
-          if (
-            typeof newData[fieldParent] === "object" &&
-            newData[fieldParent] !== null &&
-            !Array.isArray(newData[fieldParent])
-          ) {
-            (newData[fieldParent] as { [key: string]: FormField })[fieldChild] =
-              value;
-          }
-        } else {
-          newData[id] = value;
-        }
-
-        return {
-          ...prevData,
-          data: newData,
-        };
-      });
-    } catch (error) {
-      console.log(`DynamicForm, Error: `, error);
-    }
+  const onClose = useCallback(() => {
+    dispatch(toggleRemainderPopup({ isOpen: false, key: null }));
   }, []);
 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPInput
-          id="remainderName"
+          {...getFieldProps("remainderName")}
           label="Remainder Name"
-          placeholder="remainderName"
+          placeholder="Remainder Name"
           required={true}
-          data={postData?.data}
           onChangeData={(data: any) => {
-            setPostData((prevData: any) => ({
-              ...prevData,
-              data: data,
-            }));
+            handleFieldChange("remainderName", data);
           }}
-          value={postData?.data?.remainderName}
-          validation={postData?.validations?.remainderName}
         />
-        <ERPInput
-          id="descriptions"
+         <ERPInput
+          {...getFieldProps("descriptions")}
           label="Descriptions"
-          placeholder="descriptions"
+          placeholder="Descriptions"
           required={true}
-          data={postData?.data}
-          onChangeData={(data: any) => {
-            setPostData((prevData: any) => ({
-              ...prevData,
-              data: data,
-            }));
-          }}
-          value={postData?.data?.descriptions}
-          validation={postData?.validations?.descriptions}
+          onChangeData={(data: any) => handleFieldChange("descriptions", data)}
         />
-        <ERPDateInput
-          id="remaindingDate"
-          field={{ type: "date", id: "remaindingDate", required: true }}
-          label={"From"}
-          data={postData?.data}
-          handleChange={(id: any, value: any) => {
-            setPostData((prev: any) => ({
-              ...prev,
-              data: {
-                ...prev.data,
-                [id]: value,
-              },
-            }));
-          }}
-          validation={postData.validations.remaindingDate}
-        />
-        <ERPInput
-          id="noOfDay"
-          label="NoOf Day"
-          placeholder="NoOf Day"
-          required={true}
-          data={postData?.data}
-          onChangeData={(data: any) => {
-            setPostData((prevData: any) => ({
-              ...prevData,
-              data: data,
-            }));
-          }}
-          value={postData?.data?.noOfDay}
-          validation={postData?.validations?.noOfDay}
-        />
-      </div>
+        {/* <ERPDateInput
+          {...getFieldProps("remaindingDate")}
+          label="Date of Remainds"
 
-      <div className="w-full p-2 flex justify-end">
-        <ERPButton
-          type="reset"
-          title="Cancel"
-          variant="secondary"
-          onClick={onClose}
-        // disabled={emailLoading}
-        ></ERPButton>
-        <ERPButton
-          type="button"
-          disabled={postDataLoading}
-          variant="primary"
-          onClick={handleSubmit}
-          loading={postDataLoading}
-          title={key != undefined && key != null ? "Update" : "Submit"}
-        ></ERPButton>
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("remaindingDate", data)}
+        /> */}
+       
+          <ERPInput
+          {...getFieldProps("noOfDays")}
+          label="NoOf Days"
+          placeholder="noOfDays"
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("noOfDays", data)}
+        />
+       
       </div>
+      <ERPFormButtons
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={onClose}
+        onSubmit={handleSubmit}
+      />
     </div>
   );
-};
+});

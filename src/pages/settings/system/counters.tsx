@@ -15,8 +15,7 @@ const Counters = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo(
-    () => [
+  const columns: DevGridColumn[] = useMemo( () => [
       {
         dataField: "siNo",
         caption: t("SiNo"),
@@ -125,7 +124,6 @@ const Counters = () => {
         fixedPosition: "right",
         width: 100,
         cellRender: (cellElement: any) => {
-          debugger;
           return (
             <ERPGridActions
               view={{ type: "popup", action: () => toggleCounterPopup({ isOpen: true, key: cellElement?.data?.id }) }}

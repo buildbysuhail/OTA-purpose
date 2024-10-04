@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { UserData } from "./user-manage-types";
 import { toggleAccountGroupPopup, toggleUserPopup } from "../../../redux/slices/popup-reducer";
-import { RootState } from "../../../redux/store";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import Urls from "../../../redux/urls";

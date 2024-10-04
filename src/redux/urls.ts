@@ -31,6 +31,7 @@ const Urls = {
   data_batchcriteria : "/Data/BatchCriteria/",
   data_pricectegory : "/Data/PriceCategory/",
   data_languages : "/Data/Language/",
+  data_counters : "/Data/Counter/",
 
   // Dropdown - accounts
   data_acc_groups : "/Accounts/Data/AccGroups/",

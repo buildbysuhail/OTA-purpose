@@ -40,14 +40,12 @@ export const initialDataUserType = {
   },
 };
 export interface UserData {
-  branchIDs: string;
-  counterID: number;
+  user : string;
   Passwd: string;
   confrimPassword: string;
   userTypeCode: string;
+  counterID: number;
   employeeID: number;
   maxDecimalPerAllowed: number;
-  email: string;
-  phoneNumber: string;
-  displayName: string;
+  passkey: string;
 }

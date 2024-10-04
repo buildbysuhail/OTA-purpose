@@ -60,7 +60,7 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/user-management/users`, type: 'link', active: false, selected: false, title: 'users' },
-      { path: `${import.meta.env.BASE_URL}settings/_/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'user_type' },
+      { path: `${import.meta.env.BASE_URL}settings/_/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'usertype' },
       { path: `${import.meta.env.BASE_URL}settings/_/user-management/user-type-privileges`, type: 'link', active: false, selected: false, title: 'user_type_privilege' },
     ]
   },

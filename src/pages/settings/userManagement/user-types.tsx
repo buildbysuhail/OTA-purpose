@@ -21,7 +21,7 @@ const UserTypes = () => {
   const columns: DevGridColumn[] = useMemo(() =>[
     {
       dataField: "userTypeName",
-      caption: t("user_type"),
+      caption: t("usertype"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -80,7 +80,7 @@ const UserTypes = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
                   columns={columns}
-                  gridHeader={t("user_type")}
+                  gridHeader={t("usertype")}
                   dataUrl={Urls.UserTypes}
                   gridId="grd_user_type"
                   popupAction={toggleUserTypePopup}

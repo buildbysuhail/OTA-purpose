@@ -515,21 +515,22 @@ const updateBasicInfo = useCallback(async () => {
                     />
                   <ERPDateInput
                     id="dob"
-                    field={{ type: "date", id: "dob", required: true }}
+                    type="date"
+                    required
+                    value={basicInfo.data.dob}
                     label={"Date of Birth"}
                     data={basicInfo?.data}
-                    handleChange={(id: any, value: any) =>
-                    {
+                    onChange={(e) => {
                       
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: {
                           ...prev.data,
-                          [id]: value
+                          dob: e.target.value
                         }
                       }));
-                    }
-                    }
+                    }}
+                    
                     validation={basicInfo.validations.dob}
                   />
                   <div className="w-full p-2 flex justify-end">

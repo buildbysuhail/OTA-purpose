@@ -19,13 +19,13 @@ interface UseFormManagerOptions {
 interface FormField {
   id: string;
   value: any;
+  data: any;
   validation?: string;
 }
 
 export function useFormManager<T>({ url, onSuccess, onError, key }: UseFormManagerOptions) {
-  
+  debugger
   const location = useLocation();
-  const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
 
   const queryParams = new URLSearchParams(location.search);
@@ -84,16 +84,20 @@ export function useFormManager<T>({ url, onSuccess, onError, key }: UseFormManag
       data: {
         data: {
           ...formState.data.data,
-          [fieldId]: value
-        }
-      }
-    });
+          [fieldId]: value[fieldId]
+        },
+        validations: {...formState.data.validations}
+      },
+      loading: false,
+      error: null
+      });
   }, [formState.data, rName]);
 
   const getFieldProps = useCallback((fieldId: string): FormField => {
     
     return {
       id: fieldId,
+      data: formState.data.data,
       value: formState.data.data?.[fieldId] || '',
       validation: formState.data.validations?.[fieldId]
     };

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -13,51 +13,78 @@ interface AccountGroupData {
   remark: string;
 }
 
-export const AccountGroupManage = () => {
+export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
+  const [localFormData, setLocalFormData] = useState<AccountGroupData>({
+    userTypeName: '',
+    userTypeCode: '',
+    remark: ''
+  });
 
   const {
     isEdit,
     handleSubmit,
     handleFieldChange,
     getFieldProps,
-    isLoading
+    isLoading,
+    formState
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: () => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })),
+    onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.accountGroup.key
   });
 
+  useEffect(() => {
+    if (formState.data.data) {
+      setLocalFormData(formState.data.data);
+    }
+  }, [formState.data.data]);
+
   const onClose = useCallback(() => {
     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
-  }, []);
+  }, [dispatch]);
+
+  const handleLocalFieldChange = useCallback((fieldId: string, value: any) => {
+    setLocalFormData(prev => ({
+      ...prev,
+      [fieldId]: value[fieldId]
+    }));
+    handleFieldChange(fieldId, value);
+  }, [handleFieldChange]);
+
+  const memoizedInputs = useMemo(() => (
+    <div className="grid grid-cols-1 gap-3">
+      <ERPInput
+        {...getFieldProps('accGroupName')}
+        label="User Type Name"
+        placeholder="User Type Name"
+        required={true}
+        // value={localFormData.accGroupName}
+        onChangeData={(data: any) => handleLocalFieldChange('accGroupName', data)}
+      />
+      <ERPInput
+        {...getFieldProps('userTypeCode')}
+        label="User Type Code"
+        placeholder="User Type Code"
+        required={true}
+        value={localFormData.userTypeCode}
+        onChangeData={(data: any) => handleLocalFieldChange('userTypeCode', data)}
+      />
+      <ERPInput
+        {...getFieldProps('remark')}
+        label="Remark"
+        placeholder="Remark"
+        required={true}
+        value={localFormData.remark}
+        onChangeData={(data: any) => handleLocalFieldChange('remark', data)}
+      />
+    </div>
+  ), [getFieldProps, handleLocalFieldChange, localFormData]);
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
-        <ERPInput
-          {...getFieldProps('accGroupName')}
-          label="User Type Name"
-          placeholder="User Type Name"
-          required={true}
-          onChangeData={(data: any) => {debugger;handleFieldChange('accGroupName', data)}}
-        />
-        <ERPInput
-          {...getFieldProps('userTypeCode')}
-          label="User Type Code"
-          placeholder="User Type Code"
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
-        />
-        <ERPInput
-          {...getFieldProps('remark')}
-          label="Remark"
-          placeholder="Remark"
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('remark', data)}
-        />
-      </div>
+      {memoizedInputs}
       <ERPFormButtons
         isEdit={isEdit}
         isLoading={isLoading}
@@ -66,4 +93,4 @@ export const AccountGroupManage = () => {
       />
     </div>
   );
-};
+});

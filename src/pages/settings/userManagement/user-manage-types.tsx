@@ -43,6 +43,9 @@ export interface UserData {
   user : string;
   Passwd: string;
   confrimPassword: string;
+  email:string;
+  phoneNumber : string;
+  displayName:string;
   userTypeCode: string;
   counterID: number;
   employeeID: number;

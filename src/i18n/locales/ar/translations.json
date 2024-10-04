@@ -306,5 +306,21 @@
     "tin": "الرقم الضريبي",
     "tax_identification_number": "رقم التعريف الضريبي",
     "registration_number": "رقم التسجيل",
-    "branch_manager": "مدير الفرع"
+    "branch_manager": "مدير الفرع",
+
+    "delete_in_active_transactions": "حذف في المعاملات النشطة",
+    "branch_info": "معلومات الفرع",
+    "import_export": "استيراد وتصدير",
+    "reset_dataBase": "إعادة تعيين قاعدة البيانات",
+    "sql_commands": "أوامر SQL",
+    "authorization_settings": "إعدادات التفويض",
+
+    "execute": "تنفيذ",
+  "checkbox": "مربع اختيار",
+  "user_id": "معرف المستخدم",
+  "branch_id": "معرف الفرع",
+  "counter_id": "معرف العداد",
+  "user_name": "اسم المستخدم",
+  "user_type_code": "رمز نوع المستخدم",
+  "created_user_id": "معرف المستخدم المنشئ"
 }

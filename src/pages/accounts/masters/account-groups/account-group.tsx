@@ -8,6 +8,7 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { AccountGroupManage } from "./account-group-manage";
+import { useTranslation } from "react-i18next";
 const AccountGroupType = () => {
 
   const MemoizedAccountGroupManage = useMemo(() => React.memo(AccountGroupManage), []);
@@ -197,7 +198,7 @@ const AccountGroupType = () => {
         )
       },
     }
-  ];
+  ], [cellRender]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

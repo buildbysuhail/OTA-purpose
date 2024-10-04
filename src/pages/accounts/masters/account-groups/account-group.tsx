@@ -210,7 +210,7 @@ const AccountGroupType = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.accountGroup.isOpen || false}
-        title={"Add New UserType"}
+        title={"Add New Account Group"}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

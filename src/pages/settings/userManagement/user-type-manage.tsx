@@ -8,6 +8,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import React from "react";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import { initialDataUserType } from "./user-manage-types";
 
 interface UserTypeData {
   userTypeName: string;
@@ -28,7 +29,8 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
   } = useFormManager<UserTypeData>({
     url: Urls.UserTypes,
     onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null })), [dispatch]),
-    key: rootState.PopupData.userType.key
+    key: rootState.PopupData.userType.key,
+    initialData: initialDataUserType
   });
 
   const onClose = useCallback(() => {

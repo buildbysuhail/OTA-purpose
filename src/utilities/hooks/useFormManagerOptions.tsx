@@ -142,9 +142,9 @@ export function useFormManager<T>({
       try {
         let response;
         if (isEdit) {
-          response = await apiClient.put(`${url}`, formState.data);
+          response = await apiClient.put(`${url}`, formState?.data);
         } else {
-          response = await apiClient.post(url, formState.data);
+          response = await apiClient.post(url, formState?.data);
         }
         handleResponse(
           response,
@@ -155,7 +155,7 @@ export function useFormManager<T>({
             setLocalFormState((prevState) => ({
               ...prevState,
               data: {
-                ...prevState.data,
+                ...prevState?.data,
               },
             }));
             onError?.(response);
@@ -191,7 +191,7 @@ export function useFormManager<T>({
     }
     setIsLoading(false);
   }, [
-    formState.data,
+    formState?.data,
     rName,
     appDispatch,
     isEdit,
@@ -205,7 +205,7 @@ export function useFormManager<T>({
   const handleFieldChange = useCallback(
     (fieldId: string, value: any) => {
       const newData = {
-        ...formState.data,
+        ...formState?.data,
         [fieldId]: value[fieldId],
       };
 
@@ -213,18 +213,18 @@ export function useFormManager<T>({
         setLocalFormState((prevState) => ({
           ...prevState,
           data: newData,
-          validations: { ...prevState.data.validations },
+          validations: { ...prevState?.data.validations },
         }));
       } else {
         reduxManager.setState(rName, {
           data: newData,
-          validations: { ...formState.data.validations },
+          validations: { ...formState?.data.validations },
           loading: false,
           error: null,
         });
       }
     },
-    [formState.data, rName, useApiClient]
+    [formState?.data, rName, useApiClient]
   );
 
   const getFieldProps = useCallback(
@@ -237,7 +237,7 @@ export function useFormManager<T>({
         checked: formState?.data?.[fieldId] || false,
       };
     },
-    [formState.data]
+    [formState?.data]
   );
 
   return {

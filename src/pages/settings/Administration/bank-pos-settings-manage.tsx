@@ -1,199 +1,79 @@
-import { useCallback, useState } from "react";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import { handleResponse } from "../../../utilities/HandleResponse";
-import { toggleBankPosPopup } from "../../../redux/slices/popup-reducer";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import AdministrationSettingsApis from "./administration-settings-apis";
-import ERPInput from "../../../components/ERPComponents/erp-input";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
+import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
+import { BankPoseData } from "./administration-types";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { toggleBankPosPopup } from "../../../redux/slices/popup-reducer";
 
-const BankPosSettingsManage = () => {
+export const BankPosSettingsManage: React.FC = React.memo(() => {
+  const rootState = useRootState();
   const dispatch = useDispatch();
-  const onClose = useCallback(async () => {
-    dispatch(toggleBankPosPopup({ isOpen: false }));
+ 
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading
+  } = useFormManager<BankPoseData>({
+    url:Urls.Remainder,
+    onSuccess: useCallback(() => dispatch(toggleBankPosPopup({ isOpen: false, key: null })), [dispatch]),
+    key: rootState.PopupData.reminder.key
+  });
+
+  const onClose = useCallback(() => {
+    dispatch(toggleBankPosPopup({ isOpen: false, key: null }));
   }, []);
 
-  const initialData = {
-    data: {
-      machineBrand: "",
-      model: "",
-      comPort: "",
-      geldeaWsPort: "",
-      gediaService: "",
-    },
-    validations: {
-      machineBrand: "",
-      model: "",
-      comPort: "",
-      geldeaWsPort: "",
-      gediaService: "",
-    },
-  };
-  const [postData, setPostData] = useState(initialData);
-  const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
-
-  const addBankPos = useCallback(async () => {
-    setPostDataLoading(true);
-
-    const response: ResponseModelWithValidation<any, any> =
-      await AdministrationSettingsApis.addBankPosInfo(postData?.data);
-
-    setPostDataLoading(false);
-
-    handleResponse(
-      response,
-      () => {
-        dispatch(toggleBankPosPopup({ isOpen: false }));
-      },
-      () => {
-        setPostData((prevData: any) => ({
-          ...prevData,
-          validations: response.validations,
-        }));
-      }
-    );
-  }, [postData?.data]);
-
   return (
-    <>
-      <div className="w-full pt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <ERPDataCombobox
-            id="machineBrand"
-            field={{
-              id: "machineBrand",
-              required: true,
-              getListUrl: Urls.data_countries,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            //   validation={postData.validations.machineBrand}
-            data={postData?.data}
-            defaultData={postData?.data}
-            value={
-              postData != undefined &&
-                postData?.data != undefined &&
-                postData?.data?.machineBrand != undefined
-                ? postData?.data?.machineBrand
-                : 0
-            }
-            label="Machine Brand"
-          />
+    <div className="w-full pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <ERPDataCombobox
+  {...getFieldProps("machineBrand")}
+  label="Machine Brand"
+  onChangeData={(data: any) => handleFieldChange("machineBrand", data)}
+/>
 
-          <ERPDataCombobox
-            id="model"
-            field={{
-              id: "model",
-              required: true,
-              getListUrl: Urls.data_countries,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            //   validation={postData.validations.model}
-            data={postData?.data}
-            defaultData={postData?.data}
-            value={
-              postData != undefined &&
-                postData?.data != undefined &&
-                postData?.data?.model != undefined
-                ? postData?.data?.model
-                : 0
-            }
-            label="Model"
-          />
+<ERPDataCombobox
+  {...getFieldProps("model")}
+  label="Model"
+  onChangeData={(data: any) => handleFieldChange("model", data)}
+/>
 
-          <ERPDataCombobox
-            id="comPort"
-            field={{
-              id: "comPort",
-              required: true,
-              getListUrl: Urls.data_countries,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
-                ...prev,
-                data: data,
-              }));
-            }}
-            //   validation={postData.validations.comPort}
-            data={postData?.data}
-            defaultData={postData?.data}
-            value={
-              postData != undefined &&
-                postData?.data != undefined &&
-                postData?.data?.comPort != undefined
-                ? postData?.data?.comPort
-                : 0
-            }
-            label="Com Port"
-          />
-          <ERPInput
-            id="geldeaWsPort"
-            label="Geldea Ws Port"
-            placeholder="Geldea Ws Port"
-            required={true}
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prevData: any) => ({
-                ...prevData,
-                data: data,
-              }));
-            }}
-            value={postData?.data?.geldeaWsPort}
-          //   validation={postData?.validations?.geldeaWsPort}
-          />
-          <ERPInput
-            id="gediaService"
-            label="Gedia Service"
-            placeholder="gediaService"
-            required={true}
-            data={postData?.data}
-            onChangeData={(data: any) => {
-              setPostData((prevData: any) => ({
-                ...prevData,
-                data: data,
-              }));
-            }}
-            value={postData?.data?.gediaService}
-          //   validation={postData?.validations?.gediaService}
-          />
-        </div>
-        {/* Buttons */}
-        <div className="w-full p-2 flex justify-center md:justify-end space-x-4">
-          <ERPButton
-            type="reset"
-            title="Cancel"
-            variant="secondary"
-            onClick={onClose}
-          ></ERPButton>
-          <ERPButton
-            type="button"
-            disabled={postDataLoading}
-            variant="primary"
-            onClick={addBankPos}
-            loading={postDataLoading}
-            title={"Submit"}
-          ></ERPButton>
-        </div>
+<ERPDataCombobox
+  {...getFieldProps("comPort")}
+  label="Com Port"
+  onChangeData={(data: any) => handleFieldChange("comPort", data)}
+/>
+
+<ERPInput
+  {...getFieldProps("geldeaWsPort")}
+  label="Geldea Ws Port"
+  placeholder="Geldea Ws Port"
+  required={true}
+  onChangeData={(data: any) => handleFieldChange("geldeaWsPort", data)}
+/>
+
+<ERPInput
+  {...getFieldProps("gediaService")}
+  label="Gedia Service"
+  placeholder="Gedia Service"
+  required={true}
+  onChangeData={(data: any) => handleFieldChange("gediaService", data)}
+/>
+       
       </div>
-    </>
+      <ERPFormButtons
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={onClose}
+        onSubmit={handleSubmit}
+      />
+    </div>
   );
-};
-
-export default BankPosSettingsManage;
+});

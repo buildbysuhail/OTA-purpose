@@ -7,6 +7,7 @@ import Urls from "../../../redux/urls";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import React from "react";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
 interface UserTypeData {
   userTypeName: string;
@@ -57,6 +58,16 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
           placeholder="Remark"
           required={true}
           onChangeData={(data: any) => handleFieldChange('remark', data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps('isEditable')}
+          label="Is Editable"
+          onChange={(data: any) => handleFieldChange('isEditable', data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps('isDeletable')}
+          label="Is Deletable"
+          onChange={(data: any) => handleFieldChange('isDeletable', data)}
         />
       </div>
       <ERPFormButtons

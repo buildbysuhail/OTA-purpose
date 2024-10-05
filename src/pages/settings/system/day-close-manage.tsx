@@ -15,24 +15,26 @@ interface DayCloseManageData {
   isPurchase: boolean,
   isAccounts: boolean,
   passWord: string,
+  isAgree: boolean,
 }
-export const initialDataDayClose = {
-  data: {
-    closedDate: "",
-    isSales: false,
-    isPurchase: false,
-    isAccounts: false,
-    passWord: "",
-  },
-  validations: {
-    closedDate: "",
-    isSales: "",
-    isPurchase: "",
-    isAccounts: "",
-    passWord: "",
-    isAgree: ""
-  },
-};
+// export const initialDataDayClose = {
+//   data: {
+//     closedDate: "",
+//     isSales: true,
+//     isPurchase: true,
+//     isAccounts: true,
+//     passWord: "",
+//     isAgree: true
+//   },
+//   validations: {
+//     closedDate: "",
+//     isSales: "",
+//     isPurchase: "",
+//     isAccounts: "",
+//     passWord: "",
+//     isAgree: ""
+//   },
+// };
 
 const DayCloseManage :  React.FC = React.memo(() => {
   const dispatch = useDispatch();
@@ -92,10 +94,10 @@ const DayCloseManage :  React.FC = React.memo(() => {
         />
         </div>
         <ERPCheckbox
-          {...getFieldProps("isAccounts")}
+          {...getFieldProps("isAgree")}
           label="I agree to close the transactions till date mentioned 
                  (Add/Edit/Delete will be blocked for all the Inventory and Account Transaction)"
-          onChangeData={(data: any) => handleFieldChange("isAccounts", data)}
+          onChangeData={(data: any) => handleFieldChange("isAgree", data)}
         />
       </div>
       <ERPFormButtons

@@ -9,6 +9,7 @@ import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-butto
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { CounterData, initialDataCounter } from "./counters-manage-type";
+import { useTranslation } from "react-i18next";
 
 export const CounterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -36,13 +37,15 @@ export const CounterManage: React.FC = React.memo(() => {
     dispatch(toggleCounterPopup({ isOpen: false, key: null }));
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("counterName")}
-          label=" Counter Name"
-          placeholder=" Counter Name"
+          label={t("counter_name")}
+          placeholder={t("counter_name")}
           required={true}
           onChangeData={(data: any) => {
             debugger;
@@ -51,8 +54,8 @@ export const CounterManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("descriptions")}
-          label="Descriptions"
-          placeholder="Descriptions"
+          label={t("descriptions")}
+          placeholder={t("descriptions")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("descriptions", data)}
         />
@@ -66,7 +69,7 @@ export const CounterManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          label="Warehouse ID"
+          label={t("warehouse_id")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("warehouseID", data)}
         />
@@ -80,13 +83,13 @@ export const CounterManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          label="cashLedgerID"
+          label={t("cashLedger_id")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("cashLedgerID", data)}
         />
            <ERPCheckbox
           {...getFieldProps('maintainShift')}
-          label="Maintain Shift"
+          label={t("maintain_shift")}
           onChangeData={(data: any) => handleFieldChange('maintainShift', data)}
         />
 

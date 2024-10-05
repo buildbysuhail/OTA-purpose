@@ -5,14 +5,20 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import { BankPoseData } from "./administration-types";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { toggleBankPosPopup } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
+import { ActionType } from "../../../redux/types";
+
+export interface BankPoseData {
+  machineBrand?: string;
+  model?: string;
+  comPort?: string;
+  geldeaWsPort?: string;
+  gediaService?: string;
+}
 
 const BankPosSettingsManage: React.FC = React.memo(() => {
-  const rootState = useRootState();
   const{t} = useTranslation();
   const dispatch = useDispatch();
 
@@ -20,14 +26,15 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
     useFormManager<BankPoseData>({
       url: Urls.BankPosSettings,
       onSuccess: useCallback(
-        () => dispatch(toggleBankPosPopup({ isOpen: false, key: null })),
+        () => dispatch(toggleBankPosPopup({ isOpen: false})),
         [dispatch]
       ),
-      key: rootState.PopupData.reminder.key,
+      method: ActionType.POST,
+      useApiClient: true
     });
 
   const onClose = useCallback(() => {
-    dispatch(toggleBankPosPopup({ isOpen: false, key: null }));
+    dispatch(toggleBankPosPopup({ isOpen: false}));
   }, []);
 
   return (
@@ -36,7 +43,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
         
         <ERPDataCombobox
           {...getFieldProps("machineBrand")}
-          id="employeeID"
+          id="machineBrand"
           field={{
             id: "machineBrand",
             required: true,

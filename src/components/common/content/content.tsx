@@ -5,6 +5,7 @@ import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import Flex from '../../../pages/inventory/demo-flex';
 
+
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -20,6 +21,7 @@ const FinancialYear = lazy(() => import('../../../pages/settings/system/financia
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
 const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
+const BranchGrid = lazy(() => import("../../../pages/settings/Administration/branch"));
 
 
 // Inventory Starts
@@ -62,7 +64,8 @@ const Content: FC<ContentProps> = () => {
         {/* settings user */}
         <Route path="/user-management/users" element={<Users />} />
         <Route path="/user-management/userstypes" element={<UserTypes />} />
-
+        {/* settings Administer*/}
+        <Route path="/administration/branch" element={<BranchGrid/>} />
         {/* settings Systems */}
         <Route path="/system/counters" element={<SystemCounters />} />
         <Route path="/system/vouchers" element={<SystemVoucher />} />

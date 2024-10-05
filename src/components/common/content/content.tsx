@@ -1,5 +1,8 @@
 import { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import ApplicationSettings from '../../../pages/settings/system/application-settings';
+import Templates from '../../../pages/InvoiceDesigner/Templates';
+import Settings from '../../../pages/settings/AllSettings/Settings';
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
@@ -8,7 +11,6 @@ const AccountSettingsSessions = lazy(() => import('../../../pages/account-settin
 const AccountSettingsProfile = lazy(() => import('../../../pages/account-settings/account-settings-profile'));
 const WorkspaceSettingsMembers = lazy(() => import('../../../pages/work-space/workspace-settings-members'));
 const WorkspaceSettingsSecurity = lazy(() => import('../../../pages/work-space/workspace-settings-security'));
-const Settings = lazy(() => import('../../../pages/settings/AllSettings/Settings'));
 const UserTypes = lazy(() => import('../../../pages/settings/userManagement/user-types'));
 const Users = lazy(() => import('../../../pages/settings/userManagement/Users'));
 const SystemCounters = lazy(() => import('../../../pages/settings/system/counters'));
@@ -17,7 +19,6 @@ const FinancialYear = lazy(() => import('../../../pages/settings/system/financia
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
 const ExchangeRates = lazy(() => import("../../../pages/settings/system/exchange-rates"));
-const Templates = lazy(() => import("../../../pages/InvoiceDesigner/Templates"));
 const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
 const Barcodeprint = lazy(() => import("../../../pages/settings/system/barcode-print"));
 
@@ -69,6 +70,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/financial-year" element={<FinancialYear />} />
         <Route path="/system/reminders" element={<Reminders />} />
         <Route path="/system/exchange-rates" element={<ExchangeRates />} />
+        <Route path="/system/application-settings" element={<ApplicationSettings />} />
         <Route path="settings" element={<Settings />} />
 
         {/* Inventory Starts */}

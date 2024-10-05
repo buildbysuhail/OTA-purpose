@@ -9,6 +9,8 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
+import BranchManage from "./branch-info-manage";
+import { BranchGridManage } from "./branch-manage";
 
 const BranchGrid = () => {
   const { t } = useTranslation();
@@ -236,13 +238,13 @@ const BranchGrid = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.branchGrid.isOpen || false}
-        title={"Add New Branch"}
+        title={"Branch"}
         isForm={true}
         width="w-full max-w-[800px]"
         closeModal={() => {
           dispatch(toggleBranchGridPopup({ isOpen: false }));
         }}
-        // content={<VoucherManage/>}
+        content={<BranchGridManage/>}
       />
     </Fragment>
   );

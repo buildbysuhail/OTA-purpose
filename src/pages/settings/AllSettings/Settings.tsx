@@ -96,7 +96,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleBranchPopup({ isOpen: false }));
         }}
-        content={<BranchManage />}
+        content={<BranchManage/>}
       />
       <ERPModal
         isOpen={rootState.PopupData.dayClose.isOpen || false}

@@ -379,7 +379,7 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
               />
             );
 
-          case "textarea":
+          case "textarea": 
             return (
               <ERPTextarea
                 onChange={({ target }) => handleChange(target?.id, target.value)}

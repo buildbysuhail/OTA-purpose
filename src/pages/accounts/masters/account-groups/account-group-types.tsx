@@ -36,3 +36,22 @@ export const initialAccountGroup = {
     reasonForModification: ''
   },
 };
+
+ export interface AccountGroupData {
+  accGroupID: number,
+  branchID: number,
+  accGroupName: string,
+  shortName: string,
+  parentGroupID: number,
+  remarks: string,
+  isEditable: boolean,
+  isDeletable: boolean,
+  isProtected: boolean,
+  isCommon: boolean,
+  createdUserID: number,
+  aStatus: string,
+  displayOrder: number,
+  arabicName: string,
+  modifiedUserID: number,
+  reasonForModification: string
+}

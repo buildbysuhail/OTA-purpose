@@ -294,7 +294,7 @@
 
     "enter_id": "أدخل الهوية",
     "company_id": "هوية الشركة",
-    "date_form": "تاريخ من",
+    "date_from": "التاريخ من",
     "date_to": "تاريخ إلى",
     "branch_code": "رمز الفرع",
     "branch_name": "اسم الفرع",
@@ -355,9 +355,7 @@
     "counter_name": "اسم العداد",
     "warehouse_id": "معرف المستودع",
     "cashLedger_id": "معرف دفتر النقد",
-    "add_new_counter": "إضافة عداد جديد",
 
-    "add_new_financial_data": "إضافة بيانات مالية جديدة",
     "enter_remarks": "أدخل الملاحظات",
     "prev_period_stock_value": "قيمة المخزون للفترة السابقة",
     "select_status": "اختر الحالة",
@@ -372,5 +370,31 @@
     "lastVoucher_number": "رقم آخر قسيمة",
      "printDesign_fileName": "اسم ملف تصميم الطباعة",
      "default_voucher": "القسيمة الافتراضية",
-     "is_default": "هل هو افتراضي"
+     "is_default": "هل هو افتراضي",
+
+    "transaction": "المعاملة",
+    "action": "الإجراء",
+
+    "remainder_id": "معرف التذكير",
+    "remainder_name": "اسم التذكير",
+    "reminding_date": "تاريخ التذكير",
+    "number_of_days": "عدد الأيام",
+    "remainders": "التذكيرات",
+    "date_of_reminds": "تاريخ التذكيرات",
+
+    "to_currency": "إلى العملة",
+    "rate": "السعر",
+    "rate_date": "تاريخ السعر",
+    "base_currency": "العملة الأساسية",
+    "load": "تحميل",
+    "currencies": "العملات",
+    "currency_name": "اسم العملة",
+    "currency_symbol": "رمز العملة",
+    "currency_code": "رمز العملة",
+    "sub_unit": "الوحدة الفرعية",
+    "subUnit_symbol": "رمز الوحدة الفرعية",
+
+    "day_close_agreement": "أوافق على إغلاق المعاملات حتى التاريخ المذكور (سيتم حظر الإضافة/التعديل/الحذف لجميع معاملات المخزون والحساب)",
+    "enter_password": "أدخل كلمة المرور",
+    "closed_date": "تاريخ الإغلاق"
 }

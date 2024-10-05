@@ -21,7 +21,6 @@ export const CounterManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-    formState,
   } = useFormManager<CounterData>({
     url: Urls.Counter,
     onSuccess: useCallback(
@@ -48,7 +47,6 @@ export const CounterManage: React.FC = React.memo(() => {
           placeholder={t("counter_name")}
           required={true}
           onChangeData={(data: any) => {
-            debugger;
             handleFieldChange("counterName", data);
           }}
         />

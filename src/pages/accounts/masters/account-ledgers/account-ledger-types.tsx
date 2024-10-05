@@ -42,3 +42,25 @@ export const initialAccountGroup = {
     arabicName: ''
   },
 };
+
+export interface AccountLedgerData {
+  ledgerID: number,
+  branchID: number,
+  ledgerName: string,
+  accGroupID: number,
+  ledgerCode: string,
+  aliasName: string,
+  isEditable: boolean,
+  isBillwiseApplicable: boolean,
+  isDeletable: boolean,
+  remarks: string,
+  isIncomeLedger: boolean,
+  isActive: boolean,
+  createdUserID: number,
+  modifiedUserID: number,
+  isProtected: boolean,
+  isCommon: boolean,
+  accTransactionID: number,
+  isCostCentreApplicable: boolean,
+  arabicName: string
+}

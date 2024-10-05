@@ -9,13 +9,14 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
+import BranchManage from "./branch-info-manage";
+import { BranchGridManage } from "./branch-manage";
 
 const BranchGrid = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo(
-    () => [
+  const columns: DevGridColumn[] = useMemo(() => [
       {
         dataField:"branchCode",
         caption: "Branch Code",
@@ -237,16 +238,16 @@ const BranchGrid = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.branchGrid.isOpen || false}
-        title={"Add New Branch"}
+        title={"Branch"}
         isForm={true}
         width="w-full max-w-[800px]"
         closeModal={() => {
           dispatch(toggleBranchGridPopup({ isOpen: false }));
         }}
-        // content={<VoucherManage/>}
+        content={<BranchGridManage/>}
       />
     </Fragment>
   );
 };
 
-export default BranchGrid;
+export default React.memo(BranchGrid);

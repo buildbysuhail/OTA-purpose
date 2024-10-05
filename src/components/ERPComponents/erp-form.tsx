@@ -393,7 +393,11 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
                 required={field?.required}
               />
             );
-          case "text" || "password" || "search" || "tel" || "url":
+          case "text":
+          case "password":
+          case "search":
+          case "tel":
+          case "url":
             return (
               <ERPInput
                 onChange={({ target }) => handleChange(target?.id, target.value)}
@@ -486,7 +490,11 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
               </FormControl>
             );
          
-          case "date" || "datetime-local" || "time" || "month" || "week":
+          case "date":
+          case "datetime-local":
+          case "time":
+          case "month":
+          case "week":
             return (
               
               <ERPDateInput

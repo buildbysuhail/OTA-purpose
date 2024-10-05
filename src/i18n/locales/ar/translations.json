@@ -236,6 +236,7 @@
     "add_new_user": "إضافة مستخدم جديد",
     "maintain_shift": "إدارة الشيفت",
     "descriptions": "الوصف",
+    "SiNo": "الرقم التسلسلي",
     "ledger_name": "اسم دفتر الحسابات",
     "voucher_prefix": "بادئة القسيمة",
     "employee": "الموظف",
@@ -328,5 +329,48 @@
 
     "use_main_branch_inventory": "استخدام مخزون الفرع الرئيسي",
     "till_date": "حتى التاريخ",
-  "i_agree_to_delete_all_inactive_transactions_till_the_selected_date": "أوافق على حذف جميع المعاملات غير النشطة حتى التاريخ المحدد"
+    "i_agree_to_delete_all_inactive_transactions_till_the_selected_date": "أوافق على حذف جميع المعاملات غير النشطة حتى التاريخ المحدد",
+
+    "accounts": "الحسابات",
+    "inventory": "المخزون",
+    "branch": "الفرع",
+    "backup": "نسخة احتياطية",
+    "print": "طباعة",
+    "products": "المنتجات",
+    "gst": "ضريبة السلع والخدمات",
+     "tax": "ضريبة",
+     "miscellaneous": "متنوع",
+
+    "file_path": "مسار الملف",
+    "product": "المنتج",
+    "parties": "الأطراف",
+
+    "select_all": "حدد الكل",
+    "update_stock": "تحديث المخزون",
+    "maintain_records": "صيانة السجلات",
+    "update_account": "تحديث الحساب",
+    "from": "من",
+    "to": "إلى",
+
+    "counter_name": "اسم العداد",
+    "warehouse_id": "معرف المستودع",
+    "cashLedger_id": "معرف دفتر النقد",
+    "add_new_counter": "إضافة عداد جديد",
+
+    "add_new_financial_data": "إضافة بيانات مالية جديدة",
+    "enter_remarks": "أدخل الملاحظات",
+    "prev_period_stock_value": "قيمة المخزون للفترة السابقة",
+    "select_status": "اختر الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "progress": "قيد التقدم",
+    "visible_on_startUp": "مرئي عند بدء التشغيل",
+
+    "voucher_type": "نوع القسيمة",
+     "form_type": "نوع النموذج",
+    "lastVoucher_prefix": "بادئة آخر قسيمة",
+    "lastVoucher_number": "رقم آخر قسيمة",
+     "printDesign_fileName": "اسم ملف تصميم الطباعة",
+     "default_voucher": "القسيمة الافتراضية",
+     "is_default": "هل هو افتراضي"
 }

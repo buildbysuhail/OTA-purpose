@@ -329,5 +329,48 @@
 
   "use_main_branch_inventory":"Use Main Branch Inventory",
   "till_date":"Til Date",
-  "i_agree_to_delete_all_inactive_transactions_till_the_selected_date":"I agree to delete all inactive transactions till the selected date"
+  "i_agree_to_delete_all_inactive_transactions_till_the_selected_date":"I agree to delete all inactive transactions till the selected date",
+
+  "accounts":"Accounts",
+  "inventory":"Inventory",
+  "branch":"Branch",
+  "backup":"Backup",
+  "print":"Print",
+  "products":"Products",
+  "gst":"GST",
+  "tax":"Tax",
+  "miscellaneous":"Miscellaneous",
+
+  "file_path":"File Path",
+  "product":"Product",
+  "parties":"Parties",
+
+  "select_all":"Select All",
+  "update_stock":" Update Stock",
+  "maintain_records":"Maintain Records",
+  "update_account":"Update Account",
+  "from":"From",
+  "to":"To",
+
+  "counter_name":"Counter Name",
+  "warehouse_id":"Warehouse ID",
+  "cashLedger_id":"cashLedgerID",
+  "add_new_counter":"Add New Counter",
+
+  "add_new_financial_data":"Add New Financial Data",
+  "enter_remarks":"Enter Remarks",
+  "prev_period_stock_value":"Prev Period Stock Value",
+  "select_status":"Select Status",
+  "active":"Active",
+  "inactive":"Inactive",
+  "progress":"Progress",
+  "visible_on_startUp":"Visible On StartUp",
+
+  "voucher_type":"Voucher Type",
+  "form_type":"Form Type",
+  "lastVoucher_prefix":"LastVoucher Prefix",
+  "lastVoucher_number":"LastVoucher Number",
+  "printDesign_fileName":"PrintDesign FileName",
+  "default_voucher":"Default Voucher",
+  "is_default":"Is Default"
 }

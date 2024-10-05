@@ -13,7 +13,7 @@ import React from "react";
 
 const UserTypes = () => {
 
-  const MemoizedUserTypeManage = useMemo(() => React.memo(UserTypeManage), []);
+  // const MemoizedUserTypeManage = useMemo(() => React.memo(UserTypeManage), []);
   const dispatch = useAppDispatch();
   const {t}=useTranslation();
   const rootState = useRootState();

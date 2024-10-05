@@ -14,8 +14,7 @@ const BranchGrid = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo(
-    () => [
+  const columns: DevGridColumn[] = useMemo(() => [
       {
         dataField:"branchCode",
         caption: "Branch Code",
@@ -249,4 +248,4 @@ const BranchGrid = () => {
   );
 };
 
-export default BranchGrid;
+export default React.memo(BranchGrid);

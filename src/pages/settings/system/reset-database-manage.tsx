@@ -51,6 +51,7 @@ const ResetDbManage: React.FC = React.memo(() => {
         [dispatch]
       ),
       method: ActionType.POST,
+      useApiClient: true,
     });
 
   const onClose = useCallback(() => {
@@ -86,35 +87,81 @@ const ResetDbManage: React.FC = React.memo(() => {
           />
         </div>
 
-        {/* <div className="flex justify-start items-center gap-5 ">
-        <div className="grid grid-cols-2 gap-5"> 
-          
+        <div className="flex justify-start items-center gap-5 mb-5">
+          <div className="grid grid-cols-2 gap-5">
+            {/* deme text area */}
+            <div className="mt-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Transaction Forms
+              </label>
+              <textarea
+                {...getFieldProps("remarks")}
+                rows={8}
+                className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
+                onChange={(e) => handleFieldChange("remarks", e.target.value)}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 ">
+        {/* Account Master */}
+        <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+        Account Master
+        </label>
+         
+          <ERPCheckbox label="Account Group" {...getFieldProps("selectAll")}/>
+          <ERPCheckbox label="Account Ledgers" {...getFieldProps("selectAll")}/>
+          <ERPCheckbox label="Currencies" {...getFieldProps("selectAll")}/>
+          <ERPCheckbox label="Party Category" {...getFieldProps("selectAll")}/>
+          <ERPCheckbox label="Customers" {...getFieldProps("selectAll")}/>
+          <ERPCheckbox label="Suppliers" {...getFieldProps("selectAll")} />
         </div>
-        </div> */}
+
+        {/* HR Master */}
+        <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+        HR Master
+        </label>
+         
+          <ERPCheckbox label="Designation" {...getFieldProps("selectAll")}/>
+          <ERPCheckbox label="Employee" {...getFieldProps("selectAll")} />
+          <ERPCheckbox label="Job Works" {...getFieldProps("selectAll")}/>
+          <ERPCheckbox label="Documents" {...getFieldProps("selectAll")}/>
+        </div>
+      </div>
+
+          </div>
+        </div>
 
         <div className="flex justify-start items-center gap-5 ">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2  sm:gap-5"> 
-          <ERPCheckbox
-            {...getFieldProps("selectAll")}
-            label={t("select_all")}
-            onChangeData={(data: any) => handleFieldChange("selectAll", data)}
-          />
-          <ERPCheckbox
-            {...getFieldProps("updateStock")}
-            label={t("update_stock")}
-            onChangeData={(data: any) => handleFieldChange("updateStock", data)}
-          />
-          <ERPCheckbox
-            {...getFieldProps("maintainRecords")}
-            label={t("maintain_records")}
-            onChangeData={(data: any) => handleFieldChange("maintainRecords", data)}
-          />
-          <ERPCheckbox
-            {...getFieldProps("updateAccount")}
-            label={t("update_account")}
-            onChangeData={(data: any) => handleFieldChange("updateAccount", data)}
-          />
-        </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2  sm:gap-5">
+            <ERPCheckbox
+              {...getFieldProps("selectAll")}
+              label={t("select_all")}
+              onChangeData={(data: any) => handleFieldChange("selectAll", data)}
+            />
+            <ERPCheckbox
+              {...getFieldProps("updateStock")}
+              label={t("update_stock")}
+              onChangeData={(data: any) =>
+                handleFieldChange("updateStock", data)
+              }
+            />
+            <ERPCheckbox
+              {...getFieldProps("maintainRecords")}
+              label={t("maintain_records")}
+              onChangeData={(data: any) =>
+                handleFieldChange("maintainRecords", data)
+              }
+            />
+            <ERPCheckbox
+              {...getFieldProps("updateAccount")}
+              label={t("update_account")}
+              onChangeData={(data: any) =>
+                handleFieldChange("updateAccount", data)
+              }
+            />
+          </div>
         </div>
       </div>
       <ERPFormButtons

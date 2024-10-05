@@ -355,9 +355,7 @@
     "counter_name": "اسم العداد",
     "warehouse_id": "معرف المستودع",
     "cashLedger_id": "معرف دفتر النقد",
-    "add_new_counter": "إضافة عداد جديد",
 
-    "add_new_financial_data": "إضافة بيانات مالية جديدة",
     "enter_remarks": "أدخل الملاحظات",
     "prev_period_stock_value": "قيمة المخزون للفترة السابقة",
     "select_status": "اختر الحالة",
@@ -394,5 +392,9 @@
     "currency_symbol": "رمز العملة",
     "currency_code": "رمز العملة",
     "sub_unit": "الوحدة الفرعية",
-    "subUnit_symbol": "رمز الوحدة الفرعية"
+    "subUnit_symbol": "رمز الوحدة الفرعية",
+
+    "day_close_agreement": "أوافق على إغلاق المعاملات حتى التاريخ المذكور (سيتم حظر الإضافة/التعديل/الحذف لجميع معاملات المخزون والحساب)",
+    "enter_password": "أدخل كلمة المرور",
+    "closed_date": "تاريخ الإغلاق"
 }

@@ -174,7 +174,7 @@ const FinancialYear = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.financialYear.isOpen || false}
-        title={t("add_new_financial_data")}
+        title={t("financial_year")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

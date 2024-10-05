@@ -19,8 +19,7 @@ export interface CompanyProfileData {
   streetName: string,
   district: string,
   city: string,
-  country: string,
-  cId: number,
+  country: number,
   postalCode: string,
   additionalNo: string,
   emailAddress: string,
@@ -29,48 +28,8 @@ export interface CompanyProfileData {
   countrySubEntity: string
 }
 
-export const initialCompanyProfileData = {
-  data: {
-    registeredName: "",
-    registeredNameArabic: "",
-    taxRegNo: "",
-    crNumber: "",
-    buildingNo: "",
-    streetName: "",
-    district: "",
-    city: "",
-    country: "",
-    countryId: 0,
-    postalCode: "",
-    additionalNo: "",
-    emailAddress: "",
-    telephone: "",
-    mobile: "",
-    countrySubEntity: ""
-  },
-  validations: {
-    registeredName: "",
-    registeredNameArabic: "",
-    taxRegNo: "",
-    crNumber: "",
-    buildingNo: "",
-    streetName: "",
-    district: "",
-    city: "",
-    country: "",
-    postalCode: "",
-    additionalNo: "",
-    emailAddress: "",
-    telephone: "",
-    mobile: "",
-    countrySubEntity: ""
-  },
-};
-
-
-
 const CompanyProfileManage: React.FC = React.memo(() => {
-  const rootState = useRootState()
+  
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const {
@@ -79,18 +38,16 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-    formState
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfiles,
-    onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null }));
+    dispatch(toggleCompanyProfilePopup({ isOpen: false}));
   }, []);
- 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -154,16 +111,16 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("city", data)}
         />
         <ERPDataCombobox
-          {...getFieldProps("countryId")}
+          {...getFieldProps("country")}
           field={{
-            id: "countryId",
+            id: "country",
             required: true,
             getListUrl: Urls.data_countries,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("countryId", data)
+          onChangeData={(data: any) => { 
+            handleFieldChange("country", data) 
           }}
           label={t("country")}
         />

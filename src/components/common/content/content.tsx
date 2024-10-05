@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import ApplicationSettings from '../../../pages/settings/system/application-settings';
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
+import Flex from '../../../pages/inventory/demo-flex';
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
@@ -76,6 +77,7 @@ const Content: FC<ContentProps> = () => {
         {/* Inventory Starts */}
 
         <Route path="sales/new" element={<InvTransaction />} />
+        <Route path="vat-sales-invoice" element={<Flex />} />
 
 
         {/* Inventory End */}

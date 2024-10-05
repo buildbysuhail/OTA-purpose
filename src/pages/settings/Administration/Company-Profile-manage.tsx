@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -40,7 +40,7 @@ export const initialCompanyProfileData = {
     district: "",
     city: "",
     country: "",
-    cId:0,
+    countryId:0,
     postalCode: "",
     additionalNo: "",
     emailAddress: "",
@@ -90,7 +90,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   const onClose = useCallback(() => {
     dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null }));
   }, []);
-
+  const [formData, setFormData] = useState(initialCompanyProfileData);
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -154,15 +154,17 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("city", data)}
         />
         <ERPDataCombobox
-          {...getFieldProps("cId")}
+          {...getFieldProps("countryId")}
           field={{
-            id: "cId",
+            id: "countryId",
             required: true,
             getListUrl: Urls.data_countries,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChange={(data: any) => handleFieldChange("cId", data)}
+          onChangeData={(data: any) => { 
+            handleFieldChange("countryId", data) 
+          }}
           label={t("country")}
         />
 

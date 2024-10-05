@@ -118,7 +118,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.importExport.isOpen || false}
-        title={t("import_export")}
+        title={t("export_import")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

@@ -294,7 +294,7 @@
 
   "enter_id":"Enter Id",
   "company_id":"Company Id",
-  "date_form":"Date Form",
+  "date_from":"Date from",
   "date_to":"Date To",
   "branch_code":"Branch Code",
   "branch_name":"Branch Name",
@@ -372,5 +372,8 @@
   "lastVoucher_number":"LastVoucher Number",
   "printDesign_fileName":"PrintDesign FileName",
   "default_voucher":"Default Voucher",
-  "is_default":"Is Default"
+  "is_default":"Is Default",
+
+  "transaction":"Transaction",
+  "action":"Action"
 }

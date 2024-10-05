@@ -294,7 +294,7 @@
 
     "enter_id": "أدخل الهوية",
     "company_id": "هوية الشركة",
-    "date_form": "تاريخ من",
+    "date_from": "التاريخ من",
     "date_to": "تاريخ إلى",
     "branch_code": "رمز الفرع",
     "branch_name": "اسم الفرع",
@@ -372,5 +372,8 @@
     "lastVoucher_number": "رقم آخر قسيمة",
      "printDesign_fileName": "اسم ملف تصميم الطباعة",
      "default_voucher": "القسيمة الافتراضية",
-     "is_default": "هل هو افتراضي"
+     "is_default": "هل هو افتراضي",
+
+    "transaction": "المعاملة",
+    "action": "الإجراء"
 }

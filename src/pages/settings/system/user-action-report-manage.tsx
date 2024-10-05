@@ -10,6 +10,7 @@ import { ActionType } from "../../../redux/types";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import { useTranslation } from "react-i18next";
 
 
 export interface UserActionReport {
@@ -41,6 +42,8 @@ const UserActionReport: React.FC = React.memo(() => {
     dispatch(toggleUserActionPopup({ isOpen: false }));
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2  gap-3">
@@ -49,14 +52,14 @@ const UserActionReport: React.FC = React.memo(() => {
           {...getFieldProps("dateFrom")}
           type="date"
           id="dateFrom"
-          label="Date From"
+          label={t("date_from")}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
           type="date"
           id="dateTo"
-          label="Date To"
+          label={t("date_to")}
           onChangeData={(data: any) => handleFieldChange("dateTo", data)}
         />
           <ERPDataCombobox
@@ -71,7 +74,7 @@ const UserActionReport: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("userID", data)
           }}
-          label="User"
+          label={t("user")}
         />
         <ERPDataCombobox
           {...getFieldProps("counterID")}
@@ -85,12 +88,12 @@ const UserActionReport: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("counterID", data)
           }}
-          label="Counter"
+          label={t("counter")}
         />
         <div className="flex justify-start gap-3">
         <ERPCheckbox
           {...getFieldProps("isTransaction")}
-          label="Transaction"
+          label={t("transaction")}
           onChangeData={(data: any) => handleFieldChange("isTransaction", data)}
         />
         <ERPDataCombobox
@@ -111,7 +114,7 @@ const UserActionReport: React.FC = React.memo(() => {
         <div className="flex justify-start gap-3">
         <ERPCheckbox
           {...getFieldProps("isAction")}
-          label="Action"
+          label={t("action")}
           onChangeData={(data: any) => handleFieldChange("isAction", data)}
         />
         <ERPDataCombobox

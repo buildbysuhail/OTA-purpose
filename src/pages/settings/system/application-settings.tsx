@@ -4,9 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
-
-import stdTempImage from "../../assets/images/templates/Invoice_std.png";
-import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
 import PSModel from "../../../components/common/polosys/ps-modal";
 import { showAlert } from "../../../components/ERPComponents/erp-alert";
 import ERPSubmitButton from "../../../components/ERPComponents/erp-submit-button";
@@ -181,7 +178,7 @@ const ApplicationSettings = ({ }) => {
 
                 {tempData?.map((temp: any) => {
                   const paperSize = temp?.content?.propertiesState?.pageSize?.value;
-                  const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
+                  // const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
                   return (
                     <div
                       key={`ti_${temp?.id}`}
@@ -190,11 +187,11 @@ const ApplicationSettings = ({ }) => {
                       className=" relative hover:ring-0 hover:shadow-xl cursor-pointer 100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded"
                     >
                       <div className=" relative">
-                        <img
+                        {/* <img
                           src={temp?.preview ?? thumbImage}
                           alt=""
                           className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
-                        />
+                        /> */}
                         <div className=" bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center">
                           <div
                             tabIndex={0}
@@ -371,7 +368,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
             ?.filter((t: any) => t?.is_primary)
             ?.map((template: any, index: number) => {
               const paperSize = template?.content?.propertiesState?.pageSize?.value;
-              const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
+              // const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
               return (
                 <div
                   key={`ti_${index}`}
@@ -379,11 +376,11 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                   className=" relative hover:ring-2 hover:shadow-md  100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border rounded border-gray-400"
                 >
                   <div className=" relative">
-                    <img
+                    {/* <img
                       src={template?.preview ?? thumbImage}
                       alt=""
                       className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
-                    />
+                    /> */}
                     <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
                   </div>
                   <div className="flex flex-col justify-center items-center text-center py-3">

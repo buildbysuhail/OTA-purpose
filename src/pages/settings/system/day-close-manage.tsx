@@ -3,11 +3,12 @@ import { useDispatch } from "react-redux";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import { toggleDayClosePopup} from "../../../redux/slices/popup-reducer";
+import { toggleDayClosePopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPInput from "../../../components/ERPComponents/erp-input";
+import { useTranslation } from "react-i18next";
 
 interface DayCloseManageData {
   closedDate: string,
@@ -36,7 +37,7 @@ interface DayCloseManageData {
 //   },
 // };
 
-const DayCloseManage :  React.FC = React.memo(() => {
+const DayCloseManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
@@ -45,7 +46,7 @@ const DayCloseManage :  React.FC = React.memo(() => {
       onSuccess: useCallback(
         () =>
           dispatch(
-           toggleDayClosePopup({ isOpen: false, key: null })
+            toggleDayClosePopup({ isOpen: false, key: null })
           ),
         [dispatch]
       ),
@@ -55,17 +56,19 @@ const DayCloseManage :  React.FC = React.memo(() => {
 
   const onClose = useCallback(() => {
     dispatch(
-     toggleDayClosePopup({ isOpen: false, key: null })
+      toggleDayClosePopup({ isOpen: false, key: null })
     );
   }, []);
+
+  const { t } = useTranslation();
 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
-      <ERPInput
+        <ERPInput
           {...getFieldProps("passWord")}
-          label="PassWord"
-          placeholder="Enter PassWord"
+          label={t("password")}
+          placeholder={t("enter_password")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("passWord", data)}
         />
@@ -73,30 +76,29 @@ const DayCloseManage :  React.FC = React.memo(() => {
           {...getFieldProps("closedDate")}
           type="date"
           id="closedDate"
-          label=" Closed Date "
+          label={t("closed_date")}
           onChangeData={(data: any) => handleFieldChange("closedDate", data)}
         />
         <div className="flex justify-around items-center">
-        <ERPCheckbox
-          {...getFieldProps("isSales")}
-          label="Sales"
-          onChangeData={(data: any) => handleFieldChange("isSales", data)}
-        />
-         <ERPCheckbox
-          {...getFieldProps("isPurchase")}
-          label="Purchase"
-          onChangeData={(data: any) => handleFieldChange("isPurchase", data)}
-        />
-         <ERPCheckbox
-          {...getFieldProps("isAccounts")}
-          label="Accounts"
-          onChangeData={(data: any) => handleFieldChange("isAccounts", data)}
-        />
+          <ERPCheckbox
+            {...getFieldProps("isSales")}
+            label={t("Sales")}
+            onChangeData={(data: any) => handleFieldChange("isSales", data)}
+          />
+          <ERPCheckbox
+            {...getFieldProps("isPurchase")}
+            label={t("purchase")}
+            onChangeData={(data: any) => handleFieldChange("isPurchase", data)}
+          />
+          <ERPCheckbox
+            {...getFieldProps("isAccounts")}
+            label={t("accounts")}
+            onChangeData={(data: any) => handleFieldChange("isAccounts", data)}
+          />
         </div>
         <ERPCheckbox
           {...getFieldProps("isAgree")}
-          label="I agree to close the transactions till date mentioned 
-                 (Add/Edit/Delete will be blocked for all the Inventory and Account Transaction)"
+          label={t("day_close_agreement")}
           onChangeData={(data: any) => handleFieldChange("isAgree", data)}
         />
       </div>

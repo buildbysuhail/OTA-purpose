@@ -355,9 +355,7 @@
   "counter_name":"Counter Name",
   "warehouse_id":"Warehouse ID",
   "cashLedger_id":"cashLedgerID",
-  "add_new_counter":"Add New Counter",
 
-  "add_new_financial_data":"Add New Financial Data",
   "enter_remarks":"Enter Remarks",
   "prev_period_stock_value":"Prev Period Stock Value",
   "select_status":"Select Status",
@@ -394,6 +392,9 @@
   "currency_symbol":"Currency Symbol",
   "currency_code":"Currency Code",
   "sub_unit":"Sub Unit",
-  "subUnit_symbol":"SubUnit Symbol"
+  "subUnit_symbol":"SubUnit Symbol",
 
+  "day_close_agreement":"I agree to close the transactions till date mentioned (Add/Edit/Delete will be blocked for all the Inventory and Account Transaction)",
+  "enter_password":"Enter Password",
+  "closed_date":"Closed Date"
 }

@@ -382,5 +382,17 @@
     "reminding_date": "تاريخ التذكير",
     "number_of_days": "عدد الأيام",
     "remainders": "التذكيرات",
-    "date_of_reminds": "تاريخ التذكيرات"
+    "date_of_reminds": "تاريخ التذكيرات",
+
+    "to_currency": "إلى العملة",
+    "rate": "السعر",
+    "rate_date": "تاريخ السعر",
+    "base_currency": "العملة الأساسية",
+    "load": "تحميل",
+    "currencies": "العملات",
+    "currency_name": "اسم العملة",
+    "currency_symbol": "رمز العملة",
+    "currency_code": "رمز العملة",
+    "sub_unit": "الوحدة الفرعية",
+    "subUnit_symbol": "رمز الوحدة الفرعية"
 }

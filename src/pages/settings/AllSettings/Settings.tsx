@@ -172,7 +172,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.exchangeRates.isOpen || false}
-        title="Exchange Rates"
+        title={t("exchange_rates")}
         width="w-full max-w-[1000px]"
         isForm={true}
         closeModal={() => {

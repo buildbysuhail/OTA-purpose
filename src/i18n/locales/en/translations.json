@@ -382,5 +382,18 @@
   "reminding_date":"Reminding Date",
   "number_of_days":"Number Of Days",
   "remainders":"Remainders",
-  "date_of_reminds":"Date Of Reminds"
+  "date_of_reminds":"Date Of Reminds",
+
+  "to_currency":"To Currency",
+  "rate":"Rate",
+  "rate_date":"Rate Date",
+  "base_currency":"Base Currency",
+  "load":"Load",
+  "currencies":"Currencies",
+  "currency_name":"Currency Name",
+  "currency_symbol":"Currency Symbol",
+  "currency_code":"Currency Code",
+  "sub_unit":"Sub Unit",
+  "subUnit_symbol":"SubUnit Symbol"
+
 }

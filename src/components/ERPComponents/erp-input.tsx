@@ -33,6 +33,7 @@ interface ERPInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   accept?: string;
   validation?: string;
   autoFocus?: boolean;
+  customSize?: "sm" | "md" | "lg" | "auto";
 }
 
 const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
@@ -43,6 +44,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
   onBlur,
   data,
   type = "text",
+  customSize = "auto",
+
   autocomplete = "off",
   label,
   placeholder,
@@ -69,6 +72,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
   ...props
 }: ERPInputProps, ref) => {
   const iLabel = label || id?.replaceAll("_", " ");
+  let sizeClasses = "";
+  if (customSize === "sm") {
+    sizeClasses = "!p-1 !h-6 !text-[12px]";
+  } else if (customSize === "md") {
+    sizeClasses = "p-1 h-5 text-[11px]";
+   } else if (customSize === 'lg') {
+    sizeClasses = "p-1 h-5 text-[11px]";
+    } else {
+      sizeClasses = "";
+    }
   return (
     <div className={className}>
       {!noLabel && (
@@ -109,7 +122,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
             autoComplete={autocomplete}
             disabled={disabled}
             placeholder={placeholder || label}
-            className={`block w-full  ${prefix ? "" : "rounded-l"} ${
+            className={`block w-full ${sizeClasses}  ${prefix ? "" : "rounded-l"} ${
               suffix ? "" : " rounded-r"
             } ${inputClassName} border placeholder:capitalize h-9 border-gray-300 ${
               disabled ? "text-gray-400" : "bg-white text-gray-900"

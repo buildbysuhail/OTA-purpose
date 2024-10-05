@@ -324,5 +324,9 @@
     "created_user_id": "معرف المستخدم المنشئ",
 
     "discount_type": "نوع الخصم",
-    "discount_percentage": "نسبة الخصم"
+    "discount_percentage": "نسبة الخصم",
+
+    "use_main_branch_inventory": "استخدام مخزون الفرع الرئيسي",
+    "till_date": "حتى التاريخ",
+  "i_agree_to_delete_all_inactive_transactions_till_the_selected_date": "أوافق على حذف جميع المعاملات غير النشطة حتى التاريخ المحدد"
 }

@@ -104,12 +104,9 @@ const AuthorizationSettings: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("password", data)}
         />
-
       </div>
 
-
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-
         <ERPInput
           {...getFieldProps("confirmPassword")}
           label={t("confirm_password")}
@@ -117,7 +114,6 @@ const AuthorizationSettings: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("confirmPassword", data)}
         />
-
         <ERPFormButtons
           isEdit={isEdit}
           isLoading={isLoading}
@@ -125,7 +121,6 @@ const AuthorizationSettings: React.FC = React.memo(() => {
           onSubmit={handleSubmit}
         />
       </div>
-
 
       <div className="mt-6">
         <div className="box custom-box">

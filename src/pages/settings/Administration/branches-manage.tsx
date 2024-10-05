@@ -225,7 +225,7 @@ const BranchManage: React.FC = React.memo(() => {
       
         <ERPCheckbox
           {...getFieldProps("useMainBranchInventory")}
-          label="Use Main Branch Inventory"
+          label={t("use_main_branch_inventory")}
           onChangeData={(data: any) => handleFieldChange("useMainBranchInventory", data)}
         />
       </div>

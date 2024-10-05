@@ -173,6 +173,7 @@ const Users = () => {
                   popupAction={toggleUserPopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""
+                  pageSize={40}
                 ></ErpDevGrid>
               </div>
             </div>

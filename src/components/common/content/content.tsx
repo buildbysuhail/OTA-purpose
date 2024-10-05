@@ -84,7 +84,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
         {/* Accounts End */}
         {/* Templates starts */}
-        <Route path="/settings/templates" element={<Templates />} />
+        <Route path="/templates" element={<Templates />} />
         <Route path="/settings/invoice_designer/:id" element={<InvoiceDesigner />} />
         {/* Templates ends */}
 

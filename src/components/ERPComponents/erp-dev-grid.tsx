@@ -349,7 +349,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         >
           <ColumnFixing enabled={true} />
           <Scrolling mode={scrollingMode} />
-          {allowPaging && <Paging defaultPageSize={pageSize} />}
+          {allowPaging && <Paging defaultPageSize={pageSize} pageSize={pageSize} />}
           {allowFiltering && <FilterRow visible={true} />}
           {allowSearching && <SearchPanel visible={true} />}
           <HeaderFilter visible={true} />

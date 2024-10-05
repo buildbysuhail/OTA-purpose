@@ -26,6 +26,7 @@ interface popupData {
   authorizationSettings: popupDataProps
   barcodeprint: popupDataProps
   exchangeRates:popupDataProps
+  branchGrid:popupDataProps
 }
 const initialState: popupData = {
   userType: { isOpen: false, key: null, mode: "edit" },
@@ -49,6 +50,7 @@ const initialState: popupData = {
   authorizationSettings: { isOpen: false, key: null, mode: "edit" },
   barcodeprint: { isOpen: false, key: null, mode: "edit" },
   exchangeRates: { isOpen: false, key: null, mode: "edit" },
+  branchGrid: { isOpen: false, key: null, mode: "edit" },
 };
 
 const popupDataSlice = createSlice({
@@ -131,6 +133,9 @@ const popupDataSlice = createSlice({
     toggleExchangeRatesPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.exchangeRates = action.payload;
     },
+    toggleBranchGridPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.branchGrid = action.payload;
+    },
   },
 });
 
@@ -157,6 +162,7 @@ export const {
   toggleAccountGroupPopup,
   toggleAccountLedgerPopup,
   toggleAuthorizationSettingsPopup,
+  toggleBranchGridPopup,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

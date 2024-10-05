@@ -25,7 +25,7 @@ import { useTranslation } from "react-i18next";
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
 const BankPosSettingsManage = lazy(() => import("../Administration/bank-pos-settings-manage"));
-const BranchManage = lazy(() => import("../Administration/branches-manage"));
+const BranchManage = lazy(() => import("../Administration/branch-info-manage"));
 const DayCloseManage = lazy(() => import("../system/day-close-manage"));
 const UserActionReport = lazy(() => import("../system/user-action-report-manage"));
 const ImportExportManage = lazy(() => import("../system/import-export"));

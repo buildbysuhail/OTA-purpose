@@ -62,8 +62,8 @@ const ResetDbManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-center gap-5 ">
+      <div className="grid grid-cols-1 gap-3 ">
+        <div className="flex flex-row  sm:justify-start items-center  gap-5 mb-4">
           <ERPDateInput
             {...getFieldProps("from")}
             type="date"
@@ -87,16 +87,16 @@ const ResetDbManage: React.FC = React.memo(() => {
           />
         </div>
 
-        <div className="flex justify-start items-center gap-5 mb-5">
+        <div className="flex justify-start items-center gap-5 mb-4">
           {/* deme text area */}
           <div className="w-1/2 ">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 ">
               Transaction Forms
             </label>
             <textarea
               {...getFieldProps("remarks")}
               rows={12}
-              className="w-full border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
+              className="w-full border border-gray-300  rounded focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
               onChange={(e) => handleFieldChange("remarks", e.target.value)}
             />
           </div>

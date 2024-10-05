@@ -18,7 +18,7 @@ const SystemVoucher = () => {
   const columns: DevGridColumn[] = useMemo( () => [
     {
       dataField: "siNo",
-      caption: "Serial No",
+      caption: t("SiNo"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -27,7 +27,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "voucherType",
-      caption: "Voucher Type",
+      caption: t("voucher_type"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -36,7 +36,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "formType",
-      caption: "Form Type",
+      caption: t("form_type"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -45,7 +45,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "lastVoucherPrefix",
-      caption: "LastVoucher Prefix",
+      caption: t("lastVoucher_prefix"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -54,7 +54,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "lastVoucherNumber",
-      caption: "LastVoucher Number",
+      caption: t("lastVoucher_number"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -63,7 +63,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "descriptions",
-      caption: "Descriptions",
+      caption: t("descriptions"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -72,7 +72,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "id",
-      caption: "Id",
+      caption: t("id"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -81,7 +81,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "printDesignFileName",
-      caption: "PrintDesign FileName",
+      caption: t("printDesign_fileName"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -90,7 +90,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "createdUser",
-      caption: "CreatedUser",
+      caption: t("created_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -99,7 +99,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "createdDate",
-      caption: "Created Date",
+      caption: t("created_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
@@ -108,7 +108,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "modifiedUser",
-      caption: "Modified User",
+      caption: t("modified_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -117,7 +117,7 @@ const SystemVoucher = () => {
     },
     {
       dataField: "modifiedDate",
-      caption: "Modified Date",
+      caption: t("modified_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
@@ -127,7 +127,7 @@ const SystemVoucher = () => {
 
     {
       dataField: "defaultVoucher",
-      caption: "default Voucher",
+      caption: t("default_voucher"),
       dataType: "boolean",
       allowSorting: true,
       allowSearch: true,
@@ -167,7 +167,7 @@ const SystemVoucher = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
                   columns={columns}
-                  gridHeader="Voucher"
+                  gridHeader={t("voucher")}
                   dataUrl={Urls.Voucher}
                   gridId="grd_voucher"
                   popupAction={toggleVoucherPopup}
@@ -181,7 +181,7 @@ const SystemVoucher = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.voucher.isOpen || false}
-        title={"Add New Voucher"}
+        title={t("voucher")}
         isForm={true}
         width="w-full max-w-[600px]"
         closeModal={() => {

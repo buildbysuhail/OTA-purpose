@@ -5,7 +5,7 @@ interface ERPFormButtonsProps {
   isEdit: boolean;
   isLoading: boolean;
   onCancel: () => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
 }
 
 export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoading, onCancel, onSubmit }) => {
@@ -17,14 +17,16 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoadin
         variant="secondary"
         onClick={onCancel}
       />
-      <ERPButton
-        type="button"
-        disabled={isLoading}
-        variant="primary"
-        onClick={onSubmit}
-        loading={isLoading}
-        title={isEdit ? 'Update' : 'Submit'}
-      />
+       {onSubmit && (
+        <ERPButton
+          type="button"
+          disabled={isLoading}
+          variant="primary"
+          onClick={onSubmit}
+          loading={isLoading}
+          title={isEdit ? 'Update' : 'Submit'}
+        />
+      )}
     </div>
   );
 };

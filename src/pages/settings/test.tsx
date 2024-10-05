@@ -11,6 +11,7 @@ import React from "react";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import { ERPFormButtons } from "../../components/ERPComponents/erp-form-buttons";
+import ERPRadio from "../../components/ERPComponents/erp-radio";
 
 interface SampleData {
   userTypeName: string;
@@ -18,23 +19,21 @@ interface SampleData {
   remarks: string;
 }
 
-export const SampleMange : React.FC = React.memo(() =>  {
+export const SampleMange: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const {
-    isEdit,
-    handleSubmit,
-    handleFieldChange,
-    getFieldProps,
-    isLoading
-  } = useFormManager<SampleData>({
-    url: Urls.UserTypes,
-    onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null })), [dispatch]),
-    key: rootState.PopupData.userType.key,
-    useApiClient: true,
-    initialData: initialDataUserType
-  });
+  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+    useFormManager<SampleData>({
+      url: Urls.UserTypes,
+      onSuccess: useCallback(
+        () => dispatch(toggleUserTypePopup({ isOpen: false, key: null })),
+        [dispatch]
+      ),
+      key: rootState.PopupData.userType.key,
+      useApiClient: true,
+      initialData: initialDataUserType,
+    });
 
   const onClose = useCallback(() => {
     dispatch(toggleUserTypePopup({ isOpen: false, key: null }));
@@ -44,16 +43,19 @@ export const SampleMange : React.FC = React.memo(() =>  {
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
         <ERPInput
-          {...getFieldProps('userTypeName')}
+          {...getFieldProps("userTypeName")}
           label="User Type Name"
           placeholder="User Type Name"
           required={true}
-          onChangeData={(data: any) => {debugger;handleFieldChange('userTypeName', data)}}
+          onChangeData={(data: any) => {
+            debugger;
+            handleFieldChange("userTypeName", data);
+          }}
         />
         <ERPCheckbox
-          {...getFieldProps('isEditable')}
+          {...getFieldProps("isEditable")}
           label="Is Editable"
-          onChangeData={(data: any) => handleFieldChange('isEditable', data)}
+          onChangeData={(data: any) => handleFieldChange("isEditable", data)}
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
@@ -61,6 +63,13 @@ export const SampleMange : React.FC = React.memo(() =>  {
           id="dateTo"
           label="Date To"
           onChangeData={(data: any) => handleFieldChange("dateTo", data)}
+        />
+        <ERPRadio
+        {...getFieldProps("dateTo")}
+          name="flexRadioDefault"
+          label="Default checked radio"
+          onChange={(e) => console.log(e.target.value)}
+          defaultChecked
         />
         <ERPDataCombobox
           {...getFieldProps("counterID")}
@@ -72,7 +81,7 @@ export const SampleMange : React.FC = React.memo(() =>  {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("counterID", data)
+            handleFieldChange("counterID", data);
           }}
           label="counterID"
         />
@@ -86,4 +95,3 @@ export const SampleMange : React.FC = React.memo(() =>  {
     </div>
   );
 });
-

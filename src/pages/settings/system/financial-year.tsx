@@ -160,7 +160,7 @@ const FinancialYear = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Financial Year"
+                  gridHeader={t("financial_year")}
                   dataUrl={Urls.FinancialYear}
                   gridId="grd_fin_year"
                   popupAction={toggleFinancialYearPopup}
@@ -174,7 +174,7 @@ const FinancialYear = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.financialYear.isOpen || false}
-        title={"Add New Financial Data"}
+        title={t("add_new_financial_data")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

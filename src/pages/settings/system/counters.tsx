@@ -165,7 +165,7 @@ const Counters = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.counter.isOpen || false}
-        title={"Add New Counter"}
+        title={t("add_new_counter")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

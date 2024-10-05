@@ -7,6 +7,7 @@ import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-butto
 import { toggleImportExportPopup,} from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import { useTranslation } from "react-i18next";
 
 interface ImportExportForm {
   filePath: string;
@@ -69,6 +70,8 @@ const ImportExportManage: React.FC = React.memo(() => {
     }
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
@@ -77,7 +80,7 @@ const ImportExportManage: React.FC = React.memo(() => {
             htmlFor="fileInput"
             className="block text-sm font-medium text-gray-700"
           >
-            File Path
+            {t("file_path")}
           </label>
           <input
             type="file"
@@ -89,13 +92,13 @@ const ImportExportManage: React.FC = React.memo(() => {
        <div className="flex justify-around">
         <ERPCheckbox
           {...getFieldProps("product")}
-          label="Product"
+          label={t("product")}
           onChangeData={(data: any) => handleFieldChange("product", data)}
         />
 
         <ERPCheckbox
           {...getFieldProps("parties")}
-          label="Parties"
+          label={t("parties")}
           onChangeData={(data: any) => handleFieldChange("parties", data)}
         />
         </div>

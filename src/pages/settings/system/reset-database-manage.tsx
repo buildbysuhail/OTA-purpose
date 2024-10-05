@@ -67,20 +67,20 @@ const ResetDbManage: React.FC = React.memo(() => {
             {...getFieldProps("from")}
             type="date"
             id="from"
-            label="from"
+            label={t("from")}
             onChangeData={(data: any) => handleFieldChange("from", data)}
           />
           <ERPDateInput
             {...getFieldProps("to")}
             type="date"
             id="to"
-            label="to"
+            label={t("to")}
             onChangeData={(data: any) => handleFieldChange("to", data)}
           />
           <ERPInput
             {...getFieldProps("password")}
-            label="password"
-            placeholder="password"
+            label={t("password")}
+            placeholder={t("password")}
             required={true}
             onChangeData={(data: any) => handleFieldChange("password", data)}
           />
@@ -96,22 +96,22 @@ const ResetDbManage: React.FC = React.memo(() => {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2  sm:gap-5"> 
           <ERPCheckbox
             {...getFieldProps("selectAll")}
-            label="Select All"
+            label={t("select_all")}
             onChangeData={(data: any) => handleFieldChange("selectAll", data)}
           />
           <ERPCheckbox
             {...getFieldProps("updateStock")}
-            label=" Update Stock"
+            label={t("update_stock")}
             onChangeData={(data: any) => handleFieldChange("updateStock", data)}
           />
           <ERPCheckbox
             {...getFieldProps("maintainRecords")}
-            label="Maintain Records"
+            label={t("maintain_records")}
             onChangeData={(data: any) => handleFieldChange("maintainRecords", data)}
           />
           <ERPCheckbox
             {...getFieldProps("updateAccount")}
-            label="Update Account"
+            label={t("update_account")}
             onChangeData={(data: any) => handleFieldChange("updateAccount", data)}
           />
         </div>

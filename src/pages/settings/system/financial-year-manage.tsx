@@ -8,6 +8,7 @@ import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import { useTranslation } from "react-i18next";
 
 export interface FinancialYearData {
   dateFrom: string;
@@ -62,7 +63,7 @@ export const FinancialYearManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-   
+
   } = useFormManager<FinancialYearData>({
     url: Urls.FinancialYear,
     onSuccess: useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null })), [dispatch]),
@@ -71,38 +72,37 @@ export const FinancialYearManage: React.FC = React.memo(() => {
     initialData: initialFinancialYearData
   });
 
-
-
-
   const onClose = useCallback(() => {
     dispatch(toggleFinancialYearPopup({ isOpen: false, key: null }));
   }, []);
+
+  const { t } = useTranslation();
 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPDateInput
           {...getFieldProps("dateFrom")}
-          label="From"
+          label={t("from")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
-          label="To"
+          label={t("to")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateTo", data)}
         />
         <ERPInput
           {...getFieldProps("remarks")}
-          label="Remarks"
-          placeholder="Enter Remarks"
+          label={t("remarks")}
+          placeholder={t("enter_remarks")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("remarks", data)}
         />
         <ERPInput
           {...getFieldProps("openingStockValue")}
-          label="Prev Period Stock Value"
+          label={t("prev_period_stock_value")}
           placeholder="0.00"
           type="number"
           required={false}
@@ -111,23 +111,23 @@ export const FinancialYearManage: React.FC = React.memo(() => {
 
         <div className="w-full">
           <label htmlFor="fStatus" className="block text-xs text-gray-700">
-            Status*
+            {t("status")}
           </label>
           <select
             className="block w-full px-3 py-1 bg-white border border-gray-300 shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             {...getFieldProps("fStatus")}
             onChange={(e) => handleFieldChange("fStatus", e.target.value)}
           >
-            <option value="" disabled>Select Status</option>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-            <option value="Progress">Progress</option>
+            <option value="" disabled>{t("select_status")}</option>
+            <option value="Active">{t("active")}</option>
+            <option value="Inactive">{t("inactive")}</option>
+            <option value="Progress">{t("progress")}</option>
           </select>
         </div>
 
         <ERPCheckbox
           {...getFieldProps('visibleOnStartUp')}
-          label="Visible On StartUp"
+          label={t("visible_on_startUp")}
           onChangeData={(data: any) => handleFieldChange('visibleOnStartUp', data)}
         />
       </div>

@@ -232,18 +232,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   initialPreferences,
   paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
 }) => {
-  const {t}=useTranslation();
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
 
-  const [addButtonText,setAddButtonText]=useState<string>(gridAddButtonText = "Add" ? t("add") : gridAddButtonText)
+  const [addButtonText, setAddButtonText] = useState<string>(gridAddButtonText == "Add" ? t("add") : gridAddButtonText)
   const onPopupOpenClick = useCallback(() => {
     dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
-  
+
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
@@ -367,13 +367,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               allowAdding={true}
             />
           )}
-          {allowExport && (
+          {allowExport ? (
             <Export
               enabled={true}
               formats={exportFormats}
               allowExportSelectedData={true}
             />
-          )}
+          ) : (<Export enabled={false}></Export>)}
           {stateStoring && (
             <StateStoring
               enabled={stateStoring.enabled}

@@ -393,27 +393,27 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
                 required={field?.required}
               />
             );
-          // case "text" || "password" || "search" || "tel" || "url":
-          //   return (
-          //     <ERPInput
-          //       onChange={({ target }) => handleChange(target?.id, target.value)}
-          //       id={field?.id}
-          //       label={label}
-          //       disabled={disabled}
-          //       type={field?.type}
-          //       required={field?.required}
-          //       // defaultValue={value == undefined ? "" : value}
-          //       value={value == undefined ? "" : value}
-          //       minLength={field?.minLength}
-          //       maxLength={field?.maxLength}
-          //       min={field?.min}
-          //       max={field?.max}
-          //       pattern={field?.pattern}
-          //       key={`tfi_${index}`}
-          //       placeholder={field?.placeholder}
-          //       autoFocus={index == 0}
-          //     />
-          //   );
+          case "text" || "password" || "search" || "tel" || "url":
+            return (
+              <ERPInput
+                onChange={({ target }) => handleChange(target?.id, target.value)}
+                id={field?.id}
+                label={label}
+                disabled={disabled}
+                type={field?.type}
+                required={field?.required}
+                // defaultValue={value == undefined ? "" : value}
+                value={value == undefined ? "" : value}
+                minLength={field?.minLength}
+                maxLength={field?.maxLength}
+                min={field?.min}
+                max={field?.max}
+                pattern={field?.pattern}
+                key={`tfi_${index}`}
+                placeholder={field?.placeholder}
+                autoFocus={index == 0}
+              />
+            );
           case "email":
             return (
               <ERPInput
@@ -486,18 +486,18 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
               </FormControl>
             );
          
-          // case "date" || "datetime-local" || "time" || "month" || "week":
-          //   return (
-          //     <ERPDateInput
-          //       key={`sti_${index}`}
-          //       label={label}
-          //       field={field}
-          //       disabled={disabled}
-          //       handleChange={handleChange}
-          //       data={data}
-          //       defaultData={defaultData}
-          //     />
-          //   );
+          case "date" || "datetime-local" || "time" || "month" || "week":
+            return (
+              <ERPDateInput
+                key={`sti_${index}`}
+                label={label}
+                id={field?.id}
+                disabled={disabled}
+                handleChange={handleChange}
+                data={data}
+                defaultData={defaultData}
+              />
+            );
           
           case "heading":
             return <p className="text-sm flex items-center col-start-1 col-end-4">{field?.label}</p>;

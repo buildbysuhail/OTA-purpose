@@ -1,13 +1,6 @@
 import {
-  AdjustmentsVerticalIcon,
-  BanknotesIcon,
-  BellAlertIcon,
-  BellIcon,
-  BuildingOffice2Icon,
   CheckBadgeIcon,
-  PuzzlePieceIcon,
   UserIcon,
-  WrenchIcon,
 } from "@heroicons/react/24/outline";
 import {toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
         toggleDayClosePopup, 
@@ -94,7 +87,7 @@ export const SettingsMenuItems = [
     columns: 2,
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings`, type: 'link', active: false, selected: false, title: 'app_settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=main`, type: 'link', active: false, selected: false, title: 'app_settings' },
       { action:toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'export_import' },
       { action:toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'reset_db' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/counters`, type: 'link', active: false, selected: false, title: 'counters' },

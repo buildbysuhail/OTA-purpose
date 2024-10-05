@@ -941,3 +941,4 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
 //     </>
 //   );
 };
+export default TransactionDetailsDesigner

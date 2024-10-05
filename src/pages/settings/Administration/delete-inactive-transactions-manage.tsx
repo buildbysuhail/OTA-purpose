@@ -12,18 +12,9 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 
 interface DeleteInactiveTransactionManageData {
   date: string;
-  isChecked: boolean;
+  isAgree: boolean;
 }
-export const initialDataDeleteInactive = {
-  data: {
-    date: "",
-    isChecked: false,
-  },
-  validations: {
-    date: "",
-    isChecked: "",
-  },
-};
+
 const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
@@ -58,9 +49,9 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("date", data)}
         />
         <ERPCheckbox
-          {...getFieldProps("isChecked")}
+          {...getFieldProps("isAgree")}
           label="I agree to delete all inactive transactions till the selected date"
-          onChangeData={(data: any) => handleFieldChange("isChecked", data)}
+          onChangeData={(data: any) => handleFieldChange("isAgree", data)}
         />
       </div>
       <ERPFormButtons

@@ -87,7 +87,7 @@ const DayCloseManage :  React.FC = React.memo(() => {
         />
          <ERPCheckbox
           {...getFieldProps("isAccounts")}
-          label="isAccounts"
+          label="Accounts"
           onChangeData={(data: any) => handleFieldChange("isAccounts", data)}
         />
         </div>

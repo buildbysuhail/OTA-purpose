@@ -18,6 +18,7 @@ import {
   toggleCommandsPopup,
   toggleAuthorizationSettingsPopup,
   toggleBarcodePrintPopup,
+  toggleExchangeRatesPopup,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 
@@ -32,6 +33,7 @@ const CommandsManage = lazy(() => import("../system/commands"));
 const AuthorizationSettings = lazy(() => import("../system/authorization-settings-manage"));
 const  ResetDbManage= lazy(() => import("../system/reset-database-manage"));
 const Barcodeprint = lazy(() => import("../system/barcode-print"));
+const ExchangeRates = lazy(() => import("../system/exchange-rates"));
 const Settings = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -167,6 +169,16 @@ const Settings = () => {
           dispatch(toggleBarcodePrintPopup({ isOpen: false }));
         }}
         content={<Barcodeprint/>}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.exchangeRates.isOpen || false}
+        title="Exchange Rates"
+        width="w-full max-w-[1000px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleExchangeRatesPopup({ isOpen: false }));
+        }}
+        content={<ExchangeRates/>}
       />
     </Fragment>
   );

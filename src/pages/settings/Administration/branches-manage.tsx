@@ -9,6 +9,7 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { toggleBranchPopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import { useTranslation } from "react-i18next";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
 export interface BranchData {
   id: number;
@@ -22,8 +23,7 @@ export interface BranchData {
   city: string;
   district: string;
   bState: string;
-  country: string;
-  cId: number;
+  country: number;
   pinCode: string;
   phone: string;
   mobile: string;
@@ -38,77 +38,19 @@ export interface BranchData {
   useMainBranchInventory: boolean;
 }
 
-export const initialBranchData = {
-  data: {
-    id: 0,
-    companyID: 0,
-    dateFrom: "",
-    dateTo: "",
-    branchCode: "",
-    branchName: "",
-    address1: "",
-    address2: "",
-    city: "",
-    district: "",
-    bState: "",
-    country: "",
-    cId: 0,
-    pinCode: "",
-    phone: "",
-    mobile: "",
-    fax: "",
-    email: "",
-    tin: "",
-    registrationNumber: "",
-    branchManager: "",
-    remarks: "",
-    userName: "",
-    password: "",
-    useMainBranchInventory: false,
-  },
-  validations: {
-    id: "",
-    companyID: "",
-    dateFrom: "",
-    dateTo: "",
-    branchCode: "",
-    branchName: "",
-    address1: "",
-    address2: "",
-    city: "",
-    district: "",
-    bState: "",
-    country: "",
-    pinCode: "",
-    phone: "",
-    mobile: "",
-    fax: "",
-    email: "",
-    tin: "",
-    registrationNumber: "",
-    branchManager: "",
-    remarks: "",
-    userName: "",
-    password: "",
-    useMainBranchInventory: "",
-  },
-};
-
 const BranchManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
-  const {
-    isEdit,
-    handleSubmit,
-    handleFieldChange,
-    getFieldProps,
-    isLoading,
-  } = useFormManager<BranchData>({
-    url: Urls.Branch,
-    onSuccess: useCallback(() => dispatch(toggleBranchPopup({ isOpen: false })), [dispatch]),
-    method: ActionType.POST,
-    useApiClient: true
-  });
+  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+    useFormManager<BranchData>({
+      url: Urls.Branch,
+      onSuccess: useCallback(
+        () => dispatch(toggleBranchPopup({ isOpen: false })),
+        [dispatch]
+      ),
+      method: ActionType.POST,
+      useApiClient: true,
+    });
 
   const onClose = useCallback(() => {
     dispatch(toggleBranchPopup({ isOpen: false }));
@@ -126,7 +68,6 @@ const BranchManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("id", data)}
         />
-
         <ERPDataCombobox
           {...getFieldProps("companyID")}
           field={{
@@ -136,25 +77,23 @@ const BranchManage: React.FC = React.memo(() => {
             valueKey: "companyID",
             labelKey: "companyID",
           }}
-          onChange={(data: any) => handleFieldChange("companyID", data.companyID)}
+          onChange={(data: any) =>
+            handleFieldChange("companyID", data.companyID)
+          }
           label={t("company_id")}
         />
-
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           label={t("date_form")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
         />
-
         <ERPDateInput
           {...getFieldProps("dateTo")}
           label={t("date_to")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateTo", data)}
         />
-
-
         <ERPInput
           {...getFieldProps("branchCode")}
           label={t("branch_code")}
@@ -162,7 +101,6 @@ const BranchManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("branchCode", data)}
         />
-
         <ERPInput
           {...getFieldProps("branchName")}
           label={t("branch_name")}
@@ -170,21 +108,18 @@ const BranchManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("branchName", data)}
         />
-
         <ERPInput
           {...getFieldProps("address1")}
           label={t("address_line_1")}
           placeholder={t("address_line_1")}
           onChangeData={(data: any) => handleFieldChange("address1", data)}
         />
-
         <ERPInput
           {...getFieldProps("address2")}
           label={t("address_line_2")}
           placeholder={t("address_line_2")}
           onChangeData={(data: any) => handleFieldChange("address2", data)}
         />
-
         <ERPInput
           {...getFieldProps("city")}
           label={t("city")}
@@ -192,100 +127,88 @@ const BranchManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("city", data)}
         />
-
         <ERPInput
           {...getFieldProps("district")}
           label={t("district")}
           placeholder={t("district")}
           onChangeData={(data: any) => handleFieldChange("district", data)}
         />
-
         <ERPInput
           {...getFieldProps("bState")}
           label={t("state")}
           placeholder={t("state")}
           onChangeData={(data: any) => handleFieldChange("bState", data)}
         />
-
         <ERPDataCombobox
-          {...getFieldProps("cId")}
+          {...getFieldProps("country")}
           field={{
-            id: "cId",
+            id: "country",
             required: true,
             getListUrl: Urls.data_countries,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChange={(data: any) => {
-            handleFieldChange("country", data.label);
-            handleFieldChange("cId", data.value);
+          onChangeData={(data: any) => {
+            handleFieldChange("country", data);
           }}
           label={t("country")}
         />
-
         <ERPInput
           {...getFieldProps("pinCode")}
           label={t("pin_code")}
           placeholder={t("pin_code")}
           onChangeData={(data: any) => handleFieldChange("pinCode", data)}
         />
-
         <ERPInput
           {...getFieldProps("phone")}
           label={t("phone")}
           placeholder={t("phone")}
           onChangeData={(data: any) => handleFieldChange("phone", data)}
         />
-
         <ERPInput
           {...getFieldProps("mobile")}
           label={t("mobile")}
           placeholder={t("mobile")}
           onChangeData={(data: any) => handleFieldChange("mobile", data)}
         />
-
         <ERPInput
           {...getFieldProps("fax")}
           label={t("fax")}
           placeholder={t("fax")}
           onChangeData={(data: any) => handleFieldChange("fax", data)}
         />
-
         <ERPInput
           {...getFieldProps("email")}
           label={t("email")}
           placeholder={t("email")}
           onChangeData={(data: any) => handleFieldChange("email", data)}
         />
-
         <ERPInput
           {...getFieldProps("tin")}
           label={t("tin")}
           placeholder={t("tax_identification_number")}
           onChangeData={(data: any) => handleFieldChange("tin", data)}
         />
-
         <ERPInput
           {...getFieldProps("registrationNumber")}
           label={t("registration_number")}
           placeholder={t("registration_number")}
-          onChangeData={(data: any) => handleFieldChange("registrationNumber", data)}
+          onChangeData={(data: any) =>
+            handleFieldChange("registrationNumber", data)
+          }
         />
-
         <ERPInput
           {...getFieldProps("branchManager")}
           label={t("branch_manager")}
           placeholder={t("branch_manager")}
           onChangeData={(data: any) => handleFieldChange("branchManager", data)}
         />
-
         <ERPInput
           {...getFieldProps("userName")}
           label={t("username")}
           placeholder={t("username")}
           onChangeData={(data: any) => handleFieldChange("userName", data)}
         />
-
         <ERPInput
           {...getFieldProps("password")}
           label={t("password")}
@@ -293,30 +216,18 @@ const BranchManage: React.FC = React.memo(() => {
           type="password"
           onChangeData={(data: any) => handleFieldChange("password", data)}
         />
-
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data)}
         />
-
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            name="useMainBranchInventory"
-            className="ti-form-checkbox"
-            id="useMainBranchInventory"
-            checked={getFieldProps("useMainBranchInventory").value}
-            onChange={(e) => handleFieldChange("useMainBranchInventory", e.target.checked)}
-          />
-          <label
-            htmlFor="useMainBranchInventory"
-            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
-          >
-            Use Main Branch Inventory
-          </label>
-        </div>
+      
+        <ERPCheckbox
+          {...getFieldProps("useMainBranchInventory")}
+          label={t("use_main_branch_inventory")}
+          onChangeData={(data: any) => handleFieldChange("useMainBranchInventory", data)}
+        />
       </div>
 
       <ERPFormButtons

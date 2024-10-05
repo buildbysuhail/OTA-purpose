@@ -488,14 +488,14 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
          
           case "date" || "datetime-local" || "time" || "month" || "week":
             return (
+              
               <ERPDateInput
                 key={`sti_${index}`}
                 label={label}
                 id={field?.id}
                 disabled={disabled}
-                handleChange={handleChange}
+                onChange={(target: any) => handleChange(target?.id, target.value)}
                 data={data}
-                defaultData={defaultData}
               />
             );
           

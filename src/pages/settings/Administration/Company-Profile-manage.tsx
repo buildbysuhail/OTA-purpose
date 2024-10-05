@@ -20,7 +20,7 @@ export interface CompanyProfileData {
   district: string,
   city: string,
   country: string,
-  cId:number,
+  cId: number,
   postalCode: string,
   additionalNo: string,
   emailAddress: string,
@@ -40,7 +40,7 @@ export const initialCompanyProfileData = {
     district: "",
     city: "",
     country: "",
-    countryId:0,
+    countryId: 0,
     postalCode: "",
     additionalNo: "",
     emailAddress: "",
@@ -90,7 +90,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   const onClose = useCallback(() => {
     dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null }));
   }, []);
-  const [formData, setFormData] = useState(initialCompanyProfileData);
+ 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -162,8 +162,8 @@ const CompanyProfileManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => { 
-            handleFieldChange("countryId", data) 
+          onChangeData={(data: any) => {
+            handleFieldChange("countryId", data)
           }}
           label={t("country")}
         />

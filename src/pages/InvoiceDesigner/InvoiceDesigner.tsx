@@ -289,13 +289,13 @@ const InvoiceDesigner = () => {
           />
         )}
 
-        {currentSection.type == "transactions" && (
+        {/* {currentSection.type == "transactions" && (
           <TransactionDetailsDesigner
             template={templateData.activeTemplate}
             headerState={templateData.activeTemplate?.headerState}
             onChange={(headerState) => dispatch(setTemplateHeaderState( headerState ))}
           />
-        )}
+        )} */}
 
         {currentSection.type == "table" && (
           <ItemTableDesigner

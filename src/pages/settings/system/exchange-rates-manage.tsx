@@ -9,6 +9,7 @@ import { useLocation } from "react-router-dom";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import SystemSettingsApi from "./system-apis";
+import { useTranslation } from "react-i18next";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -114,6 +115,8 @@ export const CurrencyExchangeManage = () => {
     }
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -142,12 +145,12 @@ export const CurrencyExchangeManage = () => {
               ? postData?.data?.countryID
               : 0
           }
-          label="Country"
+          label={t("country")}
         />
         <ERPInput
           id="currencyName"
-          label="Currency Name"
-          placeholder="currency Name"
+          label={t("currency_name")}
+          placeholder={t("currency_name")}
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
@@ -161,8 +164,8 @@ export const CurrencyExchangeManage = () => {
         />
         <ERPInput
           id="currencySymbol"
-          label="Currency Symbol"
-          placeholder="currency Symbol"
+          label={t("currency_symbol")}
+          placeholder={t("currency_symbol")}
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
@@ -176,8 +179,8 @@ export const CurrencyExchangeManage = () => {
         />
         <ERPInput
           id="currencyCode"
-          label="currency Code"
-          placeholder="currency Code"
+          label={t("currency_code")}
+          placeholder={t("currency_code")}
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
@@ -191,8 +194,8 @@ export const CurrencyExchangeManage = () => {
         />
         <ERPInput
           id="subUnit"
-          label="Sub Unit"
-          placeholder="sub Unit"
+          label={t("sub_unit")}
+          placeholder={t("sub_unit")}
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
@@ -206,8 +209,8 @@ export const CurrencyExchangeManage = () => {
         />
         <ERPInput
           id="subUnitSymbol"
-          label="SubUnit Symbol"
-          placeholder="subUnit Symbol"
+          label={t("subUnit_symbol")}
+          placeholder={t("subUnit_symbol")}
           required={true}
           data={postData?.data}
           onChangeData={(data: any) => {
@@ -225,7 +228,7 @@ export const CurrencyExchangeManage = () => {
       <div className="w-full p-2 flex justify-end">
         <ERPButton
           type="reset"
-          title="Cancel"
+          title={t("cancel")}
           variant="secondary"
           onClick={onClose}
         // disabled={emailLoading}

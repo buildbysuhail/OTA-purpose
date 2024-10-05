@@ -26,7 +26,7 @@ const ExchangeRates = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "ExchRateID",
-      caption: "SINo",
+      caption: t("SiNo"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -35,7 +35,7 @@ const ExchangeRates = () => {
     },
     {
       dataField: "ToCurrency",
-      caption: "To Currency",
+      caption: t("to_currency"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -44,7 +44,7 @@ const ExchangeRates = () => {
     },
     {
       dataField: "Rate",
-      caption: "Rate",
+      caption: t("rate"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -52,7 +52,7 @@ const ExchangeRates = () => {
     },
     {
       dataField: "RateDate",
-      caption: "Rate Date",
+      caption: t("rate_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -60,7 +60,7 @@ const ExchangeRates = () => {
     },
     {
       dataField: "CStatus",
-      caption: "Active",
+      caption: t("active"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -118,7 +118,7 @@ const ExchangeRates = () => {
                   data={postData?.data}
                   defaultData={postData?.data}
                   value={postData?.data.baseCurrency}
-                  label="Base Currency"
+                  label={t("base_currency")}
 
                 />
                 </div>
@@ -129,7 +129,7 @@ const ExchangeRates = () => {
                     variant="primary"
                     //   onClick={handleSubmit}
                     loading={postDataLoading}
-                    title={"Load"}
+                    title={t("load")}
                   ></ERPButton>
                 </div>
               </div>
@@ -151,7 +151,7 @@ const ExchangeRates = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.currencyExchange.isOpen||false}
-        title={"Currencies"}
+        title={t("currencies")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

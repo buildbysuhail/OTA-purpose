@@ -1,18 +1,15 @@
 import { useCallback, useState } from "react";
-import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { toggleUserActionPopup } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import SystemSettingsApi from "./system-apis";
 import Urls from "../../../redux/urls";
 import React from "react";
 import { ActionType } from "../../../redux/types";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
 
 export interface UserActionReport {
@@ -21,7 +18,9 @@ export interface UserActionReport {
   dateTo: string,
   counterID: number,
   transactionType: object,
-  action: object
+  action: object,
+  isTransaction:boolean,
+  isAction:boolean,
 }
 const UserActionReport: React.FC = React.memo(() => {
   const dispatch = useDispatch();
@@ -34,31 +33,9 @@ const UserActionReport: React.FC = React.memo(() => {
         [dispatch]
       ),
       method: ActionType.POST,
+      useApiClient: true
     });
-  // const [postData, setPostData] = useState(initialData);
-  // const [allUserSelect, setAllUserSelect] = useState<boolean>(false)
-  // const [postDataLoading, setPostDataLoading] = useState<boolean>(false);
 
-  // const userActionReport = useCallback(async () => {
-  //   setPostDataLoading(true);
-  //   window.alert(JSON.stringify(postData.data, null, 2));
-  //   // const response: ResponseModelWithValidation<any, any> =
-  //   //   await SystemSettingsApi.postUserActionReport(postData?.data);
-  //   setPostDataLoading(false);
-  //   dispatch(toggleUserActionPopup({ isOpen: false }));
-  //   // handleResponse(
-  //   //   response,
-  //   //   () => {
-  //   //     dispatch(toggleUserActionPopup({isOpen: false}));
-  //   //   },
-  //   //   () => {
-  //   //     setPostData((prevData: any) => ({
-  //   //       ...prevData,
-  //   //       validations: response.validations,
-  //   //     }));
-  //   //   }
-  //   // );
-  // }, [postData?.data]);
 
   const onClose = useCallback(async () => {
     dispatch(toggleUserActionPopup({ isOpen: false }));
@@ -66,14 +43,8 @@ const UserActionReport: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2  gap-3">
 
-        <ERPInput
-          {...getFieldProps("userID")}
-          label="User ID"
-          placeholder="userID"
-          onChangeData={(data: any) => handleFieldChange("userID", data)}
-        />
         <ERPDateInput
           {...getFieldProps("dateFrom")}
           type="date"
@@ -88,6 +59,20 @@ const UserActionReport: React.FC = React.memo(() => {
           label="Date To"
           onChangeData={(data: any) => handleFieldChange("dateTo", data)}
         />
+          <ERPDataCombobox
+          {...getFieldProps("userID")}
+          field={{
+            id: "userID",
+            required: true,
+            getListUrl: Urls.data_user_types,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("userID", data)
+          }}
+          label="User"
+        />
         <ERPDataCombobox
           {...getFieldProps("counterID")}
           field={{
@@ -100,9 +85,50 @@ const UserActionReport: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("counterID", data)
           }}
-          label="counterID"
+          label="Counter"
         />
-
+        <div className="flex justify-start gap-3">
+        <ERPCheckbox
+          {...getFieldProps("isTransaction")}
+          label="Transaction"
+          onChangeData={(data: any) => handleFieldChange("isTransaction", data)}
+        />
+        <ERPDataCombobox
+          {...getFieldProps("transactionType")}
+          field={{
+            id: "transactionType",
+            required: true,
+            getListUrl: Urls.data_counters,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("transactionType", data)
+          }}
+         
+        />
+        </div>
+        <div className="flex justify-start gap-3">
+        <ERPCheckbox
+          {...getFieldProps("isAction")}
+          label="Action"
+          onChangeData={(data: any) => handleFieldChange("isAction", data)}
+        />
+        <ERPDataCombobox
+          {...getFieldProps("action")}
+          field={{
+            id: "action",
+            required: true,
+            getListUrl: Urls.data_counters,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("action", data)
+          }}
+       
+        />
+        </div>
       </div>
       <ERPFormButtons
         isEdit={isEdit}

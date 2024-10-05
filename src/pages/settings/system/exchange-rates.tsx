@@ -134,16 +134,18 @@ const ExchangeRates = () => {
                 </div>
               </div>
               <div className="grid grid-cols-1 gap-3">
-                {/* <ERPDevGrid
+                <ERPDevGrid
                   columns={columns}
                   gridHeader="Currency  Exchange"
                   dataUrl={Urls.currencyExchange}
                   gridId="grd_currency-exchange"
                   popupAction={toggleCurrencyExchangePopup}
-                  // hideGridAddButton={true}
+                  hideGridAddButton={true}
+                  allowExport={false}
+                  allowEditing={true}
                   gridAddButtonType="popup"
                   gridAddButtonIcon="ri-add-line"
-                ></ERPDevGrid> */}
+                ></ERPDevGrid>
               </div>
             </div>
           </div>

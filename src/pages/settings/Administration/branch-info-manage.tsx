@@ -234,7 +234,7 @@ const BranchManage: React.FC = React.memo(() => {
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}
-        onSubmit={handleSubmit}
+       
       />
     </div>
   );

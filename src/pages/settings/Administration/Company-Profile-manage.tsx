@@ -53,8 +53,8 @@ const CompanyProfileManage: React.FC = React.memo(() => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         <ERPInput
           {...getFieldProps("registeredName")}
-          label="Registered Name"
-          placeholder="Registered Name"
+          label={t("registered_name")}
+          placeholder={t("registered_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("registeredName", data)}
         />

@@ -8,7 +8,6 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { toggleAuthorizationSettingsPopup } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import { ApiResponse } from "../../../redux/dynamic-store-manager-pro";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { ActionType } from "../../../redux/types";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
@@ -50,13 +49,40 @@ const AuthorizationSettings: React.FC = React.memo(() => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      minWidth: 150,
+    },
+    {
+      dataField: "Password",
+      caption: t("password"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+    {
+      dataField: "Discount Type",
+      caption: t("discount_type"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+    {
+      dataField: "Discount Percentage",
+      caption: t("discount_percentage"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
     },
   ];
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
         <ERPDataCombobox
           {...getFieldProps("employeeID")}
           field={{
@@ -71,7 +97,6 @@ const AuthorizationSettings: React.FC = React.memo(() => {
           }}
           label={t("employee")}
         />
-
         <ERPInput
           {...getFieldProps("password")}
           label={t("password")}
@@ -79,6 +104,9 @@ const AuthorizationSettings: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("password", data)}
         />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
         <ERPInput
           {...getFieldProps("confirmPassword")}
           label={t("confirm_password")}
@@ -86,14 +114,13 @@ const AuthorizationSettings: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("confirmPassword", data)}
         />
+        <ERPFormButtons
+          isEdit={isEdit}
+          isLoading={isLoading}
+          onCancel={onClose}
+          onSubmit={handleSubmit}
+        />
       </div>
-
-      <ERPFormButtons
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={onClose}
-        onSubmit={handleSubmit}
-      />
 
       <div className="mt-6">
         <div className="box custom-box">

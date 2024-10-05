@@ -379,7 +379,7 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
               />
             );
 
-          case "textarea":
+          case "textarea": 
             return (
               <ERPTextarea
                 onChange={({ target }) => handleChange(target?.id, target.value)}
@@ -393,7 +393,11 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
                 required={field?.required}
               />
             );
-          case "text" || "password" || "search" || "tel" || "url":
+          case "text":
+          case "password":
+          case "search":
+          case "tel":
+          case "url":
             return (
               <ERPInput
                 onChange={({ target }) => handleChange(target?.id, target.value)}
@@ -486,16 +490,20 @@ const ERPForm = ({ data, defaultData, onChangeData, onChangeDefaultData, ...prop
               </FormControl>
             );
          
-          case "date" || "datetime-local" || "time" || "month" || "week":
+          case "date":
+          case "datetime-local":
+          case "time":
+          case "month":
+          case "week":
             return (
+              
               <ERPDateInput
                 key={`sti_${index}`}
                 label={label}
                 id={field?.id}
                 disabled={disabled}
-                handleChange={handleChange}
+                onChange={(target: any) => handleChange(target?.id, target.value)}
                 data={data}
-                defaultData={defaultData}
               />
             );
           

@@ -146,7 +146,7 @@ export function useFormManager<T>({
           response = await apiClient.put(`${url}`, formState?.data);
         } else {
           response = await apiClient.post(url, formState?.data);
-        }
+        }debugger;
         handleResponse(
           response,
           () => {
@@ -158,6 +158,9 @@ export function useFormManager<T>({
               data: {
                 ...prevState?.data,
               },
+              validations: { ...response.validations },
+              error: null,
+              loading: false,
             }));
             onError?.(response);
           }

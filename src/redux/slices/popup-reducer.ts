@@ -25,6 +25,7 @@ interface popupData {
   accountLedger: popupDataProps
   authorizationSettings: popupDataProps
   barcodeprint: popupDataProps
+  exchangeRates:popupDataProps
 }
 const initialState: popupData = {
   userType: { isOpen: false, key: null, mode: "edit" },
@@ -47,6 +48,7 @@ const initialState: popupData = {
   accountLedger: { isOpen: false, key: null, mode: "edit" },
   authorizationSettings: { isOpen: false, key: null, mode: "edit" },
   barcodeprint: { isOpen: false, key: null, mode: "edit" },
+  exchangeRates: { isOpen: false, key: null, mode: "edit" },
 };
 
 const popupDataSlice = createSlice({
@@ -126,11 +128,15 @@ const popupDataSlice = createSlice({
     toggleBarcodePrintPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.barcodeprint = action.payload;
     },
+    toggleExchangeRatesPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.exchangeRates = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  toggleExchangeRatesPopup,
   toggleBarcodePrintPopup,
   toggleUserTypePopup,
   toggleUserPopup,

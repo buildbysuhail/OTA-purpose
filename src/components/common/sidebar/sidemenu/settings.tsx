@@ -12,6 +12,7 @@ import {
 import {toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
         toggleDayClosePopup, 
         toggleDeleteInactiveTransactionPopup, 
+        toggleExchangeRatesPopup, 
         toggleImportExportPopup, 
         toggleResetDataBasePopup, 
         toggleUserActionPopup} from "../../../../redux/slices/popup-reducer";
@@ -105,7 +106,7 @@ export const SettingsMenuItems = [
       { action:toggleCommandsPopup, type: 'popup', active: false, selected: false, title: 'commands' },
       { action:toggleUserActionPopup, type: 'popup', active: false, selected: false, title: 'user_action_report' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/reminders`, type: 'link', active: false, selected: false, title: 'reminders' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/exchange-rates`, type: 'link', active: false, selected: false, title: 'exchange_rates' },
+      { action:toggleExchangeRatesPopup, type: 'popup', active: false, selected: false, title: 'exchange_rates' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/refresh-all-branches`, type: 'link', active: false, selected: false, title: 'refresh_all_branches' },
       {action:toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'day_close' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/advance-options`, type: 'link', active: false, selected: false, title: 'advance_options' },

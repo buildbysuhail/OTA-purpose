@@ -322,5 +322,8 @@
   "counter_id":"counterID",
   "user_name":"userName",
   "user_type_code":"UserTypeCode",
-  "created_user_id":"createdUserId"
+  "created_user_id":"createdUserId",
+
+  "discount_type":"Discount Type",
+  "discount_percentage":"Discount Percentage"
 }

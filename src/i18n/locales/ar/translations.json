@@ -321,5 +321,8 @@
     "counter_id": "معرف العداد",
     "user_name": "اسم المستخدم",
     "user_type_code": "رمز نوع المستخدم",
-    "created_user_id": "معرف المستخدم المنشئ"
+    "created_user_id": "معرف المستخدم المنشئ",
+
+    "discount_type": "نوع الخصم",
+    "discount_percentage": "نسبة الخصم"
 }

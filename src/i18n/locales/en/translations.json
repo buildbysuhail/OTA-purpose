@@ -375,5 +375,12 @@
   "is_default":"Is Default",
 
   "transaction":"Transaction",
-  "action":"Action"
+  "action":"Action",
+
+  "remainder_id":"Remainder ID",
+  "remainder_name":"Remainder Name",
+  "reminding_date":"Reminding Date",
+  "number_of_days":"Number Of Days",
+  "remainders":"Remainders",
+  "date_of_reminds":"Date Of Reminds"
 }

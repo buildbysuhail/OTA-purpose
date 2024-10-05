@@ -375,5 +375,12 @@
      "is_default": "هل هو افتراضي",
 
     "transaction": "المعاملة",
-    "action": "الإجراء"
+    "action": "الإجراء",
+
+    "remainder_id": "معرف التذكير",
+    "remainder_name": "اسم التذكير",
+    "reminding_date": "تاريخ التذكير",
+    "number_of_days": "عدد الأيام",
+    "remainders": "التذكيرات",
+    "date_of_reminds": "تاريخ التذكيرات"
 }

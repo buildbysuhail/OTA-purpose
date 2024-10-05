@@ -9,14 +9,16 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { RemainderManage } from "./remainder-manage";
+import { useTranslation } from "react-i18next";
 
 const Remainders = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] =useMemo( () => [
     {
       dataField: "remaindersID",
-      caption: "Remainder ID",
+      caption: t("remainder_id"),
       dataType: "number",
       allowSorting: true,
       allowFiltering: true,
@@ -25,7 +27,7 @@ const Remainders = () => {
     },
     {
       dataField: "remainderName",
-      caption: "Remainder Name",
+      caption: t("remainder_name"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -35,15 +37,15 @@ const Remainders = () => {
     },
     {
       dataField: "descriptions",
-      caption: "Descriptions",
+      caption: t("descriptions"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       minWidth: 200,
     },
     {
-      dataField: "remaindingDate",
-      caption: "Remainding Date",
+      dataField: "remindingDate",
+      caption: t("reminding_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
@@ -52,7 +54,7 @@ const Remainders = () => {
     },
     {
       dataField: "numberOfDays",
-      caption: "Number of Days",
+      caption: t("number_of_days"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -62,7 +64,7 @@ const Remainders = () => {
 
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -92,7 +94,7 @@ const Remainders = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
                   columns={columns}
-                  gridHeader="Remainders"
+                  gridHeader={t("remainders")}
                   dataUrl={Urls.Remainder}
                   gridId="grd_remainder"
                   popupAction={toggleRemainderPopup}
@@ -106,7 +108,7 @@ const Remainders = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.reminder.isOpen || false}
-        title={"Remainders"}
+        title={t("remainders")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

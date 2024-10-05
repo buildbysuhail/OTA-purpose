@@ -161,7 +161,7 @@ const Settings = () => {
         <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
         title="Barcode Print"
-        width="w-full max-w-[800px]"
+        width="w-full max-w-[1000px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleBarcodePrintPopup({ isOpen: false }));

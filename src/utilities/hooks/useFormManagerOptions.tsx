@@ -214,12 +214,12 @@ export function useFormManager<T>({
         setLocalFormState((prevState) => ({
           ...prevState,
           data: newData,
-          validations: { ...prevState?.data.validations },
+          validations: { ...prevState?.validations },
         }));
       } else {
         reduxManager.setState(rName, {
           data: newData,
-          validations: { ...formState?.data.validations },
+          validations: { ...formState?.validations },
           loading: false,
           error: null,
         });

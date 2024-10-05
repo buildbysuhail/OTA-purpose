@@ -70,8 +70,8 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { action:toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'company_profile' },
-      { action:toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'Branch Info' },
-      { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'Branch' },
+      { action:toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'branch_info' },
+      { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'branch' },
       { action:toggleDeleteInactiveTransactionPopup, type: 'popup', active: false, selected: false, title: 'delete_inactive_transactions' },
       { action:toggleBankPosPopup, type: 'popup', active: false, selected: false, title: 'bank_pos_settings' },
     ]

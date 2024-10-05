@@ -6,17 +6,10 @@ import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-
-interface AccountGroupData {
-  name: string;
-  nameInArabic: string;
-  shortName: string;
-  groupUnder: string;
-  remarks: string;
-  reasonForEdit: string;
-  isEditable: boolean;
-  isDeletable: boolean;
-}
+import { ActionType } from "../../../../redux/types";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import { AccountGroupData } from "./account-group-types";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
 export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -32,7 +25,8 @@ export const AccountGroupManage: React.FC = React.memo(() => {
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
     onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })), [dispatch]),
-    key: rootState.PopupData.accountGroup.key
+    method: ActionType.POST,
+    useApiClient: true
   });
 
   const onClose = useCallback(() => {
@@ -63,10 +57,19 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange('shortName', data)}
         />
-        <ERPInput
+        <ERPDataCombobox
+          {...getFieldProps("parentGroupID")}
+          field={{
+            id: "parentGroupID",
+            required: true,
+            getListUrl: Urls.data_acc_groups,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("parentGroupID", data)
+          }}
           label="Group Under"
-          onChangeData={(data: string) => handleFieldChange('groupUnder', data)}
-          {...getFieldProps('groupUnder')}
         />
         <ERPInput
           {...getFieldProps('remarks')}
@@ -81,6 +84,16 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           placeholder="Reason For Edit"
           required={true}
           onChangeData={(data: any) => handleFieldChange('reasonForEdit', data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isEditable")}
+          label="Editable"
+          onChangeData={(data: any) => handleFieldChange("isEditable", data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isDeletable")}
+          label="Deletable"
+          onChangeData={(data: any) => handleFieldChange("isDeletable", data)}
         />
       </div>
       <ERPFormButtons

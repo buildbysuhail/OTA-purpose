@@ -8,7 +8,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import { VoucherData } from "./vouchers-manage-type";
+import { initialDataVoucher, VoucherData } from "./vouchers-manage-type";
 
 export const VoucherManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -22,6 +22,8 @@ export const VoucherManage: React.FC = React.memo(() => {
         [dispatch]
       ),
       key: rootState.PopupData.voucher.key,
+      useApiClient: true,
+      initialData: initialDataVoucher
     });
 
   const onClose = useCallback(() => {

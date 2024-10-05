@@ -62,7 +62,7 @@ const ResetDbManage: React.FC = React.memo(() => {
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
-        <div className="flex justify-start items-center gap-5 ">
+        <div className="flex flex-col sm:flex-row justify-center sm:justify-start items-center gap-5 ">
           <ERPDateInput
             {...getFieldProps("from")}
             type="date"
@@ -86,7 +86,14 @@ const ResetDbManage: React.FC = React.memo(() => {
           />
         </div>
 
+        {/* <div className="flex justify-start items-center gap-5 ">
+        <div className="grid grid-cols-2 gap-5"> 
+          
+        </div>
+        </div> */}
+
         <div className="flex justify-start items-center gap-5 ">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2  sm:gap-5"> 
           <ERPCheckbox
             {...getFieldProps("selectAll")}
             label="Select All"
@@ -94,19 +101,20 @@ const ResetDbManage: React.FC = React.memo(() => {
           />
           <ERPCheckbox
             {...getFieldProps("updateStock")}
-            label=" updateStock"
+            label=" Update Stock"
             onChangeData={(data: any) => handleFieldChange("updateStock", data)}
           />
           <ERPCheckbox
-            {...getFieldProps("isChecked")}
-            label="I agree to delete all inactive transactions till the selected date"
-            onChangeData={(data: any) => handleFieldChange("isChecked", data)}
+            {...getFieldProps("maintainRecords")}
+            label="Maintain Records"
+            onChangeData={(data: any) => handleFieldChange("maintainRecords", data)}
           />
           <ERPCheckbox
-            {...getFieldProps("isChecked")}
-            label="I agree to delete all inactive transactions till the selected date"
-            onChangeData={(data: any) => handleFieldChange("isChecked", data)}
+            {...getFieldProps("updateAccount")}
+            label="Update Account"
+            onChangeData={(data: any) => handleFieldChange("updateAccount", data)}
           />
+        </div>
         </div>
       </div>
       <ERPFormButtons

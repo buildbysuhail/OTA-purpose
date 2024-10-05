@@ -19,9 +19,8 @@ const SystemVoucher = lazy(() => import('../../../pages/settings/system/vouchers
 const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
-const ExchangeRates = lazy(() => import("../../../pages/settings/system/exchange-rates"));
 const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
-const Barcodeprint = lazy(() => import("../../../pages/settings/system/barcode-print"));
+
 
 // Inventory Starts
 
@@ -66,11 +65,9 @@ const Content: FC<ContentProps> = () => {
 
         {/* settings Systems */}
         <Route path="/system/counters" element={<SystemCounters />} />
-        <Route path="/system/barcodeprint" element={<Barcodeprint />} />
         <Route path="/system/vouchers" element={<SystemVoucher />} />
         <Route path="/system/financial-year" element={<FinancialYear />} />
         <Route path="/system/reminders" element={<Reminders />} />
-        <Route path="/system/exchange-rates" element={<ExchangeRates />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
         <Route path="settings" element={<Settings />} />
 

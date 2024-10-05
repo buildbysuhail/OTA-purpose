@@ -325,5 +325,9 @@
   "created_user_id":"createdUserId",
 
   "discount_type":"Discount Type",
-  "discount_percentage":"Discount Percentage"
+  "discount_percentage":"Discount Percentage",
+
+  "use_main_branch_inventory":"Use Main Branch Inventory",
+  "till_date":"Til Date",
+  "i_agree_to_delete_all_inactive_transactions_till_the_selected_date":"I agree to delete all inactive transactions till the selected date"
 }

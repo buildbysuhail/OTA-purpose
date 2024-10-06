@@ -410,5 +410,11 @@
     "enter_name_in_arabic": "أدخل الاسم بالعربية",
     "cost_center_applicable": "مركز التكلفة ينطبق",
     "bill_wise_applicable": "فاتورة ينطبق",
-    "clear": "مسح"
+    "clear": "مسح",
+
+    "cost_centre": "مركز التكلفة",
+    "cost_centre_id": "معرف مركز التكلفة",
+    "cost_centre_name": "اسم مركز التكلفة",
+    "enter_cost_centre_name": "أدخل اسم مركز التكلفة",
+    "enter_short_name": "أدخل الاسم المختصر"
 }

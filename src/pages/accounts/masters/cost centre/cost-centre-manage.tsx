@@ -22,7 +22,7 @@ export const CostCentreManage = () => {
     getFieldProps,
     isLoading
   } = useFormManager<CostCentreData>({
-    url: Urls.cost_centre,
+    url: Urls.cost_center,
     onSuccess: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.costCentre.key,
     useApiClient: true,

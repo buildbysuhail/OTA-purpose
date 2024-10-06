@@ -149,6 +149,7 @@ const Urls = {
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",
   account_privilege_card:"/Accounts/PrivilegeCards",
+  branch_ledger:"/Accounts/BranchLedger",
   //Reports
   // Accounts End
   //Templates

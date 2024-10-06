@@ -11,26 +11,23 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
-import {
-  initialPartyCategory,
-  PartyCategoryData,
-} from "./party-category-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { CurrencyData, initialCurrency } from "./currency-master-manage-type";
 
 export const PartyCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<PartyCategoryData>({
-      url: Urls.account_party_category,
+    useFormManager<CurrencyData>({
+      url: Urls.account_currency_master,
       onSuccess: useCallback(
         () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null })),
         [dispatch]
       ),
-      key: rootState.PopupData.partyCategory.key,
+      key: rootState.PopupData.currencyMaster.key,
       useApiClient: true,
-      initialData: initialPartyCategory,
+      initialData: initialCurrency,
     });
 
   const onClose = useCallback(() => {
@@ -38,27 +35,38 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
   }, []);
 
   const { t } = useTranslation();
-
+//   currencyId: number;
+//   currencyCode: string;
+//   currencyName: string;
+//   currencySymbol: string;
+//   subUnit: string;
+//   subUnitSymbol: string;
+//   countryId: number;
+//   countryName: string;
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
-        <ERPInput
-          {...getFieldProps("partyCategoryName")}
-          label="Name"
-          placeholder="Name"
-          required={true}
-          onChangeData={(data: any) => {
-            debugger;
-            handleFieldChange("partyCategoryName", data);
+      <ERPDataCombobox
+          {...getFieldProps("countryId")}
+          field={{
+            id: "countryId",
+            required: true,
+            getListUrl: Urls.data_countries,
+            valueKey: "id",
+            labelKey: "name",
           }}
+          onChangeData={(data: any) => {
+            handleFieldChange("countryId", data);
+          }}
+          label={t("country")}
         />
         <ERPInput
-          {...getFieldProps("remarks")}
-          label="Remarks"
-          placeholder="Remarks"
+          {...getFieldProps("currencyCode")}
+          label="currencyCode"
+          placeholder="currencyCode"
           required={true}
           onChangeData={(data: any) =>
-            handleFieldChange("remarks", data)
+            handleFieldChange("currencyCode", data)
           }
         />
         <ERPCheckbox

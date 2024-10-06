@@ -7,52 +7,56 @@ import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-butto
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { toggleBranchGridPopup } from "../../../redux/slices/popup-reducer";
+import { useRootState } from "../../../utilities/hooks/useRootState";
 
 interface BranchData {
-  code: string;
-  name: string;
-  company: string;
-  address1: string;
-  address2: string;
-  city: string;
-  district: string;
-  state: string;
-  country: string;
-  pin: string;
-  manager: string;
-  landPhone: string;
-  mobilePhone: string;
-  fax: string;
-  tin: string;
-  registerNo: string;
-  email: string;
-  remarks: string;
-  financialYearFrom: string;
-  financialYearTo: string;
-  username: string;
-  password: string;
-  confirmPassword: string;
-  useMainBranchInventory: boolean;
+    id: number;
+    companyID: number;
+    dateFrom: string;
+    dateTo: string;
+    branchCode: string;
+    branchName: string;
+    address1: string;
+    address2: string;
+    city: string;
+    district: string;
+    bState: string;
+    country: number;
+    pinCode: string;
+    phone: string;
+    mobile: string;
+    fax: string;
+    email: string;
+    tin: string;
+    registrationNumber: string;
+    branchManager: string;
+    remarks: string;
+    userName: string;
+    password: string;
+    useMainBranchInventory: boolean;
 }
 
-export const BranchManage: React.FC = React.memo(() => {
+export const BranchGridManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-
+  const rootState = useRootState();
   const {
     isEdit,
     handleSubmit,
     handleFieldChange,
     getFieldProps,
-    isLoading,
+    isLoading
   } = useFormManager<BranchData>({
     url: Urls.Branch,
-    onSuccess: useCallback(() => {
-      console.log("Branch saved successfully");
-    }, []),
-   
+    onSuccess: useCallback(() => dispatch(toggleBranchGridPopup({ isOpen: false, key: null })), [dispatch]),
+    key: rootState.PopupData.branchGrid.key,
     useApiClient: true,
-    
+    // initialData: initialDataUserType
   });
+
+  const onClose = useCallback(() => {
+    dispatch(toggleBranchGridPopup({ isOpen: false, key: null }));
+  }, []);
 
   return (
     <div className="w-full pt-4">
@@ -201,7 +205,7 @@ export const BranchManage: React.FC = React.memo(() => {
       <ERPFormButtons
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={() => console.log("Canceled")}
+        onCancel={onClose}
         onSubmit={handleSubmit}
       />
     </div>

@@ -6,7 +6,7 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
-import { toggleBranchPopup } from "../../../redux/slices/popup-reducer";
+import { toggleBranchGridPopup, toggleBranchPopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -40,7 +40,6 @@ export interface BranchData {
 
 const BranchManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BranchData>({
       url: Urls.Branch,
@@ -84,7 +83,7 @@ const BranchManage: React.FC = React.memo(() => {
         />
         <ERPDateInput
           {...getFieldProps("dateFrom")}
-          label={t("date_form")}
+          label={t("date_from")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
         />

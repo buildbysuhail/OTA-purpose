@@ -1,11 +1,12 @@
 import { Cog6ToothIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useNavigation } from "react-router-dom";
 import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { SettingsMenuItems } from "../../../../components/common/sidebar/sidemenu/settings";
+import { useTranslation } from "react-i18next";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -25,14 +26,29 @@ const Header = () => {
   }, [search]);
 
   const handleSearch = (event: any) => {
+    const searchTerm = event?.target?.value?.toLowerCase();
     let AllRoutes: any[] = [];
-    routes?.forEach((item: any) => {
-      item?.items?.forEach((routes: any) => {
-        AllRoutes?.push(routes?.routes);
+  
+    // Recursively extract all routes from children, regardless of depth
+    const extractRoutes = (menuItems: any[]) => {
+      menuItems?.forEach((item) => {
+        if (item?.children) {
+          extractRoutes(item?.children); // Recurse deeper into children if present
+        } else if (item?.path) {
+          AllRoutes.push(item); // Push route items into AllRoutes array
+        }
       });
-    });
-    let searchResult: any = AllRoutes?.flat()?.filter((item: any) => item?.title?.toLowerCase()?.includes(event?.target?.value?.toLowerCase()));
-
+    };
+  
+    // Start the recursive extraction
+    extractRoutes(SettingsMenuItems);
+  
+    // Perform the search filtering
+    let searchResult = AllRoutes?.filter((item: any) =>
+      item?.title?.toLowerCase()?.includes(searchTerm)
+    );
+  
+    // Set the filtered search results
     setSearchResults(searchResult);
   };
 
@@ -66,6 +82,7 @@ const Header = () => {
             className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
             value={search}
             onChange={(e: any) => {
+              debugger;
               if (e?.target?.value) {
                 setSearch(e?.target?.value);
                 handleSearch(e);
@@ -92,6 +109,7 @@ const Header = () => {
 export default Header;
 
 const SearchResultBar = ({ isOpen, searchResults }: any) => {
+  const{t} = useTranslation();
   const navigate = useNavigate();
   return (
     <div
@@ -110,7 +128,7 @@ const SearchResultBar = ({ isOpen, searchResults }: any) => {
                     item?.path ? navigate(item?.path) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
                   }}
                 >
-                  {item?.title}
+                  { t(item?.title)}
                 </p>
               </div>
             );

@@ -6,25 +6,13 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
-
-interface AccountLedgerData {
-  code: string;
-  name: string;
-  aliasName: string;
-  nameInArabic: string;
-  groupUnder: number;
-  openingBalance: number;
-  balanceType: string;
-  remarks: string;
-  isBillWiseApplicable: boolean;
-  isActive: boolean;
-  isEditable: boolean;
-  isDeletable: boolean;
-  isCostCentreApplicable: boolean;
-  isCommon: boolean;
-}
+import { AccountLedgerData } from "./account-ledger-types";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { ActionType } from "../../../../redux/types";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
 export const AccountLedgerManage = () => {
+  const rootState = useRootState();
   const dispatch = useDispatch();
 
   const {
@@ -36,7 +24,9 @@ export const AccountLedgerManage = () => {
     isLoading
   } = useFormManager<AccountLedgerData>({
     url: Urls.account_ledger,
-    onSuccess: () => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }))
+    onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null })), [dispatch]),
+    method: ActionType.POST,
+    useApiClient: true
   });
 
   const onClose = useCallback(() => {
@@ -45,20 +35,20 @@ export const AccountLedgerManage = () => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         <ERPInput
-          {...getFieldProps('code')}
+          {...getFieldProps('ledgerCode')}
           label="Code"
-          placeholder="Enter code"
+          placeholder="Enter Code"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('code', data)}
+          onChangeData={(data: any) => handleFieldChange('ledgerCode', data)}
         />
         <ERPInput
-          {...getFieldProps('name')}
+          {...getFieldProps('ledgerName')}
           label="Name"
-          placeholder="Enter name"
+          placeholder="Enter Name"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('name', data)}
+          onChangeData={(data: any) => handleFieldChange('ledgerName', data)}
         />
         <ERPInput
           {...getFieldProps('aliasName')}
@@ -74,102 +64,89 @@ export const AccountLedgerManage = () => {
         />
 
         <ERPDataCombobox
-          id="groupUnder"
+          {...getFieldProps("accGroupID")}
           field={{
-            id: "groupUnder",
+            id: "accGroupID",
             required: true,
-            getListUrl: Urls.account_group,
+            getListUrl: Urls.data_acc_ledgers,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange('groupUnder', data.groupUnder)
+            handleFieldChange("accGroupID", data)
           }}
-          validation={postData.validations.groupUnder}
-          data={postData?.data}
-          defaultData={postData?.data}
-          value={postData?.data?.groupUnder ?? 0}
-          label="Group(Under)"
+          label="Group Under"
         />
 
-        <div className="flex items-center gap-2">
-          <ERPInput
-            {...getFieldProps('openingBalance')}
-            label="Opening Balance"
-            type="number"
-            className="w-32"
-            onChangeData={(data: any) => handleFieldChange('openingBalance', data)}
-          />
-          <ERPInput
-            {...getFieldProps('balanceType')}
-            type="select"
-            className="w-32"
-            data={{
-              balanceType: postData?.data?.balanceType || '',
-              selectOptions: [
-                { value: 'debit', label: 'Dr' },
-                { value: 'credit', label: 'Cr' }
-              ]
-            }}
-            onChangeData={(data: any) => handleFieldChange('balanceType', data)}
-          />
+        <div>
+          <div className="flex items-center gap-2">
+            <ERPInput
+              {...getFieldProps('openingBalance')}
+              label="Opening Balance"
+              type="number"
+              className="w-32"
+              onChangeData={(data: any) => handleFieldChange('openingBalance', data)}
+            />
+            <ERPInput
+              {...getFieldProps('balanceType')}
+              type="select"
+              className="w-32"
+              data={{
+                balanceType: postData?.data?.balanceType || '',
+                selectOptions: [
+                  { value: 'debit', label: 'Dr' },
+                  { value: 'credit', label: 'Cr' }
+                ]
+              }}
+              onChangeData={(data: any) => handleFieldChange('balanceType', data)}
+            />
+          </div>
         </div>
+      </div>
 
+      <div className="mt-4">
         <ERPInput
           {...getFieldProps('remarks')}
           label="Remarks"
           placeholder="Enter remarks"
           onChangeData={(data: any) => handleFieldChange('remarks', data)}
         />
-
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <ERPInput
-              {...getFieldProps('isBillWiseApplicable')}
-              type="checkbox"
-              label="Bill wise Applicable"
-              onChangeData={(data: any) => handleFieldChange('isBillWiseApplicable', data)}
-            />
-            <ERPInput
-              {...getFieldProps('isEditable')}
-              type="checkbox"
-              label="Editable"
-              onChangeData={(data: any) => handleFieldChange('isEditable', data)}
-            />
-          </div>
-          <div className="space-y-2">
-            <ERPInput
-              {...getFieldProps('isActive')}
-              type="checkbox"
-              label="Active"
-              onChangeData={(data: any) => handleFieldChange('isActive', data)}
-            />
-            <ERPInput
-              {...getFieldProps('isDeletable')}
-              type="checkbox"
-              label="Deletable"
-              onChangeData={(data: any) => handleFieldChange('isDeletable', data)}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <ERPInput
-            {...getFieldProps('isCostCentreApplicable')}
-            type="checkbox"
-            label="Is Cost Centre Applicable"
-            onChangeData={(data: any) => handleFieldChange('isCostCentreApplicable', data)}
-          />
-          <ERPInput
-            {...getFieldProps('isCommon')}
-            type="checkbox"
-            label="Is Common"
-            onChangeData={(data: any) => handleFieldChange('isCommon', data)}
-          />
-        </div>
       </div>
 
-      <div className="w-full p-2 flex justify-end space-x-2">
+      <div className="grid grid-cols-2 gap-4 mt-4">
+        <ERPCheckbox
+          {...getFieldProps("isBillwiseApplicable")}
+          label="Bill Wise Applicable"
+          onChangeData={(data: any) => handleFieldChange("isBillwiseApplicable", data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isActive")}
+          label="Active"
+          onChangeData={(data: any) => handleFieldChange("isActive", data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isEditable")}
+          label="Editable"
+          onChangeData={(data: any) => handleFieldChange("isEditable", data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isDeletable")}
+          label="Deletable"
+          onChangeData={(data: any) => handleFieldChange("isDeletable", data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isCostCentreApplicable")}
+          label="Is Cost Center Applicable"
+          onChangeData={(data: any) => handleFieldChange("isCostCentreApplicable", data)}
+        />
+        <ERPCheckbox
+          {...getFieldProps("isCommon")}
+          label="Is Common"
+          onChangeData={(data: any) => handleFieldChange("isCommon", data)}
+        />
+      </div>
+
+      <div className="w-full p-2 flex justify-center space-x-2 mt-5">
         <ERPButton
           type="button"
           title="Save"

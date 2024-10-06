@@ -96,7 +96,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleBranchPopup({ isOpen: false }));
         }}
-        content={<BranchManage />}
+        content={<BranchManage/>}
       />
       <ERPModal
         isOpen={rootState.PopupData.dayClose.isOpen || false}
@@ -110,7 +110,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.userActionReport.isOpen || false}
-        title={("user_action_report")}
+        title={t("user_action_report")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -163,7 +163,7 @@ const Settings = () => {
         <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
         title="Barcode Print"
-        width="w-full max-w-[1000px]"
+        width="w-full max-w-full"
         isForm={true}
         closeModal={() => {
           dispatch(toggleBarcodePrintPopup({ isOpen: false }));
@@ -172,7 +172,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.exchangeRates.isOpen || false}
-        title="Exchange Rates"
+        title={t("exchange_rates")}
         width="w-full max-w-[1000px]"
         isForm={true}
         closeModal={() => {

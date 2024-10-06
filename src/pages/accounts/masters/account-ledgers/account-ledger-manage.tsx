@@ -11,6 +11,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { ActionType } from "../../../../redux/types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
+import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 
 export const AccountLedgerManage = () => {
   const rootState = useRootState();
@@ -151,24 +152,11 @@ export const AccountLedgerManage = () => {
       </div>
 
       <div className="w-full p-2 flex justify-center space-x-2 mt-5">
-        <ERPButton
-          type="button"
-          title={t("save")}
-          variant="primary"
-          onClick={handleSubmit}
-          loading={isLoading}
-          disabled={isLoading}
-        />
-        <ERPButton
-          type="button"
-          title={t("clear")}
-          variant="secondary"
-        />
-        <ERPButton
-          type="button"
-          title={t("close")}
-          variant="secondary"
-          onClick={onClose}
+        <ERPFormButtons
+          isEdit={isEdit}
+          isLoading={isLoading}
+          onCancel={onClose}
+          onSubmit={handleSubmit}
         />
       </div>
     </div>

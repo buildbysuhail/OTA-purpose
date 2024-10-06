@@ -78,7 +78,7 @@ const CostCentre = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("cost_centre")}
-                  dataUrl={Urls.cost_centre}
+                  dataUrl={Urls.cost_center}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   gridAddButtonType="popup"

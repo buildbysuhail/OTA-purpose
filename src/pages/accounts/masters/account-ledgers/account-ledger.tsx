@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -10,12 +10,13 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { AccountLedgerManage } from "./account-ledger-manage";
 import { useTranslation } from "react-i18next";
 
-
 const AccountLedgerType = () => {
+  const MemoizedAccountLedgerManage = useMemo(() => React.memo(AccountLedgerManage), []);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = [
+
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "s.No",
       caption: t("SiNo"),
@@ -180,17 +181,17 @@ const AccountLedgerType = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
           }}
         />
       ),
     },
-  ];
+  ], [t]);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -206,7 +207,7 @@ const AccountLedgerType = () => {
                   popupAction={toggleAccountLedgerPopup}
                   gridAddButtonType="popup"
                   gridAddButtonIcon=""
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
@@ -220,10 +221,10 @@ const AccountLedgerType = () => {
         closeModal={() => {
           dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));
         }}
-        content={<AccountLedgerManage />}
+        content={<MemoizedAccountLedgerManage />}
       />
     </Fragment>
   );
 };
 
-export default AccountLedgerType;
+export default React.memo(AccountLedgerType);

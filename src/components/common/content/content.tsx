@@ -5,7 +5,6 @@ import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import Flex from '../../../pages/inventory/demo-flex';
 
-
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -33,7 +32,7 @@ const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transacti
 const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/account-groups/account-group'));
 const AccountsLedger = lazy(() => import('../../../pages/accounts/masters/account-ledgers/account-ledger'));
 const CostCenter = lazy(() => import('../../../pages/accounts/masters/cost centre/cost-centre'));
-
+const PartyCategory  = lazy(() => import('../../../pages/accounts/masters/account-party-category/party-category'));
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
 
 // Acc End
@@ -90,6 +89,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/account-group" element={<AccountsMasters />} />
         <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
+        <Route path="account-masters/party-category" element={<PartyCategory />} />
+       
         {/* cost center */}
         <Route path="account-masters/cost-center" element={<CostCenter/>} />
         {/* Accounts End */}

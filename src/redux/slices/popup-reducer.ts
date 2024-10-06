@@ -29,6 +29,7 @@ interface popupData {
   exchangeRates:popupDataProps
   branchGrid:popupDataProps
   privilegeCard:popupDataProps
+  partyCategory:popupDataProps
 }
 const initialState: popupData = {
   userType: { isOpen: false, key: null, mode: "edit" },
@@ -55,6 +56,7 @@ const initialState: popupData = {
   exchangeRates: { isOpen: false, key: null, mode: "edit" },
   branchGrid: { isOpen: false, key: null, mode: "edit" },
   privilegeCard: { isOpen: false, key: null, mode: "edit" },
+  partyCategory: { isOpen: false, key: null, mode: "edit" },
 };
 
 const popupDataSlice = createSlice({
@@ -146,11 +148,15 @@ const popupDataSlice = createSlice({
     togglePrivilegeCardPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.privilegeCard = action.payload;
     },
+    togglePartyCategoryPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.partyCategory = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  togglePartyCategoryPopup,
   togglePrivilegeCardPopup,
   toggleExchangeRatesPopup,
   toggleBarcodePrintPopup,

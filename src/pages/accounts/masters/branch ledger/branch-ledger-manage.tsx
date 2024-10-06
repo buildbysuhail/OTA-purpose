@@ -1,14 +1,13 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { toggleBranchLedgerPopup } from "../../../../redux/slices/popup-reducer";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { ActionType } from "../../../../redux/types";
 import { useTranslation } from "react-i18next";
 import { BranchLedgerData, initialBranchLedger } from "./branch-ledger-types";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 
 export const BranchLedgerManage = () => {
   const rootState = useRootState();
@@ -37,25 +36,62 @@ export const BranchLedgerManage = () => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
-        <ERPInput
-          {...getFieldProps('costCentreName')}
-          label={t("cost_centre_name")}
-          placeholder={t("enter_cost_centre_name")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('costCentreName', data)}
+      <div className="grid grid-cols-2 gap-3">
+        <ERPDataCombobox
+          {...getFieldProps("accGroupID")}
+          field={{
+            id: "accGroupID",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("accGroupID", data)
+          }}
+          label={t("reference_branch")}
         />
-        <ERPInput
-          {...getFieldProps('shortName')}
-          label={t("short_name")}
-          placeholder={t("enter_short_name")}
-          onChangeData={(data: any) => handleFieldChange('shortName', data)}
+        <ERPDataCombobox
+          {...getFieldProps("accGroupID")}
+          field={{
+            id: "accGroupID",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("accGroupID", data)
+          }}
+          label={t("purchase_ledger")}
         />
-        <ERPInput
-          {...getFieldProps('remarks')}
-          label={t("remarks")}
-          placeholder={t("enter_remarks")}
-          onChangeData={(data: any) => handleFieldChange('remarks', data)}
+        <ERPDataCombobox
+          {...getFieldProps("accGroupID")}
+          field={{
+            id: "accGroupID",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("accGroupID", data)
+          }}
+          label={t("receivable_ledger")}
+        />
+        <ERPDataCombobox
+          {...getFieldProps("accGroupID")}
+          field={{
+            id: "accGroupID",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("accGroupID", data)
+          }}
+          label={t("branch_payable_ledger")}
         />
       </div>
 

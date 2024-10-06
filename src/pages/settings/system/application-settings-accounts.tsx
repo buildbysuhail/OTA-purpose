@@ -3,10 +3,9 @@ import ERPDataCombobox from '../../../components/ERPComponents/erp-data-combobox
 import ERPButton from '../../../components/ERPComponents/erp-button';
 import ERPCheckbox from '../../../components/ERPComponents/erp-checkbox';
 import ERPInput from '../../../components/ERPComponents/erp-input';
+import ERPDataCombobox from '../../../components/ERPComponents/erp-select';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
-import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
-import { getAction } from '../../../redux/slices/app-thunks';
 
 
 interface AccountSettingsState {
@@ -91,7 +90,7 @@ const ApplicationSettingsAccounts = () => {
     allowMultiPayments: false,
   };
   const [formState, setFormState] = useState<AccountSettingsState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<AccountSettingsState>>({});
+  const [changedSettings, setChangedSettings] = useState<Partial<AccountSettingsState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -100,14 +99,11 @@ const ApplicationSettingsAccounts = () => {
   }, []);
 
   const loadSettings = async () => {
-    const dispatch = useAppDispatch();
     setLoading(true);
     try {
-      const response = await dispatch(getAction({apiUrl: Urls.updateUserAppSetting, params:{}}) as any
-    ).unwrap();
-
-    setFormStatePrev(response);
-      setFormState(response);
+      const response = await fetch('/api/settings');
+      const data: AccountSettingsState = await response.json();
+      setSettings(data);
     } catch (error) {
       console.error('Error loading settings:', error);
     } finally {
@@ -116,12 +112,12 @@ const ApplicationSettingsAccounts = () => {
   };
 
   const handleFieldChange = ((settingName: any, value: any) => {
-    setFormState((prevSettings = {} as AccountSettingsState) => ({
+    setSettings((prevSettings = {} as Settings) => ({
       ...prevSettings,
       [settingName]: value ?? ''
     }));
     
-    setChangedSettings((prevChangedSettings = {} as AccountSettingsState) => ({
+    setChangedSettings((prevChangedSettings = {} as Settings) => ({
       ...prevChangedSettings,
       [settingName]: value ?? ''
     }));
@@ -157,7 +153,7 @@ const ApplicationSettingsAccounts = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
     
-    <div className='grid grid-cols-4 gap-6'>
+    <div>
         <ERPDataCombobox
           id="defaultCashAcc"
           value={formState.defaultCashAcc}
@@ -211,13 +207,13 @@ const ApplicationSettingsAccounts = () => {
           id="defaultOpeningStockValueAcc"
           value={formState.defaultOpeningStockValueAcc}
           data={formState}
-          label="Default Opening StockLedger"
+          label="Default Opening Stock Ledger"
           onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data)}
         />
       </div>
 
       {/* Second Column of Select Inputs */}
-      <div className='grid grid-cols-4 gap-5'>
+      <div>
         <ERPInput
           id="supervisorPassword"
           value={formState.supervisorPassword}
@@ -270,78 +266,71 @@ const ApplicationSettingsAccounts = () => {
       </div>
 
       {/* Minimum Shift Duration */}
-      <div className='flex justify-start gap-5'>
-      <ERPCheckbox
-          id="minimumShiftDuration"
-          value={formState.minimumShiftDuration}
-          data={formState}
-          label="Minimum Shift Duration"
-          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
-        />
+      <div>
         <ERPInput
           id="minimumShiftDuration"
           value={formState.minimumShiftDuration}
           data={formState}
-        
+          label="Minimum Shift Duration"
           type="number"
           onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
         />
       </div>
 
       {/* Checkboxes */}
-      <div className='grid grid-cols-3 justify-start gap-5'>
+      <div>
         <ERPCheckbox
           id="maintainCostCenter"
-          checked={formState.maintainCostCenter}
+          value={formState.maintainCostCenter}
           data={formState}
           label="Maintain Cost Center"
           onChangeData={(data) => handleFieldChange('maintainCostCenter', data)}
         />
         <ERPCheckbox
           id="allowSalesCounter"
-          checked={formState.allowSalesCounter}
+          value={formState.allowSalesCounter}
           data={formState}
           label="Allow Sales Counter"
           onChangeData={(data) => handleFieldChange('allowSalesCounter', data)}
         />
         <ERPCheckbox
           id="maintainBillwiseAccount"
-          checked={formState.maintainBillwiseAccount}
+          value={formState.maintainBillwiseAccount}
           data={formState}
           label="Maintain Billwise Account"
           onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data)}
         />
         <ERPCheckbox
           id="printAccAftersave"
-          checked={formState.printAccAftersave}
+          value={formState.printAccAftersave}
           data={formState}
           label="Print After Save"
           onChangeData={(data) => handleFieldChange('printAccAftersave', data)}
         />
         <ERPCheckbox
           id="enableAuthorizationforShiftClose"
-          checked={formState.enableAuthorizationforShiftClose}
+          value={formState.enableAuthorizationforShiftClose}
           data={formState}
           label="Enable Authorization for Shift Close"
           onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data)}
         />
         <ERPCheckbox
           id="allowMultiPayments"
-          checked={formState.allowMultiPayments}
+          value={formState.allowMultiPayments}
           data={formState}
           label="Allow Multi-Payments"
           onChangeData={(data) => handleFieldChange('allowMultiPayments', data)}
         />
         <ERPCheckbox
           id="enable24Hours"
-          checked={formState.enable24Hours}
+          value={formState.enable24Hours}
           data={formState}
           label="Enable 24 Hours Business"
           onChangeData={(data) => handleFieldChange('enable24Hours', data)}
         />
         <ERPCheckbox
           id="setDefaultCustomerInSales"
-          checked={formState.setDefaultCustomerInSales}
+          value={formState.setDefaultCustomerInSales}
           data={formState}
           label="Set Default Customer in Sales"
           onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data)}

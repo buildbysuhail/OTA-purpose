@@ -175,7 +175,7 @@ const ERPSettingsFormMain = () => {
             id="DecimalPoints"
             label="Decimal Points"
             type="select"
-            value={settings?.DecimalPoints}
+            value={settings?.decimalPoints}
             onChangeData={(data) => handleFieldChange("DecimalPoints", data.DecimalPoints)}
             options={[
               { value: '0', label: '0' },

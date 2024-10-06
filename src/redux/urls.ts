@@ -44,6 +44,11 @@ const Urls = {
   data_upis: "/Accounts/Data/UPIs/",
   data_bankcards: "/Accounts/Data/BankCards",
   data_vouchertype: "/Accounts/Data/VoucherType",
+  data_InputCalamity: "/Accounts/Data/InputCalamity",
+  data_FormTypeBySI: "/Accounts/Data/FormTypeBySI",
+  data_FormTypeBySR: "/Accounts/Data/FormTypeBySR",
+  data_VPrefixForSI: "/Accounts/Data/VPrefixForSI",
+  data_VPrefixForSR: "/Accounts/Data/VPrefixForSR",
 
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",

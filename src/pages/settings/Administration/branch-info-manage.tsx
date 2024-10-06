@@ -6,7 +6,7 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
-import { toggleBranchGridPopup, toggleBranchPopup } from "../../../redux/slices/popup-reducer";
+import {toggleBranchPopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";

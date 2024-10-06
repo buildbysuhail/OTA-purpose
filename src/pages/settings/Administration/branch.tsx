@@ -200,12 +200,12 @@ const BranchGrid = () => {
         cellRender: (cellElement: any) => {
             return (
                 <ERPGridActions
-                  view={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-                  edit={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+                  view={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID }) }}
+                  edit={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID }) }}
                   delete={{
                     confirmationRequired: true,
                     confirmationMessage: "Are you sure you want to delete this item?",
-                    // url:Urls?.Counter,key:cellElement?.data?.id
+                    url:Urls?.Branch,key:cellElement?.data?.branchID
                   }}
                 />
               )

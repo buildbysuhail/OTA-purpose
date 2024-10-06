@@ -9,6 +9,7 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { toggleBranchGridPopup } from "../../../redux/slices/popup-reducer";
 import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useTranslation } from "react-i18next";
 
 interface BranchData {
     id: number;
@@ -37,7 +38,63 @@ interface BranchData {
     useMainBranchInventory: boolean;
 }
 
+export const initialDataBranch = {
+  data: {
+    id: 0,
+    companyID: 0,
+    dateFrom: "",
+    dateTo: "",
+    branchCode: "",
+    branchName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    district: "",
+    bState: "",
+    country: 0,
+    pinCode: "",
+    phone: "",
+    mobile: "",
+    fax: "",
+    email: "",
+    tin: "",
+    registrationNumber: "",
+    branchManager: "",
+    remarks: "",
+    userName: "",
+    password: "",
+    useMainBranchInventory: false,
+  },
+  validations: {
+    id: "",
+    companyID: "",
+    dateFrom: "",
+    dateTo: "",
+    branchCode: "",
+    branchName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    district: "",
+    bState: "",
+    country: "",
+    pinCode: "",
+    phone: "",
+    mobile: "",
+    fax: "",
+    email: "",
+    tin: "",
+    registrationNumber: "",
+    branchManager: "",
+    remarks: "",
+    userName: "",
+    password: "",
+    useMainBranchInventory: "",
+  }
+};
+
 export const BranchGridManage: React.FC = React.memo(() => {
+  const {t} = useTranslation()
   const dispatch = useDispatch();
   const rootState = useRootState();
   const {
@@ -47,11 +104,11 @@ export const BranchGridManage: React.FC = React.memo(() => {
     getFieldProps,
     isLoading
   } = useFormManager<BranchData>({
-    url: Urls.Branch,
+    url:Urls.Branch,
     onSuccess: useCallback(() => dispatch(toggleBranchGridPopup({ isOpen: false, key: null })), [dispatch]),
     key: rootState.PopupData.branchGrid.key,
     useApiClient: true,
-    // initialData: initialDataUserType
+    initialData: initialDataBranch 
   });
 
   const onClose = useCallback(() => {
@@ -60,7 +117,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1  sm:grid-cols-2 md:grid-cols-3 gap-4">
         <ERPInput
           {...getFieldProps("code")}
           label="Code"
@@ -73,17 +130,19 @@ export const BranchGridManage: React.FC = React.memo(() => {
           required
           onChangeData={(data) => handleFieldChange("name", data)}
         />
-        <ERPDataCombobox
-          {...getFieldProps("company")}
+       <ERPDataCombobox
+          {...getFieldProps("companyID")}
           field={{
-            id: "company",
+            id: "companyID",
             required: true,
-            getListUrl: Urls.CompanyProfiles,
-            valueKey: "id",
-            labelKey: "name",
+            getListUrl: Urls.data_company_id,
+            valueKey: "companyID",
+            labelKey: "companyID",
           }}
-          label="Company"
-          onChangeData={(data) => handleFieldChange("company", data)}
+          onChange={(data: any) =>
+            handleFieldChange("companyID", data.companyID)
+          }
+          label="Company Id"
         />
         <ERPInput
           {...getFieldProps("address1")}
@@ -110,10 +169,19 @@ export const BranchGridManage: React.FC = React.memo(() => {
           label="State"
           onChangeData={(data) => handleFieldChange("state", data)}
         />
-        <ERPInput
+        <ERPDataCombobox
           {...getFieldProps("country")}
-          label="Country"
-          onChangeData={(data) => handleFieldChange("country", data)}
+          field={{
+            id: "country",
+            required: true,
+            getListUrl: Urls.data_countries,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data: any) => {
+            handleFieldChange("country", data);
+          }}
+          label={t("country")}
         />
         <ERPInput
           {...getFieldProps("pin")}

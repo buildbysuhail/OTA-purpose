@@ -147,6 +147,7 @@ const Urls = {
   // Masters
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
+  account_privilege_card:"/Accounts/PrivilegeCards",
   //Reports
   // Accounts End
   //Templates

@@ -1,4 +1,4 @@
-export const initialCostCenter = {
+export const initialCostCentre = {
   data: {
     costCentreID: 0,
     branchID: 0,
@@ -19,7 +19,7 @@ export const initialCostCenter = {
   },
 };
 
-export interface CostCenterData {
+export interface CostCentreData {
   costCentreID: number,
   branchID: number,
   costCentreName: string,

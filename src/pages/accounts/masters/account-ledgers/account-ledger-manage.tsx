@@ -6,7 +6,7 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
-import { AccountLedgerData } from "./account-ledger-types";
+import { AccountLedgerData, initialAccountLedger } from "./account-ledger-types";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { ActionType } from "../../../../redux/types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
@@ -26,8 +26,9 @@ export const AccountLedgerManage = () => {
   } = useFormManager<AccountLedgerData>({
     url: Urls.account_ledger,
     onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null })), [dispatch]),
-    method: ActionType.POST,
-    useApiClient: true
+    key: rootState.PopupData.accountLedger.key,
+    useApiClient: true,
+    initialData: initialAccountLedger
   });
 
   const onClose = useCallback(() => {

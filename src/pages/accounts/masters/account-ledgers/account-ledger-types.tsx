@@ -1,4 +1,4 @@
-export const initialAccountGroup = {
+export const initialAccountLedger = {
   data: {
     ledgerID: 0,
     branchID: 0,

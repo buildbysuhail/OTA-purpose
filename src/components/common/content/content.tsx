@@ -89,7 +89,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
         {/* cost center */}
-        <Route path="account-masters/cost-center" element={<CostCenter />} />
+        <Route path="account-masters/cost-center" element={<CostCentre />} />
         {/* Accounts End */}
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />

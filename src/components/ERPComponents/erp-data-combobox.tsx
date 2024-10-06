@@ -1,15 +1,33 @@
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
-import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from "@headlessui/react";
+import {
+  Combobox,
+  ComboboxButton,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+  Transition,
+} from "@headlessui/react";
 import { Fragment, useEffect, useRef, useState } from "react";
-import { CheckIcon, ChevronDownIcon, XMarkIcon } from "@heroicons/react/20/solid";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
 
 import { useLocation } from "react-router-dom";
-import { getCurrentCurrencySymbol, getPriceListOptions } from "../../utilities/Utils";
+import {
+  getCurrentCurrencySymbol,
+  getPriceListOptions,
+} from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { reduxManager } from "../../redux/dynamic-store-manager-pro";
-import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../utilities/hooks/useAppDispatch";
 import { reducerNameFromUrl } from "../../redux/actions/AppActions";
+import { getAction } from "../../redux/slices/app-thunks";
 interface ERPDataComboboxProps {
   id: string;
   label?: string;
@@ -38,20 +56,20 @@ interface ERPDataComboboxProps {
   validation?: string;
 }
 
-export const getOptions = (data: any, keyLabel: string) => {
+export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
   let getter = keyLabel?.split(".");
   if (data?.length > 0) {
     let options;
     if (getter?.length > 1) {
       options = data?.map((item: any) => ({
         label: item?.[getter[0]]?.[getter[1]],
-        value: item?.id,
+        value: item?.[keyValue],
         is_active: item?.is_active,
       }));
     } else {
       options = data?.map((item: any) => ({
         label: item?.[keyLabel],
-        value: item?.id,
+        value: item?.[keyValue],
         is_active: item?.is_active,
       }));
     }
@@ -67,6 +85,7 @@ export default function ERPDataCombobox({
   onChange,
   onChangeData,
   onSelectItem,
+  options,
   field,
   defaultData,
   defaultValue,
@@ -81,7 +100,7 @@ export default function ERPDataCombobox({
   initialValue,
   isPaginated = false,
   disabledApiCall = false,
-  validation
+  validation,
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -92,66 +111,75 @@ export default function ERPDataCombobox({
 
   const [query, setQuery] = useState("");
   const [localValue, setLocalValue] = useState<any>();
+  const [items, setItems] = useState<any>([]);
+  const [loading, setLoading] = useState<any>([]);
   const [hasValue, setHasValue] = useState<boolean>(false);
-
-const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
-  const dataList = useAppSelector((state: any) => state?.[reducerName]?.data);
-
-  const listData = isPaginated ? dataList?.results : dataList;
-
-  console.log(`ERPDataCombobox,  : data_list_data`, id, dataList);
-
-  let getListAction = reduxManager.getTypedThunk(reducerName);
-  
+  const [initial, setInitial] = useState<any>(initialValue);
   useEffect(() => {
     if (!disabledApiCall) {
-      field?.getListUrl && dispatch(getListAction({}) as any).unwrap();
+      loadData();
     }
   }, []);
+  const loadData = async () => {
+    setLoading(true);
+    let _items = options ? options : await getAction({ apiUrl: field?.getListUrl });
+debugger;
+    let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];
 
+    _options = _options?.filter(
+      (option: any) => !excludeOptions?.includes(option?.value)
+    );
+    _options = includeOptions ? [...includeOptions, ..._options] : _options;
+
+    const filteredPeople =
+      query === ""
+        ? _options
+        : _options?.filter((person: any) =>
+            person?.label
+              ?.toLowerCase()
+              ?.replace(/\s+/g, "")
+              ?.includes(query?.toLowerCase()?.replace(/\s+/g, ""))
+          );
+          setItems(
+            filteredPeople != undefined && filteredPeople != null
+              ? filteredPeople
+              : []
+          );
+          setLoading(false);
+  };
+
+  let _default = null;
+  let _exceptional = null;
+  let _selected = null;
   const iLabel = label || id?.replaceAll("_", " ");
-  const fieldKey = field?.id?.replaceAll("_id", "");
-  const defaultValueKey = defaultData?.[fieldKey]?.[field?.valueKey];
-  console.log(`ERPDataCombobox,  : default_value_key`, defaultValueKey);
+  useEffect(() => {
+    const iLabel = label || id?.replaceAll("_", " ");
+    const fieldKey = field?.id?.replaceAll("_id", "");
+    const defaultValueKey = defaultData?.[fieldKey]?.[field?.valueKey];
 
-  let value = field?.labelKey ? defaultData?.[field?.id]?.[field?.labelKey] : defaultData?.[field?.id];
-  if (data !== undefined && data?.[field?.id] !== undefined) {
-    value = data?.[field?.id] === undefined ? value : localValue?.label;
-  }
+    let value = field?.labelKey
+      ? defaultData?.[field?.id]?.[field?.labelKey]
+      : defaultData?.[field?.id];
+    if (data !== undefined && data?.[field?.id] !== undefined) {
+      value = data?.[field?.id] === undefined ? value : localValue?.label;
+    }
 
-  // let isActive = field?.id?.includes("customer") || field?.id?.includes("vendor") || field?.id === "item";
-  // let activeData = dataList?.data?.filter((item: any) => item?.[field?.activeCheckKey] === true);
+    _default = items?.find(
+      (option: any) => option?.value === defaultValueKey
+    );
+    _selected = items?.find(
+      (option: any) => option?.value === data?.[field?.id]
+    );
 
-  let options = getOptions(listData, field?.labelKey) || [];
-
-  options = field?.isPriceList
-    ? getPriceListOptions(
-        listData?.filter((item: any) => item?.is_active == true),
-        "name",
-        "is_for"
-      )?.filter((item: any) => item?.is_for == field?.filterKey)
-    : options;
-  console.log(`ERPDataCombobox,  : options_data_value`, options, excludeOptions);
-  options = options?.filter((option: any) => !excludeOptions?.includes(option?.value));
-  options = includeOptions ? [...includeOptions, ...options] : options;
-
-  const filteredPeople =
-    query === ""
-      ? options
-      : options?.filter((person: any) => person?.label?.toLowerCase()?.replace(/\s+/g, "")?.includes(query?.toLowerCase()?.replace(/\s+/g, "")));
-
-  const defualt = options?.find((option: any) => option?.value === defaultValueKey);
-  const selected = options?.find((option: any) => option?.value === data?.[field?.id]);
-
-  console.log(`ERPDataCombobox,  : default_data_value`, defaultData, options, defualt);
-
-  const exceptional =
-    (defaultData && fieldKey === "payment_terms" && options[0]) ||
-    (fieldKey === "currency");
+    _exceptional =
+      (defaultData && fieldKey === "payment_terms" && items[0]) ||
+      fieldKey === "currency";
+      setInitial(_selected || _default || _exceptional || initialValue || "")
+  }, [items]);
 
   useEffect(() => {
     if (defaultData) {
-      defualt && setHasValue(true);
+      initial && initial != '' && setHasValue(true);
     }
   }, [defaultData]);
 
@@ -166,7 +194,12 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
 
   // =================== Disable field based on data =============
   const disableCombobox = () => {
-    if (pathname?.includes("/accountant/chart_of_accounts") && field?.id == "currency_id" && defaultData?.has_transactions) return true;
+    if (
+      pathname?.includes("/accountant/chart_of_accounts") &&
+      field?.id == "currency_id" &&
+      defaultData?.has_transactions
+    )
+      return true;
     return disabled;
   };
 
@@ -175,20 +208,29 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
       {/* <ERPModelForm formFields={field?.formFields} show={showForm} onClose={() => setShowForm(false)} title={iLabel} /> */}
       <Combobox
         disabled={disableCombobox()}
-        value={selected || defualt || exceptional || initialValue || ""}
+        value={initial}
         onChange={(value) => {
-          
+          debugger;
+          setInitial(value)
           onChange && onChange(value);
-          onChangeData && value && data && onChangeData({ ...data, [id]: value?.value });
+          onChangeData &&
+            value &&
+            data &&
+            onChangeData({ ...data, [id]: value?.value });
           handleChange && handleChange(field?.id, value?.value);
           handleChangeData && handleChangeData(field?.id, value?.value);
-          onSelectItem?.(listData?.find((val: any) => val?.[field?.valueKey] == value?.value));
+          onSelectItem?.(
+            items?.find((val: any) => val?.[field?.valueKey] == value?.value)
+          );
           setHasValue(true);
         }}
       >
         <div className="relative">
           <div className="">
-            <ComboboxButton type="button" className="w-full inset-y-0 top-[30px] right-0 flex items-center">
+            <ComboboxButton
+              type="button"
+              className="w-full inset-y-0 top-[30px] right-0 flex items-center"
+            >
               <div className=" relative flex flex-col w-full">
                 {!noLabel && (
                   <label className="text-left rtl:text-right capitalize mb-1 block text-xs text-black">
@@ -199,7 +241,9 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
                 <ComboboxInput
                   multiple={multiple}
                   className={`w-full appearance-none rounded border border-gray-300 h-9 ${
-                    disableCombobox() ? "text-gray-400 " : "bg-white text-gray-900"
+                    disableCombobox()
+                      ? "text-gray-400 "
+                      : "bg-white text-gray-900"
                   }  px-3 py-2  placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
                   displayValue={(person: any) => person?.label}
                   onChange={(event) => setQuery(event.target.value)}
@@ -217,15 +261,24 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
                 />
               </div>
               <div
-                className={`flex absolute ${!disabled && "bg-white/50 backdrop-blur-sm"}  right-2 ${
+                className={`flex absolute ${
+                  !disabled && "bg-white/50 backdrop-blur-sm"
+                }  right-2 ${
                   noLabel ? "top-[8px]" : "top-[28px]"
                 } gap-2 justify-between items-center`}
               >
                 {field?.hasCloseButton && hasValue && (
-                  <XMarkIcon className="h-5 aspect-square text-gray-400 hover:text-gray-500" aria-hidden="true" onClick={clearSelection} />
+                  <XMarkIcon
+                    className="h-5 aspect-square text-gray-400 hover:text-gray-500"
+                    aria-hidden="true"
+                    onClick={clearSelection}
+                  />
                 )}
                 <div className="border-l-2 pr-1 pl-2 group bg-white">
-                  <ChevronDownIcon className="h-5 aspect-square text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
+                  <ChevronDownIcon
+                    className="h-5 aspect-square text-gray-400 group-hover:text-gray-500"
+                    aria-hidden="true"
+                  />
                 </div>
               </div>
             </ComboboxButton>
@@ -238,20 +291,30 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
             afterLeave={() => setQuery("")}
           >
             <ComboboxOptions className="absolute z-50 mt-2 max-h-60 min-w-full w-fit overflow-auto rounded-md bg-white  text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-              {dataList?.loading && filteredPeople?.length === 0 && query !== "" ? (
-                dataList?.loading ? (
-                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Loading...</div>
+              {loading &&
+              items?.length === 0 &&
+              query !== "" ? (
+                loading ? (
+                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                    Loading...
+                  </div>
                 ) : (
-                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">No data found</div>
+                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                    No data found
+                  </div>
                 )
-              ) : filteredPeople?.length === 0 ? (
-                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">No data found</div>
+              ) : items?.length === 0 ? (
+                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                  No data found
+                </div>
               ) : (
-                filteredPeople?.map((person: any, index: number) => (
+                items?.map((person: any, index: number) => (
                   <ComboboxOption
                     key={`cb_${person?.value}-${index}`}
                     className={({ active }) =>
-                      `${person?.is_active == false ? "hidden" : "relative"} cursor-pointer select-none py-2  pl-10 pr-4 ${
+                      `${
+                        person?.is_active == false ? "hidden" : "relative"
+                      } cursor-pointer select-none py-2  pl-10 pr-4 ${
                         active ? "bg-primary text-white" : "text-gray-900"
                       }`
                     }
@@ -259,9 +322,19 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
                   >
                     {({ selected, active }) => (
                       <>
-                        <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{person?.label}</span>
+                        <span
+                          className={`block truncate ${
+                            selected ? "font-medium" : "font-normal"
+                          }`}
+                        >
+                          {person?.label}
+                        </span>
                         {selected ? (
-                          <span className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? "text-white" : "text-accent"}`}>
+                          <span
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                              active ? "text-white" : "text-accent"
+                            }`}
+                          >
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
@@ -284,7 +357,9 @@ const reducerName = reducerNameFromUrl(field?.getListUrl, "GET");
           </Transition>
         </div>
       </Combobox>
-      <ERPElementValidationMessage validation={validation}></ERPElementValidationMessage>
+      <ERPElementValidationMessage
+        validation={validation}
+      ></ERPElementValidationMessage>
     </div>
   );
 }

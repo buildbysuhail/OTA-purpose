@@ -127,7 +127,7 @@ const Urls = {
   patchUserSubscriped: "/Subscription/User/EditUser/",
   UserTypes: "/Core/UserType/",
   //setting/Administrations
-  CompanyProfiles: "/Core/CompanyProfile/",
+  CompanyProfiles: "/Core/CompanyProfile",
   Branch: "/Core/Branch/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
@@ -150,6 +150,7 @@ const Urls = {
   cost_center: "/Accounts/CostCenter/",
   account_privilege_card:"/Accounts/PrivilegeCards",
   branch_ledger:"/Accounts/BranchLedger",
+  account_party_category:"/Accounts/PartyCategory/",
   //Reports
   // Accounts End
   //Templates

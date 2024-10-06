@@ -39,7 +39,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     getFieldProps,
     isLoading,
   } = useFormManager<CompanyProfileData>({
-    url: Urls.CompanyProfiles,
+    url:Urls.CompanyProfiles,
     onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true

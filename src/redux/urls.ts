@@ -150,6 +150,7 @@ const Urls = {
   cost_center: "/Accounts/CostCenter/",
   account_privilege_card:"/Accounts/PrivilegeCards/",
   account_party_category:"/Accounts/PartyCategory/",
+  account_currency:"/Accounts/Currency",
   //Reports
   // Accounts End
   //Templates

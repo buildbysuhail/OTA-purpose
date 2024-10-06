@@ -93,6 +93,18 @@ const ERPSettingsFormMain = () => {
     }
   };
 
+  const verifyOtp = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('/api/settings');
+      const data: Settings = await response.json();
+      setSettings(data);
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleFieldChange = ((settingName: any, value: any) => {
     setSettings((prevSettings = {} as Settings) => ({
       ...prevSettings,
@@ -171,12 +183,11 @@ const ERPSettingsFormMain = () => {
               { value: '4', label: '4' },
             ]}
           />
-          <ERPInput
-            id="DecimalPoints"
+          <ERPDataCombobox
+            id="decimalPoints"
             label="Decimal Points"
-            type="select"
-            value={settings?.DecimalPoints}
-            onChangeData={(data) => handleFieldChange("DecimalPoints", data.DecimalPoints)}
+            value={settings?.decimalPoints}
+            onChangeData={(data) => handleFieldChange("decimalPoints", data.decimalPoints)}
             options={[
               { value: '0', label: '0' },
               { value: '1', label: '1' },
@@ -185,48 +196,45 @@ const ERPSettingsFormMain = () => {
               { value: '4', label: '4' },
             ]}
           />
-          <ERPInput
-            id="CurrencyFormat"
+          <ERPDataCombobox
+            id="currencyFormat"
             label="Currency Format"
-            type="select"
-            value={settings?.CurrencyFormat}
-            onChangeData={(data) => handleFieldChange("CurrencyFormat", data.CurrencyFormat)}
+            value={settings?.currencyFormat}
+            onChangeData={(data) => handleFieldChange("currencyFormat", data.currencyFormat)}
             options={[
               { value: 'Millions', label: 'Millions' },
               { value: 'Thousands', label: 'Thousands' },
               { value: 'Hundreds', label: 'Hundreds' },
             ]}
           />
-          <ERPInput
-            id="RoundingMethod"
+          <ERPDataCombobox
+            id="roundingMethod"
             label="Rounding Method"
-            type="select"
-            value={settings?.RoundingMethod}
-            onChangeData={(data) => handleFieldChange("RoundingMethod", data.RoundingMethod)}
+            value={settings?.roundingMethod}
+            onChangeData={(data) => handleFieldChange("roundingMethod", data.roundingMethod)}
             options={[
               { value: 'Round', label: 'Round' },
               { value: 'RoundUp', label: 'Round Up' },
               { value: 'RoundDown', label: 'Round Down' },
             ]}
           />
-          <ERPInput
-            id="SalesRoundingMethod"
+          <ERPDataCombobox
+            id="salesRoundingMethod"
             label="Sales Rounding Method"
             type="select"
-            value={settings?.SalesRoundingMethod}
-            onChangeData={(data) => handleFieldChange("SalesRoundingMethod", data.SalesRoundingMethod)}
+            value={settings?.salesRoundingMethod}
+            onChangeData={(data) => handleFieldChange("salesRoundingMethod", data.salesRoundingMethod)}
             options={[
               { value: 'Round', label: 'Round' },
               { value: 'RoundUp', label: 'Round Up' },
               { value: 'RoundDown', label: 'Round Down' },
             ]}
           />
-          <ERPInput
-            id="TaxDecimalPoints"
+          <ERPDataCombobox
+            id="caxDecimalPoints"
             label="Tax Decimal Points"
-            type="select"
-            value={settings?.TaxDecimalPoints}
-            onChangeData={(data) => handleFieldChange("TaxDecimalPoints", data.TaxDecimalPoints)}
+            value={settings?.taxDecimalPoints}
+            onChangeData={(data) => handleFieldChange("TaxDecimalPoints", data.taxDecimalPoints)}
             options={[
               { value: '0', label: '0' },
               { value: '1', label: '1' },
@@ -235,12 +243,11 @@ const ERPSettingsFormMain = () => {
               { value: '4', label: '4' },
             ]}
           />
-          <ERPInput
-            id="RoundingMethodGlobal"
+          <ERPDataCombobox
+            id="roundingMethodGlobal"
             label="Rounding Method Global"
-            type="select"
-            value={settings?.RoundingMethodGlobal}
-            onChangeData={(data) => handleFieldChange("RoundingMethodGlobal", data.RoundingMethodGlobal)}
+            value={settings?.roundingMethodGlobal}
+            onChangeData={(data) => handleFieldChange("RoundingMethodGlobal", data.roundingMethodGlobal)}
             options={[
               { value: 'Round', label: 'Round' },
               { value: 'RoundUp', label: 'Round Up' },
@@ -248,17 +255,17 @@ const ERPSettingsFormMain = () => {
             ]}
           />
           <ERPCheckbox
-          id="AutoChangeTransactionDate"
+          id="autoChangeTransactionDate"
           label="Auto Change Transaction Date By 12:00 AM"
-          checked={settings?.AutoChangeTransactionDate}
-          onChangeData={(data) => handleFieldChange("AutoChangeTransactionDate", data.AutoChangeTransactionDate)}
+          checked={settings?.autoChangeTransactionDate}
+          onChangeData={(data) => handleFieldChange("autoChangeTransactionDate", data.autoChangeTransactionDate)}
         />
          <ERPInput
-            id="AutoUpdateReleaseUpTo"
+            id="autoUpdateReleaseUpTo"
             label="Auto Update Release Up To"
             type="number"
-            value={settings?.AutoUpdateReleaseUpTo}
-            onChangeData={(data) => handleFieldChange("AutoUpdateReleaseUpTo", data.AutoUpdateReleaseUpTo)}
+            value={settings?.autoUpdateReleaseUpTo}
+            onChangeData={(data) => handleFieldChange("autoChangeTransactionDate", data.autoUpdateReleaseUpTo)}
           />
         </div>
 
@@ -267,23 +274,23 @@ const ERPSettingsFormMain = () => {
         <div className="flex items-center space-x-4">
          
           <ERPInput
-            id="OTPEmail"
+            id="oTPEmail"
             label="OTP Email"
             className="flex-grow"
-            value={settings?.OTPEmail}
-            onChangeData={(data) => handleFieldChange("OTPEmail", data.OTPEmail)}
+            value={settings?.oTPEmail}
+            onChangeData={(data) => handleFieldChange("OTPEmail", data.oTPEmail)}
           />
           <ERPButton
             title="Send OTP"
             variant="secondary"
-            onClick={() => console.log('Send OTP clicked')}
+            onClick={() => verifyOtp}
           />
           <ERPInput
-            id="OTPVerification"
+            id="oTPVerification"
             placeholder="Enter OTP"
             className="w-32"
-            value={settings?.OTPVerification}
-            onChangeData={(data) => handleFieldChange("OTPVerification", data.OTPVerification)}
+            value={settings?.oTPVerification}
+            onChangeData={(data) => handleFieldChange("oTPVerification", data.oTPVerification)}
           />
           <ERPButton
             title="Verify"

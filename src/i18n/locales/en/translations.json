@@ -426,5 +426,8 @@
   "payable_ledger":"Payable Ledger",
   "receivable_ledger":"Receivable Ledger",
   "payable_ledger_id":"Payable Ledger ID",
-  "receivable_ledger_id":"Receivable Ledger ID"
+  "receivable_ledger_id":"Receivable Ledger ID",
+
+  "reference_branch":"Reference Branch",
+  "branch_payable_ledger":"Branch Payable Ledger"
 }

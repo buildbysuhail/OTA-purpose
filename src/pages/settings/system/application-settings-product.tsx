@@ -3,11 +3,39 @@ import ERPDataCombobox from '../../../components/ERPComponents/erp-data-combobox
 import ERPButton from '../../../components/ERPComponents/erp-button';
 import ERPCheckbox from '../../../components/ERPComponents/erp-checkbox';
 import ERPInput from '../../../components/ERPComponents/erp-input';
-import ERPSelect from '../../../components/ERPComponents/erp-select';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
 
 interface Settings {
+  currency: any;
+  unitPriceDecimalPoints: any;
+  DecimalPoints: any;
+  CurrencyFormat: any;
+  RoundingMethod: any;
+  SalesRoundingMethod: any;
+  TaxDecimalPoints: any;
+  RoundingMethodGlobal: any;
+  AutoChangeTransactionDate: boolean | undefined;
+  AutoUpdateReleaseUpTo: any;
+  OTPEmail: any;
+  OTPVerification: any;
+  AllowPrivilegeCard: boolean | undefined;
+  PrivilegeCardPercentage: any;
+  AllowPostdatedTransaction: boolean | undefined;
+  PostdatedTransactionDays: any;
+  AllowPredatedTransaction: boolean | undefined;
+  PredatedTransactionDays: any;
+  MaintainSeparatePrefixForCashSales: boolean | undefined;
+  SaveModifiedTransactionSummary: boolean | undefined;
+  MaintainProduction: boolean | undefined;
+  ShowReminders: boolean | undefined;
+  EnableSecondDisplay: boolean | undefined;
+  AllowSalesRouteArea: boolean | undefined;
+  EnableDayEnd: boolean | undefined;
+  MaintainSalesRouteCreditLimit: boolean | undefined;
+  MaintainMultilanguage: boolean | undefined;
+  ShowUserMessages: boolean | undefined;
+  BusinessType: any;
   imageLocation: string,
   weighingScaleBarcodeType: string,
   lastGeneratedBarcode: string,
@@ -52,6 +80,35 @@ const initialSettings: Settings = {
   maintainSchemes: false,
   enableSupplierWiseItemCode: false,
   enableMultiWarehouseBilling: false,
+  currency: undefined,
+  unitPriceDecimalPoints: undefined,
+  DecimalPoints: undefined,
+  CurrencyFormat: undefined,
+  RoundingMethod: undefined,
+  SalesRoundingMethod: undefined,
+  TaxDecimalPoints: undefined,
+  RoundingMethodGlobal: undefined,
+  AutoChangeTransactionDate: undefined,
+  AutoUpdateReleaseUpTo: undefined,
+  OTPEmail: undefined,
+  OTPVerification: undefined,
+  AllowPrivilegeCard: undefined,
+  PrivilegeCardPercentage: undefined,
+  AllowPostdatedTransaction: undefined,
+  PostdatedTransactionDays: undefined,
+  AllowPredatedTransaction: undefined,
+  PredatedTransactionDays: undefined,
+  MaintainSeparatePrefixForCashSales: undefined,
+  SaveModifiedTransactionSummary: undefined,
+  MaintainProduction: undefined,
+  ShowReminders: undefined,
+  EnableSecondDisplay: undefined,
+  AllowSalesRouteArea: undefined,
+  EnableDayEnd: undefined,
+  MaintainSalesRouteCreditLimit: undefined,
+  MaintainMultilanguage: undefined,
+  ShowUserMessages: undefined,
+  BusinessType: undefined
 };
 
 const ApplicationSettingsProduct = () => {

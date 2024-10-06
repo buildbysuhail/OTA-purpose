@@ -396,5 +396,19 @@
 
     "day_close_agreement": "أوافق على إغلاق المعاملات حتى التاريخ المذكور (سيتم حظر الإضافة/التعديل/الحذف لجميع معاملات المخزون والحساب)",
     "enter_password": "أدخل كلمة المرور",
-    "closed_date": "تاريخ الإغلاق"
+    "closed_date": "تاريخ الإغلاق",
+
+    "name_in_arabic": "الاسم بالعربية",
+    "group_under": "المجموعة تحت",
+    "reason_for_edit": "سبب التعديل",
+    "editable": "قابل للتعديل",
+    "deletable": "قابل للحذف",
+
+    "enter_code": "أدخل الرمز",
+    "enter_name": "أدخل الاسم",
+    "enter_alias_name": "أدخل الاسم المستعار",
+    "enter_name_in_arabic": "أدخل الاسم بالعربية",
+    "cost_center_applicable": "مركز التكلفة ينطبق",
+    "bill_wise_applicable": "فاتورة ينطبق",
+    "clear": "مسح"
 }

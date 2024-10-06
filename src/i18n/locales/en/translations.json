@@ -396,5 +396,26 @@
 
   "day_close_agreement":"I agree to close the transactions till date mentioned (Add/Edit/Delete will be blocked for all the Inventory and Account Transaction)",
   "enter_password":"Enter Password",
-  "closed_date":"Closed Date"
+  "closed_date":"Closed Date",
+
+  "name_in_arabic":"Name In Arabic",
+  "group_under":"Group Under",
+  "reason_for_edit":"Reason For Edit",
+  "editable":"Editable",
+  "deletable":"Deletable",
+
+  "enter_code":"Enter Code",
+  "enter_name":"Enter Name",
+  "enter_alias_name":"Enter Alias Name",
+  "enter_name_in_arabic":"Enter Name In Arabic",
+  "cost_center_applicable":"Cost Center Applicable",
+  "bill_wise_applicable":"Billwise Applicable",
+  "clear":"Clear",
+
+  "cost_center":"Cost Center",
+  "cost_center_code":"Cost Center Code",
+  "cost_center_name":"Cost Center Name",
+  "enter_cost_center_name":"Enter Cost Center Name",
+  "enter_short_name":"Enter Short Name"
+
 }

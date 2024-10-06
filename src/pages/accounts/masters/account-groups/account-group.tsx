@@ -196,7 +196,7 @@ const AccountGroupType = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Account Group"
+                  gridHeader={t("acc_group")}
                   dataUrl={Urls.account_group}
                   gridId="grd_acc_group"
                   popupAction={toggleAccountGroupPopup}
@@ -210,7 +210,7 @@ const AccountGroupType = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.accountGroup.isOpen || false}
-        title={"Add New Account Group"}
+        title={t("acc_group")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

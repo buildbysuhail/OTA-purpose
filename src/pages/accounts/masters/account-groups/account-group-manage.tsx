@@ -10,6 +10,7 @@ import { ActionType } from "../../../../redux/types";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { AccountGroupData } from "./account-group-types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useTranslation } from "react-i18next";
 
 export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -33,66 +34,68 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps('accGroupName')}
-          label="Name"
-          placeholder="Name"
+          label={t("name")}
+          placeholder={t("name")}
           required={true}
           onChangeData={(data: any) => { debugger; handleFieldChange('accGroupName', data) }}
         />
         <ERPInput
-          {...getFieldProps('accGroupNameArabic')}
-          label="Name in Arabic"
-          placeholder="Name in Arabic"
+          {...getFieldProps('arabicName')}
+          label={t("name_in_arabic")}
+          placeholder={t("name_in_arabic")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('accGroupNameArabic', data)}
+          onChangeData={(data: any) => handleFieldChange('arabicName', data)}
         />
         <ERPInput
           {...getFieldProps('shortName')}
-          label="Short Name"
-          placeholder="Short Name"
+          label={t("short_name")}
+          placeholder={t("short_name")}
           required={true}
           onChangeData={(data: any) => handleFieldChange('shortName', data)}
         />
         <ERPDataCombobox
-          {...getFieldProps("parentGroupID")}
+          {...getFieldProps("accGroupID")}
           field={{
-            id: "parentGroupID",
+            id: "accGroupID",
             required: true,
             getListUrl: Urls.data_acc_groups,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("parentGroupID", data)
+            handleFieldChange("accGroupID", data)
           }}
-          label="Group Under"
+          label={t("group_under")}
         />
         <ERPInput
           {...getFieldProps('remarks')}
-          label="Remarks"
-          placeholder="Remarks"
+          label={t("remarks")}
+          placeholder={t("remarks")}
           required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data)}
         />
         <ERPInput
-          {...getFieldProps('reasonForEdit')}
-          label="Reason For Edit"
-          placeholder="Reason For Edit"
+          {...getFieldProps('reasonForModification')}
+          label={t("reason_for_edit")}
+          placeholder={t("reason_for_edit")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('reasonForEdit', data)}
+          onChangeData={(data: any) => handleFieldChange('reasonForModification', data)}
         />
         <ERPCheckbox
           {...getFieldProps("isEditable")}
-          label="Editable"
+          label={t("editable")}
           onChangeData={(data: any) => handleFieldChange("isEditable", data)}
         />
         <ERPCheckbox
           {...getFieldProps("isDeletable")}
-          label="Deletable"
+          label={t("deletable")}
           onChangeData={(data: any) => handleFieldChange("isDeletable", data)}
         />
       </div>

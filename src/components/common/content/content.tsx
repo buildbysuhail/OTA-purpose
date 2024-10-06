@@ -31,6 +31,7 @@ const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transacti
 // Acc Starts
 const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/account-groups/account-group'));
 const AccountsLedger = lazy(() => import('../../../pages/accounts/masters/account-ledgers/account-ledger'));
+const CostCenter = lazy(() => import('../../../pages/accounts/masters/cost center/cost-center'));
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
 
 // Acc End
@@ -87,6 +88,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/account-group" element={<AccountsMasters />} />
         <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
+        {/* cost center */}
+        <Route path="account-masters/cost-center" element={<CostCenter />} />
         {/* Accounts End */}
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />

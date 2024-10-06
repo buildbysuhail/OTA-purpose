@@ -172,7 +172,7 @@ const AccountLedgerType = () => {
     },
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -200,7 +200,7 @@ const AccountLedgerType = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Account Ledger"
+                  gridHeader={t("acc_ledger")}
                   dataUrl={Urls.account_ledger}
                   gridId="grd_user_type"
                   popupAction={toggleAccountLedgerPopup}
@@ -214,7 +214,7 @@ const AccountLedgerType = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.accountLedger.isOpen || false}
-        title={"Add New UserType"}
+        title={t("acc_ledger")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

@@ -148,7 +148,8 @@ const Urls = {
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",
-  account_privilege_card:"/Accounts/PrivilegeCards/",
+  account_privilege_card:"/Accounts/PrivilegeCards",
+  branch_ledger:"/Accounts/BranchLedger",
   account_party_category:"/Accounts/PartyCategory/",
   account_currency:"/Accounts/Currency",
   //Reports

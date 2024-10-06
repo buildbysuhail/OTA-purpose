@@ -416,6 +416,15 @@
   "cost_centre_id":"Cost Centre ID",
   "cost_centre_name":"Cost Centre Name",
   "enter_cost_centre_name":"Enter Cost Centre Name",
-  "enter_short_name":"Enter Short Name"
+  "enter_short_name":"Enter Short Name",
 
+  "branch_ledger_id":"Branch Ledger ID",
+  "purchase_ledger_id":"Purchase Ledger ID",
+  "ref_branch_name":"Ref Branch Name",
+  "purchase_ledger":"Purchase Ledger",
+  "ref_branch_id":"Ref Branch ID",
+  "payable_ledger":"Payable Ledger",
+  "receivable_ledger":"Receivable Ledger",
+  "payable_ledger_id":"Payable Ledger ID",
+  "receivable_ledger_id":"Receivable Ledger ID"
 }

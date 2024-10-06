@@ -24,6 +24,7 @@ interface popupData {
   accountGroup: popupDataProps
   accountLedger: popupDataProps
   costCentre: popupDataProps
+  branchLedger: popupDataProps
   authorizationSettings: popupDataProps
   barcodeprint: popupDataProps
   exchangeRates:popupDataProps
@@ -51,6 +52,7 @@ const initialState: popupData = {
   accountGroup: { isOpen: false, key: null, mode: "edit" },
   accountLedger: { isOpen: false, key: null, mode: "edit" },
   costCentre: { isOpen: false, key: null, mode: "edit" },
+  branchLedger: { isOpen: false, key: null, mode: "edit" },
   authorizationSettings: { isOpen: false, key: null, mode: "edit" },
   barcodeprint: { isOpen: false, key: null, mode: "edit" },
   exchangeRates: { isOpen: false, key: null, mode: "edit" },
@@ -133,6 +135,9 @@ const popupDataSlice = createSlice({
     toggleCostCentrePopup: (state, action: PayloadAction<popupDataProps>) => {
       state.costCentre = action.payload;
     },
+    toggleBranchLedgerPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.branchLedger = action.payload;
+    },
     toggleAuthorizationSettingsPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.authorizationSettings = action.payload;
     },
@@ -179,6 +184,7 @@ export const {
   toggleAccountGroupPopup,
   toggleAccountLedgerPopup,
   toggleCostCentrePopup,
+  toggleBranchLedgerPopup,
   toggleAuthorizationSettingsPopup,
   toggleBranchGridPopup,
 } = popupDataSlice.actions;

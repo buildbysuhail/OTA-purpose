@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { ApplicationSettingsIds, ApplicationSettingsTypes } from "./application-settings-categories";
 import ERPSettingsFormMain from "./application-settings-main";
+import ApplicationSettingsAccounts from "./application-settings-main-accounts";
 
 
 
@@ -55,7 +56,7 @@ const ApplicationSettings = ({ }) => {
 
           <div className="flex-1 h-full">
           <div className="p-6 bg-white rounded-lg shadow-md">
-          <ERPSettingsFormMain></ERPSettingsFormMain>
+          <ApplicationSettingsAccounts/>
     </div>
           </div>
         </div>

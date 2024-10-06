@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { ApplicationSettingsIds, ApplicationSettingsTypes } from "./application-settings-categories";
+import ERPSettingsFormMain from "./application-settings-main";
 
 
 
@@ -53,7 +54,9 @@ const ApplicationSettings = ({ }) => {
           </div>
 
           <div className="flex-1 h-full">
-           safvan
+          <div className="p-6 bg-white rounded-lg shadow-md">
+          <ERPSettingsFormMain></ERPSettingsFormMain>
+    </div>
           </div>
         </div>
     </>

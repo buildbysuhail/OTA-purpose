@@ -6,7 +6,9 @@ import ERPInput from '../../../components/ERPComponents/erp-input';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
 import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
-import { getAction } from '../../../redux/slices/app-thunks';
+import { getAction, postAction } from '../../../redux/slices/app-thunks';
+import { ResponseModelWithValidation } from '../../../base/response-model';
+import { handleResponse } from '../../../utilities/HandleResponse';
 
 
 interface AccountSettingsState {
@@ -28,6 +30,7 @@ interface AccountSettingsState {
   minimumShiftDuration: number;
 
   // Checkbox fields
+  minimumShiftDurationChecked:boolean
   blockOnCreditLimit: 'Ignore' | 'Block';
   maintainCostCenter: boolean;
   allowSalesCounter: boolean;
@@ -69,6 +72,7 @@ const ApplicationSettingsAccounts = () => {
     minimumShiftDuration: 12,
 
     // Checkboxes
+    minimumShiftDurationChecked: false,
     blockOnCreditLimit: 'Ignore',
     maintainCostCenter: false,
     allowSalesCounter: false,
@@ -95,15 +99,15 @@ const ApplicationSettingsAccounts = () => {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
+  const dispatch = useAppDispatch();
   useEffect(() => {
     loadSettings();
   }, []);
 
   const loadSettings = async () => {
-    const dispatch = useAppDispatch();
     setLoading(true);
     try {
-      const response = await dispatch(getAction({apiUrl: Urls.updateUserAppSetting, params:{}}) as any
+      const response = await dispatch(getAction({apiUrl: `${Urls.application_setting}accounts`}) as any
     ).unwrap();
 
     setFormStatePrev(response);
@@ -121,34 +125,26 @@ const ApplicationSettingsAccounts = () => {
       [settingName]: value ?? ''
     }));
     
-    setChangedSettings((prevChangedSettings = {} as AccountSettingsState) => ({
-      ...prevChangedSettings,
-      [settingName]: value ?? ''
-    }));
   });
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    try {
-      const response = await fetch('/api/settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(changedSettings),
-      });
-      if (response.ok) {
-        console.log('Settings saved successfully');
-        setChangedSettings({});
-      } else {
-        console.error('Error saving settings');
+  const handleSubmit = async() => {
+    const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+      const currentValue = formState[key as keyof AccountSettingsState];
+      const prevValue = formStatePrev[key as keyof AccountSettingsState];
+
+      if (currentValue !== prevValue) {
+        acc.push({
+          settingsName: key,
+          settingsValue: currentValue
+        });
       }
-    } catch (error) {
-      console.error('Error saving settings:', error);
-    } finally {
-      setIsSaving(false);
-    }
+      return acc;
+    }, [] as { settingsName: string; settingsValue: any }[]);
+    const response: any = await postAction({apiUrl:Urls.application_setting, data: modifiedSettings}) as any
+    handleResponse(response);
+    console.log(modifiedSettings);
+    // You can send this list to your API or handle it as needed
   };
+
 
   if (loading) {
     return <div>Loading settings?...</div>;
@@ -272,17 +268,17 @@ const ApplicationSettingsAccounts = () => {
       {/* Minimum Shift Duration */}
       <div className='flex justify-start gap-5'>
       <ERPCheckbox
-          id="minimumShiftDuration"
-          value={formState.minimumShiftDuration}
+          id="minimumShiftDurationChecked"
+          checked={formState.minimumShiftDurationChecked}
           data={formState}
           label="Minimum Shift Duration"
-          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
+          onChangeData={(data) => handleFieldChange('minimumShiftDurationChecked', data)}
         />
         <ERPInput
           id="minimumShiftDuration"
           value={formState.minimumShiftDuration}
           data={formState}
-        
+          noLabel={true}
           type="number"
           onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
         />

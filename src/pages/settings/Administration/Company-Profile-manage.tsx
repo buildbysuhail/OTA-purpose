@@ -41,7 +41,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   } = useFormManager<CompanyProfileData>({
     url:Urls.CompanyProfiles,
     onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false })), [dispatch]),
-    method: ActionType.POST,
+    method:ActionType.POST,
     useApiClient: true
   });
 

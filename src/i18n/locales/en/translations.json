@@ -412,10 +412,10 @@
   "bill_wise_applicable":"Billwise Applicable",
   "clear":"Clear",
 
-  "cost_center":"Cost Center",
-  "cost_center_code":"Cost Center Code",
-  "cost_center_name":"Cost Center Name",
-  "enter_cost_center_name":"Enter Cost Center Name",
+  "cost_centre":"Cost Centre",
+  "cost_centre_id":"Cost Centre ID",
+  "cost_centre_name":"Cost Centre Name",
+  "enter_cost_centre_name":"Enter Cost Centre Name",
   "enter_short_name":"Enter Short Name"
 
 }

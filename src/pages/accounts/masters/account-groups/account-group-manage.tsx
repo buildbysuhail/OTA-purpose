@@ -8,7 +8,7 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { ActionType } from "../../../../redux/types";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import { AccountGroupData } from "./account-group-types";
+import { AccountGroupData, initialAccountGroup } from "./account-group-types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 
@@ -26,8 +26,9 @@ export const AccountGroupManage: React.FC = React.memo(() => {
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
     onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })), [dispatch]),
-    method: ActionType.POST,
-    useApiClient: true
+    key: rootState.PopupData.accountGroup.key,
+    useApiClient: true,
+    initialData: initialAccountGroup,
   });
 
   const onClose = useCallback(() => {

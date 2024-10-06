@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { toggleCostCenterPopup } from "../../../../redux/slices/popup-reducer";
+import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
@@ -8,9 +8,9 @@ import { useFormManager } from "../../../../utilities/hooks/useFormManagerOption
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { ActionType } from "../../../../redux/types";
 import { useTranslation } from "react-i18next";
-import { CostCenterData } from "./cost-center-types";
+import { CostCentreData, initialCostCentre } from "./cost-centre-types";
 
-export const CostCenterManage = () => {
+export const CostCentreManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -21,15 +21,16 @@ export const CostCenterManage = () => {
     handleFieldChange,
     getFieldProps,
     isLoading
-  } = useFormManager<CostCenterData>({
-    url: Urls.cost_center,
-    onSuccess: useCallback(() => dispatch(toggleCostCenterPopup({ isOpen: false, key: null })), [dispatch]),
-    method: ActionType.POST,
-    useApiClient: true
+  } = useFormManager<CostCentreData>({
+    url: Urls.cost_centre,
+    onSuccess: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null })), [dispatch]),
+    key: rootState.PopupData.costCentre.key,
+    useApiClient: true,
+    initialData: initialCostCentre
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleCostCenterPopup({ isOpen: false, key: null }));
+    dispatch(toggleCostCentrePopup({ isOpen: false, key: null }));
   }, []);
 
   const { t } = useTranslation();
@@ -38,11 +39,11 @@ export const CostCenterManage = () => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
         <ERPInput
-          {...getFieldProps('costCenterName')}
-          label={t("cost_center_name")}
-          placeholder={t("enter_cost_center_name")}
+          {...getFieldProps('costCentreName')}
+          label={t("cost_centre_name")}
+          placeholder={t("enter_cost_centre_name")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('costCenterName', data)}
+          onChangeData={(data: any) => handleFieldChange('costCentreName', data)}
         />
         <ERPInput
           {...getFieldProps('shortName')}

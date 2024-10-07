@@ -6,6 +6,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { APIClient } from "../../../helpers/api-client";
 
 interface FormState {
     expensesTaxAccount: string;
@@ -32,37 +33,32 @@ const initialState: FormState = {
 
 
 const TaxSettingsForm: React.FC = () => {
-    const [formState, setFormState] = useState(initialState);
-    const [formStatePrev, setFormStatePrev] = useState({});
+    const [formState, setFormState] = useState<FormState>(initialState);
+    const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
+  
     const dispatch = useAppDispatch();
-
+    const api = new APIClient();
     useEffect(() => {
         loadSettings();
     }, []);
 
     const loadSettings = async () => {
         setLoading(true);
-        setError(null);
         try {
-            const response = await dispatch(
-                getAction({ apiUrl: `${Urls.application_setting}print` }) as any
-            ).unwrap();
-
-            if (response) {
-                setFormStatePrev(response);
-                setFormState(response);
-            }
+          const response = await api.getAsync(`${Urls.application_settings}tax`)
+        debugger;
+        console.log(formState);
+        setFormStatePrev(response);
+        setFormState(response);
         } catch (error) {
-            console.error("Error loading settings:", error);
-            setError("Failed to load settings. Please try again.");
+          console.error('Error loading settings:', error);
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
-    };
+    }
 
     const handleFieldChange = (field: keyof typeof initialState, value: any) => {
         setFormState(prevState => ({
@@ -71,38 +67,37 @@ const TaxSettingsForm: React.FC = () => {
         }));
     };
 
-    const handleSubmit = async () => {
-        const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-            const typedKey = key as keyof typeof initialState;
-            const currentValue = formState[typedKey];
-            const prevValue = (formStatePrev as any)[key];
-
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSaving(true);
+        try {
+          const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+            const currentValue = formState[key as keyof FormState];
+            const prevValue = formStatePrev[key as keyof FormState];
+      
             if (currentValue !== prevValue) {
-                acc.push({
-                    settingsName: key,
-                    settingsValue: currentValue,
-                });
+              acc.push({
+                settingsName: key,
+                settingsValue: currentValue
+              });
             }
             return acc;
-        }, [] as { settingsName: string; settingsValue: any }[]);
-
-        setIsSaving(true);
-        setError(null);
-        try {
-            const response = await dispatch(
-                postAction({
-                    apiUrl: Urls.application_setting,
-                    data: modifiedSettings,
-                }) as any
-            ).unwrap();
-            handleResponse(response);
+          }, [] as { settingsName: string; settingsValue: any }[]);
+          
+          const response = await api.put(Urls.application_settings,{type:"tax",updateList:modifiedSettings})
+       
+        //   if (response.ok) {
+        //     console.log('Settings saved successfully');
+        //     setFormStatePrev({});
+        //   } else {
+        //     console.error('Error saving settings');
+        //   }
         } catch (error) {
-            console.error("Error saving settings:", error);
-            setError("Failed to save settings. Please try again.");
+          console.error('Error saving settings:', error);
         } finally {
-            setIsSaving(false);
+          setIsSaving(false);
         }
-    };
+      };
 
     if (loading) {
         return <div>Loading settings...</div>;

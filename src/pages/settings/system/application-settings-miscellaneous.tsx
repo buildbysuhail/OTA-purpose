@@ -7,7 +7,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import { Label } from "@headlessui/react";
+
 
 interface FormState {
   salesmanIncentive: number;
@@ -51,7 +51,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
     setLoading(true);
     try {
       const response = await dispatch(
-        getAction({ apiUrl: `${Urls.application_setting}miscellaneous` }) as any
+        getAction({ apiUrl:`${Urls.application_setting}miscellaneous` }) as any
       ).unwrap();
 
       setFormStatePrev(response);
@@ -97,12 +97,12 @@ const MiscellaneousSettingsForm: React.FC = () => {
         <div className="grid grid-cols-1">
           <div className="grid grid-cols-2 justify-start gap-4">
             <ERPCheckbox
-              id="Maintain All Branch With Common Inventory"
+              id="maintainAllBranchWithCommonInventory"
               checked={formState.maintainAllBranchWithCommonInventory}
               data={formState}
               label="Minimum Shift Duration"
               onChangeData={(data) =>
-                handleFieldChange("maintainAllBranchWithCommonInventory", data)
+                handleFieldChange("maintainAllBranchWithCommonInventory", data.maintainAllBranchWithCommonInventory)
               }
             />
             <ERPCheckbox
@@ -111,7 +111,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               data={formState}
               label="Auto Sync SI and PIBranch Transfer"
               onChangeData={(data) =>
-                handleFieldChange("autoSyncSIandPI_BT", data)
+                handleFieldChange("autoSyncSIandPI_BT", data.autoSyncSIandPI_BT)
               }
             />
             <ERPCheckbox
@@ -120,7 +120,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               data={formState}
               label="Maintain Untallied Bills"
               onChangeData={(data) =>
-                handleFieldChange("maintainUntalliedBills", data)
+                handleFieldChange("maintainUntalliedBills", data.maintainUntalliedBills)
               }
             />
             <ERPCheckbox
@@ -129,7 +129,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               data={formState}
               label="Allow Sales Detailed Edit"
               onChangeData={(data) =>
-                handleFieldChange("allowSalesDetailedEdit", data)
+                handleFieldChange("allowSalesDetailedEdit", data.allowSalesDetailedEdit)
               }
             />
             <ERPInput
@@ -139,16 +139,24 @@ const MiscellaneousSettingsForm: React.FC = () => {
               type="number"
               label="Salesman Incentive"
               onChangeData={(data) =>
-                handleFieldChange("salesmanIncentive", data)
+                handleFieldChange("salesmanIncentive", data.salesmanIncentive)
               }
             />
             <ERPDataCombobox
               id="defaultIncentiveLedger"
               value={formState.defaultIncentiveLedger}
+              field={{
+                id: "defaultIncentiveLedger",
+                required: true,
+                getListUrl: Urls.data_acc_ledgers,
+                // param:`ledgerID = 0 & ledgerType =${ledger}`,
+                valueKey: "id",
+                labelKey: "name",
+              }}
               data={formState}
               label="Default Incentive Ledger"
               onChangeData={(data) =>
-                handleFieldChange("defaultIncentiveLedger", data)
+              handleFieldChange("defaultIncentiveLedger", data)
               }
             />
             <ERPInput
@@ -158,7 +166,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               className="flex-grow"
               label="Plu Path"
               onChangeData={(data) =>
-                handleFieldChange("weighingScalePluFilePath", data)
+                handleFieldChange("weighingScalePluFilePath", data.weighingScalePluFilePath)
               }
             />
 
@@ -166,10 +174,10 @@ const MiscellaneousSettingsForm: React.FC = () => {
               id="secondDisplayImagesPath"
               value={formState.secondDisplayImagesPath}
               data={formState}
-              type="number"
+           
               label="Second Display Images Path"
               onChangeData={(data) =>
-                handleFieldChange("secondDisplayImagesPath", data)
+                handleFieldChange("secondDisplayImagesPath", data.secondDisplayImagesPath)
               }
             />
           </div>
@@ -180,7 +188,27 @@ const MiscellaneousSettingsForm: React.FC = () => {
               type="submit"
             />
           </div>
-          <div className="flex justify-start gap-5 ">
+          <div className="flex justify-around items-start">
+          <ERPCheckbox
+              id="sendSMS"
+              checked={formState.sendSMS}
+              data={formState}
+              label="send SMS"
+              onChangeData={(data) =>
+                handleFieldChange("sendSMS", data.sendSMS)
+              }
+            />
+          <ERPInput
+              id="smsURL"
+              value={formState.smsURL}
+              data={formState}
+              label="URL"
+              onChangeData={(data) =>
+                handleFieldChange("smsURL", data.smsURL)
+              }
+            />
+          </div>
+          <div className="flex gap-5 items-center">
             <div className="overflow-x-auto basis-[80%] scroll snap-x">
               <table className="table-auto border-collapse w-full">
                 <thead>
@@ -200,7 +228,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 </tbody>
               </table>
             </div>
-            <div className="flex flex-col -translate-y-4">
+            <div className="flex flex-col items-end">
               <ERPButton title="Load" variant="secondary" type="submit" />
               <ERPButton title="Save" variant="secondary" type="submit" />
             </div>
@@ -210,13 +238,12 @@ const MiscellaneousSettingsForm: React.FC = () => {
           <h4 className="text-red font-medium text-center">Set Decimal</h4>
           <div className=" flex justify-center items-center ">
             <ERPInput
-              id="secondDisplayImagesPath"
-              value={formState.secondDisplayImagesPath}
+              id="password"
+              value={formState.password}
               data={formState}
-              type="number"
               label="Password"
               onChangeData={(data) =>
-                handleFieldChange("secondDisplayImagesPath", data)
+                handleFieldChange("password", data.password)
               }
             />
           </div>
@@ -235,7 +262,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
          
           <div className="flex justify-center  items-center gap-4">
             <ERPButton title="Settings" variant="secondary" type="submit" startIcon="ri-settings-5-line"/>
-            <ERPButton title="Sync" variant="secondary" type="submit" startIcon="ri-loop-left-line"/>
+            <ERPButton title="Sync" variant="secondary" type="submit" startIcon="ri-refresh-line"/>
             
           </div>
             <span className="ml-2 text-red-500">

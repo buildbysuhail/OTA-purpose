@@ -9,6 +9,8 @@ import MiscellaneousSettingsForm from "./application-settings-miscellaneous";
 import InventorySettingsForm from "./application-settings-inventory";
 import ERPSettingsFormGSTTaxes from "./application-settings-GSTTaxes";
 import ApplicationSettingsProduct from "./application-settings-product";
+import PrintSettingForm from "./application-settings-print";
+import BackupSettingsForm from "./application-settings-backup";
 
 
 
@@ -80,6 +82,10 @@ const ApplicationSettings = ({ }) => {
           ?<InventorySettingsForm/>
           :settingsGroup == "gst"
           ?<ERPSettingsFormGSTTaxes/>
+          :settingsGroup=="print"
+          ?<PrintSettingForm/>
+          :settingsGroup=="backup"
+          ?<BackupSettingsForm/>
           :null
                     }
 

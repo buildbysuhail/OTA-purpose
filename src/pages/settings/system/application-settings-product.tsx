@@ -201,7 +201,7 @@ const ApplicationSettingsProduct = () => {
             value={settings?.unitPriceDecimalPoints}
             data={settings}
             onChangeData={(data) =>{
-              debugger;
+              
               handleFieldChange("unitPriceDecimalPoints", data.unitPriceDecimalPoints)
             }}
             options={[

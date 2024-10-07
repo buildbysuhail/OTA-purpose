@@ -82,7 +82,7 @@ const Header = () => {
             className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
             value={search}
             onChange={(e: any) => {
-              debugger;
+              
               if (e?.target?.value) {
                 setSearch(e?.target?.value);
                 handleSearch(e);

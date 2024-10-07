@@ -48,7 +48,7 @@ export const SampleMange: React.FC = React.memo(() => {
           placeholder="User Type Name"
           required={true}
           onChangeData={(data: any) => {
-            debugger;
+            
             handleFieldChange("userTypeName", data);
           }}
         />

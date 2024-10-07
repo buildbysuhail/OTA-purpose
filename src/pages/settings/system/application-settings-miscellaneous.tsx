@@ -7,6 +7,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import { LedgerType } from "../../../enums/ledger-types";
 
 
 interface FormState {
@@ -149,7 +150,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 id: "defaultIncentiveLedger",
                 required: true,
                 getListUrl: Urls.data_acc_ledgers,
-                // param:`ledgerID = 0 & ledgerType =${ledger}`,
+                params:`ledgerID=0&ledgerType=${LedgerType.Incentive_Given}`,
                 valueKey: "id",
                 labelKey: "name",
               }}

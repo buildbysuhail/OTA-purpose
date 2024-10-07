@@ -49,6 +49,13 @@ const Urls = {
   data_FormTypeBySR: "/Accounts/Data/FormTypeBySR",
   data_VPrefixForSI: "/Accounts/Data/VPrefixForSI",
   data_VPrefixForSR: "/Accounts/Data/VPrefixForSR",
+  data_CashLedgers: "/Accounts/Data/CashLedgers",
+  data_SuspenseAccount: "/Accounts/Data/SuspenseAccount",
+  data_BankAccounts: "/Accounts/Data/BankAccounts",
+  data_SalesAccount: "/Accounts/Data/SalesAccount",
+  data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
+  data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
+
 
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",

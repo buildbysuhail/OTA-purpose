@@ -1,405 +1,614 @@
-// import React, { useState } from "react";
-// import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-// import { getAction, postAction } from "../../../redux/slices/app-thunks";
-// import Urls from "../../../redux/urls";
-// import { handleResponse } from "../../../utilities/HandleResponse";
-// import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import React, { useState } from "react";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { getAction, postAction } from "../../../redux/slices/app-thunks";
+import Urls from "../../../redux/urls";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
-// interface FormState {
-//   maintainTax: boolean;
-//   showFinancialYearSelector: boolean;
-//   countryName: string;
-//   maintainSynchronization: boolean;
-//   autoPostingTransaction: boolean;
-//   allowEditPostedTransactions: boolean;
-//   maintainMasterEntry: boolean;
-//   maintainInventoryTransactionsEntry: boolean;
-//   syncMethod: string;
-//   syncIntervals: number;
-//   reportMode: string;
-//   useBranchWiseSalesPrice: boolean;
-//   useTemplateSelectionForPrinting: boolean;
-//   showBTINotification: boolean;
-//   applyVATOnPurchaseToBTO: boolean;
-//   maintainCounterWisePrefixForTransaction: boolean;
-//   refreshStockAfterSync: boolean;
-//   refreshServerStockAfterSync: boolean;
-//   maintainKSA_EInvoice: boolean;
-//   invoicePrintingStyle: string;
-//   enableTaxOnBillDiscount: boolean;
-//   apply_KSA_EInvoice_Validation_Rules: boolean;
-//   ksa_EInvoice_Sync_SystemCode: string;
-//   createCreditNoteAutomaticallyOnSalesEdit: boolean;
-//   enableVanSale: boolean;
-//   clientPPOSBranchID: string;
-//   vanSaleProductSerial: string;
-//   pposEmail: string;
-//   maximum_Allowed_LineItem_Amount: number;
-//   fileAttachmentMethod: string;
-//   fileAttachmentFolder: string;
-// }
+interface FormState {
+  maintainTax: boolean;
+  showFinancialYearSelector: boolean;
+  countryName: string;
+  maintainSynchronization: boolean;
+  maintainSynchronizationdata: string;
+  autoPostingTransaction: boolean;
+  allowEditPostedTransactions: boolean;
+  maintainMasterEntry: boolean;
+  maintainInventoryTransactionsEntry: boolean;
+  syncMethod: string;
+  syncIntervals: number;
+  reportMode: string;
+  useBranchWiseSalesPrice: boolean;
+  useTemplateSelectionForPrinting: boolean;
+  showBTINotification: boolean;
+  applyVATOnPurchaseToBTO: boolean;
+  maintainCounterWisePrefixForTransaction: boolean;
+  refreshStockAfterSync: boolean;
+  refreshServerStockAfterSync: boolean;
+  maintainKSA_EInvoice: boolean;
+  invoicePrintingStyle: string;
+  enableTaxOnBillDiscount: boolean;
+  apply_KSA_EInvoice_Validation_Rules: boolean;
+  ksa_EInvoice_Sync_SystemCode: string;
+  createCreditNoteAutomaticallyOnSalesEdit: boolean;
+  enableVanSale: boolean;
+  clientPPOSBranchID: string;
+  vanSaleProductSerial: string;
+  pposEmail: string;
+  maximum_Allowed_LineItem_Amount: number;
+  fileAttachmentMethod: string;
+  fileAttachmentFolder: string;
+}
 
-// const TaxAndInventorySettingsForm: React.FC = () => {
-//   const initialState: FormState = {
-//     maintainTax: true,
-//     showFinancialYearSelector: false,
-//     countryName: "1",
-//     maintainSynchronization: false,
-//     autoPostingTransaction: true,
-//     allowEditPostedTransactions: true,
-//     maintainMasterEntry: true,
-//     maintainInventoryTransactionsEntry: true,
-//     syncMethod: "",
-//     syncIntervals: 0,
-//     reportMode: "Classic",
-//     useBranchWiseSalesPrice: false,
-//     useTemplateSelectionForPrinting: false,
-//     showBTINotification: false,
-//     applyVATOnPurchaseToBTO: true,
-//     maintainCounterWisePrefixForTransaction: false,
-//     refreshStockAfterSync: true,
-//     refreshServerStockAfterSync: true,
-//     maintainKSA_EInvoice: false,
-//     invoicePrintingStyle: "Default",
-//     enableTaxOnBillDiscount: false,
-//     apply_KSA_EInvoice_Validation_Rules: false,
-//     ksa_EInvoice_Sync_SystemCode: "",
-//     createCreditNoteAutomaticallyOnSalesEdit: false,
-//     enableVanSale: false,
-//     clientPPOSBranchID: "",
-//     vanSaleProductSerial: "",
-//     pposEmail: "",
-//     maximum_Allowed_LineItem_Amount: 0.0,
-//     fileAttachmentMethod: "No",
-//     fileAttachmentFolder: "",
-//   };
+const BranchSettingsForm: React.FC = () => {
+  const initialState: FormState = {
+    maintainTax: true,
+    showFinancialYearSelector: false,
+    countryName: "1",
+    maintainSynchronization: false,
+    autoPostingTransaction: true,
+    allowEditPostedTransactions: true,
+    maintainMasterEntry: true,
+    maintainInventoryTransactionsEntry: true,
+    maintainSynchronizationdata: "",
+    syncMethod: "",
+    syncIntervals: 0,
+    reportMode: "Classic",
+    useBranchWiseSalesPrice: false,
+    useTemplateSelectionForPrinting: false,
+    showBTINotification: false,
+    applyVATOnPurchaseToBTO: true,
+    maintainCounterWisePrefixForTransaction: false,
+    refreshStockAfterSync: true,
+    refreshServerStockAfterSync: true,
+    maintainKSA_EInvoice: false,
+    invoicePrintingStyle: "Default",
+    enableTaxOnBillDiscount: false,
+    apply_KSA_EInvoice_Validation_Rules: false,
+    ksa_EInvoice_Sync_SystemCode: "",
+    createCreditNoteAutomaticallyOnSalesEdit: false,
+    enableVanSale: false,
+    clientPPOSBranchID: "",
+    vanSaleProductSerial: "",
+    pposEmail: "",
+    maximum_Allowed_LineItem_Amount: 0.0,
+    fileAttachmentMethod: "No",
+    fileAttachmentFolder: "",
+  };
 
-//   const [formState, setFormState] = useState<FormState>(initialState);
-//   const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
-//   const [loading, setLoading] = useState(true);
-//   const [isSaving, setIsSaving] = useState(false);
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
 
-//   const dispatch = useAppDispatch();
-//   //   useEffect(() => {
-//   //     loadSettings();
-//   //   }, []);
+  const dispatch = useAppDispatch();
 
-//   const loadSettings = async () => {
-//     setLoading(true);
-//     try {
-//       const response = await dispatch(
-//         getAction({ apiUrl: `${Urls.application_setting}branch` }) as any
-//       ).unwrap();
+  //loading on render
+  //   useEffect(() => {
+  //     loadSettings();
+  //   }, []);
 
-//       setFormStatePrev(response);
-//       setFormState(response);
-//     } catch (error) {
-//       console.error("Error loading settings:", error);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+  const loadSettings = async () => {
+    setLoading(true);
+    try {
+      const response = await dispatch(
+        getAction({ apiUrl: `${Urls.application_setting}branch` }) as any
+      ).unwrap();
 
-//   const handleFieldChange = (settingName: any, value: any) => {
-//     setFormState((prevSettings = {} as FormState) => ({
-//       ...prevSettings,
-//       [settingName]: value ?? "",
-//     }));
-//   };
-//   const handleSubmit = async () => {
-//     const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-//       const currentValue = formState[key as keyof FormState];
-//       const prevValue = formStatePrev[key as keyof FormState];
+      setFormStatePrev(response);
+      setFormState(response);
+    } catch (error) {
+      console.error("Error loading settings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//       if (currentValue !== prevValue) {
-//         acc.push({
-//           settingsName: key,
-//           settingsValue: currentValue,
-//         });
-//       }
-//       return acc;
-//     }, [] as { settingsName: string; settingsValue: any }[]);
-//     const response: any = (await postAction({
-//       apiUrl: Urls.application_setting,
-//       data: modifiedSettings,
-//     })) as any;
-//     handleResponse(response);
-//     console.log(modifiedSettings);
-//     // You can send this list to your API or handle it as needed
-//   };
+  const handleFieldChange = (settingName: any, value: any) => {
+    setFormState((prevSettings = {} as FormState) => ({
+      ...prevSettings,
+      [settingName]: value ?? "",
+    }));
+  };
 
-//   return (
-//     <div className="w-full max-w-4xl">
-//       <div className="grid grid-cols-3 gap-6">
-//         <div className="space-y-4">
-//           {/* Left Column */}
-//           <ERPCheckbox
-//             id="autoChangeTransactionDate"
-//             label="Auto Change Transaction Date By 12:00 AM"
-//             checked={formsate?.autoChangeTransactionDate}
-//             onChangeData={(data) =>
-//               handleFieldChange(
-//                 "autoChangeTransactionDate",
-//                 data.autoChangeTransactionDate
-//               )
-//             }
-//           />
+  const handleSubmit = async () => {
+    const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+      const currentValue = formState[key as keyof FormState];
+      const prevValue = formStatePrev[key as keyof FormState];
 
-//           <ERPCheckbox
-//             id="autoChangeTransactionDate"
-//             label="Auto Change Transaction Date By 12:00 AM"
-//             checked={formsate?.autoChangeTransactionDate}
-//             onChangeData={(data) =>
-//               handleFieldChange(
-//                 "autoChangeTransactionDate",
-//                 data.autoChangeTransactionDate
-//               )
-//             }
-//           />
-//           <ERPCheckbox
-//             id="autoChangeTransactionDate"
-//             label="Auto Change Transaction Date By 12:00 AM"
-//             checked={formsate?.autoChangeTransactionDate}
-//             onChangeData={(data) =>
-//               handleFieldChange(
-//                 "autoChangeTransactionDate",
-//                 data.autoChangeTransactionDate
-//               )
-//             }
-//           />
-//           <ERPCheckbox
-//             id="autoChangeTransactionDate"
-//             label="Auto Change Transaction Date By 12:00 AM"
-//             checked={formsate?.autoChangeTransactionDate}
-//             onChangeData={(data) =>
-//               handleFieldChange(
-//                 "autoChangeTransactionDate",
-//                 data.autoChangeTransactionDate
-//               )
-//             }
-//           />
-//           <ERPCheckbox
-//             id="autoChangeTransactionDate"
-//             label="Auto Change Transaction Date By 12:00 AM"
-//             checked={formsate?.autoChangeTransactionDate}
-//             onChangeData={(data) =>
-//               handleFieldChange(
-//                 "autoChangeTransactionDate",
-//                 data.autoChangeTransactionDate
-//               )
-//             }
-//           />
-//           <ERPCheckbox
-//             id="autoChangeTransactionDate"
-//             label="Auto Change Transaction Date By 12:00 AM"
-//             checked={formsate?.autoChangeTransactionDate}
-//             onChangeData={(data) =>
-//               handleFieldChange(
-//                 "autoChangeTransactionDate",
-//                 data.autoChangeTransactionDate
-//               )
-//             }
-//           />
-//           <ERPCheckbox
-//             id="autoChangeTransactionDate"
-//             label="Auto Change Transaction Date By 12:00 AM"
-//             checked={formsate?.autoChangeTransactionDate}
-//             onChangeData={(data) =>
-//               handleFieldChange(
-//                 "autoChangeTransactionDate",
-//                 data.autoChangeTransactionDate
-//               )
-//             }
-//           />
+      if (currentValue !== prevValue) {
+        acc.push({
+          settingsName: key,
+          settingsValue: currentValue,
+        });
+      }
+      return acc;
+    }, [] as { settingsName: string; settingsValue: any }[]);
+    const response: any = (await postAction({
+      apiUrl: Urls.application_setting,
+      data: modifiedSettings,
+    })) as any;
+    handleResponse(response);
+    console.log(modifiedSettings);
+    // You can send this list to your API or handle it as needed
+  };
 
-//           {/* <div className="space-y-2">
-//               <label>Select Country</label>
-//               <Select 
-//                 value={formState.countryName}
-//                 onValueChange={(value) => handleFieldChange("countryName", value)}
-//               >
-//                 <SelectTrigger>
-//                   <SelectValue placeholder="Select country" />
-//                 </SelectTrigger>
-//                 <SelectContent>
-//                   <SelectItem value="1">Country 1</SelectItem>
-//                   <SelectItem value="2">Country 2</SelectItem>
-//                 </SelectContent>
-//               </Select>
-//             </div> */}
+  return (
+    <div className="w-full max-w-4xl">
+      <div className="grid grid-cols-3 gap-6 mb-4">
+        <div className="flex flex-col space-y-4">
+          {/* Left Column */}
+          <ERPCheckbox
+            id="maintainTax"
+            label="Maintain Tax"
+            data={formState}
+            checked={formState?.maintainTax}
+            onChangeData={(data) =>
+              handleFieldChange("maintainTax", data.maintainTax)
+            }
+          />
 
-//           <div className="space-y-2">
-//             <label>Regional Language</label>
-//             <Select
-//               value={formState.invoicePrintingStyle}
-//               onValueChange={(value) =>
-//                 handleFieldChange("invoicePrintingStyle", value)
-//               }
-//             >
-//               <SelectTrigger>
-//                 <SelectValue placeholder="Select language" />
-//               </SelectTrigger>
-//               <SelectContent>
-//                 <SelectItem value="Default">Default</SelectItem>
-//                 <SelectItem value="Arabic">Arabic</SelectItem>
-//               </SelectContent>
-//             </Select>
-//           </div>
+          <ERPCheckbox
+            data={formState}
+            id="showFinancialYearSelector"
+            label="Show FinancialYear Selector"
+            checked={formState?.showFinancialYearSelector}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "showFinancialYearSelector",
+                data.showFinancialYearSelector
+              )
+            }
+          />
+          <ERPCheckbox
+            id="autoPostingTransaction"
+            label="Maintain Auto Posting Transaction"
+            data={formState}
+            checked={formState?.autoPostingTransaction}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "autoPostingTransaction",
+                data.autoPostingTransaction
+              )
+            }
+          />
+          <ERPCheckbox
+            id="allowEditPostedTransactions"
+            label="AllowEdit Posted Transactions"
+            data={formState}
+            checked={formState?.allowEditPostedTransactions}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "allowEditPostedTransactions",
+                data.allowEditPostedTransactions
+              )
+            }
+          />
+          <ERPCheckbox
+            id="maintainMasterEntry"
+            label="Maintain Inventory Master Entry"
+            data={formState}
+            checked={formState?.maintainMasterEntry}
+            onChangeData={(data) =>
+              handleFieldChange("maintainMasterEntry", data.maintainMasterEntry)
+            }
+          />
+          <ERPCheckbox
+            id="maintainInventoryTransactionsEntry"
+            label="Maintain Inventory Transactions Entry"
+            data={formState}
+            checked={formState?.maintainInventoryTransactionsEntry}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "maintainInventoryTransactionsEntry",
+                data.maintainInventoryTransactionsEntry
+              )
+            }
+          />
+          <ERPCheckbox
+            id="useBranchWiseSalesPrice"
+            label="Use Branch Wise Sales Price"
+            data={formState}
+            checked={formState?.useBranchWiseSalesPrice}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "useBranchWiseSalesPrice",
+                data.useBranchWiseSalesPrice
+              )
+            }
+          />
+        </div>
+        <div className="flex flex-col  space-y-4">
+          <ERPDataCombobox
+            id="countryName"
+            value={formState.countryName}
+            field={{
+              id: "countryName",
+              required: true,
+              getListUrl: Urls.data_countries,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            data={formState}
+            label="Selected Country"
+            onChangeData={(data) =>
+              handleFieldChange("countryName", data.countryName)
+            }
+          />
+          <ERPDataCombobox
+            id="invoicePrintingStyle"
+            value={formState.invoicePrintingStyle}
+            field={{
+              id: "invoicePrintingStyle",
+              required: true,
+              getListUrl: Urls.data_languages,
 
-//           <ERPCheckbox
-//             id="maintainInventoryMasterEntry"
-//             value={formState.maintainMasterEntry}
-//             data={formState}
-//             label="Maintain Inventory Master Entry"
-//             onChangeData={(data: boolean) =>
-//               handleFieldChange("maintainMasterEntry", data)
-//             }
-//           />
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            data={formState}
+            label="Regional Language"
+            onChangeData={(data) =>
+              handleFieldChange(
+                "invoicePrintingStyle",
+                data.invoicePrintingStyle
+              )
+            }
+          />
+          <ERPCheckbox
+            id="useTemplateSelectionForPrinting"
+            data={formState}
+            label="Use Template Selection For Printing"
+            checked={formState?.useTemplateSelectionForPrinting}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "useTemplateSelectionForPrinting",
+                data.useTemplateSelectionForPrinting
+              )
+            }
+          />
+          <ERPCheckbox
+            id="applyVATOnPurchaseToBTO"
+            label="Apply VAT On Purchase To BTO"
+            data={formState}
+            checked={formState?.applyVATOnPurchaseToBTO}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "applyVATOnPurchaseToBTO",
+                data.applyVATOnPurchaseToBTO
+              )
+            }
+          />
+          <ERPCheckbox
+            id="maintainCounterWisePrefixForTransaction"
+            label="Maintain Counter Wise Prefix For Transaction"
+            data={formState}
+            checked={formState?.maintainCounterWisePrefixForTransaction}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "maintainCounterWisePrefixForTransaction",
+                data.maintainCounterWisePrefixForTransaction
+              )
+            }
+          />
+        </div>
 
-//           <ERPCheckbox
-//             id="maintainInventoryTransactionsEntry"
-//             value={formState.maintainInventoryTransactionsEntry}
-//             data={formState}
-//             label="Maintain Inventory Transactions Entry"
-//             onChangeData={(data: boolean) =>
-//               handleFieldChange("maintainInventoryTransactionsEntry", data)
-//             }
-//           />
-//         </div>
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-start gap-3">
+            {formState?.maintainTax && (
+              <ERPCheckbox
+                id="maintainKSA_EInvoice"
+                label="Maintain KSA EInvoice"
+                data={formState}
+                checked={formState?.maintainKSA_EInvoice}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "maintainKSA_EInvoice",
+                    data.maintainKSA_EInvoice
+                  )
+                }
+              />
+            )}
 
-//         <div className="space-y-4">
-//           {/* Right Column */}
-//           <ERPCheckbox
-//             id="maintainKSA_EInvoice"
-//             value={formState.maintainKSA_EInvoice}
-//             data={formState}
-//             label="Maintain KSA E-Invoice"
-//             onChangeData={(data: boolean) =>
-//               handleFieldChange("maintainKSA_EInvoice", data)
-//             }
-//           />
+            <ERPCheckbox
+              id="enableTaxOnBillDiscount"
+              label="Enable Tax On Bill Discount"
+              data={formState}
+              checked={formState?.enableTaxOnBillDiscount}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "enableTaxOnBillDiscount",
+                  data.enableTaxOnBillDiscount
+                )
+              }
+            />
+          </div>
 
-//           <ERPCheckbox
-//             id="enableTaxOnBillDiscount"
-//             value={formState.enableTaxOnBillDiscount}
-//             data={formState}
-//             label="Enable Tax On Bill Discount"
-//             onChangeData={(data: boolean) =>
-//               handleFieldChange("enableTaxOnBillDiscount", data)
-//             }
-//           />
+          <ERPCheckbox
+            id="apply_KSA_EInvoice_Validation_Rules"
+            label=" Apply KSA EInvoice Validation Rules"
+            checked={formState?.apply_KSA_EInvoice_Validation_Rules}
+            data={formState}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "apply_KSA_EInvoice_Validation_Rules",
+                data.apply_KSA_EInvoice_Validation_Rules
+              )
+            }
+          />
+          <ERPCheckbox
+            id="createCreditNoteAutomaticallyOnSalesEdit"
+            label="Maintain Counter Wise Prefix For Transaction"
+            data={formState}
+            checked={formState?.createCreditNoteAutomaticallyOnSalesEdit}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "createCreditNoteAutomaticallyOnSalesEdit",
+                data.createCreditNoteAutomaticallyOnSalesEdit
+              )
+            }
+          />
 
-//           <ERPInput
-//             id="maximum_Allowed_LineItem_Amount"
-//             value={formState.maximum_Allowed_LineItem_Amount.toString()}
-//             data={formState}
-//             label="Maximum Allowed Line Item Amount"
-//             type="number"
-//             onChangeData={(data: string) =>
-//               handleFieldChange(
-//                 "maximum_Allowed_LineItem_Amount",
-//                 parseFloat(data)
-//               )
-//             }
-//           />
+          <ERPInput
+            id="ksa_EInvoice_Sync_SystemCode"
+            value={formState.ksa_EInvoice_Sync_SystemCode}
+            data={formState}
+            label="EInvoice Sync SystemCode"
+            onChangeData={(data) =>
+              handleFieldChange(
+                "ksa_EInvoice_Sync_SystemCode",
+                data.ksa_EInvoice_Sync_SystemCode
+              )
+            }
+          />
 
-//           <div className="border p-4 rounded-md space-y-4">
-//             <ERPCheckbox
-//               id="enableVanSale"
-//               value={formState.enableVanSale}
-//               data={formState}
-//               label="Enable PPOS Integration (VanSales)"
-//               onChangeData={(data: boolean) =>
-//                 handleFieldChange("enableVanSale", data)
-//               }
-//             />
+          <ERPInput
+            id="maximum_Allowed_LineItem_Amount"
+            value={formState.maximum_Allowed_LineItem_Amount}
+            data={formState}
+            type="number"
+            label="Maximum Allowed LineItem Amount"
+            onChangeData={(data) =>
+              handleFieldChange(
+                "maximum_Allowed_LineItem_Amount",
+                data.maximum_Allowed_LineItem_Amount
+              )
+            }
+          />
+        </div>
+      </div>
+      <div className="flex justify-start items-start gap-6 mb-4">
+        <ERPCheckbox
+          id="maintainSynchronization"
+          checked={formState?.maintainSynchronization}
+          data={formState}
+          label="Maintain Synchronization"
+          onChangeData={(data) =>
+            handleFieldChange(
+              "maintainSynchronization",
+              data.maintainSynchronization
+            )
+          }
+        />
+        <div className="grid grid-cols-2 gap-5">
+          {formState?.maintainSynchronization && (
+            <>
+              <ERPDataCombobox
+                id="maintainSynchronizationdata"
+                value={formState.maintainSynchronizationdata}
+                field={{
+                  id: "maintainSynchronizationdata",
+                  required: true,
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+                data={formState}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "maintainSynchronizationdata",
+                    data.maintainSynchronizationdata
+                  )
+                }
+                options={[
+                  { value: "0", label: "Manual Sync" },
+                  { value: "1", label: "Auto Sync" },
+                  { value: "2", label: "Auto Sync and Upload Only" },
+                  { value: "3", label: "Manual Sync and Upload Only" },
+                  { value: "4", label: "Upload And Download" },
+                ]}
+              />
 
-//             <div className="flex space-x-2">
-//               <ERPInput
-//                 id="clientPPOSBranchID"
-//                 value={formState.clientPPOSBranchID}
-//                 data={formState}
-//                 label="PPOS BranchID"
-//                 onChangeData={(data: string) =>
-//                   handleFieldChange("clientPPOSBranchID", data)
-//                 }
-//               />
-//               <Button onClick={handleVerifyPPOS} className="mt-6">
-//                 Verify
-//               </Button>
-//             </div>
+              <ERPInput
+                id="syncIntervals"
+                value={formState.syncIntervals}
+                data={formState}
+                label="Intervals"
+                type="number"
+                onChangeData={(data) =>
+                  handleFieldChange("syncIntervals", data.syncIntervals)
+                }
+              />
+              <ERPCheckbox
+                id="refreshStockAfterSync"
+                checked={formState.refreshStockAfterSync}
+                data={formState}
+                label="Refresh Stock After Sync"
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "refreshStockAfterSync",
+                    data.refreshStockAfterSync
+                  )
+                }
+              />
+              <ERPCheckbox
+                id="refreshServerStockAfterSync"
+                checked={formState.refreshServerStockAfterSync}
+                data={formState}
+                label="Refresh Server Stock After Sync"
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "refreshServerStockAfterSync",
+                    data.refreshServerStockAfterSync
+                  )
+                }
+              />
+            </>
+          )}
+        </div>
+      </div>
+   
+      <div className="grid grid-cols-2 gap-6">
+        <div className="flex flex-col space-y-4">
+          <ERPCheckbox
+            id="showBTINotification"
+            checked={formState.showBTINotification}
+            data={formState}
+            label="Show BTI Notification"
+            onChangeData={(data) =>
+              handleFieldChange("showBTINotification", data.showBTINotification)
+            }
+          />
 
-//             <ERPInput
-//               id="vanSaleProductSerial"
-//               value={formState.vanSaleProductSerial}
-//               data={formState}
-//               label="PPOS Product Serial"
-//               onChangeData={(data: string) =>
-//                 handleFieldChange("vanSaleProductSerial", data)
-//               }
-//             />
+          <ERPDataCombobox
+            id="reportMode"
+            value={formState.reportMode}
+            field={{
+              id: "reportMode",
+              required: true,
 
-//             <ERPInput
-//               id="pposEmail"
-//               value={formState.pposEmail}
-//               data={formState}
-//               label="PPOS Email"
-//               type="email"
-//               onChangeData={(data: string) =>
-//                 handleFieldChange("pposEmail", data)
-//               }
-//             />
-//           </div>
-//         </div>
-//       </div>
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label="Report Mode"
+            onChangeData={(data) =>
+              handleFieldChange("reportMode", data.reportMode)
+            }
+            options={[
+              { value: "0", label: "classic" },
+              { value: "1", label: "Standard" },
+            ]}
+          />
 
-//       <div className="mt-6 grid grid-cols-2 gap-4">
-//         <div className="space-y-2">
-//           <label>Report Mode</label>
-//           <Select
-//             value={formState.reportMode}
-//             onValueChange={(value) => handleFieldChange("reportMode", value)}
-//           >
-//             <SelectTrigger>
-//               <SelectValue placeholder="Select report mode" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               <SelectItem value="Classic">Classic</SelectItem>
-//               <SelectItem value="Modern">Modern</SelectItem>
-//             </SelectContent>
-//           </Select>
-//         </div>
+          <ERPDataCombobox
+            id="invoicePrintingStyle"
+            value={formState.invoicePrintingStyle}
+            field={{
+              id: "invoicePrintingStyle",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label="Invoice Printing Style"
+            onChangeData={(data) =>
+              handleFieldChange(
+                "invoicePrintingStyle",
+                data.invoicePrintingStyle
+              )
+            }
+            options={[
+              { value: "0", label: "Default" },
+              { value: "1", label: "Standard" },
+            ]}
+          />
+          <ERPDataCombobox
+            id="fileAttachmentMethod"
+            value={formState.fileAttachmentMethod}
+            field={{
+              id: "fileAttachmentMethod",
+              required: true,
 
-//         <div className="space-y-2">
-//           <label>File Attachment Method</label>
-//           <Select
-//             value={formState.fileAttachmentMethod}
-//             onValueChange={(value) =>
-//               handleFieldChange("fileAttachmentMethod", value)
-//             }
-//           >
-//             <SelectTrigger>
-//               <SelectValue placeholder="Select attachment method" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               <SelectItem value="No">No</SelectItem>
-//               <SelectItem value="Yes">Yes</SelectItem>
-//             </SelectContent>
-//           </Select>
-//         </div>
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label="File Attachment Method"
+            onChangeData={(data) =>
+              handleFieldChange(
+                "fileAttachmentMethod",
+                data.fileAttachmentMethod
+              )
+            }
+            options={[
+              { value: "0", label: "No" },
+              { value: "1", label: "File System" },
+              { value: "2", label: "Cloud" },
+            ]}
+          />
+          <ERPInput
+            id="fileAttachmentFolder"
+            value={formState.fileAttachmentFolder}
+            data={formState}
+            label="Shared Folder"
+            onChangeData={(data) =>
+              handleFieldChange(
+                "fileAttachmentFolder",
+                data.fileAttachmentFolder
+              )
+            }
+          />
+        </div>
+        <div className="flex flex-col space-y-4">
+          <ERPCheckbox
+            id="enableVanSale"
+            checked={formState?.enableVanSale}
+            data={formState}
+            label="Enable PPOS Integration (VanSale)"
+            onChangeData={(data) =>
+              handleFieldChange("enableVanSale", data.enableVanSale)
+            }
+          />
+           {formState?.enableVanSale &&(
+            <>
+             <div className="flex justify-start items-end gap-4">
+            <ERPInput
+              id="clientPPOSBranchID"
+              value={formState.clientPPOSBranchID}
+              data={formState}
+              label="PPOS Branch ID"
+              onChangeData={(data) =>
+                handleFieldChange("clientPPOSBranchID", data.clientPPOSBranchID)
+              }
+            />
+         
+              <ERPButton title="Verify" variant="secondary" type="submit" />
+           
+          </div>
 
-//         <ERPInput
-//           id="fileAttachmentFolder"
-//           value={formState.fileAttachmentFolder}
-//           data={formState}
-//           label="Shared Folder"
-//           onChangeData={(data: string) =>
-//             handleFieldChange("fileAttachmentFolder", data)
-//           }
-//         />
-//       </div>
-//     </div>
-//   );
-// };
+          <ERPInput
+            id="vanSaleProductSerial"
+            value={formState.vanSaleProductSerial}
+            data={formState}
+            label="PPOS Product Serial"
+            onChangeData={(data) =>
+              handleFieldChange(
+                "vanSaleProductSerial",
+                data.vanSaleProductSerial
+              )
+            }
+          />
+          <ERPInput
+            id="pposEmail"
+            value={formState.pposEmail}
+            data={formState}
+            label="Shared Folder"
+            onChangeData={(data) =>
+              handleFieldChange("pposEmail", data.pposEmail)
+            }
+          />
+            </>
+           )
+           
+           }
+         
+        </div>
+      </div>
+    </div>
+  );
+};
 
-// export default TaxAndInventorySettingsForm;
+export default BranchSettingsForm;

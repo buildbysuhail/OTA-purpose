@@ -45,7 +45,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           label={t("name")}
           placeholder={t("name")}
           required={true}
-          onChangeData={(data: any) => { debugger; handleFieldChange('accGroupName', data) }}
+          onChangeData={(data: any) => {  handleFieldChange('accGroupName', data) }}
         />
         <ERPInput
           {...getFieldProps('arabicName')}

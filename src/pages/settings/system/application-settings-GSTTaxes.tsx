@@ -335,12 +335,12 @@ const ERPSettingsFormGSTTaxes = () => {
   value={formState.eInvoiceProviderType}
   data={formState}
   onChangeData={(data) =>{
-    debugger;
+    
     handleFieldChange("eInvoiceProviderType", data.eInvoiceProviderType)
   }}
   options={[
-    { value: '0', label: 'Clear Tax' },
-    { value: '1', label: 'Tax Pro' },
+    { value: 'Clear Tax', label: 'Clear Tax' },
+    { value: '1Tax Pro', label: 'Tax Pro' },
   ]}
       />
 

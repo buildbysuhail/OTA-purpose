@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
-import ERPCheckbox from '../../../components/ERPComponents/erp-checkbox';
-import ERPDataCombobox from '../../../components/ERPComponents/erp-data-combobox';
-import ERPInput from '../../../components/ERPComponents/erp-input';
-import Urls from '../../../redux/urls';
+import React, { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { getAction, postAction } from "../../../redux/slices/app-thunks";
+import Urls from "../../../redux/urls";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
 interface FormState {
-    defaultSalesAccount: string;
-    defaultSalesReturnAccount: string;
-    defaultPurchaseAccount: string;
-    defaultPurchaseReturnAccount: string;
-    billDiscountGivenLedger: string;
-    billDiscountReceivedLedger: string;
-    couponCardAccount: string;
-    defaultRoundOffAccount: string;
-    defaultAdditionalAmountAccount: string;
-    defaultBrand: string;
+    defaultSalesAccount: number;
+    defaultSalesReturnAccount: number;
+    defaultPurchaseAccount: number;
+    defaultPurchaseReturnAccount: number;
+    billDiscountGivenLedger: number;
+    billDiscountReceivedLedger: number;
+    couponCardAccount: number;
+    defaultRoundOffAccount: number;
+    defaultAdditionalAmountAccount: number;
+    defaultBrand: number;
     negativeStock: string;
     maintainWarehouse: boolean;
     priceCode: string;
@@ -26,12 +30,12 @@ interface FormState {
     updatePurchasePriceOnPurchaseTransfer: boolean;
     showCashSalesSeparateMenu: boolean;
     showNonStockItemsInSales: boolean;
-    defaultBtoAccount: string;
-    defaultBtiAccount: string;
-    serviceWarrantyInvAccounts: string;
-    serviceNonWarrantyInvAccounts: string;
-    defaultServiceSpareWarehouse: string;
-    defaultSalesReturnPayableAccount: string;
+    defaultBtoAccount: number;
+    defaultBtiAccount: number;
+    serviceWarrantyInvAccounts: number;
+    serviceNonWarrantyInvAccounts: number;
+    defaultServiceSpareWarehouse: number;
+    defaultSalesReturnPayableAccount: number;
     redeemPoints: string;
     keepUserActions: number;
     blockBillDiscount: string;
@@ -59,36 +63,36 @@ interface FormState {
 }
 
 const initialState: FormState = {
-    defaultSalesAccount: '',
-    defaultSalesReturnAccount: '',
-    defaultPurchaseAccount: '',
-    defaultPurchaseReturnAccount: '',
-    billDiscountGivenLedger: '',
-    billDiscountReceivedLedger: '',
-    couponCardAccount: '',
-    defaultRoundOffAccount: '',
-    defaultAdditionalAmountAccount: '',
-    defaultBrand: '',
-    negativeStock: '',
+    defaultSalesAccount: 0,
+    defaultSalesReturnAccount: 0,
+    defaultPurchaseAccount: 0,
+    defaultPurchaseReturnAccount: 0,
+    billDiscountGivenLedger: 0,
+    billDiscountReceivedLedger: 0,
+    couponCardAccount: 0,
+    defaultRoundOffAccount: 0,
+    defaultAdditionalAmountAccount: 0,
+    defaultBrand: 0,
+    negativeStock: "",
     maintainWarehouse: false,
-    priceCode: '',
-    barcodeLabel: '',
-    ifLessSalesRate: '',
+    priceCode: "",
+    barcodeLabel: "",
+    ifLessSalesRate: "",
     setLastSalesRateAsProductSalesRate: false,
     setLastPurchaseRateAsProductPurchaseRate: false,
     setAvgPurchaseCostWithLastPurchaseRate: false,
     updatePurchasePriceOnPurchaseTransfer: false,
     showCashSalesSeparateMenu: false,
     showNonStockItemsInSales: false,
-    defaultBtoAccount: '',
-    defaultBtiAccount: '',
-    serviceWarrantyInvAccounts: '',
-    serviceNonWarrantyInvAccounts: '',
-    defaultServiceSpareWarehouse: '',
-    defaultSalesReturnPayableAccount: '',
-    redeemPoints: '',
+    defaultBtoAccount: 0,
+    defaultBtiAccount: 0,
+    serviceWarrantyInvAccounts: 0,
+    serviceNonWarrantyInvAccounts: 0,
+    defaultServiceSpareWarehouse: 0,
+    defaultSalesReturnPayableAccount: 0,
+    redeemPoints: "",
     keepUserActions: 0,
-    blockBillDiscount: '',
+    blockBillDiscount: "",
     discountAuthorizationIfDiscountAbove: 0,
     setAuthorizationInSales: false,
     enableSalesInvoiceDraftOption: false,
@@ -112,19 +116,96 @@ const initialState: FormState = {
     mobileNumberMandatoryInSales: false,
 };
 
-const ERPSettingsForm: React.FC = () => {
-    const [formState, setFormState] = useState<FormState>(initialState);
+const InventorySettingsForm: React.FC = () => {
+    const [formState, setFormState] = useState(initialState);
+    const [formStatePrev, setFormStatePrev] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
-    const handleFieldChange = (field: keyof FormState, value: any) => {
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        loadSettings();
+    }, []);
+
+    const loadSettings = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await dispatch(
+                getAction({ apiUrl: `${Urls.application_setting}inventory` }) as any
+            ).unwrap();
+
+            if (response) {
+                setFormStatePrev(response);
+                setFormState(response);
+            }
+        } catch (error) {
+            console.error("Error loading settings:", error);
+            setError("Failed to load settings. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleFieldChange = (field: keyof typeof initialState, value: any) => {
         setFormState(prevState => ({
             ...prevState,
-            [field]: value
+            [field]: value,
         }));
     };
 
+    const handleSubmit = async () => {
+        const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+            const typedKey = key as keyof typeof initialState;
+            const currentValue = formState[typedKey];
+            const prevValue = (formStatePrev as any)[key];
+
+            if (currentValue !== prevValue) {
+                acc.push({
+                    settingsName: key,
+                    settingsValue: currentValue,
+                });
+            }
+            return acc;
+        }, [] as { settingsName: string; settingsValue: any }[]);
+
+        setIsSaving(true);
+        setError(null);
+        try {
+            const response = await dispatch(
+                postAction({
+                    apiUrl: Urls.application_setting,
+                    data: modifiedSettings,
+                }) as any
+            ).unwrap();
+            handleResponse(response);
+        } catch (error) {
+            console.error("Error saving settings:", error);
+            setError("Failed to save settings. Please try again.");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    if (loading) {
+        return <div>Loading settings...</div>;
+    }
+
+    if (error) {
+        return (
+            <div className="error-message">
+                {error}
+                <button onClick={loadSettings}>Retry</button>
+            </div>
+        );
+    }
+
+
     return (
         <div className="erp-settings-form">
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultSalesAccount"
                     value={formState.defaultSalesAccount}
@@ -155,7 +236,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultSalesReturnAccount"
                     value={formState.defaultSalesReturnAccount}
@@ -186,7 +267,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultPurchaseAccount"
                     value={formState.defaultPurchaseAccount}
@@ -217,7 +298,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultPurchaseReturnAccount"
                     value={formState.defaultPurchaseReturnAccount}
@@ -248,7 +329,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="billDiscountGivenLedger"
                     value={formState.billDiscountGivenLedger}
@@ -279,7 +360,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="billDiscountReceivedLedger"
                     value={formState.billDiscountReceivedLedger}
@@ -310,7 +391,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="couponCardAccount"
                     value={formState.couponCardAccount}
@@ -335,7 +416,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultRoundOffAccount"
                     value={formState.defaultRoundOffAccount}
@@ -361,7 +442,7 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultAdditionalAmountAccount"
                     value={formState.defaultAdditionalAmountAccount}
@@ -377,28 +458,22 @@ const ERPSettingsForm: React.FC = () => {
                     label="Default Additional Amount Account"
                 />
                 <ERPDataCombobox
+                    id="blockBillDiscount"
+                    value={formState.blockBillDiscount}
+                    data={formState}
                     field={{
                         id: "blockBillDiscount",
+                        required: false,
+                        getListUrl: Urls.data_brands,
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    id="blockBillDiscount"
+                    onChangeData={(data: any) => handleFieldChange("blockBillDiscount", data)}
                     label="Block Bill Discount"
-                    value={formState.blockBillDiscount}
-                    onChangeData={(data) => {
-                        handleFieldChange("blockBillDiscount", data.blockBillDiscount)
-                    }}
-                    options={[
-                        { value: '0', label: 'No' },
-                        { value: '1', label: 'On Pos' },
-                        { value: '2', label: 'On Standard Sales' },
-                        { value: '3', label: 'On Both' },
-                        { value: '4', label: 'If Authentication Fails' },
-                    ]}
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultBrand"
                     value={formState.defaultBrand}
@@ -424,28 +499,24 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
+                    id="negativeStock"
+                    value={formState.negativeStock}
+                    data={formState}
                     field={{
                         id: "negativeStock",
+                        required: false,
+                        getListUrl: Urls.data_brands,
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    id="negativeStock"
+                    onChangeData={(data: any) => handleFieldChange("negativeStock", data)}
                     label="Negative Stock"
-                    value={formState.negativeStock}
-                    onChangeData={(data) => {
-                        handleFieldChange("negativeStock", data.negativeStock)
-                    }}
-                    options={[
-                        { value: '0', label: 'Block' },
-                        { value: '1', label: 'Warm' },
-                        { value: '2', label: 'Ignore' },
-                    ]}
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row  grid grid-cols-3 gap-3 my-3">
                 <ERPCheckbox
                     id="maintainWarehouse"
                     checked={formState.maintainWarehouse}
@@ -453,9 +524,23 @@ const ERPSettingsForm: React.FC = () => {
                     label="Maintain Warehouse"
                     onChangeData={(data: any) => handleFieldChange("maintainWarehouse", data)}
                 />
+                <ERPCheckbox
+                    id="setAuthorizationInSales"
+                    checked={formState.setAuthorizationInSales}
+                    data={formState}
+                    label="Set Authorization in Sales"
+                    onChangeData={(data: any) => handleFieldChange("setAuthorizationInSales", data)}
+                />
+                <ERPCheckbox
+                    id="carryForwardPurchaseOrderQtyToPurchase"
+                    checked={formState.carryForwardPurchaseOrderQtyToPurchase}
+                    data={formState}
+                    label="Carry Forward Purchase Order Qty To Purchase"
+                    onChangeData={(data: any) => handleFieldChange("carryForwardPurchaseOrderQtyToPurchase", data)}
+                />
             </div>
 
-            <div className="form-row">
+            <div className="form-row  grid grid-cols-3 gap-3 my-3">
                 <ERPInput
                     id="priceCode"
                     value={formState.priceCode.toString()}
@@ -465,9 +550,23 @@ const ERPSettingsForm: React.FC = () => {
                     type="Password"
                     onChangeData={(data: any) => handleFieldChange("priceCode", parseFloat(data))}
                 />
+                <ERPCheckbox
+                    id="enableSalesInvoiceDraftOption"
+                    checked={formState.enableSalesInvoiceDraftOption}
+                    data={formState}
+                    label="Enable Sales Invoice Draft Option"
+                    onChangeData={(data: any) => handleFieldChange("enableSalesInvoiceDraftOption", data)}
+                />
+                <ERPCheckbox
+                    id="useCostForStockTransferToBranch"
+                    checked={formState.useCostForStockTransferToBranch}
+                    data={formState}
+                    label="Use Cost For Stock Transfer To Branch"
+                    onChangeData={(data: any) => handleFieldChange("useCostForStockTransferToBranch", data)}
+                />
             </div>
 
-            <div className="form-row">
+            <div className="form-row   grid grid-cols-3 gap-3 my-3">
                 <ERPDataCombobox
                     id="barcodeLabel"
                     value={formState.barcodeLabel}
@@ -482,112 +581,6 @@ const ERPSettingsForm: React.FC = () => {
                     onChangeData={(data: any) => handleFieldChange("barcodeLabel", data)}
                     label="Barcode Label"
                 />
-            </div>
-
-            <div className="form-row">
-                <ERPDataCombobox
-                    field={{
-                        id: "ifLessSalesRate",
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    id="ifLessSalesRate"
-                    label="If Less Sales Rate"
-                    value={formState.ifLessSalesRate}
-                    onChangeData={(data) => {
-                        handleFieldChange("ifLessSalesRate", data.ifLessSalesRate)
-                    }}
-                    options={[
-                        { value: '0', label: 'No' },
-                        { value: '1', label: 'On Pos' },
-                        { value: '2', label: 'On Standard Sales' },
-                        { value: '3', label: 'On Both' },
-                        { value: '4', label: 'If Authentication Fails' },
-                    ]}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="setLastSalesRateAsProductSalesRate"
-                    checked={formState.setLastSalesRateAsProductSalesRate}
-                    data={formState}
-                    label="Set Last Sales Rate As Product Sales Rate"
-                    onChangeData={(data: any) => handleFieldChange("setLastSalesRateAsProductSalesRate", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="setLastPurchaseRateAsProductPurchaseRate"
-                    checked={formState.setLastPurchaseRateAsProductPurchaseRate}
-                    data={formState}
-                    label="Set Last Purchase Rate As Product Purchase Rate"
-                    onChangeData={(data: any) => handleFieldChange("setLastPurchaseRateAsProductPurchaseRate", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="setAvgPurchaseCostWithLastPurchaseRate"
-                    checked={formState.setAvgPurchaseCostWithLastPurchaseRate}
-                    data={formState}
-                    label="Set Avg. Purchase Cost with Last Purchase Rate"
-                    onChangeData={(data: any) => handleFieldChange("setAvgPurchaseCostWithLastPurchaseRate", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="updatePurchasePriceOnPurchaseTransfer"
-                    checked={formState.updatePurchasePriceOnPurchaseTransfer}
-                    data={formState}
-                    label="Update Purchase Price On Purchase Transfer"
-                    onChangeData={(data: any) => handleFieldChange("updatePurchasePriceOnPurchaseTransfer", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="showCashSalesSeparateMenu"
-                    checked={formState.showCashSalesSeparateMenu}
-                    data={formState}
-                    label="Show Cash Sales Separate Menu"
-                    onChangeData={(data: any) => handleFieldChange("showCashSalesSeparateMenu", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="showNonStockItemsInSales"
-                    checked={formState.showNonStockItemsInSales}
-                    data={formState}
-                    label="Show Non Stock Items in Sales"
-                    onChangeData={(data: any) => handleFieldChange("showNonStockItemsInSales", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="setAuthorizationInSales"
-                    checked={formState.setAuthorizationInSales}
-                    data={formState}
-                    label="Set Authorization in Sales"
-                    onChangeData={(data: any) => handleFieldChange("setAuthorizationInSales", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="enableSalesInvoiceDraftOption"
-                    checked={formState.enableSalesInvoiceDraftOption}
-                    data={formState}
-                    label="Enable Sales Invoice Draft Option"
-                    onChangeData={(data: any) => handleFieldChange("enableSalesInvoiceDraftOption", data)}
-                />
-            </div>
-
-            <div className="form-row">
                 <ERPCheckbox
                     id="setProductCostAsDeclarationPrice"
                     checked={formState.setProductCostAsDeclarationPrice}
@@ -595,99 +588,6 @@ const ERPSettingsForm: React.FC = () => {
                     label="Set Product Cost as Declaration Price"
                     onChangeData={(data: any) => handleFieldChange("setProductCostAsDeclarationPrice", data)}
                 />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="setProductCostWithTaxAmount"
-                    checked={formState.setProductCostWithTaxAmount}
-                    data={formState}
-                    label="Set Product Cost With TAX Amount"
-                    onChangeData={(data: any) => handleFieldChange("setProductCostWithTaxAmount", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="blockNonStockSerialSelling"
-                    checked={formState.blockNonStockSerialSelling}
-                    data={formState}
-                    label="Block Non Stock Serial Selling"
-                    onChangeData={(data: any) => handleFieldChange("blockNonStockSerialSelling", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="showProductDuplicationMessage"
-                    checked={formState.showProductDuplicationMessage}
-                    data={formState}
-                    label="Show Product Duplication Message"
-                    onChangeData={(data: any) => handleFieldChange("showProductDuplicationMessage", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="blockHoldItems"
-                    checked={formState.blockHoldItems}
-                    data={formState}
-                    label="Block Hold Items"
-                    onChangeData={(data: any) => handleFieldChange("blockHoldItems", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="printAfterSave"
-                    checked={formState.printAfterSave}
-                    data={formState}
-                    label="Print After Save"
-                    onChangeData={(data: any) => handleFieldChange("printAfterSave", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="needPoApprovalForPrintout"
-                    checked={formState.needPoApprovalForPrintout}
-                    data={formState}
-                    label="Need PO Approval For Printout"
-                    onChangeData={(data: any) => handleFieldChange("needPoApprovalForPrintout", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="enableAddStockAdjustment"
-                    checked={formState.enableAddStockAdjustment}
-                    data={formState}
-                    label="Enable Add Stock Adjustment"
-                    onChangeData={(data: any) => handleFieldChange("enableAddStockAdjustment", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="carryForwardPurchaseOrderQtyToPurchase"
-                    checked={formState.carryForwardPurchaseOrderQtyToPurchase}
-                    data={formState}
-                    label="Carry Forward Purchase Order Qty To Purchase"
-                    onChangeData={(data: any) => handleFieldChange("carryForwardPurchaseOrderQtyToPurchase", data)}
-                />
-            </div>
-
-            <div className="form-row">
-                <ERPCheckbox
-                    id="useCostForStockTransferToBranch"
-                    checked={formState.useCostForStockTransferToBranch}
-                    data={formState}
-                    label="Use Cost For Stock Transfer To Branch"
-                    onChangeData={(data: any) => handleFieldChange("useCostForStockTransferToBranch", data)}
-                />
-            </div>
-
-            <div className="form-row">
                 <ERPCheckbox
                     id="showAccountReceivableInPurchase"
                     checked={formState.showAccountReceivableInPurchase}
@@ -697,7 +597,28 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-3 gap-3 my-3">
+                <ERPDataCombobox
+                    id="ifLessSalesRate"
+                    value={formState.ifLessSalesRate}
+                    data={formState}
+                    field={{
+                        id: "ifLessSalesRate",
+                        required: false,
+                        getListUrl: Urls.data_brands,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data: any) => handleFieldChange("ifLessSalesRate", data)}
+                    label="If Less Sales Rate"
+                />
+                <ERPCheckbox
+                    id="setProductCostWithTaxAmount"
+                    checked={formState.setProductCostWithTaxAmount}
+                    data={formState}
+                    label="Set Product Cost With TAX Amount"
+                    onChangeData={(data: any) => handleFieldChange("setProductCostWithTaxAmount", data)}
+                />
                 <ERPCheckbox
                     id="showPrinterSelection"
                     checked={formState.showPrinterSelection}
@@ -707,7 +628,22 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row  grid grid-cols-3 gap-3 my-3">
+
+                <ERPCheckbox
+                    id="setLastSalesRateAsProductSalesRate"
+                    checked={formState.setLastSalesRateAsProductSalesRate}
+                    data={formState}
+                    label="Set Last Sales Rate As Product Sales Rate"
+                    onChangeData={(data: any) => handleFieldChange("setLastSalesRateAsProductSalesRate", data)}
+                />
+                <ERPCheckbox
+                    id="blockNonStockSerialSelling"
+                    checked={formState.blockNonStockSerialSelling}
+                    data={formState}
+                    label="Block Non Stock Serial Selling"
+                    onChangeData={(data: any) => handleFieldChange("blockNonStockSerialSelling", data)}
+                />
                 <ERPCheckbox
                     id="btoUsingMsp"
                     checked={formState.btoUsingMsp}
@@ -717,7 +653,21 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-3 gap-3 my-3">
+                <ERPCheckbox
+                    id="setLastPurchaseRateAsProductPurchaseRate"
+                    checked={formState.setLastPurchaseRateAsProductPurchaseRate}
+                    data={formState}
+                    label="Set Last Purchase Rate As Product Purchase Rate"
+                    onChangeData={(data: any) => handleFieldChange("setLastPurchaseRateAsProductPurchaseRate", data)}
+                />
+                <ERPCheckbox
+                    id="showProductDuplicationMessage"
+                    checked={formState.showProductDuplicationMessage}
+                    data={formState}
+                    label="Show Product Duplication Message"
+                    onChangeData={(data: any) => handleFieldChange("showProductDuplicationMessage", data)}
+                />
                 <ERPCheckbox
                     id="isReferenceNumberMandatoryInPurchase"
                     checked={formState.isReferenceNumberMandatoryInPurchase}
@@ -727,7 +677,21 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row  grid grid-cols-3 gap-3 my-3">
+                <ERPCheckbox
+                    id="setAvgPurchaseCostWithLastPurchaseRate"
+                    checked={formState.setAvgPurchaseCostWithLastPurchaseRate}
+                    data={formState}
+                    label="Set Avg. Purchase Cost with Last Purchase Rate"
+                    onChangeData={(data: any) => handleFieldChange("setAvgPurchaseCostWithLastPurchaseRate", data)}
+                />
+                <ERPCheckbox
+                    id="blockHoldItems"
+                    checked={formState.blockHoldItems}
+                    data={formState}
+                    label="Block Hold Items"
+                    onChangeData={(data: any) => handleFieldChange("blockHoldItems", data)}
+                />
                 <ERPCheckbox
                     id="showTransitModeStockTransferAlert"
                     checked={formState.showTransitModeStockTransferAlert}
@@ -737,7 +701,21 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-3 gap-3 my-3">
+                <ERPCheckbox
+                    id="updatePurchasePriceOnPurchaseTransfer"
+                    checked={formState.updatePurchasePriceOnPurchaseTransfer}
+                    data={formState}
+                    label="Update Purchase Price On Purchase Transfer"
+                    onChangeData={(data: any) => handleFieldChange("updatePurchasePriceOnPurchaseTransfer", data)}
+                />
+                <ERPCheckbox
+                    id="printAfterSave"
+                    checked={formState.printAfterSave}
+                    data={formState}
+                    label="Print After Save"
+                    onChangeData={(data: any) => handleFieldChange("printAfterSave", data)}
+                />
                 <ERPCheckbox
                     id="showAccountPayableInSales"
                     checked={formState.showAccountPayableInSales}
@@ -747,7 +725,21 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-3 gap-3 my-3">
+                <ERPCheckbox
+                    id="showCashSalesSeparateMenu"
+                    checked={formState.showCashSalesSeparateMenu}
+                    data={formState}
+                    label="Show Cash Sales Separate Menu"
+                    onChangeData={(data: any) => handleFieldChange("showCashSalesSeparateMenu", data)}
+                />
+                <ERPCheckbox
+                    id="needPoApprovalForPrintout"
+                    checked={formState.needPoApprovalForPrintout}
+                    data={formState}
+                    label="Need PO Approval For Printout"
+                    onChangeData={(data: any) => handleFieldChange("needPoApprovalForPrintout", data)}
+                />
                 <ERPCheckbox
                     id="holdSalesMan"
                     checked={formState.holdSalesMan}
@@ -757,7 +749,21 @@ const ERPSettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row">
+            <div className="form-row grid grid-cols-3 gap-3 my-3">
+                <ERPCheckbox
+                    id="showNonStockItemsInSales"
+                    checked={formState.showNonStockItemsInSales}
+                    data={formState}
+                    label="Show Non Stock Items in Sales"
+                    onChangeData={(data: any) => handleFieldChange("showNonStockItemsInSales", data)}
+                />
+                <ERPCheckbox
+                    id="enableAddStockAdjustment"
+                    checked={formState.enableAddStockAdjustment}
+                    data={formState}
+                    label="Enable Add Stock Adjustment"
+                    onChangeData={(data: any) => handleFieldChange("enableAddStockAdjustment", data)}
+                />
                 <ERPCheckbox
                     id="mobileNumberMandatoryInSales"
                     checked={formState.mobileNumberMandatoryInSales}
@@ -766,8 +772,18 @@ const ERPSettingsForm: React.FC = () => {
                     onChangeData={(data: any) => handleFieldChange("mobileNumberMandatoryInSales", data)}
                 />
             </div>
+            <div className="my-4 flex items-center justify-center">
+                <button
+                    onClick={handleSubmit}
+                    disabled={isSaving}
+                    type="button"
+                    className=""
+                >
+                    {isSaving ? "Saving..." : "Save Changes"}
+                </button>
+            </div>
         </div>
     );
 };
 
-export default ERPSettingsForm;
+export default InventorySettingsForm;

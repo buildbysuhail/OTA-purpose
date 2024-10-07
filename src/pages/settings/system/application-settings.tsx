@@ -8,6 +8,7 @@ import ApplicationSettingsAccounts from "./application-settings-accounts";
 import MiscellaneousSettingsForm from "./application-settings-miscellaneous";
 import ApplicationSettingsProduct from "./application-settings-product";
 import InventorySettingsForm from "./application-settings-inventory";
+import ERPSettingsFormGSTTaxes from "./application-settings-GSTTaxes";
 
 
 
@@ -20,7 +21,7 @@ const ApplicationSettings = ({ }) => {
   const [tempData, setTempData] = useState([]);
 
   const [settingsGroup, setSettingsGroup] = useState<ApplicationSettingsIds>(
-    (searchParams?.get("settings_group")! as ApplicationSettingsIds) ?? "main"
+    (searchParams?.get("settings_group_id") as ApplicationSettingsIds) ?? "main"
   );
 
   /* ########################################################################################### */
@@ -28,6 +29,8 @@ const ApplicationSettings = ({ }) => {
   
   /* ########################################################################################### */
 
+ debugger;
+ console.log(settingsGroup);
  
 
   useEffect(() => {
@@ -61,7 +64,9 @@ const ApplicationSettings = ({ }) => {
           </div>
 
           <div className="flex-1 h-full">
+            <h1>{settingsGroup}</h1>
           <div className="p-6 bg-white rounded-lg shadow-md">
+          
           {/* <ApplicationSettingsAccounts/> */}
           {settingsGroup ==  "main" 
           ? <ERPSettingsFormMain/>
@@ -73,6 +78,8 @@ const ApplicationSettings = ({ }) => {
           ?<MiscellaneousSettingsForm/>
           :settingsGroup == "inventory"
           ?<InventorySettingsForm/>
+          :settingsGroup == "gst"
+          ?<ERPSettingsFormGSTTaxes/>
           :null
                     }
 

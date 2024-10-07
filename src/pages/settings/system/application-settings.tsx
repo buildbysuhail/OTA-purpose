@@ -8,6 +8,7 @@ import ApplicationSettingsAccounts from "./application-settings-accounts";
 import MiscellaneousSettingsForm from "./application-settings-miscellaneous";
 import ApplicationSettingsProduct from "./application-settings-product";
 import InventorySettingsForm from "./application-settings-inventory";
+import ERPSettingsFormGSTTaxes from "./application-settings-GSTTaxes";
 
 
 
@@ -73,8 +74,8 @@ const ApplicationSettings = ({ }) => {
           ?<MiscellaneousSettingsForm/>
           :settingsGroup == "inventory"
           ?<InventorySettingsForm/>
-          :settingsGroup == "inventory"
-          ?<InventorySettingsForm/>
+          :settingsGroup == "gst"
+          ?<ERPSettingsFormGSTTaxes/>
           :null
                     }
 

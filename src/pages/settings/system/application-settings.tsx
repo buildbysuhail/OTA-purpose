@@ -56,7 +56,7 @@ const ApplicationSettings = ({ }) => {
 
           <div className="flex-1 h-full">
           <div className="p-6 bg-white rounded-lg shadow-md">
-          <ApplicationSettingsAccounts/>
+          <ERPSettingsFormMain/>
     </div>
           </div>
         </div>

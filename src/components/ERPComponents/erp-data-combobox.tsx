@@ -122,7 +122,8 @@ export default function ERPDataCombobox({
   }, []);
   const loadData = async () => {
     setLoading(true);
-    let _items = options ? options : await getAction({ apiUrl: field?.getListUrl });
+    var parm = field?.params ? { apiUrl: field?.getListUrl,params: field?.params } : { apiUrl: field?.getListUrl};
+    let _items = options ? options : await getAction(parm);
 debugger;
     let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];
 

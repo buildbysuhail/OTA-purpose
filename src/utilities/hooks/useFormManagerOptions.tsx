@@ -21,6 +21,7 @@ interface UseFormManagerOptions {
   onError?: (error: any) => void;
   key?: string;
   method?: ActionType;
+  loadDataRequired?: boolean;
   useApiClient?: boolean;
   initialData?: any;
 }
@@ -39,6 +40,7 @@ export function useFormManager<T>({
   onError,
   key,
   method,
+  loadDataRequired = true,
   useApiClient = false,
   initialData,
 }: UseFormManagerOptions) {
@@ -85,8 +87,9 @@ export function useFormManager<T>({
     if (useApiClient) {
       try {
         let response;
-        if (isEdit) {
-          response = await apiClient.getAsync(`${url}${key}`);
+        if (isEdit || (method != undefined && method == ActionType.POST && loadDataRequired)) {
+          let par = key != undefined && key != null && key != "" ? `${url}${key}` : `${url}`
+          response = await apiClient.getAsync(par);
         } else {
           response = initialData || {};
         }

@@ -9,6 +9,7 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 export interface FinancialYearData {
   dateFrom: string;
@@ -108,22 +109,15 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("openingStockValue", data)}
         />
-
-        <div className="w-full">
-          <label htmlFor="fStatus" className="block text-xs text-gray-700">
-            {t("status")}
-          </label>
-          <select
-            className="block w-full px-3 py-1 bg-white border border-gray-300 shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            {...getFieldProps("fStatus")}
-            onChange={(e) => handleFieldChange("fStatus", e.target.value)}
-          >
-            <option value="" disabled>{t("select_status")}</option>
-            <option value="Active">{t("active")}</option>
-            <option value="Inactive">{t("inactive")}</option>
-            <option value="Progress">{t("progress")}</option>
-          </select>
-        </div>
+        <ERPDataCombobox
+          {...getFieldProps("fStatus")}
+          onChange={(data: any) => handleFieldChange("fStatus", data)}
+          options={[
+            { value: 'Active', label: 'active' },
+            { value: 'Inactive', label: 'inactive' },
+            { value: 'Progress', label: 'progress' },
+          ]}
+        />
 
         <ERPCheckbox
           {...getFieldProps('visibleOnStartUp')}

@@ -178,7 +178,6 @@ const ERPSettingsFormMain = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Pageheader><p>Main</p></Pageheader>
         <div className="grid grid-cols-5 gap-6">
           <ERPDataCombobox
           id = "currency"

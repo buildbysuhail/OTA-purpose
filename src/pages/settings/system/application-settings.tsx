@@ -57,7 +57,7 @@ const ApplicationSettings = ({ }) => {
                     setSearchParams({ settings_group_id: settings?.settings_group_id });
                     setSettingsGroup(settings?.settings_group_id);
                   }}
-                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${searchParams?.get("settings_group") === settings?.settings_group_id ? " bg-gray-100" : "hover:bg-gray-50"
+                  className={`cursor-pointer  flex px-5 p-2  first:border-t  gap-2 items-center ${settingsGroup === settings?.settings_group_id ? " bg-primary" : "hover:bg-gray-50"
                     }`}
                 >
                   <div>
@@ -70,7 +70,7 @@ const ApplicationSettings = ({ }) => {
           </div>
 
           <div className="flex-1 h-full">
-            <h1>{settingsGroup}</h1>
+            {/* <h1>{settingsGroup}</h1> */}
           <div className="p-6 bg-white rounded-lg shadow-md">
           
           {/* <ApplicationSettingsAccounts/> */}

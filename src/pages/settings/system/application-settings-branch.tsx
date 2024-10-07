@@ -139,7 +139,6 @@ const BranchSettingsForm: React.FC = () => {
   return (
     <div className="w-full max-w-4xl">
       <div className="grid grid-cols-3 gap-6 mb-4">
-        <div className="flex flex-col space-y-4">
           {/* Left Column */}
           <ERPCheckbox
             id="maintainTax"
@@ -220,8 +219,7 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-        </div>
-        <div className="flex flex-col  space-y-4">
+       
           <ERPDataCombobox
             id="countryName"
             value={formState.countryName}
@@ -294,10 +292,8 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-        </div>
-
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-start gap-3">
+       
+         
             {formState?.maintainTax && (
               <ERPCheckbox
                 id="maintainKSA_EInvoice"
@@ -325,7 +321,7 @@ const BranchSettingsForm: React.FC = () => {
                 )
               }
             />
-          </div>
+       
 
           <ERPCheckbox
             id="apply_KSA_EInvoice_Validation_Rules"
@@ -378,9 +374,9 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-        </div>
-      </div>
-      <div className="flex justify-start items-start gap-6 mb-4">
+      
+     
+   
         <ERPCheckbox
           id="maintainSynchronization"
           checked={formState?.maintainSynchronization}
@@ -393,7 +389,7 @@ const BranchSettingsForm: React.FC = () => {
             )
           }
         />
-        <div className="grid grid-cols-2 gap-5">
+       
           {formState?.maintainSynchronization && (
             <>
               <ERPDataCombobox
@@ -457,11 +453,8 @@ const BranchSettingsForm: React.FC = () => {
               />
             </>
           )}
-        </div>
-      </div>
    
-      <div className="grid grid-cols-2 gap-6">
-        <div className="flex flex-col space-y-4">
+     
           <ERPCheckbox
             id="showBTINotification"
             checked={formState.showBTINotification}
@@ -551,8 +544,7 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-        </div>
-        <div className="flex flex-col space-y-4">
+     
           <ERPCheckbox
             id="enableVanSale"
             checked={formState?.enableVanSale}
@@ -564,7 +556,7 @@ const BranchSettingsForm: React.FC = () => {
           />
            {formState?.enableVanSale &&(
             <>
-             <div className="flex justify-start items-end gap-4">
+            
             <ERPInput
               id="clientPPOSBranchID"
               value={formState.clientPPOSBranchID}
@@ -577,7 +569,7 @@ const BranchSettingsForm: React.FC = () => {
          
               <ERPButton title="Verify" variant="secondary" type="submit" />
            
-          </div>
+         
 
           <ERPInput
             id="vanSaleProductSerial"
@@ -600,14 +592,25 @@ const BranchSettingsForm: React.FC = () => {
               handleFieldChange("pposEmail", data.pposEmail)
             }
           />
+          
             </>
+
+
+
            )
            
            }
          
         </div>
+        <div className="flex justify-end">
+          <ERPButton
+            title="Save Settings"
+            variant="primary"
+            type="submit"
+          />
+        </div>
       </div>
-    </div>
+   
   );
 };
 

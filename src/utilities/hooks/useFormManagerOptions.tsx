@@ -45,6 +45,7 @@ export function useFormManager<T>({
   const location = useLocation();
   const appDispatch = useAppDispatch();
   const apiClient = new APIClient();
+  debugger;
 
   const queryParams = new URLSearchParams(location.search);
   key =

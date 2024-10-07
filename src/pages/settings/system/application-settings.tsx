@@ -35,7 +35,7 @@ const ApplicationSettings = ({ }) => {
   
   /* ########################################################################################### */
 
- debugger;
+ 
  console.log(settingsGroup);
  
 

@@ -47,7 +47,7 @@ export function useFormManager<T>({
   const location = useLocation();
   const appDispatch = useAppDispatch();
   const apiClient = new APIClient();
-  debugger;
+  
 
   const queryParams = new URLSearchParams(location.search);
   key =
@@ -83,7 +83,7 @@ export function useFormManager<T>({
 
   const loadFormData = useCallback(async () => {
     // setIsLoading(true);
-    debugger;
+    
     if (useApiClient) {
       try {
         let response;
@@ -150,7 +150,7 @@ export function useFormManager<T>({
           response = await apiClient.put(`${url}`, formState?.data);
         } else {
           response = await apiClient.post(url, formState?.data);
-        }debugger;
+        }
         handleResponse(
           response,
           () => {

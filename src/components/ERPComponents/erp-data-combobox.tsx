@@ -119,18 +119,18 @@ export default function ERPDataCombobox({
   const [hasValue, setHasValue] = useState<boolean>(false);
   const [initial, setInitial] = useState<any>(initialValue);
   useEffect(() => {
-    debugger;
+    
     if (!disabledApiCall) {
       loadData();
     }
   }, []);
   const loadData = async () => {
-    debugger;
+    
     setLoading(true);
-    debugger;
+    
     let _items = options ? options : await api.getAsync(field?.getListUrl,field?.params ? field?.params: '' );
 
-    debugger;
+    
     let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];
 
     _options = _options?.filter(
@@ -218,7 +218,7 @@ export default function ERPDataCombobox({
         disabled={disableCombobox()}
         value={initial}
         onChange={(value) => {
-          debugger;
+          
           setInitial(value)
           onChange && onChange(value);
           onChangeData &&

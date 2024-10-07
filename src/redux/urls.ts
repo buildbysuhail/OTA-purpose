@@ -53,6 +53,8 @@ const Urls = {
   data_SuspenseAccount: "/Accounts/Data/SuspenseAccount",
   data_BankAccounts: "/Accounts/Data/BankAccounts",
   data_SalesAccount: "/Accounts/Data/SalesAccount",
+  data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
+  data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
 
 
   // Dropdown - inventory

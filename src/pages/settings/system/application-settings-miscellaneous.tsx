@@ -271,7 +271,15 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </span>
         
         </div>
+        
       </div>
+      <div className="flex justify-end">
+          <ERPButton
+            title="Save Settings"
+            variant="primary"
+            type="submit"
+          />
+        </div>
     </>
   );
 };

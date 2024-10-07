@@ -8,6 +8,8 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../enums/ledger-types";
+import { APIClient } from "../../../helpers/api-client";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
 
 interface FormState {
     defaultSalesAccount: number;
@@ -62,7 +64,8 @@ interface FormState {
     holdSalesMan: boolean;
     mobileNumberMandatoryInSales: boolean;
 }
-
+const api = new APIClient();
+const InventorySettingsForm = () => {
 const initialState: FormState = {
     defaultSalesAccount: 0,
     defaultSalesReturnAccount: 0,
@@ -117,96 +120,161 @@ const initialState: FormState = {
     mobileNumberMandatoryInSales: false,
 };
 
-const InventorySettingsForm: React.FC = () => {
-    const [formState, setFormState] = useState(initialState);
-    const [formStatePrev, setFormStatePrev] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+// const InventorySettingsForm: React.FC = () => {
+    // const [formState, setFormState] = useState(initialState);
+    // const [formStatePrev, setFormStatePrev] = useState({});
+    // const [loading, setLoading] = useState(true);
+    // const [isSaving, setIsSaving] = useState(false);
+    // const [error, setError] = useState<string | null>(null);
+
+    // const dispatch = useAppDispatch();
+
+ 
 
     const dispatch = useAppDispatch();
-
+    const [formState, setFormState] = useState<FormState>(initialState);
+    const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+    const [loading, setLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+    // const [error, setError] = useState<string | null>(null);
+  
     useEffect(() => {
-        loadSettings();
+      loadSettings();
     }, []);
 
+
+    // const loadSettings = async () => {
+    //     setLoading(true);
+    //     setError(null);
+    //     try {
+    //         const response = await dispatch(
+    //             getAction({ apiUrl: `${Urls.application_setting}inventory` }) as any
+    //         ).unwrap();
+
+    //         if (response) {
+    //             setFormStatePrev(response);
+    //             setFormState(response);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error loading settings:", error);
+    //         setError("Failed to load settings. Please try again.");
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     const loadSettings = async () => {
         setLoading(true);
-        setError(null);
         try {
-            const response = await dispatch(
-                getAction({ apiUrl: `${Urls.application_setting}inventory` }) as any
-            ).unwrap();
-
-            if (response) {
-                setFormStatePrev(response);
-                setFormState(response);
-            }
+        const response = await api.getAsync(`${Urls.application_settings}inventory`)
+        debugger;
+        console.log(formState);
+        setFormStatePrev(response);
+          setFormState(response);
         } catch (error) {
-            console.error("Error loading settings:", error);
-            setError("Failed to load settings. Please try again.");
+          console.error('Error loading settings:', error);
         } finally {
-            setLoading(false);
+          setLoading(false);
         }
-    };
-
-    const handleFieldChange = (field: keyof typeof initialState, value: any) => {
-        setFormState(prevState => ({
-            ...prevState,
-            [field]: value,
+      };
+    // const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+    //     setFormState(prevState => ({
+    //         ...prevState,
+    //         [field]: value,
+    //     }));
+    // };
+    const handleFieldChange = ((settingName: any, value: any) => {
+        setFormState((prevSettings = {} as FormState) => ({
+          ...prevSettings,
+          [settingName]: value ?? ''
         }));
-    };
-
-    const handleSubmit = async () => {
-        const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+      });
+      const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsSaving(true);
+        try {
+          const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+            // const currentValue = formState[key as keyof formState];
+            // const prevValue = formStatePrev[key as keyof formState];
             const typedKey = key as keyof typeof initialState;
             const currentValue = formState[typedKey];
-            const prevValue = (formStatePrev as any)[key];
-
+                    const prevValue = (formStatePrev as any)[key];
+           
             if (currentValue !== prevValue) {
-                acc.push({
-                    settingsName: key,
-                    settingsValue: currentValue,
-                });
+              debugger;
+              acc.push({
+                settingsName: key,
+                settingsValue: currentValue.toString()
+              });
             }
             return acc;
-        }, [] as { settingsName: string; settingsValue: any }[]);
-
-        setIsSaving(true);
-        setError(null);
-        try {
-            const response = await dispatch(
-                postAction({
-                    apiUrl: Urls.application_setting,
-                    data: modifiedSettings,
-                }) as any
-            ).unwrap();
-            handleResponse(response);
+          }, [] as { settingsName: string; settingsValue: string }[]);
+          console.log(modifiedSettings);
+          
+          const response = await api.put(Urls.application_settings,{type: 'inventory', updateList:  modifiedSettings}) as  any
+          debugger;
+          if(response!=undefined && response!=null && response.isOk==true)
+            {
+              ERPToast.showWith(response?.message, "success");
+            }
+            else{
+              ERPToast.showWith(response?.message,"warning")
+            }
         } catch (error) {
-            console.error("Error saving settings:", error);
-            setError("Failed to save settings. Please try again.");
+          console.error('Error saving settings:', error);
         } finally {
-            setIsSaving(false);
+          setIsSaving(false);
         }
-    };
+      };
+    // const handleSubmit = async () => {
+    //     const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+    //         const typedKey = key as keyof typeof initialState;
+    //         const currentValue = formState[typedKey];
+    //         const prevValue = (formStatePrev as any)[key];
 
-    if (loading) {
-        return <div>Loading settings...</div>;
-    }
+    //         if (currentValue !== prevValue) {
+    //             acc.push({
+    //                 settingsName: key,
+    //                 settingsValue: currentValue,
+    //             });
+    //         }
+    //         return acc;
+    //     }, [] as { settingsName: string; settingsValue: any }[]);
 
-    if (error) {
-        return (
-            <div className="error-message">
-                {error}
-                <button onClick={loadSettings}>Retry</button>
-            </div>
-        );
-    }
+    //     setIsSaving(true);
+    //     setError(null);
+    //     try {
+    //         const response = await dispatch(
+    //             postAction({
+    //                 apiUrl: Urls.application_setting,
+    //                 data: modifiedSettings,
+    //             }) as any
+    //         ).unwrap();
+    //         handleResponse(response);
+    //     } catch (error) {
+    //         console.error("Error saving settings:", error);
+    //         setError("Failed to save settings. Please try again.");
+    //     } finally {
+    //         setIsSaving(false);
+    //     }
+    // };
+
+    // if (loading) {
+    //     return <div>Loading settings...</div>;
+    // }
+
+    // if (error) {
+    //     return (
+    //         <div className="error-message">
+    //             {error}
+    //             <button onClick={loadSettings}>Retry</button>
+    //         </div>
+    //     );
+    // }
 
 
     return (
         <div className="erp-settings-form">
-            <div className="form-row grid grid-cols-5 gap-3 my-3">
+            <div className="form-row grid grid-cols-4 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultSalesAccount"
                     value={formState.defaultSalesAccount}
@@ -219,7 +287,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultSalesAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultSalesAccount", data.defaultSalesAccount)}
                     label="Default Sales Account"
                 />
                 <ERPDataCombobox
@@ -234,12 +302,10 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultBtoAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultBtoAccount", data.defaultBtoAccount)}
                     label="Default BTO Account"
                 />
-            </div>
 
-            <div className="form-row grid grid-cols-5 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultSalesReturnAccount"
                     value={formState.defaultSalesReturnAccount}
@@ -252,7 +318,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultSalesReturnAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultSalesReturnAccount", data.defaultSalesReturnAccount)}
                     label="Default Sales Return Account"
                 />
                 <ERPDataCombobox
@@ -267,12 +333,10 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultBtiAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultBtiAccount", data.defaultBtiAccount)}
                     label="Default BTI Account"
                 />
-            </div>
 
-            <div className="form-row grid grid-cols-5 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultPurchaseAccount"
                     value={formState.defaultPurchaseAccount}
@@ -285,7 +349,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultPurchaseAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultPurchaseAccount", data.defaultPurchaseAccount)}
                     label="Default Purchase Account"
                 />
                 <ERPDataCombobox
@@ -300,12 +364,10 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("serviceWarrantyInvAccounts", data)}
+                    onChangeData={(data: any) => handleFieldChange("serviceWarrantyInvAccounts", data.serviceWarrantyInvAccounts)}
                     label="Service Warranty Inv Accounts"
                 />
-            </div>
 
-            <div className="form-row grid grid-cols-5 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultPurchaseReturnAccount"
                     value={formState.defaultPurchaseReturnAccount}
@@ -318,7 +380,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultPurchaseReturnAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultPurchaseReturnAccount", data.defaultPurchaseReturnAccount)}
                     label="Default Purchase Return Account"
                 />
                 <ERPDataCombobox
@@ -333,12 +395,10 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("serviceNonWarrantyInvAccounts", data)}
+                    onChangeData={(data: any) => handleFieldChange("serviceNonWarrantyInvAccounts", data.serviceNonWarrantyInvAccounts)}
                     label="Service Non Warranty Inv Accounts"
                 />
-            </div>
 
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="billDiscountGivenLedger"
                     value={formState.billDiscountGivenLedger}
@@ -351,7 +411,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("billDiscountGivenLedger", data)}
+                    onChangeData={(data: any) => handleFieldChange("billDiscountGivenLedger", data.billDiscountGivenLedger)}
                     label="Bill Discount Given Ledger"
                 />
                 <ERPDataCombobox
@@ -365,12 +425,10 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultServiceSpareWarehouse", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultServiceSpareWarehouse", data.defaultServiceSpareWarehouse)}
                     label="Default Service Spare Warehouse"
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
+ 
                 <ERPDataCombobox
                     id="billDiscountReceivedLedger"
                     value={formState.billDiscountReceivedLedger}
@@ -383,7 +441,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("billDiscountReceivedLedger", data)}
+                    onChangeData={(data: any) => handleFieldChange("billDiscountReceivedLedger", data.billDiscountReceivedLedger)}
                     label="Bill Discount Received Ledger"
                 />
                 <ERPDataCombobox
@@ -398,12 +456,9 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultSalesReturnPayableAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultSalesReturnPayableAccount", data.defaultSalesReturnPayableAccount)}
                     label="Default Sales Return Payable Acc:"
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="couponCardAccount"
                     value={formState.couponCardAccount}
@@ -416,7 +471,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("couponCardAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("couponCardAccount", data.couponCardAccount)}
                     label="Coupon Card Account"
                 />
                 <ERPInput
@@ -427,9 +482,6 @@ const InventorySettingsForm: React.FC = () => {
                     placeholder="Enter redeem points"
                     onChangeData={(data: any) => handleFieldChange("redeemPoints", data.redeemPoints)}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultRoundOffAccount"
                     value={formState.defaultRoundOffAccount}
@@ -442,21 +494,18 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultRoundOffAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultRoundOffAccount", data.defaultRoundOffAccount)}
                     label="Default Round off Account"
                 />
                 <ERPInput
                     id="keepUserActions"
-                    value={formState.keepUserActions.toString()}
+                    value={formState.keepUserActions}
                     data={formState}
                     label="Keep User Actions (in Days)"
                     placeholder="Enter number of days"
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("keepUserActions", parseInt(data.keepUserActions, 10))}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultAdditionalAmountAccount"
                     value={formState.defaultAdditionalAmountAccount}
@@ -469,26 +518,23 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultAdditionalAmountAccount", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultAdditionalAmountAccount", data.defaultAdditionalAmountAccount)}
                     label="Default Additional Amount Account"
                 />
                 <ERPDataCombobox
                     id="blockBillDiscount"
                     value={formState.blockBillDiscount}
                     data={formState}
-                    field={{
-                        id: "blockBillDiscount",
-                        required: false,
-                        getListUrl: Urls.data_brands,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onChangeData={(data: any) => handleFieldChange("blockBillDiscount", data)}
+                    options={[
+                        { value: 'No', label: 'No' },
+                        { value: 'On POS', label: 'On POS' },
+                        { value: 'On Standard Sales', label: 'On Standard Sales' },
+                        { value: 'On Both', label: 'On Both' },
+                        { value: 'If Authentication Fails', label: 'If Authentication Fails' },
+                      ]}
+                    onChangeData={(data: any) => handleFieldChange("blockBillDiscount", data.blockBillDiscount)}
                     label="Block Bill Discount"
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultBrand"
                     value={formState.defaultBrand}
@@ -500,38 +546,32 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("defaultBrand", data)}
+                    onChangeData={(data: any) => handleFieldChange("defaultBrand", data.defaultBrand)}
                     label="Default Brand"
                 />
                 <ERPInput
                     id="discountAuthorizationIfDiscountAbove"
-                    value={formState.discountAuthorizationIfDiscountAbove.toString()}
+                    value={formState.discountAuthorizationIfDiscountAbove}
                     data={formState}
                     label="Discount Authorization if Discount above"
                     placeholder="Enter discount threshold"
                     type="number"
                     onChangeData={(data: any) => handleFieldChange("discountAuthorizationIfDiscountAbove", parseFloat(data.discountAuthorizationIfDiscountAbove))}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
+           
                 <ERPDataCombobox
                     id="negativeStock"
                     value={formState.negativeStock}
                     data={formState}
-                    field={{
-                        id: "negativeStock",
-                        required: false,
-                        getListUrl: Urls.data_countries,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onChangeData={(data: any) => handleFieldChange("negativeStock", data)}
+                    options={[
+                        { value: 'Block', label: 'Block' },
+                        { value: 'Warn', label: 'Warn' },
+                        { value: 'Ignore', label: 'Ignore' },
+                      ]}
+                    onChangeData={(data: any) => handleFieldChange("negativeStock", data.negativeStock)}
                     label="Negative Stock"
                 />
-            </div>
-
-            <div className="form-row  grid grid-cols-3 gap-3 my-3">
+          
                 <ERPCheckbox
                     id="maintainWarehouse"
                     checked={formState.maintainWarehouse}
@@ -553,12 +593,10 @@ const InventorySettingsForm: React.FC = () => {
                     label="Carry Forward Purchase Order Qty To Purchase"
                     onChangeData={(data: any) => handleFieldChange("carryForwardPurchaseOrderQtyToPurchase", data.carryForwardPurchaseOrderQtyToPurchase)}
                 />
-            </div>
-
-            <div className="form-row  grid grid-cols-3 gap-3 my-3">
+           
                 <ERPInput
                     id="priceCode"
-                    value={formState.priceCode.toString()}
+                    value={formState.priceCode}
                     data={formState}
                     label="Price Code"
                     placeholder="Enter the Price Code"
@@ -579,9 +617,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Use Cost For Stock Transfer To Branch"
                     onChangeData={(data: any) => handleFieldChange("useCostForStockTransferToBranch", data.useCostForStockTransferToBranch)}
                 />
-            </div>
-
-            <div className="form-row   grid grid-cols-3 gap-3 my-3">
+           
                 <ERPDataCombobox
                     id="barcodeLabel"
                     value={formState.barcodeLabel}
@@ -593,7 +629,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("barcodeLabel", data)}
+                    onChangeData={(data: any) => handleFieldChange("barcodeLabel", data.barcodeLabel)}
                     label="Barcode Label"
                 />
                 <ERPCheckbox
@@ -610,9 +646,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Show Account Receivable In Purchase"
                     onChangeData={(data: any) => handleFieldChange("showAccountReceivableInPurchase", data.showAccountReceivableInPurchase)}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-3 gap-3 my-3">
+           
                 <ERPDataCombobox
                     id="ifLessSalesRate"
                     value={formState.ifLessSalesRate}
@@ -624,7 +658,7 @@ const InventorySettingsForm: React.FC = () => {
                         valueKey: "id",
                         labelKey: "name",
                     }}
-                    onChangeData={(data: any) => handleFieldChange("ifLessSalesRate", data)}
+                    onChangeData={(data: any) => handleFieldChange("ifLessSalesRate", data.ifLessSalesRate)}
                     label="If Less Sales Rate"
                 />
                 <ERPCheckbox
@@ -641,9 +675,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Show Printer Selection"
                     onChangeData={(data: any) => handleFieldChange("showPrinterSelection", data.showPrinterSelection)}
                 />
-            </div>
-
-            <div className="form-row  grid grid-cols-3 gap-3 my-3">
+          
 
                 <ERPCheckbox
                     id="setLastSalesRateAsProductSalesRate"
@@ -666,9 +698,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="BTO Using MSP"
                     onChangeData={(data: any) => handleFieldChange("btoUsingMsp", data.btoUsingMsp)}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-3 gap-3 my-3">
+           
                 <ERPCheckbox
                     id="setLastPurchaseRateAsProductPurchaseRate"
                     checked={formState.setLastPurchaseRateAsProductPurchaseRate}
@@ -690,9 +720,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Is Reference Number Mandatory In Purchase"
                     onChangeData={(data: any) => handleFieldChange("isReferenceNumberMandatoryInPurchase", data.isReferenceNumberMandatoryInPurchase)}
                 />
-            </div>
-
-            <div className="form-row  grid grid-cols-3 gap-3 my-3">
+          
                 <ERPCheckbox
                     id="setAvgPurchaseCostWithLastPurchaseRate"
                     checked={formState.setAvgPurchaseCostWithLastPurchaseRate}
@@ -714,9 +742,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Show Transit Mode Stock Transfer Alert"
                     onChangeData={(data: any) => handleFieldChange("showTransitModeStockTransferAlert", data.showTransitModeStockTransferAlert)}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-3 gap-3 my-3">
+         
                 <ERPCheckbox
                     id="updatePurchasePriceOnPurchaseTransfer"
                     checked={formState.updatePurchasePriceOnPurchaseTransfer}
@@ -738,9 +764,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Show Account Payable In Sales"
                     onChangeData={(data: any) => handleFieldChange("showAccountPayableInSales", data.showAccountPayableInSales)}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-3 gap-3 my-3">
+         
                 <ERPCheckbox
                     id="showCashSalesSeparateMenu"
                     checked={formState.showCashSalesSeparateMenu}
@@ -762,9 +786,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Hold Sales Man"
                     onChangeData={(data: any) => handleFieldChange("holdSalesMan", data.holdSalesMan)}
                 />
-            </div>
-
-            <div className="form-row grid grid-cols-3 gap-3 my-3">
+        
                 <ERPCheckbox
                     id="showNonStockItemsInSales"
                     checked={formState.showNonStockItemsInSales}
@@ -787,18 +809,15 @@ const InventorySettingsForm: React.FC = () => {
                     onChangeData={(data: any) => handleFieldChange("mobileNumberMandatoryInSales", data.mobileNumberMandatoryInSales)}
                 />
             </div>
-            <div className="my-4 flex items-center justify-center">
-                <button
-                    onClick={handleSubmit}
-                    disabled={isSaving}
-                    type="button"
-                    className=""
-                >
-                    {isSaving ? "Saving..." : "Save Changes"}
-                </button>
-            </div>
+            <div className="flex justify-end">
+          <ERPButton
+            title="Save Settings"
+            variant="primary"
+            type="submit"
+          />
+        </div>
         </div>
     );
 };
 
-export default InventorySettingsForm;
+export default InventorySettingsForm; 

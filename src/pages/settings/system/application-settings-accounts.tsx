@@ -10,6 +10,7 @@ import { getAction, postAction } from '../../../redux/slices/app-thunks';
 import { LedgerType } from '../../../enums/ledger-types';
 import { useDispatch } from 'react-redux';
 import { APIClient } from '../../../helpers/api-client';
+import ERPToast from '../../../components/ERPComponents/erp-toast';
 
 
 interface AccountSettingsState {
@@ -143,10 +144,11 @@ const ApplicationSettingsAccounts = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState[key as keyof AccountSettingsState];
+        const currentValue = formState?.[key as keyof AccountSettingsState];
         const prevValue = formStatePrev[key as keyof AccountSettingsState];
-  
+       
         if (currentValue !== prevValue) {
+          debugger;
           acc.push({
             settingsName: key,
             settingsValue: currentValue
@@ -154,14 +156,17 @@ const ApplicationSettingsAccounts = () => {
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: any }[]);
-      const response = await dispatch(postAction({apiUrl: `${Urls.application_settings}accounts`,data:modifiedSettings}) as any
-    ).unwrap();
-      if (response.ok) {
-        console.log('Settings saved successfully');
-        setFormStatePrev({});
-      } else {
-        console.error('Error saving settings');
-      }
+      console.log(modifiedSettings);
+      
+      const response = await api.put(Urls.application_settings,{type: 'accounts', updateList:  modifiedSettings}) as  any
+      debugger;
+      if(response!=undefined && response!=null && response.IsOk==true)
+        {
+          ERPToast.showWith(response?.message, "success");
+        }
+        else{
+          ERPToast.showWith(response?.message,"warning")
+        }
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {
@@ -181,12 +186,12 @@ const ApplicationSettingsAccounts = () => {
           label="Default Cash Account"
           field={{
             id: "defaultCashAcc",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_CashLedgers,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultCashAcc', data)}
+          onChangeData={(data) => handleFieldChange('defaultCashAcc', data.defaultCashAcc)}
         />
         <ERPDataCombobox
           id="defaultSuspenseAcc"
@@ -195,12 +200,12 @@ const ApplicationSettingsAccounts = () => {
           label="Default Suspense Account"
           field={{
             id: "defaultSuspenseAcc",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_SuspenseAccount,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data)}
+          onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data.defaultSuspenseAcc)}
         />
         <ERPDataCombobox
           id="defaultServiceAccount"
@@ -209,12 +214,12 @@ const ApplicationSettingsAccounts = () => {
           label="Default Service Account"
           field={{
             id: "defaultServiceAccount",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_SalesAccount,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultServiceAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultServiceAccount', data.defaultServiceAccount)}
         />
         <ERPDataCombobox
           id="defaultBankAcc"
@@ -223,12 +228,12 @@ const ApplicationSettingsAccounts = () => {
           label="Default Bank Account"
           field={{
             id: "defaultBankAcc",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_BankAccounts,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultBankAcc', data)}
+          onChangeData={(data) => handleFieldChange('defaultBankAcc', data.defaultBankAcc)}
         />
         <ERPDataCombobox
           id="defaultCreditCardAcc"
@@ -237,12 +242,12 @@ const ApplicationSettingsAccounts = () => {
           label="Default Credit Card Account"
           field={{
             id: "defaultCreditCardAcc",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_BankAccounts,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data)}
+          onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data.defaultCreditCardAcc)}
         />
         <ERPDataCombobox
           id="defaultCostCenterID"
@@ -251,12 +256,12 @@ const ApplicationSettingsAccounts = () => {
           label="Default Cost Center"
           field={{
             id: "defaultCostCenterID",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_costcentres,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultCostCenterID', data)}
+          onChangeData={(data) => handleFieldChange('defaultCostCenterID', data.defaultCostCenterID)}
         />
         <ERPDataCombobox
           id="defaultCustomerLedgerID"
@@ -265,13 +270,13 @@ const ApplicationSettingsAccounts = () => {
           label="Default Customer Ledger"
           field={{
             id: "defaultCustomerLedgerID",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data)}
+          onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
         />
         <ERPDataCombobox
           id="defaultOpeningStockValueAcc"
@@ -280,13 +285,13 @@ const ApplicationSettingsAccounts = () => {
           label="Default Opening StockLedger"
           field={{
             id: "defaultOpeningStockValueAcc",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.Current_Assets}`,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data)}
+          onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
         />
       </div>
 
@@ -297,7 +302,7 @@ const ApplicationSettingsAccounts = () => {
           value={formState.supervisorPassword}
           data={formState}
           label="Supervisor Password"
-          onChangeData={(data) => handleFieldChange('supervisorPassword', data)}
+          onChangeData={(data) => handleFieldChange('supervisorPassword', data.supervisorPassword)}
         />
         <ERPDataCombobox
           id="defaultLoanAcc"
@@ -306,13 +311,13 @@ const ApplicationSettingsAccounts = () => {
           label="Default Loan Account"
           field={{
             id: "defaultLoanAcc",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultLoanAcc', data)}
+          onChangeData={(data) => handleFieldChange('defaultLoanAcc', data.defaultLoanAcc)}
         />
         <ERPDataCombobox
           id="defaultIncentiveAcc1"
@@ -326,7 +331,7 @@ const ApplicationSettingsAccounts = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data)}
+          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data.defaultIncentiveAcc1)}
         />
         <ERPDataCombobox
           id="defaultIncentiveAcc2"
@@ -340,7 +345,7 @@ const ApplicationSettingsAccounts = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data)}
+          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
         /> 
         <ERPDataCombobox
           id="defaultPDCReceivableAccount"
@@ -349,13 +354,13 @@ const ApplicationSettingsAccounts = () => {
           label="Default PDC Receivable Account"
           field={{
             id: "defaultPDCReceivableAccount",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultPDCReceivableAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
         />
           <ERPDataCombobox
           id="defaultPDCPayableAccount"
@@ -364,13 +369,13 @@ const ApplicationSettingsAccounts = () => {
           label="Default PDC Payable Account"
           field={{
             id: "defaultPDCPayableAccount",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultPDCPayableAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
         />
           <ERPDataCombobox
           id="defaultBankChargeAccount"
@@ -379,13 +384,13 @@ const ApplicationSettingsAccounts = () => {
           label="Default Bank Charge Account"
           field={{
             id: "defaultBankChargeAccount",
-            required: true,
+            //required: true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data.defaultBankChargeAccount)}
         />
           <ERPDataCombobox
           id="defaultIndirectExpenseAccount"
@@ -430,7 +435,7 @@ const ApplicationSettingsAccounts = () => {
             { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
             { value: 'Indirect_Income', label: 'Indirect Income' },
           ]}
-          onChangeData={(data) => handleFieldChange('defaultIndirectExpenseAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)}
         />
            <ERPDataCombobox
           id="defaultPurchaseAssetsAccount"
@@ -475,7 +480,7 @@ const ApplicationSettingsAccounts = () => {
             { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
             { value: 'Indirect_Income', label: 'Indirect Income' },
           ]}
-          onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data.defaultPurchaseAssetsAccount)}
         />
 
 
@@ -484,21 +489,21 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultExcessAccount}
           data={formState}
           label="Default Excess Account"
-          onChangeData={(data) => handleFieldChange('defaultExcessAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultExcessAccount', data.)}
         />
         <ERPDataCombobox
           id="defaultShortageAccount"
           value={formState.defaultShortageAccount}
           data={formState}
           label="Default Shortage Account"
-          onChangeData={(data) => handleFieldChange('defaultShortageAccount', data)}
+          onChangeData={(data) => handleFieldChange('defaultShortageAccount', data.)}
         />
         <ERPInput
           id="maxShortageAmount"
           value={formState.maxShortageAmount}
           data={formState}
           label="Max Shortage Amount"
-          onChangeData={(data) => handleFieldChange('maxShortageAmount', data)}
+          onChangeData={(data) => handleFieldChange('maxShortageAmount', data.)}
         />
       
 
@@ -510,7 +515,7 @@ const ApplicationSettingsAccounts = () => {
           value={formState.minimumShiftDuration}
           data={formState}
           label="Minimum Shift Duration"
-          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
+          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
         />
         <ERPInput
           id="minimumShiftDuration"
@@ -518,7 +523,7 @@ const ApplicationSettingsAccounts = () => {
           data={formState}
         
           type="number"
-          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
+          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
         />
       </div>
 
@@ -529,56 +534,56 @@ const ApplicationSettingsAccounts = () => {
           checked={formState.maintainCostCenter}
           data={formState}
           label="Maintain Cost Center"
-          onChangeData={(data) => handleFieldChange('maintainCostCenter', data)}
+          onChangeData={(data) => handleFieldChange('maintainCostCenter', data.maintainCostCenter)}
         />
         <ERPCheckbox
           id="allowSalesCounter"
           checked={formState.allowSalesCounter}
           data={formState}
           label="Allow Sales Counter"
-          onChangeData={(data) => handleFieldChange('allowSalesCounter', data)}
+          onChangeData={(data) => handleFieldChange('allowSalesCounter', data.allowSalesCounter)}
         />
         <ERPCheckbox
           id="maintainBillwiseAccount"
           checked={formState.maintainBillwiseAccount}
           data={formState}
           label="Maintain Billwise Account"
-          onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data)}
+          onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data.maintainBillwiseAccount)}
         />
         <ERPCheckbox
           id="printAccAftersave"
           checked={formState.printAccAftersave}
           data={formState}
           label="Print After Save"
-          onChangeData={(data) => handleFieldChange('printAccAftersave', data)}
+          onChangeData={(data) => handleFieldChange('printAccAftersave', data.printAccAftersave)}
         />
         <ERPCheckbox
           id="enableAuthorizationforShiftClose"
           checked={formState.enableAuthorizationforShiftClose}
           data={formState}
           label="Enable Authorization for Shift Close"
-          onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data)}
+          onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data.enableAuthorizationforShiftClose)}
         />
         <ERPCheckbox
           id="allowMultiPayments"
           checked={formState.allowMultiPayments}
           data={formState}
           label="Allow Multi-Payments"
-          onChangeData={(data) => handleFieldChange('allowMultiPayments', data)}
+          onChangeData={(data) => handleFieldChange('allowMultiPayments', data.allowMultiPayments)}
         />
         <ERPCheckbox
           id="enable24Hours"
           checked={formState.enable24Hours}
           data={formState}
           label="Enable 24 Hours Business"
-          onChangeData={(data) => handleFieldChange('enable24Hours', data)}
+          onChangeData={(data) => handleFieldChange('enable24Hours', data.enable24Hours)}
         />
         <ERPCheckbox
           id="setDefaultCustomerInSales"
           checked={formState.setDefaultCustomerInSales}
           data={formState}
           label="Set Default Customer in Sales"
-          onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data)}
+          onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data.setDefaultCustomerInSales)}
         />
       </div>
       

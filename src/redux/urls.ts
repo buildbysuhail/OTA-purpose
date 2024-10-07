@@ -65,10 +65,11 @@ const Urls = {
   password_reset_confirm: "/resetPassword/",
   social_signup: "/socialSignup/",
   set_branch: "/Subscription/Auth/SetBranch/",
-
+  SendEmailToken:"/Subscription/Auth/SendEmailToken",
+  ValidateToken:"/Subscription/Auth/ValidateToken",
+  
   // App
-  getUserAppSetting: "/User/getUserAppSetting/",
-  updateUserAppSetting: "/User/updateUserAppSetting/",
+  application_setting: "/Core/ApplicationSettings/",
 
   // AccountSettings/Profile
   uploadUserImage: "/Subscription/Profile/UploadUserImage/",
@@ -127,7 +128,7 @@ const Urls = {
   patchUserSubscriped: "/Subscription/User/EditUser/",
   UserTypes: "/Core/UserType/",
   //setting/Administrations
-  CompanyProfiles: "/Core/CompanyProfile",
+  CompanyProfiles: "/Core/CompanyProfile/",
   Branch: "/Core/Branch/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
@@ -143,15 +144,16 @@ const Urls = {
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/ResetTransactionTables/",
+  application_settings:"/Core/ApplicationSettings/",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",
   account_privilege_card:"/Accounts/PrivilegeCards",
-  branch_ledger:"/Accounts/BranchLedger",
+  branch_ledger:"/Accounts/BranchLedger/",
   account_party_category:"/Accounts/PartyCategory/",
-  account_currency:"/Accounts/Currency",
+  account_currency_master:"/Accounts/Currency/",
   //Reports
   // Accounts End
   //Templates

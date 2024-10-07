@@ -5,6 +5,7 @@ import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import Flex from '../../../pages/inventory/demo-flex';
 
+
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -35,6 +36,7 @@ const CostCenter = lazy(() => import('../../../pages/accounts/masters/cost centr
 const BranchLedger = lazy(() => import('../../../pages/accounts/masters/branch ledger/branch-ledger'));
 const PartyCategory  = lazy(() => import('../../../pages/accounts/masters/account-party-category/party-category'));
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
+const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
 
 
 // Acc End
@@ -92,7 +94,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
         <Route path="account-masters/party-category" element={<PartyCategory />} />
-
+        <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
         {/* cost center */}
         <Route path="account-masters/cost-center" element={<CostCenter/>} />
         {/* Branch Ledger */}

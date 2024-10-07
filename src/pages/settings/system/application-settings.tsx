@@ -6,6 +6,8 @@ import ERPSettingsFormMain from "./application-settings-main";
 import ApplicationSettingsAccounts from "./application-settings-accounts";
 import ApplicationSettingsProduct from "./application-settings-product";
 import MiscellaneousSettingsForm from "./application-settings-miscellaneous";
+import ApplicationSettingsProduct from "./application-settings-product";
+import InventorySettingsForm from "./application-settings-inventory";
 
 
 
@@ -69,6 +71,8 @@ const ApplicationSettings = ({ }) => {
           ? <ApplicationSettingsProduct/>
           : settingsGroup == "miscellaneous"
           ?<MiscellaneousSettingsForm/>
+          :settingsGroup == "inventory"
+          ?<InventorySettingsForm/>
           :null
                     }
 

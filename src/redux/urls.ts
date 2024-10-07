@@ -65,7 +65,9 @@ const Urls = {
   password_reset_confirm: "/resetPassword/",
   social_signup: "/socialSignup/",
   set_branch: "/Subscription/Auth/SetBranch/",
-
+  SendEmailToken:"/Subscription/Auth/SendEmailToken",
+  ValidateToken:"/Subscription/Auth/ValidateToken",
+  
   // App
   application_setting: "/Core/ApplicationSettings/",
 

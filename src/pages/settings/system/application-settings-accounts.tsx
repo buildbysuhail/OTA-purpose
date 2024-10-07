@@ -158,20 +158,196 @@ const ApplicationSettingsAccounts = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
     
-   
+    <div className='grid grid-cols-4 gap-6'>
+        <ERPDataCombobox
+          id="defaultCashAcc"
+          value={formState?.defaultCashAcc}
+          data={formState}
+          label="Default Cash Account"
+          onChangeData={(data) => handleFieldChange('defaultCashAcc', data)}
+        />
+        <ERPDataCombobox
+          id="defaultSuspenseAcc"
+          value={formState.defaultSuspenseAcc}
+          data={formState}
+          label="Default Suspense Account"
+          onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data)}
+        />
+        <ERPDataCombobox
+          id="defaultServiceAccount"
+          value={formState.defaultServiceAccount}
+          data={formState}
+          label="Default Service Account"
+          onChangeData={(data) => handleFieldChange('defaultServiceAccount', data)}
+        />
+        <ERPDataCombobox
+          id="defaultBankAcc"
+          value={formState.defaultBankAcc}
+          data={formState}
+          label="Default Bank Account"
+          onChangeData={(data) => handleFieldChange('defaultBankAcc', data)}
+        />
+        <ERPDataCombobox
+          id="defaultCreditCardAcc"
+          value={formState.defaultCreditCardAcc}
+          data={formState}
+          label="Default Credit Card Account"
+          onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data)}
+        />
+        <ERPDataCombobox
+          id="defaultCostCenterID"
+          value={formState.defaultCostCenterID}
+          data={formState}
+          label="Default Cost Center"
+          onChangeData={(data) => handleFieldChange('defaultCostCenterID', data)}
+        />
+        <ERPDataCombobox
+          id="defaultCustomerLedgerID"
+          value={formState.defaultCustomerLedgerID}
+          data={formState}
+          label="Default Customer Ledger"
+          onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data)}
+        />
+        <ERPDataCombobox
+          id="defaultOpeningStockValueAcc"
+          value={formState.defaultOpeningStockValueAcc}
+          data={formState}
+          label="Default Opening StockLedger"
+          onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data)}
+        />
+      </div>
+
       {/* Second Column of Select Inputs */}
       <div className='grid grid-cols-4 gap-5'>
         <ERPInput
-          id="blockOnCreditLimit"
-          value={formState?.blockOnCreditLimit}
+          id="supervisorPassword"
+          value={formState.supervisorPassword}
           data={formState}
           label="Supervisor Password"
-          onChangeData={(data) => handleFieldChange('blockOnCreditLimit', data)}
+          onChangeData={(data) => handleFieldChange('supervisorPassword', data)}
         />
-       
+        <ERPDataCombobox
+          id="defaultLoanAcc"
+          value={formState.defaultLoanAcc}
+          data={formState}
+          label="Default Loan Account"
+          onChangeData={(data) => handleFieldChange('defaultLoanAcc', data)}
+        />
+        <ERPDataCombobox
+          id="defaultIncentiveAcc1"
+          value={formState.defaultIncentiveAcc1}
+          data={formState}
+          label="Default Incentive Account 1"
+          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data)}
+        />
+        <ERPDataCombobox
+          id="defaultIncentiveAcc2"
+          value={formState.defaultIncentiveAcc2}
+          data={formState}
+          label="Default Incentive Account 2"
+          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data)}
+        />
+        <ERPDataCombobox
+          id="defaultExcessAccount"
+          value={formState.defaultExcessAccount}
+          data={formState}
+          label="Default Excess Account"
+          onChangeData={(data) => handleFieldChange('defaultExcessAccount', data)}
+        />
+        <ERPDataCombobox
+          id="defaultShortageAccount"
+          value={formState.defaultShortageAccount}
+          data={formState}
+          label="Default Shortage Account"
+          onChangeData={(data) => handleFieldChange('defaultShortageAccount', data)}
+        />
+        <ERPInput
+          id="maxShortageAmount"
+          value={formState.maxShortageAmount}
+          data={formState}
+          label="Max Shortage Amount"
+          onChangeData={(data) => handleFieldChange('maxShortageAmount', data)}
+        />
       </div>
 
       {/* Minimum Shift Duration */}
+      <div className='flex justify-start gap-5'>
+      <ERPCheckbox
+          id="minimumShiftDuration"
+          value={formState.minimumShiftDuration}
+          data={formState}
+          label="Minimum Shift Duration"
+          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
+        />
+        <ERPInput
+          id="minimumShiftDuration"
+          value={formState.minimumShiftDuration}
+          data={formState}
+        
+          type="number"
+          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data)}
+        />
+      </div>
+
+      {/* Checkboxes */}
+      <div className='grid grid-cols-3 justify-start gap-5'>
+        <ERPCheckbox
+          id="maintainCostCenter"
+          checked={formState.maintainCostCenter}
+          data={formState}
+          label="Maintain Cost Center"
+          onChangeData={(data) => handleFieldChange('maintainCostCenter', data)}
+        />
+        <ERPCheckbox
+          id="allowSalesCounter"
+          checked={formState.allowSalesCounter}
+          data={formState}
+          label="Allow Sales Counter"
+          onChangeData={(data) => handleFieldChange('allowSalesCounter', data)}
+        />
+        <ERPCheckbox
+          id="maintainBillwiseAccount"
+          checked={formState.maintainBillwiseAccount}
+          data={formState}
+          label="Maintain Billwise Account"
+          onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data)}
+        />
+        <ERPCheckbox
+          id="printAccAftersave"
+          checked={formState.printAccAftersave}
+          data={formState}
+          label="Print After Save"
+          onChangeData={(data) => handleFieldChange('printAccAftersave', data)}
+        />
+        <ERPCheckbox
+          id="enableAuthorizationforShiftClose"
+          checked={formState.enableAuthorizationforShiftClose}
+          data={formState}
+          label="Enable Authorization for Shift Close"
+          onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data)}
+        />
+        <ERPCheckbox
+          id="allowMultiPayments"
+          checked={formState.allowMultiPayments}
+          data={formState}
+          label="Allow Multi-Payments"
+          onChangeData={(data) => handleFieldChange('allowMultiPayments', data)}
+        />
+        <ERPCheckbox
+          id="enable24Hours"
+          checked={formState.enable24Hours}
+          data={formState}
+          label="Enable 24 Hours Business"
+          onChangeData={(data) => handleFieldChange('enable24Hours', data)}
+        />
+        <ERPCheckbox
+          id="setDefaultCustomerInSales"
+          checked={formState.setDefaultCustomerInSales}
+          data={formState}
+          label="Set Default Customer in Sales"
+          onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data)}
+        />
+      </div>
       
 
         <div className="flex justify-end">

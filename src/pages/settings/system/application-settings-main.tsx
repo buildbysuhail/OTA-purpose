@@ -178,7 +178,7 @@ const ERPSettingsFormMain = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Pageheader><p>asasa</p></Pageheader>
+      <Pageheader><p>Main</p></Pageheader>
         <div className="grid grid-cols-5 gap-6">
           <ERPDataCombobox
           id = "currency"
@@ -213,6 +213,7 @@ const ERPSettingsFormMain = () => {
               { value: '2', label: '2' },
               { value: '3', label: '3' },
               { value: '4', label: '4' },
+              { value: '5', label: '5' },
             ]}
           />
           <ERPDataCombobox
@@ -226,6 +227,7 @@ const ERPSettingsFormMain = () => {
               { value: '2', label: '2' },
               { value: '3', label: '3' },
               { value: '4', label: '4' },
+              { value: '5', label: '5' },
             ]}
           />
           <ERPDataCombobox
@@ -235,8 +237,7 @@ const ERPSettingsFormMain = () => {
             onChangeData={(data) => handleFieldChange("currencyFormat", data.currencyFormat)}
             options={[
               { value: 'Millions', label: 'Millions' },
-              { value: 'Thousands', label: 'Thousands' },
-              { value: 'Hundreds', label: 'Hundreds' },
+              { value: 'Lakhs', label: 'Lakhs' },
             ]}
           />
           <ERPDataCombobox
@@ -245,9 +246,10 @@ const ERPSettingsFormMain = () => {
             value={settings?.roundingMethod}
             onChangeData={(data) => handleFieldChange("roundingMethod", data.roundingMethod)}
             options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'No Rounding', label: 'No Rounding' },
+              { value: 'Ceiling', label: 'Ceiling' },
+              { value: 'Floor', label: 'Floor' },
             ]}
           />
           <ERPDataCombobox
@@ -262,13 +264,22 @@ const ERPSettingsFormMain = () => {
             data={settings}
             onChangeData={(data) => handleFieldChange("salesRoundingMethod", data.salesRoundingMethod)}
             options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'No Rounding', label: 'No Rounding' },
+              { value: 'Ceiling', label: 'Ceiling' },
+              { value: 'Floor', label: 'Floor' },
+              { value: 'Round to 0.25', label: 'Round to 0.25' },
+              { value: 'Round to 0.50', label: 'Round to 0.50' },
+              { value: 'Round to 0.10', label: 'Round to 0.10' },
+              { value: 'Floor Round to 0.50', label: 'Floor Round to 0.50' },
+              { value: 'Floor Round to 0.25', label: 'Floor Round to 0.25' },
+              { value: 'Floor Round to 0.10', label: 'Floor Round to 0.10' },
+              { value: 'Not Set', label: 'Not Set' },
+              { value: 'Round to 0.010', label: 'Round to 0.010' },
             ]}
           />
           <ERPDataCombobox
-            id="caxDecimalPoints"
+            id="taxDecimalPoints"
             label="Tax Decimal Points"
             value={settings?.taxDecimalPoints}
             onChangeData={(data) => handleFieldChange("TaxDecimalPoints", data.taxDecimalPoints)}
@@ -278,6 +289,7 @@ const ERPSettingsFormMain = () => {
               { value: '2', label: '2' },
               { value: '3', label: '3' },
               { value: '4', label: '4' },
+              { value: '5', label: '5' },
             ]}
           />
           <ERPDataCombobox
@@ -286,9 +298,18 @@ const ERPSettingsFormMain = () => {
             value={settings?.roundingMethodGlobal}
             onChangeData={(data) => handleFieldChange("RoundingMethodGlobal", data.roundingMethodGlobal)}
             options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'No Rounding', label: 'No Rounding' },
+              { value: 'Ceiling', label: 'Ceiling' },
+              { value: 'Floor', label: 'Floor' },
+              { value: 'Round to 0.25', label: 'Round to 0.25' },
+              { value: 'Round to 0.50', label: 'Round to 0.50' },
+              { value: 'Round to 0.10', label: 'Round to 0.10' },
+              { value: 'Floor Round to 0.50', label: 'Floor Round to 0.50' },
+              { value: 'Floor Round to 0.25', label: 'Floor Round to 0.25' },
+              { value: 'Floor Round to 0.10', label: 'Floor Round to 0.10' },
+              { value: 'Not Set', label: 'Not Set' },
+              { value: 'Round to 0.010', label: 'Round to 0.010' },
             ]}
           />
           <ERPCheckbox

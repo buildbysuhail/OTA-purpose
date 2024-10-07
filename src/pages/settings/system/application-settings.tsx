@@ -62,7 +62,7 @@ const ApplicationSettings = ({ }) => {
                 >
                   <div>
                     <Link to={`${location.pathname}?settings_group_id=${settings.settings_group_id}`}></Link>
-                    <h1 className=" text-sm">{settings.name}</h1>
+                    <h1 className=" text-sm ">{settings.name}</h1>
                   </div>
                 </div>
               ))}
@@ -70,8 +70,8 @@ const ApplicationSettings = ({ }) => {
           </div>
 
           <div className="flex-1 h-full">
-            <h1>{settingsGroup}</h1>
-          <div className="p-6 bg-white rounded-lg shadow-md">
+            <h1 className="ms-4">{settingsGroup}</h1>
+          <div className="p-6 ">
           
           {/* <ApplicationSettingsAccounts/> */}
           {settingsGroup ==  "main" 

@@ -7,6 +7,8 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { APIClient } from "../../../helpers/api-client";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
 
 interface FormState {
     expensesTaxAccount: string;
@@ -72,28 +74,32 @@ const TaxSettingsForm: React.FC = () => {
         setIsSaving(true);
         try {
           const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-            const currentValue = formState[key as keyof FormState];
+            const currentValue = formState?.[key as keyof FormState];
             const prevValue = formStatePrev[key as keyof FormState];
-      
+    
             if (currentValue !== prevValue) {
+              debugger;
               acc.push({
                 settingsName: key,
-                settingsValue: currentValue
+                settingsValue: currentValue,
               });
             }
             return acc;
           }, [] as { settingsName: string; settingsValue: any }[]);
-          
-          const response = await api.put(Urls.application_settings,{type:"tax",updateList:modifiedSettings})
-       
-        //   if (response.ok) {
-        //     console.log('Settings saved successfully');
-        //     setFormStatePrev({});
-        //   } else {
-        //     console.error('Error saving settings');
-        //   }
+          console.log(modifiedSettings);
+    
+          const response = (await api.put(Urls.application_settings, {
+            type: "tax",
+            updateList: modifiedSettings,
+          })) as any;
+          debugger;
+          if (response != undefined && response != null && response.IsOk == true) {
+            ERPToast.showWith(response?.message, "success");
+          } else {
+            ERPToast.showWith(response?.message, "warning");
+          }
         } catch (error) {
-          console.error('Error saving settings:', error);
+          console.error("Error saving settings:", error);
         } finally {
           setIsSaving(false);
         }
@@ -114,6 +120,7 @@ const TaxSettingsForm: React.FC = () => {
 
 
     return (
+     <form onSubmit={handleSubmit} className="space-y-6">
         <div className="erp-settings-form">
             <div className="form-row grid grid-cols-1  sm:grid-cols-2 gap-3 my-3">
                 <ERPDataCombobox
@@ -123,7 +130,7 @@ const TaxSettingsForm: React.FC = () => {
                     field={{
                         id: "purchaseFormType",
                         required: false,
-                        getListUrl: Urls.data_acc_ledgers,
+                        getListUrl: Urls.data_FormTypeByPI,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -229,8 +236,12 @@ const TaxSettingsForm: React.FC = () => {
                     label="Income Tax Account"
                 />
             </div>
+            <div className="my-4 flex items-center justify-end">
+          <ERPButton title="Save" variant="primary" type="submit" />
+        </div>
           
         </div>
+         </form>
     );
 };
 

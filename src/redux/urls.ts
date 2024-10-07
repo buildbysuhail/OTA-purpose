@@ -70,7 +70,9 @@ const Urls = {
   password_reset_confirm: "/resetPassword/",
   social_signup: "/socialSignup/",
   set_branch: "/Subscription/Auth/SetBranch/",
-
+  SendEmailToken:"/Subscription/Auth/SendEmailToken",
+  ValidateToken:"/Subscription/Auth/ValidateToken",
+  
   // App
   application_setting: "/Core/ApplicationSettings/",
 
@@ -147,6 +149,7 @@ const Urls = {
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/ResetTransactionTables/",
+  application_settings:"/Core/ApplicationSettings/",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

@@ -6,7 +6,7 @@ import ERPInput from '../../../components/ERPComponents/erp-input';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
 import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
-import { getAction } from '../../../redux/slices/app-thunks';
+import { getAction, postAction } from '../../../redux/slices/app-thunks';
 
 
 interface AccountSettingsState {
@@ -90,6 +90,7 @@ const ApplicationSettingsAccounts = () => {
     enable24Hours: false,
     allowMultiPayments: false,
   };
+  const dispatch = useAppDispatch();
   const [formState, setFormState] = useState<AccountSettingsState>(initialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<AccountSettingsState>>({});
   const [loading, setLoading] = useState(true);
@@ -100,12 +101,13 @@ const ApplicationSettingsAccounts = () => {
   }, []);
 
   const loadSettings = async () => {
-    const dispatch = useAppDispatch();
     setLoading(true);
     try {
-      const response = await dispatch(getAction({apiUrl: Urls.updateUserAppSetting, params:{}}) as any
+      const response = await dispatch(getAction({apiUrl: `${Urls.application_settings}accounts`}) as any
+      
+      
     ).unwrap();
-
+    console.log(formState);
     setFormStatePrev(response);
       setFormState(response);
     } catch (error) {
@@ -120,26 +122,28 @@ const ApplicationSettingsAccounts = () => {
       ...prevSettings,
       [settingName]: value ?? ''
     }));
-    
-    setChangedSettings((prevChangedSettings = {} as AccountSettingsState) => ({
-      ...prevChangedSettings,
-      [settingName]: value ?? ''
-    }));
   });
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const response = await fetch('/api/settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(changedSettings),
-      });
+      const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+        const currentValue = formState[key as keyof AccountSettingsState];
+        const prevValue = formStatePrev[key as keyof AccountSettingsState];
+  
+        if (currentValue !== prevValue) {
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: any }[]);
+      const response = await dispatch(postAction({apiUrl: `${Urls.application_settings}accounts`,data:modifiedSettings}) as any
+    ).unwrap();
       if (response.ok) {
         console.log('Settings saved successfully');
-        setChangedSettings({});
+        setFormStatePrev({});
       } else {
         console.error('Error saving settings');
       }
@@ -150,17 +154,14 @@ const ApplicationSettingsAccounts = () => {
     }
   };
 
-  if (loading) {
-    return <div>Loading settings?...</div>;
-  }
-
+ 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
     
     <div className='grid grid-cols-4 gap-6'>
         <ERPDataCombobox
           id="defaultCashAcc"
-          value={formState.defaultCashAcc}
+          value={formState?.defaultCashAcc}
           data={formState}
           label="Default Cash Account"
           onChangeData={(data) => handleFieldChange('defaultCashAcc', data)}
@@ -347,6 +348,7 @@ const ApplicationSettingsAccounts = () => {
           onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data)}
         />
       </div>
+      
 
         <div className="flex justify-end">
           <ERPButton

@@ -6,6 +6,10 @@ import ERPInput from '../../../components/ERPComponents/erp-input';
 import ERPSelect from '../../../components/ERPComponents/erp-select';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
+import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
+import { postAction } from '../../../redux/slices/app-thunks';
+import { APIClient } from '../../../helpers/api-client';
+import ERPToast from '../../../components/ERPComponents/erp-toast';
 
 interface Settings {
   currency: string;
@@ -69,8 +73,9 @@ const initialSettings: Settings = {
   showUserMessages: false,
   businessType: "General"
 };
-
+const api=new APIClient();
 const ERPSettingsFormMain = () => {
+  const dispatch=useAppDispatch()
   const [settings, setSettings] = useState<Settings>(initialSettings);
   const [changedSettings, setChangedSettings] = useState<Partial<Settings>>({});
   const [loading, setLoading] = useState(true);
@@ -96,7 +101,34 @@ const ERPSettingsFormMain = () => {
   const verifyOtp = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/settings');
+      const response = await api.post(Urls.ValidateToken,{email: settings.oTPEmail,token: settings.oTPVerification});
+      if(response!=undefined && response!=null && response.IsOk==true)
+        {
+          ERPToast.showWith(response?.message, "success");
+        }
+        else{
+          ERPToast.showWith(response?.message,"warning")
+        }
+      const data: Settings = await response.json();
+      setSettings(data);
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const sendOtp = async () => {
+    setLoading(true);
+    try {
+
+      const response = await api.post(Urls.SendEmailToken,{ email: settings.oTPEmail});// dispatch(postAction({apiUrl:Urls.SendEmailToken,data:{ email: settings.oTPEmail}}) as any).unwrap();
+      if(response!=undefined && response!=null && response.IsOk == settings)
+      {
+        ERPToast.showWith(response?.message, "success");
+      }
+      else{
+        ERPToast.showWith(response?.message,"warning")
+      }
       const data: Settings = await response.json();
       setSettings(data);
     } catch (error) {
@@ -283,24 +315,26 @@ const ERPSettingsFormMain = () => {
             label="OTP Email"
             className="flex-grow"
             value={settings?.oTPEmail}
-            onChangeData={(data) => handleFieldChange("OTPEmail", data.oTPEmail)}
+            data={settings}
+            onChangeData={(data) => handleFieldChange("oTPEmail", data.oTPEmail)}
           />
           <ERPButton
             title="Send OTP"
             variant="secondary"
-            onClick={() => verifyOtp}
+            onClick={() => sendOtp()}
           />
           <ERPInput
             id="oTPVerification"
             placeholder="Enter OTP"
             className="w-32"
             value={settings?.oTPVerification}
+            data={settings}
             onChangeData={(data) => handleFieldChange("oTPVerification", data.oTPVerification)}
           />
           <ERPButton
             title="Verify"
             variant="primary"
-            onClick={() => console.log('Verify OTP clicked')}
+            onClick={() => verifyOtp()}
           />
         </div>
 

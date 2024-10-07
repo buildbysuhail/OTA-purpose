@@ -68,6 +68,8 @@ export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
         is_active: item?.is_active,
       }));
     } else {
+      console.log('data:' + data);
+      
       options = data?.map((item: any) => ({
         label: item?.[keyLabel],
         value: item?.[keyValue],
@@ -124,7 +126,8 @@ export default function ERPDataCombobox({
   const loadData = async () => {
     debugger;
     setLoading(true);
-    let _items = options ? options : await api.get(field?.getListUrl);
+    var parm = field?.params ? { apiUrl: field?.getListUrl,params: field?.params } : { apiUrl: field?.getListUrl};
+    let _items = options ? options : await getAction(parm);
 debugger;
     let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];
 

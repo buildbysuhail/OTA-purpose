@@ -108,8 +108,8 @@ const BackupSettingsForm: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="erp-settings-form">
+    <form onSubmit={handleSubmit} className="space-y-6 min-h-full">
+      <div className="min-h-full">
         <div className="form-row grid grid-cols-1 gap-3 my-3">
           <ERPDataCombobox
             id="backupMethods"
@@ -170,16 +170,15 @@ const BackupSettingsForm: React.FC = () => {
           />
         </div>
 
-        <div className="my-4 flex items-center justify-center">
-        <ERPButton
+        
+      </div>
+          <div className="flex justify-end">
+          <ERPButton
             title="Save Settings"
             variant="primary"
-            disabled={isSaving}
-            loading={isSaving}
             type="submit"
           />
         </div>
-      </div>
     </form>
   );
 };

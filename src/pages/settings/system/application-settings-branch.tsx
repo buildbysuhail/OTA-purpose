@@ -618,11 +618,11 @@ const BranchSettingsForm: React.FC = () => {
           />
           <ERPInput
             id="pposEmail"
-            value={formState.pposEmail}
+            value={formState.pPosEmail}
             data={formState}
             label="Shared Folder"
             onChangeData={(data) =>
-              handleFieldChange("pposEmail", data.pposEmail)
+              handleFieldChange("pPosEmail", data.pposEmail)
             }
           />
             </>
@@ -632,6 +632,13 @@ const BranchSettingsForm: React.FC = () => {
          
         </div>
       </div>
+      <div className="flex justify-end">
+          <ERPButton
+            title="Save Settings"
+            variant="primary"
+            type="submit"
+          />
+        </div>
     </div>
   );
 };

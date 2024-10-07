@@ -593,6 +593,13 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Show Prev. Forms"
         onChangeData={(data: any) => handleFieldChange("showPrevForms", data)}
       />
+       <div className="flex justify-end">
+          <ERPButton
+            title="Save Settings"
+            variant="primary"
+            type="submit"
+          />
+        </div>
       </div>
     </form>
   );

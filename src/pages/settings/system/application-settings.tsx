@@ -8,6 +8,7 @@ import ApplicationSettingsAccounts from "./application-settings-accounts";
 import MiscellaneousSettingsForm from "./application-settings-miscellaneous";
 import InventorySettingsForm from "./application-settings-inventory";
 import ERPSettingsFormGSTTaxes from "./application-settings-GSTTaxes";
+import ApplicationSettingsProduct from "./application-settings-product";
 
 
 

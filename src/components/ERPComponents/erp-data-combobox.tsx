@@ -214,6 +214,7 @@ export default function ERPDataCombobox({
     <div className="relative">
       {/* <ERPModelForm formFields={field?.formFields} show={showForm} onClose={() => setShowForm(false)} title={iLabel} /> */}
       <Combobox
+      key={id}
         disabled={disableCombobox()}
         value={initial}
         onChange={(value) => {

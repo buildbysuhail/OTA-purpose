@@ -298,18 +298,21 @@ const BranchSettingsForm: React.FC = () => {
 
         <div className="flex flex-col space-y-4">
           <div className="flex items-start gap-3">
-            <ERPCheckbox
-              id="maintainKSA_EInvoice"
-              label="Maintain KSA EInvoice"
-              data={formState}
-              checked={formState?.maintainKSA_EInvoice}
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "maintainKSA_EInvoice",
-                  data.maintainKSA_EInvoice
-                )
-              }
-            />
+            {formState?.maintainTax && (
+              <ERPCheckbox
+                id="maintainKSA_EInvoice"
+                label="Maintain KSA EInvoice"
+                data={formState}
+                checked={formState?.maintainKSA_EInvoice}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "maintainKSA_EInvoice",
+                    data.maintainKSA_EInvoice
+                  )
+                }
+              />
+            )}
+
             <ERPCheckbox
               id="enableTaxOnBillDiscount"
               label="Enable Tax On Bill Discount"
@@ -380,68 +383,83 @@ const BranchSettingsForm: React.FC = () => {
       <div className="flex justify-start items-start gap-6 mb-4">
         <ERPCheckbox
           id="maintainSynchronization"
-          checked={formState.maintainSynchronization}
+          checked={formState?.maintainSynchronization}
           data={formState}
           label="Maintain Synchronization"
           onChangeData={(data) =>
-            handleFieldChange("maintainSynchronization", data.maintainSynchronization)
+            handleFieldChange(
+              "maintainSynchronization",
+              data.maintainSynchronization
+            )
           }
         />
-        <ERPDataCombobox
-          id="maintainSynchronizationdata"
-          value={formState.maintainSynchronizationdata}
-          field={{
-            id: "maintainSynchronizationdata",
-            required: true,
-            valueKey: "value",
-            labelKey: "label",
-          }}
-          data={formState}
-          label="Regional Language"
-          onChangeData={(data) =>
-            handleFieldChange("maintainSynchronizationdata", data.maintainSynchronizationdata)
-          }
-          options={[
-            { value: '0', label: 'Manual Sync' },
-            { value: '1', label: 'Auto Sync' },
-            { value: '1', label: 'Auto Sync and Upload Only' },
-            { value: '1', label: 'Manual Sync and Upload Only' },
-            { value: '1', label: 'UploadAndDownload' },
-          ]}
-        />
+        <div className="grid grid-cols-2 gap-5">
+          {formState?.maintainSynchronization && (
+            <>
+              <ERPDataCombobox
+                id="maintainSynchronizationdata"
+                value={formState.maintainSynchronizationdata}
+                field={{
+                  id: "maintainSynchronizationdata",
+                  required: true,
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+                data={formState}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "maintainSynchronizationdata",
+                    data.maintainSynchronizationdata
+                  )
+                }
+                options={[
+                  { value: "0", label: "Manual Sync" },
+                  { value: "1", label: "Auto Sync" },
+                  { value: "2", label: "Auto Sync and Upload Only" },
+                  { value: "3", label: "Manual Sync and Upload Only" },
+                  { value: "4", label: "Upload And Download" },
+                ]}
+              />
 
-        <ERPInput
-          id="syncIntervals"
-          value={formState.syncIntervals}
-          data={formState}
-          label="Intervals"
-          type="number"
-          onChangeData={(data) =>
-            handleFieldChange("syncIntervals", data.syncIntervals)
-          }
-        />
+              <ERPInput
+                id="syncIntervals"
+                value={formState.syncIntervals}
+                data={formState}
+                label="Intervals"
+                type="number"
+                onChangeData={(data) =>
+                  handleFieldChange("syncIntervals", data.syncIntervals)
+                }
+              />
+              <ERPCheckbox
+                id="refreshStockAfterSync"
+                checked={formState.refreshStockAfterSync}
+                data={formState}
+                label="Refresh Stock After Sync"
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "refreshStockAfterSync",
+                    data.refreshStockAfterSync
+                  )
+                }
+              />
+              <ERPCheckbox
+                id="refreshServerStockAfterSync"
+                checked={formState.refreshServerStockAfterSync}
+                data={formState}
+                label="Refresh Server Stock After Sync"
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "refreshServerStockAfterSync",
+                    data.refreshServerStockAfterSync
+                  )
+                }
+              />
+            </>
+          )}
+        </div>
       </div>
-      <div className="flex justify-start items-start gap-6 mb-4">
-        <ERPCheckbox
-          id="refreshStockAfterSync"
-          checked={formState.refreshStockAfterSync}
-          data={formState}
-          label="Refresh Stock After Sync"
-          onChangeData={(data) =>
-            handleFieldChange("refreshStockAfterSync", data.refreshStockAfterSync)
-          }
-        />
-        <ERPCheckbox
-          id="refreshServerStockAfterSync"
-          checked={formState.refreshServerStockAfterSync}
-          data={formState}
-          label="Refresh Server Stock After Sync"
-          onChangeData={(data) =>
-            handleFieldChange("refreshServerStockAfterSync", data.refreshServerStockAfterSync)
-          }
-        />
-       
-      </div>
+   
       <div className="grid grid-cols-2 gap-6">
         <div className="flex flex-col space-y-4">
           <ERPCheckbox
@@ -453,32 +471,28 @@ const BranchSettingsForm: React.FC = () => {
               handleFieldChange("showBTINotification", data.showBTINotification)
             }
           />
-          
+
           <ERPDataCombobox
             id="reportMode"
             value={formState.reportMode}
             field={{
               id: "reportMode",
               required: true,
-            
+
               valueKey: "value",
               labelKey: "label",
             }}
             data={formState}
             label="Report Mode"
             onChangeData={(data) =>
-              handleFieldChange(
-                "reportMode",
-                data.reportMode
-              )
+              handleFieldChange("reportMode", data.reportMode)
             }
             options={[
-                { value: '0', label: 'classic' },
-                { value: '1', label: 'Standard' },
-               
-              ]}
+              { value: "0", label: "classic" },
+              { value: "1", label: "Standard" },
+            ]}
           />
-            
+
           <ERPDataCombobox
             id="invoicePrintingStyle"
             value={formState.invoicePrintingStyle}
@@ -497,10 +511,9 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
             options={[
-                { value: '0', label: 'Default' },
-                { value: '1', label: 'Standard' },
-               
-              ]}
+              { value: "0", label: "Default" },
+              { value: "1", label: "Standard" },
+            ]}
           />
           <ERPDataCombobox
             id="fileAttachmentMethod"
@@ -508,7 +521,7 @@ const BranchSettingsForm: React.FC = () => {
             field={{
               id: "fileAttachmentMethod",
               required: true,
-            
+
               valueKey: "value",
               labelKey: "label",
             }}
@@ -521,10 +534,10 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
             options={[
-                { value: '0', label: 'No' },
-                { value: '1', label: 'File System' },
-                { value: '2', label: 'Cloud' },
-              ]}
+              { value: "0", label: "No" },
+              { value: "1", label: "File System" },
+              { value: "2", label: "Cloud" },
+            ]}
           />
           <ERPInput
             id="fileAttachmentFolder"
@@ -532,21 +545,26 @@ const BranchSettingsForm: React.FC = () => {
             data={formState}
             label="Shared Folder"
             onChangeData={(data) =>
-              handleFieldChange("fileAttachmentFolder", data.fileAttachmentFolder)
+              handleFieldChange(
+                "fileAttachmentFolder",
+                data.fileAttachmentFolder
+              )
             }
           />
         </div>
         <div className="flex flex-col space-y-4">
-        <ERPCheckbox
-          id="enableVanSale"
-          checked={formState.enableVanSale}
-          data={formState}
-          label="Enable PPOS Integration (VanSale)"
-          onChangeData={(data) =>
-            handleFieldChange("enableVanSale", data.enableVanSale)
-          }
-        />
-          <div className="flex justify-start items-center gap-4">
+          <ERPCheckbox
+            id="enableVanSale"
+            checked={formState?.enableVanSale}
+            data={formState}
+            label="Enable PPOS Integration (VanSale)"
+            onChangeData={(data) =>
+              handleFieldChange("enableVanSale", data.enableVanSale)
+            }
+          />
+           {formState?.enableVanSale &&(
+            <>
+             <div className="flex justify-start items-end gap-4">
             <ERPInput
               id="clientPPOSBranchID"
               value={formState.clientPPOSBranchID}
@@ -556,9 +574,9 @@ const BranchSettingsForm: React.FC = () => {
                 handleFieldChange("clientPPOSBranchID", data.clientPPOSBranchID)
               }
             />
-            <div className="self-end">
-            <ERPButton title="Verify" variant="secondary" type="submit"/>
-            </div>
+         
+              <ERPButton title="Verify" variant="secondary" type="submit" />
+           
           </div>
 
           <ERPInput
@@ -567,7 +585,10 @@ const BranchSettingsForm: React.FC = () => {
             data={formState}
             label="PPOS Product Serial"
             onChangeData={(data) =>
-              handleFieldChange("vanSaleProductSerial", data.vanSaleProductSerial)
+              handleFieldChange(
+                "vanSaleProductSerial",
+                data.vanSaleProductSerial
+              )
             }
           />
           <ERPInput
@@ -579,9 +600,13 @@ const BranchSettingsForm: React.FC = () => {
               handleFieldChange("pposEmail", data.pposEmail)
             }
           />
+            </>
+           )
+           
+           }
+         
         </div>
       </div>
-  
     </div>
   );
 };

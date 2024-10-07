@@ -67,6 +67,8 @@ export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
         is_active: item?.is_active,
       }));
     } else {
+      console.log('data:' + data);
+      
       options = data?.map((item: any) => ({
         label: item?.[keyLabel],
         value: item?.[keyValue],

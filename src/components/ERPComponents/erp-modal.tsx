@@ -32,7 +32,7 @@ const ERPModal = ({
   isForm = false,
   onSubmitModel,
   hasSubmit = true,
-  closeButton = "None",
+  closeButton = "LeftArrow",
   closeTitle = "Cancel",
   className,
   isFullHeight = false,
@@ -73,7 +73,7 @@ const ERPModal = ({
                 >
                   <DialogTitle as="h3" className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 ">
                   {/* flex justify-between  */}
-                  { closeButton && closeButton == "LeftArrow" && <i onClick={closeModal} className="ri-arrow-left-line mr-2" style={{ fontSize: '23px' }}></i>} {title}{" "}
+                  { closeButton != undefined && closeButton == "LeftArrow" && <i onClick={closeModal} className="ri-arrow-left-line mr-2" style={{ fontSize: '23px' }}></i>} {title}{" "}
                     {closeButton && closeButton == "Button" && (
                       <div className=" max-w-[200px] inline-block">
                         <ERPButton className="w-full" type="button" title={closeTitle} onClick={closeModal} tabIndex={-1} />

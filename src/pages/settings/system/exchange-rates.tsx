@@ -75,7 +75,7 @@ const ExchangeRates = () => {
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any) => {
-        debugger;
+        
         return (
           <ERPGridActions
             view={{ type: "popup", action:toggleCurrencyExchangePopup}}

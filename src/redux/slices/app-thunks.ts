@@ -27,7 +27,7 @@ export const getAction = createAsyncThunk(
     try {
       const url = params ? `${apiUrl}?${params}` : apiUrl;
       const response = await api.get(url);
-      debugger;
+      
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);

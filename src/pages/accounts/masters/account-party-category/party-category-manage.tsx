@@ -48,7 +48,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder="Name"
           required={true}
           onChangeData={(data: any) => {
-            debugger;
+            
             handleFieldChange("partyCategoryName", data);
           }}
         />

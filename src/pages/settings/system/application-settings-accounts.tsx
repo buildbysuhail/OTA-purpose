@@ -7,6 +7,9 @@ import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
 import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
 import { getAction, postAction } from '../../../redux/slices/app-thunks';
+import { LedgerType } from '../../../enums/ledger-types';
+import { useDispatch } from 'react-redux';
+import { APIClient } from '../../../helpers/api-client';
 
 
 interface AccountSettingsState {
@@ -22,9 +25,16 @@ interface AccountSettingsState {
   defaultLoanAcc: number;
   defaultIncentiveAcc1: number;
   defaultIncentiveAcc2: number;
-  defaultExcessAccount: number;
-  defaultShortageAccount: number;
-  maxShortageAmount: string;
+  defaultIndirectExpenseAccount: string;
+  defaultPurchaseAssetsAccount: string;
+//not updating to db
+defaultPDCReceivableAccount: number;
+defaultPDCPayableAccount: number;
+defaultBankChargeAccount: number;
+
+  // defaultExcessAccount: number;
+  // defaultShortageAccount: number;
+  // maxShortageAmount: string;
   minimumShiftDuration: number;
 
   // Checkbox fields
@@ -49,6 +59,7 @@ interface AccountSettingsState {
   enable24Hours: boolean;
   allowMultiPayments: boolean;
 }
+const api = new APIClient();
 const ApplicationSettingsAccounts = () => {
   const initialState: AccountSettingsState = {
     defaultCashAcc: 1,
@@ -63,9 +74,15 @@ const ApplicationSettingsAccounts = () => {
     defaultLoanAcc: 0,
     defaultIncentiveAcc1: 0,
     defaultIncentiveAcc2: 0,
-    defaultExcessAccount: 1,
-    defaultShortageAccount: 1,
-    maxShortageAmount: '',
+    defaultIndirectExpenseAccount: "All",
+    defaultPurchaseAssetsAccount: "All",
+  //not updating to db
+  defaultPDCReceivableAccount: 1,
+  defaultPDCPayableAccount: 0,
+  defaultBankChargeAccount: 0,
+    // defaultExcessAccount: 1,
+    // defaultShortageAccount: 1,
+    // maxShortageAmount: '',
     minimumShiftDuration: 12,
 
     // Checkboxes
@@ -90,7 +107,7 @@ const ApplicationSettingsAccounts = () => {
     enable24Hours: false,
     allowMultiPayments: false,
   };
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [formState, setFormState] = useState<AccountSettingsState>(initialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<AccountSettingsState>>({});
   const [loading, setLoading] = useState(true);
@@ -103,10 +120,8 @@ const ApplicationSettingsAccounts = () => {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await dispatch(getAction({apiUrl: `${Urls.application_settings}accounts`}) as any
-      
-      
-    ).unwrap();
+      const response = await api.getAsync(`${Urls.application_settings}accounts`)
+    debugger;
     console.log(formState);
     setFormStatePrev(response);
       setFormState(response);
@@ -252,6 +267,7 @@ const ApplicationSettingsAccounts = () => {
             id: "defaultCustomerLedgerID",
             required: true,
             getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -262,6 +278,14 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultOpeningStockValueAcc}
           data={formState}
           label="Default Opening StockLedger"
+          field={{
+            id: "defaultOpeningStockValueAcc",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.Current_Assets}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data)}
         />
       </div>
@@ -280,6 +304,14 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultLoanAcc}
           data={formState}
           label="Default Loan Account"
+          field={{
+            id: "defaultLoanAcc",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultLoanAcc', data)}
         />
         <ERPDataCombobox
@@ -287,6 +319,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultIncentiveAcc1}
           data={formState}
           label="Default Incentive Account 1"
+          field={{
+            id: "defaultIncentiveAcc1",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data)}
         />
         <ERPDataCombobox
@@ -294,9 +333,153 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultIncentiveAcc2}
           data={formState}
           label="Default Incentive Account 2"
+          field={{
+            id: "defaultIncentiveAcc2",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data)}
-        />
+        /> 
         <ERPDataCombobox
+          id="defaultPDCReceivableAccount"
+          value={formState.defaultPDCReceivableAccount}
+          data={formState}
+          label="Default PDC Receivable Account"
+          field={{
+            id: "defaultPDCReceivableAccount",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) => handleFieldChange('defaultPDCReceivableAccount', data)}
+        />
+          <ERPDataCombobox
+          id="defaultPDCPayableAccount"
+          value={formState.defaultPDCPayableAccount}
+          data={formState}
+          label="Default PDC Payable Account"
+          field={{
+            id: "defaultPDCPayableAccount",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) => handleFieldChange('defaultPDCPayableAccount', data)}
+        />
+          <ERPDataCombobox
+          id="defaultBankChargeAccount"
+          value={formState.defaultBankChargeAccount}
+          data={formState}
+          label="Default Bank Charge Account"
+          field={{
+            id: "defaultBankChargeAccount",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data)}
+        />
+          <ERPDataCombobox
+          id="defaultIndirectExpenseAccount"
+          value={formState.defaultIndirectExpenseAccount}
+          data={formState}
+          label="Default Indirect Expense Account"
+          options={[
+            { value: 'All', label: 'All' },
+            { value: 'Customer', label: 'Customer' },
+            { value: 'Supplier', label: 'Supplier' },
+            { value: 'ReferalAgent', label: 'Referal Agent' },
+            { value: 'CashInHand', label: 'Cash In Hand' },
+            { value: 'BankAccount', label: 'Bank Account' },
+            { value: 'SuspenseAccount', label: 'Suspense Account' },
+            { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
+            { value: 'Cash_Bank', label: 'Cash & Bank' },
+            { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
+            { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
+            { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
+            { value: 'Sales_Account', label: 'Sales Account' },
+            { value: 'Purchase_Account', label: 'Purchase Account' },
+            { value: 'Salaries', label: 'Salaries' },
+            { value: 'Discount_Received', label: 'Discount Received' },
+            { value: 'Discount_Given', label: 'Discount Given' },
+            { value: 'Incentive_Given', label: 'Incentive Given' },
+            { value: 'Salary_Account', label: 'Salary Account' },
+            { value: 'Job_Works', label: 'Job Works' },
+            { value: 'Branch_Receivable', label: 'Branch Receivable' },
+            { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
+            { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
+            { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
+            { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
+            { value: 'Branch_Payable', label: 'Branch Payable' },
+            { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
+            { value: 'Expenses', label: 'Expenses' },
+            { value: 'Incomes', label: 'Incomes' },
+            { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
+            { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
+            { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
+            { value: 'Current_Assets', label: 'Current Assets' },
+            { value: 'Fixed_Assets', label: 'Fixed Assets' },
+            { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
+            { value: 'Indirect_Income', label: 'Indirect Income' },
+          ]}
+          onChangeData={(data) => handleFieldChange('defaultIndirectExpenseAccount', data)}
+        />
+           <ERPDataCombobox
+          id="defaultPurchaseAssetsAccount"
+          value={formState.defaultPurchaseAssetsAccount}
+          data={formState}
+          label="Default Purchase Assets Account"
+          options={[
+            { value: 'All', label: 'All' },
+            { value: 'Customer', label: 'Customer' },
+            { value: 'Supplier', label: 'Supplier' },
+            { value: 'ReferalAgent', label: 'Referal Agent' },
+            { value: 'CashInHand', label: 'Cash In Hand' },
+            { value: 'BankAccount', label: 'Bank Account' },
+            { value: 'SuspenseAccount', label: 'Suspense Account' },
+            { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
+            { value: 'Cash_Bank', label: 'Cash & Bank' },
+            { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
+            { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
+            { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
+            { value: 'Sales_Account', label: 'Sales Account' },
+            { value: 'Purchase_Account', label: 'Purchase Account' },
+            { value: 'Salaries', label: 'Salaries' },
+            { value: 'Discount_Received', label: 'Discount Received' },
+            { value: 'Discount_Given', label: 'Discount Given' },
+            { value: 'Incentive_Given', label: 'Incentive Given' },
+            { value: 'Salary_Account', label: 'Salary Account' },
+            { value: 'Job_Works', label: 'Job Works' },
+            { value: 'Branch_Receivable', label: 'Branch Receivable' },
+            { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
+            { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
+            { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
+            { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
+            { value: 'Branch_Payable', label: 'Branch Payable' },
+            { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
+            { value: 'Expenses', label: 'Expenses' },
+            { value: 'Incomes', label: 'Incomes' },
+            { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
+            { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
+            { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
+            { value: 'Current_Assets', label: 'Current Assets' },
+            { value: 'Fixed_Assets', label: 'Fixed Assets' },
+            { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
+            { value: 'Indirect_Income', label: 'Indirect Income' },
+          ]}
+          onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data)}
+        />
+
+
+        {/* <ERPDataCombobox
           id="defaultExcessAccount"
           value={formState.defaultExcessAccount}
           data={formState}
@@ -317,9 +500,10 @@ const ApplicationSettingsAccounts = () => {
           label="Max Shortage Amount"
           onChangeData={(data) => handleFieldChange('maxShortageAmount', data)}
         />
-      </div>
+      
 
       {/* Minimum Shift Duration */}
+       </div>
       <div className='flex justify-start gap-5'>
       <ERPCheckbox
           id="minimumShiftDuration"

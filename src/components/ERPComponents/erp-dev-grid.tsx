@@ -44,6 +44,10 @@ import { AppDispatch } from "../../redux/store";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 
+interface ToolbarItem {
+  item: React.ReactNode;
+  location: "before" | "after";
+}
 interface ERPDevGridProps {
   columns: DevGridColumn[];
   gridId: string;
@@ -66,13 +70,13 @@ interface ERPDevGridProps {
   allowSorting?: boolean;
   allowSearching?: boolean;
   remoteOperations?:
-  | boolean
-  | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+    | boolean
+    | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   onRowClick?: (e: any) => void;
   onSelectionChanged?: () => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
-  customToolbarItems?: React.ReactNode[];
+  customToolbarItems?: ToolbarItem[];
   hideDefaultExportButton?: boolean;
   hideDefaultSearchPanel?: boolean;
   hideGridHeader?: boolean;
@@ -83,7 +87,10 @@ interface ERPDevGridProps {
   gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
   heightToAdjustOnMobile?: number;
-  popupAction: (value: popupDataProps) => { type: string; payload: popupDataProps };
+  popupAction: (value: popupDataProps) => {
+    type: string;
+    payload: popupDataProps;
+  };
   defaultColumnWidth?: number;
   columnAutoWidth?: boolean;
   columnHidingEnabled?: boolean;
@@ -136,15 +143,15 @@ const createStore = (
         const result = await api.get(dataUrl, queryString);
         return result
           ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
+              data: result.data,
+              totalCount: result.totalCount,
+            }
           : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
         return {
           data: [],
@@ -239,7 +246,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     windows: number;
   }>({ mobile: 500, windows: 500 });
 
-  const [addButtonText, setAddButtonText] = useState<string>(gridAddButtonText == "Add" ? t("add") : gridAddButtonText)
+  const [addButtonText, setAddButtonText] = useState<string>(
+    gridAddButtonText == "Add" ? t("add") : gridAddButtonText
+  );
   const onPopupOpenClick = useCallback(() => {
     dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
@@ -254,7 +263,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [gridCols, setGridCols] = useState<DevGridColumn[]>();
   const [preferences, setPreferences] = useState<GridPreference>();
   useEffect(() => {
-    console.log('preferer useeff');
+    console.log("preferer useeff");
 
     if (gridId != "" && columns != undefined && columns != null) {
       onApplyPreferences(getInitialPreference(gridId, columns));
@@ -274,11 +283,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const isNotEmpty = (value: any) =>
     value !== undefined && value !== null && value !== "";
   console.log("store:");
-  const store = useMemo(() => createStore(keyExpr, dataUrl, allowEditing), [
-    keyExpr,
-    dataUrl,
-    allowEditing,
-  ]);
+  const store = useMemo(
+    () => createStore(keyExpr, dataUrl, allowEditing),
+    [keyExpr, dataUrl, allowEditing]
+  );
 
   const onExportingHandler = (e: any) => {
     if (onExporting) {
@@ -346,10 +354,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           dateSerializationFormat={dateSerializationFormat}
           // loadPanelEnabled={true}
           hoverStateEnabled={hoverStateEnabled}
+          
         >
           <ColumnFixing enabled={true} />
           <Scrolling mode={scrollingMode} />
-          {allowPaging && <Paging defaultPageSize={pageSize} pageSize={pageSize} />}
+          {allowPaging && (
+            <Paging defaultPageSize={pageSize} pageSize={pageSize} />
+          )}
           {allowFiltering && <FilterRow visible={true} />}
           {allowSearching && <SearchPanel visible={true} />}
           <HeaderFilter visible={true} />
@@ -373,7 +384,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               formats={exportFormats}
               allowExportSelectedData={true}
             />
-          ) : (<Export enabled={false}></Export>)}
+          ) : (
+            <Export enabled={false}></Export>
+          )}
           {stateStoring && (
             <StateStoring
               enabled={stateStoring.enabled}
@@ -416,22 +429,35 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                     </Link>
                   )}
                   {gridAddButtonType == "popup" && (
-                    <ERPButton variant="primary" onClick={onPopupOpenClick} title={addButtonText} startIcon={gridAddButtonIcon}>
-                    </ERPButton>
-
+                    <ERPButton
+                      variant="primary"
+                      onClick={onPopupOpenClick}
+                      title={addButtonText}
+                      startIcon={gridAddButtonIcon}
+                    ></ERPButton>
                   )}
                 </div>
               </Item>
             )}
 
-            {customToolbarItems.map((item, index) => (
-              <Item key={index} location="after">
-                {item}
-              </Item>
-            ))}
+            {customToolbarItems
+              ?.filter((item) => item.location === "before")
+              .map((toolbarItem, index) => (
+                <Item key={index} location="before">
+                  {toolbarItem.item}
+                </Item>
+              ))}
+            {customToolbarItems
+              ?.filter((item) => item.location === "after")
+              .map((toolbarItem, index) => (
+                <Item key={index} location="after">
+                  {toolbarItem.item}
+                </Item>
+              ))}
           </Toolbar>
           {gridCols?.map((column) => (
             <Column
+              allowEditing={column.allowEditing || false}
               key={column.dataField}
               dataField={column.dataField}
               caption={column.caption}

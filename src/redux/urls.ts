@@ -44,6 +44,18 @@ const Urls = {
   data_upis: "/Accounts/Data/UPIs/",
   data_bankcards: "/Accounts/Data/BankCards",
   data_vouchertype: "/Accounts/Data/VoucherType",
+  data_InputCalamity: "/Accounts/Data/InputCalamity",
+  data_FormTypeBySI: "/Accounts/Data/FormTypeBySI",
+  data_FormTypeBySR: "/Accounts/Data/FormTypeBySR",
+  data_VPrefixForSI: "/Accounts/Data/VPrefixForSI",
+  data_VPrefixForSR: "/Accounts/Data/VPrefixForSR",
+  data_CashLedgers: "/Accounts/Data/CashLedgers",
+  data_SuspenseAccount: "/Accounts/Data/SuspenseAccount",
+  data_BankAccounts: "/Accounts/Data/BankAccounts",
+  data_SalesAccount: "/Accounts/Data/SalesAccount",
+  data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
+  data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
+
 
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
@@ -65,7 +77,9 @@ const Urls = {
   password_reset_confirm: "/resetPassword/",
   social_signup: "/socialSignup/",
   set_branch: "/Subscription/Auth/SetBranch/",
-
+  SendEmailToken:"/Subscription/Auth/SendEmailToken",
+  ValidateToken:"/Subscription/Auth/ValidateToken",
+  
   // App
   application_setting: "/Core/ApplicationSettings/",
 
@@ -142,6 +156,7 @@ const Urls = {
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/ResetTransactionTables/",
+  application_settings:"/Core/ApplicationSettings/",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

@@ -42,7 +42,7 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("username")}
           required={true}
           onChangeData={(data: any) => {
-            debugger;
+            
             handleFieldChange("userName", data);
           }}
         />

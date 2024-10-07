@@ -5,178 +5,190 @@ import ERPCheckbox from '../../../components/ERPComponents/erp-checkbox';
 import ERPInput from '../../../components/ERPComponents/erp-input';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
+import ERPToast from '../../../components/ERPComponents/erp-toast';
+import { APIClient } from '../../../helpers/api-client';
+import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
 
-interface Settings {
-  currency: any;
-  unitPriceDecimalPoints: any;
-  DecimalPoints: any;
-  CurrencyFormat: any;
-  RoundingMethod: any;
-  SalesRoundingMethod: any;
-  TaxDecimalPoints: any;
-  RoundingMethodGlobal: any;
-  AutoChangeTransactionDate: boolean | undefined;
-  AutoUpdateReleaseUpTo: any;
-  OTPEmail: any;
-  OTPVerification: any;
-  AllowPrivilegeCard: boolean | undefined;
-  PrivilegeCardPercentage: any;
-  AllowPostdatedTransaction: boolean | undefined;
-  PostdatedTransactionDays: any;
-  AllowPredatedTransaction: boolean | undefined;
-  PredatedTransactionDays: any;
-  MaintainSeparatePrefixForCashSales: boolean | undefined;
-  SaveModifiedTransactionSummary: boolean | undefined;
-  MaintainProduction: boolean | undefined;
-  ShowReminders: boolean | undefined;
-  EnableSecondDisplay: boolean | undefined;
-  AllowSalesRouteArea: boolean | undefined;
-  EnableDayEnd: boolean | undefined;
-  MaintainSalesRouteCreditLimit: boolean | undefined;
-  MaintainMultilanguage: boolean | undefined;
-  ShowUserMessages: boolean | undefined;
-  BusinessType: any;
-  imageLocation: string,
-  weighingScaleBarcodeType: string,
-  lastGeneratedBarcode: string,
-  pposPriceCategory: string,
-  marginRoundTo:number,
-  hsnCode: string,
-  lpPriceLessThanSelling: boolean,
-  mrpLessThanSalesPrice: boolean,
-  zeroMultiRateValidate: boolean,
-  defaultQty: boolean,
-  multiRate: boolean,
-  multiUnit: boolean,
-  sharedGiftPath: string,
-  giftOnBilling: boolean,
-  loadCustomerLastSalesRate: boolean,
-  focusToQtyAfterBarcode: boolean,
-  loadDummyProducts: boolean,
-  showRateBeforeTax: boolean,
-  maintainSchemes: boolean,
-  enableSupplierWiseItemCode: boolean,
-  enableMultiWarehouseBilling: boolean,
+interface FormState {
+  setDefaultQty1: boolean;
+  allowMultiUnits: boolean;
+  allowMultirate: boolean;
+  batchCriteria: string;
+  loadCustomerLastRate: boolean;
+  loadDummyProducts: boolean;
+  marginRoundTo: number;
+  focusToQtyAfterBarcode: boolean;
+  stockTransferNegativeStock: string;
+  allowManualProductSelectionInSales: boolean;
+  useProductImages: boolean;
+  productImagePath: string;
+  maintainSchemes: boolean;
+  weighingScaleBarcodeType: string;
+  pPOsPriceCategory: number;
+  showRateBeforeTax: boolean;
+  stopScanningOnWrongBarcode: boolean;
+  allowOnlyScanProductMarkedAsWeighingScaleItems: boolean;
+  loadListedProductPrices: boolean;
+  advancedProductSearching: boolean;
+  blockQtyChangeOptionInPOS: boolean;
+  enableGoogleTranslationOfProductName: boolean;
+  setQty1ForWeighingScaleItem_ValueMode: boolean;
+  allowUpdateSalesPriceFromPurchase: boolean;
+  usePopupWindowForItemSearch: boolean;
+  enableMultiWarehouseBilling: boolean;
+  enableSupplierWiseItemCode: boolean;
+  includeSearchItemAlias_ItemName2: boolean;
+  lastSystemGeneratedBarcode: number;
+  stopScanningOnWrongBarcodeInSales: boolean;
+  excludeSchemeProductAmountFromPrivilegeCard: boolean;
+  showPurchaseCostChangeWarning: boolean;
+  listBarcodeItemsInItemLookup: boolean;
+  showHSNCodeWarning: string;
+  giftOnBilling: boolean;
+  setProductQtyLimitinSales: boolean;
+  enableQtySlabOffer: boolean;
+  giftOnBillingAs: string;
+  enableMultiFOC: boolean;
+  lPPriceLessThanSellingPrice: string;
+  mRPLessThanSalesPrice: string;
+  zeroMultiRateValidate: string;
+  allowUpdateMultiRateinPurchase: boolean;
 }
-const initialSettings: Settings = {
-  imageLocation: "",
-  weighingScaleBarcodeType: "",
-  lastGeneratedBarcode: "",
-  pposPriceCategory: "",
-  marginRoundTo: 0,
-  hsnCode: "",
-  lpPriceLessThanSelling: false,
-  mrpLessThanSalesPrice: false,
-  zeroMultiRateValidate: false,
-  defaultQty: false,
-  multiRate: false,
-  multiUnit: false,
-  sharedGiftPath: "",
-  giftOnBilling: false,
-  loadCustomerLastSalesRate: false,
-  focusToQtyAfterBarcode: false,
-  loadDummyProducts: false,
-  showRateBeforeTax: false,
-  maintainSchemes: false,
-  enableSupplierWiseItemCode: false,
-  enableMultiWarehouseBilling: false,
-  currency: undefined,
-  unitPriceDecimalPoints: undefined,
-  DecimalPoints: undefined,
-  CurrencyFormat: undefined,
-  RoundingMethod: undefined,
-  SalesRoundingMethod: undefined,
-  TaxDecimalPoints: undefined,
-  RoundingMethodGlobal: undefined,
-  AutoChangeTransactionDate: undefined,
-  AutoUpdateReleaseUpTo: undefined,
-  OTPEmail: undefined,
-  OTPVerification: undefined,
-  AllowPrivilegeCard: undefined,
-  PrivilegeCardPercentage: undefined,
-  AllowPostdatedTransaction: undefined,
-  PostdatedTransactionDays: undefined,
-  AllowPredatedTransaction: undefined,
-  PredatedTransactionDays: undefined,
-  MaintainSeparatePrefixForCashSales: undefined,
-  SaveModifiedTransactionSummary: undefined,
-  MaintainProduction: undefined,
-  ShowReminders: undefined,
-  EnableSecondDisplay: undefined,
-  AllowSalesRouteArea: undefined,
-  EnableDayEnd: undefined,
-  MaintainSalesRouteCreditLimit: undefined,
-  MaintainMultilanguage: undefined,
-  ShowUserMessages: undefined,
-  BusinessType: undefined
-};
+
 
 const ApplicationSettingsProduct = () => {
-  const [settings, setSettings] = useState<Settings>(initialSettings);
-  const [changedSettings, setChangedSettings] = useState<Partial<Settings>>({});
-  const [loading, setLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+const initialState: FormState = {
+  setDefaultQty1: true,
+  allowMultiUnits: true,
+  allowMultirate: false,
+  batchCriteria: "NB",
+  loadCustomerLastRate: false,
+  loadDummyProducts: false,
+  marginRoundTo: 0,
+  focusToQtyAfterBarcode: true,
+  stockTransferNegativeStock: "Warn",
+  allowManualProductSelectionInSales: true,
+  useProductImages: false,
+  productImagePath: " ",
+  maintainSchemes: false,
+  weighingScaleBarcodeType: "Standard. No Check Digit",
+  pPOsPriceCategory: 1,
+  showRateBeforeTax: false,
+  stopScanningOnWrongBarcode: false,
+  allowOnlyScanProductMarkedAsWeighingScaleItems: false,
+  loadListedProductPrices: false,
+  advancedProductSearching: false,
+  blockQtyChangeOptionInPOS: false,
+  enableGoogleTranslationOfProductName: true,
+  setQty1ForWeighingScaleItem_ValueMode: true,
+  allowUpdateSalesPriceFromPurchase: false,
+  usePopupWindowForItemSearch: false,
+  enableMultiWarehouseBilling: false,
+  enableSupplierWiseItemCode: false,
+  includeSearchItemAlias_ItemName2: true,
+  lastSystemGeneratedBarcode: 1000000000001,
+  stopScanningOnWrongBarcodeInSales: false,
+  excludeSchemeProductAmountFromPrivilegeCard: false,
+  showPurchaseCostChangeWarning: false,
+  listBarcodeItemsInItemLookup: false,
+  showHSNCodeWarning: "Warn",
+  giftOnBilling: false,
+  setProductQtyLimitinSales: false,
+  enableQtySlabOffer: false,
+  giftOnBillingAs: "Products",
+  enableMultiFOC: false,
+  lPPriceLessThanSellingPrice: "Warn",
+  mRPLessThanSalesPrice: "Warn",
+  zeroMultiRateValidate: "Warn",
+  allowUpdateMultiRateinPurchase: false
+};
 
-  useEffect(() => {
-    loadSettings();
-  }, []);
 
-  const loadSettings = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('/api/settings');
-      const data: Settings = await response.json();
-      setSettings(data);
-    } catch (error) {
-      console.error('Error loading settings:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+const [formState, setFormState] = useState<FormState>(initialState);
+const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+const [loading, setLoading] = useState(true);
+const [isSaving, setIsSaving] = useState(false);
+const [error, setError] = useState<string | null>(null);
+const api = new APIClient();
+const dispatch = useAppDispatch();
 
-  const handleFieldChange = ((settingName: any, value: any) => {
-    setSettings((prevSettings = {} as Settings) => ({
-      ...prevSettings,
-      [settingName]: value ?? ''
-    }));
-    
-    setChangedSettings((prevChangedSettings = {} as Settings) => ({
-      ...prevChangedSettings,
-      [settingName]: value ?? ''
-    }));
-  });
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
-    try {
-      const response = await fetch('/api/settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(changedSettings),
-      });
-      if (response.ok) {
-        console.log('Settings saved successfully');
-        setChangedSettings({});
-      } else {
-        console.error('Error saving settings');
-      }
-    } catch (error) {
-      console.error('Error saving settings:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
+useEffect(() => {
+  loadSettings();
+}, []);
 
-  if (loading) {
-    return <div>Loading settings?...</div>;
+const loadSettings = async () => {
+  setLoading(true);
+  try {
+    const response = await api.getAsync(`${Urls.application_settings}products`);
+    debugger;
+    console.log(formState);
+    setFormStatePrev(response);
+    setFormState(response);
+  } catch (error) {
+    console.error("Error loading settings:", error);
+  } finally {
+    setLoading(false);
   }
+};
 
+const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+  setFormState((prevState) => ({
+    ...prevState,
+    [field]: value,
+  }));
+};
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSaving(true);
+  try {
+    const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+      const currentValue = formState?.[key as keyof FormState];
+      const prevValue = formStatePrev[key as keyof FormState];
+
+      if (currentValue !== prevValue) {
+        debugger;
+        acc.push({
+          settingsName: key,
+          settingsValue: currentValue,
+        });
+      }
+      return acc;
+    }, [] as { settingsName: string; settingsValue: any }[]);
+    console.log(modifiedSettings);
+
+    const response = (await api.put(Urls.application_settings, {
+      type: "products",
+      updateList: modifiedSettings,
+    })) as any;
+    debugger;
+    if (response != undefined && response != null && response.IsOk == true) {
+      ERPToast.showWith(response?.message, "success");
+    } else {
+      ERPToast.showWith(response?.message, "warning");
+    }
+  } catch (error) {
+    console.error("Error saving settings:", error);
+  } finally {
+    setIsSaving(false);
+  }
+};
+//   if (loading) {
+//     return <div>Loading settings...</div>;
+//   }
+
+if (error) {
+  return (
+    <div className="error-message">
+      {error}
+      <button onClick={loadSettings}>Retry</button>
+    </div>
+  );
+}
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Pageheader><p>asasa</p></Pageheader>
-        <div className="grid grid-cols-5 gap-6">
+      
+        {/* <div className="grid grid-cols-5 gap-6">
           <ERPDataCombobox
           id = "currency"
             field={{
@@ -201,7 +213,7 @@ const ApplicationSettingsProduct = () => {
             value={settings?.unitPriceDecimalPoints}
             data={settings}
             onChangeData={(data) =>{
-              debugger;
+              
               handleFieldChange("unitPriceDecimalPoints", data.unitPriceDecimalPoints)
             }}
             options={[
@@ -465,7 +477,7 @@ const ApplicationSettingsProduct = () => {
             variant="primary"
             type="submit"
           />
-        </div>
+        </div> */}
       </form>
   );
 };

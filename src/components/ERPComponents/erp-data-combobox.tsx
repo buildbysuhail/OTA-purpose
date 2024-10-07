@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import {
   Combobox,
   ComboboxButton,
@@ -18,16 +17,12 @@ import {
 import { useLocation } from "react-router-dom";
 import {
   getCurrentCurrencySymbol,
-  getPriceListOptions,
 } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
-import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 import {
   useAppDispatch,
-  useAppSelector,
 } from "../../utilities/hooks/useAppDispatch";
-import { reducerNameFromUrl } from "../../redux/actions/AppActions";
-import { getAction } from "../../redux/slices/app-thunks";
+import { APIClient } from "../../helpers/api-client";
 interface ERPDataComboboxProps {
   id: string;
   label?: string;
@@ -67,6 +62,8 @@ export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
         is_active: item?.is_active,
       }));
     } else {
+      console.log('data:' + data);
+      
       options = data?.map((item: any) => ({
         label: item?.[keyLabel],
         value: item?.[keyValue],
@@ -76,7 +73,7 @@ export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
     return options || [];
   }
 };
-
+const api = new APIClient();
 export default function ERPDataCombobox({
   id,
   label,
@@ -98,9 +95,10 @@ export default function ERPDataCombobox({
   autoFocus,
   disabled = false,
   initialValue,
+  className,
   isPaginated = false,
   disabledApiCall = false,
-  validation,
+  validation
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -116,14 +114,18 @@ export default function ERPDataCombobox({
   const [hasValue, setHasValue] = useState<boolean>(false);
   const [initial, setInitial] = useState<any>(initialValue);
   useEffect(() => {
+    
     if (!disabledApiCall) {
       loadData();
     }
   }, []);
   const loadData = async () => {
+    
     setLoading(true);
-    let _items = options ? options : await getAction({ apiUrl: field?.getListUrl });
-debugger;
+    
+    let _items = options ? options : await api.getAsync(field?.getListUrl,field?.params ? field?.params: '' );
+
+    
     let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];
 
     _options = _options?.filter(
@@ -207,10 +209,11 @@ debugger;
     <div className="relative">
       {/* <ERPModelForm formFields={field?.formFields} show={showForm} onClose={() => setShowForm(false)} title={iLabel} /> */}
       <Combobox
+      key={id}
         disabled={disableCombobox()}
         value={initial}
         onChange={(value) => {
-          debugger;
+          
           setInitial(value)
           onChange && onChange(value);
           onChangeData &&
@@ -226,7 +229,7 @@ debugger;
         }}
       >
         <div className="relative">
-          <div className="">
+          <div className={className}>
             <ComboboxButton
               type="button"
               className="w-full inset-y-0 top-[30px] right-0 flex items-center"

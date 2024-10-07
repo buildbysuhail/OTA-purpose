@@ -6,6 +6,10 @@ import ERPInput from '../../../components/ERPComponents/erp-input';
 import ERPSelect from '../../../components/ERPComponents/erp-select';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
+import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
+import { postAction } from '../../../redux/slices/app-thunks';
+import { APIClient } from '../../../helpers/api-client';
+import ERPToast from '../../../components/ERPComponents/erp-toast';
 
 interface Settings {
   currency: string;
@@ -69,8 +73,9 @@ const initialSettings: Settings = {
   showUserMessages: false,
   businessType: "General"
 };
-
+const api=new APIClient();
 const ERPSettingsFormMain = () => {
+  const dispatch=useAppDispatch()
   const [settings, setSettings] = useState<Settings>(initialSettings);
   const [changedSettings, setChangedSettings] = useState<Partial<Settings>>({});
   const [loading, setLoading] = useState(true);
@@ -96,7 +101,34 @@ const ERPSettingsFormMain = () => {
   const verifyOtp = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/settings');
+      const response = await api.post(Urls.ValidateToken,{email: settings.oTPEmail,token: settings.oTPVerification});
+      if(response!=undefined && response!=null && response.IsOk==true)
+        {
+          ERPToast.showWith(response?.message, "success");
+        }
+        else{
+          ERPToast.showWith(response?.message,"warning")
+        }
+      const data: Settings = await response.json();
+      setSettings(data);
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const sendOtp = async () => {
+    setLoading(true);
+    try {
+
+      const response = await api.post(Urls.SendEmailToken,{ email: settings.oTPEmail});// dispatch(postAction({apiUrl:Urls.SendEmailToken,data:{ email: settings.oTPEmail}}) as any).unwrap();
+      if(response!=undefined && response!=null && response.IsOk == settings)
+      {
+        ERPToast.showWith(response?.message, "success");
+      }
+      else{
+        ERPToast.showWith(response?.message,"warning")
+      }
       const data: Settings = await response.json();
       setSettings(data);
     } catch (error) {
@@ -146,7 +178,7 @@ const ERPSettingsFormMain = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <Pageheader><p>asasa</p></Pageheader>
+      <Pageheader><p>Main</p></Pageheader>
         <div className="grid grid-cols-5 gap-6">
           <ERPDataCombobox
           id = "currency"
@@ -172,7 +204,7 @@ const ERPSettingsFormMain = () => {
             value={settings?.unitPriceDecimalPoints}
             data={settings}
             onChangeData={(data) =>{
-              debugger;
+              
               handleFieldChange("unitPriceDecimalPoints", data.unitPriceDecimalPoints)
             }}
             options={[
@@ -181,6 +213,7 @@ const ERPSettingsFormMain = () => {
               { value: '2', label: '2' },
               { value: '3', label: '3' },
               { value: '4', label: '4' },
+              { value: '5', label: '5' },
             ]}
           />
           <ERPDataCombobox
@@ -194,6 +227,7 @@ const ERPSettingsFormMain = () => {
               { value: '2', label: '2' },
               { value: '3', label: '3' },
               { value: '4', label: '4' },
+              { value: '5', label: '5' },
             ]}
           />
           <ERPDataCombobox
@@ -203,8 +237,7 @@ const ERPSettingsFormMain = () => {
             onChangeData={(data) => handleFieldChange("currencyFormat", data.currencyFormat)}
             options={[
               { value: 'Millions', label: 'Millions' },
-              { value: 'Thousands', label: 'Thousands' },
-              { value: 'Hundreds', label: 'Hundreds' },
+              { value: 'Lakhs', label: 'Lakhs' },
             ]}
           />
           <ERPDataCombobox
@@ -213,25 +246,40 @@ const ERPSettingsFormMain = () => {
             value={settings?.roundingMethod}
             onChangeData={(data) => handleFieldChange("roundingMethod", data.roundingMethod)}
             options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'No Rounding', label: 'No Rounding' },
+              { value: 'Ceiling', label: 'Ceiling' },
+              { value: 'Floor', label: 'Floor' },
             ]}
           />
           <ERPDataCombobox
+           field={{
+            id: "salesRoundingMethod",
+            valueKey: "value",
+            labelKey: "label",
+          }}
             id="salesRoundingMethod"
             label="Sales Rounding Method"
-            type="select"
             value={settings?.salesRoundingMethod}
+            data={settings}
             onChangeData={(data) => handleFieldChange("salesRoundingMethod", data.salesRoundingMethod)}
             options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'No Rounding', label: 'No Rounding' },
+              { value: 'Ceiling', label: 'Ceiling' },
+              { value: 'Floor', label: 'Floor' },
+              { value: 'Round to 0.25', label: 'Round to 0.25' },
+              { value: 'Round to 0.50', label: 'Round to 0.50' },
+              { value: 'Round to 0.10', label: 'Round to 0.10' },
+              { value: 'Floor Round to 0.50', label: 'Floor Round to 0.50' },
+              { value: 'Floor Round to 0.25', label: 'Floor Round to 0.25' },
+              { value: 'Floor Round to 0.10', label: 'Floor Round to 0.10' },
+              { value: 'Not Set', label: 'Not Set' },
+              { value: 'Round to 0.010', label: 'Round to 0.010' },
             ]}
           />
           <ERPDataCombobox
-            id="caxDecimalPoints"
+            id="taxDecimalPoints"
             label="Tax Decimal Points"
             value={settings?.taxDecimalPoints}
             onChangeData={(data) => handleFieldChange("TaxDecimalPoints", data.taxDecimalPoints)}
@@ -241,6 +289,7 @@ const ERPSettingsFormMain = () => {
               { value: '2', label: '2' },
               { value: '3', label: '3' },
               { value: '4', label: '4' },
+              { value: '5', label: '5' },
             ]}
           />
           <ERPDataCombobox
@@ -249,9 +298,18 @@ const ERPSettingsFormMain = () => {
             value={settings?.roundingMethodGlobal}
             onChangeData={(data) => handleFieldChange("RoundingMethodGlobal", data.roundingMethodGlobal)}
             options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'No Rounding', label: 'No Rounding' },
+              { value: 'Ceiling', label: 'Ceiling' },
+              { value: 'Floor', label: 'Floor' },
+              { value: 'Round to 0.25', label: 'Round to 0.25' },
+              { value: 'Round to 0.50', label: 'Round to 0.50' },
+              { value: 'Round to 0.10', label: 'Round to 0.10' },
+              { value: 'Floor Round to 0.50', label: 'Floor Round to 0.50' },
+              { value: 'Floor Round to 0.25', label: 'Floor Round to 0.25' },
+              { value: 'Floor Round to 0.10', label: 'Floor Round to 0.10' },
+              { value: 'Not Set', label: 'Not Set' },
+              { value: 'Round to 0.010', label: 'Round to 0.010' },
             ]}
           />
           <ERPCheckbox
@@ -278,24 +336,26 @@ const ERPSettingsFormMain = () => {
             label="OTP Email"
             className="flex-grow"
             value={settings?.oTPEmail}
-            onChangeData={(data) => handleFieldChange("OTPEmail", data.oTPEmail)}
+            data={settings}
+            onChangeData={(data) => handleFieldChange("oTPEmail", data.oTPEmail)}
           />
           <ERPButton
             title="Send OTP"
             variant="secondary"
-            onClick={() => verifyOtp}
+            onClick={() => sendOtp()}
           />
           <ERPInput
             id="oTPVerification"
             placeholder="Enter OTP"
             className="w-32"
             value={settings?.oTPVerification}
+            data={settings}
             onChangeData={(data) => handleFieldChange("oTPVerification", data.oTPVerification)}
           />
           <ERPButton
             title="Verify"
             variant="primary"
-            onClick={() => console.log('Verify OTP clicked')}
+            onClick={() => verifyOtp()}
           />
         </div>
 
@@ -304,14 +364,14 @@ const ERPSettingsFormMain = () => {
             <ERPCheckbox
               id="AllowPrivilegeCard"
               label="Allow Privilege Card"
-              checked={settings?.AllowPrivilegeCard}
+              checked={settings?.allowPrivilegeCard}
               onChangeData={(data) => handleFieldChange("AllowPrivilegeCard", data.AllowPrivilegeCard)}
             />
             <ERPInput
               id="PrivilegeCardPercentage"
               type="number"
               className="w-16 ml-6 mt-1"
-              value={settings?.PrivilegeCardPercentage}
+              value={settings?.privilegeCardPercentage}
               onChangeData={(data) => handleFieldChange("PrivilegeCardPercentage", data.PrivilegeCardPercentage)}
             />
           </div>
@@ -319,14 +379,14 @@ const ERPSettingsFormMain = () => {
             <ERPCheckbox
               id="AllowPostdatedTransaction"
               label="Allow Postdated Transaction"
-              checked={settings?.AllowPostdatedTransaction}
+              checked={settings?.allowPostdatedTransaction}
               onChangeData={(data) => handleFieldChange("AllowPostdatedTransaction", data.AllowPostdatedTransaction)}
             />
             <ERPInput
               id="PostdatedTransactionDays"
               type="number"
               className="w-16 ml-6 mt-1"
-              value={settings?.PostdatedTransactionDays}
+              value={settings?.postdatedTransactionDays}
               onChangeData={(data) => handleFieldChange("PostdatedTransactionDays", data.PostdatedTransactionDays)}
             />
           </div>
@@ -334,14 +394,14 @@ const ERPSettingsFormMain = () => {
             <ERPCheckbox
               id="AllowPredatedTransaction"
               label="Allow Predated Transaction"
-              checked={settings?.AllowPredatedTransaction}
+              checked={settings?.allowPredatedTransaction}
               onChangeData={(data) => handleFieldChange("AllowPredatedTransaction", data.AllowPredatedTransaction)}
             />
             <ERPInput
               id="PredatedTransactionDays"
               type="number"
               className="w-16 ml-6 mt-1"
-              value={settings?.PredatedTransactionDays}
+              value={settings?.predatedTransactionDays}
               onChangeData={(data) => handleFieldChange("PredatedTransactionDays", data.PredatedTransactionDays)}
             />
           </div>
@@ -352,76 +412,85 @@ const ERPSettingsFormMain = () => {
         <ERPCheckbox
           id="MaintainSeparatePrefixForCashSales"
           label="Maintain Separate Prefix for Cash Sales"
-          checked={settings?.MaintainSeparatePrefixForCashSales}
+          checked={settings?.maintainSeparatePrefixForCashSales}
           onChangeData={(data) => handleFieldChange("MaintainSeparatePrefixForCashSales", data.MaintainSeparatePrefixForCashSales)}
         />
 
           <ERPCheckbox
             id="SaveModifiedTransactionSummary"
             label="Save Modified Transaction Summary"
-            checked={settings?.SaveModifiedTransactionSummary}
+            checked={settings?.saveModifiedTransactionSummary}
             onChangeData={(data) => handleFieldChange("SaveModifiedTransactionSummary", data.SaveModifiedTransactionSummary)}
           />
           <ERPCheckbox
             id="MaintainProduction"
             label="Maintain Production"
-            checked={settings?.MaintainProduction}
+            checked={settings?.maintainProduction}
             onChangeData={(data) => handleFieldChange("MaintainProduction", data.MaintainProduction)}
           />
           <ERPCheckbox
             id="ShowReminders"
             label="Show Reminders"
-            checked={settings?.ShowReminders}
+            checked={settings?.showReminders}
             onChangeData={(data) => handleFieldChange("ShowReminders", data.ShowReminders)}
           />
           <ERPCheckbox
             id="EnableSecondDisplay"
             label="Enable Second Display"
-            checked={settings?.EnableSecondDisplay}
+            checked={settings?.enableSecondDisplay}
             onChangeData={(data) => handleFieldChange("EnableSecondDisplay", data.EnableSecondDisplay)}
           />
           <ERPCheckbox
             id="AllowSalesRouteArea"
             label="Allow Sales Route/Area"
-            checked={settings?.AllowSalesRouteArea}
+            checked={settings?.allowSalesRouteArea}
             onChangeData={(data) => handleFieldChange("AllowSalesRouteArea", data.AllowSalesRouteArea)}
           />
           <ERPCheckbox
             id="EnableDayEnd"
             label="Enable Day End"
-            checked={settings?.EnableDayEnd}
+            checked={settings?.enableDayEnd}
             onChangeData={(data) => handleFieldChange("EnableDayEnd", data.EnableDayEnd)}
           />
           <ERPCheckbox
             id="MaintainSalesRouteCreditLimit"
             label="Maintain Sales Route Credit Limit"
-            checked={settings?.MaintainSalesRouteCreditLimit}
+            checked={settings?.maintainSalesRouteCreditLimit}
             onChangeData={(data) => handleFieldChange("MaintainSalesRouteCreditLimit", data.MaintainSalesRouteCreditLimit)}
           />
           <ERPCheckbox
             id="MaintainMultilanguage"
             label="Maintain Multilanguage"
-            checked={settings?.MaintainMultilanguage}
+            checked={settings?.maintainMultilanguage}
             onChangeData={(data) => handleFieldChange("MaintainMultilanguage", data.MaintainMultilanguage)}
           />
           <ERPCheckbox
             id="ShowUserMessages"
             label="Show User Messages"
-            checked={settings?.ShowUserMessages}
+            checked={settings?.showUserMessages}
             onChangeData={(data) => handleFieldChange("ShowUserMessages", data.ShowUserMessages)}
           />
         </div>
 
-        <ERPInput
+        <ERPDataCombobox
+         field={{
+          id: "BusinessType",
+          valueKey: "value",
+          labelKey: "label",
+        }}
           id="BusinessType"
           label="Business Type"
-          type="select"
-          value={settings?.BusinessType}
+          value={settings?.businessType}
+          data={settings}
           onChangeData={(data) => handleFieldChange("BusinessType", data.BusinessType)}
           options={[
-            { value: 'Retail', label: 'Retail' },
-            { value: 'Wholesale', label: 'Wholesale' },
+            { value: 'Retail', label: 'General' },
+            { value: 'Distribution', label: 'Distribution' },
             { value: 'Manufacturing', label: 'Manufacturing' },
+            { value: 'Supermarket', label: 'Supermarket' },
+            { value: 'Textiles', label: 'Textiles' },
+            { value: 'Restaurant', label: 'Restaurant' },
+            { value: 'Opticals', label: 'Opticals' },
           ]}
         />
 

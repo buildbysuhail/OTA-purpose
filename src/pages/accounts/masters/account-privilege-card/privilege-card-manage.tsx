@@ -43,7 +43,7 @@ export const PrivilegeCardManage : React.FC = React.memo(() => {
           label="Card Number"
           placeholder="Card Number"
           required={true}
-          onChangeData={(data: any) => { debugger; handleFieldChange('cardNumber', data) }}
+          onChangeData={(data: any) => {  handleFieldChange('cardNumber', data) }}
         />
         <ERPInput
           {...getFieldProps('cardHolderName')}

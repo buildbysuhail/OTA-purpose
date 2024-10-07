@@ -21,6 +21,7 @@ interface UseFormManagerOptions {
   onError?: (error: any) => void;
   key?: string;
   method?: ActionType;
+  loadDataRequired?: boolean;
   useApiClient?: boolean;
   initialData?: any;
 }
@@ -39,12 +40,14 @@ export function useFormManager<T>({
   onError,
   key,
   method,
+  loadDataRequired = true,
   useApiClient = false,
   initialData,
 }: UseFormManagerOptions) {
   const location = useLocation();
   const appDispatch = useAppDispatch();
   const apiClient = new APIClient();
+  
 
   const queryParams = new URLSearchParams(location.search);
   key =
@@ -80,12 +83,13 @@ export function useFormManager<T>({
 
   const loadFormData = useCallback(async () => {
     // setIsLoading(true);
-    debugger;
+    
     if (useApiClient) {
       try {
         let response;
-        if (isEdit) {
-          response = await apiClient.getAsync(`${url}${key}`);
+        if (isEdit || (method != undefined && method == ActionType.POST && loadDataRequired)) {
+          let par = key != undefined && key != null && key != "" ? `${url}${key}` : `${url}`
+          response = await apiClient.getAsync(par);
         } else {
           response = initialData || {};
         }
@@ -146,7 +150,7 @@ export function useFormManager<T>({
           response = await apiClient.put(`${url}`, formState?.data);
         } else {
           response = await apiClient.post(url, formState?.data);
-        }debugger;
+        }
         handleResponse(
           response,
           () => {

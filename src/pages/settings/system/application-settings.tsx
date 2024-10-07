@@ -4,9 +4,17 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import { ApplicationSettingsIds, ApplicationSettingsTypes } from "./application-settings-categories";
 import ERPSettingsFormMain from "./application-settings-main";
 import ApplicationSettingsAccounts from "./application-settings-accounts";
+
 import MiscellaneousSettingsForm from "./application-settings-miscellaneous";
-import ApplicationSettingsProduct from "./application-settings-product";
 import InventorySettingsForm from "./application-settings-inventory";
+import ERPSettingsFormGSTTaxes from "./application-settings-GSTTaxes";
+import ApplicationSettingsProduct from "./application-settings-product";
+import BranchSettingsForm from "./application-settings-branch";
+
+import PrintSettingForm from "./application-settings-print";
+import BackupSettingsForm from "./application-settings-backup";
+import TaxSettingsForm from "./appllication-settings-tax";
+
 
 
 
@@ -19,7 +27,7 @@ const ApplicationSettings = ({ }) => {
   const [tempData, setTempData] = useState([]);
 
   const [settingsGroup, setSettingsGroup] = useState<ApplicationSettingsIds>(
-    (searchParams?.get("settings_group")! as ApplicationSettingsIds) ?? "main"
+    (searchParams?.get("settings_group_id") as ApplicationSettingsIds) ?? "main"
   );
 
   /* ########################################################################################### */
@@ -27,6 +35,8 @@ const ApplicationSettings = ({ }) => {
   
   /* ########################################################################################### */
 
+ 
+ console.log(settingsGroup);
  
 
   useEffect(() => {
@@ -52,7 +62,7 @@ const ApplicationSettings = ({ }) => {
                 >
                   <div>
                     <Link to={`${location.pathname}?settings_group_id=${settings.settings_group_id}`}></Link>
-                    <h1 className=" text-sm">{settings.name}</h1>
+                    <h1 className=" text-sm ">{settings.name}</h1>
                   </div>
                 </div>
               ))}
@@ -60,7 +70,9 @@ const ApplicationSettings = ({ }) => {
           </div>
 
           <div className="flex-1 h-full">
-          <div className="p-6 bg-white rounded-lg shadow-md">
+            <h1 className="ms-4">{settingsGroup}</h1>
+          <div className="p-6 ">
+          
           {/* <ApplicationSettingsAccounts/> */}
           {settingsGroup ==  "main" 
           ? <ERPSettingsFormMain/>
@@ -72,6 +84,16 @@ const ApplicationSettings = ({ }) => {
           ?<MiscellaneousSettingsForm/>
           :settingsGroup == "inventory"
           ?<InventorySettingsForm/>
+          :settingsGroup == "gst"
+          ?<ERPSettingsFormGSTTaxes/>
+          :settingsGroup == "branch"
+          ?<BranchSettingsForm/>
+          :settingsGroup=="print"
+          ?<PrintSettingForm/>
+          :settingsGroup=="backup"
+          ?<BackupSettingsForm/>
+          :settingsGroup=="tax"
+          ?<TaxSettingsForm/>
           :null
                     }
 

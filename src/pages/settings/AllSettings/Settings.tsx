@@ -40,6 +40,26 @@ const Settings = () => {
   const dispatch = useAppDispatch();
   const [settingsRoutes, setSettingRoutes] = useState(SettingsMenuItems);
   let sds = jwtHelper.getLoggedInUserRole();
+  const preloadComponents = () => {
+    import("../Administration/delete-inactive-transactions-manage");
+    import("../Administration/Company-Profile-manage");
+    import("../Administration/bank-pos-settings-manage");
+    import("../Administration/branch-info-manage");
+    import("../system/day-close-manage");
+    import("../system/user-action-report-manage");
+    import("../system/import-export");
+    import("../system/commands");
+    import("../system/authorization-settings-manage");
+    import("../system/reset-database-manage");
+    import("../system/barcode-print");
+    import("../system/exchange-rates");
+  };
+
+  useEffect(() => {
+    // Preload the components after the initial render
+    preloadComponents();
+  }, []);
+
 
   return (
     <Fragment>

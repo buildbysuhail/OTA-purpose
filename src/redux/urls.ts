@@ -142,6 +142,7 @@ const Urls = {
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/ResetTransactionTables/",
+  application_settings:"/Core/ApplicationSettings/",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

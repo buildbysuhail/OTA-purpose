@@ -90,10 +90,6 @@ const MiscellaneousSettingsForm: React.FC = () => {
     // You can send this list to your API or handle it as needed
   };
 
-  //   if (loading) {
-  //     return <div>Loading settings?...</div>;
-  //   }
-
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 justify-start gap-5">
@@ -183,6 +179,28 @@ const MiscellaneousSettingsForm: React.FC = () => {
             type="submit"
           />
         </div>
+
+        <div className="overflow-x-auto w-full ">
+        <table className="min-w-full bg-white border border-gray-200 scroll">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b">ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+              <tr
+                
+              >
+                <td className="py-2 px-4 border-b text-center"></td>
+                <td className="py-2 px-4 border-b text-center"></td>
+                <td className="py-2 px-4 border-b text-center"></td>
+               
+              </tr>
+          
+          </tbody>
+        </table>
+      </div>
         
         </div>
         <div></div>

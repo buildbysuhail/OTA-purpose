@@ -92,10 +92,9 @@ const ExchangeRates = () => {
                   hideDefaultSearchPanel={true}
                   allowExport={false}
                   allowEditing={true}
-                  className="w-[300px] mb-[13px]"
                   customToolbarItems={[
                     { item:  <ERPDataCombobox
-                      className="w-[250px]"
+                  className="w-[300px] mb-[13px]"
                       id="baseCurrency"
                       field={{
                         id: "baseCurrency",

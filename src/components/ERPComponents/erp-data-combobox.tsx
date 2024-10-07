@@ -79,7 +79,6 @@ export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
     return options || [];
   }
 };
-
 const api = new APIClient();
 export default function ERPDataCombobox({
   id,
@@ -126,6 +125,7 @@ export default function ERPDataCombobox({
     }
   }, []);
   const loadData = async () => {
+    debugger;
     setLoading(true);
     debugger;
     let _items = options ? options : await api.getAsync(field?.getListUrl,field?.params ? field?.params: '' );

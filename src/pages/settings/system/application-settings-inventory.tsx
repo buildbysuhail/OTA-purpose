@@ -206,7 +206,7 @@ const InventorySettingsForm: React.FC = () => {
 
     return (
         <div className="erp-settings-form">
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
+            <div className="form-row grid grid-cols-5 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultSalesAccount"
                     value={formState.defaultSalesAccount}
@@ -239,7 +239,7 @@ const InventorySettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
+            <div className="form-row grid grid-cols-5 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultSalesReturnAccount"
                     value={formState.defaultSalesReturnAccount}
@@ -272,7 +272,7 @@ const InventorySettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
+            <div className="form-row grid grid-cols-5 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultPurchaseAccount"
                     value={formState.defaultPurchaseAccount}
@@ -305,7 +305,7 @@ const InventorySettingsForm: React.FC = () => {
                 />
             </div>
 
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
+            <div className="form-row grid grid-cols-5 gap-3 my-3">
                 <ERPDataCombobox
                     id="defaultPurchaseReturnAccount"
                     value={formState.defaultPurchaseReturnAccount}

@@ -229,7 +229,7 @@ export default function ERPDataCombobox({
         }}
       >
         <div className="relative">
-          <div className="w-[300px] mb-[13px]">
+          <div className={className}>
             <ComboboxButton
               type="button"
               className="w-full inset-y-0 top-[30px] right-0 flex items-center"

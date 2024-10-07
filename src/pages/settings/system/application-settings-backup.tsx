@@ -171,7 +171,13 @@ const BackupSettingsForm: React.FC = () => {
         </div>
 
         <div className="my-4 flex items-center justify-center">
-          <ERPButton title="Save Settings" variant="primary" type="submit" />
+        <ERPButton
+            title="Save Settings"
+            variant="primary"
+            disabled={isSaving}
+            loading={isSaving}
+            type="submit"
+          />
         </div>
       </div>
     </form>

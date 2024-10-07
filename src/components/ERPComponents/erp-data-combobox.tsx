@@ -28,6 +28,7 @@ import {
 } from "../../utilities/hooks/useAppDispatch";
 import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { getAction } from "../../redux/slices/app-thunks";
+import { APIClient } from "../../helpers/api-client";
 interface ERPDataComboboxProps {
   id: string;
   label?: string;
@@ -67,6 +68,8 @@ export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
         is_active: item?.is_active,
       }));
     } else {
+      console.log('data:' + data);
+      
       options = data?.map((item: any) => ({
         label: item?.[keyLabel],
         value: item?.[keyValue],
@@ -76,7 +79,7 @@ export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
     return options || [];
   }
 };
-
+const api = new APIClient();
 export default function ERPDataCombobox({
   id,
   label,
@@ -116,15 +119,18 @@ export default function ERPDataCombobox({
   const [hasValue, setHasValue] = useState<boolean>(false);
   const [initial, setInitial] = useState<any>(initialValue);
   useEffect(() => {
+    debugger;
     if (!disabledApiCall) {
       loadData();
     }
   }, []);
   const loadData = async () => {
+    debugger;
     setLoading(true);
-    var parm = field?.params ? { apiUrl: field?.getListUrl,params: field?.params } : { apiUrl: field?.getListUrl};
-    let _items = options ? options : await getAction(parm);
-debugger;
+    debugger;
+    let _items = options ? options : await api.getAsync(field?.getListUrl,field?.params ? field?.params: '' );
+
+    debugger;
     let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];
 
     _options = _options?.filter(

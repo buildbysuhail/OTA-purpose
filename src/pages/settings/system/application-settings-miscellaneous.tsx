@@ -7,6 +7,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import { Label } from "@headlessui/react";
 
 interface FormState {
   salesmanIncentive: number;
@@ -94,116 +95,154 @@ const MiscellaneousSettingsForm: React.FC = () => {
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 justify-start gap-5">
         <div className="grid grid-cols-1">
-         <div className="grid grid-cols-2 justify-start gap-4">
-          <ERPCheckbox
-            id="Maintain All Branch With Common Inventory"
-            checked={formState.maintainAllBranchWithCommonInventory}
-            data={formState}
-            label="Minimum Shift Duration"
-            onChangeData={(data) =>
-              handleFieldChange("maintainAllBranchWithCommonInventory", data)
-            }
-          />
-          <ERPCheckbox
-            id="autoSyncSIandPI_BT"
-            checked={formState.autoSyncSIandPI_BT}
-            data={formState}
-            label="Auto Sync SI and PIBranch Transfer"
-            onChangeData={(data) =>
-              handleFieldChange("autoSyncSIandPI_BT", data)
-            }
-          />
-          <ERPCheckbox
-            id="maintainUntalliedBills"
-            checked={formState.maintainUntalliedBills}
-            data={formState}
-            label="Maintain Untallied Bills"
-            onChangeData={(data) =>
-              handleFieldChange("maintainUntalliedBills", data)
-            }
-          />
-          <ERPCheckbox
-            id="allowSalesDetailedEdit"
-            checked={formState.allowSalesDetailedEdit}
-            data={formState}
-            label="Allow Sales Detailed Edit"
-            onChangeData={(data) =>
-              handleFieldChange("allowSalesDetailedEdit", data)
-            }
-          />
-          <ERPInput
-            id="salesmanIncentive"
-            value={formState.salesmanIncentive}
-            data={formState}
-            type="number"
-            label="Salesman Incentive"
-            onChangeData={(data) =>
-            handleFieldChange("salesmanIncentive", data)
-            }
-          />
-          <ERPDataCombobox
-            id="defaultIncentiveLedger"
-            value={formState.defaultIncentiveLedger}
-            data={formState}
-            label="Default Incentive Ledger"
-            onChangeData={(data) =>
-              handleFieldChange("defaultIncentiveLedger", data)
-            }
-          />
-          <ERPInput
-            id="weighingScalePluFilePath"
-            value={formState.weighingScalePluFilePath}
-            data={formState}
-            className="flex-grow"
-            label="Plu Path"
-            onChangeData={(data) =>
-              handleFieldChange("weighingScalePluFilePath", data)
-            }
-          />
+          <div className="grid grid-cols-2 justify-start gap-4">
+            <ERPCheckbox
+              id="Maintain All Branch With Common Inventory"
+              checked={formState.maintainAllBranchWithCommonInventory}
+              data={formState}
+              label="Minimum Shift Duration"
+              onChangeData={(data) =>
+                handleFieldChange("maintainAllBranchWithCommonInventory", data)
+              }
+            />
+            <ERPCheckbox
+              id="autoSyncSIandPI_BT"
+              checked={formState.autoSyncSIandPI_BT}
+              data={formState}
+              label="Auto Sync SI and PIBranch Transfer"
+              onChangeData={(data) =>
+                handleFieldChange("autoSyncSIandPI_BT", data)
+              }
+            />
+            <ERPCheckbox
+              id="maintainUntalliedBills"
+              checked={formState.maintainUntalliedBills}
+              data={formState}
+              label="Maintain Untallied Bills"
+              onChangeData={(data) =>
+                handleFieldChange("maintainUntalliedBills", data)
+              }
+            />
+            <ERPCheckbox
+              id="allowSalesDetailedEdit"
+              checked={formState.allowSalesDetailedEdit}
+              data={formState}
+              label="Allow Sales Detailed Edit"
+              onChangeData={(data) =>
+                handleFieldChange("allowSalesDetailedEdit", data)
+              }
+            />
+            <ERPInput
+              id="salesmanIncentive"
+              value={formState.salesmanIncentive}
+              data={formState}
+              type="number"
+              label="Salesman Incentive"
+              onChangeData={(data) =>
+                handleFieldChange("salesmanIncentive", data)
+              }
+            />
+            <ERPDataCombobox
+              id="defaultIncentiveLedger"
+              value={formState.defaultIncentiveLedger}
+              data={formState}
+              label="Default Incentive Ledger"
+              onChangeData={(data) =>
+                handleFieldChange("defaultIncentiveLedger", data)
+              }
+            />
+            <ERPInput
+              id="weighingScalePluFilePath"
+              value={formState.weighingScalePluFilePath}
+              data={formState}
+              className="flex-grow"
+              label="Plu Path"
+              onChangeData={(data) =>
+                handleFieldChange("weighingScalePluFilePath", data)
+              }
+            />
 
-          <ERPInput
-            id="secondDisplayImagesPath"
-            value={formState.secondDisplayImagesPath}
-            data={formState}
-            type="number"
-            label="Second Display Images Path"
-            onChangeData={(data) =>
-              handleFieldChange("secondDisplayImagesPath", data)
-            }
-          />
+            <ERPInput
+              id="secondDisplayImagesPath"
+              value={formState.secondDisplayImagesPath}
+              data={formState}
+              type="number"
+              label="Second Display Images Path"
+              onChangeData={(data) =>
+                handleFieldChange("secondDisplayImagesPath", data)
+              }
+            />
           </div>
           <div className="flex justify-end my-4">
-          <ERPButton
-            title="Set Master Branch Grid Design"
-            variant="secondary"
-            type="submit"
-          />
+            <ERPButton
+              title="Set Master Branch Grid Design"
+              variant="secondary"
+              type="submit"
+            />
+          </div>
+          <div className="flex justify-start gap-5 ">
+            <div className="overflow-x-auto basis-[80%] scroll snap-x">
+              <table className="table-auto border-collapse w-full">
+                <thead>
+                  <tr>
+                    <th className="border border-black px-4 py-2">
+                      Sync SystemCode
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="border border-black px-4 py-2 bg-gray-200"></td>
+                  </tr>
+                  <tr>
+                    <td className="border border-black px-4 py-2 bg-gray-400"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div className="flex flex-col -translate-y-4">
+              <ERPButton title="Load" variant="secondary" type="submit" />
+              <ERPButton title="Save" variant="secondary" type="submit" />
+            </div>
+          </div>
         </div>
-
-        <div className="overflow-x-auto w-full ">
-        <table className="min-w-full bg-white border border-gray-200 scroll">
-          <thead>
-            <tr>
-              <th className="py-2 px-4 border-b">ID</th>
-            </tr>
-          </thead>
-          <tbody>
-            
-              <tr
-                
-              >
-                <td className="py-2 px-4 border-b text-center"></td>
-                <td className="py-2 px-4 border-b text-center"></td>
-                <td className="py-2 px-4 border-b text-center"></td>
-               
-              </tr>
-          
-          </tbody>
-        </table>
+        <div className="border border-gray-300 flex flex-col justify-around p-5">
+          <h4 className="text-red font-medium text-center">Set Decimal</h4>
+          <div className=" flex justify-center items-center ">
+            <ERPInput
+              id="secondDisplayImagesPath"
+              value={formState.secondDisplayImagesPath}
+              data={formState}
+              type="number"
+              label="Password"
+              onChangeData={(data) =>
+                handleFieldChange("secondDisplayImagesPath", data)
+              }
+            />
+          </div>
+          <div className="flex flex-col justify-center  items-center gap-4">
+            <ERPButton title="4Decimals" variant="secondary" type="submit" />
+            <ERPButton title="3Decimals" variant="secondary" type="submit" />
+            <ERPButton title="2Decimals" variant="secondary" type="submit" />
+          </div>
+        </div>
       </div>
+      <div className="flex items-center justify-end my-4">
+        <div className="bg-gray-100 p-4  ml-10 shadow-md">
+          <h2 className="text-lg font-semibold mb-4">
+            Synchronize Remote Database
+          </h2>
+         
+          <div className="flex justify-center  items-center gap-4">
+            <ERPButton title="Settings" variant="secondary" type="submit" startIcon="ri-settings-5-line"/>
+            <ERPButton title="Sync" variant="secondary" type="submit" startIcon="ri-loop-left-line"/>
+            
+          </div>
+            <span className="ml-2 text-red-500">
+              Processing...
+            </span>
         
         </div>
-        <div></div>
       </div>
     </>
   );

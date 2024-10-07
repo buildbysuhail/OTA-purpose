@@ -21,7 +21,7 @@ const ApplicationSettings = ({ }) => {
   const [tempData, setTempData] = useState([]);
 
   const [settingsGroup, setSettingsGroup] = useState<ApplicationSettingsIds>(
-    (searchParams?.get("settings_group")! as ApplicationSettingsIds) ?? "main"
+    (searchParams?.get("settings_group_id") as ApplicationSettingsIds) ?? "main"
   );
 
   /* ########################################################################################### */
@@ -29,6 +29,8 @@ const ApplicationSettings = ({ }) => {
   
   /* ########################################################################################### */
 
+ debugger;
+ console.log(settingsGroup);
  
 
   useEffect(() => {
@@ -62,7 +64,9 @@ const ApplicationSettings = ({ }) => {
           </div>
 
           <div className="flex-1 h-full">
+            <h1>{settingsGroup}</h1>
           <div className="p-6 bg-white rounded-lg shadow-md">
+          
           {/* <ApplicationSettingsAccounts/> */}
           {settingsGroup ==  "main" 
           ? <ERPSettingsFormMain/>

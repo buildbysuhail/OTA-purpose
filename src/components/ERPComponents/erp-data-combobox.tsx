@@ -119,6 +119,7 @@ export default function ERPDataCombobox({
   const [hasValue, setHasValue] = useState<boolean>(false);
   const [initial, setInitial] = useState<any>(initialValue);
   useEffect(() => {
+    debugger;
     if (!disabledApiCall) {
       loadData();
     }
@@ -126,9 +127,10 @@ export default function ERPDataCombobox({
   const loadData = async () => {
     debugger;
     setLoading(true);
-    var parm = field?.params ? { apiUrl: field?.getListUrl,params: field?.params } : { apiUrl: field?.getListUrl};
-    let _items = options ? options : await getAction(parm);
-debugger;
+    debugger;
+    let _items = options ? options : await api.getAsync(field?.getListUrl,field?.params ? field?.params: '' );
+
+    debugger;
     let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];
 
     _options = _options?.filter(

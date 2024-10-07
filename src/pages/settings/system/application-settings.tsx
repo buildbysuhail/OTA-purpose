@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 
 import { ApplicationSettingsIds, ApplicationSettingsTypes } from "./application-settings-categories";
 import ERPSettingsFormMain from "./application-settings-main";
-import ApplicationSettingsAccounts from "./application-settings-main-accounts";
+import ApplicationSettingsAccounts from "./application-settings-accounts";
+import MiscellaneousSettingsForm from "./application-settings-miscellaneous";
+import ApplicationSettingsProduct from "./application-settings-product";
+import InventorySettingsForm from "./application-settings-inventory";
 
 
 
 const ApplicationSettings = ({ }) => {
 
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [loading, setLoading] = useState(false);
@@ -47,6 +51,7 @@ const ApplicationSettings = ({ }) => {
                     }`}
                 >
                   <div>
+                    <Link to={`${location.pathname}?settings_group_id=${settings.settings_group_id}`}></Link>
                     <h1 className=" text-sm">{settings.name}</h1>
                   </div>
                 </div>
@@ -56,7 +61,20 @@ const ApplicationSettings = ({ }) => {
 
           <div className="flex-1 h-full">
           <div className="p-6 bg-white rounded-lg shadow-md">
-          <ERPSettingsFormMain/>
+          {/* <ApplicationSettingsAccounts/> */}
+          {settingsGroup ==  "main" 
+          ? <ERPSettingsFormMain/>
+          : settingsGroup == "accounts"
+          ? <ApplicationSettingsAccounts/>
+          : settingsGroup == "products"
+          ? <ApplicationSettingsProduct/>
+          : settingsGroup == "miscellaneous"
+          ?<MiscellaneousSettingsForm/>
+          :settingsGroup == "inventory"
+          ?<InventorySettingsForm/>
+          :null
+                    }
+
     </div>
           </div>
         </div>

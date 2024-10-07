@@ -7,6 +7,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import { LedgerType } from "../../../enums/ledger-types";
 
 interface FormState {
     defaultSalesAccount: number;
@@ -213,7 +214,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultSalesAccount",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -227,7 +229,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultBtoAccount",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -244,7 +247,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultSalesReturnAccount",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -258,7 +262,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultBtiAccount",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -275,7 +280,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultPurchaseAccount",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -289,7 +295,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "serviceWarrantyInvAccounts",
                         required: false,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -306,7 +313,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultPurchaseReturnAccount",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -320,7 +328,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "serviceNonWarrantyInvAccounts",
                         required: false,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Customer}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -337,7 +346,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "billDiscountGivenLedger",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Discount_Given}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -368,7 +378,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "billDiscountReceivedLedger",
                         required: true,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Discount_Received}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -382,7 +393,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultSalesReturnPayableAccount",
                         required: false,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Customer}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -399,7 +411,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "couponCardAccount",
                         required: false,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -412,7 +425,7 @@ const InventorySettingsForm: React.FC = () => {
                     data={formState}
                     label="Redeem Points (Separated by comma)"
                     placeholder="Enter redeem points"
-                    onChangeData={(data: any) => handleFieldChange("redeemPoints", data)}
+                    onChangeData={(data: any) => handleFieldChange("redeemPoints", data.redeemPoints)}
                 />
             </div>
 
@@ -424,7 +437,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultRoundOffAccount",
                         required: false,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.Indirect_Expenses}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -438,7 +452,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Keep User Actions (in Days)"
                     placeholder="Enter number of days"
                     type="number"
-                    onChangeData={(data: any) => handleFieldChange("keepUserActions", parseInt(data, 10))}
+                    onChangeData={(data: any) => handleFieldChange("keepUserActions", parseInt(data.keepUserActions, 10))}
                 />
             </div>
 
@@ -450,7 +464,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultAdditionalAmountAccount",
                         required: false,
-                        getListUrl: Urls.data_counters,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -464,7 +479,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "blockBillDiscount",
                         required: false,
-                        getListUrl: Urls.data_brands,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -481,7 +497,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultBrand",
                         required: false,
-                        getListUrl: Urls.data_brands,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -495,7 +512,7 @@ const InventorySettingsForm: React.FC = () => {
                     label="Discount Authorization if Discount above"
                     placeholder="Enter discount threshold"
                     type="number"
-                    onChangeData={(data: any) => handleFieldChange("discountAuthorizationIfDiscountAbove", parseFloat(data))}
+                    onChangeData={(data: any) => handleFieldChange("discountAuthorizationIfDiscountAbove", parseFloat(data.discountAuthorizationIfDiscountAbove))}
                 />
             </div>
 
@@ -507,7 +524,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "negativeStock",
                         required: false,
-                        getListUrl: Urls.data_brands,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -522,21 +540,21 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.maintainWarehouse}
                     data={formState}
                     label="Maintain Warehouse"
-                    onChangeData={(data: any) => handleFieldChange("maintainWarehouse", data)}
+                    onChangeData={(data: any) => handleFieldChange("maintainWarehouse", data.maintainWarehouse)}
                 />
                 <ERPCheckbox
                     id="setAuthorizationInSales"
                     checked={formState.setAuthorizationInSales}
                     data={formState}
                     label="Set Authorization in Sales"
-                    onChangeData={(data: any) => handleFieldChange("setAuthorizationInSales", data)}
+                    onChangeData={(data: any) => handleFieldChange("setAuthorizationInSales", data.setAuthorizationInSales)}
                 />
                 <ERPCheckbox
                     id="carryForwardPurchaseOrderQtyToPurchase"
                     checked={formState.carryForwardPurchaseOrderQtyToPurchase}
                     data={formState}
                     label="Carry Forward Purchase Order Qty To Purchase"
-                    onChangeData={(data: any) => handleFieldChange("carryForwardPurchaseOrderQtyToPurchase", data)}
+                    onChangeData={(data: any) => handleFieldChange("carryForwardPurchaseOrderQtyToPurchase", data.carryForwardPurchaseOrderQtyToPurchase)}
                 />
             </div>
 
@@ -548,21 +566,21 @@ const InventorySettingsForm: React.FC = () => {
                     label="Price Code"
                     placeholder="Enter the Price Code"
                     type="Password"
-                    onChangeData={(data: any) => handleFieldChange("priceCode", parseFloat(data))}
+                    onChangeData={(data: any) => handleFieldChange("priceCode", parseFloat(data.priceCode))}
                 />
                 <ERPCheckbox
                     id="enableSalesInvoiceDraftOption"
                     checked={formState.enableSalesInvoiceDraftOption}
                     data={formState}
                     label="Enable Sales Invoice Draft Option"
-                    onChangeData={(data: any) => handleFieldChange("enableSalesInvoiceDraftOption", data)}
+                    onChangeData={(data: any) => handleFieldChange("enableSalesInvoiceDraftOption", data.enableSalesInvoiceDraftOption)}
                 />
                 <ERPCheckbox
                     id="useCostForStockTransferToBranch"
                     checked={formState.useCostForStockTransferToBranch}
                     data={formState}
                     label="Use Cost For Stock Transfer To Branch"
-                    onChangeData={(data: any) => handleFieldChange("useCostForStockTransferToBranch", data)}
+                    onChangeData={(data: any) => handleFieldChange("useCostForStockTransferToBranch", data.useCostForStockTransferToBranch)}
                 />
             </div>
 
@@ -574,7 +592,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "barcodeLabel",
                         required: false,
-                        getListUrl: Urls.data_brands,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -586,14 +605,14 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.setProductCostAsDeclarationPrice}
                     data={formState}
                     label="Set Product Cost as Declaration Price"
-                    onChangeData={(data: any) => handleFieldChange("setProductCostAsDeclarationPrice", data)}
+                    onChangeData={(data: any) => handleFieldChange("setProductCostAsDeclarationPrice", data.setProductCostAsDeclarationPrice)}
                 />
                 <ERPCheckbox
                     id="showAccountReceivableInPurchase"
                     checked={formState.showAccountReceivableInPurchase}
                     data={formState}
                     label="Show Account Receivable In Purchase"
-                    onChangeData={(data: any) => handleFieldChange("showAccountReceivableInPurchase", data)}
+                    onChangeData={(data: any) => handleFieldChange("showAccountReceivableInPurchase", data.showAccountReceivableInPurchase)}
                 />
             </div>
 
@@ -605,7 +624,8 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "ifLessSalesRate",
                         required: false,
-                        getListUrl: Urls.data_brands,
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -617,14 +637,14 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.setProductCostWithTaxAmount}
                     data={formState}
                     label="Set Product Cost With TAX Amount"
-                    onChangeData={(data: any) => handleFieldChange("setProductCostWithTaxAmount", data)}
+                    onChangeData={(data: any) => handleFieldChange("setProductCostWithTaxAmount", data.setProductCostWithTaxAmount)}
                 />
                 <ERPCheckbox
                     id="showPrinterSelection"
                     checked={formState.showPrinterSelection}
                     data={formState}
                     label="Show Printer Selection"
-                    onChangeData={(data: any) => handleFieldChange("showPrinterSelection", data)}
+                    onChangeData={(data: any) => handleFieldChange("showPrinterSelection", data.showPrinterSelection)}
                 />
             </div>
 
@@ -635,21 +655,21 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.setLastSalesRateAsProductSalesRate}
                     data={formState}
                     label="Set Last Sales Rate As Product Sales Rate"
-                    onChangeData={(data: any) => handleFieldChange("setLastSalesRateAsProductSalesRate", data)}
+                    onChangeData={(data: any) => handleFieldChange("setLastSalesRateAsProductSalesRate", data.setLastSalesRateAsProductSalesRate)}
                 />
                 <ERPCheckbox
                     id="blockNonStockSerialSelling"
                     checked={formState.blockNonStockSerialSelling}
                     data={formState}
                     label="Block Non Stock Serial Selling"
-                    onChangeData={(data: any) => handleFieldChange("blockNonStockSerialSelling", data)}
+                    onChangeData={(data: any) => handleFieldChange("blockNonStockSerialSelling", data.blockNonStockSerialSelling)}
                 />
                 <ERPCheckbox
                     id="btoUsingMsp"
                     checked={formState.btoUsingMsp}
                     data={formState}
                     label="BTO Using MSP"
-                    onChangeData={(data: any) => handleFieldChange("btoUsingMsp", data)}
+                    onChangeData={(data: any) => handleFieldChange("btoUsingMsp", data.btoUsingMsp)}
                 />
             </div>
 
@@ -659,21 +679,21 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.setLastPurchaseRateAsProductPurchaseRate}
                     data={formState}
                     label="Set Last Purchase Rate As Product Purchase Rate"
-                    onChangeData={(data: any) => handleFieldChange("setLastPurchaseRateAsProductPurchaseRate", data)}
+                    onChangeData={(data: any) => handleFieldChange("setLastPurchaseRateAsProductPurchaseRate", data.setLastPurchaseRateAsProductPurchaseRate)}
                 />
                 <ERPCheckbox
                     id="showProductDuplicationMessage"
                     checked={formState.showProductDuplicationMessage}
                     data={formState}
                     label="Show Product Duplication Message"
-                    onChangeData={(data: any) => handleFieldChange("showProductDuplicationMessage", data)}
+                    onChangeData={(data: any) => handleFieldChange("showProductDuplicationMessage", data.showProductDuplicationMessage)}
                 />
                 <ERPCheckbox
                     id="isReferenceNumberMandatoryInPurchase"
                     checked={formState.isReferenceNumberMandatoryInPurchase}
                     data={formState}
                     label="Is Reference Number Mandatory In Purchase"
-                    onChangeData={(data: any) => handleFieldChange("isReferenceNumberMandatoryInPurchase", data)}
+                    onChangeData={(data: any) => handleFieldChange("isReferenceNumberMandatoryInPurchase", data.isReferenceNumberMandatoryInPurchase)}
                 />
             </div>
 
@@ -683,21 +703,21 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.setAvgPurchaseCostWithLastPurchaseRate}
                     data={formState}
                     label="Set Avg. Purchase Cost with Last Purchase Rate"
-                    onChangeData={(data: any) => handleFieldChange("setAvgPurchaseCostWithLastPurchaseRate", data)}
+                    onChangeData={(data: any) => handleFieldChange("setAvgPurchaseCostWithLastPurchaseRate", data.setAvgPurchaseCostWithLastPurchaseRate)}
                 />
                 <ERPCheckbox
                     id="blockHoldItems"
                     checked={formState.blockHoldItems}
                     data={formState}
                     label="Block Hold Items"
-                    onChangeData={(data: any) => handleFieldChange("blockHoldItems", data)}
+                    onChangeData={(data: any) => handleFieldChange("blockHoldItems", data.blockHoldItems)}
                 />
                 <ERPCheckbox
                     id="showTransitModeStockTransferAlert"
                     checked={formState.showTransitModeStockTransferAlert}
                     data={formState}
                     label="Show Transit Mode Stock Transfer Alert"
-                    onChangeData={(data: any) => handleFieldChange("showTransitModeStockTransferAlert", data)}
+                    onChangeData={(data: any) => handleFieldChange("showTransitModeStockTransferAlert", data.showTransitModeStockTransferAlert)}
                 />
             </div>
 
@@ -707,21 +727,21 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.updatePurchasePriceOnPurchaseTransfer}
                     data={formState}
                     label="Update Purchase Price On Purchase Transfer"
-                    onChangeData={(data: any) => handleFieldChange("updatePurchasePriceOnPurchaseTransfer", data)}
+                    onChangeData={(data: any) => handleFieldChange("updatePurchasePriceOnPurchaseTransfer", data.updatePurchasePriceOnPurchaseTransfer)}
                 />
                 <ERPCheckbox
                     id="printAfterSave"
                     checked={formState.printAfterSave}
                     data={formState}
                     label="Print After Save"
-                    onChangeData={(data: any) => handleFieldChange("printAfterSave", data)}
+                    onChangeData={(data: any) => handleFieldChange("printAfterSave", data.printAfterSave)}
                 />
                 <ERPCheckbox
                     id="showAccountPayableInSales"
                     checked={formState.showAccountPayableInSales}
                     data={formState}
                     label="Show Account Payable In Sales"
-                    onChangeData={(data: any) => handleFieldChange("showAccountPayableInSales", data)}
+                    onChangeData={(data: any) => handleFieldChange("showAccountPayableInSales", data.showAccountPayableInSales)}
                 />
             </div>
 
@@ -731,21 +751,21 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.showCashSalesSeparateMenu}
                     data={formState}
                     label="Show Cash Sales Separate Menu"
-                    onChangeData={(data: any) => handleFieldChange("showCashSalesSeparateMenu", data)}
+                    onChangeData={(data: any) => handleFieldChange("showCashSalesSeparateMenu", data.showCashSalesSeparateMenu)}
                 />
                 <ERPCheckbox
                     id="needPoApprovalForPrintout"
                     checked={formState.needPoApprovalForPrintout}
                     data={formState}
                     label="Need PO Approval For Printout"
-                    onChangeData={(data: any) => handleFieldChange("needPoApprovalForPrintout", data)}
+                    onChangeData={(data: any) => handleFieldChange("needPoApprovalForPrintout", data.needPoApprovalForPrintout)}
                 />
                 <ERPCheckbox
                     id="holdSalesMan"
                     checked={formState.holdSalesMan}
                     data={formState}
                     label="Hold Sales Man"
-                    onChangeData={(data: any) => handleFieldChange("holdSalesMan", data)}
+                    onChangeData={(data: any) => handleFieldChange("holdSalesMan", data.holdSalesMan)}
                 />
             </div>
 
@@ -755,21 +775,21 @@ const InventorySettingsForm: React.FC = () => {
                     checked={formState.showNonStockItemsInSales}
                     data={formState}
                     label="Show Non Stock Items in Sales"
-                    onChangeData={(data: any) => handleFieldChange("showNonStockItemsInSales", data)}
+                    onChangeData={(data: any) => handleFieldChange("showNonStockItemsInSales", data.showNonStockItemsInSales)}
                 />
                 <ERPCheckbox
                     id="enableAddStockAdjustment"
                     checked={formState.enableAddStockAdjustment}
                     data={formState}
                     label="Enable Add Stock Adjustment"
-                    onChangeData={(data: any) => handleFieldChange("enableAddStockAdjustment", data)}
+                    onChangeData={(data: any) => handleFieldChange("enableAddStockAdjustment", data.enableAddStockAdjustment)}
                 />
                 <ERPCheckbox
                     id="mobileNumberMandatoryInSales"
                     checked={formState.mobileNumberMandatoryInSales}
                     data={formState}
                     label="Mobile Number Mandatory in Sales"
-                    onChangeData={(data: any) => handleFieldChange("mobileNumberMandatoryInSales", data)}
+                    onChangeData={(data: any) => handleFieldChange("mobileNumberMandatoryInSales", data.mobileNumberMandatoryInSales)}
                 />
             </div>
             <div className="my-4 flex items-center justify-center">

@@ -54,7 +54,6 @@ interface ERPDataComboboxProps {
   isPaginated?: boolean;
   disabledApiCall?: boolean;
   validation?: string;
-  params: any
 }
 
 export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
@@ -102,7 +101,6 @@ export default function ERPDataCombobox({
   isPaginated = false,
   disabledApiCall = false,
   validation,
-  params
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -124,7 +122,7 @@ export default function ERPDataCombobox({
   }, []);
   const loadData = async () => {
     setLoading(true);
-    var parm = params ? { apiUrl: field?.getListUrl,params: params } : { apiUrl: field?.getListUrl};
+    var parm = field?.params ? { apiUrl: field?.getListUrl,params: field?.params } : { apiUrl: field?.getListUrl};
     let _items = options ? options : await getAction(parm);
 debugger;
     let _options = getOptions(_items, field?.labelKey ?? 'label', field?.valueKey ??'value') || [];

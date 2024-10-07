@@ -10,6 +10,7 @@ import { getAction, postAction } from '../../../redux/slices/app-thunks';
 import { LedgerType } from '../../../enums/ledger-types';
 import { useDispatch } from 'react-redux';
 import { APIClient } from '../../../helpers/api-client';
+import ERPToast from '../../../components/ERPComponents/erp-toast';
 
 
 interface AccountSettingsState {
@@ -157,13 +158,15 @@ const ApplicationSettingsAccounts = () => {
       }, [] as { settingsName: string; settingsValue: any }[]);
       console.log(modifiedSettings);
       
-      const response = await api.put(Urls.application_settings,{type: 'accounts', updateList:  modifiedSettings})
-      // if (response.ok) {
-      //   console.log('Settings saved successfully');
-      //   setFormStatePrev({});
-      // } else {
-      //   console.error('Error saving settings');
-      // }
+      const response = await api.put(Urls.application_settings,{type: 'accounts', updateList:  modifiedSettings}) as  any
+      debugger;
+      if(response!=undefined && response!=null && response.IsOk==true)
+        {
+          ERPToast.showWith(response?.message, "success");
+        }
+        else{
+          ERPToast.showWith(response?.message,"warning")
+        }
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {

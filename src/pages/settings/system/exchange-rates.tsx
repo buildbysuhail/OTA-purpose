@@ -25,7 +25,7 @@ const ExchangeRates = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "ExchRateID",
+      dataField: "exchRateID",
       caption: t("SiNo"),
       dataType: "number",
       allowSorting: true,
@@ -34,24 +34,26 @@ const ExchangeRates = () => {
       minWidth: 150,
     },
     {
-      dataField: "ToCurrency",
+      dataField: "toCurrency",
       caption: t("to_currency"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      allowEditing: true
     },
     {
-      dataField: "Rate",
+      dataField: "rate",
       caption: t("rate"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      allowEditing: true
     },
     {
-      dataField: "RateDate",
+      dataField: "rateDate",
       caption: t("rate_date"),
       dataType: "string",
       allowSearch: true,
@@ -59,80 +61,24 @@ const ExchangeRates = () => {
       minWidth: 100,
     },
     {
-      dataField: "CStatus",
+      dataField: "cStatus",
       caption: t("active"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
     },
-    {
-      dataField: "actions",
-      caption: t("actions"),
-      allowSearch: false,
-      allowFiltering: false,
-      fixed: true,
-      fixedPosition: "right",
-      width: 100,
-      cellRender: (cellElement: any) => {
-        
-        return (
-          <ERPGridActions
-            view={{ type: "popup", action:toggleCurrencyExchangePopup}}
-            edit={{ type: "popup", action: toggleCurrencyExchangePopup}}
-            delete={{
-              confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
-              // action: () => handleDelete(cellInfo?.data?.id),
-            }}
-            itemId={cellElement?.data?.userTypeCode || ""}
-          />
-        )
-      }
-    },
   ];
+  const handleLoad = async() => {
+
+  }
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="box custom-box">
             <div className="box-body">
-              <div className="grid grid-cols-1 sm:grid-cols-2 justify-start items-center gap-4 my-4">
-                <div>
-                <ERPDataCombobox
-                  id="baseCurrency"
-                  field={{
-                    id: "baseCurrency",
-                    required: true,
-                    getListUrl: Urls. data_base_currency,
-                    valueKey: "currencyID",
-                    labelKey: "currencyName",
-                  }}
-                  onChangeData={(data: any) => {
-                    setPostData((prev: any) => ({
-                      ...prev,
-                      data: data,
-                    }));
-                  }}
-                  validation={postData.validations.baseCurrency} // If validation is needed
-                  data={postData?.data}
-                  defaultData={postData?.data}
-                  value={postData?.data.baseCurrency}
-                  label={t("base_currency")}
-
-                />
-                </div>
-                <div className="translate-y-2">
-                  <ERPButton
-                    type="button"
-                    disabled={postDataLoading}
-                    variant="primary"
-                    //   onClick={handleSubmit}
-                    loading={postDataLoading}
-                    title={t("load")}
-                  ></ERPButton>
-                </div>
-              </div>
+              
               <div className="grid grid-cols-1 gap-3">
                 <ERPDevGrid
                   columns={columns}
@@ -141,8 +87,44 @@ const ExchangeRates = () => {
                   gridId="grd_currency-exchange"
                   popupAction={toggleCurrencyExchangePopup}
                   hideGridAddButton={true}
+                  hideDefaultExportButton={true}
+                  hideGridHeader={true}
+                  hideDefaultSearchPanel={true}
                   allowExport={false}
                   allowEditing={true}
+                  customToolbarItems={[
+                    { item:  <ERPDataCombobox
+                      className="w-[250px]"
+                      id="baseCurrency"
+                      field={{
+                        id: "baseCurrency",
+                        required: true,
+                        getListUrl: Urls. data_base_currency,
+                        valueKey: "currencyID",
+                        labelKey: "currencyName",
+                      }}
+                      onChangeData={(data: any) => {
+                        setPostData((prev: any) => ({
+                          ...prev,
+                          data: data,
+                        }));
+                      }}
+                      validation={postData.validations.baseCurrency} // If validation is needed
+                      data={postData?.data}
+                      defaultData={postData?.data}
+                      value={postData?.data.baseCurrency}
+                      label={t("base_currency")}
+    
+                    />, location: 'before' }, // Add this item before
+                    { item:  <ERPButton
+                      type="button"
+                      disabled={postDataLoading}
+                      variant="primary"
+                        onClick={handleLoad}
+                      loading={postDataLoading}
+                      title={t("load")}
+                    ></ERPButton>, location: 'before' } // Add this item after
+                  ]}
                   gridAddButtonType="popup"
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>

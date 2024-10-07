@@ -25,7 +25,8 @@ export interface DevGridColumn {
     fixedPosition?: 'left' | 'right';
     width?: number;
     alignment?: "center" | "left" | "right";
-    showInPdf?: boolean;
+    showInPdf?: boolean | false;
+    allowEditing?: boolean;
     cellRender?: (cellElement: any, cellInfo: any) => React.ReactNode;
   }
   const initialColumnPreference: ColumnPreference = {
@@ -40,7 +41,7 @@ export interface DevGridColumn {
     fontColor: "#000000",               // string: font color in hex
     fontSize: 12,   
     showInPdf: true,                    // number: font size
-    displayOrder: 1                     // number: the order in which the column appears
+    displayOrder: 1                  // number: the order in which the column appears
   };
   export interface Preferences {
     [dataField: string]: ColumnPreference;

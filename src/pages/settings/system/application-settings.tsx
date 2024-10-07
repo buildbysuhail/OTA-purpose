@@ -72,6 +72,8 @@ const ApplicationSettings = ({ }) => {
           ?<MiscellaneousSettingsForm/>
           :settingsGroup == "inventory"
           ?<InventorySettingsForm/>
+          :settingsGroup == "inventory"
+          ?<InventorySettingsForm/>
           :null
                     }
 

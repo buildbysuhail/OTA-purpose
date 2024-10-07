@@ -30,7 +30,8 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         [dispatch]
       ),
       method: ActionType.POST,
-      useApiClient: true
+      useApiClient: true,
+      loadDataRequired: false
     });
 
   const onClose = useCallback(() => {

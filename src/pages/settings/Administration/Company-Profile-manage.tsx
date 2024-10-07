@@ -43,6 +43,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false })), [dispatch]),
     method:ActionType.POST,
     useApiClient: true
+    
   });
 
   const onClose = useCallback(() => {

@@ -11,6 +11,8 @@ import ERPSettingsFormGSTTaxes from "./application-settings-GSTTaxes";
 import ApplicationSettingsProduct from "./application-settings-product";
 import BranchSettingsForm from "./application-settings-branch";
 
+import PrintSettingForm from "./application-settings-print";
+import BackupSettingsForm from "./application-settings-backup";
 
 
 
@@ -84,6 +86,10 @@ const ApplicationSettings = ({ }) => {
           ?<ERPSettingsFormGSTTaxes/>
           :settingsGroup == "branch"
           ?<BranchSettingsForm/>
+          :settingsGroup=="print"
+          ?<PrintSettingForm/>
+          :settingsGroup=="backup"
+          ?<BackupSettingsForm/>
           :null
                     }
 

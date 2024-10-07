@@ -164,6 +164,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState?.defaultCashAcc}
           data={formState}
           label="Default Cash Account"
+          field={{
+            id: "defaultCashAcc",
+            required: true,
+            getListUrl: Urls.data_CashLedgers,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultCashAcc', data)}
         />
         <ERPDataCombobox
@@ -171,6 +178,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultSuspenseAcc}
           data={formState}
           label="Default Suspense Account"
+          field={{
+            id: "defaultSuspenseAcc",
+            required: true,
+            getListUrl: Urls.data_SuspenseAccount,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data)}
         />
         <ERPDataCombobox
@@ -178,6 +192,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultServiceAccount}
           data={formState}
           label="Default Service Account"
+          field={{
+            id: "defaultServiceAccount",
+            required: true,
+            getListUrl: Urls.data_SalesAccount,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultServiceAccount', data)}
         />
         <ERPDataCombobox
@@ -185,6 +206,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultBankAcc}
           data={formState}
           label="Default Bank Account"
+          field={{
+            id: "defaultBankAcc",
+            required: true,
+            getListUrl: Urls.data_BankAccounts,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultBankAcc', data)}
         />
         <ERPDataCombobox
@@ -192,6 +220,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultCreditCardAcc}
           data={formState}
           label="Default Credit Card Account"
+          field={{
+            id: "defaultCreditCardAcc",
+            required: true,
+            getListUrl: Urls.data_BankAccounts,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data)}
         />
         <ERPDataCombobox
@@ -199,6 +234,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultCostCenterID}
           data={formState}
           label="Default Cost Center"
+          field={{
+            id: "defaultCostCenterID",
+            required: true,
+            getListUrl: Urls.data_costcentres,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultCostCenterID', data)}
         />
         <ERPDataCombobox
@@ -206,6 +248,13 @@ const ApplicationSettingsAccounts = () => {
           value={formState.defaultCustomerLedgerID}
           data={formState}
           label="Default Customer Ledger"
+          field={{
+            id: "defaultCustomerLedgerID",
+            required: true,
+            getListUrl: Urls.data_acc_ledgers,
+            valueKey: "id",
+            labelKey: "name",
+          }}
           onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data)}
         />
         <ERPDataCombobox

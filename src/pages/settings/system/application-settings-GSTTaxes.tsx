@@ -177,7 +177,12 @@ const ERPSettingsFormGSTTaxes = () => {
         value={formState.defaultSalesFormType}
         data={formState}
         label="Default Sales Form Type"
-        options={[]} // Add your options here
+        options={[
+          { value: 'Form 8B', label: 'Form 8B' },
+          { value: 'Form 8', label: 'Form 8' },
+          { value: 'Normal', label: 'Normal' },
+          { value: 'VAT', label: 'VAT' },
+        ]}
         onChangeData={(data: any) => handleFieldChange("defaultSalesFormType", data)}
       />
 
@@ -409,8 +414,8 @@ const ERPSettingsFormGSTTaxes = () => {
           id: "defaultSRPrefixForPOS",
           required: true,
           getListUrl: Urls.data_VPrefixForSR,
-          valueKey: "id",
-          labelKey: "name",
+          valueKey: "VoucherID",
+          labelKey: "FormType",
         }}
         onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data)}
       />

@@ -13,6 +13,8 @@ import BranchSettingsForm from "./application-settings-branch";
 
 import PrintSettingForm from "./application-settings-print";
 import BackupSettingsForm from "./application-settings-backup";
+import TaxSettingsForm from "./appllication-settings-tax";
+
 
 
 
@@ -90,6 +92,8 @@ const ApplicationSettings = ({ }) => {
           ?<PrintSettingForm/>
           :settingsGroup=="backup"
           ?<BackupSettingsForm/>
+          :settingsGroup=="tax"
+          ?<TaxSettingsForm/>
           :null
                     }
 

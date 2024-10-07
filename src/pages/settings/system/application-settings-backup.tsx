@@ -6,169 +6,182 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import { APIClient } from "../../../helpers/api-client";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
 
 interface FormState {
-    backupMethods: string,
-    backupPath: string,
-    duration: number,
-    backupFile: boolean
+  backupMethods: string;
+  backUpPath: string;
+  backupDuration: number;
+  compressBackupFile: boolean;
 }
 
 const initialState: FormState = {
-    backupMethods: "",
-    backupPath: "",
-    duration: 0,
-    backupFile: false
+  backupMethods: "",
+  backUpPath: "",
+  backupDuration: 0,
+  compressBackupFile: false,
 };
 
 const BackupSettingsForm: React.FC = () => {
-    const [formState, setFormState] = useState(initialState);
-    const [formStatePrev, setFormStatePrev] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const api = new APIClient();
+  const dispatch = useAppDispatch();
 
-    const dispatch = useAppDispatch();
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
-    useEffect(() => {
-        loadSettings();
-    }, []);
-
-    const loadSettings = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const response = await dispatch(
-                getAction({ apiUrl: `${Urls.application_setting}print` }) as any
-            ).unwrap();
-
-            if (response) {
-                setFormStatePrev(response);
-                setFormState(response);
-            }
-        } catch (error) {
-            console.error("Error loading settings:", error);
-            setError("Failed to load settings. Please try again.");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleFieldChange = (field: keyof typeof initialState, value: any) => {
-        setFormState(prevState => ({
-            ...prevState,
-            [field]: value,
-        }));
-    };
-
-    const handleSubmit = async () => {
-        const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-            const typedKey = key as keyof typeof initialState;
-            const currentValue = formState[typedKey];
-            const prevValue = (formStatePrev as any)[key];
-
-            if (currentValue !== prevValue) {
-                acc.push({
-                    settingsName: key,
-                    settingsValue: currentValue,
-                });
-            }
-            return acc;
-        }, [] as { settingsName: string; settingsValue: any }[]);
-
-        setIsSaving(true);
-        setError(null);
-        try {
-            const response = await dispatch(
-                postAction({
-                    apiUrl: Urls.application_setting,
-                    data: modifiedSettings,
-                }) as any
-            ).unwrap();
-            handleResponse(response);
-        } catch (error) {
-            console.error("Error saving settings:", error);
-            setError("Failed to save settings. Please try again.");
-        } finally {
-            setIsSaving(false);
-        }
-    };
-
-    if (loading) {
-        return <div>Loading settings...</div>;
+  const loadSettings = async () => {
+    setLoading(true);
+    try {
+      const response = await api.getAsync(`${Urls.application_settings}backup`);
+      debugger;
+      console.log(formState);
+      setFormStatePrev(response);
+      setFormState(response);
+    } catch (error) {
+      console.error("Error loading settings:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    if (error) {
-        return (
-            <div className="error-message">
-                {error}
-                <button onClick={loadSettings}>Retry</button>
-            </div>
-        );
+  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+        const currentValue = formState?.[key as keyof FormState];
+        const prevValue = formStatePrev[key as keyof FormState];
+
+        if (currentValue !== prevValue) {
+          debugger;
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue,
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: any }[]);
+      console.log(modifiedSettings);
+
+      const response = (await api.put(Urls.application_settings, {
+        type: "backup",
+        updateList: modifiedSettings,
+      })) as any;
+      debugger;
+      if (response != undefined && response != null && response.IsOk == true) {
+        ERPToast.showWith(response?.message, "success");
+      } else {
+        ERPToast.showWith(response?.message, "warning");
+      }
+    } catch (error) {
+      console.error("Error saving settings:", error);
+    } finally {
+      setIsSaving(false);
     }
+  };
+//   if (loading) {
+//     return <div>Loading settings...</div>;
+//   }
 
-
+  if (error) {
     return (
-        <div className="erp-settings-form">
-            <div className="form-row grid grid-cols-1 gap-3 my-3">
-                <ERPDataCombobox
-                    id="backupPath"
-                    value={formState.backupPath}
-                    data={formState}
-                    field={{
-                        id: "backupPath",
-                        required: false,
-                        getListUrl: Urls.data_acc_ledgers,
-                        valueKey: "id",
-                        labelKey: "name",
-                    }}
-                    onChangeData={(data: any) => handleFieldChange("backupPath", data)}
-                    label="Backup Methods"
-                />
-            </div>
-            <div className="form-row grid grid-cols-1 gap-3 my-3">
-                <ERPInput
-                    id="backupPath"
-                    value={formState.backupPath.toString()}
-                    data={formState}
-                    label="Backup Path"
-                    placeholder="Enter discount threshold"
-                    type="number"
-                    onChangeData={(data: any) => handleFieldChange("backupPath", parseFloat(data.backupPath))}
-                />
-            </div>
-
-            <div className="form-row grid grid-cols-2 gap-3 my-3">
-                <ERPInput
-                    id="duration"
-                    value={formState.duration.toString()}
-                    data={formState}
-                    label="Duration"
-                    placeholder="Enter discount threshold"
-                    type="number"
-                    onChangeData={(data: any) => handleFieldChange("duration", parseFloat(data.duration))}
-                />
-                <ERPCheckbox
-                    id="backupFile"
-                    checked={formState.backupFile}
-                    data={formState}
-                    label="Compress Backup File"
-                    onChangeData={(data: any) => handleFieldChange("backupFile", data.backupFile)}
-                />
-            </div>
-
-            <div className="my-4 flex items-center justify-center">
-                <button
-                    onClick={handleSubmit}
-                    disabled={isSaving}
-                    type="button"
-                    className=""
-                >
-                    {isSaving ? "Saving..." : "Save Changes"}
-                </button>
-            </div>
-        </div>
+      <div className="error-message">
+        {error}
+        <button onClick={loadSettings}>Retry</button>
+      </div>
     );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="erp-settings-form">
+        <div className="form-row grid grid-cols-1 gap-3 my-3">
+          <ERPDataCombobox
+            id="backupMethods"
+            value={formState.backupMethods}
+            data={formState}
+            field={{
+              id: "backupMethods",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onChangeData={(data: any) =>
+              handleFieldChange("backupMethods", data.backupMethods)
+            }
+            label="Backup Methods"
+            options={[
+              { value: "0", label: "No BackUp" },
+              { value: "1", label: "BackUp On Close" },
+              { value: "2", label: "Scheduled BackUp" },
+            ]}
+          />
+        </div>
+        <div className="form-row grid grid-cols-1 gap-3 my-3">
+          <ERPInput
+            id="backUpPath"
+            value={formState.backUpPath}
+            data={formState}
+            label="Backup Path"
+            placeholder="Enter discount threshold"
+            onChangeData={(data: any) =>
+              handleFieldChange("backUpPath", parseFloat(data.backUpPath))
+            }
+          />
+        </div>
+
+        <div className="form-row grid grid-cols-2 gap-3 my-3">
+          <ERPInput
+            id="backupDuration"
+            value={formState.backupDuration}
+            data={formState}
+            label="Duration"
+            placeholder="Enter discount threshold"
+            type="number"
+            onChangeData={(data: any) =>
+              handleFieldChange(
+                "backupDuration",
+                parseFloat(data.backupDuration)
+              )
+            }
+          />
+          <ERPCheckbox
+            id="compressBackupFile"
+            checked={formState.compressBackupFile}
+            data={formState}
+            label="Compress Backup File"
+            onChangeData={(data: any) =>
+              handleFieldChange("compressBackupFile", data.compressBackupFile)
+            }
+          />
+        </div>
+
+        <div className="my-4 flex items-center justify-center">
+        <ERPButton
+            title="Save Settings"
+            variant="primary"
+            disabled={isSaving}
+            loading={isSaving}
+            type="submit"
+          />
+        </div>
+      </div>
+    </form>
+  );
 };
 
 export default BackupSettingsForm;

@@ -156,7 +156,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
               </div>
             </div>
-           <div className="border border-gray-200 rounded p-2">
+           <div className="border border-gray-200 rounded p-2"> 
             <label className="block text-sm font-medium text-gray-700 mb-1">
             Inventory Master
              </label>

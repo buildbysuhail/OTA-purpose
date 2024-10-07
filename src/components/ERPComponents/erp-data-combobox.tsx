@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
 import {
   Combobox,
   ComboboxButton,
@@ -18,16 +17,11 @@ import {
 import { useLocation } from "react-router-dom";
 import {
   getCurrentCurrencySymbol,
-  getPriceListOptions,
 } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
-import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 import {
   useAppDispatch,
-  useAppSelector,
 } from "../../utilities/hooks/useAppDispatch";
-import { reducerNameFromUrl } from "../../redux/actions/AppActions";
-import { getAction } from "../../redux/slices/app-thunks";
 import { APIClient } from "../../helpers/api-client";
 interface ERPDataComboboxProps {
   id: string;
@@ -101,9 +95,10 @@ export default function ERPDataCombobox({
   autoFocus,
   disabled = false,
   initialValue,
+  className,
   isPaginated = false,
   disabledApiCall = false,
-  validation,
+  validation
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -234,7 +229,7 @@ export default function ERPDataCombobox({
         }}
       >
         <div className="relative">
-          <div className="">
+          <div className={className}>
             <ComboboxButton
               type="button"
               className="w-full inset-y-0 top-[30px] right-0 flex items-center"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { getAction, postAction } from "../../../redux/slices/app-thunks";
 import Urls from "../../../redux/urls";
@@ -7,41 +7,44 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { APIClient } from "../../../helpers/api-client";
 
 interface FormState {
-  maintainTax: boolean;
-  showFinancialYearSelector: boolean;
-  countryName: string;
-  maintainSynchronization: boolean;
-  maintainSynchronizationdata: string;
-  autoPostingTransaction: boolean;
-  allowEditPostedTransactions: boolean;
-  maintainMasterEntry: boolean;
-  maintainInventoryTransactionsEntry: boolean;
-  syncMethod: string;
-  syncIntervals: number;
-  reportMode: string;
-  useBranchWiseSalesPrice: boolean;
-  useTemplateSelectionForPrinting: boolean;
-  showBTINotification: boolean;
-  applyVATOnPurchaseToBTO: boolean;
-  maintainCounterWisePrefixForTransaction: boolean;
-  refreshStockAfterSync: boolean;
-  refreshServerStockAfterSync: boolean;
-  maintainKSA_EInvoice: boolean;
-  invoicePrintingStyle: string;
-  enableTaxOnBillDiscount: boolean;
-  apply_KSA_EInvoice_Validation_Rules: boolean;
-  ksa_EInvoice_Sync_SystemCode: string;
-  createCreditNoteAutomaticallyOnSalesEdit: boolean;
-  enableVanSale: boolean;
-  clientPPOSBranchID: string;
-  vanSaleProductSerial: string;
-  pposEmail: string;
-  maximum_Allowed_LineItem_Amount: number;
-  fileAttachmentMethod: string;
-  fileAttachmentFolder: string;
-}
+    maintainTax: boolean;
+    showFinancialYearSelector: boolean;
+    countryName: string;
+    maintainSynchronization: boolean;
+    maintainSynchronizationdata: string;
+    autoPostingTransaction: boolean;
+    allowEditPostedTransactions: boolean;
+    maintainMasterEntry: boolean;
+    maintainInventoryTransactionsEntry: boolean;
+    syncMethod: string;
+    syncIntervals: number;
+    reportMode: string;
+    useBranchWiseSalesPrice: boolean;
+    useTemplateSelectionForPrinting: boolean;
+    showBTINotification: boolean;
+    applyVATOnPurchaseToBTO: boolean;
+    maintainCounterWisePrefixForTransaction: boolean;
+    refreshStockAfterSync: boolean;
+    refreshServerStockAfterSync: boolean;
+    maintainKSA_EInvoice: boolean;
+    invoicePrintingStyle: string;
+    enableTaxOnBillDiscount: boolean;
+    apply_KSA_EInvoice_Validation_Rules: boolean;
+    kSA_EInvoice_Sync_SystemCode: string;
+    createCreditNoteAutomaticallyOnSalesEdit: boolean;
+    enableVanSale: boolean;
+    clientPPOSBranchID: string;
+    vanSaleProductSerial: string;
+    pPosEmail: string;
+    maximum_Allowed_LineItem_Amount: number;
+    fileAttachmentMethod: string;
+    fileAttachmentFolder: string;
+  }
+  
 
 const BranchSettingsForm: React.FC = () => {
   const initialState: FormState = {
@@ -68,12 +71,12 @@ const BranchSettingsForm: React.FC = () => {
     invoicePrintingStyle: "Default",
     enableTaxOnBillDiscount: false,
     apply_KSA_EInvoice_Validation_Rules: false,
-    ksa_EInvoice_Sync_SystemCode: "",
+    kSA_EInvoice_Sync_SystemCode: "",
     createCreditNoteAutomaticallyOnSalesEdit: false,
     enableVanSale: false,
     clientPPOSBranchID: "",
     vanSaleProductSerial: "",
-    pposEmail: "",
+    pPosEmail: "",
     maximum_Allowed_LineItem_Amount: 0.0,
     fileAttachmentMethod: "No",
     fileAttachmentFolder: "",
@@ -83,21 +86,20 @@ const BranchSettingsForm: React.FC = () => {
   const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-
+  const [error, setError] = useState<string | null>(null);
+  const api = new APIClient();
   const dispatch = useAppDispatch();
 
-  //loading on render
-  //   useEffect(() => {
-  //     loadSettings();
-  //   }, []);
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await dispatch(
-        getAction({ apiUrl: `${Urls.application_setting}branch` }) as any
-      ).unwrap();
-
+      const response = await api.getAsync(`${Urls.application_settings}branch`);
+      debugger;
+      console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
     } catch (error) {
@@ -107,38 +109,64 @@ const BranchSettingsForm: React.FC = () => {
     }
   };
 
-  const handleFieldChange = (settingName: any, value: any) => {
-    setFormState((prevSettings = {} as FormState) => ({
-      ...prevSettings,
-      [settingName]: value ?? "",
+  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      [field]: value,
     }));
   };
 
-  const handleSubmit = async () => {
-    const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-      const currentValue = formState[key as keyof FormState];
-      const prevValue = formStatePrev[key as keyof FormState];
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+        const currentValue = formState?.[key as keyof FormState];
+        const prevValue = formStatePrev[key as keyof FormState];
 
-      if (currentValue !== prevValue) {
-        acc.push({
-          settingsName: key,
-          settingsValue: currentValue,
-        });
+        if (currentValue !== prevValue) {
+          debugger;
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue,
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: any }[]);
+      console.log(modifiedSettings);
+
+      const response = (await api.put(Urls.application_settings, {
+        type: "branch",
+        updateList: modifiedSettings,
+      })) as any;
+      debugger;
+      if (response != undefined && response != null && response.IsOk == true) {
+        ERPToast.showWith(response?.message, "success");
+      } else {
+        ERPToast.showWith(response?.message, "warning");
       }
-      return acc;
-    }, [] as { settingsName: string; settingsValue: any }[]);
-    const response: any = (await postAction({
-      apiUrl: Urls.application_setting,
-      data: modifiedSettings,
-    })) as any;
-    handleResponse(response);
-    console.log(modifiedSettings);
-    // You can send this list to your API or handle it as needed
+    } catch (error) {
+      console.error("Error saving settings:", error);
+    } finally {
+      setIsSaving(false);
+    }
   };
+  //   if (loading) {
+  //     return <div>Loading settings...</div>;
+  //   }
 
+  if (error) {
+    return (
+      <div className="error-message">
+        {error}
+        <button onClick={loadSettings}>Retry</button>
+      </div>
+    );
+  }
   return (
     <div className="w-full max-w-4xl">
       <div className="grid grid-cols-3 gap-6 mb-4">
+        <div className="flex flex-col space-y-4">
           {/* Left Column */}
           <ERPCheckbox
             id="maintainTax"
@@ -219,7 +247,8 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-       
+        </div>
+        <div className="flex flex-col  space-y-4">
           <ERPDataCombobox
             id="countryName"
             value={formState.countryName}
@@ -292,8 +321,10 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-       
-         
+        </div>
+
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-start gap-3">
             {formState?.maintainTax && (
               <ERPCheckbox
                 id="maintainKSA_EInvoice"
@@ -321,45 +352,45 @@ const BranchSettingsForm: React.FC = () => {
                 )
               }
             />
-       
+          </div>
 
-          <ERPCheckbox
-            id="apply_KSA_EInvoice_Validation_Rules"
-            label=" Apply KSA EInvoice Validation Rules"
-            checked={formState?.apply_KSA_EInvoice_Validation_Rules}
-            data={formState}
-            onChangeData={(data) =>
-              handleFieldChange(
-                "apply_KSA_EInvoice_Validation_Rules",
-                data.apply_KSA_EInvoice_Validation_Rules
-              )
-            }
-          />
-          <ERPCheckbox
-            id="createCreditNoteAutomaticallyOnSalesEdit"
-            label="Maintain Counter Wise Prefix For Transaction"
-            data={formState}
-            checked={formState?.createCreditNoteAutomaticallyOnSalesEdit}
-            onChangeData={(data) =>
-              handleFieldChange(
-                "createCreditNoteAutomaticallyOnSalesEdit",
-                data.createCreditNoteAutomaticallyOnSalesEdit
-              )
-            }
-          />
+            <ERPCheckbox
+              id="apply_KSA_EInvoice_Validation_Rules"
+              label=" Apply KSA EInvoice Validation Rules"
+              checked={formState?.apply_KSA_EInvoice_Validation_Rules}
+              data={formState}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "apply_KSA_EInvoice_Validation_Rules",
+                  data.apply_KSA_EInvoice_Validation_Rules
+                )
+              }
+            />
+            <ERPCheckbox
+              id="createCreditNoteAutomaticallyOnSalesEdit"
+              label="Maintain Counter Wise Prefix For Transaction"
+              data={formState}
+              checked={formState?.createCreditNoteAutomaticallyOnSalesEdit}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "createCreditNoteAutomaticallyOnSalesEdit",
+                  data.createCreditNoteAutomaticallyOnSalesEdit
+                )
+              }
+            />
 
-          <ERPInput
-            id="ksa_EInvoice_Sync_SystemCode"
-            value={formState.ksa_EInvoice_Sync_SystemCode}
-            data={formState}
-            label="EInvoice Sync SystemCode"
-            onChangeData={(data) =>
-              handleFieldChange(
-                "ksa_EInvoice_Sync_SystemCode",
-                data.ksa_EInvoice_Sync_SystemCode
-              )
-            }
-          />
+            <ERPInput
+              id="kSA_EInvoice_Sync_SystemCode"
+              value={formState.kSA_EInvoice_Sync_SystemCode}
+              data={formState}
+              label="EInvoice Sync SystemCode"
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "kSA_EInvoice_Sync_SystemCode",
+                  data.kSA_EInvoice_Sync_SystemCode
+                )
+              }
+            />
 
           <ERPInput
             id="maximum_Allowed_LineItem_Amount"
@@ -374,9 +405,9 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-      
-     
-   
+        </div>
+      </div>
+      <div className="flex justify-start items-start gap-6 mb-4">
         <ERPCheckbox
           id="maintainSynchronization"
           checked={formState?.maintainSynchronization}
@@ -389,7 +420,7 @@ const BranchSettingsForm: React.FC = () => {
             )
           }
         />
-       
+        <div className="grid grid-cols-2 gap-5">
           {formState?.maintainSynchronization && (
             <>
               <ERPDataCombobox
@@ -453,8 +484,11 @@ const BranchSettingsForm: React.FC = () => {
               />
             </>
           )}
+        </div>
+      </div>
    
-     
+      <div className="grid grid-cols-2 gap-6">
+        <div className="flex flex-col space-y-4">
           <ERPCheckbox
             id="showBTINotification"
             checked={formState.showBTINotification}
@@ -465,26 +499,24 @@ const BranchSettingsForm: React.FC = () => {
             }
           />
 
-          <ERPDataCombobox
-            id="reportMode"
-            value={formState.reportMode}
-            field={{
-              id: "reportMode",
-              required: true,
-
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            data={formState}
-            label="Report Mode"
-            onChangeData={(data) =>
-              handleFieldChange("reportMode", data.reportMode)
-            }
-            options={[
-              { value: "0", label: "classic" },
-              { value: "1", label: "Standard" },
-            ]}
-          />
+            <ERPDataCombobox
+              id="reportMode"
+              value={formState.reportMode}
+              field={{
+                id: "reportMode",
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              data={formState}
+              label="Report Mode"
+              onChangeData={(data) =>
+                handleFieldChange("reportMode", data.reportMode)
+              }
+              options={[
+                { value: "0", label: "classic" },
+                { value: "1", label: "Standard" },
+              ]}
+            />
 
           <ERPDataCombobox
             id="invoicePrintingStyle"
@@ -544,7 +576,8 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
           />
-     
+        </div>
+        <div className="flex flex-col space-y-4">
           <ERPCheckbox
             id="enableVanSale"
             checked={formState?.enableVanSale}
@@ -556,7 +589,7 @@ const BranchSettingsForm: React.FC = () => {
           />
            {formState?.enableVanSale &&(
             <>
-            
+             <div className="flex justify-start items-end gap-4">
             <ERPInput
               id="clientPPOSBranchID"
               value={formState.clientPPOSBranchID}
@@ -569,7 +602,7 @@ const BranchSettingsForm: React.FC = () => {
          
               <ERPButton title="Verify" variant="secondary" type="submit" />
            
-         
+          </div>
 
           <ERPInput
             id="vanSaleProductSerial"
@@ -592,25 +625,14 @@ const BranchSettingsForm: React.FC = () => {
               handleFieldChange("pposEmail", data.pposEmail)
             }
           />
-          
             </>
-
-
-
            )
            
            }
          
         </div>
-        <div className="flex justify-end">
-          <ERPButton
-            title="Save Settings"
-            variant="primary"
-            type="submit"
-          />
-        </div>
       </div>
-   
+    </div>
   );
 };
 

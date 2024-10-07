@@ -215,7 +215,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultSalesAccount",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Sales_Account}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -230,7 +230,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultBtoAccount",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Sales_Account}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -248,7 +248,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultSalesReturnAccount",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Sales_Account}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -263,7 +263,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultBtiAccount",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Purchase_Account}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -281,7 +281,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultPurchaseAccount",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Purchase_Account}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -296,7 +296,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "serviceWarrantyInvAccounts",
                         required: false,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -314,7 +314,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultPurchaseReturnAccount",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Purchase_Account}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -329,7 +329,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "serviceNonWarrantyInvAccounts",
                         required: false,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Customer}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -347,7 +347,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "billDiscountGivenLedger",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Discount_Given}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -379,7 +379,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "billDiscountReceivedLedger",
                         required: true,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Discount_Received}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Discount_Received}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -394,7 +394,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultSalesReturnPayableAccount",
                         required: false,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Customer}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -412,7 +412,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "couponCardAccount",
                         required: false,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -438,7 +438,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultRoundOffAccount",
                         required: false,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.Indirect_Expenses}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.Indirect_Expenses}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -465,7 +465,7 @@ const InventorySettingsForm: React.FC = () => {
                         id: "defaultAdditionalAmountAccount",
                         required: false,
                         getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -479,8 +479,7 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "blockBillDiscount",
                         required: false,
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
+                        getListUrl: Urls.data_brands,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -497,8 +496,7 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "defaultBrand",
                         required: false,
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
+                        getListUrl: Urls.data_brands,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -524,8 +522,7 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "negativeStock",
                         required: false,
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
+                        getListUrl: Urls.data_countries,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -592,8 +589,7 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "barcodeLabel",
                         required: false,
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
+                        getListUrl: Urls.data_countries,
                         valueKey: "id",
                         labelKey: "name",
                     }}
@@ -624,8 +620,7 @@ const InventorySettingsForm: React.FC = () => {
                     field={{
                         id: "ifLessSalesRate",
                         required: false,
-                        getListUrl: Urls.data_acc_ledgers,
-                        params: `ledgerID = 0 & ledgerType=${LedgerType}`,
+                        getListUrl: Urls.data_languages,
                         valueKey: "id",
                         labelKey: "name",
                     }}

@@ -6,6 +6,8 @@ import ERPInput from '../../../components/ERPComponents/erp-input';
 import ERPSelect from '../../../components/ERPComponents/erp-select';
 import Urls from '../../../redux/urls';
 import Pageheader from '../../../components/common/pageheader/pageheader';
+import ERPToast from '../../../components/ERPComponents/erp-toast';
+import { APIClient } from '../../../helpers/api-client';
 
 interface TaxSettingsFormState {
   defaultPurchaseFormType: {
@@ -45,9 +47,11 @@ interface TaxSettingsFormState {
   enableKarnatakaTaxReportFormat: boolean;
   showPrevForms: boolean;
 }
-
+const api = new APIClient();
 const ERPSettingsFormGSTTaxes = () => {
-  const [formState, setFormState] = useState<TaxSettingsFormState>({
+  const initialState: TaxSettingsFormState = {
+// const ERPSettingsFormGSTTaxes = () => {
+//   const [formState, setFormState] = useState<TaxSettingsFormState>({
     defaultPurchaseFormType: {
       normal: false,
       interState: false,
@@ -84,8 +88,11 @@ const ERPSettingsFormGSTTaxes = () => {
     considerSalesPriceAsCalamityIncluded: false,
     enableKarnatakaTaxReportFormat: false,
     showPrevForms: false,
-  });
-  const [changedSettings, setChangedSettings] = useState<Partial<TaxSettingsFormState>>({});
+  };
+  // const [changedSettings, setChangedSettings] = useState<Partial<TaxSettingsFormState>>({});
+  // const [formState, setFormState] = useState<TaxSettingsFormState>(initialState);
+  const [formState, setFormState] = useState<TaxSettingsFormState>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<TaxSettingsFormState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -112,41 +119,74 @@ const ERPSettingsFormGSTTaxes = () => {
       [settingName]: value ?? ''
     }));
     
-    setChangedSettings((prevChangedSettings = {} as TaxSettingsFormState) => ({
+    setFormStatePrev((prevChangedSettings = {} as TaxSettingsFormState) => ({
       ...prevChangedSettings,
       [settingName]: value ?? ''
     }));
   });
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setIsSaving(true);
+  //   try {
+  //     const response = await fetch('/api/settings', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(changedSettings),
+  //     });
+  //     if (response.ok) {
+  //       console.log('Settings saved successfully');
+  //       setChangedSettings({});
+  //     } else {
+  //       console.error('Error saving settings');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error saving settings:', error);
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const response = await fetch('/api/settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(changedSettings),
-      });
-      if (response.ok) {
-        console.log('Settings saved successfully');
-        setChangedSettings({});
-      } else {
-        console.error('Error saving settings');
-      }
+      const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+        const currentValue = formState?.[key as keyof TaxSettingsFormState];
+        const prevValue = formStatePrev[key as keyof TaxSettingsFormState];
+       
+        if (currentValue !== prevValue) {
+          debugger;
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue.toString()
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: string }[]);
+      console.log(modifiedSettings);
+      
+      const response = await api.put(Urls.application_settings,{type: 'accounts', updateList:  modifiedSettings}) as  any
+      debugger;
+      if(response!=undefined && response!=null && response.isOk==true)
+        {
+          ERPToast.showWith(response?.message, "success");
+        }
+        else{
+          ERPToast.showWith(response?.message,"warning")
+        }
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {
       setIsSaving(false);
     }
   };
-
   if (loading) {
     return <div>Loading settings?...</div>;
   }
 
   return (
-    <form>
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className='grid grid-cols-4 gap-6'>
         <label>Default Purchase Form Type</label>
         <ERPCheckbox
@@ -193,7 +233,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Input CST Account"
         field={{
           id: "inputCSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -208,7 +248,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Output CST Account"
         field={{
           id: "outputCSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -221,7 +261,7 @@ const ERPSettingsFormGSTTaxes = () => {
         value={formState.inputCessAccount}
         field={{
           id: "inputCessAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -238,7 +278,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Output Cess Account"
         field={{
           id: "outputCessAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -253,7 +293,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Input Add Cess Account"
         field={{
           id: "inputAddCessAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -268,7 +308,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Output Add Cess Account"
         field={{
           id: "outputAddCessAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -283,7 +323,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Expenses Tax Account"
         field={{
           id: "expensesTaxAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -298,7 +338,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Income Tax Account"
         field={{
           id: "incomeTaxAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -367,7 +407,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Default SI Form Type For POS"
         field={{
           id: "defaultSIFormTypeForPOS",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_FormTypeBySI,
           valueKey: "id",
           labelKey: "name",
@@ -382,7 +422,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Default SI Prefix For POS"
         field={{
           id: "defaultSIPrefixForPOS",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_VPrefixForSI,
           valueKey: "id",
           labelKey: "name",
@@ -397,7 +437,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Default SR Form Type For POS"
         field={{
           id: "defaultSRFormTypeForPOS",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_FormTypeBySR,
           valueKey: "id",
           labelKey: "name",
@@ -412,7 +452,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Default SR Prefix For POS"
         field={{
           id: "defaultSRPrefixForPOS",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_VPrefixForSR,
           valueKey: "VoucherID",
           labelKey: "FormType",
@@ -427,7 +467,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Input SGST Account"
         field={{
           id: "inputSGSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -442,7 +482,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Output SGST Account"
         field={{
           id: "outputSGSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -457,7 +497,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Input CGST Account"
         field={{
           id: "inputCGSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -472,7 +512,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Output CGST Account"
         field={{
           id: "outputCGSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -487,7 +527,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Input IGST Account"
         field={{
           id: "inputIGSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -502,7 +542,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Output IGST Account"
         field={{
           id: "outputIGSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -517,7 +557,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="TCS Paid Account"
         field={{
           id: "TCSPaidAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -532,7 +572,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="TCS Payable Account"
         field={{
           id: "TCSPayableAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",
@@ -547,7 +587,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Input Calamity Cess Account"
         field={{
           id: "inputCSTAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_InputCalamity,
           valueKey: "id",
           labelKey: "name",
@@ -562,7 +602,7 @@ const ERPSettingsFormGSTTaxes = () => {
         label="Output Calamity Cess Account"
         field={{
           id: "outputCalamityCessAccount",
-          required: true,
+         // required: true,
           getListUrl: Urls.data_duties_taxes,
           valueKey: "id",
           labelKey: "name",

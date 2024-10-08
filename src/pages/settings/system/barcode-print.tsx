@@ -495,7 +495,7 @@ const Barcodeprint: React.FC = () => {
                           customSize="sm"
                           customWidth="50%" // Limit the width of the input field
                           onChange={handleInputChange}
-                          placeholder="Enter other type"
+                          placeholder="other type"
                           validation=""
                         />
                       )}

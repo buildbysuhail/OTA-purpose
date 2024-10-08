@@ -9,6 +9,8 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 interface FormState {
   expensesTaxAccount: string;
@@ -58,6 +60,7 @@ const TaxSettingsForm: React.FC = () => {
     } finally {
       setLoading(false);
     }
+    const { t } = useTranslation();
   };
 
   const handleFieldChange = (field: keyof typeof initialState, value: any) => {
@@ -104,14 +107,14 @@ const TaxSettingsForm: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading settings...</div>;
+    return <div>{t("loading_settings...")}</div>;
   }
 
   if (error) {
     return (
       <div className="error-message">
         {error}
-        <button onClick={loadSettings}>Retry</button>
+        <button onClick={loadSettings}>{t("retry")}</button>
       </div>
     );
   }
@@ -134,7 +137,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("purchaseFormType", data.purchaseFormType)
             }
-            label="Default Purchase Form Type"
+            label={t("default_purchase")}
           />
 
           <ERPDataCombobox
@@ -151,7 +154,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("salesFormType", data.salesFormType)
             }
-            label="Sales Form Type"
+            label={t("sales_form_type")}
           />
           <ERPDataCombobox
             id="purchaseTaxAccount"
@@ -167,7 +170,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("purchaseTaxAccount", data.purchaseTaxAccount)
             }
-            label="Purchase Tax Account"
+            label={t("purchase_tax_account")}
           />
           <ERPDataCombobox
             id="salesTaxAccount"
@@ -183,7 +186,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("salesTaxAccount", data.salesTaxAccount)
             }
-            label="Sales Tax Account"
+            label={t("sales_tax_account")}
           />
           <ERPDataCombobox
             id="purchaseCSTAccount"
@@ -199,7 +202,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("purchaseCSTAccount", data.purchaseCSTAccount)
             }
-            label="Purchase CST Account"
+            label={t("purchase_cst_account")}
           />
           <ERPDataCombobox
             id="salesCSTAccount"
@@ -215,7 +218,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("salesCSTAccount", data.salesCSTAccount)
             }
-            label="sales CST Account"
+            label={t("sales_cst_account")}
           />
           <ERPDataCombobox
             id="expensesTaxAccount"
@@ -231,7 +234,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("expensesTaxAccount", data.expensesTaxAccount)
             }
-            label="Expenses Tax Account "
+            label={t("expenses_tax_account")}
           />
           <ERPDataCombobox
             id="incomeTaxAccount"
@@ -247,12 +250,12 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("incomeTaxAccount", data.incomeTaxAccount)
             }
-            label="Income Tax Account"
+            label={t("income_tax_account")}
           />
         </div>
         <div className="my-4 flex items-center justify-end">
           <ERPButton
-            title="Save Changes"
+            title={t("save_changes")}
             variant="primary"
             disabled={isSaving}
             loading={isSaving}

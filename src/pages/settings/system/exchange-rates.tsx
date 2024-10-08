@@ -48,9 +48,9 @@ const ExchangeRates = () => {
   const handleSubmit = async () => {
     setPostDataLoading(true);
     const result: any = await api.post(
-      `${Urls.currencyExchange}`,postData
+      `${Urls.currencyExchange}`, postData
     );
-    
+
     setStore(result?.data);
     setPostDataLoading(false);
   };
@@ -170,14 +170,15 @@ const ExchangeRates = () => {
                 </DataGrid>
               </div>
               <div className="grid grid-cols-1 gap-3">
-              <ERPButton
-                        type="button"
-                        disabled={postDataLoading}
-                        variant="primary"
-                        onClick={handleSubmit}
-                        loading={postDataLoading}
-                        title={t("load")}
-                      ></ERPButton>
+                <ERPButton
+                  className="justify-self-end"
+                  type="button"
+                  disabled={postDataLoading}
+                  variant="primary"
+                  onClick={handleSubmit}
+                  loading={postDataLoading}
+                  title={t("save")}
+                ></ERPButton>
               </div>
             </div>
           </div>

@@ -6,7 +6,7 @@ export const initialDataUser = {
     confrimPassword: "",
     userTypeCode: "",
     employeeID: 0,
-    maxDecimalPerAllowed: 0,
+    maxDiscPercAllowed: 0,
     email: "",
     phoneNumber: "",
     displayName: "",
@@ -18,7 +18,7 @@ export const initialDataUser = {
     confrimPassword: "",
     userTypeCode: "",
     employeeID: "",
-    maxDecimalPerAllowed: "",
+    maxDiscPercAllowed: "",
     email: "",
     phoneNumber: "",
     displayName: "",
@@ -49,6 +49,6 @@ export interface UserData {
   userTypeCode: string;
   counterID: number;
   employeeID: number;
-  maxDecimalPerAllowed: number;
+  maxDiscPercAllowed: number;
   passkey: string;
 }

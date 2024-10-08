@@ -57,9 +57,10 @@ export const RemainderManage: React.FC = React.memo(() => {
           {...getFieldProps("remindingDate")}
           type="date"
           id="remindingDate"
+          required={true}
           label={t("date_of_reminds")}
           onChangeData={(data: any) => handleFieldChange("remindingDate", data)}
-        />
+        /> 
 
         <ERPInput
           {...getFieldProps("noOfDays")}

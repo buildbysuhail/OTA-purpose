@@ -57,11 +57,11 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
           onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
         />
         <ERPInput
-          {...getFieldProps('remark')}
+          {...getFieldProps('remarks')}
           label="Remark"
           placeholder="Remark"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('remark', data)}
+          onChangeData={(data: any) => handleFieldChange('remarks', data)}
         />
         <ERPCheckbox
           {...getFieldProps('isEditable')}

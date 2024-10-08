@@ -229,12 +229,12 @@ const BranchManage: React.FC = React.memo(() => {
         />
       </div>
 
-      <ERPFormButtons
+      {/* <ERPFormButtons
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}
        
-      />
+      /> */}
     </div>
   );
 });

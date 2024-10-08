@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -12,17 +12,60 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
+import { DataGrid } from "devextreme-react";
+import { Toolbar, Item, Editing } from "devextreme-react/cjs/data-grid";
+import { APIClient } from "../../../helpers/api-client";
+import CustomStore from "devextreme/data/custom_store";
+import "./exchange-rates.css";
+const isNotEmpty = (value: any) =>
+  value !== undefined && value !== null && value !== "";
+const api = new APIClient();
 
 const ExchangeRates = () => {
-  const {t}=useTranslation()
-  const initialUserTypeData = {
-    data: { baseCurrency: 0 },
-    validations: { baseCurrency: "" },
-  };
-  const [postData, setPostData] = useState(initialUserTypeData);
-  const [postDataLoading, setPostDataLoading] = useState(false)
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+
+  const [postData, setPostData] = useState<{ baseCurrency: number }>({
+    baseCurrency: 0,
+  });
+  const [store, setStore] = useState<any>([]);
+  const [postDataLoading, setPostDataLoading] = useState(false);
+  function isNotEmpty(value: string | undefined | null) {
+    return value !== undefined && value !== null && value !== "";
+  }
+  const load = async (baseCurrency?: number) => {
+    const result: any = await api.getAsync(
+      `${Urls.currencyExchange}${baseCurrency ? baseCurrency : ""}`
+    );
+    debugger;
+    setStore(result?.data);
+  };
+  const handleSubmit = async () => {
+    setPostDataLoading(true);
+    const result: any = await api.post(
+      `${Urls.currencyExchange}`,postData
+    );
+    
+    setStore(result?.data);
+    setPostDataLoading(false);
+  };
+  useEffect(() => {
+    try {
+      load();
+    } catch (error) {
+      setStore([]);
+    }
+    let wh = window.innerHeight;
+    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
+    let gridHeightWindows = wh - 400; // Assuming 100px is the height to minus for windows
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, []);
+
   const columns: DevGridColumn[] = [
     {
       dataField: "exchRateID",
@@ -41,7 +84,7 @@ const ExchangeRates = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      allowEditing: true
+      allowEditing: true,
     },
     {
       dataField: "rate",
@@ -50,7 +93,7 @@ const ExchangeRates = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      allowEditing: true
+      allowEditing: true,
     },
     {
       dataField: "rateDate",
@@ -69,72 +112,80 @@ const ExchangeRates = () => {
       minWidth: 150,
     },
   ];
-  const handleLoad = async() => {
-
-  }
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="box custom-box">
             <div className="box-body">
-              
               <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid
-                  columns={columns}
-                  gridHeader="Currency  Exchange"
-                  dataUrl={Urls.currencyExchange}
-                  gridId="grd_currency-exchange"
-                  popupAction={toggleCurrencyExchangePopup}
-                  hideGridAddButton={true}
-                  hideDefaultExportButton={true}
-                  hideGridHeader={true}
-                  hideDefaultSearchPanel={true}
-                  allowExport={false}
-                  allowEditing={true}
-                  customToolbarItems={[
-                    { item:  <ERPDataCombobox
-                  className="w-[300px] mb-[13px]"
-                      id="baseCurrency"
-                      field={{
-                        id: "baseCurrency",
-                        required: true,
-                        getListUrl: Urls. data_base_currency,
-                        valueKey: "currencyID",
-                        labelKey: "currencyName",
-                      }}
-                      onChangeData={(data: any) => {
-                        setPostData((prev: any) => ({
-                          ...prev,
-                          data: data,
-                        }));
-                      }}
-                      validation={postData.validations.baseCurrency} // If validation is needed
-                      data={postData?.data}
-                      defaultData={postData?.data}
-                      value={postData?.data.baseCurrency}
-                      label={t("base_currency")}
-    
-                    />, location: 'before' }, // Add this item before
-                    { item:  <ERPButton
-                      type="button"
-                      disabled={postDataLoading}
-                      variant="primary"
+                <DataGrid
+                  dataSource={store}
+                  height={gridHeight.windows}
+                  key="exchRateID"
+                  showBorders={true}
+                >
+                  <Editing
+                    mode="cell"
+                    allowUpdating={true}
+                    allowAdding={true}
+                    allowDeleting={true}
+                  />
+                  <Toolbar>
+                    <Item location="before" cssClass="mb-4">
+                      <ERPDataCombobox
+                        className="w-[300px] mb-[13px]"
+                        id="baseCurrency"
+                        field={{
+                          id: "baseCurrency",
+                          required: true,
+                          getListUrl: Urls.data_base_currency,
+                          valueKey: "currencyID",
+                          labelKey: "currencyName",
+                        }}
+                        onChangeData={(data: any) => {
+                          setPostData((prev: any) => ({
+                            ...prev,
+                            data: data,
+                          }));
+                          load(data?.baseCurrency);
+                        }}
+                        data={postData}
+                        defaultData={postData}
+                        value={postData?.baseCurrency}
+                        label={t("base_currency")}
+                      />
+                    </Item>
+                    {/* <Item location="before">
+                      <ERPButton
+                        type="button"
+                        disabled={postDataLoading}
+                        variant="primary"
                         onClick={handleLoad}
-                      loading={postDataLoading}
-                      title={t("load")}
-                    ></ERPButton>, location: 'before' } // Add this item after
-                  ]}
-                  gridAddButtonType="popup"
-                  gridAddButtonIcon="ri-add-line"
-                ></ERPDevGrid>
+                        loading={postDataLoading}
+                        title={t("load")}
+                      ></ERPButton>
+                    </Item> */}
+                  </Toolbar>
+                </DataGrid>
+              </div>
+              <div className="grid grid-cols-1 gap-3">
+              <ERPButton
+                        type="button"
+                        disabled={postDataLoading}
+                        variant="primary"
+                        onClick={handleSubmit}
+                        loading={postDataLoading}
+                        title={t("load")}
+                      ></ERPButton>
               </div>
             </div>
           </div>
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.currencyExchange.isOpen||false}
+        closeButton="Button"
+        isOpen={rootState.PopupData.currencyExchange.isOpen || false}
         title={t("currencies")}
         width="w-full max-w-[600px]"
         isForm={true}

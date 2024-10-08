@@ -23,7 +23,7 @@ export interface UserActionReport {
   isTransaction:boolean,
   isAction:boolean,
 }
-const UserActionReport: React.FC = React.memo(() => {
+const UserActionReportFilter: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
@@ -34,7 +34,17 @@ const UserActionReport: React.FC = React.memo(() => {
         [dispatch]
       ),
       method: ActionType.POST,
-      useApiClient: true
+      useApiClient: true,
+      initialData: {
+        userID: 0,
+        dateFrom: new Date(),
+        dateTo: new Date(),
+        counterID: 0,
+        transactionType: {}, // Define the structure for this object if required
+        action: {}, // Define the structure for this object if required
+        isTransaction: false,
+        isAction: false,
+      }
     });
 
 
@@ -143,4 +153,4 @@ const UserActionReport: React.FC = React.memo(() => {
   );
 });
 
-export default UserActionReport;
+export default UserActionReportFilter;

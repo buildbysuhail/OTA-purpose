@@ -43,11 +43,14 @@ import ERPButton from "./erp-button";
 import { AppDispatch } from "../../redux/store";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
+import { formatDate } from "devextreme/localization";
 
 interface ToolbarItem {
   item: React.ReactNode;
   location: "before" | "after";
 }
+type FilterOperation = "=" | "<>" | ">" | ">=" | "<" | "<=" | "startswith" | "endswith" | "contains" | "notcontains" | "between";
+
 interface ERPDevGridProps {
   columns: DevGridColumn[];
   gridId: string;
@@ -67,6 +70,7 @@ interface ERPDevGridProps {
   allowColumnResizing?: boolean;
   allowColumnChooser?: boolean;
   allowFiltering?: boolean;
+  initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
   allowSorting?: boolean;
   allowSearching?: boolean;
   remoteOperations?:
@@ -87,7 +91,7 @@ interface ERPDevGridProps {
   gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
   heightToAdjustOnMobile?: number;
-  popupAction: (value: popupDataProps) => {
+  popupAction?: (value: popupDataProps) => {
     type: string;
     payload: popupDataProps;
   };
@@ -126,11 +130,22 @@ const createStore = (
   keyExpr: string | string[] | undefined,
   dataUrl: string,
   allowEditing?: boolean,
-  paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"]
+  paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
+  initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
 ) => {
   return new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
+      if (initialFilters && initialFilters.length > 0 && !loadOptions.filter) {
+        loadOptions.filter = initialFilters.map(f => {
+          if (f.value instanceof Date) {
+            // Format the date as ISO string
+            return [f.field, f.operation, formatDate(f.value, 'yyyy-MM-ddTHH:mm:ss')];
+          }
+          return [f.field, f.operation, f.value];
+        });
+      }
+
       const queryString = paramNames
         .filter((paramName) => isNotEmpty(loadOptions[paramName]))
         .map(
@@ -196,6 +211,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   allowColumnResizing = true,
   allowColumnChooser = true,
   allowFiltering = true,
+  initialFilters = [],
   allowSorting = true,
   allowSearching = true,
   remoteOperations = true,
@@ -250,7 +266,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     gridAddButtonText == "Add" ? t("add") : gridAddButtonText
   );
   const onPopupOpenClick = useCallback(() => {
-    dispatch(popupAction({ isOpen: true, key: null }));
+    popupAction && dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
 
   useEffect(() => {
@@ -361,7 +377,16 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           {allowPaging && (
             <Paging defaultPageSize={pageSize} pageSize={pageSize} />
           )}
-          {allowFiltering && <FilterRow visible={true} />}
+          {allowFiltering && <FilterRow visible={true}>
+            {initialFilters.map((filter, index) => (
+              <Column
+                key={index}
+                dataField={filter.field}
+                filterValue={filter.value}
+                selectedFilterOperation={filter.operation}
+              />
+            ))}
+          </FilterRow>}
           {allowSearching && <SearchPanel visible={true} />}
           <HeaderFilter visible={true} />
           {allowColumnChooser && <ColumnChooser enabled={true} />}

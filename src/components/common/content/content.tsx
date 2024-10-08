@@ -4,6 +4,7 @@ import ApplicationSettings from '../../../pages/settings/system/application-sett
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import Flex from '../../../pages/inventory/demo-flex';
+import UserActionReport from '../../../pages/settings/system/user-action-report';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -78,6 +79,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/vouchers" element={<SystemVoucher />} />
         <Route path="/system/financial-year" element={<FinancialYear />} />
         <Route path="/system/reminders" element={<Reminders />} />
+        <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
         <Route path="settings" element={<Settings />} />
 

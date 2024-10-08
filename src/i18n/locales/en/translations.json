@@ -497,5 +497,17 @@
   "2decimals":"2Decimals",
   "synchronize_remote_database":"Synchronize Remote Database",
   "sync":"Sync",
-  "processing...":"Processing..."
+  "processing...":"Processing...",
+
+  "default_purchase":"Default Purchase Form Type",
+  "loading_settings...":"Loading Settings...",
+  "retry":"Retry",
+  "sales_form_type":"Sales Form Type",
+  "purchase_tax_account":"Purchase Tax Account",
+  "sales_tax_account":"Sales Tax Account",
+  "purchase_cst_account":"Purchase CST Account",
+  "sales_cst_account":"Sales CST Account",
+  "expenses_tax_account":"Expenses Tax Account",
+  "income_tax_account":"Income Tax Account",
+  "save_changes":"Save Changes"
 }

@@ -497,5 +497,17 @@
   "2decimals": "فاصلتان عشريتان",
   "synchronize_remote_database": "مزامنة قاعدة البيانات البعيدة",
   "sync": "مزامنة",
-  "processing...": "جارٍ المعالجة..."
+  "processing...": "جارٍ المعالجة...",
+
+  "default_purchase": "نوع نموذج الشراء الافتراضي",
+  "loading_settings...": "جارٍ تحميل الإعدادات...",
+  "retry": "إعادة المحاولة",
+  "sales_form_type": "نوع نموذج المبيعات",
+  "purchase_tax_account": "حساب ضريبة الشراء",
+  "sales_tax_account": "حساب ضريبة المبيعات",
+  "purchase_cst_account": "حساب ضريبة المبيعات المركزية للشراء",
+  "sales_cst_account": "حساب ضريبة المبيعات المركزية للمبيعات",
+  "expenses_tax_account": "حساب ضريبة المصاريف",
+  "income_tax_account": "حساب ضريبة الدخل",
+  "save_changes": "حفظ التغييرات"
 }

@@ -39,68 +39,68 @@ export const SampleMange: React.FC = React.memo(() => {
     dispatch(toggleUserTypePopup({ isOpen: false, key: null }));
   }, []);
 
-  return (
-    <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
-        <ERPInput
-          id = "userTypeId"
-          value={formState.userTypeId}
-          data={formState}
-          label="User Type Name"
-          placeholder="User Type Name"
-          required={true}
-          onChangeData={(data: any) => {
+  return (<></>
+    // <div className="w-full pt-4">
+    //   <div className="grid grid-cols-1 gap-3">
+    //     <ERPInput
+    //       id = "userTypeId"
+    //       value={formState.userTypeId}
+    //       data={formState}
+    //       label="User Type Name"
+    //       placeholder="User Type Name"
+    //       required={true}
+    //       onChangeData={(data: any) => {
             
-            handleFieldChange("userTypeName", data);
-          }}
-        />
-        <ERPCheckbox
-         id = "isEditable"
-         value={formState.isEditable}
-         data={formState}
-          label="Is Editable"
-          onChangeData={(data: any) => handleFieldChange("isEditable", data)}
-        />
-        <ERPDateInput
-           id = "dateTo"
-           value={formState.dateTo}
-           data={formState}
-          type="date"
-          label="Date To"
-          onChangeData={(data: any) => handleFieldChange("dateTo", data)}
-        />
-        <ERPRadio
-         id = "radioSample"
-         value={formState.radioSample}
-         data={formState}
-          name="flexRadioDefault"
-          label="Default checked radio"
-          onChangeData={(data: any) => handleFieldChange("dateTo", data)}
-          defaultChecked
-        />
-        <ERPDataCombobox+
-           id = "counterID"
-           value={formState.counterID}
-           data={counterID}
-          field={{
-            id: "counterID",
-            required: true,
-            getListUrl: Urls.data_counters,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => {
-            handleFieldChange("counterID", data);
-          }}
-          label="counterID"
-        />
-      </div>
-      <ERPFormButtons
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={onClose}
-        onSubmit={handleSubmit}
-      />
-    </div>
+    //         handleFieldChange("userTypeName", data);
+    //       }}
+    //     />
+    //     <ERPCheckbox
+    //      id = "isEditable"
+    //      value={formState.isEditable}
+    //      data={formState}
+    //       label="Is Editable"
+    //       onChangeData={(data: any) => handleFieldChange("isEditable", data)}
+    //     />
+    //     <ERPDateInput
+    //        id = "dateTo"
+    //        value={formState.dateTo}
+    //        data={formState}
+    //       type="date"
+    //       label="Date To"
+    //       onChangeData={(data: any) => handleFieldChange("dateTo", data)}
+    //     />
+    //     <ERPRadio
+    //      id = "radioSample"
+    //      value={formState.radioSample}
+    //      data={formState}
+    //       name="flexRadioDefault"
+    //       label="Default checked radio"
+    //       onChangeData={(data: any) => handleFieldChange("dateTo", data)}
+    //       defaultChecked
+    //     />
+    //     <ERPDataCombobox+
+    //        id = "counterID"
+    //        value={formState.counterID}
+    //        data={counterID}
+    //       field={{
+    //         id: "counterID",
+    //         required: true,
+    //         getListUrl: Urls.data_counters,
+    //         valueKey: "id",
+    //         labelKey: "name",
+    //       }}
+    //       onChangeData={(data: any) => {
+    //         handleFieldChange("counterID", data);
+    //       }}
+    //       label="counterID"
+    //     />
+    //   </div>
+    //   <ERPFormButtons
+    //     isEdit={isEdit}
+    //     isLoading={isLoading}
+    //     onCancel={onClose}
+    //     onSubmit={handleSubmit}
+    //   />
+    // </div>
   );
 });

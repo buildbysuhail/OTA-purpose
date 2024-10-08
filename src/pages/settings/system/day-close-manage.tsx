@@ -1,63 +1,58 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
-import Urls from "../../../redux/urls";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import { toggleDayClosePopup } from "../../../redux/slices/popup-reducer";
-import { ActionType } from "../../../redux/types";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import ERPInput from "../../../components/ERPComponents/erp-input";
+import Urls from "../../../redux/urls";
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { ActionType } from "../../../redux/types";
 import { useTranslation } from "react-i18next";
+import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 
 interface DayCloseManageData {
-  closedDate: string,
-  isSales: boolean,
-  isPurchase: boolean,
-  isAccounts: boolean,
-  passWord: string,
-  isAgree: boolean,
+  closedDate: string;
+  isSales: boolean;
+  isPurchase: boolean;
+  isAccounts: boolean;
+  passWord: string;
+  isAgree: boolean;
 }
-// export const initialDataDayClose = {
-//   data: {
-//     closedDate: "",
-//     isSales: true,
-//     isPurchase: true,
-//     isAccounts: true,
-//     passWord: "",
-//     isAgree: true
-//   },
-//   validations: {
-//     closedDate: "",
-//     isSales: "",
-//     isPurchase: "",
-//     isAccounts: "",
-//     passWord: "",
-//     isAgree: ""
-//   },
-// };
 
-const DayCloseManage: React.FC = React.memo(() => {
+export const initialDayCloseData: DayCloseManageData = {
+  closedDate: "",
+  isSales: false,
+  isPurchase: false,
+  isAccounts: false,
+  passWord: "",
+  isAgree: false
+};
+
+const DayCloseManage = () => {
+  const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<DayCloseManageData>({
-      url: Urls.DayClose,
-      onSuccess: useCallback(
-        () =>
-          dispatch(
-            toggleDayClosePopup({ isOpen: false, key: null })
-          ),
-        [dispatch]
-      ),
-      method: ActionType.POST,
-      useApiClient: true
-    });
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading
+  } = useFormManager<DayCloseManageData>({
+    url: Urls.DayClose,
+    onSuccess: useCallback(
+      () => dispatch(toggleDayClosePopup({ isOpen: false, key: null })),
+      [dispatch]
+    ),
+    key: rootState.PopupData.dayClose?.key,
+    useApiClient: true,
+    initialData: initialDayCloseData
+  });
 
   const onClose = useCallback(() => {
-    dispatch(
-      toggleDayClosePopup({ isOpen: false, key: null })
-    );
+    dispatch(toggleDayClosePopup({ isOpen: false, key: null }));
   }, []);
 
   const { t } = useTranslation();
@@ -110,13 +105,6 @@ const DayCloseManage: React.FC = React.memo(() => {
       />
     </div>
   );
-});
-
+};
 
 export default DayCloseManage;
-
-
-
-
-
-

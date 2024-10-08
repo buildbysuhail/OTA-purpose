@@ -58,12 +58,12 @@ const UserActionReport: React.FC = React.memo(() => {
       dataType: "date", // or "datetime" depending on your use case
       allowSorting: true,
       allowFiltering: true,
-      minWidth: 150,
+      minWidth: 150, 
       isLocked: false,
     },
     {
       dataField: "actionName",
-      caption: t("action"),
+      caption: t("action"), 
       dataType: "string",
       allowSorting: true,
       allowFiltering: true,

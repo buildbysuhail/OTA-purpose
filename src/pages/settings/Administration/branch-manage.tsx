@@ -66,32 +66,32 @@ export const initialDataBranch = {
     password: "",
     useMainBranchInventory: false,
   },
-  validations: {
-    id: "",
-    companyID: "",
-    dateFrom: "",
-    dateTo: "",
-    branchCode: "",
-    branchName: "",
-    address1: "",
-    address2: "",
-    city: "",
-    district: "",
-    bState: "",
-    country: "",
-    pinCode: "",
-    phone: "",
-    mobile: "",
-    fax: "",
-    email: "",
-    tin: "",
-    registrationNumber: "",
-    branchManager: "",
-    remarks: "",
-    userName: "",
-    password: "",
-    useMainBranchInventory: "",
-  },
+  // validations: {
+  //   id: "",
+  //   companyID: "",
+  //   dateFrom: "",
+  //   dateTo: "",
+  //   branchCode: "",
+  //   branchName: "",
+  //   address1: "",
+  //   address2: "",
+  //   city: "",
+  //   district: "",
+  //   bState: "",
+  //   country: "",
+  //   pinCode: "",
+  //   phone: "",
+  //   mobile: "",
+  //   fax: "",
+  //   email: "",
+  //   tin: "",
+  //   registrationNumber: "",
+  //   branchManager: "",
+  //   remarks: "",
+  //   userName: "",
+  //   password: "",
+  //   useMainBranchInventory: "",
+  // },
 };
 
 export const BranchGridManage: React.FC = React.memo(() => {
@@ -106,8 +106,8 @@ export const BranchGridManage: React.FC = React.memo(() => {
         [dispatch]
       ),
       key: rootState.PopupData.branchGrid.key,
-      useApiClient: true,
-      initialData: initialDataBranch,
+      useApiClient:true,
+      // initialData: initialDataBranch,
     });
 
   const onClose = useCallback(() => {
@@ -130,18 +130,20 @@ export const BranchGridManage: React.FC = React.memo(() => {
           required
           onChangeData={(data) => handleFieldChange("branchName", data)}
         />
-        <ERPDataCombobox
+        {/* <ERPDataCombobox
           {...getFieldProps("companyID")}
           field={{
             id: "companyID",
             required: true,
             getListUrl: Urls.data_company_id,
-            valueKey: "companyID",
-            labelKey: "companyID",
+            valueKey:"companyID",
+            labelKey:"companyID",
           }}
           onChange={(data: any) => handleFieldChange("companyID", data)}
           label="Company Id"
-        />
+          id="companyID"
+        /> */}
+        
         <ERPInput
           {...getFieldProps("address1")}
           label="Address 1"

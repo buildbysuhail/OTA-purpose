@@ -4,7 +4,7 @@ export interface RemainderData {
     remainderName: string;
     descriptions: string;
     remaindingDate: string;
-    noOfDays: number;
+    numberOfDays: number;
   }
 
   export const initialDataRemainder = {
@@ -14,7 +14,7 @@ export interface RemainderData {
       remainderName: "",
       descriptions: "",
       remaindingDate: "",
-      noOfDays: 0,
+      numberOfDays: 0,
     },
     validations: {
       remiandingID: "",
@@ -22,7 +22,7 @@ export interface RemainderData {
       remainderName: "",
       descriptions: "",
       remaindingDate: "",
-      noOfDays: "",
+      numberOfDays: "",
     },
   };
   

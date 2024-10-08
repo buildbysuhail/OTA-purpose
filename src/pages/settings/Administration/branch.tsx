@@ -39,6 +39,7 @@ const BranchGrid = () => {
       dataField: "companyID",
       caption: t("company_id"),
       dataType: "number",
+      visible:false,
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,

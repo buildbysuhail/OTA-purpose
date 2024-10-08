@@ -7,8 +7,8 @@ interface ERPMUIInputProps {
   id: string;
   label?: string;
   type?: string;
-  value?: any;
-  defaultValue?: any;
+  value?: string; // Set type to string for better type safety
+  defaultValue?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -18,6 +18,7 @@ interface ERPMUIInputProps {
   customWidth?: string;
   placeholder?: string;
   validation?: string;
+  name?: string; // Add name property
 }
 
 const ERPMUIInput = forwardRef<HTMLInputElement, ERPMUIInputProps>(({
@@ -35,6 +36,7 @@ const ERPMUIInput = forwardRef<HTMLInputElement, ERPMUIInputProps>(({
   disabled,
   placeholder,
   validation,
+  name, // Destructure name from props
   ...props
 }: ERPMUIInputProps, ref) => {
   // Define size classes based on customSize prop
@@ -60,7 +62,9 @@ const ERPMUIInput = forwardRef<HTMLInputElement, ERPMUIInputProps>(({
       padding: '8px 16px',
     },
   };
+
   const selectedSizeStyles = sizeStyles[customSize];
+
   return (
     <div style={{ width: customWidth }}>
       <TextField
@@ -86,9 +90,11 @@ const ERPMUIInput = forwardRef<HTMLInputElement, ERPMUIInputProps>(({
           },
         }}
         fullWidth
+        name={name} // Pass the name prop to TextField
+        ref={ref} // Make sure to pass ref to TextField
         {...props}
       />
-      <ERPElementValidationMessage validation={validation}></ERPElementValidationMessage>
+      <ERPElementValidationMessage validation={validation} />
     </div>
   );
 });

@@ -38,6 +38,7 @@ interface FormData {
   barcodeComma: string;
   preview: boolean;
   type: string;
+  Othertype:string;
   vPrefix: string;
   formType: string;
   billNo: string;
@@ -75,6 +76,7 @@ const Barcodeprint: React.FC = () => {
     barcodeComma: "",
     preview: false,
     type: "sales",
+    Othertype:"",
     vPrefix: "",
     formType: "",
     billNo: "",
@@ -194,12 +196,35 @@ const Barcodeprint: React.FC = () => {
   //   };
 
   // Handle input changes for the form
-  const handleInputChange = (e: InputChangeEvent) => {
-    const { name, value, type } = e.target;
+  // const handleInputChange = (e: InputChangeEvent) => {
+  //   const { name, value, type } = e.target;
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]:
+  //       type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+  //   }));
+  // };
+
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prevData => ({
+  //     ...prevData,
+  //     [name]: value
+  //   }));
+  // };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    // Optional: Validate the input before updating the state
+    if (value.trim() === "") {
+      console.warn(`The value for ${name} is empty.`);
+    }
+
+    // Update the state
     setFormData((prevData) => ({
       ...prevData,
-      [name]:
-        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+      [name]: value || "", // Ensure value is never undefined
     }));
   };
 
@@ -393,6 +418,18 @@ const Barcodeprint: React.FC = () => {
                       </label>
                       <div className="flex space-x-2">
                         {/* <div className="flex flex-col sm:flex-row sm:items-center gap-2"> */}
+                        {/* <ERPMUIInput
+                          id="barcodeForm"
+                          label="Form"
+                          type="text"
+                          value={formData.barcodeFrom}
+                          customSize="sm"
+                          customWidth="100%"
+                          // onChange={handleInputChange}
+                          onChange={(e) => handleInputChange(e as React.ChangeEvent<HTMLInputElement>)}
+                          placeholder="Form"
+                          validation=""
+                        /> */}
                         <ERPMUIInput
                           id="barcodeForm"
                           label="Form"
@@ -400,17 +437,20 @@ const Barcodeprint: React.FC = () => {
                           value={formData.barcodeFrom}
                           customSize="sm"
                           customWidth="100%"
+                          name="barcodeFrom"
                           onChange={handleInputChange}
                           placeholder="Form"
                           validation=""
                         />
+
                         <ERPMUIInput
-                          id="barcodeTo"
+                          id="barcodeTo"    
                           // label="To"
                           type="text"
                           value={formData.barcodeTo}
                           customSize="sm"
                           customWidth="100%"
+                          name="barcodeTo"
                           onChange={handleInputChange}
                           placeholder="To"
                           validation=""
@@ -425,6 +465,7 @@ const Barcodeprint: React.FC = () => {
                         value={formData.barcodeComma}
                         customSize="sm"
                         customWidth="100%"
+                        name="barcodeComma"
                         onChange={handleInputChange}
                         placeholder="Comma Separated"
                         validation=""
@@ -491,9 +532,10 @@ const Barcodeprint: React.FC = () => {
                           id="Othertype"
                           label=""
                           type="text"
-                          value={formData.billNo} // Adjust this value as needed for the form state
+                          value={formData.Othertype} // Adjust this value as needed for the form state
                           customSize="sm"
                           customWidth="50%" // Limit the width of the input field
+                          name="Othertype"
                           onChange={handleInputChange}
                           placeholder="other type"
                           validation=""
@@ -514,6 +556,7 @@ const Barcodeprint: React.FC = () => {
                   value={formData.vPrefix}
                   customSize="sm"
                   customWidth="100%"
+                  name="vPrefix"
                   onChange={handleInputChange}
                   placeholder="VPrefix"
                   validation=""
@@ -546,6 +589,7 @@ const Barcodeprint: React.FC = () => {
                   value={formData.billNo}
                   customSize="sm"
                   customWidth="100%"
+                  name="billNo"
                   onChange={handleInputChange}
                   placeholder="Bill No"
                   validation=""
@@ -595,6 +639,7 @@ const Barcodeprint: React.FC = () => {
                     value={formData.expDesc}
                     customSize="sm"
                     customWidth="100%"
+                    name="expDesc"
                     onChange={handleInputChange}
                     placeholder="Exp Desc"
                     validation=""
@@ -606,6 +651,7 @@ const Barcodeprint: React.FC = () => {
                     value={formData.note1}
                     customSize="sm"
                     customWidth="100%"
+                    name="note1"
                     onChange={handleInputChange}
                     placeholder="Note 1"
                     validation=""
@@ -617,6 +663,7 @@ const Barcodeprint: React.FC = () => {
                     value={formData.note2}
                     customSize="sm"
                     customWidth="100%"
+                    name="note2"
                     onChange={handleInputChange}
                     placeholder="Note 2"
                     validation=""
@@ -628,6 +675,7 @@ const Barcodeprint: React.FC = () => {
                     value={formData.note3}
                     customSize="sm"
                     customWidth="100%"
+                    name="note3"
                     onChange={handleInputChange}
                     placeholder="Note 3"
                     validation=""
@@ -639,6 +687,7 @@ const Barcodeprint: React.FC = () => {
                     value={formData.note4}
                     customSize="sm"
                     customWidth="100%"
+                    name="note4"
                     onChange={handleInputChange}
                     placeholder="Note 4"
                     validation=""
@@ -688,6 +737,7 @@ const Barcodeprint: React.FC = () => {
                         value={formData.startRow}
                         customSize="sm"
                         customWidth="100%"
+                        name="startRow"
                         onChange={handleInputChange}
                         validation=""
                       />
@@ -700,6 +750,7 @@ const Barcodeprint: React.FC = () => {
                         value={formData.endRow}
                         customSize="sm"
                         customWidth="100%"
+                        name="endRow"
                         onChange={handleInputChange}
                         validation=""
                       />

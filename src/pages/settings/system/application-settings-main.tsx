@@ -13,25 +13,25 @@ import ERPToast from '../../../components/ERPComponents/erp-toast';
 
 interface Settings {
   currency: string;
-  unitPriceDecimalPoints: string;
+  unitPriceDecimalPoint: string;
   decimalPoints: string;
-  currencyFormat: string;
+  cashSalesVoucherPrefix: string;
   roundingMethod: string;
-  salesRoundingMethod: string;
-  taxDecimalPoints: string;
+  posRoundingMethod: string;
+  taxDecimalPoint: string;
   roundingMethodGlobal: string;
   autoChangeTransactionDate: boolean;
   autoUpdateReleaseUpTo: number;
   oTPEmail: string;
   oTPVerification: string;
   allowPrivilegeCard: boolean;
-  privilegeCardPercentage: number;
-  allowPostdatedTransaction: boolean;
-  postdatedTransactionDays: number;
-  allowPredatedTransaction: boolean;
-  predatedTransactionDays: number;
-  maintainSeparatePrefixForCashSales: boolean;
-  saveModifiedTransactionSummary: boolean;
+  previlegeCardPerc: number;
+  allowPostdatedTrans: boolean;
+  postDatedTransInNumbers: number;
+  autoChangeTransactionDateByMidnight: boolean;
+  preDatedTransInNumbers: number;
+  maintainSeperatePrefixforCashSales: boolean;
+  saveModTransSum: boolean;
   maintainProduction: boolean;
   showReminders: boolean;
   enableSecondDisplay: boolean;
@@ -40,29 +40,31 @@ interface Settings {
   maintainSalesRouteCreditLimit: boolean;
   maintainMultilanguage: boolean;
   showUserMessages: boolean;
-  businessType: string;
+  maintainBusinessType: string;
+
+
 }
 const initialSettings: Settings = {
   currency: "2",
-  unitPriceDecimalPoints: "2",
+  unitPriceDecimalPoint: "2",
   decimalPoints: "2",
-  currencyFormat: "Millions",
+  cashSalesVoucherPrefix: "Millions",
   roundingMethod: "Normal",
-  salesRoundingMethod: "No Rounding", // Assuming this is what POSRoundingMethod refers to
-  taxDecimalPoints: "2",
+  posRoundingMethod: "No Rounding", // Assuming this is what POSRoundingMethod refers to
+  taxDecimalPoint: "2",
   roundingMethodGlobal: "Normal",
   autoChangeTransactionDate: false,
   autoUpdateReleaseUpTo: 0,
   oTPEmail: "",
   oTPVerification: "", // Not provided, using empty string as default
   allowPrivilegeCard: false,
-  privilegeCardPercentage: 1,
-  allowPostdatedTransaction: true,
-  postdatedTransactionDays: 0,
-  allowPredatedTransaction: true,
-  predatedTransactionDays: 110,
-  maintainSeparatePrefixForCashSales: false,
-  saveModifiedTransactionSummary: false,
+  previlegeCardPerc: 1,
+  allowPostdatedTrans: true,
+  postDatedTransInNumbers: 0,
+  autoChangeTransactionDateByMidnight: true,
+  preDatedTransInNumbers: 110,
+  maintainSeperatePrefixforCashSales: false,
+  saveModTransSum: false,
   maintainProduction: false,
   showReminders: false,
   enableSecondDisplay: false,
@@ -71,7 +73,7 @@ const initialSettings: Settings = {
   maintainSalesRouteCreditLimit: false,
   maintainMultilanguage: false,
   showUserMessages: false,
-  businessType: "General"
+  maintainBusinessType: "General"
 };
 const api=new APIClient();
 const ERPSettingsFormMain = () => {
@@ -243,17 +245,17 @@ const ERPSettingsFormMain = () => {
           />
           <ERPDataCombobox
           field={{
-            id: "unitPriceDecimalPoints",
+            id: "unitPriceDecimalPoint",
             valueKey: "value",
             labelKey: "label",
           }}
-            id="unitPriceDecimalPoints"
+            id="unitPriceDecimalPoint"
             label="Unit Price Decimal Points"
-            value={settings?.unitPriceDecimalPoints}
+            value={settings?.unitPriceDecimalPoint}
             data={settings}
             onChangeData={(data) =>{
               
-              handleFieldChange("unitPriceDecimalPoints", data.unitPriceDecimalPoints)
+              handleFieldChange("unitPriceDecimalPoint", data.unitPriceDecimalPoint)
             }}
             options={[
               { value: '0', label: '0' },
@@ -280,11 +282,11 @@ const ERPSettingsFormMain = () => {
             ]}
           />
           <ERPDataCombobox
-            id="currencyFormat"
+            id="cashSalesVoucherPrefix"
             label="Currency Format"
             data={settings}
-            value={settings?.currencyFormat}
-            onChangeData={(data) => handleFieldChange("currencyFormat", data.currencyFormat)}
+            value={settings?.cashSalesVoucherPrefix}
+            onChangeData={(data) => handleFieldChange("cashSalesVoucherPrefix", data.cashSalesVoucherPrefix)}
             options={[
               { value: 'Millions', label: 'Millions' },
               { value: 'Lakhs', label: 'Lakhs' },
@@ -305,15 +307,15 @@ const ERPSettingsFormMain = () => {
           />
           <ERPDataCombobox
            field={{
-            id: "salesRoundingMethod",
+            id: "posRoundingMethod",
             valueKey: "value",
             labelKey: "label",
           }}
-            id="salesRoundingMethod"
+            id="posRoundingMethod"
             label="Sales Rounding Method"
-            value={settings?.salesRoundingMethod}
+            value={settings?.posRoundingMethod}
             data={settings}
-            onChangeData={(data) => handleFieldChange("salesRoundingMethod", data.salesRoundingMethod)}
+            onChangeData={(data) => handleFieldChange("posRoundingMethod", data.posRoundingMethod)}
             options={[
               { value: 'Normal', label: 'Normal' },
               { value: 'No Rounding', label: 'No Rounding' },
@@ -330,11 +332,11 @@ const ERPSettingsFormMain = () => {
             ]}
           />
           <ERPDataCombobox
-            id="taxDecimalPoints"
+            id="taxDecimalPoint"
             label="Tax Decimal Points"
-            value={settings?.taxDecimalPoints}
+            value={settings?.taxDecimalPoint}
             data={settings}
-            onChangeData={(data) => handleFieldChange("taxDecimalPoints", data.taxDecimalPoints)}
+            onChangeData={(data) => handleFieldChange("taxDecimalPoint", data.taxDecimalPoint)}
             options={[
               { value: '0', label: '0' },
               { value: '1', label: '1' },
@@ -426,46 +428,46 @@ const ERPSettingsFormMain = () => {
               onChangeData={(data) => handleFieldChange("allowPrivilegeCard", data.allowPrivilegeCard)}
             />
             <ERPInput
-              id="privilegeCardPercentage"
+              id="previlegeCardPerc"
               type="number"
               data={settings}
               className="w-16 ml-6 mt-1"
-              value={settings?.privilegeCardPercentage}
-              onChangeData={(data) => handleFieldChange("privilegeCardPercentage", data.privilegeCardPercentage)}
+              value={settings?.previlegeCardPerc}
+              onChangeData={(data) => handleFieldChange("previlegeCardPerc", data.previlegeCardPerc)}
             />
           </div>
           <div>
             <ERPCheckbox
-              id="allowPostdatedTransaction"
+              id="allowPostdatedTrans"
               label="Allow Postdated Transaction"
               data={settings}
-              checked={settings?.allowPostdatedTransaction}
-              onChangeData={(data) => handleFieldChange("allowPostdatedTransaction", data.allowPostdatedTransaction)}
+              checked={settings?.allowPostdatedTrans}
+              onChangeData={(data) => handleFieldChange("allowPostdatedTrans", data.allowPostdatedTrans)}
             />
             <ERPInput
-              id="postdatedTransactionDays"
+              id="postDatedTransInNumbers"
               type="number"
               data={settings}
               className="w-16 ml-6 mt-1"
-              value={settings?.postdatedTransactionDays}
-              onChangeData={(data) => handleFieldChange("postdatedTransactionDays", data.postdatedTransactionDays)}
+              value={settings?.postDatedTransInNumbers}
+              onChangeData={(data) => handleFieldChange("postDatedTransInNumbers", data.postDatedTransInNumbers)}
             />
           </div>
           <div>
             <ERPCheckbox
-              id="allowPredatedTransaction"
-              label="Allow Predated Transaction"
+              id="autoChangeTransactionDateByMidnight"
+              label="Allow Predated Transaction Date By Midnight"
               data={settings}
-              checked={settings?.allowPredatedTransaction}
-              onChangeData={(data) => handleFieldChange("allowPredatedTransaction", data.allowPredatedTransaction)}
+              checked={settings?.autoChangeTransactionDateByMidnight}
+              onChangeData={(data) => handleFieldChange("autoChangeTransactionDateByMidnight", data.autoChangeTransactionDateByMidnight)}
             />
             <ERPInput
-              id="predatedTransactionDays"
+              id="preDatedTransInNumbers"
               type="number"
               data={settings}
               className="w-16 ml-6 mt-1"
-              value={settings?.predatedTransactionDays}
-              onChangeData={(data) => handleFieldChange("predatedTransactionDays", data.predatedTransactionDays)}
+              value={settings?.preDatedTransInNumbers}
+              onChangeData={(data) => handleFieldChange("preDatedTransInNumbers", data.preDatedTransInNumbers)}
             />
           </div>
         </div>
@@ -473,19 +475,19 @@ const ERPSettingsFormMain = () => {
       
         <div className="grid grid-cols-4 gap-6">
         <ERPCheckbox
-          id="maintainSeparatePrefixForCashSales"
+          id="maintainSeperatePrefixforCashSales"
           label="Maintain Separate Prefix for Cash Sales"
           data={settings}
-          checked={settings?.maintainSeparatePrefixForCashSales}
-          onChangeData={(data) => handleFieldChange("maintainSeparatePrefixForCashSales", data.maintainSeparatePrefixForCashSales)}
+          checked={settings?.maintainSeperatePrefixforCashSales}
+          onChangeData={(data) => handleFieldChange("maintainSeperatePrefixforCashSales", data.maintainSeperatePrefixforCashSales)}
         />
 
           <ERPCheckbox
-            id="saveModifiedTransactionSummary"
+            id="saveModTransSum"
             label="Save Modified Transaction Summary"
             data={settings}
-            checked={settings?.saveModifiedTransactionSummary}
-            onChangeData={(data) => handleFieldChange("saveModifiedTransactionSummary", data.saveModifiedTransactionSummary)}
+            checked={settings?.saveModTransSum}
+            onChangeData={(data) => handleFieldChange("saveModTransSum", data.saveModTransSum)}
           />
           <ERPCheckbox
             id="maintainProduction"
@@ -547,15 +549,15 @@ const ERPSettingsFormMain = () => {
 
         <ERPDataCombobox
          field={{
-          id: "businessType",
+          id: "maintainBusinessType",
           valueKey: "value",
           labelKey: "label",
         }}
-          id="businessType"
+          id="maintainBusinessType"
           label="Business Type"
-          value={settings?.businessType}
+          value={settings?.maintainBusinessType}
           data={settings}
-          onChangeData={(data) => handleFieldChange("businessType", data.businessType)}
+          onChangeData={(data) => handleFieldChange("maintainBusinessType", data.maintainBusinessType)}
           options={[
             { value: 'Retail', label: 'General' },
             { value: 'Distribution', label: 'Distribution' },

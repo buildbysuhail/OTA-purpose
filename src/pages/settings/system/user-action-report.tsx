@@ -63,7 +63,7 @@ const UserActionReport: React.FC = React.memo(() => {
     },
     {
       dataField: "actionName",
-      caption: t("action"),
+      caption: t("action"), 
       dataType: "string",
       allowSorting: true,
       allowFiltering: true,

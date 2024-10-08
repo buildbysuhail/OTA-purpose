@@ -201,14 +201,15 @@ const AuthorizationSettings = () => {
                   }}
                 />
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
+              <div className="grid grid-cols-4 sm:grid-cols-4 gap-3 ">
                 <ERPButton
                   loading={postDataLoading}
+                  disabled={postDataLoading}
                   onClick={handleSubmit}
                   title={t("save")}
                 />
                 <ERPButton
-                  loading={postDataLoading}
+                  disabled={postDataLoading}
                   onClick={onClear}
                   title={t("clear")}
                 />

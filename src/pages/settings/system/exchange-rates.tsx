@@ -40,7 +40,7 @@ const ExchangeRates = () => {
   }
   const load = async (baseCurrency?: number) => {
     const result: any = await api.getAsync(
-      `${Urls.currencyExchange}${baseCurrency ? baseCurrency : ""}`
+      `${Urls.currencyExchange}${baseCurrency ? baseCurrency : "0"}`
     );
     debugger;
     setStore(result?.data);

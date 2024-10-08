@@ -82,6 +82,7 @@ const CostCentre = () => {
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.costCentre?.reload}
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>

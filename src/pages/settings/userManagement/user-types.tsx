@@ -84,6 +84,7 @@ const UserTypes = () => {
                   gridId="grd_user_type"
                   popupAction={toggleUserTypePopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.userType?.reload}
                   gridAddButtonIcon=""
                 ></ERPDevGrid>
               </div>

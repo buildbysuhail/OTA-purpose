@@ -201,6 +201,7 @@ const AccountGroupType = () => {
                   gridId="grd_acc_group"
                   popupAction={toggleAccountGroupPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.accountGroup?.reload}
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>

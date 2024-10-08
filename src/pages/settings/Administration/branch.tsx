@@ -230,6 +230,7 @@ const BranchGrid = () => {
                   gridId="grd_branch"
                   popupAction={toggleBranchGridPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.branch?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>
               </div>

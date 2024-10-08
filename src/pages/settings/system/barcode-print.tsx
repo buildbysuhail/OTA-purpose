@@ -825,6 +825,7 @@ const Barcodeprint: React.FC = () => {
                     gridId="grd_counter"
                     popupAction={toggleCounterPopup}
                     gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.barcodeprint?.reload}
                     gridAddButtonIcon="ri-add-line"
                   />
                 </div>

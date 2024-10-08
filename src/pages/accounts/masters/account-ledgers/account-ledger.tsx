@@ -206,6 +206,7 @@ const AccountLedgerType = () => {
                   gridId="grd_user_type"
                   popupAction={toggleAccountLedgerPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.accountLedger?.reload}
                   gridAddButtonIcon=""
                 />
               </div>

@@ -172,6 +172,7 @@ const SystemVoucher = () => {
                   gridId="grd_voucher"
                   popupAction={toggleVoucherPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.voucher?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>
               </div>

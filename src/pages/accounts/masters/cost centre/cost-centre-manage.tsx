@@ -23,7 +23,7 @@ export const CostCentreManage = () => {
     isLoading
   } = useFormManager<CostCentreData>({
     url: Urls.cost_center,
-    onSuccess: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.costCentre.key,
     useApiClient: true,
     initialData: initialCostCentre

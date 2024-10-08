@@ -22,7 +22,7 @@ export const BranchLedgerManage = () => {
     isLoading
   } = useFormManager<BranchLedgerData>({
     url: Urls.branch_ledger,
-    onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.branchLedger.key,
     useApiClient: true,
     initialData: initialBranchLedger

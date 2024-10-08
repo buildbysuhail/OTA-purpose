@@ -99,6 +99,7 @@ const Remainders = () => {
                   gridId="grd_remainder"
                   popupAction={toggleRemainderPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.reminder?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>
               </div>

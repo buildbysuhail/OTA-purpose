@@ -74,9 +74,9 @@ const Header = () => {
         </div>
       </div>
       <div className="w-full relative">
-        <div className="flex">
+        <div className="flex h-10">
           <div className="h-full p-2 bg-slate-50 border border-r-0 rounded-md rounded-r-none">
-            <MagnifyingGlassIcon className="w-4 aspect-square stroke-accent" />
+            <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
           </div>
           <input
             className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"

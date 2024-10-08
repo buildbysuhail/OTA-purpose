@@ -10,6 +10,8 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../enums/ledger-types";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { APIClient } from "../../../helpers/api-client";
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 
 interface FormState {
@@ -65,6 +67,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
     } finally {
       setLoading(false);
     }
+    const { t } = useTranslation();
   };
 
   const handleFieldChange = (settingName: any, value: any) => {
@@ -138,7 +141,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               id="maintainAllBranchWithCommonInventory"
               checked={formState.maintainAllBranchWithCommonInventory}
               data={formState}
-              label="Minimum Shift Duration"
+              label={t("minimum_shift_duration")}
               onChangeData={(data) =>
                 handleFieldChange("maintainAllBranchWithCommonInventory", data.maintainAllBranchWithCommonInventory)
               }
@@ -147,7 +150,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               id="autoSyncSIandPI_BT"
               checked={formState.autoSyncSIandPI_BT}
               data={formState}
-              label="Auto Sync SI and PIBranch Transfer"
+              label={t("auto_sync")}
               onChangeData={(data) =>
                 handleFieldChange("autoSyncSIandPI_BT", data.autoSyncSIandPI_BT)
               }
@@ -156,7 +159,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               id="maintainUntalliedBills"
               checked={formState.maintainUntalliedBills}
               data={formState}
-              label="Maintain Untallied Bills"
+              label={t("maintain_untallied_bills")}
               onChangeData={(data) =>
                 handleFieldChange("maintainUntalliedBills", data.maintainUntalliedBills)
               }
@@ -165,7 +168,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               id="allowSalesDetailedEdit"
               checked={formState.allowSalesDetailedEdit}
               data={formState}
-              label="Allow Sales Detailed Edit"
+              label={t("allow_sales_detailed_edit")}
               onChangeData={(data) =>
                 handleFieldChange("allowSalesDetailedEdit", data.allowSalesDetailedEdit)
               }
@@ -175,7 +178,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               value={formState.salesmanIncentive}
               data={formState}
               type="number"
-              label="Salesman Incentive"
+              label={t("salesman_incentive")}
               onChangeData={(data) =>
                 handleFieldChange("salesmanIncentive", data.salesmanIncentive)
               }
@@ -192,7 +195,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 labelKey: "name",
               }}
               data={formState}
-              label="Default Incentive Ledger"
+              label={t("default_incentive_ledger")}
               onChangeData={(data) =>
               handleFieldChange("defaultIncentiveLedger", data)
               }
@@ -202,7 +205,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               value={formState.weighingScalePluFilePath}
               data={formState}
               className="flex-grow"
-              label="Plu Path"
+              label={t("plu_path")}
               onChangeData={(data) =>
                 handleFieldChange("weighingScalePluFilePath", data.weighingScalePluFilePath)
               }
@@ -213,7 +216,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               value={formState.secondDisplayImagesPath}
               data={formState}
            
-              label="Second Display Images Path"
+              label={t("second_display_images_path")}
               onChangeData={(data) =>
                 handleFieldChange("secondDisplayImagesPath", data.secondDisplayImagesPath)
               }
@@ -221,7 +224,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
           </div>
           <div className="flex justify-end my-4">
             <ERPButton
-              title="Set Master Branch Grid Design"
+              title={t("set_master_branch_grid_design")}
               variant="secondary"
               type="submit"
             />
@@ -231,7 +234,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               id="sendSMS"
               checked={formState.sendSMS}
               data={formState}
-              label="send SMS"
+              label={t("send_sms")}
               onChangeData={(data) =>
                 handleFieldChange("sendSMS", data.sendSMS)
               }
@@ -240,7 +243,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               id="smsURL"
               value={formState.smsURL}
               data={formState}
-              label="URL"
+              label={t("url")}
               onChangeData={(data) =>
                 handleFieldChange("smsURL", data.smsURL)
               }
@@ -252,7 +255,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 <thead>
                   <tr>
                     <th className="border border-black px-4 py-2">
-                      Sync SystemCode
+                      {t("sync_systemCode")}
                     </th>
                   </tr>
                 </thead>
@@ -267,44 +270,44 @@ const MiscellaneousSettingsForm: React.FC = () => {
               </table>
             </div>
             <div className="flex flex-col items-end">
-              <ERPButton title="Load" variant="secondary" type="submit" />
-              <ERPButton title="Save" variant="secondary" type="submit" />
+              <ERPButton title={t("load")} variant="secondary" type="submit" />
+              <ERPButton title={t("save")} variant="secondary" type="submit" />
             </div>
           </div>
         </div>
         <div className="border border-gray-300 flex flex-col justify-around p-5">
-          <h4 className="text-red font-medium text-center">Set Decimal</h4>
+          <h4 className="text-red font-medium text-center">{t("set_decimal")}</h4>
           <div className=" flex justify-center items-center ">
             <ERPInput
               id="password"
               value={formState.password}
               data={formState}
-              label="Password"
+              label={t("password")}
               onChangeData={(data) =>
                 handleFieldChange("password", data.password)
               }
             />
           </div>
           <div className="flex flex-col justify-center  items-center gap-4">
-            <ERPButton title="4Decimals" variant="secondary" type="submit" />
-            <ERPButton title="3Decimals" variant="secondary" type="submit" />
-            <ERPButton title="2Decimals" variant="secondary" type="submit" />
+            <ERPButton title={t("4decimals")} variant="secondary" type="submit" />
+            <ERPButton title={t("3decimals")} variant="secondary" type="submit" />
+            <ERPButton title={t("2decimals")} variant="secondary" type="submit" />
           </div>
         </div>
       </div>
       <div className="flex items-center justify-end my-4">
         <div className="bg-gray-100 p-4  ml-10 shadow-md">
           <h2 className="text-lg font-semibold mb-4">
-            Synchronize Remote Database
+            {t("synchronize_remote_database")}
           </h2>
          
           <div className="flex justify-center  items-center gap-4">
-            <ERPButton title="Settings" variant="secondary" type="submit" startIcon="ri-settings-5-line"/>
-            <ERPButton title="Sync" variant="secondary" type="submit" startIcon="ri-refresh-line"/>
+            <ERPButton title={t("settings")} variant="secondary" type="submit" startIcon="ri-settings-5-line"/>
+            <ERPButton title={t("sync")} variant="secondary" type="submit" startIcon="ri-refresh-line"/>
             
           </div>
             <span className="ml-2 text-red-500">
-              Processing...
+              {t("processing...")}
             </span>
         
         </div>
@@ -312,7 +315,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
       </div>
       <div className="flex justify-end">
           <ERPButton
-            title="Save Settings"
+            title={t("save_settings")}
             variant="primary"
             type="submit"
           />

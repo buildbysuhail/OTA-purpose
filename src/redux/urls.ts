@@ -160,6 +160,11 @@ const Urls = {
   reset_data_base: "/Core/ResetDataBase/ResetTransactionTables/",
   application_settings:"/Core/ApplicationSettings/",
   sql_commands : "/Core/SQLCommand",
+
+  //setings/AdvanceOptions
+  advanceOptions:"/Core/AdvancedOptions",
+  revertBillModifications:"/Core/AdvancedOptions/RevertBillModification",
+  branchDataReset:"/Core/AdvancedOptions/BranchDataReset",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

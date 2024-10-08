@@ -75,8 +75,10 @@ const AuthorizationSettings = () => {
     setStore(result?.data);
     setPostDataLoading(false);
   };
-  const onSelectionChanged = useCallback(({ selectedRowsData }: DataGridTypes.SelectionChangedEvent) => {
-    const data = selectedRowsData[0];
+  const onSelectionChanged = useCallback((e: any) => {
+    console.log(e);
+    
+    const data = e.data;
     if (data != undefined && data != null) {
       setPostData((previous: any) => ({
         ...previous, // Use the spread operator with three dots
@@ -107,8 +109,8 @@ const AuthorizationSettings = () => {
 
   const columns: DevGridColumn[] = [
     {
-      dataField: "Employee",
-      caption: t("employee"),
+      dataField: "employeeID",
+      // caption: t("employeeId"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -116,7 +118,17 @@ const AuthorizationSettings = () => {
       minWidth: 150,
     },
     {
-      dataField: "Password",
+      dataField: "employeeName",
+      caption: t("employee"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    
+    {
+      dataField: "password",
       caption: t("password"),
       dataType: "string",
       allowSorting: true,
@@ -125,7 +137,7 @@ const AuthorizationSettings = () => {
       minWidth: 100,
     },
     {
-      dataField: "Discount Type",
+      dataField: "discountType",
       caption: t("discount_type"),
       dataType: "string",
       allowSorting: true,
@@ -134,7 +146,7 @@ const AuthorizationSettings = () => {
       minWidth: 100,
     },
     {
-      dataField: "Discount Percentage",
+      dataField: "discountPercentage",
       caption: t("discount_percentage"),
       dataType: "string",
       allowSorting: true,
@@ -215,12 +227,20 @@ const AuthorizationSettings = () => {
                 />
               </div>
               <div className="grid grid-cols-1 gap-3">
-                <DataGrid
+                {/* <DataGrid
                 columns={columns}
                   dataSource={store}
                   onSelectionChanged={onSelectionChanged}
                   height={gridHeight.windows}
-                  key="exchRateID"
+                  key="authorizationID"
+                  showBorders={true}
+                ></DataGrid> */}
+                  <DataGrid
+                    columns={columns}
+                  dataSource={store}
+                  onRowClick={(e) => onSelectionChanged(e)}
+                  height={gridHeight.windows}
+                  key="authorizationID"
                   showBorders={true}
                 ></DataGrid>
               </div>

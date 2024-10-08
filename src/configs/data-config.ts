@@ -33,6 +33,7 @@ export const DATA_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.data_employees, method: ActionType.GET as const },
   { url: Urls.data_warehouse, method: ActionType.GET as const },
   { url: Urls.data_vouchertype, method: ActionType.GET as const },
+  { url: Urls.sql_commands, method: ActionType.POST as const },
   ////////
   { url: Urls.updateLanguage, method: ActionType.POST as const },
   { url: Urls.updateUserThemes, method: ActionType.POST as const },

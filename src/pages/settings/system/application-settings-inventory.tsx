@@ -11,7 +11,7 @@ import { LedgerType } from "../../../enums/ledger-types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 
-interface FormState {
+interface Inventory {
     defaultSalesAccount: number;
     defaultSalesReturnAccount: number;
     defaultPurchaseAccount: number;
@@ -66,7 +66,7 @@ interface FormState {
 }
 const api = new APIClient();
 const InventorySettingsForm = () => {
-const initialState: FormState = {
+const initialState: Inventory = {
     defaultSalesAccount: 0,
     defaultSalesReturnAccount: 0,
     defaultPurchaseAccount: 0,
@@ -132,8 +132,8 @@ const initialState: FormState = {
  
 
     const dispatch = useAppDispatch();
-    const [formState, setFormState] = useState<FormState>(initialState);
-    const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+    const [formState, setFormState] = useState<Inventory>(initialState);
+    const [formStatePrev, setFormStatePrev] = useState<Partial<Inventory>>({});
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     // const [error, setError] = useState<string | null>(null);
@@ -183,7 +183,7 @@ const initialState: FormState = {
     //     }));
     // };
     const handleFieldChange = ((settingName: any, value: any) => {
-        setFormState((prevSettings = {} as FormState) => ({
+        setFormState((prevSettings = {} as Inventory) => ({
           ...prevSettings,
           [settingName]: value ?? ''
         }));
@@ -193,11 +193,11 @@ const initialState: FormState = {
         setIsSaving(true);
         try {
           const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-            // const currentValue = formState[key as keyof formState];
-            // const prevValue = formStatePrev[key as keyof formState];
-            const typedKey = key as keyof typeof initialState;
-            const currentValue = formState[typedKey];
-                    const prevValue = (formStatePrev as any)[key];
+            const currentValue = formState[key as keyof Inventory];
+            const prevValue = formState[key as keyof Inventory];
+            // const typedKey = key as keyof typeof initialState;
+            // const currentValue = formState[typedKey];
+            //         const prevValue = (formStatePrev as any)[key];
            
             if (currentValue !== prevValue) {
               debugger;
@@ -273,6 +273,7 @@ const initialState: FormState = {
 
 
     return (
+        <form onSubmit={handleSubmit} className="space-y-6">
         <div className="erp-settings-form">
             <div className="form-row grid grid-cols-4 gap-3 my-3">
                 <ERPDataCombobox
@@ -281,7 +282,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "defaultSalesAccount",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
@@ -296,7 +297,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "defaultBtoAccount",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
@@ -312,7 +313,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "defaultSalesReturnAccount",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
                         valueKey: "id",
@@ -327,7 +328,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "defaultBtiAccount",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
@@ -343,7 +344,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "defaultPurchaseAccount",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
@@ -374,7 +375,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "defaultPurchaseReturnAccount",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
                         valueKey: "id",
@@ -405,7 +406,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "billDiscountGivenLedger",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
                         valueKey: "id",
@@ -435,7 +436,7 @@ const initialState: FormState = {
                     data={formState}
                     field={{
                         id: "billDiscountReceivedLedger",
-                        required: true,
+                       // required: true,
                         getListUrl: Urls.data_acc_ledgers,
                         params: `ledgerID=0&ledgerType=${LedgerType.Discount_Received}`,
                         valueKey: "id",
@@ -817,6 +818,7 @@ const initialState: FormState = {
           />
         </div>
         </div>
+         </form>
     );
 };
 

@@ -8,6 +8,8 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../enums/ledger-types";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { APIClient } from "../../../helpers/api-client";
 
 
 interface FormState {
@@ -23,6 +25,7 @@ interface FormState {
   maintainUntalliedBills: boolean;
   password: string;
 }
+const api = new APIClient();
 const MiscellaneousSettingsForm: React.FC = () => {
   const initialState: FormState = {
     salesmanIncentive: 0,
@@ -70,30 +73,64 @@ const MiscellaneousSettingsForm: React.FC = () => {
       [settingName]: value ?? "",
     }));
   };
-  const handleSubmit = async () => {
-    const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-      const currentValue = formState[key as keyof FormState];
-      const prevValue = formStatePrev[key as keyof FormState];
-
-      if (currentValue !== prevValue) {
-        acc.push({
-          settingsName: key,
-          settingsValue: currentValue,
-        });
-      }
-      return acc;
-    }, [] as { settingsName: string; settingsValue: any }[]);
-    const response: any = (await postAction({
-      apiUrl: Urls.application_setting,
-      data: modifiedSettings,
-    })) as any;
-    handleResponse(response);
-    console.log(modifiedSettings);
-    // You can send this list to your API or handle it as needed
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+        const currentValue = formState?.[key as keyof FormState];
+        const prevValue = formStatePrev[key as keyof FormState];
+       
+        if (currentValue !== prevValue) {
+          debugger;
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue.toString()
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: string }[]);
+      console.log(modifiedSettings);
+      
+      const response = await api.put(Urls.application_settings,{type: 'miscellaneous', updateList:  modifiedSettings}) as  any
+      debugger;
+      if(response!=undefined && response!=null && response.isOk==true)
+        {
+          ERPToast.showWith(response?.message, "success");
+        }
+        else{
+          ERPToast.showWith(response?.message,"warning")
+        }
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    } finally {
+      setIsSaving(false);
+    }
   };
+  // const handleSubmit = async () => {
+  //   const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+  //     const currentValue = formState[key as keyof FormState];
+  //     const prevValue = formStatePrev[key as keyof FormState];
+
+  //     if (currentValue !== prevValue) {
+  //       acc.push({
+  //         settingsName: key,
+  //         settingsValue: currentValue.toString(),
+  //       });
+  //     }
+  //     return acc;
+  //   }, [] as { settingsName: string; settingsValue: string }[]);
+  //   const response: any = (await postAction({
+  //     apiUrl: Urls.application_setting,
+  //     data: modifiedSettings,
+  //   })) as any;
+  //   handleResponse(response);
+  //   console.log(modifiedSettings);
+  //   // You can send this list to your API or handle it as needed
+  // };
 
   return (
-    <>
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 justify-start gap-5">
         <div className="grid grid-cols-1">
           <div className="grid grid-cols-2 justify-start gap-4">
@@ -280,7 +317,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             type="submit"
           />
         </div>
-    </>
+    </form>
   );
 };
 

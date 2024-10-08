@@ -157,6 +157,7 @@ const Urls = {
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/ResetTransactionTables/",
   application_settings:"/Core/ApplicationSettings/",
+  sql_commands : "/Core/SQLCommand",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

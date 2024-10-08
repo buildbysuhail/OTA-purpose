@@ -79,11 +79,11 @@ const TaxSettingsForm: React.FC = () => {
           debugger;
           acc.push({
             settingsName: key,
-            settingsValue: currentValue,
+            settingsValue: currentValue.toString(),
           });
         }
         return acc;
-      }, [] as { settingsName: string; settingsValue: any }[]);
+      }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
@@ -91,7 +91,7 @@ const TaxSettingsForm: React.FC = () => {
         updateList: modifiedSettings,
       })) as any;
       debugger;
-      if (response != undefined && response != null && response.IsOk == true) {
+      if (response != undefined && response != null && response.isOk == true) {
         ERPToast.showWith(response?.message, "success");
       } else {
         ERPToast.showWith(response?.message, "warning");

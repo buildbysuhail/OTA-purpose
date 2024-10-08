@@ -117,12 +117,46 @@ const Barcodeprint: React.FC = () => {
   // const handleChange = (event: SelectChangeEvent) => {
   //   setSelectedFromType(event.target.value as string); // Update state with selected value
   // };
-  const handleChange = (id: string, date: string) => {
-    const parsedDate = dayjs(date); // Convert string to Day.js object if needed
-    setFormData((prevData) => ({
-      ...prevData,
-      [id]: parsedDate.isValid() ? parsedDate.format() : null, // Store formatted date or null if invalid
-    }));
+
+  // const handleChange = (id: string, date: string) => {
+  //   const parsedDate = dayjs(date); // Convert string to Day.js object if needed
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [id]: parsedDate.isValid() ? parsedDate.format() : null, // Store formatted date or null if invalid
+  //   }));
+  // };
+  // const handleChange = (event: SelectChangeEvent<string | number>) => {
+  //   const { name, value } = event.target;
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [name]: value,
+  //   }));
+  // };
+  // const handleChange = (id: string, date: string) => {
+  //   setFormData((prevData) => ({
+  //     ...prevData,
+  //     [id]: date,
+  //   }));
+  // };
+
+  const handleChange = (
+    event: SelectChangeEvent<string | number> | { id: string; date: string }
+  ) => {
+    if ("target" in event) {
+      // Handle SelectChangeEvent
+      const { name, value } = event.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    } else {
+      // Handle Date change
+      const { id, date } = event;
+      setFormData((prevData) => ({
+        ...prevData,
+        [id]: date,
+      }));
+    }
   };
 
   //   const handleChange = (event: SelectChangeEvent<string | number>) => {
@@ -144,9 +178,9 @@ const Barcodeprint: React.FC = () => {
   //   console.log("Selected date:", date);
   // };
   // Ensure this function is defined
-  const handleDatePickerChange = (newValue: Dayjs | null) => {
-    setDateValue(newValue);
-  };
+  // const handleDatePickerChange = (newValue: Dayjs | null) => {
+  //   setDateValue(newValue);
+  // };
 
   const [date, setDate] = useState(null);
 
@@ -345,26 +379,29 @@ const Barcodeprint: React.FC = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Top Section */}
-            <div className="flex flex-col lg:flex-row lg:space-x-4 mb-4  h-[199px]">
+            <div className="flex flex-col lg:flex-row lg:space-x-4 mb-4  h-[170px]">
               {/* 1 div */}
               <div className="flex flex-col lg:flex-row lg:space-x-4">
                 {/* Barcode Inputs */}
-                <div className="lex flex-col sm:flex-row sm:items-center gap-2">
-                  <div className="flex-1 space-y-2">
+
+                {/* <div className="lex flex-col sm:flex-row sm:items-center gap-2"> */}
+                <div className="w-3/10">
+                  <div className="space-y-2">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-1">
                         Barcode
                       </label>
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                      <div className="flex space-x-2">
+                        {/* <div className="flex flex-col sm:flex-row sm:items-center gap-2"> */}
                         <ERPMUIInput
-                          id="barcodeFrom"
-                          label="From"
+                          id="barcodeForm"
+                          label="Form"
                           type="text"
                           value={formData.barcodeFrom}
                           customSize="sm"
                           customWidth="100%"
                           onChange={handleInputChange}
-                          placeholder="From"
+                          placeholder="Form"
                           validation=""
                         />
                         <ERPMUIInput
@@ -412,7 +449,7 @@ const Barcodeprint: React.FC = () => {
                 </div>
                 {/* 1 barcode form end */}
               </div>
-              <div className=" space-y-2 flex-start">
+              {/* <div className=" space-y-2 flex-start">
                 <label className="block text-sm font-semibold text-gray-700">
                   Type
                 </label>
@@ -430,25 +467,59 @@ const Barcodeprint: React.FC = () => {
                     />
                   )
                 )}
+              </div> */}
+              <div className="w-1/6 space-y-0">
+                <label className="block text-sm font-semibold text-gray-700">
+                  Type
+                </label>
+                {["Sales", "Purchase", "BTO", "BTI", "OS", "Other"].map(
+                  (label, index) => (
+                    <div
+                      key={`type-${label.toLowerCase()}-${index}`}
+                      className="flex items-center space-x-2"
+                    >
+                      <ERPRadio
+                        id={`type-${label.toLowerCase()}-${index}`} // Unique ID for each radio button
+                        name="type"
+                        value={label.toLowerCase()}
+                        checked={formData.type === label.toLowerCase()}
+                        onChange={handleInputChange}
+                        label={label}
+                      />
+                      {label === "Other" && (
+                        <ERPMUIInput
+                          id="Othertype"
+                          label=""
+                          type="text"
+                          value={formData.billNo} // Adjust this value as needed for the form state
+                          customSize="sm"
+                          customWidth="50%" // Limit the width of the input field
+                          onChange={handleInputChange}
+                          placeholder="other type"
+                          validation=""
+                        />
+                      )}
+                    </div>
+                  )
+                )}
               </div>
 
               {/* 2 div */}
-              <div className="flex flex-col lg:flex-row lg:space-x-4">
-                <div className="flex-1 space-y-2">
-                  <div></div>
-                  <ERPMUIInput
-                    id="vPrefix"
-                    label="VPrefix"
-                    type="text"
-                    value={formData.vPrefix}
-                    customSize="sm"
-                    customWidth="100%"
-                    onChange={handleInputChange}
-                    placeholder="VPrefix"
-                    validation=""
-                  />
+              {/* <div className="flex flex-col lg:flex-row lg:space-x-4"> */}
+              <div className="w-3/10 space-y-2">
+                <ERPMUIInput
+                  id="vPrefix"
+                  label="VPrefix"
+                  type="text"
+                  value={formData.vPrefix}
+                  customSize="sm"
+                  customWidth="100%"
+                  onChange={handleInputChange}
+                  placeholder="VPrefix"
+                  validation=""
+                />
 
-                  {/* <ERPSelect
+                {/* <ERPSelect
                     id="fromType"
                     label="From Type"
                     options={options}
@@ -457,53 +528,43 @@ const Barcodeprint: React.FC = () => {
                     required={true}
                   /> */}
 
-                  <ERPMUISelect
-                    id="fromType"
-                    label="From Type"
-                    options={options}
-                    value={selectedFromType}
-                    handleChange={handleChange}
-                    customSize="sm" // You can set it to "sm", "md", "lg", or "auto"
-                    customWidth="200px" // Set a custom width
-                    required={true}
-                  />
+                <ERPMUISelect
+                  id="FormType"
+                  label="Form Type"
+                  options={options}
+                  value={selectedFromType}
+                  handleChange={handleChange}
+                  customSize="sm" // You can set it to "sm", "md", "lg", or "auto"
+                  customWidth="200px" // Set a custom width
+                  required={true}
+                />
 
-                  <ERPMUIInput
-                    id="billNo"
-                    label="Bill No"
-                    type="text"
-                    value={formData.billNo}
-                    customSize="sm"
-                    customWidth="100%"
-                    onChange={handleInputChange}
-                    placeholder="Bill No"
-                    validation=""
-                  />
+                <ERPMUIInput
+                  id="billNo"
+                  label="Bill No"
+                  type="text"
+                  value={formData.billNo}
+                  customSize="sm"
+                  customWidth="100%"
+                  onChange={handleInputChange}
+                  placeholder="Bill No"
+                  validation=""
+                />
 
-                  <div>
-                    {/* <ERPDatePicker
-                      label="Select Date"
-                      field={{ id: "begin", required: true }}
-                      defaultData={{ begin: dayjs("1997-01-01") }} // Set a default date if needed
-                      handleChange={handleDateChange} // Use the handleDateChange method
-                      onChange={(newDate) =>
-                        console.log("Date changed:", newDate)
-                      } // Optional additional handling
-                      data={{ begin: "" }} // Pass current data as needed
-                    /> */}
-                    <div className="flex-1 space-y-2">
-                      <ERPButton
-                        title="Show"
-                        className="px-3 py-1"
-                        variant="secondary" // Choose the appropriate variant if needed
-                      />
-                    </div>
+                <div>
+                  <div className="flex justify-end space-y-2">
+                    <ERPButton
+                      title="Show"
+                      className="px-3 py-1"
+                      variant="secondary" // Choose the appropriate variant if needed
+                    />
                   </div>
                 </div>
-                {/* <div className="flex-1 space-y-2"></div> */}
               </div>
+              {/* <div className="flex-1 space-y-2"></div> */}
+              {/* </div> */}
               <div className="flex-1 space-y-2">
-                <div className="grid grid-cols-3   gap-4">
+                <div className="grid grid-cols-2   gap-4">
                   {/* <ERPDateInput
                     type="date"
                     id="begin"
@@ -705,7 +766,10 @@ const Barcodeprint: React.FC = () => {
                 <div className="grid grid-cols-1 gap-3">
                   <ERPDevGrid
                     columns={columns}
-                    gridHeader={t("counter")}
+                    // gridHeader={t("counter")}
+                    hideGridAddButton={true}
+                    hideDefaultSearchPanel={true}
+                    hideDefaultExportButton={true}
                     dataUrl={Urls.Counter}
                     gridId="grd_counter"
                     popupAction={toggleCounterPopup}
@@ -721,7 +785,8 @@ const Barcodeprint: React.FC = () => {
         {/* Modal for Counter Management */}
         <ERPModal
           isOpen={rootState.PopupData.counter.isOpen || false}
-          title={t("add_new_counter")}
+          title="add_new_counter"
+          // title={t("add_new_counter")}
           width="w-full max-w-[600px]"
           isForm={true}
           closeModal={() => {

@@ -13,7 +13,15 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "devextreme-react";
-import { Toolbar, Item, Editing, Column, Lookup } from "devextreme-react/cjs/data-grid";
+import {
+  Toolbar,
+  Item,
+  Editing,
+  Column,
+  Lookup,
+  Scrolling,
+  RemoteOperations,
+} from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../../helpers/api-client";
 import CustomStore from "devextreme/data/custom_store";
 import "./exchange-rates.css";
@@ -39,25 +47,45 @@ const ExchangeRates = () => {
   function isNotEmpty(value: string | undefined | null) {
     return value !== undefined && value !== null && value !== "";
   }
-  const loadCurrencies = useCallback( async() => {
-   
-  const result: any = await api.getAsync(
-    `${Urls.data_currencies}`
-  );
-  setCurrencies(result);
+  const loadCurrencies = useCallback(async () => {
+    const result: any = await api.getAsync(`${Urls.data_currencies}`);
+    setCurrencies(result);
   }, []);
   const load = async (baseCurrency?: number) => {
     const result: any = await api.getAsync(
       `${Urls.currencyExchange}${baseCurrency ? baseCurrency : "0"}`
     );
     debugger;
-    setStore(result?.data);
+    updateStore(result?.data)
   };
-  const handleSubmit = async () => {
+  const updateStore = (inputData: any) => {
+    let data = inputData;
+    const length = data?.length ?? 0;
+    if (length < 30) {
+      const remain = 30 - length;
+      for (let index = 0; index < remain; index++) {
+        data.push({
+          cStatus: false,
+          exchRateID: null,
+          rate: null,
+          rateDate: null,
+          toCurrency: null,
+        });
+      }
+    } 
+    setStore(data);
+  }
+    const handleSubmit = async () => {
     setPostDataLoading(true);
-    const result: any = await api.post(
-      `${Urls.currencyExchange}`, {currencyId: postData.baseCurrency, data: store}
+    debugger;
+    const dataToSubmit = store.filter((row: any) => 
+      row.toCurrency !== null && row.rate !== null
     );
+    debugger;
+    const result: any = await api.post(`${Urls.currencyExchange}`, {
+      currencyId: postData.baseCurrency,
+      data: dataToSubmit,
+    });
 
     setStore(result?.data);
     setPostDataLoading(false);
@@ -133,53 +161,63 @@ const ExchangeRates = () => {
                   height={gridHeight.windows}
                   key="exchRateID"
                   showBorders={true}
+                  showRowLines={true}
                 >
+                  <Scrolling mode="virtual" />
+                  <RemoteOperations filtering={false} sorting={false} paging={false}></RemoteOperations>
                   <Column
-        dataField="exchRateID"
-        caption={t("SiNo")}
-        dataType="number"
-        allowSorting={true}
-        allowSearch={true}
-        allowFiltering={true}
-        minWidth={150}
-      />
-      <Column
-        dataField="toCurrency"
-        caption={t("to_currency")}
-        dataType="string"
-        allowSorting={true}
-        allowSearch={true}
-        allowFiltering={true}
-        minWidth={150}
-        allowEditing={true}
-      >
-         <Lookup dataSource={currencies} valueExpr="id" displayExpr="name" />
-         </Column>
-      <Column
-        dataField="rate"
-        caption={t("rate")}
-        dataType="number"
-        allowSearch={true}
-        allowFiltering={true}
-        minWidth={150}
-        allowEditing={true}
-      />
-      <Column
-        dataField="rateDate"
-        caption={t("rate_date")}
-        dataType="string"
-        allowSearch={true}
-        allowFiltering={true}
-        minWidth={100}
-      />
-      <Column
-        dataField="cStatus"
-        caption={t("active")}
-        dataType="string"
-        allowSearch={true}
-        allowFiltering={true}
-        minWidth={150}
-      />
+                    dataField="exchRateID"
+                    caption={t("SiNo")}
+                    dataType="number"
+                    allowSorting={true}
+                    allowSearch={true}
+                    allowEditing={false}
+                    allowFiltering={true}
+                    minWidth={150}
+                  />
+                  <Column
+                    dataField="toCurrency"
+                    caption={t("to_currency")}
+                    dataType="string"
+                    allowSorting={true}
+                    allowSearch={true}
+                    allowFiltering={true}
+                    minWidth={150}
+                    allowEditing={true}
+                  >
+                    <Lookup
+                      dataSource={currencies}
+                      valueExpr="id"
+                      displayExpr="name"
+                    />
+                  </Column>
+                  <Column
+                    dataField="rate"
+                    caption={t("rate")}
+                    dataType="number"
+                    allowSearch={true}
+                    allowFiltering={true}
+                    minWidth={150}
+                    allowEditing={true}
+                  />
+                  <Column
+                    dataField="rateDate"
+                    caption={t("rate_date")}
+                    dataType="string"
+                    allowEditing={false}
+                    allowSearch={true}
+                    allowFiltering={true}
+                    minWidth={100}
+                  />
+                  <Column
+                    dataField="cStatus"
+                    caption={t("active")}
+                    dataType="string"
+                    allowEditing={false}
+                    allowSearch={true}
+                    allowFiltering={true}
+                    minWidth={150}
+                  />
                   <Editing
                     mode="cell"
                     allowUpdating={true}

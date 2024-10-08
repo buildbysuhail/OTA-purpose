@@ -88,9 +88,11 @@ const ERPSettingsFormMain = () => {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/settings');
-      const data: Settings = await response.json();
-      setSettings(data);
+      const response = await api.getAsync(`${Urls.application_settings}main`)
+    debugger;
+    console.log(settings);
+    setChangedSettings(response);
+    setSettings(response);
     } catch (error) {
       console.error('Error loading settings:', error);
     } finally {
@@ -148,36 +150,49 @@ const ERPSettingsFormMain = () => {
       [settingName]: value ?? ''
     }));
   });
+ 
   // const handleSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();
   //   setIsSaving(true);
   //   try {
-  //     const response = await fetch('/api/settings', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify(changedSettings),
-  //     });
-  //     if (response.ok) {
-  //       console.log('Settings saved successfully');
-  //       setChangedSettings({});
-  //     } else {
-  //       console.error('Error saving settings');
-  //     }
+  //     const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
+  //       const currentValue = settings?.[key as keyof Settings];
+  //       const prevValue = settings[key as keyof Settings];
+       
+  //       if (currentValue !== prevValue) {
+  //         debugger;
+  //         acc.push({
+  //           settingsName: key,
+  //           settingsValue: currentValue.toString()
+  //         });
+  //       }
+  //       return acc;
+  //     }, [] as { settingsName: string; settingsValue: string }[]);
+  //     console.log(modifiedSettings);
+      
+  //     const response = await api.put(Urls.application_settings,{type: 'settings', updateList:  modifiedSettings}) as  any
+  //     debugger;
+  //     if(response!=undefined && response!=null && response.isOk==true)
+  //       {
+  //         ERPToast.showWith(response?.message, "success");
+  //       }
+  //       else{
+  //         ERPToast.showWith(response?.message,"warning")
+  //       }
   //   } catch (error) {
   //     console.error('Error saving settings:', error);
   //   } finally {
   //     setIsSaving(false);
   //   }
   // };
-  const handleSubmit = async (e: React.FormEvent) => {
+
+ const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
         const currentValue = settings?.[key as keyof Settings];
-        const prevValue = settings[key as keyof Settings];
+        const prevValue = changedSettings[key as keyof Settings];
        
         if (currentValue !== prevValue) {
           debugger;
@@ -190,7 +205,7 @@ const ERPSettingsFormMain = () => {
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
       
-      const response = await api.put(Urls.application_settings,{type: 'settings', updateList:  modifiedSettings}) as  any
+      const response = await api.put(Urls.application_settings,{type: 'mai', updateList:  modifiedSettings}) as  any
       debugger;
       if(response!=undefined && response!=null && response.isOk==true)
         {
@@ -205,7 +220,6 @@ const ERPSettingsFormMain = () => {
       setIsSaving(false);
     }
   };
-
   if (loading) {
     return <div>Loading settings?...</div>;
   }
@@ -222,6 +236,7 @@ const ERPSettingsFormMain = () => {
               valueKey: "id",
               labelKey: "name",
             }}
+            data={settings}
             value={settings?.currency}
             onChangeData={(data) => handleFieldChange("Currency", data.Currency)}
             label="Currency"
@@ -252,6 +267,7 @@ const ERPSettingsFormMain = () => {
           <ERPDataCombobox
             id="decimalPoints"
             label="Decimal Points"
+            data={settings}
             value={settings?.decimalPoints}
             onChangeData={(data) => handleFieldChange("decimalPoints", data.decimalPoints)}
             options={[
@@ -266,6 +282,7 @@ const ERPSettingsFormMain = () => {
           <ERPDataCombobox
             id="currencyFormat"
             label="Currency Format"
+            data={settings}
             value={settings?.currencyFormat}
             onChangeData={(data) => handleFieldChange("currencyFormat", data.currencyFormat)}
             options={[
@@ -276,6 +293,7 @@ const ERPSettingsFormMain = () => {
           <ERPDataCombobox
             id="roundingMethod"
             label="Rounding Method"
+            data={settings}
             value={settings?.roundingMethod}
             onChangeData={(data) => handleFieldChange("roundingMethod", data.roundingMethod)}
             options={[
@@ -315,7 +333,8 @@ const ERPSettingsFormMain = () => {
             id="taxDecimalPoints"
             label="Tax Decimal Points"
             value={settings?.taxDecimalPoints}
-            onChangeData={(data) => handleFieldChange("TaxDecimalPoints", data.taxDecimalPoints)}
+            data={settings}
+            onChangeData={(data) => handleFieldChange("taxDecimalPoints", data.taxDecimalPoints)}
             options={[
               { value: '0', label: '0' },
               { value: '1', label: '1' },
@@ -329,7 +348,8 @@ const ERPSettingsFormMain = () => {
             id="roundingMethodGlobal"
             label="Rounding Method Global"
             value={settings?.roundingMethodGlobal}
-            onChangeData={(data) => handleFieldChange("RoundingMethodGlobal", data.roundingMethodGlobal)}
+            data={settings}
+            onChangeData={(data) => handleFieldChange("roundingMethodGlobal", data.roundingMethodGlobal)}
             options={[
               { value: 'Normal', label: 'Normal' },
               { value: 'No Rounding', label: 'No Rounding' },
@@ -348,6 +368,7 @@ const ERPSettingsFormMain = () => {
           <ERPCheckbox
           id="autoChangeTransactionDate"
           label="Auto Change Transaction Date By 12:00 AM"
+          data={settings}
           checked={settings?.autoChangeTransactionDate}
           onChangeData={(data) => handleFieldChange("autoChangeTransactionDate", data.autoChangeTransactionDate)}
         />
@@ -355,9 +376,11 @@ const ERPSettingsFormMain = () => {
             id="autoUpdateReleaseUpTo"
             label="Auto Update Release Up To"
             type="number"
+            data={settings}
             value={settings?.autoUpdateReleaseUpTo}
-            onChangeData={(data) => handleFieldChange("autoChangeTransactionDate", data.autoUpdateReleaseUpTo)}
+            onChangeData={(data) => handleFieldChange("autoUpdateReleaseUpTo", data.autoUpdateReleaseUpTo)}
           />
+         
         </div>
 
         
@@ -380,9 +403,10 @@ const ERPSettingsFormMain = () => {
           <ERPInput
             id="oTPVerification"
             placeholder="Enter OTP"
+            data={settings}
             className="w-32"
             value={settings?.oTPVerification}
-            data={settings}
+           
             onChangeData={(data) => handleFieldChange("oTPVerification", data.oTPVerification)}
           />
           <ERPButton
@@ -395,47 +419,53 @@ const ERPSettingsFormMain = () => {
         <div className="grid grid-cols-3 gap-6">
           <div>
             <ERPCheckbox
-              id="AllowPrivilegeCard"
+              id="allowPrivilegeCard"
               label="Allow Privilege Card"
+              data={settings}
               checked={settings?.allowPrivilegeCard}
-              onChangeData={(data) => handleFieldChange("AllowPrivilegeCard", data.AllowPrivilegeCard)}
+              onChangeData={(data) => handleFieldChange("allowPrivilegeCard", data.allowPrivilegeCard)}
             />
             <ERPInput
-              id="PrivilegeCardPercentage"
+              id="privilegeCardPercentage"
               type="number"
+              data={settings}
               className="w-16 ml-6 mt-1"
               value={settings?.privilegeCardPercentage}
-              onChangeData={(data) => handleFieldChange("PrivilegeCardPercentage", data.PrivilegeCardPercentage)}
+              onChangeData={(data) => handleFieldChange("privilegeCardPercentage", data.privilegeCardPercentage)}
             />
           </div>
           <div>
             <ERPCheckbox
-              id="AllowPostdatedTransaction"
+              id="allowPostdatedTransaction"
               label="Allow Postdated Transaction"
+              data={settings}
               checked={settings?.allowPostdatedTransaction}
-              onChangeData={(data) => handleFieldChange("AllowPostdatedTransaction", data.AllowPostdatedTransaction)}
+              onChangeData={(data) => handleFieldChange("allowPostdatedTransaction", data.allowPostdatedTransaction)}
             />
             <ERPInput
-              id="PostdatedTransactionDays"
+              id="postdatedTransactionDays"
               type="number"
+              data={settings}
               className="w-16 ml-6 mt-1"
               value={settings?.postdatedTransactionDays}
-              onChangeData={(data) => handleFieldChange("PostdatedTransactionDays", data.PostdatedTransactionDays)}
+              onChangeData={(data) => handleFieldChange("postdatedTransactionDays", data.postdatedTransactionDays)}
             />
           </div>
           <div>
             <ERPCheckbox
-              id="AllowPredatedTransaction"
+              id="allowPredatedTransaction"
               label="Allow Predated Transaction"
+              data={settings}
               checked={settings?.allowPredatedTransaction}
-              onChangeData={(data) => handleFieldChange("AllowPredatedTransaction", data.AllowPredatedTransaction)}
+              onChangeData={(data) => handleFieldChange("allowPredatedTransaction", data.allowPredatedTransaction)}
             />
             <ERPInput
-              id="PredatedTransactionDays"
+              id="predatedTransactionDays"
               type="number"
+              data={settings}
               className="w-16 ml-6 mt-1"
               value={settings?.predatedTransactionDays}
-              onChangeData={(data) => handleFieldChange("PredatedTransactionDays", data.PredatedTransactionDays)}
+              onChangeData={(data) => handleFieldChange("predatedTransactionDays", data.predatedTransactionDays)}
             />
           </div>
         </div>
@@ -443,79 +473,89 @@ const ERPSettingsFormMain = () => {
       
         <div className="grid grid-cols-4 gap-6">
         <ERPCheckbox
-          id="MaintainSeparatePrefixForCashSales"
+          id="maintainSeparatePrefixForCashSales"
           label="Maintain Separate Prefix for Cash Sales"
+          data={settings}
           checked={settings?.maintainSeparatePrefixForCashSales}
-          onChangeData={(data) => handleFieldChange("MaintainSeparatePrefixForCashSales", data.MaintainSeparatePrefixForCashSales)}
+          onChangeData={(data) => handleFieldChange("maintainSeparatePrefixForCashSales", data.maintainSeparatePrefixForCashSales)}
         />
 
           <ERPCheckbox
-            id="SaveModifiedTransactionSummary"
+            id="saveModifiedTransactionSummary"
             label="Save Modified Transaction Summary"
+            data={settings}
             checked={settings?.saveModifiedTransactionSummary}
-            onChangeData={(data) => handleFieldChange("SaveModifiedTransactionSummary", data.SaveModifiedTransactionSummary)}
+            onChangeData={(data) => handleFieldChange("saveModifiedTransactionSummary", data.saveModifiedTransactionSummary)}
           />
           <ERPCheckbox
-            id="MaintainProduction"
+            id="maintainProduction"
             label="Maintain Production"
+            data={settings}
             checked={settings?.maintainProduction}
-            onChangeData={(data) => handleFieldChange("MaintainProduction", data.MaintainProduction)}
+            onChangeData={(data) => handleFieldChange("maintainProduction", data.maintainProduction)}
           />
           <ERPCheckbox
-            id="ShowReminders"
+            id="showReminders"
             label="Show Reminders"
+            data={settings}
             checked={settings?.showReminders}
-            onChangeData={(data) => handleFieldChange("ShowReminders", data.ShowReminders)}
+            onChangeData={(data) => handleFieldChange("showReminders", data.showReminders)}
           />
           <ERPCheckbox
-            id="EnableSecondDisplay"
+            id="enableSecondDisplay"
             label="Enable Second Display"
+            data={settings}
             checked={settings?.enableSecondDisplay}
-            onChangeData={(data) => handleFieldChange("EnableSecondDisplay", data.EnableSecondDisplay)}
+            onChangeData={(data) => handleFieldChange("enableSecondDisplay", data.enableSecondDisplay)}
           />
           <ERPCheckbox
-            id="AllowSalesRouteArea"
+            id="allowSalesRouteArea"
             label="Allow Sales Route/Area"
+            data={settings}
             checked={settings?.allowSalesRouteArea}
-            onChangeData={(data) => handleFieldChange("AllowSalesRouteArea", data.AllowSalesRouteArea)}
+            onChangeData={(data) => handleFieldChange("allowSalesRouteArea", data.allowSalesRouteArea)}
           />
           <ERPCheckbox
-            id="EnableDayEnd"
+            id="enableDayEnd"
             label="Enable Day End"
+            data={settings}
             checked={settings?.enableDayEnd}
-            onChangeData={(data) => handleFieldChange("EnableDayEnd", data.EnableDayEnd)}
+            onChangeData={(data) => handleFieldChange("enableDayEnd", data.enableDayEnd)}
           />
           <ERPCheckbox
-            id="MaintainSalesRouteCreditLimit"
+            id="maintainSalesRouteCreditLimit"
             label="Maintain Sales Route Credit Limit"
+            data={settings}
             checked={settings?.maintainSalesRouteCreditLimit}
-            onChangeData={(data) => handleFieldChange("MaintainSalesRouteCreditLimit", data.MaintainSalesRouteCreditLimit)}
+            onChangeData={(data) => handleFieldChange("maintainSalesRouteCreditLimit", data.maintainSalesRouteCreditLimit)}
           />
           <ERPCheckbox
-            id="MaintainMultilanguage"
+            id="maintainMultilanguage"
             label="Maintain Multilanguage"
+            data={settings}
             checked={settings?.maintainMultilanguage}
-            onChangeData={(data) => handleFieldChange("MaintainMultilanguage", data.MaintainMultilanguage)}
+            onChangeData={(data) => handleFieldChange("maintainMultilanguage", data.maintainMultilanguage)}
           />
           <ERPCheckbox
-            id="ShowUserMessages"
+            id="showUserMessages"
             label="Show User Messages"
+            data={settings}
             checked={settings?.showUserMessages}
-            onChangeData={(data) => handleFieldChange("ShowUserMessages", data.ShowUserMessages)}
+            onChangeData={(data) => handleFieldChange("showUserMessages", data.showUserMessages)}
           />
         </div>
 
         <ERPDataCombobox
          field={{
-          id: "BusinessType",
+          id: "businessType",
           valueKey: "value",
           labelKey: "label",
         }}
-          id="BusinessType"
+          id="businessType"
           label="Business Type"
           value={settings?.businessType}
           data={settings}
-          onChangeData={(data) => handleFieldChange("BusinessType", data.BusinessType)}
+          onChangeData={(data) => handleFieldChange("businessType", data.businessType)}
           options={[
             { value: 'Retail', label: 'General' },
             { value: 'Distribution', label: 'Distribution' },

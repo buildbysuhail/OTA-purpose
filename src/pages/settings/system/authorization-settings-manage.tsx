@@ -200,7 +200,7 @@ const AuthorizationSettings = () => {
                     }));
                   }}
                 />
-              </div>
+              </div> 
               <div className="grid grid-cols-4 sm:grid-cols-4 gap-3 ">
                 <ERPButton
                   loading={postDataLoading}

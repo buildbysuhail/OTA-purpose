@@ -82,6 +82,8 @@ const Urls = {
   
   // App
   application_setting: "/Core/ApplicationSettings/",
+  getUserAppSetting: "/User/getUserAppSetting/",
+  updateUserAppSetting: "/User/updateUserAppSetting",
 
   // AccountSettings/Profile
   uploadUserImage: "/Subscription/Profile/UploadUserImage/",

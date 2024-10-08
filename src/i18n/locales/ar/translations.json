@@ -416,5 +416,22 @@
     "cost_centre_id": "معرف مركز التكلفة",
     "cost_centre_name": "اسم مركز التكلفة",
     "enter_cost_centre_name": "أدخل اسم مركز التكلفة",
-    "enter_short_name": "أدخل الاسم المختصر"
+    "enter_short_name": "أدخل الاسم المختصر",
+
+    "branch_ledger_id": "معرف دفتر الفرع",
+    "purchase_ledger_id": "معرف دفتر الشراء",
+    "ref_branch_name": "اسم الفرع المرجعي",
+    "purchase_ledger": "دفتر الشراء",
+    "ref_branch_id": "معرف الفرع المر,جعي",
+    "payable_ledger": "دفتر الحسابات الدائنة",
+    "receivable_ledger": "دفتر الحسابات المدينة",
+    "payable_ledger_id": "معرف دفتر الحسابات الدائنة",
+    "receivable_ledger_id": "معرف دفتر الحسابات المدينة",
+    "reference_branch": "الفرع المرجعي",
+    "branch_payable_ledger": "دفتر الحسابات الدائنة للفرع",
+
+    "date_time_of_action": "تاريخ ووقت الإجراء",
+    "action_form": "نموذج الإجراء",
+    "system_name": "اسم النظام",
+    "user_actions": "إجراءات المستخدم"
 }

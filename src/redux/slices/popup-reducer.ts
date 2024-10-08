@@ -3,6 +3,7 @@ export interface popupDataProps {
   isOpen?: boolean | false;
   key?: any | null;
   mode?: "add" | "edit" | "view";
+  reload?: boolean;
 }
 interface popupData {
   userType: popupDataProps
@@ -35,7 +36,7 @@ interface popupData {
 }
 const initialState: popupData = {
   userType: { isOpen: false, key: null, mode: "edit" },
-  user: { isOpen: false, key: null, mode: "edit" },
+  user: { isOpen: false, key: null, mode: "edit", reload: true },
   counter: { isOpen: false, key: null, mode: "edit" },
   voucher: { isOpen: false, key: null, mode: "edit" },
   financialYear: { isOpen: false, key: null, mode: "edit" },

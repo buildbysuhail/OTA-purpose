@@ -124,6 +124,7 @@ interface ERPDevGridProps {
   hoverStateEnabled?: boolean;
   initialPreferences?: GridPreference;
   paramNames?: string[];
+  reload?: boolean;
 }
 const api = new APIClient();
 const createStore = (
@@ -253,6 +254,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   loadPanelEnabled = true,
   hoverStateEnabled = true,
   initialPreferences,
+  reload,
   paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
 }) => {
   const { t } = useTranslation();
@@ -262,6 +264,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     windows: number;
   }>({ mobile: 500, windows: 500 });
 
+ 
   const [addButtonText, setAddButtonText] = useState<string>(
     gridAddButtonText == "Add" ? t("add") : gridAddButtonText
   );
@@ -277,6 +280,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   }, []);
 
   const [gridCols, setGridCols] = useState<DevGridColumn[]>();
+  const [currentStore, setCurrentStore] = useState<any>(null);
   const [preferences, setPreferences] = useState<GridPreference>();
   useEffect(() => {
     console.log("preferer useeff");
@@ -300,8 +304,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     value !== undefined && value !== null && value !== "";
   console.log("store:");
   const store = useMemo(
-    () => createStore(keyExpr, dataUrl, allowEditing),
-    [keyExpr, dataUrl, allowEditing]
+    () => {
+      if (reload) {
+        const newStore = createStore(keyExpr, dataUrl, allowEditing);
+        setCurrentStore(newStore);  // Update current store whenever reload is true
+        return newStore;
+      }
+      return currentStore;
+    },
+    [keyExpr, dataUrl, allowEditing,reload]
   );
 
   const onExportingHandler = (e: any) => {

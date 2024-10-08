@@ -44,7 +44,7 @@ const Remainders = () => {
       minWidth: 200,
     },
     {
-      dataField: "remindingDate",
+      dataField: "remaindingDate",
       caption: t("reminding_date"),
       dataType: "date",
       allowSorting: true,

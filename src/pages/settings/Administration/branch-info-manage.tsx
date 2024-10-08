@@ -11,7 +11,7 @@ import { ActionType } from "../../../redux/types";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
-export interface BranchData {
+export interface BranchDataInfo {
   id: number;
   companyID: number;
   dateFrom: string;
@@ -41,7 +41,7 @@ export interface BranchData {
 const BranchManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<BranchData>({
+    useFormManager<BranchDataInfo>({
       url: Urls.Branch,
       onSuccess: useCallback(
         () => dispatch(toggleBranchPopup({ isOpen: false })),

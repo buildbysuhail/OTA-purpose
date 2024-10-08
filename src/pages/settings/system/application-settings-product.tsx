@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import ERPDataCombobox from '../../../components/ERPComponents/erp-data-combobox';
-import ERPButton from '../../../components/ERPComponents/erp-button';
-import ERPCheckbox from '../../../components/ERPComponents/erp-checkbox';
-import ERPInput from '../../../components/ERPComponents/erp-input';
-import Urls from '../../../redux/urls';
-import Pageheader from '../../../components/common/pageheader/pageheader';
-import ERPToast from '../../../components/ERPComponents/erp-toast';
-import { APIClient } from '../../../helpers/api-client';
-import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
+import React, { useState, useEffect } from "react";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import Urls from "../../../redux/urls";
+import Pageheader from "../../../components/common/pageheader/pageheader";
+import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { APIClient } from "../../../helpers/api-client";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 
 interface FormState {
   setDefaultQty1: boolean;
@@ -39,6 +39,7 @@ interface FormState {
   enableSupplierWiseItemCode: boolean;
   includeSearchItemAlias_ItemName2: boolean;
   lastSystemGeneratedBarcode: number;
+  lastSystemGeneratedBarcodetrue: boolean;
   stopScanningOnWrongBarcodeInSales: boolean;
   excludeSchemeProductAmountFromPrivilegeCard: boolean;
   showPurchaseCostChangeWarning: boolean;
@@ -55,430 +56,743 @@ interface FormState {
   allowUpdateMultiRateinPurchase: boolean;
 }
 
-
 const ApplicationSettingsProduct = () => {
-const initialState: FormState = {
-  setDefaultQty1: true,
-  allowMultiUnits: true,
-  allowMultirate: false,
-  batchCriteria: "NB",
-  loadCustomerLastRate: false,
-  loadDummyProducts: false,
-  marginRoundTo: 0,
-  focusToQtyAfterBarcode: true,
-  stockTransferNegativeStock: "Warn",
-  allowManualProductSelectionInSales: true,
-  useProductImages: false,
-  productImagePath: " ",
-  maintainSchemes: false,
-  weighingScaleBarcodeType: "Standard. No Check Digit",
-  pPOsPriceCategory: 1,
-  showRateBeforeTax: false,
-  stopScanningOnWrongBarcode: false,
-  allowOnlyScanProductMarkedAsWeighingScaleItems: false,
-  loadListedProductPrices: false,
-  advancedProductSearching: false,
-  blockQtyChangeOptionInPOS: false,
-  enableGoogleTranslationOfProductName: true,
-  setQty1ForWeighingScaleItem_ValueMode: true,
-  allowUpdateSalesPriceFromPurchase: false,
-  usePopupWindowForItemSearch: false,
-  enableMultiWarehouseBilling: false,
-  enableSupplierWiseItemCode: false,
-  includeSearchItemAlias_ItemName2: true,
-  lastSystemGeneratedBarcode: 1000000000001,
-  stopScanningOnWrongBarcodeInSales: false,
-  excludeSchemeProductAmountFromPrivilegeCard: false,
-  showPurchaseCostChangeWarning: false,
-  listBarcodeItemsInItemLookup: false,
-  showHSNCodeWarning: "Warn",
-  giftOnBilling: false,
-  setProductQtyLimitinSales: false,
-  enableQtySlabOffer: false,
-  giftOnBillingAs: "Products",
-  enableMultiFOC: false,
-  lPPriceLessThanSellingPrice: "Warn",
-  mRPLessThanSalesPrice: "Warn",
-  zeroMultiRateValidate: "Warn",
-  allowUpdateMultiRateinPurchase: false
-};
+  const initialState: FormState = {
+    setDefaultQty1: true,
+    lastSystemGeneratedBarcodetrue: false,
+    allowMultiUnits: true,
+    allowMultirate: false,
+    batchCriteria: "NB",
+    loadCustomerLastRate: false,
+    loadDummyProducts: false,
+    marginRoundTo: 0,
+    focusToQtyAfterBarcode: true,
+    stockTransferNegativeStock: "Warn",
+    allowManualProductSelectionInSales: true,
+    useProductImages: false,
+    productImagePath: " ",
+    maintainSchemes: false,
+    weighingScaleBarcodeType: "Standard. No Check Digit",
+    pPOsPriceCategory: 1,
+    showRateBeforeTax: false,
+    stopScanningOnWrongBarcode: false,
+    allowOnlyScanProductMarkedAsWeighingScaleItems: false,
+    loadListedProductPrices: false,
+    advancedProductSearching: false,
+    blockQtyChangeOptionInPOS: false,
+    enableGoogleTranslationOfProductName: true,
+    setQty1ForWeighingScaleItem_ValueMode: true,
+    allowUpdateSalesPriceFromPurchase: false,
+    usePopupWindowForItemSearch: false,
+    enableMultiWarehouseBilling: false,
+    enableSupplierWiseItemCode: false,
+    includeSearchItemAlias_ItemName2: true,
+    lastSystemGeneratedBarcode: 1000000000001,
+    stopScanningOnWrongBarcodeInSales: false,
+    excludeSchemeProductAmountFromPrivilegeCard: false,
+    showPurchaseCostChangeWarning: false,
+    listBarcodeItemsInItemLookup: false,
+    showHSNCodeWarning: "Warn",
+    giftOnBilling: false,
+    setProductQtyLimitinSales: false,
+    enableQtySlabOffer: false,
+    giftOnBillingAs: "Products",
+    enableMultiFOC: false,
+    lPPriceLessThanSellingPrice: "Warn",
+    mRPLessThanSalesPrice: "Warn",
+    zeroMultiRateValidate: "Warn",
+    allowUpdateMultiRateinPurchase: false,
+  };
 
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [loading, setLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const api = new APIClient();
+  const dispatch = useAppDispatch();
 
-const [formState, setFormState] = useState<FormState>(initialState);
-const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
-const [loading, setLoading] = useState(true);
-const [isSaving, setIsSaving] = useState(false);
-const [error, setError] = useState<string | null>(null);
-const api = new APIClient();
-const dispatch = useAppDispatch();
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
-useEffect(() => {
-  loadSettings();
-}, []);
-
-const loadSettings = async () => {
-  setLoading(true);
-  try {
-    const response = await api.getAsync(`${Urls.application_settings}products`);
-    debugger;
-    console.log(formState);
-    setFormStatePrev(response);
-    setFormState(response);
-  } catch (error) {
-    console.error("Error loading settings:", error);
-  } finally {
-    setLoading(false);
-  }
-};
-
-const handleFieldChange = (field: keyof typeof initialState, value: any) => {
-  setFormState((prevState) => ({
-    ...prevState,
-    [field]: value,
-  }));
-};
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSaving(true);
-  try {
-    const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-      const currentValue = formState?.[key as keyof FormState];
-      const prevValue = formStatePrev[key as keyof FormState];
-
-      if (currentValue !== prevValue) {
-        debugger;
-        acc.push({
-          settingsName: key,
-          settingsValue: currentValue,
-        });
-      }
-      return acc;
-    }, [] as { settingsName: string; settingsValue: any }[]);
-    console.log(modifiedSettings);
-
-    const response = (await api.put(Urls.application_settings, {
-      type: "products",
-      updateList: modifiedSettings,
-    })) as any;
-    debugger;
-    if (response != undefined && response != null && response.IsOk == true) {
-      ERPToast.showWith(response?.message, "success");
-    } else {
-      ERPToast.showWith(response?.message, "warning");
+  const loadSettings = async () => {
+    setLoading(true);
+    try {
+      const response = await api.getAsync(
+        `${Urls.application_settings}products`
+      );
+      debugger;
+      console.log(formState);
+      setFormStatePrev(response);
+      setFormState(response);
+    } catch (error) {
+      console.error("Error loading settings:", error);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Error saving settings:", error);
-  } finally {
-    setIsSaving(false);
-  }
-};
-//   if (loading) {
-//     return <div>Loading settings...</div>;
-//   }
+  };
 
-if (error) {
-  return (
-    <div className="error-message">
-      {error}
-      <button onClick={loadSettings}>Retry</button>
-    </div>
-  );
-}
+  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
+        const currentValue = formState?.[key as keyof FormState];
+        const prevValue = formStatePrev[key as keyof FormState];
+
+        if (currentValue !== prevValue) {
+          debugger;
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue,
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: any }[]);
+      console.log(modifiedSettings);
+
+      const response = (await api.put(Urls.application_settings, {
+        type: "products",
+        updateList: modifiedSettings,
+      })) as any;
+      debugger;
+      if (response != undefined && response != null && response.IsOk == true) {
+        ERPToast.showWith(response?.message, "success");
+      } else {
+        ERPToast.showWith(response?.message, "warning");
+      }
+    } catch (error) {
+      console.error("Error saving settings:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  //   if (loading) {
+  //     return <div>Loading settings...</div>;
+  //   }
+
+  if (error) {
+    return (
+      <div className="error-message">
+        {error}
+        <button onClick={loadSettings}>Retry</button>
+      </div>
+    );
+  }
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      
-        {/* <div className="grid grid-cols-5 gap-6">
+      <div className="erp-settings-form">
+        <div className="grid grid-cols-1  sm;grid-cols-2 lg:grid-cols-3 gap-6">
+          <ERPCheckbox
+            id="useProductImages"
+            label="Use Product Images"
+            data={formState}
+            checked={formState?.useProductImages}
+            onChangeData={(data) =>
+              handleFieldChange("useProductImages", data.useProductImages)
+            }
+          />
+          <ERPInput
+            id="productImagePath"
+            value={formState.productImagePath}
+            data={formState}
+            label="Product Image Path"
+            placeholder="Product Image Path"
+            type="text"
+            onChangeData={(data: any) =>
+              handleFieldChange("productImagePath", data.productImagePath)
+            }
+          />
           <ERPDataCombobox
-          id = "currency"
+            id="batchCriteria"
             field={{
-              id: "currency",
-              required: true,
-              getListUrl:Urls.data_currencies,
+              id: "batchCriteria",
+
+              getListUrl: Urls.data_batchcriteria,
               valueKey: "id",
               labelKey: "name",
             }}
-            value={settings?.currency}
-            onChangeData={(data) => handleFieldChange("Currency", data.Currency)}
-            label="Currency"
+            data={formState}
+            value={formState?.batchCriteria}
+            onChangeData={(data) =>
+              handleFieldChange("batchCriteria", data.batchCriteria)
+            }
+            label="Batch Criteria"
           />
+          <ERPCheckbox
+            data={formState}
+            id="allowOnlyScanProductMarkedAsWeighingScaleItems"
+            label="allow OnlyScan Product Marked As Weighing Scale Items"
+            checked={formState?.allowOnlyScanProductMarkedAsWeighingScaleItems}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "allowOnlyScanProductMarkedAsWeighingScaleItems",
+                data.allowOnlyScanProductMarkedAsWeighingScaleItems
+              )
+            }
+          />
+
+          <ERPInput
+            id="marginRoundTo"
+            label="Margin Round To"
+            type="number"
+            data={formState}
+            value={formState?.marginRoundTo}
+            onChangeData={(data) =>
+              handleFieldChange("marginRoundTo", data.marginRoundTo)
+            }
+          />
+
           <ERPDataCombobox
-          field={{
-            id: "unitPriceDecimalPoints",
-            valueKey: "value",
-            labelKey: "label",
-          }}
-            id="unitPriceDecimalPoints"
-            label="Unit Price Decimal Points"
-            value={settings?.unitPriceDecimalPoints}
-            data={settings}
-            onChangeData={(data) =>{
-              
-              handleFieldChange("unitPriceDecimalPoints", data.unitPriceDecimalPoints)
+            field={{
+              id: "weighingScaleBarcodeType",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="weighingScaleBarcodeType"
+            label="Weighing Scale Barcode Type"
+            value={formState?.weighingScaleBarcodeType}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange(
+                "weighingScaleBarcodeType",
+                data.weighingScaleBarcodeType
+              );
             }}
             options={[
-              { value: '0', label: '0' },
-              { value: '1', label: '1' },
-              { value: '2', label: '2' },
-              { value: '3', label: '3' },
-              { value: '4', label: '4' },
-            ]}
-          />
-          <ERPInput
-            id="DecimalPoints"
-            label="Decimal Points"
-            type="select"
-            value={settings?.DecimalPoints}
-            onChangeData={(data) => handleFieldChange("DecimalPoints", data.DecimalPoints)}
-            options={[
-              { value: '0', label: '0' },
-              { value: '1', label: '1' },
-              { value: '2', label: '2' },
-              { value: '3', label: '3' },
-              { value: '4', label: '4' },
-            ]}
-          />
-          <ERPInput
-            id="CurrencyFormat"
-            label="Currency Format"
-            type="select"
-            value={settings?.CurrencyFormat}
-            onChangeData={(data) => handleFieldChange("CurrencyFormat", data.CurrencyFormat)}
-            options={[
-              { value: 'Millions', label: 'Millions' },
-              { value: 'Thousands', label: 'Thousands' },
-              { value: 'Hundreds', label: 'Hundreds' },
-            ]}
-          />
-          <ERPInput
-            id="RoundingMethod"
-            label="Rounding Method"
-            type="select"
-            value={settings?.RoundingMethod}
-            onChangeData={(data) => handleFieldChange("RoundingMethod", data.RoundingMethod)}
-            options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
-            ]}
-          />
-          <ERPInput
-            id="SalesRoundingMethod"
-            label="Sales Rounding Method"
-            type="select"
-            value={settings?.SalesRoundingMethod}
-            onChangeData={(data) => handleFieldChange("SalesRoundingMethod", data.SalesRoundingMethod)}
-            options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
-            ]}
-          />
-          <ERPInput
-            id="TaxDecimalPoints"
-            label="Tax Decimal Points"
-            type="select"
-            value={settings?.TaxDecimalPoints}
-            onChangeData={(data) => handleFieldChange("TaxDecimalPoints", data.TaxDecimalPoints)}
-            options={[
-              { value: '0', label: '0' },
-              { value: '1', label: '1' },
-              { value: '2', label: '2' },
-              { value: '3', label: '3' },
-              { value: '4', label: '4' },
-            ]}
-          />
-          <ERPInput
-            id="RoundingMethodGlobal"
-            label="Rounding Method Global"
-            type="select"
-            value={settings?.RoundingMethodGlobal}
-            onChangeData={(data) => handleFieldChange("RoundingMethodGlobal", data.RoundingMethodGlobal)}
-            options={[
-              { value: 'Round', label: 'Round' },
-              { value: 'RoundUp', label: 'Round Up' },
-              { value: 'RoundDown', label: 'Round Down' },
+              { value: "0", label: "Standard. No Check Digit" },
+              { value: "1", label: "13 Digit With Check Digit (Qty)" },
+              { value: "2", label: "13 Digit With Check Digit (Value)" },
+              { value: "3", label: "13 Digit With Check Digit (Qty/Value)" },
+              { value: "4", label: "Ignore" },
             ]}
           />
           <ERPCheckbox
-          id="AutoChangeTransactionDate"
-          label="Auto Change Transaction Date By 12:00 AM"
-          checked={settings?.AutoChangeTransactionDate}
-          onChangeData={(data) => handleFieldChange("AutoChangeTransactionDate", data.AutoChangeTransactionDate)}
-        />
-         <ERPInput
-            id="AutoUpdateReleaseUpTo"
-            label="Auto Update Release Up To"
+            id="setQty1ForWeighingScaleItem_ValueMode"
+            data={formState}
+            label="Set Qty1 For Weighing ScaleItem ValueMode"
+            checked={formState?.setQty1ForWeighingScaleItem_ValueMode}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "setQty1ForWeighingScaleItem_ValueMode",
+                data.setQty1ForWeighingScaleItem_ValueMode
+              )
+            }
+          />
+          <ERPDataCombobox
+            field={{
+              id: "stockTransferNegativeStock",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="stockTransferNegativeStock"
+            label="Stock Transfer Negative Stock"
+            value={formState?.stockTransferNegativeStock}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange(
+                "stockTransferNegativeStock",
+                data.stockTransferNegativeStock
+              );
+            }}
+            options={[
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
+            ]}
+          />
+
+          <ERPDataCombobox
+            field={{
+              id: "showHSNCodeWarning",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="showHSNCodeWarning"
+            label="HSN Code"
+            value={formState?.showHSNCodeWarning}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange("showHSNCodeWarning", data.showHSNCodeWarning);
+            }}
+            options={[
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
+            ]}
+          />
+
+          <div className="flex  items-start gap-5">
+            <ERPCheckbox
+              id="lastSystemGeneratedBarcodetrue"
+              data={formState}
+              label="Last System Generated Barcode"
+              checked={formState?.lastSystemGeneratedBarcodetrue}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "lastSystemGeneratedBarcodetrue",
+                  data.lastSystemGeneratedBarcodetrue
+                )
+              }
+            />
+
+            <ERPInput
+              id="lastSystemGeneratedBarcode"
+              value={formState.lastSystemGeneratedBarcode}
+              data={formState}
+              noLabel={true}
+              type="text"
+              onChangeData={(data: any) =>
+                handleFieldChange(
+                  "lastSystemGeneratedBarcode",
+                  data.lastSystemGeneratedBarcode
+                )
+              }
+            />
+          </div>
+          <ERPDataCombobox
+            field={{
+              id: "lPPriceLessThanSellingPrice",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="lPPriceLessThanSellingPrice"
+            label="LP PriceLess Than Selling Price"
+            value={formState?.lPPriceLessThanSellingPrice}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange(
+                "lPPriceLessThanSellingPrice",
+                data.lPPriceLessThanSellingPrice
+              );
+            }}
+            options={[
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
+            ]}
+          />
+
+          <ERPDataCombobox
+            field={{
+              id: "mRPLessThanSalesPrice",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="mRPLessThanSalesPrice"
+            label="MRP Less Than Sales Price"
+            value={formState?.mRPLessThanSalesPrice}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange(
+                "mRPLessThanSalesPrice",
+                data.mRPLessThanSalesPrice
+              );
+            }}
+            options={[
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
+            ]}
+          />
+          <ERPCheckbox
+            id="allowMultirate"
+            data={formState}
+            label="allow Multi rate"
+            checked={formState?.allowMultirate}
+            onChangeData={(data) =>
+              handleFieldChange("allowMultirate", data.allowMultirate)
+            }
+          />
+          <ERPDataCombobox
+            field={{
+              id: "pPOsPriceCategory",
+              valueKey: "id",
+              labelKey: "name",
+              getListUrl: Urls.data_pricectegory,
+            }}
+            id="pPOsPriceCategory"
+            label="PPOs Price Category"
+            value={formState?.pPOsPriceCategory}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange("pPOsPriceCategory", data.pPOsPriceCategory);
+            }}
+          />
+
+          <ERPDataCombobox
+            field={{
+              id: "zeroMultiRateValidate",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="zeroMultiRateValidate"
+            label="Zero Multi Rate Validate"
+            value={formState?.zeroMultiRateValidate}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange(
+                "zeroMultiRateValidate",
+                data.zeroMultiRateValidate
+              );
+            }}
+            options={[
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
+            ]}
+          />
+          <ERPCheckbox
+            id="allowMultiUnits"
+            label="Allow Multi Units"
+            data={formState}
+            checked={formState?.allowMultiUnits}
+            onChangeData={(data) =>
+              handleFieldChange("allowMultiUnits", data.allowMultiUnits)
+            }
+          />
+
+          <ERPInput
+            id="productImagePath"
+            label="Set gift shared Path"
+            data={formState}
             type="number"
-            value={settings?.AutoUpdateReleaseUpTo}
-            onChangeData={(data) => handleFieldChange("AutoUpdateReleaseUpTo", data.AutoUpdateReleaseUpTo)}
+            value={formState?.productImagePath}
+            onChangeData={(data) =>
+              handleFieldChange("productImagePath", data.productImagePath)
+            }
           />
-        </div>
 
-        
-
-        <div className="flex items-center space-x-4">
-         
-          <ERPInput
-            id="OTPEmail"
-            label="OTP Email"
-            className="flex-grow"
-            value={settings?.OTPEmail}
-            onChangeData={(data) => handleFieldChange("OTPEmail", data.OTPEmail)}
-          />
-          <ERPButton
-            title="Send OTP"
-            variant="secondary"
-            onClick={() => console.log('Send OTP clicked')}
-          />
-          <ERPInput
-            id="OTPVerification"
-            placeholder="Enter OTP"
-            className="w-32"
-            value={settings?.OTPVerification}
-            onChangeData={(data) => handleFieldChange("OTPVerification", data.OTPVerification)}
-          />
-          <ERPButton
-            title="Verify"
-            variant="primary"
-            onClick={() => console.log('Verify OTP clicked')}
-          />
-        </div>
-
-        <div className="grid grid-cols-3 gap-6">
-          <div>
+          <div className="flex  items-start gap-5">
             <ERPCheckbox
-              id="AllowPrivilegeCard"
-              label="Allow Privilege Card"
-              checked={settings?.AllowPrivilegeCard}
-              onChangeData={(data) => handleFieldChange("AllowPrivilegeCard", data.AllowPrivilegeCard)}
+              id="giftOnBilling"
+              data={formState}
+              label="Gift On Billing"
+              checked={formState?.giftOnBilling}
+              onChangeData={(data) =>
+                handleFieldChange("giftOnBilling", data.giftOnBilling)
+              }
             />
-            <ERPInput
-              id="PrivilegeCardPercentage"
-              type="number"
-              className="w-16 ml-6 mt-1"
-              value={settings?.PrivilegeCardPercentage}
-              onChangeData={(data) => handleFieldChange("PrivilegeCardPercentage", data.PrivilegeCardPercentage)}
+            <ERPDataCombobox
+              field={{
+                id: "giftOnBillingAs",
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              id="giftOnBillingAs"
+              value={formState?.giftOnBillingAs}
+              data={formState}
+              onChangeData={(data) => {
+                handleFieldChange("giftOnBillingAs", data.giftOnBillingAs);
+              }}
+              options={[
+                { value: "0", label: "CashCoupons" },
+                { value: "1", label: "Products" },
+                { value: "2", label: "Special Price" },
+              ]}
             />
           </div>
-          <div>
-            <ERPCheckbox
-              id="AllowPostdatedTransaction"
-              label="Allow Postdated Transaction"
-              checked={settings?.AllowPostdatedTransaction}
-              onChangeData={(data) => handleFieldChange("AllowPostdatedTransaction", data.AllowPostdatedTransaction)}
-            />
-            <ERPInput
-              id="PostdatedTransactionDays"
-              type="number"
-              className="w-16 ml-6 mt-1"
-              value={settings?.PostdatedTransactionDays}
-              onChangeData={(data) => handleFieldChange("PostdatedTransactionDays", data.PostdatedTransactionDays)}
-            />
-          </div>
-          <div>
-            <ERPCheckbox
-              id="AllowPredatedTransaction"
-              label="Allow Predated Transaction"
-              checked={settings?.AllowPredatedTransaction}
-              onChangeData={(data) => handleFieldChange("AllowPredatedTransaction", data.AllowPredatedTransaction)}
-            />
-            <ERPInput
-              id="PredatedTransactionDays"
-              type="number"
-              className="w-16 ml-6 mt-1"
-              value={settings?.PredatedTransactionDays}
-              onChangeData={(data) => handleFieldChange("PredatedTransactionDays", data.PredatedTransactionDays)}
-            />
-          </div>
+
+          <ERPCheckbox
+            id="stopScanningOnWrongBarcode"
+            label="Stop Scanning On Wrong Barcode(POS)"
+            data={formState}
+            checked={formState?.stopScanningOnWrongBarcode}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "stopScanningOnWrongBarcode",
+                data.stopScanningOnWrongBarcode
+              )
+            }
+          />
+          <ERPCheckbox
+            id="stopScanningOnWrongBarcodeInSales"
+            label="Stop Scanning On Wrong Barcode In Sales"
+            data={formState}
+            checked={formState?.stopScanningOnWrongBarcodeInSales}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "stopScanningOnWrongBarcodeInSales",
+                data.stopScanningOnWrongBarcodeInSales
+              )
+            }
+          />
+          <ERPCheckbox
+            id="loadCustomerLastRate"
+            label="Load Customer Last Sales Rate"
+            data={formState}
+            checked={formState?.loadCustomerLastRate}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "loadCustomerLastRate",
+                data.loadCustomerLastRate
+              )
+            }
+          />
+          <ERPCheckbox
+            id="blockQtyChangeOptionInPOS"
+            label="Block Qty Change Option(POS)"
+            data={formState}
+            checked={formState?.blockQtyChangeOptionInPOS}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "blockQtyChangeOptionInPOS",
+                data.blockQtyChangeOptionInPOS
+              )
+            }
+          />
+          <ERPCheckbox
+            id="enableGoogleTranslationOfProductName"
+            label="Enable Google Translation Of Product Name"
+            data={formState}
+            checked={formState?.enableGoogleTranslationOfProductName}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "enableGoogleTranslationOfProductName",
+                data.enableGoogleTranslationOfProductName
+              )
+            }
+          />
+          <ERPCheckbox
+            id="focusToQtyAfterBarcode"
+            label="Focus To Qty After Barcode"
+            data={formState}
+            checked={formState?.focusToQtyAfterBarcode}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "focusToQtyAfterBarcode",
+                data.focusToQtyAfterBarcode
+              )
+            }
+          />
+          <ERPCheckbox
+            id="loadListedProductPrices"
+            label="Load Listed Product Prices"
+            data={formState}
+            checked={formState?.loadListedProductPrices}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "loadListedProductPrices",
+                data.loadListedProductPrices
+              )
+            }
+          />
+          <ERPCheckbox
+            id="maintainSchemes"
+            label="maintain Schemes"
+            data={formState}
+            checked={formState?.maintainSchemes}
+            onChangeData={(data) =>
+              handleFieldChange("maintainSchemes", data.maintainSchemes)
+            }
+          />
+          <ERPCheckbox
+            id="excludeSchemeProductAmountFromPrivilegeCard"
+            label="Exclude Scheme Product Amount From Privilege Card"
+            data={formState}
+            checked={formState?.excludeSchemeProductAmountFromPrivilegeCard}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "excludeSchemeProductAmountFromPrivilegeCard",
+                data.excludeSchemeProductAmountFromPrivilegeCard
+              )
+            }
+          />
+          <ERPCheckbox
+            id="includeSearchItemAlias_ItemName2"
+            label="Include Search ItemAlias ItemName2"
+            data={formState}
+            checked={formState?.includeSearchItemAlias_ItemName2}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "includeSearchItemAlias_ItemName2",
+                data.includeSearchItemAlias_ItemName2
+              )
+            }
+          />
+          <ERPCheckbox
+            id="advancedProductSearching"
+            label="Advanced Product Searching "
+            data={formState}
+            checked={formState?.advancedProductSearching}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "advancedProductSearching",
+                data.advancedProductSearching
+              )
+            }
+          />
+          <ERPCheckbox
+            id="allowUpdateSalesPriceFromPurchase"
+            label="Allow Update Sales Price  From Purchase"
+            data={formState}
+            checked={formState?.allowUpdateSalesPriceFromPurchase}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "allowUpdateSalesPriceFromPurchase",
+                data.allowUpdateSalesPriceFromPurchase
+              )
+            }
+          />
+          <ERPCheckbox
+            id="allowUpdateMultiRateinPurchase"
+            label="allow Update Multi Ratein Purchase"
+            data={formState}
+            checked={formState?.allowUpdateMultiRateinPurchase}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "allowUpdateMultiRateinPurchase",
+                data.allowUpdateMultiRateinPurchase
+              )
+            }
+          />
+          <ERPCheckbox
+            id="enableQtySlabOffer"
+            label="Enable Qty Slab Offer"
+            data={formState}
+            checked={formState?.enableQtySlabOffer}
+            onChangeData={(data) =>
+              handleFieldChange("enableQtySlabOffer", data.enableQtySlabOffer)
+            }
+          />
+          <ERPCheckbox
+            id="setProductQtyLimitinSales"
+            label="Set Product Qty Limitin Sales"
+            data={formState}
+            checked={formState?.setProductQtyLimitinSales}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "setProductQtyLimitinSales",
+                data.setProductQtyLimitinSales
+              )
+            }
+          />
+          <ERPCheckbox
+            id="enableMultiFOC"
+            label="Enable Multi FOC"
+            data={formState}
+            checked={formState?.enableMultiFOC}
+            onChangeData={(data) =>
+              handleFieldChange("enableMultiFOC", data.enableMultiFOC)
+            }
+          />
+          <ERPCheckbox
+            id="allowManualProductSelectionInSales"
+            label="allowManual Product Selection In Sales"
+            data={formState}
+            checked={formState?.allowManualProductSelectionInSales}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "allowManualProductSelectionInSales",
+                data.allowManualProductSelectionInSales
+              )
+            }
+          />
+          <ERPCheckbox
+            id="showRateBeforeTax"
+            label="Show Rate Before Tax on Sales"
+            data={formState}
+            checked={formState?.showRateBeforeTax}
+            onChangeData={(data) =>
+              handleFieldChange("showRateBeforeTax", data.showRateBeforeTax)
+            }
+          />
+          <ERPCheckbox
+            id="loadDummyProducts"
+            label="Load Dummy Products"
+            data={formState}
+            checked={formState?.loadDummyProducts}
+            onChangeData={(data) =>
+              handleFieldChange("loadDummyProducts", data.loadDummyProducts)
+            }
+          />
+          <ERPCheckbox
+            id="showPurchaseCostChangeWarning"
+            label="Show Purchase Cost Change Warning"
+            data={formState}
+            checked={formState?.showPurchaseCostChangeWarning}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "showPurchaseCostChangeWarning",
+                data.showPurchaseCostChangeWarning
+              )
+            }
+          />
+          <ERPCheckbox
+            id="enableSupplierWiseItemCode"
+            label="Enable Supplie rWise Item Code"
+            data={formState}
+            checked={formState?.enableSupplierWiseItemCode}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "enableSupplierWiseItemCode",
+                data.enableSupplierWiseItemCode
+              )
+            }
+          />
+          <ERPCheckbox
+            id="enableMultiWarehouseBilling"
+            label="Enable Multi Warehouse Billing"
+            data={formState}
+            checked={formState?.enableMultiWarehouseBilling}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "enableMultiWarehouseBilling",
+                data.enableMultiWarehouseBilling
+              )
+            }
+          />
+          <ERPCheckbox
+            id="usePopupWindowForItemSearch"
+            label="Use Popup Window For Item Search"
+            data={formState}
+            checked={formState?.usePopupWindowForItemSearch}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "usePopupWindowForItemSearch",
+                data.usePopupWindowForItemSearch
+              )
+            }
+          />
+          <ERPCheckbox
+            id="listBarcodeItemsInItemLookup"
+            label="List Barcode Items In Item Lookup"
+            data={formState}
+            checked={formState?.listBarcodeItemsInItemLookup}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "listBarcodeItemsInItemLookup",
+                data.listBarcodeItemsInItemLookup
+              )
+            }
+          />
+          {/* <ERPCheckbox
+          id="allowMultiUnits"
+          label="Allow Multi Units"
+          data={forState}
+          checked={formState?.allowMultiUnits}
+          onChangeData={(data) => handleFieldChange("allowMultiUnits", data.allowMultiUnits)}
+        /> */}
         </div>
-
-      
-        <div className="grid grid-cols-4 gap-6">
-        <ERPCheckbox
-          id="MaintainSeparatePrefixForCashSales"
-          label="Maintain Separate Prefix for Cash Sales"
-          checked={settings?.MaintainSeparatePrefixForCashSales}
-          onChangeData={(data) => handleFieldChange("MaintainSeparatePrefixForCashSales", data.MaintainSeparatePrefixForCashSales)}
-        />
-
-          <ERPCheckbox
-            id="SaveModifiedTransactionSummary"
-            label="Save Modified Transaction Summary"
-            checked={settings?.SaveModifiedTransactionSummary}
-            onChangeData={(data) => handleFieldChange("SaveModifiedTransactionSummary", data.SaveModifiedTransactionSummary)}
-          />
-          <ERPCheckbox
-            id="MaintainProduction"
-            label="Maintain Production"
-            checked={settings?.MaintainProduction}
-            onChangeData={(data) => handleFieldChange("MaintainProduction", data.MaintainProduction)}
-          />
-          <ERPCheckbox
-            id="ShowReminders"
-            label="Show Reminders"
-            checked={settings?.ShowReminders}
-            onChangeData={(data) => handleFieldChange("ShowReminders", data.ShowReminders)}
-          />
-          <ERPCheckbox
-            id="EnableSecondDisplay"
-            label="Enable Second Display"
-            checked={settings?.EnableSecondDisplay}
-            onChangeData={(data) => handleFieldChange("EnableSecondDisplay", data.EnableSecondDisplay)}
-          />
-          <ERPCheckbox
-            id="AllowSalesRouteArea"
-            label="Allow Sales Route/Area"
-            checked={settings?.AllowSalesRouteArea}
-            onChangeData={(data) => handleFieldChange("AllowSalesRouteArea", data.AllowSalesRouteArea)}
-          />
-          <ERPCheckbox
-            id="EnableDayEnd"
-            label="Enable Day End"
-            checked={settings?.EnableDayEnd}
-            onChangeData={(data) => handleFieldChange("EnableDayEnd", data.EnableDayEnd)}
-          />
-          <ERPCheckbox
-            id="MaintainSalesRouteCreditLimit"
-            label="Maintain Sales Route Credit Limit"
-            checked={settings?.MaintainSalesRouteCreditLimit}
-            onChangeData={(data) => handleFieldChange("MaintainSalesRouteCreditLimit", data.MaintainSalesRouteCreditLimit)}
-          />
-          <ERPCheckbox
-            id="MaintainMultilanguage"
-            label="Maintain Multilanguage"
-            checked={settings?.MaintainMultilanguage}
-            onChangeData={(data) => handleFieldChange("MaintainMultilanguage", data.MaintainMultilanguage)}
-          />
-          <ERPCheckbox
-            id="ShowUserMessages"
-            label="Show User Messages"
-            checked={settings?.ShowUserMessages}
-            onChangeData={(data) => handleFieldChange("ShowUserMessages", data.ShowUserMessages)}
-          />
-        </div>
-
-        <ERPInput
-          id="BusinessType"
-          label="Business Type"
-          type="select"
-          value={settings?.BusinessType}
-          onChangeData={(data) => handleFieldChange("BusinessType", data.BusinessType)}
-          options={[
-            { value: 'Retail', label: 'Retail' },
-            { value: 'Wholesale', label: 'Wholesale' },
-            { value: 'Manufacturing', label: 'Manufacturing' },
-          ]}
-        />
-
         <div className="flex justify-end">
           <ERPButton
-            title="Save Settings"
+            title="Save Changes"
             variant="primary"
+            disabled={isSaving}
+            loading={isSaving}
             type="submit"
           />
-        </div> */}
-      </form>
+        </div>
+      </div>
+    </form>
   );
 };
 

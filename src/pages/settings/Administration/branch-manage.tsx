@@ -208,7 +208,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("tin")}
-          label="TIN"
+          label={t("tin")}
           required
           onChangeData={(data) => handleFieldChange("tin", data)}
         />

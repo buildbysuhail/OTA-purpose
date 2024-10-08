@@ -73,7 +73,7 @@ const ERPModal = ({
                 >
                   <DialogTitle as="h3" className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 ">
                   {/* flex justify-between  */}
-                  { closeButton != undefined && closeButton == "LeftArrow" && <i onClick={closeModal} className="ri-arrow-left-line mr-2" style={{ fontSize: '23px' }}></i>} {title}{" "}
+                  { closeButton != undefined && closeButton == "LeftArrow" && <i onClick={closeModal} className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line" style={{ fontSize: '23px' }}></i>} {title}{" "}
                     {closeButton && closeButton == "Button" && (
                       <div className=" max-w-[200px] inline-block">
                         <ERPButton className="w-full" type="button" title={closeTitle} onClick={closeModal} tabIndex={-1} />

@@ -75,12 +75,14 @@ const ERPModal = ({
                 <DialogPanel
                   className={`transform bg-white px-5 py-3 text-left align-middle shadow-xl transition-all ${width} ${isFullHeight ? 'min-h-full h-screen' : 'rounded-md'}`}
                 >
-                  <DialogTitle as="h3" className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 ">
-                  {/* flex justify-between  */}
-                  { closeButton != undefined && closeButton == "LeftArrow" && <i onClick={closeModal} className="ri-arrow-left-line mr-2" style={{ fontSize: '23px' }}></i>} {title}{" "}
-                    {closeButton && closeButton == "Button" && (
-                      <div className=" max-w-[200px] inline-block">
-                        <ERPButton className="w-full" type="button" title={closeTitle} onClick={closeModal} tabIndex={-1} />
+                  <DialogTitle as="h3" className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900">
+                    {closeButton !== undefined && closeButton === "LeftArrow" && (
+                      <i onClick={handleClose} className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line" style={{ fontSize: '23px' }}></i>
+                    )} 
+                    {title}{" "}
+                    {closeButton && closeButton === "Button" && (
+                      <div className="max-w-[200px] inline-block">
+                        <ERPButton className="w-full" type="button" title={closeTitle} onClick={handleClose} tabIndex={-1} />
                       </div>
                     )}
                   </DialogTitle>

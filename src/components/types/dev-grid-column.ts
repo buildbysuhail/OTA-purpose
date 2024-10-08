@@ -27,6 +27,7 @@ export interface DevGridColumn {
     alignment?: "center" | "left" | "right";
     showInPdf?: boolean | false;
     allowEditing?: boolean;
+    visible?: boolean;
     cellRender?: (cellElement: any, cellInfo: any) => React.ReactNode;
   }
   const initialColumnPreference: ColumnPreference = {

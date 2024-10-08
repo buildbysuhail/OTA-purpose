@@ -124,11 +124,11 @@ export const UserManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("employeeID", data)}
         />
         <ERPInput
-          {...getFieldProps("maxDecimalPerAllowed")}
+          {...getFieldProps("maxDiscPercAllowed")}
           label={t("max_dis%")}
           placeholder={t("max_dis%")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("maxDecimalPerAllowed", data)}
+          onChangeData={(data: any) => handleFieldChange("maxDiscPercAllowed", data)}
         />
         <ERPInput
           {...getFieldProps("passkey")}

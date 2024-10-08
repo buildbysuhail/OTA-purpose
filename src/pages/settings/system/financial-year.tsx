@@ -24,7 +24,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 90,
+      width: 100,
       isLocked: true,
     },
     {
@@ -34,7 +34,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
       isLocked: false,
     },
     {
@@ -44,7 +44,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 150,
     },
     {
       dataField: "toDate",
@@ -53,7 +53,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 150,
     },
     {
       dataField: "status",
@@ -62,7 +62,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "remarks",
@@ -71,7 +71,7 @@ const FinancialYear = () => {
       allowSorting: false,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "visibleOnStartup",
@@ -80,7 +80,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: false,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "createdUser",
@@ -89,7 +89,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      minWidth: 100,
     },
     {
       dataField: "createdDate",
@@ -98,7 +98,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 150,
     },
     {
       dataField: "modifiedUser",
@@ -107,7 +107,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      minWidth: 100,
     },
     {
       dataField: "modifiedDate",
@@ -116,7 +116,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 150,
     },
     {
       dataField: "openingStockValue",
@@ -125,7 +125,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "actions",

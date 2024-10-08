@@ -122,7 +122,7 @@ const ERPSettingsFormMain = () => {
     try {
 
       const response = await api.post(Urls.SendEmailToken,{ email: settings.oTPEmail});// dispatch(postAction({apiUrl:Urls.SendEmailToken,data:{ email: settings.oTPEmail}}) as any).unwrap();
-      if(response!=undefined && response!=null && response.IsOk == settings)
+      if(response!=undefined && response!=null && response.isOk == settings)
       {
         ERPToast.showWith(response?.message, "success");
       }
@@ -148,23 +148,57 @@ const ERPSettingsFormMain = () => {
       [settingName]: value ?? ''
     }));
   });
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setIsSaving(true);
+  //   try {
+  //     const response = await fetch('/api/settings', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(changedSettings),
+  //     });
+  //     if (response.ok) {
+  //       console.log('Settings saved successfully');
+  //       setChangedSettings({});
+  //     } else {
+  //       console.error('Error saving settings');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error saving settings:', error);
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const response = await fetch('/api/settings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(changedSettings),
-      });
-      if (response.ok) {
-        console.log('Settings saved successfully');
-        setChangedSettings({});
-      } else {
-        console.error('Error saving settings');
-      }
+      const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
+        const currentValue = settings?.[key as keyof Settings];
+        const prevValue = settings[key as keyof Settings];
+       
+        if (currentValue !== prevValue) {
+          debugger;
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue.toString()
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: string }[]);
+      console.log(modifiedSettings);
+      
+      const response = await api.put(Urls.application_settings,{type: 'settings', updateList:  modifiedSettings}) as  any
+      debugger;
+      if(response!=undefined && response!=null && response.isOk==true)
+        {
+          ERPToast.showWith(response?.message, "success");
+        }
+        else{
+          ERPToast.showWith(response?.message,"warning")
+        }
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {

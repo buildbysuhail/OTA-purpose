@@ -128,11 +128,11 @@ const BranchSettingsForm: React.FC = () => {
           debugger;
           acc.push({
             settingsName: key,
-            settingsValue: currentValue,
+            settingsValue: currentValue.toString(),
           });
         }
         return acc;
-      }, [] as { settingsName: string; settingsValue: any }[]);
+      }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
@@ -140,7 +140,7 @@ const BranchSettingsForm: React.FC = () => {
         updateList: modifiedSettings,
       })) as any;
       debugger;
-      if (response != undefined && response != null && response.IsOk == true) {
+      if (response != undefined && response != null && response.isOk == true) {
         ERPToast.showWith(response?.message, "success");
       } else {
         ERPToast.showWith(response?.message, "warning");
@@ -164,6 +164,7 @@ const BranchSettingsForm: React.FC = () => {
     );
   }
   return (
+    <form onSubmit={handleSubmit} className="space-y-6">
     <div className="w-full max-w-4xl">
       <div className="grid grid-cols-3 gap-6 mb-4">
         <div className="flex flex-col space-y-4">
@@ -254,7 +255,7 @@ const BranchSettingsForm: React.FC = () => {
             value={formState.countryName}
             field={{
               id: "countryName",
-              required: true,
+             // required: true,
               getListUrl: Urls.data_countries,
               valueKey: "id",
               labelKey: "name",
@@ -270,7 +271,7 @@ const BranchSettingsForm: React.FC = () => {
             value={formState.invoicePrintingStyle}
             field={{
               id: "invoicePrintingStyle",
-              required: true,
+             // required: true,
               getListUrl: Urls.data_languages,
 
               valueKey: "id",
@@ -428,7 +429,7 @@ const BranchSettingsForm: React.FC = () => {
                 value={formState.maintainSynchronizationdata}
                 field={{
                   id: "maintainSynchronizationdata",
-                  required: true,
+                 // required: true,
                   valueKey: "value",
                   labelKey: "label",
                 }}
@@ -523,7 +524,7 @@ const BranchSettingsForm: React.FC = () => {
             value={formState.invoicePrintingStyle}
             field={{
               id: "invoicePrintingStyle",
-              required: true,
+             // required: true,
               valueKey: "value",
               labelKey: "label",
             }}
@@ -545,7 +546,7 @@ const BranchSettingsForm: React.FC = () => {
             value={formState.fileAttachmentMethod}
             field={{
               id: "fileAttachmentMethod",
-              required: true,
+             // required: true,
 
               valueKey: "value",
               labelKey: "label",
@@ -640,6 +641,7 @@ const BranchSettingsForm: React.FC = () => {
           />
         </div>
     </div>
+    </form>
   );
 };
 

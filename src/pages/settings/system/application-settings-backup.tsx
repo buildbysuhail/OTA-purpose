@@ -83,7 +83,7 @@ const BackupSettingsForm: React.FC = () => {
         updateList: modifiedSettings,
       })) as any;
       debugger;
-      if (response != undefined && response != null && response.IsOk == true) {
+      if (response != undefined && response != null && response.isOk == true) {
         ERPToast.showWith(response?.message, "success");
       } else {
         ERPToast.showWith(response?.message, "warning");

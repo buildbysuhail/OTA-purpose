@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -13,7 +13,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "devextreme-react";
-import { Toolbar, Item, Editing } from "devextreme-react/cjs/data-grid";
+import { Toolbar, Item, Editing, Column, Lookup } from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../../helpers/api-client";
 import CustomStore from "devextreme/data/custom_store";
 import "./exchange-rates.css";
@@ -34,10 +34,18 @@ const ExchangeRates = () => {
     baseCurrency: 0,
   });
   const [store, setStore] = useState<any>([]);
+  const [currencies, setCurrencies] = useState<any>([]);
   const [postDataLoading, setPostDataLoading] = useState(false);
   function isNotEmpty(value: string | undefined | null) {
     return value !== undefined && value !== null && value !== "";
   }
+  const loadCurrencies = useCallback( async() => {
+   
+  const result: any = await api.getAsync(
+    `${Urls.data_currencies}`
+  );
+  setCurrencies(result);
+  }, []);
   const load = async (baseCurrency?: number) => {
     const result: any = await api.getAsync(
       `${Urls.currencyExchange}${baseCurrency ? baseCurrency : ""}`
@@ -48,7 +56,7 @@ const ExchangeRates = () => {
   const handleSubmit = async () => {
     setPostDataLoading(true);
     const result: any = await api.post(
-      `${Urls.currencyExchange}`, postData
+      `${Urls.currencyExchange}`, {currencyId: postData.baseCurrency, data: store}
     );
 
     setStore(result?.data);
@@ -57,6 +65,7 @@ const ExchangeRates = () => {
   useEffect(() => {
     try {
       load();
+      loadCurrencies();
     } catch (error) {
       setStore([]);
     }
@@ -125,6 +134,52 @@ const ExchangeRates = () => {
                   key="exchRateID"
                   showBorders={true}
                 >
+                  <Column
+        dataField="exchRateID"
+        caption={t("SiNo")}
+        dataType="number"
+        allowSorting={true}
+        allowSearch={true}
+        allowFiltering={true}
+        minWidth={150}
+      />
+      <Column
+        dataField="toCurrency"
+        caption={t("to_currency")}
+        dataType="string"
+        allowSorting={true}
+        allowSearch={true}
+        allowFiltering={true}
+        minWidth={150}
+        allowEditing={true}
+      >
+         <Lookup dataSource={currencies} valueExpr="id" displayExpr="name" />
+         </Column>
+      <Column
+        dataField="rate"
+        caption={t("rate")}
+        dataType="number"
+        allowSearch={true}
+        allowFiltering={true}
+        minWidth={150}
+        allowEditing={true}
+      />
+      <Column
+        dataField="rateDate"
+        caption={t("rate_date")}
+        dataType="string"
+        allowSearch={true}
+        allowFiltering={true}
+        minWidth={100}
+      />
+      <Column
+        dataField="cStatus"
+        caption={t("active")}
+        dataType="string"
+        allowSearch={true}
+        allowFiltering={true}
+        minWidth={150}
+      />
                   <Editing
                     mode="cell"
                     allowUpdating={true}

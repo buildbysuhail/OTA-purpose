@@ -213,7 +213,7 @@
     "email-phone-username": "البريد الإلكتروني أو رقم الهاتف أو اسم المستخدم",
     "voucher": "قسيمة",
 
-    "actions": "الإجراءات",
+    "actions": "إجراءاتs",
     "users": "المستخدمون",
     "si_no": "التسلسلي",
     "user": "المستخدم",
@@ -433,5 +433,15 @@
     "date_time_of_action": "تاريخ ووقت الإجراء",
     "action_form": "نموذج الإجراء",
     "system_name": "اسم النظام",
-    "user_actions": "إجراءات المستخدم"
+    "user_actions": "إجراءات المستخدم",
+
+    "delete_this_item": "هل أنت متأكد أنك تريد حذف هذا العنصر؟",
+    "address2": "العنوان 2",
+    "address1": "العنوان 1",
+    "pin": "الرمز البريدي",
+    "land_phone": "الهاتف الأرضي",
+    "mobile_phone": "الهاتف المحمول",
+    "register_no": "رقم التسجيل",
+    "financial_year_from": "السنة المالية من",
+    "financial_year_to": "السنة المالية إلى"
 }

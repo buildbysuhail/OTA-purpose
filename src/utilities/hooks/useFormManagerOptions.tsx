@@ -47,7 +47,7 @@ export function useFormManager<T>({
   const location = useLocation();
   const appDispatch = useAppDispatch();
   const apiClient = new APIClient();
-  
+
 
   const queryParams = new URLSearchParams(location.search);
   key =
@@ -60,19 +60,28 @@ export function useFormManager<T>({
     url,
     method ? method : isEdit ? ActionType.PUT : ActionType.POST
   );
-
-  const [localFormState, setLocalFormState] = useState<ApiResponse<any>>({
-    data: initialData?.data || {},
-    validations: initialData?.validations || {},
-    loading: false,
-    error: null,
-  });
+  debugger;
+  // if(localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data ==null )
+  const [localFormState, setLocalFormState] = useState<ApiResponse<any>>();
 
   const reduxFormState = useAppSelector<ApiResponse<any>>(
     (state: any) => state?.[rName]
   );
   const formState = useApiClient ? localFormState : reduxFormState;
 
+  useEffect(() => {
+    debugger;
+    if (localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data == null) {
+      debugger;
+      const df = {
+        data: initialData?.data || {},
+        validations: initialData?.validations || {},
+        loading: false,
+        error: null,
+      }
+      setLocalFormState(df);
+    }
+  }, [initialData]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -83,7 +92,7 @@ export function useFormManager<T>({
 
   const loadFormData = useCallback(async () => {
     // setIsLoading(true);
-    
+
     if (useApiClient) {
       try {
         let response;
@@ -176,7 +185,7 @@ export function useFormManager<T>({
       const action = reduxManager.getTypedThunk(rName);
       try {
         const response: ResponseModelWithValidation<T, any> = await appDispatch(
-          action({ data: formState.data }) as any
+          action({ data: formState?.data }) as any
         ).unwrap();
         handleResponse(
           response,
@@ -185,7 +194,7 @@ export function useFormManager<T>({
           },
           () => {
             reduxManager.setState(rName, {
-              data: { ...formState.data },
+              data: { ...formState?.data },
               validations: { ...response.validations },
               error: null,
               loading: false,
@@ -211,14 +220,16 @@ export function useFormManager<T>({
   ]);
 
   const handleFieldChange = useCallback(
+
     (fieldId: string, value: any) => {
+      debugger;
       const newData = {
         ...formState?.data,
         [fieldId]: value[fieldId],
       };
 
       if (useApiClient) {
-        setLocalFormState((prevState) => ({
+        setLocalFormState((prevState: any) => ({
           ...prevState,
           data: newData,
           validations: { ...prevState?.validations },

@@ -27,11 +27,12 @@ interface popupData {
   branchLedger: popupDataProps
   authorizationSettings: popupDataProps
   barcodeprint: popupDataProps
-  exchangeRates:popupDataProps
-  branchGrid:popupDataProps
-  privilegeCard:popupDataProps
-  partyCategory:popupDataProps
-  currencyMaster:popupDataProps
+  exchangeRates: popupDataProps
+  branchGrid: popupDataProps
+  privilegeCard: popupDataProps
+  partyCategory: popupDataProps
+  currencyMaster: popupDataProps
+  revertBillModifications: popupDataProps
 }
 const initialState: popupData = {
   userType: { isOpen: false, key: null, mode: "edit" },
@@ -61,6 +62,7 @@ const initialState: popupData = {
   privilegeCard: { isOpen: false, key: null, mode: "edit" },
   partyCategory: { isOpen: false, key: null, mode: "edit" },
   currencyMaster: { isOpen: false, key: null, mode: "edit" },
+  revertBillModifications: { isOpen: false, key: null, mode: "edit" },
 };
 
 const popupDataSlice = createSlice({
@@ -159,7 +161,10 @@ const popupDataSlice = createSlice({
       state.partyCategory = action.payload;
     },
     toggleCurrencyMasterPopup: (state, action: PayloadAction<popupDataProps>) => {
-      state.currencyMaster= action.payload;
+      state.currencyMaster = action.payload;
+    },
+    toggleRevertBillModifications: (state, action: PayloadAction<popupDataProps>) => {
+      state.revertBillModifications = action.payload;
     },
   },
 });
@@ -193,6 +198,7 @@ export const {
   toggleBranchLedgerPopup,
   toggleAuthorizationSettingsPopup,
   toggleBranchGridPopup,
+  toggleRevertBillModifications,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

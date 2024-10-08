@@ -2,13 +2,15 @@ import {
   CheckBadgeIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import {toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup, 
-        toggleDayClosePopup, 
-        toggleDeleteInactiveTransactionPopup, 
-        toggleExchangeRatesPopup, 
-        toggleImportExportPopup, 
-        toggleResetDataBasePopup, 
-        toggleUserActionPopup} from "../../../../redux/slices/popup-reducer";
+import {
+  toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup,
+  toggleDayClosePopup,
+  toggleDeleteInactiveTransactionPopup,
+  toggleExchangeRatesPopup,
+  toggleImportExportPopup,
+  toggleResetDataBasePopup,
+  toggleUserActionPopup
+} from "../../../../redux/slices/popup-reducer";
 
 export const SettingsMenuItems = [
   // {
@@ -69,11 +71,11 @@ export const SettingsMenuItems = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { action:toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'company_profile' },
-      { action:toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'branch_info' },
+      { action: toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'company_profile' },
+      { action: toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'branch_info' },
       { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'branch' },
-      { action:toggleDeleteInactiveTransactionPopup, type: 'popup', active: false, selected: false, title: 'delete_inactive_transactions' },
-      { action:toggleBankPosPopup, type: 'popup', active: false, selected: false, title: 'bank_pos_settings' },
+      { action: toggleDeleteInactiveTransactionPopup, type: 'popup', active: false, selected: false, title: 'delete_inactive_transactions' },
+      { action: toggleBankPosPopup, type: 'popup', active: false, selected: false, title: 'bank_pos_settings' },
     ]
   },
   {
@@ -89,23 +91,23 @@ export const SettingsMenuItems = [
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=main`, type: 'link', active: false, selected: false, title: 'app_settings' },
-      { action:toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'export_import' },
-      { action:toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'reset_db' },
+      { action: toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'export_import' },
+      { action: toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'reset_db' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/counters`, type: 'link', active: false, selected: false, title: 'counters' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/financial-year`, type: 'link', active: false, selected: false, title: 'financial_year' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/vouchers`, type: 'link', active: false, selected: false, title: 'vouchers' },
-      {action:toggleBarcodePrintPopup, type: 'popup', active: false, selected: false, title: 'barcode_print' },
+      { action: toggleBarcodePrintPopup, type: 'popup', active: false, selected: false, title: 'barcode_print' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/headers-footers`, type: 'link', active: false, selected: false, title: 'headers_footers' },
       { path: `${import.meta.env.BASE_URL}settings/_/templates`, type: 'link', active: false, selected: false, title: 'invoice_designer' },
-      { action:toggleCommandsPopup, type: 'popup', active: false, selected: false, title: 'commands' },
+      { action: toggleCommandsPopup, type: 'popup', active: false, selected: false, title: 'commands' },
       // { action:toggleUserActionPopup, type: 'popup', active: false, selected: false, title: 'user_action_report' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/reminders`, type: 'link', active: false, selected: false, title: 'reminders' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/user-actions`, type: 'link', active: false, selected: false, title: 'user_action_report' },
-      { action:toggleExchangeRatesPopup, type: 'popup', active: false, selected: false, title: 'exchange_rates' },
+      { action: toggleExchangeRatesPopup, type: 'popup', active: false, selected: false, title: 'exchange_rates' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/refresh-all-branches`, type: 'link', active: false, selected: false, title: 'refresh_all_branches' },
-      {action:toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'day_close' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/advance-options`, type: 'link', active: false, selected: false, title: 'advance_options' },
-      {action:toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
+      { action: toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'day_close' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert-bill-modifications' },
+      { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
     ]
   }
 ];

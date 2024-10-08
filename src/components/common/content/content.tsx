@@ -35,9 +35,10 @@ const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/accou
 const AccountsLedger = lazy(() => import('../../../pages/accounts/masters/account-ledgers/account-ledger'));
 const CostCenter = lazy(() => import('../../../pages/accounts/masters/cost centre/cost-centre'));
 const BranchLedger = lazy(() => import('../../../pages/accounts/masters/branch ledger/branch-ledger'));
-const PartyCategory  = lazy(() => import('../../../pages/accounts/masters/account-party-category/party-category'));
+const PartyCategory = lazy(() => import('../../../pages/accounts/masters/account-party-category/party-category'));
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
 const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
+const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
 
 
 // Acc End
@@ -73,7 +74,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/user-management/users" element={<Users />} />
         <Route path="/user-management/userstypes" element={<UserTypes />} />
         {/* settings Administer*/}
-        <Route path="/administration/branch" element={<BranchGrid/>} />
+        <Route path="/administration/branch" element={<BranchGrid />} />
         {/* settings Systems */}
         <Route path="/system/counters" element={<SystemCounters />} />
         <Route path="/system/vouchers" element={<SystemVoucher />} />
@@ -81,6 +82,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/reminders" element={<Reminders />} />
         <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
+        <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
         <Route path="settings" element={<Settings />} />
 
         {/* Inventory Starts */}
@@ -98,9 +100,9 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/party-category" element={<PartyCategory />} />
         <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
         {/* cost center */}
-        <Route path="account-masters/cost-center" element={<CostCenter/>} />
+        <Route path="account-masters/cost-center" element={<CostCenter />} />
         {/* Branch Ledger */}
-        <Route path="account-masters/branch-ledgers" element={<BranchLedger/>} />
+        <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         {/* Accounts End */}
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />

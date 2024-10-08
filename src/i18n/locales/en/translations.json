@@ -544,5 +544,8 @@
   "output_calamity_cess_account":"Output Calamity Cess Account",
   "consider_sales_price_as_calamity_included":"Consider Sales Price as Calamity Included",
   "enable_karnataka_tax_report_format":"Enable Karnataka Tax Report Format",
-  "show_prev._forms":"Show Prev. Forms"
+  "show_prev._forms":"Show Prev. Forms",
+
+  "revert_bill_modifications":"Revert Bill Modifications",
+  "reset_branch_data_for_sync":"Reset Branch Data For Sync"
 }

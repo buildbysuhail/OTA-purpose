@@ -506,6 +506,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
               cellRender={column.cellRender}
+              visible={column.visible}
             />
           ))}
         </DataGrid>

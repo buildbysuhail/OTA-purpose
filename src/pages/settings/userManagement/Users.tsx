@@ -74,6 +74,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false,
     },
     {
       dataField: "createdDate",
@@ -82,6 +83,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "modifiedUser",
@@ -90,6 +92,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -98,6 +101,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      visible:false,
     },
     {
       dataField: "employeeID",

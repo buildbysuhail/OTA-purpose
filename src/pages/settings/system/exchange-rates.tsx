@@ -149,6 +149,17 @@ const ExchangeRates = () => {
       minWidth: 150,
     },
   ];
+  const handleDelete = async() => {
+    //api
+    // resp
+    alert('asasa')
+    load(postData.baseCurrency);
+  }
+  const ChartCell = (cellData: any) => (
+    <div className="chart-cell">
+      <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={handleDelete}></i>
+    </div>
+  );
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -218,11 +229,13 @@ const ExchangeRates = () => {
                     allowFiltering={true}
                     minWidth={150}
                   />
+                   <Column caption="Dynamics" minWidth={320} cellRender={ChartCell} />
                   <Editing
                     mode="cell"
                     allowUpdating={true}
-                    allowAdding={true}
-                    allowDeleting={true}
+                    allowAdding={false}
+                    allowDeleting={false}
+                   
                   />
                   <Toolbar>
                     <Item location="before" cssClass="mb-4">
@@ -239,7 +252,7 @@ const ExchangeRates = () => {
                         onChangeData={(data: any) => {
                           setPostData((prev: any) => ({
                             ...prev,
-                            data: data,
+                            baseCurrency: data.baseCurrency,
                           }));
                           load(data?.baseCurrency);
                         }}

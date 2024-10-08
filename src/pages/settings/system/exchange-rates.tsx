@@ -24,6 +24,7 @@ const api = new APIClient();
 const ExchangeRates = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const rootState = useRootState();
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
@@ -33,7 +34,7 @@ const ExchangeRates = () => {
     baseCurrency: 0,
   });
   const [store, setStore] = useState<any>([]);
-  const [postDataLoading, setPostDataLoading] = useState<any>([]);
+  const [postDataLoading, setPostDataLoading] = useState(false);
   function isNotEmpty(value: string | undefined | null) {
     return value !== undefined && value !== null && value !== "";
   }
@@ -51,7 +52,7 @@ const ExchangeRates = () => {
     );
     
     setStore(result?.data);
-    setPostDataLoading(false
+    setPostDataLoading(false);
   };
   useEffect(() => {
     try {

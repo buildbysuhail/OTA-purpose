@@ -1,4 +1,4 @@
-import { FormControl, TextField } from "@mui/material";
+import { FormControl, SelectChangeEvent, TextField } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
@@ -11,7 +11,7 @@ interface ERPMUIDatePickerProps {
   data?: any;
   field?: any;
   defaultData?: any;
-  handleChange?: (id: string, date: string) => void;
+  handleChange?: (event: SelectChangeEvent<string | number> | { id: string; date: string }) => void;
   onChange?: (date: Date | null) => void;
   required?: boolean;
   disabled?: boolean;
@@ -22,7 +22,7 @@ interface ERPMUIDatePickerProps {
 
 const ERPMUIDatePicker = forwardRef<HTMLDivElement, ERPMUIDatePickerProps>(({
   id,
-  label, // Extract label prop
+  label,
   data,
   field,
   defaultData,
@@ -35,73 +35,46 @@ const ERPMUIDatePicker = forwardRef<HTMLDivElement, ERPMUIDatePickerProps>(({
   validation,
 }: ERPMUIDatePickerProps, ref) => {
   
-  // Define size styles based on customSize prop
   const sizeStyles = {
-    sm: {
-      fontSize: '12px',
-      height: '30px',
-      padding: '2px 8px',
-    },
-    md: {
-      fontSize: '14px',
-      height: '36px',
-      padding: '6px 12px',
-    },
-    lg: {
-      fontSize: '16px',
-      height: '40px',
-      padding: '8px 16px',
-    },
-    auto: {
-      fontSize: '16px',
-      height: '40px',
-      padding: '8px 16px',
-    },
+    sm: { fontSize: '12px', height: '30px', padding: '2px 8px' },
+    md: { fontSize: '14px', height: '36px', padding: '6px 12px' },
+    lg: { fontSize: '16px', height: '40px', padding: '8px 16px' },
+    auto: { fontSize: '16px', height: '40px', padding: '8px 16px' },
   };
   
   const selectedSizeStyles = sizeStyles[customSize];
 
   useEffect(() => {
     const currentDate = dayjs();
-    handleChange && handleChange(field?.id, currentDate.format());
+    handleChange && handleChange({ id: field?.id, date: currentDate.format() });
   }, [field, handleChange]);
 
   return (
     <FormControl fullWidth style={{ width: customWidth }} ref={ref}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
-          value={
-            data?.[field?.id] ? dayjs(data[field.id]) : defaultData?.[field?.id] ? dayjs(defaultData[field.id]) : null
-          }
-          onChange={(newValue: any) => {
-            if (newValue && newValue.isValid()) {
-              handleChange && handleChange(field?.id, dayjs(newValue).format());
-              onChange && onChange(newValue.toDate());
-            } else {
-              handleChange && handleChange(field?.id, '');
-              onChange && onChange(null);
-            }
+          value={data?.[field?.id] ? dayjs(data[field.id]) : defaultData?.[field?.id] ? dayjs(defaultData[field.id]) : null}
+          onChange={(newValue) => {
+            const dateString = newValue && newValue.isValid() ? dayjs(newValue).format() : '';
+            handleChange && handleChange({ id: field?.id, date: dateString });
+            onChange && onChange(newValue ? newValue.toDate() : null);
           }}
           slots={{
             textField: (params) => (
               <TextField
                 {...params}
                 id={id}
-                label={label || ""} // Include the label here
+                label={label || ""}
                 required={required}
                 disabled={disabled}
                 fullWidth
                 InputProps={{
                   ...params.InputProps,
-                  sx: {
-                    ...selectedSizeStyles, // Apply size styles
-                  },
+                  sx: { ...selectedSizeStyles },
                 }}
                 InputLabelProps={{
                   ...params.InputLabelProps,
-                  sx: {
-                    fontSize: selectedSizeStyles.fontSize || 'inherit', // Adjust label size
-                  },
+                  sx: { fontSize: selectedSizeStyles.fontSize || 'inherit' },
                 }}
               />
             ),

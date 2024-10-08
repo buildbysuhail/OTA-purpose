@@ -544,5 +544,7 @@
   "output_calamity_cess_account": "حساب ضريبة الكوارث المخرج",
   "consider_sales_price_as_calamity_included": "اعتبر سعر المبيعات متضمناً ضريبة الكوارث",
   "enable_karnataka_tax_report_format": "تمكين تنسيق تقرير ضريبة كارناتاكا",
-  "show_prev._forms": "إظهار النماذج السابقة"
+  "show_prev._forms": "إظهار النماذج السابقة",
+
+   "revert_bill_modification": "إرجاع تعديل الفاتورة"
 }

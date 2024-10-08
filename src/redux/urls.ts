@@ -162,8 +162,8 @@ const Urls = {
   sql_commands : "/Core/SQLCommand",
 
   //setings/AdvanceOptions
-  advanceOptions:"/Core/AdvancedOptions",
-  revertBillModifications:"/Core/AdvancedOptions/RevertBillModification",
+  // advanceOptions:"/Core/AdvancedOptions",
+  revertBillModifications:"/Core/AdvancedOptions",
   branchDataReset:"/Core/AdvancedOptions/BranchDataReset",
   // Accounts Start
   // Masters

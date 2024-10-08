@@ -239,7 +239,7 @@ const ExchangeRates = () => {
                         onChangeData={(data: any) => {
                           setPostData((prev: any) => ({
                             ...prev,
-                            data: data,
+                            baseCurrency: data.baseCurrency,
                           }));
                           load(data?.baseCurrency);
                         }}

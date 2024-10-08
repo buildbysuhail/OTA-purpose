@@ -215,7 +215,7 @@ const ApplicationSettingsProduct = () => {
             id="batchCriteria"
             field={{
               id: "batchCriteria",
-             
+
               getListUrl: Urls.data_batchcriteria,
               valueKey: "id",
               labelKey: "name",
@@ -268,12 +268,11 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: '0', label: 'Standard. No Check Digit' },
-              { value: '1', label: '13 Digit With Check Digit (Qty)' },
-              { value: '2', label: '13 Digit With Check Digit (Value)' },
-              { value: '3', label: '13 Digit With Check Digit (Qty/Value)' },
-              { value: '4', label: 'Ignore' },
-             
+              { value: "0", label: "Standard. No Check Digit" },
+              { value: "1", label: "13 Digit With Check Digit (Qty)" },
+              { value: "2", label: "13 Digit With Check Digit (Value)" },
+              { value: "3", label: "13 Digit With Check Digit (Qty/Value)" },
+              { value: "4", label: "Ignore" },
             ]}
           />
           <ERPCheckbox
@@ -305,10 +304,9 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: '0', label: 'Block' },
-              { value: '1', label: 'Warn' },
-              { value: '2', label: 'Ignore' },
-             
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
             ]}
           />
 
@@ -326,10 +324,9 @@ const ApplicationSettingsProduct = () => {
               handleFieldChange("showHSNCodeWarning", data.showHSNCodeWarning);
             }}
             options={[
-              { value: '0', label: 'Block' },
-              { value: '1', label: 'Warn' },
-              { value: '2', label: 'Ignore' },
-             
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
             ]}
           />
 
@@ -346,21 +343,19 @@ const ApplicationSettingsProduct = () => {
                 )
               }
             />
-            <ERPDataCombobox
-              field={{
-                id: "lastSystemGeneratedBarcode",
-                valueKey: "value",
-                labelKey: "label",
-              }}
+
+            <ERPInput
               id="lastSystemGeneratedBarcode"
-              value={formState?.lastSystemGeneratedBarcode}
+              value={formState.lastSystemGeneratedBarcode}
               data={formState}
-              onChangeData={(data) => {
+              noLabel={true}
+              type="text"
+              onChangeData={(data: any) =>
                 handleFieldChange(
                   "lastSystemGeneratedBarcode",
                   data.lastSystemGeneratedBarcode
-                );
-              }}
+                )
+              }
             />
           </div>
           <ERPDataCombobox
@@ -380,10 +375,9 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: '0', label: 'Block' },
-              { value: '1', label: 'Warn' },
-              { value: '2', label: 'Ignore' },
-             
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
             ]}
           />
 
@@ -404,10 +398,9 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: '0', label: 'Block' },
-              { value: '1', label: 'Warn' },
-              { value: '2', label: 'Ignore' },
-             
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
             ]}
           />
           <ERPCheckbox
@@ -422,8 +415,8 @@ const ApplicationSettingsProduct = () => {
           <ERPDataCombobox
             field={{
               id: "pPOsPriceCategory",
-              valueKey: "value",
-              labelKey: "label",
+              valueKey: "id",
+              labelKey: "name",
               getListUrl: Urls.data_pricectegory,
             }}
             id="pPOsPriceCategory"
@@ -452,10 +445,9 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: '0', label: 'Block' },
-              { value: '1', label: 'Warn' },
-              { value: '2', label: 'Ignore' },
-             
+              { value: "0", label: "Block" },
+              { value: "1", label: "Warn" },
+              { value: "2", label: "Ignore" },
             ]}
           />
           <ERPCheckbox
@@ -502,10 +494,9 @@ const ApplicationSettingsProduct = () => {
                 handleFieldChange("giftOnBillingAs", data.giftOnBillingAs);
               }}
               options={[
-                { value: '0', label: 'CashCoupons' },
-                { value: '1', label: 'Products' },
-                { value: '2', label: 'Special Price' },
-               
+                { value: "0", label: "CashCoupons" },
+                { value: "1", label: "Products" },
+                { value: "2", label: "Special Price" },
               ]}
             />
           </div>

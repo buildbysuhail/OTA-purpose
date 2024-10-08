@@ -72,7 +72,7 @@ const ExchangeRates = () => {
           toCurrency: null,
         });
       }
-    }
+    } 
     setStore(data);
   }
     const handleSubmit = async () => {

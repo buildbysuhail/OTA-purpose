@@ -429,5 +429,10 @@
   "receivable_ledger_id":"Receivable Ledger ID",
 
   "reference_branch":"Reference Branch",
-  "branch_payable_ledger":"Branch Payable Ledger"
+  "branch_payable_ledger":"Branch Payable Ledger",
+
+  "date_time_of_action":"Date Time of Action",
+  "action_form":"Action Form",
+  "system_name":"System Name",
+  "user_actions":"User Actions"
 }

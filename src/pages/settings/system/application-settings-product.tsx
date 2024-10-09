@@ -8,6 +8,7 @@ import Pageheader from "../../../components/common/pageheader/pageheader";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { APIClient } from "../../../helpers/api-client";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { handleResponse } from "../../../utilities/HandleResponse";
 
 interface FormState {
   setDefaultQty1: boolean;
@@ -163,12 +164,7 @@ const ApplicationSettingsProduct = () => {
         type: "products",
         updateList: modifiedSettings,
       })) as any;
-      debugger;
-      if (response != undefined && response != null && response.IsOk == true) {
-        ERPToast.showWith(response?.message, "success");
-      } else {
-        ERPToast.showWith(response?.message, "warning");
-      }
+     handleResponse(response);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

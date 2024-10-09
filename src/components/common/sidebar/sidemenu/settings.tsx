@@ -10,7 +10,8 @@ import {
   toggleImportExportPopup,
   toggleResetBranchDataForSync,
   toggleResetDataBasePopup,
-  toggleUserActionPopup
+  toggleUserActionPopup,
+  toggleUserTypePrivilegePopup
 } from "../../../../redux/slices/popup-reducer";
 
 export const SettingsMenuItems = [
@@ -58,7 +59,7 @@ export const SettingsMenuItems = [
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/user-management/users`, type: 'link', active: false, selected: false, title: 'users' },
       { path: `${import.meta.env.BASE_URL}settings/_/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'usertype' },
-      { path: `${import.meta.env.BASE_URL}settings/_/user-management/user-type-privileges`, type: 'link', active: false, selected: false, title: 'user_type_privilege' },
+      { action:toggleUserTypePrivilegePopup, type: 'popup', active: false, selected: false, title: 'user_type_privilege' },
     ]
   },
   {

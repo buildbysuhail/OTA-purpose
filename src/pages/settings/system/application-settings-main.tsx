@@ -10,6 +10,7 @@ import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
 import { postAction } from '../../../redux/slices/app-thunks';
 import { APIClient } from '../../../helpers/api-client';
 import ERPToast from '../../../components/ERPComponents/erp-toast';
+import { handleResponse } from '../../../utilities/HandleResponse';
 
 interface Settings {
   currency: string;
@@ -103,16 +104,10 @@ const ERPSettingsFormMain = () => {
   };
 
   const verifyOtp = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const response = await api.post(Urls.ValidateToken,{email: settings.oTPEmail,token: settings.oTPVerification});
-      if(response!=undefined && response!=null && response.IsOk==true)
-        {
-          ERPToast.showWith(response?.message, "success");
-        }
-        else{
-          ERPToast.showWith(response?.message,"warning")
-        }
+      handleResponse(response);
       const data: Settings = await response.json();
       setSettings(data);
     } catch (error) {
@@ -122,17 +117,11 @@ const ERPSettingsFormMain = () => {
     }
   };
   const sendOtp = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
 
       const response = await api.post(Urls.SendEmailToken,{ email: settings.oTPEmail});
-      if(response!=undefined && response!=null && response.isOk == settings)
-      {
-        ERPToast.showWith(response?.message, "success");
-      }
-      else{
-        ERPToast.showWith(response?.message,"warning")
-      }
+      handleResponse(response);
       const data: Settings = await response.json();
       setSettings(data);
     } catch (error) {
@@ -208,14 +197,7 @@ const ERPSettingsFormMain = () => {
       console.log(modifiedSettings);
       
       const response = await api.put(Urls.application_settings,{type: 'mai', updateList:  modifiedSettings}) as  any
-      debugger;
-      if(response!=undefined && response!=null && response.isOk==true)
-        {
-          ERPToast.showWith(response?.message, "success");
-        }
-        else{
-          ERPToast.showWith(response?.message,"warning")
-        }
+      handleResponse(response);
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {

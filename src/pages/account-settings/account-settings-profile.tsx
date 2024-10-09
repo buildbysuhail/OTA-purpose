@@ -530,7 +530,6 @@ const updateBasicInfo = useCallback(async () => {
                         }
                       }));
                     }}
-                    
                     validation={basicInfo.validations.dob}
                   />
                   <div className="w-full p-2 flex justify-end">

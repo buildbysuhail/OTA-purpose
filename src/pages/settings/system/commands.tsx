@@ -1,17 +1,8 @@
 import { useCallback, useState } from "react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import { handleResponse } from "../../../utilities/HandleResponse";
-import {
-  toggleCommandsPopup,
-  toggleCurrencyExchangePopup,
-} from "../../../redux/slices/popup-reducer";
+import { toggleCommandsPopup, } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../redux/urls";
-import SystemSettingsApi from "./system-apis";
 import { useTranslation } from "react-i18next";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
@@ -44,81 +35,12 @@ const CommandsManage = () => {
   const onClose = useCallback(async () => {
     dispatch(toggleCommandsPopup({ isOpen: false }));
   }, []);
-  //   const initialUserTypeData = {
-  //     data: {
-  //       countryID: 1,
-  //       currencyName: "",
-  //       currencySymbol: "",
-  //       currencyCode: "",
-  //       subUnit: "",
-  //       subUnitSymbol: "",
-  //     },
-  //     validations: {
-  //       countryID: "",
-  //       currencyName: "",
-  //       currencySymbol: "",
-  //       currencyCode: "",
-  //       subUnit: "",
-  //       subUnitSymbol: "",
-  //     },
-  //   };
-  //   const [postData, setPostData] = useState<FormState>(initialUserTypeData);
-  //   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
 
   const queryParams = new URLSearchParams(location.search);
-
-  //key : used for route parm for edit or view
   const [key, setKey] = useState<any>(queryParams.get("key"));
-
-  //   const handleSubmit = useCallback(async () => {
-  //     setPostUserTypeLoading(true);
-  //     const response: ResponseModelWithValidation<any, any> =
-  //       await SystemSettingsApi.postCurrencyExchange(postData?.data);
-  //     setPostUserTypeLoading(false);
-  //     handleResponse(
-  //       response,
-  //       () => {
-  //         dispatch(toggleCommandsPopup({isOpen: false}));
-  //       },
-  //       () => {
-  //         setPostData((prevData: any) => ({
-  //           ...prevData,
-  //           validations: response.validations,
-  //         }));
-  //       }
-  //     );
-  //   }, [postData?.data]);
-
-  //   const handleChange = useCallback((id: string, value: FormField) => {
-  //     try {
-  //       setPostData((prevData) => {
-  //         const newData = { ...prevData.data };
-
-  //         if (id.includes(".")) {
-  //           const [fieldParent, fieldChild] = id.split(".");
-  //           if (
-  //             typeof newData[fieldParent] === "object" &&
-  //             newData[fieldParent] !== null &&
-  //             !Array.isArray(newData[fieldParent])
-  //           ) {
-  //             (newData[fieldParent] as { [key: string]: FormField })[fieldChild] =
-  //               value;
-  //           }
-  //         } else {
-  //           newData[id] = value;
-  //         }
-
-  //         return {
-  //           ...prevData,
-  //           data: newData,
-  //         };
-  //       });
-  //     } catch (error) {
-  //       console.log(`DynamicForm, Error: `, error);
-  //     }
-  //   }, []);
   const [query, setQuery] = useState("");
   const [checked, setChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
@@ -132,8 +54,33 @@ const CommandsManage = () => {
     console.log("Select button clicked");
   };
 
-  const handleExecute = () => {
-    console.log("Execute button clicked");
+  const handleExecute = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/Core/SQLCommand', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: query,
+          isChecked: checked,
+          key: key
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong');
+      }
+      console.log('Execute successful:', data);
+
+    } catch (error) {
+      console.error('Execute failed:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const { t } = useTranslation();
@@ -160,7 +107,8 @@ const CommandsManage = () => {
                 type="reset"
                 title={t("execute")}
                 variant="secondary"
-                onClick={onClose}
+                onClick={handleExecute}
+                disabled={loading}
               ></ERPButton>
             </div>
             <div>

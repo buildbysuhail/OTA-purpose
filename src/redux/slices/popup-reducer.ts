@@ -65,6 +65,7 @@ const initialState: popupData = {
   partyCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   currencyMaster: { isOpen: false, key: null, mode: "edit", reload: true },
   revertBillModifications: { isOpen: false, key: null, mode: "edit", reload: true },
+  resetBranchDataForSync: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({

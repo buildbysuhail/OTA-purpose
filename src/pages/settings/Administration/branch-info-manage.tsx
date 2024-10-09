@@ -42,13 +42,14 @@ const BranchManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BranchDataInfo>({
-      url: Urls.Branch,
+      url: Urls.BranchInfo,
       onSuccess: useCallback(
         () => dispatch(toggleBranchPopup({ isOpen: false })),
         [dispatch]
       ),
       method: ActionType.POST,
       useApiClient: true,
+      loadDataRequired:true
     });
 
   const onClose = useCallback(() => {

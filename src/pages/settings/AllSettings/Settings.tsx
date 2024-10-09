@@ -19,6 +19,7 @@ import {
   toggleAuthorizationSettingsPopup,
   toggleBarcodePrintPopup,
   toggleExchangeRatesPopup,
+  toggleUserTypePrivilegePopup,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +35,8 @@ const AuthorizationSettings = lazy(() => import("../system/authorization-setting
 const  ResetDbManage= lazy(() => import("../system/reset-database-manage"));
 const Barcodeprint = lazy(() => import("../system/barcode-print"));
 const ExchangeRates = lazy(() => import("../system/exchange-rates"));
+const UserTypePrivilegeManage = lazy(() => import("../userManagement/user-privilege-manage"));
+
 const Settings = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -77,7 +80,16 @@ const Settings = () => {
           </div>
         </div>
       </div>
-
+      <ERPModal
+        isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
+        title={"User Privilege"}
+        width="w-full max-w-[1000px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleUserTypePrivilegePopup({ isOpen: false }));
+        }}
+        content={<UserTypePrivilegeManage />}
+      />
       <ERPModal
         isOpen={rootState.PopupData.deleteInactiveTransactions.isOpen || false}
         title={t("delete_in_active_transactions")}

@@ -93,12 +93,7 @@ const TaxSettingsForm: React.FC = () => {
         type: "tax",
         updateList: modifiedSettings,
       })) as any;
-      debugger;
-      if (response != undefined && response != null && response.isOk == true) {
-        ERPToast.showWith(response?.message, "success");
-      } else {
-        ERPToast.showWith(response?.message, "warning");
-      }
+      handleResponse(response);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

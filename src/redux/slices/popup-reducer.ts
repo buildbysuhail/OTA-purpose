@@ -7,6 +7,7 @@ export interface popupDataProps {
 }
 interface popupData {
   userType: popupDataProps
+  userTypePrivilege:popupDataProps
   user: popupDataProps
   counter: popupDataProps
   voucher: popupDataProps
@@ -36,6 +37,7 @@ interface popupData {
   revertBillModifications: popupDataProps
 }
 const initialState: popupData = {
+  userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true},
   userType: { isOpen: false, key: null, mode: "edit", reload: true },
   user: { isOpen: false, key: null, mode: "edit", reload: true },
   counter: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -70,6 +72,10 @@ const popupDataSlice = createSlice({
   name: 'popupData',
   initialState,
   reducers: {
+    toggleUserTypePrivilegePopup: (state, action: PayloadAction<popupDataProps>) => {
+
+      state.userTypePrivilege = action.payload;
+    },
     toggleUserTypePopup: (state, action: PayloadAction<popupDataProps>) => {
 
       state.userType = action.payload;
@@ -172,6 +178,7 @@ const popupDataSlice = createSlice({
 
 // Extract the actions
 export const {
+  toggleUserTypePrivilegePopup,
   toggleCurrencyMasterPopup,
   togglePartyCategoryPopup,
   togglePrivilegeCardPopup,

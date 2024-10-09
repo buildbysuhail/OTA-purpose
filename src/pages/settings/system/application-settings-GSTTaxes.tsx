@@ -10,6 +10,7 @@ import ERPToast from '../../../components/ERPComponents/erp-toast';
 import { APIClient } from '../../../helpers/api-client';
 import { useTranslation } from 'react-i18next';
 import { t } from 'i18next';
+import { handleResponse } from '../../../utilities/HandleResponse';
 
 interface TaxSettingsFormState {
   defaultPurchaseFormType: {
@@ -170,13 +171,8 @@ const ERPSettingsFormGSTTaxes = () => {
       console.log(modifiedSettings);
 
       const response = await api.put(Urls.application_settings, { type: 'accounts', updateList: modifiedSettings }) as any
-      debugger;
-      if (response != undefined && response != null && response.isOk == true) {
-        ERPToast.showWith(response?.message, "success");
-      }
-      else {
-        ERPToast.showWith(response?.message, "warning")
-      }
+      handleResponse(response);
+      
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {

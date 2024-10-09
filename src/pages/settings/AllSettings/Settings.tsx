@@ -19,6 +19,7 @@ import {
   toggleAuthorizationSettingsPopup,
   toggleBarcodePrintPopup,
   toggleExchangeRatesPopup,
+  toggleResetBranchDataForSync,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +35,7 @@ const AuthorizationSettings = lazy(() => import("../system/authorization-setting
 const  ResetDbManage= lazy(() => import("../system/reset-database-manage"));
 const Barcodeprint = lazy(() => import("../system/barcode-print"));
 const ExchangeRates = lazy(() => import("../system/exchange-rates"));
+const ResetBranchDataForSync = lazy(() => import("../system/reset-branch-data-for-sync"));
 const Settings = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -53,6 +55,7 @@ const Settings = () => {
     import("../system/reset-database-manage");
     import("../system/barcode-print");
     import("../system/exchange-rates");
+    import("../system/reset-branch-data-for-sync");
   };
 
   useEffect(() => {
@@ -199,6 +202,16 @@ const Settings = () => {
           dispatch(toggleExchangeRatesPopup({ isOpen: false }));
         }}
         content={<ExchangeRates/>}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.resetBranchDataForSync.isOpen || false}
+        title={t("reset_branch_data_for_sync")}
+        width="w-full max-w-[700px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleResetBranchDataForSync({ isOpen: false }));
+        }}
+        content={<ResetBranchDataForSync/>}
       />
     </Fragment>
   );

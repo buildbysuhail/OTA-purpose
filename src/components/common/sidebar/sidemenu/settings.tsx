@@ -8,6 +8,7 @@ import {
   toggleDeleteInactiveTransactionPopup,
   toggleExchangeRatesPopup,
   toggleImportExportPopup,
+  toggleResetBranchDataForSync,
   toggleResetDataBasePopup,
   toggleUserActionPopup
 } from "../../../../redux/slices/popup-reducer";
@@ -106,6 +107,7 @@ export const SettingsMenuItems = [
       { action: toggleExchangeRatesPopup, type: 'popup', active: false, selected: false, title: 'exchange_rates' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/refresh-all-branches`, type: 'link', active: false, selected: false, title: 'refresh_all_branches' },
       { action: toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'day_close' },
+      { action: toggleResetBranchDataForSync, type: 'popup', active: false, selected: false, title: 'reset-branch-data-for-sync' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert-bill-modifications' },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
     ]

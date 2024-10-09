@@ -547,5 +547,9 @@
   "show_prev._forms":"Show Prev. Forms",
 
   "revert_bill_modifications":"Revert Bill Modifications",
-  "reset_branch_data_for_sync":"Reset Branch Data For Sync"
+  "reset_branch_data_for_sync":"Reset Branch Data For Sync",
+
+  "reset_date_from":"Reset Date From",
+  "recover_until_sync":"I agree data will not be recovered until sync done from branch",
+  "reset":"Reset"
 }

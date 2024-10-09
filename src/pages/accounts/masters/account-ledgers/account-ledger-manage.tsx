@@ -26,7 +26,7 @@ export const AccountLedgerManage = () => {
     isLoading
   } = useFormManager<AccountLedgerData>({
     url: Urls.account_ledger,
-    onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.accountLedger.key,
     useApiClient: true,
     initialData: initialAccountLedger

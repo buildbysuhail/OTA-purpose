@@ -67,7 +67,7 @@ export const FinancialYearManage: React.FC = React.memo(() => {
 
   } = useFormManager<FinancialYearData>({
     url: Urls.FinancialYear,
-    onSuccess: useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.financialYear.key,
     useApiClient: true,
     initialData: initialFinancialYearData

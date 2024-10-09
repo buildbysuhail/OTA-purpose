@@ -122,6 +122,7 @@ const  CurrencyMaster = () => {
                   gridId="grd_currency_master"
                   popupAction={toggleCurrencyMasterPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.currencyMaster?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>

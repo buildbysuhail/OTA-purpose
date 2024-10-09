@@ -124,6 +124,7 @@ const BranchLedger = () => {
                   gridId="grd_branch_ledger"
                   popupAction={toggleBranchLedgerPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.branchLedger?.reload}
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>

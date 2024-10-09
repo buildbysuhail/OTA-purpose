@@ -176,7 +176,8 @@ const Users = () => {
                   gridId="grd_users"
                   popupAction={toggleUserPopup}
                   gridAddButtonType="popup"
-                  gridAddButtonIcon=""
+                  reload={rootState?.PopupData?.user?.reload}
+                  gridAddButtonIcon=""                  
                   pageSize={40}
                 ></ErpDevGrid>
               </div>

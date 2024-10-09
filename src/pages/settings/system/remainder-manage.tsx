@@ -22,7 +22,7 @@ export const RemainderManage: React.FC = React.memo(() => {
     isLoading
   } = useFormManager<RemainderData>({
     url: Urls.Remainder,
-    onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.reminder.key,
     useApiClient: true,
     initialData: initialDataRemainder

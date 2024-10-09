@@ -32,7 +32,7 @@ const AuthorizationSettings1: React.FC = React.memo(() => {
     formState,
   } = useFormManager<AuthorizationSettingsData>({
     url: Urls.authorization_settings,
-    onSuccess: useCallback(() => dispatch(toggleAuthorizationSettingsPopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleAuthorizationSettingsPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true
   });

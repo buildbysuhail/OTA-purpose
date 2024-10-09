@@ -165,6 +165,7 @@ const FinancialYear = () => {
                   gridId="grd_fin_year"
                   popupAction={toggleFinancialYearPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.financialYear?.reload}
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>

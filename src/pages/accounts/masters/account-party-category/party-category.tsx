@@ -124,6 +124,7 @@ const  PartyCategory = () => {
                   gridId="grd__party_category"
                   popupAction={togglePartyCategoryPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.partyCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>

@@ -25,7 +25,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     formState
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
     initialData: initialAccountGroup,

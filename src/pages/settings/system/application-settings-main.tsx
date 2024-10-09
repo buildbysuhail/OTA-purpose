@@ -50,13 +50,13 @@ const initialSettings: Settings = {
   decimalPoints: "2",
   cashSalesVoucherPrefix: "Millions",
   roundingMethod: "Normal",
-  posRoundingMethod: "No Rounding", // Assuming this is what POSRoundingMethod refers to
+  posRoundingMethod: "No Rounding", 
   taxDecimalPoint: "2",
   roundingMethodGlobal: "Normal",
   autoChangeTransactionDate: false,
   autoUpdateReleaseUpTo: 0,
   oTPEmail: "",
-  oTPVerification: "", // Not provided, using empty string as default
+  oTPVerification: "", 
   allowPrivilegeCard: false,
   previlegeCardPerc: 1,
   allowPostdatedTrans: true,
@@ -69,7 +69,7 @@ const initialSettings: Settings = {
   showReminders: false,
   enableSecondDisplay: false,
   allowSalesRouteArea: false,
-  enableDayEnd: false, // Not provided, using false as default
+  enableDayEnd: false,
   maintainSalesRouteCreditLimit: false,
   maintainMultilanguage: false,
   showUserMessages: false,
@@ -125,7 +125,7 @@ const ERPSettingsFormMain = () => {
     setLoading(true);
     try {
 
-      const response = await api.post(Urls.SendEmailToken,{ email: settings.oTPEmail});// dispatch(postAction({apiUrl:Urls.SendEmailToken,data:{ email: settings.oTPEmail}}) as any).unwrap();
+      const response = await api.post(Urls.SendEmailToken,{ email: settings.oTPEmail});
       if(response!=undefined && response!=null && response.isOk == settings)
       {
         ERPToast.showWith(response?.message, "success");

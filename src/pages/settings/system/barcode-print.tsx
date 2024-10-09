@@ -38,7 +38,7 @@ interface FormData {
   barcodeComma: string;
   preview: boolean;
   type: string;
-  Othertype:string;
+  otherType:string;
   vPrefix: string;
   formType: string;
   billNo: string;
@@ -61,7 +61,7 @@ interface FormData {
 
 type InputChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement>;
 
-const Barcodeprint: React.FC = () => {
+const BarcodePrint: React.FC = () => {
   // Translation hook
   const { t } = useTranslation();
 
@@ -69,14 +69,14 @@ const Barcodeprint: React.FC = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
 
-  // State for the Barcodeprint form
+  // State for the BarcodePrint form
   const [formData, setFormData] = useState<FormData>({
     barcodeFrom: "",
     barcodeTo: "",
     barcodeComma: "",
     preview: false,
     type: "sales",
-    Othertype:"",
+    otherType:"",
     vPrefix: "",
     formType: "",
     billNo: "",
@@ -112,35 +112,6 @@ const Barcodeprint: React.FC = () => {
     { value: "adc2", label: "ADC2" },
     { value: "adc3", label: "ADC3" },
   ];
-
-  // const handleChange = (id: string, value: any) => {
-  //   setSelectedFromType(value);
-  // };
-  // const handleChange = (event: SelectChangeEvent) => {
-  //   setSelectedFromType(event.target.value as string); // Update state with selected value
-  // };
-
-  // const handleChange = (id: string, date: string) => {
-  //   const parsedDate = dayjs(date); // Convert string to Day.js object if needed
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [id]: parsedDate.isValid() ? parsedDate.format() : null, // Store formatted date or null if invalid
-  //   }));
-  // };
-  // const handleChange = (event: SelectChangeEvent<string | number>) => {
-  //   const { name, value } = event.target;
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [name]: value,
-  //   }));
-  // };
-  // const handleChange = (id: string, date: string) => {
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [id]: date,
-  //   }));
-  // };
-
   const handleChange = (
     event: SelectChangeEvent<string | number> | { id: string; date: string }
   ) => {
@@ -160,59 +131,13 @@ const Barcodeprint: React.FC = () => {
       }));
     }
   };
-
-  //   const handleChange = (event: SelectChangeEvent<string | number>) => {
-  //   setSelectedFromType(event.target.value); // Update state with selected value
-  // };
-
-  // const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-  //   setSelectedFromType(event.target.value as string); // Update state with selected value
-  // };
-
   const combinedOptions = [...options, ...newOptions];
-
-  // const handleDateChange = (id: string, date: string) => {
-  //   console.log(`Field ID: ${id}, Selected Date: ${date}`);
-  // };
-
-  // const handleDateChange = (date: Dayjs | null) => {
-  //   // Additional logic when the date changes
-  //   console.log("Selected date:", date);
-  // };
-  // Ensure this function is defined
-  // const handleDatePickerChange = (newValue: Dayjs | null) => {
-  //   setDateValue(newValue);
-  // };
 
   const [date, setDate] = useState(null);
 
   const handleDateChange = (id: string, date: string) => {
     setFormData((prev) => ({ ...prev, [id]: date }));
   };
-
-  // const YourComponent = () => {
-  //   const handleDateChange = (id: string, date: string) => {
-  //     console.log(`Field ID: ${id}, Selected Date: ${date}`);
-  //   };
-
-  // Handle input changes for the form
-  // const handleInputChange = (e: InputChangeEvent) => {
-  //   const { name, value, type } = e.target;
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     [name]:
-  //       type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
-  //   }));
-  // };
-
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData(prevData => ({
-  //     ...prevData,
-  //     [name]: value
-  //   }));
-  // };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
@@ -385,22 +310,9 @@ const Barcodeprint: React.FC = () => {
   return (
     <Fragment>
       <div className="p-0 bg-gray-100 min-h-screen">
-        {/* Barcodeprint Form */}
+        {/* BarcodePrint Form */}
         <div className="p-2 bg-white border border-gray-300 rounded-md shadow-md max-w-7xl mx-auto my-0">
-          {/* Action Buttons */}
-          {/* <div className="flex flex-wrap gap-2 mb-4">
-            {["Print", "Clear", "Remove Line", "Close", "Print Tag"].map(
-              (label) => (
-                <button
-                  key={label}
-                  className="px-3 py-1 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400"
-                >
-                  {label}
-                </button>
-              )
-            )}
-          </div> */}
-
+          
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Top Section */}
@@ -417,19 +329,7 @@ const Barcodeprint: React.FC = () => {
                         Barcode
                       </label>
                       <div className="flex space-x-2">
-                        {/* <div className="flex flex-col sm:flex-row sm:items-center gap-2"> */}
-                        {/* <ERPMUIInput
-                          id="barcodeForm"
-                          label="Form"
-                          type="text"
-                          value={formData.barcodeFrom}
-                          customSize="sm"
-                          customWidth="100%"
-                          // onChange={handleInputChange}
-                          onChange={(e) => handleInputChange(e as React.ChangeEvent<HTMLInputElement>)}
-                          placeholder="Form"
-                          validation=""
-                        /> */}
+                        
                         <ERPMUIInput
                           id="barcodeForm"
                           label="Form"
@@ -490,25 +390,7 @@ const Barcodeprint: React.FC = () => {
                 </div>
                 {/* 1 barcode form end */}
               </div>
-              {/* <div className=" space-y-2 flex-start">
-                <label className="block text-sm font-semibold text-gray-700">
-                  Type
-                </label>
-                {["Sales", "Purchase", "BTO", "BTI", "OS", "Other"].map(
-                  (label, index) => (
-                    <ERPRadio
-                      key={`type-${label.toLowerCase()}-${index}`} // Ensure a unique key for each radio button
-                      id={`type-${label.toLowerCase()}-${index}`} // Unique ID for each radio button
-                      name="type"
-                      value={label.toLowerCase()}
-                      checked={formData.type === label.toLowerCase()}
-                      onChange={handleInputChange}
-                      label={label} // Pass the label to be displayed inside ERPRadio
-                      // className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" // Additional styling if needed
-                    />
-                  )
-                )}
-              </div> */}
+             
               <div className="w-1/6 space-y-0">
                 <label className="block text-sm font-semibold text-gray-700">
                   Type
@@ -532,7 +414,7 @@ const Barcodeprint: React.FC = () => {
                           id="Othertype"
                           label=""
                           type="text"
-                          value={formData.Othertype} // Adjust this value as needed for the form state
+                          value={formData.otherType} // Adjust this value as needed for the form state
                           customSize="sm"
                           customWidth="50%" // Limit the width of the input field
                           name="Othertype"
@@ -561,15 +443,6 @@ const Barcodeprint: React.FC = () => {
                   placeholder="VPrefix"
                   validation=""
                 />
-
-                {/* <ERPSelect
-                    id="fromType"
-                    label="From Type"
-                    options={options}
-                    value={selectedFromType}
-                    handleChange={handleChange}
-                    required={true}
-                  /> */}
 
                 <ERPMUISelect
                   id="FormType"
@@ -716,17 +589,6 @@ const Barcodeprint: React.FC = () => {
                           required={true}
                           // className= ""
                         />
-                        {/* <ERPMUISelect
-                          id="my-select"
-                          label="Choose an option"
-                          options={options}
-                          value={selectedFromType}
-                          handleChange={handleChange}
-                          required={true} // Optional
-                          disabled={false} // Optional
-                          customSize="md" // Optional (sm, md, lg, auto)
-                          customWidth="200px" // Optional
-                        /> */}
                       </div>
                     </div>
                     <div className="flex flex-col">
@@ -825,6 +687,7 @@ const Barcodeprint: React.FC = () => {
                     gridId="grd_counter"
                     popupAction={toggleCounterPopup}
                     gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.barcodeprint?.reload}
                     gridAddButtonIcon="ri-add-line"
                   />
                 </div>
@@ -850,4 +713,4 @@ const Barcodeprint: React.FC = () => {
   );
 };
 
-export default Barcodeprint;
+export default BarcodePrint;

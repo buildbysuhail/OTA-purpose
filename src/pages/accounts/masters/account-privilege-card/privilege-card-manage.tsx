@@ -23,7 +23,7 @@ export const PrivilegeCardManage : React.FC = React.memo(() => {
     isLoading,
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
-    onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.voucher.key,
     useApiClient: true,
     initialData:initialPrivilegeCard

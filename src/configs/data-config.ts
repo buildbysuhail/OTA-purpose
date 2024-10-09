@@ -34,7 +34,7 @@ export const DATA_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.data_warehouse, method: ActionType.GET as const },
   { url: Urls.data_vouchertype, method: ActionType.GET as const },
   { url: Urls.sql_commands, method: ActionType.POST as const },
-  { url: Urls.advanceOptions, method: ActionType.POST as const },
+  // { url: Urls.advanceOptions, method: ActionType.POST as const },
     { url: Urls.revertBillModifications, method: ActionType.POST as const },
       { url: Urls.branchDataReset, method: ActionType.POST as const },
   ////////

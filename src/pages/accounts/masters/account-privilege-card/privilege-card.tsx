@@ -188,6 +188,7 @@ const  PrivilegeCard = () => {
                   gridId="grd_privilege_card"
                   popupAction={togglePrivilegeCardPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.privilegeCard?.reload}
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>

@@ -156,6 +156,7 @@ const Counters = () => {
                   gridId="grd_counter"
                   popupAction={toggleCounterPopup}
                   gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.counter?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>
               </div>

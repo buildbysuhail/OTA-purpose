@@ -1,13 +1,14 @@
 import * as React from "react";
 import { forwardRef } from "react";
 import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
 import ERPElementValidationMessage from "./erp-element-validation-message";
 
 interface ERPMUIInputProps {
   id: string;
   label?: string;
   type?: string;
-  value?: string; // Set type to string for better type safety
+  value?: string;
   defaultValue?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
@@ -18,15 +19,103 @@ interface ERPMUIInputProps {
   customWidth?: string;
   placeholder?: string;
   validation?: string;
-  name?: string; // Add name property
+  name?: string;
 }
+
+const StyledTextField = styled(TextField)(({ theme, customSize }) => {
+  const sizeStyles = {
+    sm: {
+      '& .MuiInputBase-root': {
+        fontSize: '12px',
+        height: '30px',
+        padding: '2px 8px',
+      },
+      '& .MuiInputLabel-root': {
+        fontSize: '12px',
+        transform: 'translate(8px, 8px) scale(1)',
+        '&.MuiInputLabel-shrink': {
+          transform: 'translate(14px, -6px) scale(0.75)',
+        },
+      },
+    },
+    md: {
+      '& .MuiInputBase-root': {
+        fontSize: '14px',
+        height: '36px',
+        padding: '4px 10px',
+      },
+      '& .MuiInputLabel-root': {
+        fontSize: '14px',
+        transform: 'translate(10px, 10px) scale(1)',
+        '&.MuiInputLabel-shrink': {
+          transform: 'translate(14px, -6px) scale(0.75)',
+        },
+      },
+    },
+    lg: {
+      '& .MuiInputBase-root': {
+        fontSize: '16px',
+        height: '40px',
+        padding: '6px 12px',
+      },
+      '& .MuiInputLabel-root': {
+        fontSize: '16px',
+        transform: 'translate(12px, 12px) scale(1)',
+        '&.MuiInputLabel-shrink': {
+          transform: 'translate(14px, -6px) scale(0.75)',
+        },
+      },
+    },
+    auto: {
+      '& .MuiInputBase-root': {
+        fontSize: '16px',
+        height: 'auto',
+        padding: '10px 12px',
+      },
+      '& .MuiInputLabel-root': {
+        fontSize: '16px',
+        transform: 'translate(12px, 16px) scale(1)',
+        '&.MuiInputLabel-shrink': {
+          transform: 'translate(14px, -6px) scale(0.75)',
+        },
+      },
+    },
+  };
+
+  return {
+    width: '100%',
+    '& .MuiInputBase-root': {
+      transition: theme.transitions.create(['border-color', 'background-color', 'box-shadow']),
+    },
+    '& .MuiInputBase-input': {
+      '&::placeholder': {
+        opacity: 0.7,
+        transition: theme.transitions.create('opacity'),
+      },
+    },
+    '& .MuiInputBase-input:focus::placeholder': {
+      opacity: 0.5,
+    },
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, 0.23)' : 'rgba(255, 255, 255, 0.23)',
+    },
+    '&:hover .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.text.primary,
+    },
+    '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.palette.primary.main,
+      borderWidth: 2,
+    },
+    ...sizeStyles[customSize],
+  };
+});
 
 const ERPMUIInput = forwardRef<HTMLInputElement, ERPMUIInputProps>(({
   id,
   label,
   type = "text",
   customSize = "sm",
-  customWidth = "100%", // Default width to full width if not provided
+  customWidth = "100%",
   value,
   defaultValue,
   onChange,
@@ -36,40 +125,15 @@ const ERPMUIInput = forwardRef<HTMLInputElement, ERPMUIInputProps>(({
   disabled,
   placeholder,
   validation,
-  name, // Destructure name from props
+  name,
   ...props
 }: ERPMUIInputProps, ref) => {
-  // Define size classes based on customSize prop
-  const sizeStyles = {
-    sm: {
-      fontSize: '12px',
-      height: '30px',
-      padding: '2px 8px',
-    },
-    md: {
-      fontSize: '14px',
-      height: '36px',
-      padding: '6px 12px',
-    },
-    lg: {
-      fontSize: '16px',
-      height: '40px',
-      padding: '8px 16px',
-    },
-    auto: {
-      fontSize: '16px',
-      height: '40px',
-      padding: '8px 16px',
-    },
-  };
-
-  const selectedSizeStyles = sizeStyles[customSize];
 
   return (
     <div style={{ width: customWidth }}>
-      <TextField
+      <StyledTextField
         id={id}
-        label={label || placeholder}
+        label={label}
         type={type}
         variant="outlined"
         value={value}
@@ -79,19 +143,11 @@ const ERPMUIInput = forwardRef<HTMLInputElement, ERPMUIInputProps>(({
         onBlur={onBlur}
         required={required}
         disabled={disabled}
-        InputProps={{
-          sx: {
-            ...selectedSizeStyles, // Apply size styles based on customSize prop
-          },
-        }}
-        InputLabelProps={{
-          sx: {
-            fontSize: selectedSizeStyles.fontSize || 'inherit', // Adjust label size
-          },
-        }}
         fullWidth
-        name={name} // Pass the name prop to TextField
-        ref={ref} // Make sure to pass ref to TextField
+        name={name}
+        inputRef={ref}
+        placeholder={placeholder}
+        customSize={customSize}
         {...props}
       />
       <ERPElementValidationMessage validation={validation} />

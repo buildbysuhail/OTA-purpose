@@ -77,7 +77,7 @@ const AuthorizationSettings = () => {
   };
   const onSelectionChanged = useCallback((e: any) => {
     console.log(e);
-    
+
     const data = e.data;
     if (data != undefined && data != null) {
       setPostData((previous: any) => ({
@@ -90,7 +90,7 @@ const AuthorizationSettings = () => {
       onClear();
     }
   }, []);
-  
+
   const onClear = async () => {
     setPostDataLoading(false);
     setPostData(initial);
@@ -126,7 +126,7 @@ const AuthorizationSettings = () => {
       allowFiltering: true,
       minWidth: 150,
     },
-    
+
     {
       dataField: "password",
       caption: t("password"),
@@ -212,16 +212,15 @@ const AuthorizationSettings = () => {
                     }));
                   }}
                 />
-              </div> 
+              </div>
               <div className="grid grid-cols-4 sm:grid-cols-4 gap-3 ">
                 <ERPButton
                   loading={postDataLoading}
-                  disabled={postDataLoading}
                   onClick={handleSubmit}
                   title={t("save")}
+                  variant="primary"
                 />
                 <ERPButton
-                  disabled={postDataLoading}
                   onClick={onClear}
                   title={t("clear")}
                 />
@@ -235,8 +234,8 @@ const AuthorizationSettings = () => {
                   key="authorizationID"
                   showBorders={true}
                 ></DataGrid> */}
-                  <DataGrid
-                    columns={columns}
+                <DataGrid
+                  columns={columns}
                   dataSource={store}
                   onRowClick={(e) => onSelectionChanged(e)}
                   height={gridHeight.windows}
@@ -244,7 +243,7 @@ const AuthorizationSettings = () => {
                   showBorders={true}
                 ></DataGrid>
               </div>
-              
+
             </div>
           </div>
         </div>

@@ -1,22 +1,41 @@
-import { Fragment } from "react";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import { toggleRevertBillModifications } from "../../../redux/slices/popup-reducer";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../redux/urls";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { useTranslation } from "react-i18next";
+import React, { Fragment, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
+import { useRootState } from '../../../utilities/hooks/useRootState';
+import { DevGridColumn } from '../../../components/types/dev-grid-column';
+import ERPGridActions from '../../../components/ERPComponents/erp-grid-actions';
+import { toggleRevertBillModifications } from '../../../redux/slices/popup-reducer';
+import ERPDevGrid from '../../../components/ERPComponents/erp-dev-grid';
+import ERPModal from '../../../components/ERPComponents/erp-modal';
+import Urls from '../../../redux/urls';
 
-const RevertBillModifications = () => {
+export interface RevertBillModificationData {
+  invTransactionMasterID: number;
+  remarks: string;
+  tType: string;
+}
+
+export const initialRevertBillModificationData = {
+  data: {
+    invTransactionMasterID: 0,
+    remarks: "",
+    tType: ""
+  },
+  validations: {
+    invTransactionMasterID: "",
+    remarks: "",
+    tType: "",
+  },
+};
+
+const RevertBillModifications: React.FC = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
 
-  const columns: DevGridColumn[] = [
+  const columns: DevGridColumn[] = useMemo(() => [
     {
-      dataField: "transactionMasterID",
+      dataField: "invTransactionMasterID",
       caption: "Transaction Master ID",
       dataType: "number",
       allowSorting: true,
@@ -68,7 +87,7 @@ const RevertBillModifications = () => {
       width: 150,
     },
     {
-      dataField: "transactionType",
+      dataField: "tType",
       caption: "Transaction Type",
       dataType: "string",
       allowSorting: true,
@@ -92,19 +111,21 @@ const RevertBillModifications = () => {
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
-      width: 180,
-      cellRender: (cellElement: any) => (
-        <ERPGridActions
-          delete={{
-            confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to revert this bill modification?",
-            url: Urls?.revertBillModifications,
-            key: cellElement?.data?.billModificationsId
-          }}
-        />
-      ),
-    },
-  ];
+      width: 100,
+      cellRender: (cellElement: any, cellInfo: any) => {
+        return (
+          <ERPGridActions
+            delete={{
+              confirmationRequired: true,
+              confirmationMessage: "Are you sure you want to delete this item?",
+              url: Urls?.revertBillModifications,
+              key: cellElement?.data?.id
+            }}
+          />
+        );
+      },
+    }
+  ], [t]);
 
   return (
     <Fragment>
@@ -120,6 +141,7 @@ const RevertBillModifications = () => {
                   gridId="grd_revertBillModifications"
                   popupAction={toggleRevertBillModifications}
                   hideGridAddButton={true}
+                  reload={rootState?.PopupData?.resetBranchDataForSync?.reload}
                   gridAddButtonIcon="ri-history-line"
                 />
               </div>
@@ -133,11 +155,11 @@ const RevertBillModifications = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleRevertBillModifications({ isOpen: false }));
+          dispatch(toggleRevertBillModifications({ isOpen: false, key: null }));
         }}
       />
     </Fragment>
   );
 };
 
-export default RevertBillModifications;
+export default React.memo(RevertBillModifications);

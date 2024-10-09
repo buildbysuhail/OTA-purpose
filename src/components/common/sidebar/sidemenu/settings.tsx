@@ -8,6 +8,7 @@ import {
   toggleDeleteInactiveTransactionPopup,
   toggleExchangeRatesPopup,
   toggleImportExportPopup,
+  toggleResetBranchDataForSync,
   toggleResetDataBasePopup,
   toggleUserActionPopup,
   toggleUserTypePrivilegePopup
@@ -74,7 +75,7 @@ export const SettingsMenuItems = [
     children: [
       { action: toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'company_profile' },
       { action: toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'branch_info' },
-      { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'branch' },
+      { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'branches' },
       { action: toggleDeleteInactiveTransactionPopup, type: 'popup', active: false, selected: false, title: 'delete_inactive_transactions' },
       { action: toggleBankPosPopup, type: 'popup', active: false, selected: false, title: 'bank_pos_settings' },
     ]
@@ -98,7 +99,6 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/system/financial-year`, type: 'link', active: false, selected: false, title: 'financial_year' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/vouchers`, type: 'link', active: false, selected: false, title: 'vouchers' },
       { action: toggleBarcodePrintPopup, type: 'popup', active: false, selected: false, title: 'barcode_print' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/headers-footers`, type: 'link', active: false, selected: false, title: 'headers_footers' },
       { path: `${import.meta.env.BASE_URL}settings/_/templates`, type: 'link', active: false, selected: false, title: 'invoice_designer' },
       { action: toggleCommandsPopup, type: 'popup', active: false, selected: false, title: 'commands' },
       // { action:toggleUserActionPopup, type: 'popup', active: false, selected: false, title: 'user_action_report' },
@@ -107,7 +107,8 @@ export const SettingsMenuItems = [
       { action: toggleExchangeRatesPopup, type: 'popup', active: false, selected: false, title: 'exchange_rates' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/refresh-all-branches`, type: 'link', active: false, selected: false, title: 'refresh_all_branches' },
       { action: toggleDayClosePopup, type: 'popup', active: false, selected: false, title: 'day_close' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert-bill-modifications' },
+      { action: toggleResetBranchDataForSync, type: 'popup', active: false, selected: false, title: 'reset_branch_data_for_sync' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications' },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
     ]
   }

@@ -8,6 +8,7 @@ import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
 import { Button } from "devextreme-react";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
 export interface BranchResetData {
   resetDateFrom: string;
@@ -56,29 +57,21 @@ export const BranchDataReset: React.FC = React.memo(() => {
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 my-4">
+      <div className="flex items-center justify-between my-4">
         <ERPCheckbox
           {...getFieldProps("agreementChecked")}
           label={t("recover_until_sync")}
           onChangeData={(checked: boolean) => handleFieldChange("agreementChecked", checked)}
         />
-        <Button
-          onClick={handleSubmit}
-          disabled={isLoading}
-          className="h-10 w-24 ml-auto"
-        >
-          {t("reset")}
-        </Button>
+        <div>
+          <ERPButton
+            title={t("reset")}
+            variant="primary"
+            className="h-10 w-24"
+            onClick={handleSubmit}
+          ></ERPButton>
+        </div>
       </div>
-
-      {/* <div className="mt-4">
-        <ERPFormButtons
-          isEdit={false}
-          isLoading={isLoading}
-          onCancel={onClose}
-          onSubmit={handleSubmit}
-        />
-      </div> */}
     </div>
   );
 });

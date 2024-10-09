@@ -546,5 +546,10 @@
   "enable_karnataka_tax_report_format": "تمكين تنسيق تقرير ضريبة كارناتاكا",
   "show_prev._forms": "إظهار النماذج السابقة",
 
-   "revert_bill_modification": "إرجاع تعديل الفاتورة"
+  "revert_bill_modifications": "إرجاع تعديلات الفاتورة",
+  "reset_branch_data_for_sync": "إعادة تعيين بيانات الفرع للمزامنة",
+  
+  "reset_date_from": "إعادة تعيين التاريخ من",
+  "recover_until_sync": "أوافق على أن البيانات لن تُسترد حتى تتم المزامنة من الفرع",
+  "reset": "إعادة تعيين"
 }

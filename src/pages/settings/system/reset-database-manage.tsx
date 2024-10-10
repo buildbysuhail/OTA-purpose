@@ -212,7 +212,7 @@ const ResetDbManage: React.FC = React.memo(() => {
             <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
               Transaction Forms
             </label>
-            <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[500px] h-auto max-h-[260px]">
+            <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[550px] h-auto max-h-[260px]">
               <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
                 {allTransactions && allTransactions.length > 0 && (
                   <TransactionFormsCheckboxes

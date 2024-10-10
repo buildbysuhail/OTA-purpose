@@ -18,7 +18,7 @@ interface Settings {
   decimalPoints: number;
   cashSalesVoucherPrefix: string;
   roundingMethod: string;
-  posRoundingMethod: string;
+  pOSRoundingMethod: string;
   taxDecimalPoint: string;
   roundingMethodGlobal: string;
   autoChangeTransactionDate: boolean;
@@ -51,7 +51,7 @@ const initialSettings: Settings = {
   decimalPoints: 2,
   cashSalesVoucherPrefix: "Millions",
   roundingMethod: "Normal",
-  posRoundingMethod: "No Rounding", 
+  pOSRoundingMethod: "No Rounding", 
   taxDecimalPoint: "2",
   roundingMethodGlobal: "Normal",
   autoChangeTransactionDate: false,
@@ -267,15 +267,15 @@ const ERPSettingsFormMain = () => {
           />
           <ERPDataCombobox
            field={{
-            id: "posRoundingMethod",
+            id: "pOSRoundingMethod",
             valueKey: "value",
             labelKey: "label",
           }}
-            id="posRoundingMethod"
+            id="pOSRoundingMethod"
             label="Sales Rounding Method"
-            value={settings?.posRoundingMethod}
+            value={settings?.pOSRoundingMethod}
             data={settings}
-            onChangeData={(data) => handleFieldChange("posRoundingMethod", data.posRoundingMethod)}
+            onChangeData={(data) => handleFieldChange("pOSRoundingMethod", data.pOSRoundingMethod)}
             options={[
               { value: 'Normal', label: 'Normal' },
               { value: 'No Rounding', label: 'No Rounding' },

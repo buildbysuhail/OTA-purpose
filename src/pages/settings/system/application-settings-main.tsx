@@ -14,8 +14,8 @@ import { handleResponse } from '../../../utilities/HandleResponse';
 
 interface Settings {
   currency: string;
-  unitPriceDecimalPoint: string;
-  decimalPoints: string;
+  unitPrice_decimalPoint: string;
+  decimalPoints: number;
   cashSalesVoucherPrefix: string;
   roundingMethod: string;
   posRoundingMethod: string;
@@ -47,8 +47,8 @@ interface Settings {
 }
 const initialSettings: Settings = {
   currency: "2",
-  unitPriceDecimalPoint: "2",
-  decimalPoints: "2",
+  unitPrice_decimalPoint: "2",
+  decimalPoints: 2,
   cashSalesVoucherPrefix: "Millions",
   roundingMethod: "Normal",
   posRoundingMethod: "No Rounding", 
@@ -80,7 +80,7 @@ const api=new APIClient();
 const ERPSettingsFormMain = () => {
   const dispatch=useAppDispatch()
   const [settings, setSettings] = useState<Settings>(initialSettings);
-  const [changedSettings, setChangedSettings] = useState<Partial<Settings>>({});
+  const [settingsPrev, setSettingsPrev] = useState<Partial<Settings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -94,7 +94,7 @@ const ERPSettingsFormMain = () => {
       const response = await api.getAsync(`${Urls.application_settings}main`)
     debugger;
     console.log(settings);
-    setChangedSettings(response);
+    setSettingsPrev(response);
     setSettings(response);
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -135,47 +135,7 @@ const ERPSettingsFormMain = () => {
       ...prevSettings,
       [settingName]: value ?? ''
     }));
-    
-    setChangedSettings((prevChangedSettings = {} as Settings) => ({
-      ...prevChangedSettings,
-      [settingName]: value ?? ''
-    }));
   });
- 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setIsSaving(true);
-  //   try {
-  //     const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
-  //       const currentValue = settings?.[key as keyof Settings];
-  //       const prevValue = settings[key as keyof Settings];
-       
-  //       if (currentValue !== prevValue) {
-  //         debugger;
-  //         acc.push({
-  //           settingsName: key,
-  //           settingsValue: currentValue.toString()
-  //         });
-  //       }
-  //       return acc;
-  //     }, [] as { settingsName: string; settingsValue: string }[]);
-  //     console.log(modifiedSettings);
-      
-  //     const response = await api.put(Urls.application_settings,{type: 'settings', updateList:  modifiedSettings}) as  any
-  //     debugger;
-  //     if(response!=undefined && response!=null && response.isOk==true)
-  //       {
-  //         ERPToast.showWith(response?.message, "success");
-  //       }
-  //       else{
-  //         ERPToast.showWith(response?.message,"warning")
-  //       }
-  //   } catch (error) {
-  //     console.error('Error saving settings:', error);
-  //   } finally {
-  //     setIsSaving(false);
-  //   }
-  // };
 
  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,9 +143,10 @@ const ERPSettingsFormMain = () => {
     try {
       const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
         const currentValue = settings?.[key as keyof Settings];
-        const prevValue = changedSettings[key as keyof Settings];
+        const prevValue = settingsPrev[key as keyof Settings];
        
         if (currentValue !== prevValue) {
+          debugger;
           debugger;
           acc.push({
             settingsName: key,
@@ -196,7 +157,7 @@ const ERPSettingsFormMain = () => {
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
       
-      const response = await api.put(Urls.application_settings,{type: 'mai', updateList:  modifiedSettings}) as  any
+      const response = await api.put(Urls.application_settings,{type: 'main', updateList:  modifiedSettings}) as  any
       handleResponse(response);
     } catch (error) {
       console.error('Error saving settings:', error);
@@ -222,48 +183,60 @@ const ERPSettingsFormMain = () => {
             }}
             data={settings}
             value={settings?.currency}
-            onChangeData={(data) => handleFieldChange("Currency", data.Currency)}
+            onChangeData={(data) => handleFieldChange("currency", data.currency)}
             label="Currency"
           />
           <ERPDataCombobox
           field={{
-            id: "unitPriceDecimalPoint",
+            id: "unitPrice_decimalPoint",
             valueKey: "value",
             labelKey: "label",
           }}
-            id="unitPriceDecimalPoint"
+            id="unitPrice_decimalPoint"
             label="Unit Price Decimal Points"
-            value={settings?.unitPriceDecimalPoint}
+            value={settings?.unitPrice_decimalPoint}
             data={settings}
+            defaultData={settings?.unitPrice_decimalPoint}
             onChangeData={(data) =>{
               
-              handleFieldChange("unitPriceDecimalPoint", data.unitPriceDecimalPoint)
+              handleFieldChange("unitPrice_decimalPoint", data.unitPrice_decimalPoint)
             }}
             options={[
-              { value: '0', label: '0' },
-              { value: '1', label: '1' },
-              { value: '2', label: '2' },
-              { value: '3', label: '3' },
-              { value: '4', label: '4' },
-              { value: '5', label: '5' },
+              { value: 0, label: '0' },
+              { value: 1, label: '1' },
+              { value: 2, label: '2' },
+              { value: 3, label: '3' },
+              { value: 4, label: '4' },
+              { value: 5, label: '5' },
             ]}
           />
           <ERPDataCombobox
+           field={{
+            id: "decimalPoints",
+            valueKey: "value",
+            labelKey: "label",
+          }}
             id="decimalPoints"
             label="Decimal Points"
             data={settings}
             value={settings?.decimalPoints}
+            defaultData={settings?.decimalPoints}
             onChangeData={(data) => handleFieldChange("decimalPoints", data.decimalPoints)}
             options={[
-              { value: '0', label: '0' },
-              { value: '1', label: '1' },
-              { value: '2', label: '2' },
-              { value: '3', label: '3' },
-              { value: '4', label: '4' },
-              { value: '5', label: '5' },
+              { value: 0, label: '0' },
+              { value: 1, label: '1' },
+              { value: 2, label: '2' },
+              { value: 3, label: '3' },
+              { value: 4, label: '4' },
+              { value: 5, label: '5' },
             ]}
           />
           <ERPDataCombobox
+            field={{
+              id: "cashSalesVoucherPrefix",
+              valueKey: "value",
+              labelKey: "label",
+            }}
             id="cashSalesVoucherPrefix"
             label="Currency Format"
             data={settings}
@@ -275,6 +248,11 @@ const ERPSettingsFormMain = () => {
             ]}
           />
           <ERPDataCombobox
+           field={{
+            id: "roundingMethod",
+            valueKey: "value",
+            labelKey: "label",
+          }}
             id="roundingMethod"
             label="Rounding Method"
             data={settings}

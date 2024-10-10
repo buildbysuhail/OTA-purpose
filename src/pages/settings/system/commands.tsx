@@ -1,9 +1,19 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { toggleCommandsPopup, } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { DataGrid } from "devextreme-react";
 import { useTranslation } from "react-i18next";
+import {
+  Column,
+  Scrolling,
+  RemoteOperations,
+} from "devextreme-react/data-grid";
+import { APIClient } from "../../../helpers/api-client";
+import Urls from "../../../redux/urls";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import { ResponseModel } from "../../../base/response-model";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -28,7 +38,7 @@ interface DynamicFormProps {
   onSubmit: (data: FormDataStructure) => void;
   onCancel: () => void;
 }
-
+const api = new APIClient();
 const CommandsManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
@@ -40,8 +50,19 @@ const CommandsManage = () => {
   const [key, setKey] = useState<any>(queryParams.get("key"));
   const [query, setQuery] = useState("");
   const [checked, setChecked] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+  const [userData, setUserData] = useState([]);
+  const [store, setStore] = useState<any>([]);
 
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
+    let gridHeightWindows = wh - 320; // Assuming 100px is the height to minus for windows
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, [])
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
   };
@@ -57,24 +78,28 @@ const CommandsManage = () => {
   const handleExecute = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/Core/SQLCommand', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response: ResponseModel<any> = await api.post(Urls.sql_commands, query);
+      handleResponse(response
+        , () => {
+          if (response.isOk) {
+            if (response.item.isSelect) {
+              setStore(response.item.data);
+            }
+            else {
+              setStore([]);
+            }
+
+            if (response.message != null && response.message != "") {
+
+            }
+          }
+          else {
+
+          }
         },
-        body: JSON.stringify({
-          query: query,
-          isChecked: checked,
-          key: key
+        () => {
+
         })
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
-      }
-      console.log('Execute successful:', data);
 
     } catch (error) {
       console.error('Execute failed:', error);
@@ -111,79 +136,30 @@ const CommandsManage = () => {
                 disabled={loading}
               ></ERPButton>
             </div>
-            <div>
-              <textarea
-                className="h-8 border border-gray-400 bg-slate-50 rounded-[3px] text-black p-2"
-                value={query}
-                onChange={handleQueryChange}
-                placeholder="..."
-              />
-            </div>
           </div>
         </div>
 
-        <div className="flex items-center mb-4">
-          <input
-            type="checkbox"
-            className="h-4 w-4 mr-2"
-            checked={checked}
-            onChange={handleCheckboxChange}
-          />
-          <label className="text-sm font-semibold">{t("checkbox")}</label>
-        </div>
         {/* Table */}
-        <div className="overflow-x-auto mb-8">
-          <table className="min-w-full bg-white border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="px-4 py-2 border">{t("user_id")}</th>
-                <th className="px-4 py-2 border">{t("branch_id")}</th>
-                <th className="px-4 py-2 border">{t("counter_id")}</th>
-                <th className="px-4 py-2 border">{t("user_name")}</th>
-                <th className="px-4 py-2 border">{t("password")}</th>
-                <th className="px-4 py-2 border">{t("user_type_code")}</th>
-                <th className="px-4 py-2 border">{t("created_user_id")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="px-4 py-2 border">-1</td>
-                <td className="px-4 py-2 border">0</td>
-                <td className="px-4 py-2 border">3</td>
-                <td className="px-4 py-2 border">POLERP</td>
-                <td className="px-4 py-2 border">sepbb</td>
-                <td className="px-4 py-2 border">CA</td>
-                <td className="px-4 py-2 border">1</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2 border">0</td>
-                <td className="px-4 py-2 border">0</td>
-                <td className="px-4 py-2 border">3</td>
-                <td className="px-4 py-2 border">CAdmin</td>
-                <td className="px-4 py-2 border">hnig_d</td>
-                <td className="px-4 py-2 border">CA</td>
-                <td className="px-4 py-2 border">1</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2 border">1</td>
-                <td className="px-4 py-2 border">1</td>
-                <td className="px-4 py-2 border">0</td>
-                <td className="px-4 py-2 border">admin</td>
-                <td className="px-4 py-2 border">sepbb</td>
-                <td className="px-4 py-2 border">BA</td>
-                <td className="px-4 py-2 border">0</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-2 border">2</td>
-                <td className="px-4 py-2 border">1</td>
-                <td className="px-4 py-2 border">0</td>
-                <td className="px-4 py-2 border">123</td>
-                <td className="px-4 py-2 border">602</td>
-                <td className="px-4 py-2 border">BS</td>
-                <td className="px-4 py-2 border">1</td>
-              </tr>
-            </tbody>
-          </table>
+        <div className="box custom-box">
+          <div className="box-body">
+            <div style={{ overflowX: 'auto', width: '100%' }}>
+              <DataGrid
+                dataSource={store}
+                height={gridHeight.windows}
+                showBorders={true}
+                showRowLines={true}
+                columnAutoWidth={true}
+                paging={{ pageSize: 30 }}
+              >
+                <Scrolling mode="virtual" />
+                <RemoteOperations
+                  filtering={false}
+                  sorting={false}
+                  paging={false}
+                />
+              </DataGrid>
+            </div>
+          </div>
         </div>
       </div>
     </div>

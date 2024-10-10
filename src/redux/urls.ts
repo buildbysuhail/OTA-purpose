@@ -160,7 +160,7 @@ const Urls = {
   currencyExchange: "/Core/ExchangeRates/",
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
-  reset_data_base: "/Core/ResetDataBase/ResetTransactionTables/",
+  reset_data_base: "/Core/ResetDataBase/",
   application_settings:"/Core/ApplicationSettings/",
   sql_commands : "/Core/SQLCommand",
 
@@ -168,6 +168,8 @@ const Urls = {
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications:"/Core/AdvancedOptions/RevertBillModification",
   branchDataReset:"/Core/AdvancedOptions/BranchDataReset",
+  // refresh all branches
+  refreshAllBranches:"/Core/RefreshAllBranch/RefreshAllBranch/",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",

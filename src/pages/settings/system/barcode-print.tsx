@@ -339,45 +339,47 @@ const BarcodePrint: React.FC = () => {
                   <div className="flex space-x-2">
                     <ERPInput
                       id="barcodeForm"
-                      label="Barcode Form"
+                      label={t("barcode_form")}
                       type="text"
                       value={formData.barcodeFrom}
                       customSize="md"
                       className="w-full"
                       name="barcodeFrom"
                       onChange={handleInputChange}
-                      placeholder="Form"
+                      placeholder={t("form")}
                     />
                     <ERPInput
                       id="barcodeTo"
-                      label="To"
+                      label={t("to")}
                       type="text"
                       value={formData.barcodeTo}
                       customSize="md"
                       className="w-full"
                       name="barcodeTo"
                       onChange={handleInputChange}
-                      placeholder="To"
+                      placeholder={t("to")}
                     />
                   </div>
                   <ERPInput
                     id="barcodeComma"
+                    label={t("barcode_comma_seperated")}
                     type="text"
                     value={formData.barcodeComma}
                     customSize="md"
                     className="w-full"
                     name="barcodeComma"
                     onChange={handleInputChange}
-                    placeholder="Comma Separated"
+                    placeholder={t("comma_separated")}
                   />
                   <div className="flex items-center justify-between">
                     <ERPCheckbox
+                      label={t("preview")}
                       id="preview"
                       data={formData}
                       onChange={handleInputChange}
                     />
                     <ERPButton
-                      title="Show"
+                      title={t("show")}
                       className="px-3 py-1"
                       variant="secondary"
                     />
@@ -391,7 +393,7 @@ const BarcodePrint: React.FC = () => {
                   {/* First section - Radio Options */}
                   <div className="flex-1">
                     <div className="space-y-2">
-                      {["Sales", "Purchase", "BTO", "BTI", "OS", "Other"].map((label, index) => (
+                      {[t("sales"), t("purchase"), t("bto"), t("bti"), t("os"), t("other")].map((label, index) => (
                         <div
                           key={`type-${label.toLowerCase()}-${index}`}
                           className="flex items-center space-x-2"
@@ -413,7 +415,7 @@ const BarcodePrint: React.FC = () => {
                               customSize="md"
                               className="w-6/12"
                               onChange={handleInputChange}
-                              placeholder="Other Type"
+                              placeholder={t("other_type")}
                             />
                           )}
                         </div>
@@ -426,14 +428,14 @@ const BarcodePrint: React.FC = () => {
                     <div className="space-y-2">
                       <ERPInput
                         id="vPrefix"
-                        label="VPrefix"
+                        label={t("VPrefix")}
                         type="text"
                         value={formData.vPrefix}
                         customSize="md"
                         className="w-full"
                         name="vPrefix"
                         onChange={handleInputChange}
-                        placeholder="VPrefix"
+                        placeholder={t("VPrefix")}
                       />
                       <ERPDataCombobox
                         id="formType"
@@ -444,25 +446,25 @@ const BarcodePrint: React.FC = () => {
                           valueKey: "id",
                           labelKey: "name",
                         }}
-                        label="Form Type"
+                        label={t("form_type")}
                         required={true}
                         onChangeData={(data: any) => handleChange("formType", data)}
                       />
                       <div className="flex justify-between gap-4">
                         <ERPInput
                           id="billNo"
-                          label="Bill No"
+                          label={t("bill_no")}
                           type="text"
                           value={formData.billNo}
                           customSize="md"
                           className="w-full"
                           name="billNo"
                           onChange={handleInputChange}
-                          placeholder="Bill No"
+                          placeholder={t("bill_no")}
                         />
                         <div className="mt-[11px]">
                           <ERPButton
-                            title="Show"
+                            title={t("show")}
                             className="px-3 py-1"
                             variant="secondary"
                           />
@@ -479,7 +481,7 @@ const BarcodePrint: React.FC = () => {
                   <ERPDateInput
                     id="packDate"
                     type="date"
-                    label="Packed Date"
+                    label={t("packed_date")}
                     value={formData.packDate}
                     onChange={(e) => {
                       setFormData(prev => ({
@@ -490,58 +492,58 @@ const BarcodePrint: React.FC = () => {
                   />
                   <ERPInput
                     id="expDesc"
-                    label="Expiry Description"
+                    label={t("expiry_description")}
                     type="text"
                     value={formData.expDesc}
                     customSize="md"
                     className="w-full"
                     name="expDesc"
                     onChange={handleInputChange}
-                    placeholder="Exp Desc"
+                    placeholder={t("exp_desc")}
                   />
                   <ERPInput
                     id="note1"
-                    label="Note 1"
+                    label={t("note_1")}
                     type="text"
                     value={formData.note1}
                     customSize="md"
                     className="w-full"
                     name="note1"
                     onChange={handleInputChange}
-                    placeholder="Note 1"
+                    placeholder={t("note_1")}
                   />
                   <ERPInput
                     id="note2"
-                    label="Note 2"
+                    label={t("note_2")}
                     type="text"
                     value={formData.note2}
                     customSize="md"
                     className="w-full"
                     name="note2"
                     onChange={handleInputChange}
-                    placeholder="Note 2"
+                    placeholder={t("note_2")}
                   />
                   <ERPInput
                     id="note3"
-                    label="Note 3"
+                    label={t("note_3")}
                     type="text"
                     value={formData.note3}
                     customSize="md"
                     className="w-full"
                     name="note3"
                     onChange={handleInputChange}
-                    placeholder="Note 3"
+                    placeholder={t("note_3")}
                   />
                   <ERPInput
                     id="note4"
-                    label="Note 4"
+                    label={t("note_4")}
                     type="text"
                     value={formData.note4}
                     customSize="md"
                     className="w-full"
                     name="note4"
                     onChange={handleInputChange}
-                    placeholder="Note 4"
+                    placeholder={t("note_4")}
                   />
                 </div>
               </div>
@@ -573,7 +575,7 @@ const BarcodePrint: React.FC = () => {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          label="Label Design"
+                          label={t("label_design")}
                           required={true}
                           onChangeData={(data: any) => handleChange("labelDesign", data)}
                         />
@@ -581,7 +583,7 @@ const BarcodePrint: React.FC = () => {
                       <div className="flex flex-col">
                         <ERPInput
                           id="startRow"
-                          label="Start Row"
+                          label={t("start_row")}
                           type="text"
                           value={formData.startRow}
                           customSize="md"
@@ -594,7 +596,7 @@ const BarcodePrint: React.FC = () => {
                       <div className="flex flex-col">
                         <ERPInput
                           id="endRow"
-                          label="End Row"
+                          label={t("end_row")}
                           type="text"
                           value={formData.endRow}
                           customSize="md"
@@ -607,13 +609,14 @@ const BarcodePrint: React.FC = () => {
                     </div>
                     <div className="flex justify-between mt-4">
                       <ERPCheckbox
+                        label={t("inSearch")}
                         id="inSearch"
                         data={formData.inSearch}
                         onChange={handleInputChange}
                         validation=""
                       />
                       <ERPButton
-                        title="Print"
+                        title={t("print")}
                         className="px-3 py-1 w-24"
                         variant="secondary"
                       />
@@ -624,23 +627,7 @@ const BarcodePrint: React.FC = () => {
                 {/* Right side */}
                 <div className="border p-4 rounded-lg">
                   <div className="w-full">
-                    <div className="flex justify-between">
-                      <div className="flex flex-col justify-between gap-9 h-full">
-                        <div className="flex flex-start mt-4">
-                          <ERPCheckbox
-                            id="Standard Preview"
-                            label="Preview"
-                            data={formData.inSearch}
-                            onChange={handleInputChange}
-                            validation=""
-                          />
-                        </div>
-                        <ERPButton
-                          title="Print"
-                          className="px-3 py-1 w-24"
-                          variant="secondary"
-                        />
-                      </div>
+                    <div className="flex gap-6 justify-between">
                       <div className="flex flex-col space-y-2 ml-4 flex-grow">
                         {/* <ERPSelect
                           id="labelDesign"
@@ -660,7 +647,7 @@ const BarcodePrint: React.FC = () => {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          label="Label Design"
+                          label={t("label_design")}
                           required={true}
                           onChangeData={(data: any) => handleChange("labelDesign", data)}
                         />
@@ -682,9 +669,25 @@ const BarcodePrint: React.FC = () => {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          label="Printer"
+                          label={t("printer")}
                           required={true}
                           onChangeData={(data: any) => handleChange("printer", data)}
+                        />
+                      </div>
+                      <div className="flex flex-col justify-between gap-9 h-full">
+                        <div className="flex flex-start mt-5">
+                          <ERPCheckbox
+                            id="Standard Preview"
+                            label={t("preview")}
+                            data={formData.inSearch}
+                            onChange={handleInputChange}
+                            validation=""
+                          />
+                        </div>
+                        <ERPButton
+                          title={t("print")}
+                          className="px-3 py-1 w-24"
+                          variant="secondary"
                         />
                       </div>
                     </div>

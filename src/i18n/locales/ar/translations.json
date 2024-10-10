@@ -551,5 +551,32 @@
   
   "reset_date_from": "إعادة تعيين التاريخ من",
   "recover_until_sync": "أوافق على أن البيانات لن تُسترد حتى تتم المزامنة من الفرع",
-  "reset": "إعادة تعيين"
+  "reset": "إعادة تعيين",
+
+  "barcode_form": "نموذج الباركود",
+  "form": "نموذج",
+  "barcode_comma_seperated": "باركود مفصول بفواصل",
+  "comma_separated": "مفصول بفواصل",
+  "preview": "معاينة",
+  "show": "عرض",
+  "sales": "المبيعات",
+  "bto": "BTO",
+  "bti": "BTI",
+  "os": "OS",
+  "other": "آخر",
+  "other_type": "نوع آخر",
+  "VPrefix": "بادئة V",
+  "bill_no": "رقم الفاتورة",
+  "packed_date": "تاريخ التعبئة",
+  "expiry_description": "وصف انتهاء الصلاحية",
+  "exp_desc": "وصف الانتهاء",
+  "note_1": "ملاحظة 1",
+  "note_2": "ملاحظة 2",
+  "note_3": "ملاحظة 3",
+  "note_4": "ملاحظة 4",
+  "label_design": "تصميم الملصق",
+  "start_row": "بدء الصف",
+  "end_row": "نهاية الصف",
+  "inSearch": "في البحث",
+  "printer": "الطابعة"
 }

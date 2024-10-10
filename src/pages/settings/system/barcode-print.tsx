@@ -28,6 +28,7 @@ import dayjs, { Dayjs } from "dayjs";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import SelectSmall from "../../../components/ERPComponents/erp-mui-select";
 import ERPMUIDatePicker from "../../../components/ERPComponents/erp-mui-date-picker";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 // Define the FormData interface
 interface FormData {
@@ -117,8 +118,7 @@ const BarcodePrint: React.FC = () => {
     { value: "adc3", label: "ADC3" },
   ];
   const handleChange = (
-    event: SelectChangeEvent<string | number> | { id: string; date: string }
-  ) => {
+    p0: string, event: SelectChangeEvent<string | number> | { id: string; date: string; } | any) => {
     if ("target" in event) {
       // Handle SelectChangeEvent
       const { name, value } = event.target;
@@ -126,21 +126,26 @@ const BarcodePrint: React.FC = () => {
         ...prevData,
         [name]: value,
       }));
-    } else {
+    } else if ("date" in event) {
       // Handle Date change
       const { id, date } = event;
       setFormData((prevData) => ({
         ...prevData,
         [id]: date,
       }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [p0]: event.id // or event.value depending on your data structure
+      }));
     }
-  };
+  }
 
-  const handleSelectChange = (id: string, value: any) => {
-    handleChange({
-      target: { name: id, value: value.value }
-    } as SelectChangeEvent<string | number>);
-  };
+  // const handleSelectChange = (id: string, value: any) => {
+  //   handleChange({
+  //     target: { name: id, value: value.value }
+  //   } as SelectChangeEvent<string | number>);
+  // };
 
   const combinedOptions = [...options, ...newOptions];
 
@@ -325,54 +330,56 @@ const BarcodePrint: React.FC = () => {
         <div className="p-2 bg-white border border-gray-300 rounded-md shadow-md mx-auto my-0">
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-2">
             {/* Top Section */}
-            <div className="flex flex-col lg:flex-row lg:space-x-4 mb-4">
+            <div className="flex flex-col lg:flex-row lg:space-x-2 mb-2">
               {/* First div - Barcode Inputs */}
               <div className="flex-1 border p-4 rounded-lg min-h-[200px]">
-                <div className="space-y-4">
+                <div className="space-y-2">
                   <div className="flex space-x-2">
                     <ERPInput
                       id="barcodeForm"
-                      label="Barcode Form"
+                      label={t("barcode_form")}
                       type="text"
                       value={formData.barcodeFrom}
                       customSize="md"
                       className="w-full"
                       name="barcodeFrom"
                       onChange={handleInputChange}
-                      placeholder="Form"
+                      placeholder={t("form")}
                     />
                     <ERPInput
                       id="barcodeTo"
-                      label="To"
+                      label={t("to")}
                       type="text"
                       value={formData.barcodeTo}
                       customSize="md"
                       className="w-full"
                       name="barcodeTo"
                       onChange={handleInputChange}
-                      placeholder="To"
+                      placeholder={t("to")}
                     />
                   </div>
                   <ERPInput
                     id="barcodeComma"
+                    label={t("barcode_comma_seperated")}
                     type="text"
                     value={formData.barcodeComma}
                     customSize="md"
                     className="w-full"
                     name="barcodeComma"
                     onChange={handleInputChange}
-                    placeholder="Comma Separated"
+                    placeholder={t("comma_separated")}
                   />
                   <div className="flex items-center justify-between">
                     <ERPCheckbox
+                      label={t("preview")}
                       id="preview"
                       data={formData}
                       onChange={handleInputChange}
                     />
                     <ERPButton
-                      title="Show"
+                      title={t("show")}
                       className="px-3 py-1"
                       variant="secondary"
                     />
@@ -380,95 +387,101 @@ const BarcodePrint: React.FC = () => {
                 </div>
               </div>
 
-              {/* Second div - Radio Options */}
+              {/* Parent div containing Radio Options and VPrefix/Dates */}
               <div className="flex-1 border p-4 rounded-lg min-h-[200px]">
-                <div className="space-y-2">
-                  {["Sales", "Purchase", "BTO", "BTI", "OS", "Other"].map((label, index) => (
-                    <div
-                      key={`type-${label.toLowerCase()}-${index}`}
-                      className="flex items-center space-x-2"
-                    >
-                      <ERPRadio
-                        id={`type-${label.toLowerCase()}-${index}`}
-                        name="type"
-                        value={label.toLowerCase()}
-                        checked={formData.type === label.toLowerCase()}
-                        onChange={handleInputChange}
-                        label={label}
-                      />
-                      {label === "Other" && (
-                        <ERPInput
-                          id="Othertype"
-                          label=" "
-                          type="text"
-                          value={formData.otherType}
-                          customSize="md"
-                          className="w-6/12"
-                          onChange={handleInputChange}
-                          placeholder="other type"
-                        />
-                      )}
+                <div className="flex gap-4 items-start">
+                  {/* First section - Radio Options */}
+                  <div className="flex-1">
+                    <div className="space-y-2">
+                      {[t("sales"), t("purchase"), t("bto"), t("bti"), t("os"), t("other")].map((label, index) => (
+                        <div
+                          key={`type-${label.toLowerCase()}-${index}`}
+                          className="flex items-center space-x-2"
+                        >
+                          <ERPRadio
+                            id={`type-${label.toLowerCase()}-${index}`}
+                            name="type"
+                            value={label.toLowerCase()}
+                            checked={formData.type === label.toLowerCase()}
+                            onChange={handleInputChange}
+                            label={label}
+                          />
+                          {label === "Other" && (
+                            <ERPInput
+                              id="Othertype"
+                              label=" "
+                              type="text"
+                              value={formData.otherType}
+                              customSize="md"
+                              className="w-6/12"
+                              onChange={handleInputChange}
+                              placeholder={t("other_type")}
+                            />
+                          )}
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
+                  </div>
 
-              {/* Third div - VPrefix and Dates */}
-              <div className="flex-1 border p-4 rounded-lg min-h-[200px]">
-                <div className="space-y-4">
-                  <ERPInput
-                    id="vPrefix"
-                    label="VPrefix"
-                    type="text"
-                    value={formData.vPrefix}
-                    customSize="md"
-                    className="w-full"
-                    name="vPrefix"
-                    onChange={handleInputChange}
-                    placeholder="VPrefix"
-                  />
-                  <ERPDateInput
-                    id="packDate"
-                    type="date"
-                    required
-                    value={formData.packDate}
-                    label="Pack. Date"
-                    data={formData}
-                    onChange={(e) => {
-                      setFormData((prev) => ({
-                        ...prev,
-                        packDate: e.target.value,
-                      }));
-                    }}
-                  />
-                  <div className="flex items-center justify-between gap-4">
-                    <ERPInput
-                      id="billNo"
-                      label="Bill No"
-                      type="text"
-                      value={formData.billNo}
-                      customSize="md"
-                      className="w-full"
-                      name="billNo"
-                      onChange={handleInputChange}
-                      placeholder="Bill No"
-                    />
-                    <ERPButton
-                      title="Show"
-                      className="px-3 py-1"
-                      variant="secondary"
-                    />
+                  {/* Second section - VPrefix and Dates */}
+                  <div className="flex-1">
+                    <div className="space-y-2">
+                      <ERPInput
+                        id="vPrefix"
+                        label={t("VPrefix")}
+                        type="text"
+                        value={formData.vPrefix}
+                        customSize="md"
+                        className="w-full"
+                        name="vPrefix"
+                        onChange={handleInputChange}
+                        placeholder={t("VPrefix")}
+                      />
+                      <ERPDataCombobox
+                        id="formType"
+                        field={{
+                          id: "formType",
+                          required: true,
+                          getListUrl: Urls.data_formtype,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        label={t("form_type")}
+                        required={true}
+                        onChangeData={(data: any) => handleChange("formType", data)}
+                      />
+                      <div className="flex justify-between gap-4">
+                        <ERPInput
+                          id="billNo"
+                          label={t("bill_no")}
+                          type="text"
+                          value={formData.billNo}
+                          customSize="md"
+                          className="w-full"
+                          name="billNo"
+                          onChange={handleInputChange}
+                          placeholder={t("bill_no")}
+                        />
+                        <div className="mt-[11px]">
+                          <ERPButton
+                            title={t("show")}
+                            className="px-3 py-1"
+                            variant="secondary"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Fourth div - Notes Grid */}
               <div className="flex-1 border p-4 rounded-lg min-h-[200px]">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-2">
                   <ERPDateInput
                     id="packDate"
                     type="date"
-                    label="Pack. Date"
+                    label={t("packed_date")}
                     value={formData.packDate}
                     onChange={(e) => {
                       setFormData(prev => ({
@@ -479,155 +492,204 @@ const BarcodePrint: React.FC = () => {
                   />
                   <ERPInput
                     id="expDesc"
-                    label="Exp Desc"
+                    label={t("expiry_description")}
                     type="text"
                     value={formData.expDesc}
                     customSize="md"
                     className="w-full"
                     name="expDesc"
                     onChange={handleInputChange}
-                    placeholder="Exp Desc"
+                    placeholder={t("exp_desc")}
                   />
                   <ERPInput
                     id="note1"
-                    label="Note 1"
+                    label={t("note_1")}
                     type="text"
                     value={formData.note1}
                     customSize="md"
                     className="w-full"
                     name="note1"
                     onChange={handleInputChange}
-                    placeholder="Note 1"
+                    placeholder={t("note_1")}
                   />
                   <ERPInput
                     id="note2"
-                    label="Note 2"
+                    label={t("note_2")}
                     type="text"
                     value={formData.note2}
                     customSize="md"
                     className="w-full"
                     name="note2"
                     onChange={handleInputChange}
-                    placeholder="Note 2"
+                    placeholder={t("note_2")}
                   />
                   <ERPInput
                     id="note3"
-                    label="Note 3"
+                    label={t("note_3")}
                     type="text"
                     value={formData.note3}
                     customSize="md"
                     className="w-full"
                     name="note3"
                     onChange={handleInputChange}
-                    placeholder="Note 3"
+                    placeholder={t("note_3")}
                   />
                   <ERPInput
                     id="note4"
-                    label="Note 4"
+                    label={t("note_4")}
                     type="text"
                     value={formData.note4}
                     customSize="md"
                     className="w-full"
                     name="note4"
                     onChange={handleInputChange}
-                    placeholder="Note 4"
+                    placeholder={t("note_4")}
                   />
                 </div>
               </div>
             </div>
 
             {/* Label Design and Row Inputs */}
-            <div className="flex gap-4 mb-4 pt-2">
-              <div className="grid grid-cols-2 gap-8 w-full">
+            <div className="flex gap-4 mb-4 ">
+              <div className="grid grid-cols-2 gap-2 w-full">
                 {/* Left side */}
-                <div className="w-full">
-                  <div className="grid grid-cols-3 gap-6">
-                    <div className="flex flex-col">
-                      <ERPSelect
-                        id="labelDesign"
-                        label="Label Design"
-                        options={options}
-                        value={formData.labelDesign}
-                        handleChange={handleSelectChange}
-                        className="w-full"
-                        required={true}
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <ERPInput
-                        id="startRow"
-                        label="Start Row"
-                        type="text"
-                        value={formData.startRow}
-                        customSize="md"
-                        className="w-full"
-                        name="startRow"
-                        onChange={handleInputChange}
-                        validation=""
-                      />
-                    </div>
-                    <div className="flex flex-col">
-                      <ERPInput
-                        id="endRow"
-                        label="End Row"
-                        type="text"
-                        value={formData.endRow}
-                        customSize="md"
-                        className="w-full"
-                        name="endRow"
-                        onChange={handleInputChange}
-                        validation=""
-                      />
-                    </div>
-                  </div>
-                  <div className="flex flex-start mt-4">
-                    <ERPCheckbox
-                      id="inSearch"
-                      data={formData.inSearch}
-                      onChange={handleInputChange}
-                      validation=""
-                    />
-                  </div>
-                </div>
-
-                {/* Right side */}
-                <div className="w-full">
-                  <div className="grid grid-cols-2 gap-6">
-                    <div className="flex flex-col h-full justify-between">
-                      <div className="flex flex-start mt-4">
-                        <ERPCheckbox
-                          id="Standard Preview"
-                          label="Preview"
-                          data={formData.inSearch}
+                <div className="border p-4 rounded-lg ">
+                  <div className="w-full">
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="flex flex-col">
+                        {/* <ERPSelect
+                          id="labelDesign"
+                          label="Label Design"
+                          options={options}
+                          value={formData.labelDesign}
+                          handleChange={handleChange}
+                          className="w-full"
+                          required={true}
+                        /> */}
+                        <ERPDataCombobox
+                          id="labelDesign"
+                          field={{
+                            id: "labelDesign",
+                            required: true,
+                            getListUrl: Urls.data_formtype,
+                            valueKey: "id",
+                            labelKey: "name",
+                          }}
+                          label={t("label_design")}
+                          required={true}
+                          onChangeData={(data: any) => handleChange("labelDesign", data)}
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <ERPInput
+                          id="startRow"
+                          label={t("start_row")}
+                          type="text"
+                          value={formData.startRow}
+                          customSize="md"
+                          className="w-full"
+                          name="startRow"
                           onChange={handleInputChange}
                           validation=""
                         />
                       </div>
+                      <div className="flex flex-col">
+                        <ERPInput
+                          id="endRow"
+                          label={t("end_row")}
+                          type="text"
+                          value={formData.endRow}
+                          customSize="md"
+                          className="w-full"
+                          name="endRow"
+                          onChange={handleInputChange}
+                          validation=""
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-between mt-4">
+                      <ERPCheckbox
+                        label={t("inSearch")}
+                        id="inSearch"
+                        data={formData.inSearch}
+                        onChange={handleInputChange}
+                        validation=""
+                      />
                       <ERPButton
-                        title="Print"
+                        title={t("print")}
                         className="px-3 py-1 w-24"
                         variant="secondary"
                       />
                     </div>
-                    <div className="flex flex-col space-y-4">
-                      <ERPSelect
-                        id="labelDesign"
-                        label="Label Design"
-                        options={options}
-                        value={selectedFromType}
-                        handleChange={handleSelectChange}
-                        className="w-full"
-                        required={true}
-                      />
-                      <ERPSelect
-                        id="printer"
-                        label="Printer"
-                        options={options}
-                        value={selectedFromType}
-                        handleChange={handleSelectChange}
-                        className="w-full"
-                        required={true}
-                      />
+                  </div>
+                </div>
+
+                {/* Right side */}
+                <div className="border p-4 rounded-lg">
+                  <div className="w-full">
+                    <div className="flex gap-6 justify-between">
+                      <div className="flex flex-col space-y-2 ml-4 flex-grow">
+                        {/* <ERPSelect
+                          id="labelDesign"
+                          label="Label Design"
+                          options={options}
+                          value={selectedFromType}
+                          handleChange={handleChange}
+                          className="w-full"
+                          required={true}
+                        /> */}
+                        <ERPDataCombobox
+                          id="labelDesign"
+                          field={{
+                            id: "labelDesign",
+                            required: true,
+                            getListUrl: Urls.data_formtype,
+                            valueKey: "id",
+                            labelKey: "name",
+                          }}
+                          label={t("label_design")}
+                          required={true}
+                          onChangeData={(data: any) => handleChange("labelDesign", data)}
+                        />
+                        {/* <ERPSelect
+                          id="printer"
+                          label="Printer"
+                          options={options}
+                          value={selectedFromType}
+                          handleChange={handleChange}
+                          className="w-full"
+                          required={true}
+                        /> */}
+                        <ERPDataCombobox
+                          id="printer"
+                          field={{
+                            id: "printer",
+                            required: true,
+                            getListUrl: Urls.data_formtype,
+                            valueKey: "id",
+                            labelKey: "name",
+                          }}
+                          label={t("printer")}
+                          required={true}
+                          onChangeData={(data: any) => handleChange("printer", data)}
+                        />
+                      </div>
+                      <div className="flex flex-col justify-between gap-9 h-full">
+                        <div className="flex flex-start mt-5">
+                          <ERPCheckbox
+                            id="Standard Preview"
+                            label={t("preview")}
+                            data={formData.inSearch}
+                            onChange={handleInputChange}
+                            validation=""
+                          />
+                        </div>
+                        <ERPButton
+                          title={t("print")}
+                          className="px-3 py-1 w-24"
+                          variant="secondary"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 export const VoucherManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  
+
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<VoucherData>({
       url: Urls.Voucher,
@@ -36,16 +36,20 @@ export const VoucherManage: React.FC = React.memo(() => {
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <ERPInput
+        <ERPDataCombobox
           {...getFieldProps("formType")}
-          label={t("form_type")}
-          placeholder={t("form_type")}
-          required={true}
-          onChangeData={(data: any) => {
-            handleFieldChange("formType", data);
+          id="formType"
+          field={{
+            id: "formType",
+            required: true,
+            getListUrl: Urls.data_formtype,
+            valueKey: "id",
+            labelKey: "name",
           }}
+          label={t("form_type")}
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("formType", data)}
         />
-
         <ERPDataCombobox
           {...getFieldProps("voucherType")}
           id="voucherType"
@@ -67,14 +71,14 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("descriptions", data)}
         />
-          <ERPInput
+        <ERPInput
           {...getFieldProps("lastVoucherPrefix")}
           label={t("lastVoucher_prefix")}
           placeholder={t("lastVoucher_prefix")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherPrefix", data)}
         />
-          <ERPInput
+        <ERPInput
           {...getFieldProps("lastVoucherNumber")}
           label={t("lastVoucher_number")}
           type="number"
@@ -82,7 +86,7 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data)}
         />
-       
+
         <ERPCheckbox
           {...getFieldProps('isDefault')}
           label={t("is_default")}

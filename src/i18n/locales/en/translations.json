@@ -551,5 +551,32 @@
 
   "reset_date_from":"Reset Date From",
   "recover_until_sync":"I agree data will not be recovered until sync done from branch",
-  "reset":"Reset"
+  "reset":"Reset",
+
+  "barcode_form":"Barcode Form",
+  "form":"Form",
+  "barcode_comma_seperated":"Barcode Comma Seperated",
+  "comma_separated":"Comma Separated",
+  "preview":"Preview",
+  "show":"Show",
+  "sales":"Sales",
+  "bto":"BTO",
+  "bti":"BTI",
+  "os":"OS",
+  "other":"Other",
+  "other_type":"Other Type",
+  "VPrefix":"VPrefix",
+  "bill_no":"Bill No",
+  "packed_date":"Packed Date",
+  "expiry_description":"Expiry Description",
+  "exp_desc":"Exp Desc",
+  "note_1":"Note 1",
+  "note_2":"Note 2",
+  "note_3":"Note 3",
+  "note_4":"Note 4",
+  "label_design":"Label Design",
+  "start_row":"Start Row",
+  "end_row":"End Row",
+  "inSearch":"In Search",
+  "printer":"Printer"
 }

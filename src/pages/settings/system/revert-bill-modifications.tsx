@@ -141,7 +141,7 @@ const RevertBillModifications: React.FC = () => {
                   gridId="grd_revertBillModifications"
                   popupAction={toggleRevertBillModifications}
                   hideGridAddButton={true}
-                  reload={rootState?.PopupData?.resetBranchDataForSync?.reload}
+                  reload={rootState?.PopupData?.revertBillModifications?.reload}
                   gridAddButtonIcon="ri-history-line"
                 />
               </div>

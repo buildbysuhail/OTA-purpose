@@ -21,6 +21,7 @@ import {
   toggleExchangeRatesPopup,
   toggleUserTypePrivilegePopup,
   toggleResetBranchDataForSync,
+  toggleRefreshAllBranches,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 
@@ -37,8 +38,8 @@ const  ResetDbManage= lazy(() => import("../system/reset-database-manage"));
 const Barcodeprint = lazy(() => import("../system/barcode-print"));
 const ExchangeRates = lazy(() => import("../system/exchange-rates"));
 const UserTypePrivilegeManage = lazy(() => import("../userManagement/user-privilege-manage"));
-
 const ResetBranchDataForSync = lazy(() => import("../system/reset-branch-data-for-sync"));
+const RefreshAllBranches = lazy(() => import("../system/refresh-all-branches"));
 const Settings = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -59,6 +60,7 @@ const Settings = () => {
     import("../system/barcode-print");
     import("../system/exchange-rates");
     import("../system/reset-branch-data-for-sync");
+    import("../system/refresh-all-branches");
   };
 
   useEffect(() => {
@@ -224,6 +226,16 @@ const Settings = () => {
           dispatch(toggleResetBranchDataForSync({ isOpen: false }));
         }}
         content={<ResetBranchDataForSync/>}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.refreshAllBranches.isOpen || false}
+        title={t("refresh_all_branches")}
+        width="w-full max-w-[700px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleRefreshAllBranches({ isOpen: false }));
+        }}
+        content={<RefreshAllBranches/>}
       />
     </Fragment>
   );

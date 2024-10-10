@@ -706,7 +706,7 @@ const BarcodePrint: React.FC = () => {
                 <div className="grid grid-cols-1 gap-3">
                   <ERPDevGrid
                     columns={columns}
-                    // gridHeader={t("counter")}
+                    gridHeader={t("barcode_print")}
                     hideGridAddButton={true}
                     hideDefaultSearchPanel={true}
                     hideDefaultExportButton={true}

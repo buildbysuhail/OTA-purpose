@@ -94,7 +94,7 @@ export const initialDataBranch = {
   // },
 };
 
-const conformPassWord = {
+const initconformPassWord = {
   data:{
   confirmPassword:""
   },
@@ -104,7 +104,7 @@ const conformPassWord = {
 }
 
 export const BranchGridManage: React.FC = React.memo(() => {
-  const [confirmPassword, setConfirmPassword] = useState(conformPassWord);
+  const [confirmPassword, setConfirmPassword] = useState(initconformPassWord);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const rootState = useRootState();
@@ -117,7 +117,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
       ),
       key: rootState.PopupData.branchGrid.key,
       useApiClient: true,
-      // initialData: initialDataBranch,
+      initialData: initialDataBranch,
     });
 
   const onClose = useCallback(() => {
@@ -280,14 +280,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             required
             onChangeData={(data) => handleFieldChange("password", data)}
           />
-          {/* <ERPInput
-            {...getFieldProps("confirmPassword")}
-            label="Confirm Password"
-            disabled={isEdit}
-            type="password"
-            required
-            onChangeData={(data) => handleFieldChange("confirmPassword", data)}
-          /> */}
+         
           <ERPInput
             id="confirmPassword"
             label="Confirm Password"
@@ -305,6 +298,18 @@ export const BranchGridManage: React.FC = React.memo(() => {
               confirmPassword?.data?.confirmPassword ? confirmPassword?.data?.confirmPassword : ""
             }
           />
+
+
+    {/* Show error message if passwords don't match */}
+    {/* {errorMessage && <p className="text-red-500">{errorMessage}</p>} */}
+           {/* <ERPInput
+            {...getFieldProps("confirmPassword")}
+            label="Confirm Password"
+            disabled={isEdit}
+            type="password"
+            required
+            onChangeData={(data) => handleFieldChange("confirmPassword", data)}
+          /> */}
         </div>
       </div>
 

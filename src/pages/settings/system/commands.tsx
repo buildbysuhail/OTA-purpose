@@ -124,16 +124,16 @@ const CommandsManage = () => {
             <div className="flex gap-4">
               <ERPButton
                 type="reset"
-                title={t("select")}
-                variant="primary"
+                title={t("close")}
+                variant="secondary"
                 onClick={onClose}
+                disabled={loading}
               ></ERPButton>
               <ERPButton
                 type="reset"
-                title={t("execute")}
-                variant="secondary"
+                title={t("submit")}
+                variant="primary"
                 onClick={handleExecute}
-                disabled={loading}
               ></ERPButton>
             </div>
           </div>

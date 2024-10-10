@@ -17,6 +17,7 @@ import SystemSettingsApi from "./system-apis";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
+import TransactionFormsCheckboxes from "./reset-database-transaction-forms-checkboxes";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -97,32 +98,34 @@ const ResetDbManage: React.FC = React.memo(() => {
 
   useEffect(() => {
     loadTransactions();
-  },[])
-const loadTransactions = async() => {
-  const res: any[] = await api.getAsync(Urls.reset_data_base);
-  const updatedVouchers = res?.map(tr => ({
-    ...tr,         // Spread existing properties
-    checked: false      // Add new `checked` property
-  }));
-  debugger;
-  setAllTransactions(updatedVouchers);
-}
+  }, []);
+  const loadTransactions = async () => {
+    const res: any[] = await api.getAsync(Urls.reset_data_base);
+    const updatedVouchers = res?.map((tr) => ({
+      ...tr, // Spread existing properties
+      checked: false, // Add new `checked` property
+    }));
+    debugger;
+    setAllTransactions(updatedVouchers);
+  };
   const { t } = useTranslation();
 
   const handleSubmit = useCallback(async () => {
     debugger;
     const masters = Object.keys(master)
-    .filter(key => master[key]) // Filter only the true values
-    .map(key => ({ tableTypeCode: key }));
+      .filter((key) => master[key]) // Filter only the true values
+      .map((key) => ({ tableTypeCode: key }));
     let fd = allTransactions && JSON.parse(JSON.stringify(allTransactions));
-    const transactions = fd && fd 
-  .filter((tr: any) => tr.checked) // Filter the checked transactions
-  .map((tr: any) => ({ voucherType: tr.voucherType }));
+    const transactions =
+      fd &&
+      fd
+        .filter((tr: any) => tr.checked) // Filter the checked transactions
+        .map((tr: any) => ({ voucherType: tr.voucherType }));
     setPostUserTypeLoading(true);
     const combinedData = {
-      ...postData?.data, 
-      transactions, 
-      masters     
+      ...postData?.data,
+      transactions,
+      masters,
     };
     const response: ResponseModelWithValidation<any, any> =
       await SystemSettingsApi.postRestDB(combinedData);
@@ -202,37 +205,25 @@ const loadTransactions = async() => {
           />
         </div>
 
-        <div className="flex justify-start items-center gap-5 mb-4">
+        <div className="flex justify-start  gap-5 mb-4">
           {/* deme text area */}
-          <div className="w-1/2 ">
-            <label className="block text-sm font-medium text-gray-700 ">
-              Transaction Forms
-            </label>
-            {allTransactions && allTransactions?.map((transaction: any) => (
-              <ERPCheckbox
-                  id={transaction.voucherType}
-                  label={transaction.voucherName}
-                  data={transaction}
-                  checked={transaction.checked}
-                onChangeData={(data) => {
-                  setAllTransactions((prev: any) =>
-                    prev.map((tr: any) =>
-                      tr.voucherType === transaction.voucherType
-                        ? { ...tr, checked: !tr.checked }
-                        : tr
-                    )
-                  );
-                }}
-              />
-))}
-
-            
-            {/* <textarea
-              rows={12}
-              className="w-full border border-gray-300  rounded focus:outline-none focus:ring focus:ring-blue-500 focus:border-blue-500"
-              // onChange={(e) => handleFieldChange("remarks", e.target.value)}
-            /> */}
-          </div>
+          
+            <div className="relative">
+              <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
+                Transaction Forms
+              </label>
+              <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[500px] h-auto max-h-[260px]">
+                <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
+                  {allTransactions && allTransactions.length > 0 && (
+                    <TransactionFormsCheckboxes
+                      allTransactions={allTransactions}
+                      setAllTransactions={setAllTransactions}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+         
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
             <div className="flex flex-col gap-6">
@@ -298,7 +289,7 @@ const loadTransactions = async() => {
                   onChangeData={(data) => {
                     setMaster((prev: any) => ({
                       ...prev,
-                     CUST: !prev.CUST,
+                      CUST: !prev.CUST,
                     }));
                   }}
                 />
@@ -310,7 +301,7 @@ const loadTransactions = async() => {
                   onChangeData={(data) => {
                     setMaster((prev: any) => ({
                       ...prev,
-                     SUPP: !prev.SUPP,
+                      SUPP: !prev.SUPP,
                     }));
                   }}
                 />
@@ -341,7 +332,7 @@ const loadTransactions = async() => {
                   onChangeData={(data) => {
                     setMaster((prev: any) => ({
                       ...prev,
-                     EMP: !prev.EMP,
+                      EMP: !prev.EMP,
                     }));
                   }}
                 />
@@ -353,7 +344,7 @@ const loadTransactions = async() => {
                   onChangeData={(data) => {
                     setMaster((prev: any) => ({
                       ...prev,
-                     JBWRK: !prev.JBWRK,
+                      JBWRK: !prev.JBWRK,
                     }));
                   }}
                 />
@@ -365,7 +356,7 @@ const loadTransactions = async() => {
                   onChangeData={(data) => {
                     setMaster((prev: any) => ({
                       ...prev,
-                     DOC: !prev.DOC,
+                      DOC: !prev.DOC,
                     }));
                   }}
                 />
@@ -383,7 +374,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   PRD: !prev.PRD,
+                    PRD: !prev.PRD,
                   }));
                 }}
               />
@@ -395,7 +386,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   PDGP: !prev.PDGP,
+                    PDGP: !prev.PDGP,
                   }));
                 }}
               />
@@ -407,7 +398,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   PDCAT: !prev.PDCAT,
+                    PDCAT: !prev.PDCAT,
                   }));
                 }}
               />
@@ -419,7 +410,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   BRD: !prev.BRD,
+                    BRD: !prev.BRD,
                   }));
                 }}
               />
@@ -431,7 +422,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   PRCAT: !prev.PRCAT,
+                    PRCAT: !prev.PRCAT,
                   }));
                 }}
               />
@@ -443,7 +434,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   UNM: !prev.UNM,
+                    UNM: !prev.UNM,
                   }));
                 }}
               />
@@ -455,7 +446,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   TXC: !prev.TXC,
+                    TXC: !prev.TXC,
                   }));
                 }}
               />
@@ -467,7 +458,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   VH: !prev.VH,
+                    VH: !prev.VH,
                   }));
                 }}
               />
@@ -479,7 +470,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   VEH: !prev.VEH,
+                    VEH: !prev.VEH,
                   }));
                 }}
               />
@@ -491,7 +482,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   PPR: !prev.PPR,
+                    PPR: !prev.PPR,
                   }));
                 }}
               />
@@ -503,7 +494,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   SRT: !prev.SRT,
+                    SRT: !prev.SRT,
                   }));
                 }}
               />
@@ -515,7 +506,7 @@ const loadTransactions = async() => {
                 onChangeData={(data) => {
                   setMaster((prev: any) => ({
                     ...prev,
-                   SLRT: !prev.SLRT,
+                    SLRT: !prev.SLRT,
                   }));
                 }}
               />

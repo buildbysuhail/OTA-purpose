@@ -7,22 +7,21 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
-import { Button } from "devextreme-react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 
 export interface BranchResetData {
-  resetDateFrom: string;
-  agreementChecked: boolean;
+  date: string;
+ isAgree: boolean;
 }
 
 export const initialBranchResetData = {
   data: {
-    resetDateFrom: "",
-    agreementChecked: false,
+    date: "",
+   isAgree: false,
   },
   validations: {
-    resetDateFrom: "",
-    agreementChecked: "",
+    date: "",
+   isAgree: "",
   },
 };
 
@@ -50,26 +49,30 @@ export const BranchDataReset: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-3 gap-4">
         <ERPDateInput
-          {...getFieldProps("resetDateFrom")}
+          {...getFieldProps("date")}
           label={t("reset_date_from")}
           required={true}
-          onChangeData={(data: string) => handleFieldChange("resetDateFrom", data)}
+          onChangeData={(data: string) => handleFieldChange("date", data)}
         />
       </div>
 
       <div className="flex items-center justify-between my-4">
         <ERPCheckbox
-          {...getFieldProps("agreementChecked")}
+          {...getFieldProps("isAgree")}
           label={t("recover_until_sync")}
-          onChangeData={(checked: boolean) => handleFieldChange("agreementChecked", checked)}
+          onChangeData={(data: any) => handleFieldChange("isAgree", data)}
         />
+        
+        
         <div>
           <ERPButton
             title={t("reset")}
             variant="primary"
             className="h-10 w-24"
+            loading={isLoading}
             onClick={handleSubmit}
           ></ERPButton>
+          
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
@@ -94,7 +94,17 @@ export const initialDataBranch = {
   // },
 };
 
+const conformPassWord = {
+  data:{
+  confirmPassword:""
+  },
+  validations:{
+     confirmPassword:""
+  }
+}
+
 export const BranchGridManage: React.FC = React.memo(() => {
+  const [confirmPassword, setConfirmPassword] = useState(conformPassWord);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const rootState = useRootState();
@@ -106,7 +116,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
         [dispatch]
       ),
       key: rootState.PopupData.branchGrid.key,
-      useApiClient:true,
+      useApiClient: true,
       // initialData: initialDataBranch,
     });
 
@@ -143,7 +153,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
           label="Company Id"
           id="companyID"
         /> */}
-        
+
         <ERPInput
           {...getFieldProps("address1")}
           label="Address 1"
@@ -270,13 +280,30 @@ export const BranchGridManage: React.FC = React.memo(() => {
             required
             onChangeData={(data) => handleFieldChange("password", data)}
           />
-          <ERPInput
+          {/* <ERPInput
             {...getFieldProps("confirmPassword")}
             label="Confirm Password"
             disabled={isEdit}
             type="password"
             required
             onChangeData={(data) => handleFieldChange("confirmPassword", data)}
+          /> */}
+          <ERPInput
+            id="confirmPassword"
+            label="Confirm Password"
+            placeholder="Confirm Password"
+            required={true}
+            data={confirmPassword?.data}
+            onChangeData={(data: any) => {
+              setConfirmPassword((prev: any) => ({
+                ...prev,
+                data: data,
+              }));
+            }}
+            validation={confirmPassword.validations?.confirmPassword}
+            value={
+              confirmPassword?.data?.confirmPassword ? confirmPassword?.data?.confirmPassword : ""
+            }
           />
         </div>
       </div>

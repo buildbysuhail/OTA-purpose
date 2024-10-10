@@ -73,6 +73,16 @@ const SystemSettingsApi = {
       return '';
     }
   },
+
+  postRestDB: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.reset_data_base,data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
 };
 
 export default SystemSettingsApi;

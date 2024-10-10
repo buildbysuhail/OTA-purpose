@@ -207,23 +207,22 @@ const ResetDbManage: React.FC = React.memo(() => {
 
         <div className="flex justify-start  gap-5 mb-4">
           {/* deme text area */}
-          
-            <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
-                Transaction Forms
-              </label>
-              <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[500px] h-auto max-h-[260px]">
-                <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
-                  {allTransactions && allTransactions.length > 0 && (
-                    <TransactionFormsCheckboxes
-                      allTransactions={allTransactions}
-                      setAllTransactions={setAllTransactions}
-                    />
-                  )}
-                </div>
+
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
+              Transaction Forms
+            </label>
+            <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[500px] h-auto max-h-[260px]">
+              <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
+                {allTransactions && allTransactions.length > 0 && (
+                  <TransactionFormsCheckboxes
+                    allTransactions={allTransactions}
+                    setAllTransactions={setAllTransactions}
+                  />
+                )}
               </div>
             </div>
-         
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
             <div className="flex flex-col gap-6">
@@ -581,7 +580,7 @@ const ResetDbManage: React.FC = React.memo(() => {
       </div>
       <div className="flex justify-end items-center gap-3 m-2">
         <ERPButton
-          title="Save Changes"
+          title="Reset"
           variant="primary"
           disabled={postDataLoading}
           loading={postDataLoading}

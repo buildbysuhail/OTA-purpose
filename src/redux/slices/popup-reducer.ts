@@ -36,6 +36,7 @@ interface popupData {
   currencyMaster: popupDataProps
   revertBillModifications: popupDataProps
   resetBranchDataForSync: popupDataProps
+  refreshAllBranches: popupDataProps
 }
 const initialState: popupData = {
   userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true},
@@ -68,6 +69,7 @@ const initialState: popupData = {
   currencyMaster: { isOpen: false, key: null, mode: "edit", reload: true },
   revertBillModifications: { isOpen: false, key: null, mode: "edit", reload: true },
   resetBranchDataForSync: { isOpen: false, key: null, mode: "edit", reload: true },
+  refreshAllBranches: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -178,6 +180,9 @@ const popupDataSlice = createSlice({
     toggleResetBranchDataForSync: (state, action: PayloadAction<popupDataProps>) => {
       state.resetBranchDataForSync = action.payload;
     },
+    toggleRefreshAllBranches: (state, action: PayloadAction<popupDataProps>) => {
+      state.refreshAllBranches = action.payload;
+    },
   },
 });
 
@@ -213,6 +218,7 @@ export const {
   toggleBranchGridPopup,
   toggleRevertBillModifications,
   toggleResetBranchDataForSync,
+  toggleRefreshAllBranches,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

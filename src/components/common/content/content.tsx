@@ -7,6 +7,7 @@ import Flex from '../../../pages/inventory/demo-flex';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
 import Cash from '../../../pages/accounts/masters/reports/cash';
 import ReportList from '../../ERPComponents/reports/reports-list';
+import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -114,7 +115,8 @@ const Content: FC<ContentProps> = () => {
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
           {/* Reports - Accounts */}
-          <Route path="/accounts/cash" element={<Cash />} />            
+          <Route path="/accounts/cash" element={<Cash />} />
+          <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />            
           {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}

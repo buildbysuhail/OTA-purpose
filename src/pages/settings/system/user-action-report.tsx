@@ -112,6 +112,7 @@ const UserActionReport: React.FC = React.memo(() => {
                   dataUrl={Urls.userActionReport}
                   gridId="user_action_report"
                   hideGridAddButton={true}
+                  reload={true}
                   initialFilters={[
                     { field: 'dateTimeOfAction', value: new Date("4/12/2024"), operation: '=' }
                   ]}

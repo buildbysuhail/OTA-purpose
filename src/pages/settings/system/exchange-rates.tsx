@@ -68,7 +68,7 @@ const ExchangeRates = () => {
       for (let index = 0; index < remain; index++) {
         data.push({
           cStatus: false,
-          exchRateID: null,
+          exchRateID: 0,
           rate: null,
           rateDate: null,
           toCurrency: null,
@@ -83,9 +83,11 @@ const ExchangeRates = () => {
     const dataToSubmit = store.filter((row: any) => 
       row.toCurrency !== null && row.rate !== null
     );
+    
     debugger;
     const result: any = await api.post(`${Urls.currencyExchange}`, {
       currencyId: postData.baseCurrency,
+      
       data: dataToSubmit,
     });
 
@@ -105,66 +107,35 @@ const ExchangeRates = () => {
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 
-  // const columns: DevGridColumn[] = [
-  //   {
-  //     dataField: "exchRateID",
-  //     caption: t("SiNo"),
-  //     dataType: "number",
-  //     allowSorting: true,
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //   },
-  //   {
-  //     dataField: "toCurrency",
-  //     caption: t("to_currency"),
-  //     dataType: "string",
-  //     allowSorting: true,
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //     allowEditing: true,
-  //   },
-  //   {
-  //     dataField: "rate",
-  //     caption: t("rate"),
-  //     dataType: "number",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //     allowEditing: true,
-  //   },
-  //   {
-  //     dataField: "rateDate",
-  //     caption: t("rate_date"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 100,
-  //   },
-  //   {
-  //     dataField: "cStatus",
-  //     caption: t("active"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //   },
-  // ];
-  const handleDelete = async(id:any) => {
  
-    alert("Are you sure you want to delete this item?")
-     const Delete: any = await api.delete(`${Urls.currencyExchange}${id}`)
-     handleResponse(Delete);
-    load(postData.baseCurrency);
+  const handleDelete = async(id: any, rowIndex: number)=> {
+    if (id === 0 || id === null) {
+      // If exchRateID is null or 0, remove the row from the store
+      const newStore = [...store];
+      newStore.splice(rowIndex, 1);
+      setStore(newStore);
+    } else {
+      // If exchRateID exists, proceed with API call for deletion
+     
+        try {
+          const Delete: any = await api.delete(`${Urls.currencyExchange}${id}`);
+          handleResponse(Delete);
+          // Reload the data after deletion
+          load(postData.baseCurrency);
+        } catch (error) {
+          console.error("Error deleting the currency exchange:", error);
+        }
+      }
   }
-  const ChartCell = (cellData: any) => (
-    <div className="chart-cell">
-      <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={()=>handleDelete(cellData.data.exchRateID)}></i>
-    </div>
-
-    
-  );
+  const ChartCell = (cellData: any) => {
+    debugger;
+    return (
+ 
+      <div className="chart-cell">
+        <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={()=>handleDelete(cellData.data.exchRateID,cellData.rowIndex)}></i>
+      </div>
+    )
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -204,7 +175,7 @@ const ExchangeRates = () => {
                   >
                     <Lookup
                       dataSource={currencies}
-                      valueExpr="id"
+                      valueExpr="name"
                       displayExpr="name"
                     />
                   </Column>
@@ -220,7 +191,7 @@ const ExchangeRates = () => {
                   <Column
                     dataField="rateDate"
                     caption={t("rate_date")}
-                    dataType="date" 
+                    dataType="date"
                     allowEditing={true}
                     allowSearch={true}
                     allowFiltering={true}

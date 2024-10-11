@@ -578,5 +578,8 @@
   "start_row":"Start Row",
   "end_row":"End Row",
   "inSearch":"In Search",
-  "printer":"Printer"
+  "printer":"Printer",
+  "debit":"Debit",
+  "credit":"Credit",
+  "balance":"Balance"
 }

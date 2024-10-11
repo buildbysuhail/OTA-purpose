@@ -21,10 +21,12 @@ import {
   Lookup,
   Scrolling,
   RemoteOperations,
+  Paging,
 } from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../../helpers/api-client";
 import CustomStore from "devextreme/data/custom_store";
 import "./exchange-rates.css";
+import { handleResponse } from "../../../utilities/HandleResponse";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
@@ -103,62 +105,65 @@ const ExchangeRates = () => {
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 
-  const columns: DevGridColumn[] = [
-    {
-      dataField: "exchRateID",
-      caption: t("SiNo"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 150,
-    },
-    {
-      dataField: "toCurrency",
-      caption: t("to_currency"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 150,
-      allowEditing: true,
-    },
-    {
-      dataField: "rate",
-      caption: t("rate"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 150,
-      allowEditing: true,
-    },
-    {
-      dataField: "rateDate",
-      caption: t("rate_date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 100,
-    },
-    {
-      dataField: "cStatus",
-      caption: t("active"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 150,
-    },
-  ];
-  const handleDelete = async() => {
-    //api
-    // resp
-    alert('asasa')
+  // const columns: DevGridColumn[] = [
+  //   {
+  //     dataField: "exchRateID",
+  //     caption: t("SiNo"),
+  //     dataType: "number",
+  //     allowSorting: true,
+  //     allowSearch: true,
+  //     allowFiltering: true,
+  //     minWidth: 150,
+  //   },
+  //   {
+  //     dataField: "toCurrency",
+  //     caption: t("to_currency"),
+  //     dataType: "string",
+  //     allowSorting: true,
+  //     allowSearch: true,
+  //     allowFiltering: true,
+  //     minWidth: 150,
+  //     allowEditing: true,
+  //   },
+  //   {
+  //     dataField: "rate",
+  //     caption: t("rate"),
+  //     dataType: "number",
+  //     allowSearch: true,
+  //     allowFiltering: true,
+  //     minWidth: 150,
+  //     allowEditing: true,
+  //   },
+  //   {
+  //     dataField: "rateDate",
+  //     caption: t("rate_date"),
+  //     dataType: "string",
+  //     allowSearch: true,
+  //     allowFiltering: true,
+  //     minWidth: 100,
+  //   },
+  //   {
+  //     dataField: "cStatus",
+  //     caption: t("active"),
+  //     dataType: "string",
+  //     allowSearch: true,
+  //     allowFiltering: true,
+  //     minWidth: 150,
+  //   },
+  // ];
+  const handleDelete = async(id:any) => {
+ 
+    alert("Are you sure you want to delete this item?")
+     const Delete: any = await api.delete(`${Urls.currencyExchange}${id}`)
+     handleResponse(Delete);
     load(postData.baseCurrency);
   }
   const ChartCell = (cellData: any) => (
     <div className="chart-cell">
-      <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={handleDelete}></i>
+      <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={()=>handleDelete(cellData.data.exchRateID)}></i>
     </div>
+
+    
   );
   return (
     <Fragment>
@@ -174,7 +179,8 @@ const ExchangeRates = () => {
                   showBorders={true}
                   showRowLines={true}
                 >
-                  <Scrolling mode="virtual" />
+                  <Paging pageSize={100}></Paging>
+                  <Scrolling mode="standard"/>
                   <RemoteOperations filtering={false} sorting={false} paging={false}></RemoteOperations>
                   <Column
                     dataField="exchRateID"
@@ -224,7 +230,7 @@ const ExchangeRates = () => {
                     dataField="cStatus"
                     caption={t("active")}
                     dataType="string"
-                    allowEditing={false}
+                    allowEditing={true}
                     allowSearch={true}
                     allowFiltering={true}
                     minWidth={150}

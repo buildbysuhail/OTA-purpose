@@ -29,6 +29,7 @@ import { initialThemeData, languagesData, Theme } from "./redux/slices/app/types
 import Settings from "./pages/settings/AllSettings/Settings";
 import SettingsLayout from "./components/common/layout/settings-layout";
 import { useTranslation } from "react-i18next";
+import ReportsLayout from "./components/common/layout/reports-layout";
 
 export const LoadingAnimation = () => {
   return (
@@ -146,7 +147,7 @@ function App() {
               />
               <Route
                 path="reports/_/*"
-                element={<SettingsLayout setMyClass={setMyClass} />}
+                element={<ReportsLayout setMyClass={setMyClass} />}
               />
               <Route
                 path="workspace-settings/*"

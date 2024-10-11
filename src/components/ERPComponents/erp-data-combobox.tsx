@@ -98,7 +98,8 @@ export default function ERPDataCombobox({
   className,
   isPaginated = false,
   disabledApiCall = false,
-  validation
+  validation,
+  value
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -177,13 +178,20 @@ export default function ERPDataCombobox({
       (defaultData && fieldKey === "payment_terms" && items[0]) ||
       fieldKey === "currency";
       setInitial(_selected || _default || _exceptional || initialValue || "")
-  }, [items]);
+  }, [items,data]);
 
   useEffect(() => {
     if (defaultData) {
       initial && initial != '' && setHasValue(true);
     }
   }, [defaultData]);
+
+  // useEffect(() => {
+  //   debugger;
+  //   _selected = items?.find(
+  //     (option: any) => option?.value === data?.[field?.id]
+  //   );
+  // }, [value]);
 
   const clearSelection = (e?: any) => {
     e?.stopPropagation();

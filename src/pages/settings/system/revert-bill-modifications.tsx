@@ -1,15 +1,15 @@
-import React, { Fragment, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useAppDispatch } from '../../../utilities/hooks/useAppDispatch';
-import { useRootState } from '../../../utilities/hooks/useRootState';
-import { DevGridColumn } from '../../../components/types/dev-grid-column';
-import ERPGridActions from '../../../components/ERPComponents/erp-grid-actions';
-import { toggleRevertBillModifications } from '../../../redux/slices/popup-reducer';
-import ERPDevGrid from '../../../components/ERPComponents/erp-dev-grid';
-import ERPModal from '../../../components/ERPComponents/erp-modal';
-import Urls from '../../../redux/urls';
-import { APIClient } from '../../../helpers/api-client';
-import { handleResponse } from '../../../utilities/HandleResponse';
+import React, { Fragment, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { toggleRevertBillModifications } from "../../../redux/slices/popup-reducer";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import Urls from "../../../redux/urls";
+import { APIClient } from "../../../helpers/api-client";
+import { handleResponse } from "../../../utilities/HandleResponse";
 
 export interface RevertBillModificationData {
   invTransactionMasterID: number;
@@ -25,7 +25,7 @@ export const initialRevertBillModificationData = {
   data: {
     invTransactionMasterID: 0,
     remarks: "",
-    tType: ""
+    tType: "",
   },
   validations: {
     invTransactionMasterID: "",
@@ -39,106 +39,109 @@ const RevertBillModifications: React.FC = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
 
-  const handleDelete = async(data: any) => {
+  const handleDelete = async (data: any) => {
     debugger;
-    const res = await api.post(Urls.revertBillModifications,{aa:data.invTransactionMasterID})
+    const res = await api.post(Urls.revertBillModifications, {
+      invTransactionMasterID: data.data.invTransactionMasterID,
+      remarks: data.data.remarks,
+      tType: data.data.tType,
+    });
     handleResponse(res);
-  }
-  const ActionCell = (cellData: any) => (
-    <div className="chart-cell">
-      <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={() =>handleDelete(cellData)}></i>
-    </div>);
-  const columns: DevGridColumn[] = useMemo(() => [
-    {
-      dataField: "invTransactionMasterID",
-      caption: "Transaction Master ID",
-      dataType: "number",
-      allowSorting: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "transactionDate",
-      caption: "Transaction Date",
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
-    },
-    {
-      dataField: "VchNo",
-      caption: "Voucher Number",
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
-    },
-    {
-      dataField: "voucherType",
-      caption: "Voucher Type",
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
-    },
-    {
-      dataField: "voucherForm",
-      caption: "Voucher Form",
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "remarks",
-      caption: "Remarks",
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "tType",
-      caption: "Transaction Type",
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "description",
-      caption: "Description",
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      minWidth: 150,
-    },
-    {
-      dataField: "actions",
-      caption: t("actions"),
-      allowSearch: false,
-      allowFiltering: false,
-      fixed: true,
-      fixedPosition: "right",
-      width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => {
-        return (
-          <ERPGridActions
-            delete={{
-              confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
-              url: Urls?.revertBillModifications}}
-          />
-        );
+  };
+  const columns: DevGridColumn[] = useMemo(
+    () => [
+      {
+        dataField: "invTransactionMasterID",
+        caption: "Transaction Master ID",
+        dataType: "number",
+        allowSorting: true,
+        allowFiltering: true,
+        width: 150,
       },
-    }
-  ], [t]);
+      {
+        dataField: "transactionDate",
+        caption: "Transaction Date",
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 200,
+      },
+      {
+        dataField: "VchNo",
+        caption: "Voucher Number",
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        width: 200,
+      },
+      {
+        dataField: "voucherType",
+        caption: "Voucher Type",
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 200,
+      },
+      {
+        dataField: "voucherForm",
+        caption: "Voucher Form",
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "remarks",
+        caption: "Remarks",
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "tType",
+        caption: "Transaction Type",
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+      },
+      {
+        dataField: "description",
+        caption: "Description",
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 150,
+      },
+      {
+        dataField: "actions",
+        caption: t("actions"),
+        allowSearch: false,
+        allowFiltering: false,
+        fixed: true,
+        fixedPosition: "right",
+        width: 100,
+        cellRender: (cellElement: any) => {
+          return (
+            <div className="chart-cell">
+              <i
+                className="ri-delete-bin-5-line delete-icon cursor-pointer"
+                onClick={() => handleDelete(cellElement)}
+              ></i>
+            </div>
+          );
+        },
+      },
+    ],
+    [t]
+  );
 
   return (
     <Fragment>

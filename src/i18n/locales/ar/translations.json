@@ -578,5 +578,10 @@
   "start_row": "بدء الصف",
   "end_row": "نهاية الصف",
   "inSearch": "في البحث",
-  "printer": "الطابعة"
+  "printer": "الطابعة",
+  "debit": "مدين",
+  "credit": "دائن",
+  "balance": "الرصيد",
+
+  "hide":"يخفي"
 }

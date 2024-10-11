@@ -16,7 +16,7 @@ const AccountPayableAgingReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "si",
-      caption: t('SlNo'),
+      caption: t('si_no'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -24,7 +24,7 @@ const AccountPayableAgingReport = () => {
     },
     {
       dataField: "ledgername",
-      caption: t("Ledger Name"),
+      caption: t("ledger_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -32,7 +32,7 @@ const AccountPayableAgingReport = () => {
     },
     {
       dataField: "Debit",
-      caption: t('Debit'),
+      caption: t('debit'),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -40,7 +40,7 @@ const AccountPayableAgingReport = () => {
     },
     {
       dataField: "Credit",
-      caption: t("Credit"),
+      caption: t("credit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -48,7 +48,7 @@ const AccountPayableAgingReport = () => {
     },
     {
       dataField: "Balance",
-      caption: t("Balance"),
+      caption: t("balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -90,7 +90,7 @@ const AccountPayableAgingReport = () => {
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.costCentre?.reload}
+                  reload={true}
                   gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>

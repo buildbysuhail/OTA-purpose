@@ -22,11 +22,15 @@ import {
   Scrolling,
   RemoteOperations,
   Paging,
+  KeyboardNavigation,
+  DataGridTypes,
 } from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../../helpers/api-client";
 import CustomStore from "devextreme/data/custom_store";
 import "./exchange-rates.css";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import { CheckBoxTypes } from "devextreme-react/cjs/check-box";
+import { SelectBoxTypes } from "devextreme-react/cjs/select-box";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
@@ -58,7 +62,7 @@ const ExchangeRates = () => {
       `${Urls.currencyExchange}${baseCurrency ? baseCurrency : "0"}`
     );
     debugger;
-    updateStore(result?.data)
+    updateStore(result?.data);
   };
   const updateStore = (inputData: any) => {
     let data = inputData;
@@ -68,24 +72,26 @@ const ExchangeRates = () => {
       for (let index = 0; index < remain; index++) {
         data.push({
           cStatus: false,
-          exchRateID: null,
+          exchRateID: 0,
           rate: null,
           rateDate: null,
           toCurrency: null,
         });
       }
-    } 
+    }
     setStore(data);
-  }
-    const handleSubmit = async () => {
+  };
+  const handleSubmit = async () => {
     setPostDataLoading(true);
     debugger;
-    const dataToSubmit = store.filter((row: any) => 
-      row.toCurrency !== null && row.rate !== null
+    const dataToSubmit = store.filter(
+      (row: any) => row.toCurrency !== null && row.rate !== null
     );
+
     debugger;
     const result: any = await api.post(`${Urls.currencyExchange}`, {
       currencyId: postData.baseCurrency,
+
       data: dataToSubmit,
     });
 
@@ -105,66 +111,62 @@ const ExchangeRates = () => {
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 
-  // const columns: DevGridColumn[] = [
-  //   {
-  //     dataField: "exchRateID",
-  //     caption: t("SiNo"),
-  //     dataType: "number",
-  //     allowSorting: true,
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //   },
-  //   {
-  //     dataField: "toCurrency",
-  //     caption: t("to_currency"),
-  //     dataType: "string",
-  //     allowSorting: true,
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //     allowEditing: true,
-  //   },
-  //   {
-  //     dataField: "rate",
-  //     caption: t("rate"),
-  //     dataType: "number",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //     allowEditing: true,
-  //   },
-  //   {
-  //     dataField: "rateDate",
-  //     caption: t("rate_date"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 100,
-  //   },
-  //   {
-  //     dataField: "cStatus",
-  //     caption: t("active"),
-  //     dataType: "string",
-  //     allowSearch: true,
-  //     allowFiltering: true,
-  //     minWidth: 150,
-  //   },
-  // ];
-  const handleDelete = async(id:any) => {
- 
-    alert("Are you sure you want to delete this item?")
-     const Delete: any = await api.delete(`${Urls.currencyExchange}${id}`)
-     handleResponse(Delete);
-    load(postData.baseCurrency);
-  }
-  const ChartCell = (cellData: any) => (
-    <div className="chart-cell">
-      <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={()=>handleDelete(cellData.data.exchRateID)}></i>
-    </div>
+  const handleDelete = async (id: any, rowIndex: number) => {
+    if (id === 0 || id === null) {
+      // If exchRateID is null or 0, remove the row from the store
+      const newStore = [...store];
+      newStore.splice(rowIndex, 1);
+      setStore(newStore);
+    } else {
+      // If exchRateID exists, proceed with API call for deletion
 
-    
+      try {
+        const Delete: any = await api.delete(`${Urls.currencyExchange}${id}`);
+        handleResponse(Delete);
+        // Reload the data after deletion
+        load(postData.baseCurrency);
+      } catch (error) {
+        console.error("Error deleting the currency exchange:", error);
+      }
+    }
+  };
+  const ChartCell = (cellData: any) => {
+    debugger;
+    return (
+      <div className="chart-cell">
+        <i
+          className="ri-delete-bin-5-line delete-icon cursor-pointer"
+          onClick={() =>
+            handleDelete(cellData.data.exchRateID, cellData.rowIndex)
+          }
+        ></i>
+      </div>
+    );
+  };
+
+  const [enterKeyAction, setEnterKeyAction] =
+    useState<DataGridTypes.EnterKeyAction>("startEdit");
+  const [enterKeyDirection, setEnterKeyDirection] =
+    useState<DataGridTypes.EnterKeyDirection>("row");
+
+  const enterKeyActionChanged = useCallback(
+    (e: SelectBoxTypes.ValueChangedEvent) => {
+      setEnterKeyAction(e.value);
+    },
+    []
   );
+
+  const enterKeyDirectionChanged = useCallback(
+    (e: SelectBoxTypes.ValueChangedEvent) => {
+      setEnterKeyDirection(e.value);
+    },
+    []
+  );
+
+  const onFocusedCellChanging = (e: { isHighlighted: boolean; }) => {
+    e.isHighlighted = true;
+  };
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -178,10 +180,28 @@ const ExchangeRates = () => {
                   key="exchRateID"
                   showBorders={true}
                   showRowLines={true}
+                  onRowUpdating={(e) => {
+                    // Check if 'rate' is being updated
+                    if (e.newData.rate !== undefined) {
+                      // Set 'rateDate' to current date and 'cStatus' to 'true'
+                      e.newData.rateDate = new Date(); 
+                      e.newData.cStatus = "true"; 
+                    }
+                  }}
+                  onFocusedCellChanging={onFocusedCellChanging}
                 >
+                  <KeyboardNavigation
+                    editOnKeyPress={true}
+                    enterKeyAction={"startEdit"}
+                    enterKeyDirection={"row"}
+                  />
                   <Paging pageSize={100}></Paging>
-                  <Scrolling mode="standard"/>
-                  <RemoteOperations filtering={false} sorting={false} paging={false}></RemoteOperations>
+                  <Scrolling mode="standard" />
+                  <RemoteOperations
+                    filtering={false}
+                    sorting={false}
+                    paging={false}
+                  ></RemoteOperations>
                   <Column
                     dataField="exchRateID"
                     caption={t("SiNo")}
@@ -204,7 +224,7 @@ const ExchangeRates = () => {
                   >
                     <Lookup
                       dataSource={currencies}
-                      valueExpr="id"
+                      valueExpr="name"
                       displayExpr="name"
                     />
                   </Column>
@@ -220,7 +240,7 @@ const ExchangeRates = () => {
                   <Column
                     dataField="rateDate"
                     caption={t("rate_date")}
-                    dataType="date" 
+                    dataType="date"
                     allowEditing={true}
                     allowSearch={true}
                     allowFiltering={true}
@@ -235,13 +255,13 @@ const ExchangeRates = () => {
                     allowFiltering={true}
                     minWidth={150}
                   />
-                   <Column caption="Action" width={80} cellRender={ChartCell} />
+                  <Column 
+                    allowEditing={false} caption="Action" width={80} cellRender={ChartCell} />
                   <Editing
-                    mode="cell"
                     allowUpdating={true}
                     allowAdding={false}
                     allowDeleting={false}
-                   
+                    mode="cell" 
                   />
                   <Toolbar>
                     <Item location="before" cssClass="mb-4">

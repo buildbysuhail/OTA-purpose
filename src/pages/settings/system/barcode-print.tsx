@@ -401,7 +401,7 @@ const BarcodePrint: React.FC = () => {
                         field={{
                           id: "formType",
                           required: true,
-                          getListUrl: Urls.barcodePrintTransaction,
+                          // getListUrl: Urls.barcodePrintTransaction,
                           valueKey: "id",
                           labelKey: "name",
                         }}

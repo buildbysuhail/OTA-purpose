@@ -53,8 +53,13 @@ class APIClient {
     setAuthorization();
     const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
     const response = await axios.get(fullUrl);
-    
-    return response.data; // Assuming you want to return the response data
+    if (response?.status != undefined && response?.status != null) {
+      return response?.data;
+    }
+    else
+    {
+      return response
+    } 
   } catch (error) {
     if (axios.isAxiosError(error)) {
       // Handle Axios specific errors

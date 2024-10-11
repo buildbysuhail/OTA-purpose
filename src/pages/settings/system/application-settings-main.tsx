@@ -181,7 +181,7 @@ const ERPSettingsFormMain = () => {
           id="currency"
           field={{
             id: "currency",
-            required: true,
+            // required: true,
             getListUrl: Urls.data_currencies,
             valueKey: "id",
             labelKey: "name",

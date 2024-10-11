@@ -166,7 +166,7 @@ const Urls = {
 
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
-  revertBillModifications:"/Core/AdvancedOptions/RevertBillModification",
+  revertBillModifications:"/Core/AdvancedOptions",
   branchDataReset:"/Core/AdvancedOptions/BranchDataReset",
   // refresh all branches
   refreshAllBranches:"/Core/RefreshAllBranch/RefreshAllBranch/",

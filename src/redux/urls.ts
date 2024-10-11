@@ -166,7 +166,7 @@ const Urls = {
 
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
-  revertBillModifications:"/Core/AdvancedOptions/RevertBillModification",
+  revertBillModifications:"/Core/AdvancedOptions",
   branchDataReset:"/Core/AdvancedOptions/BranchDataReset",
   // refresh all branches
   refreshAllBranches:"/Core/RefreshAllBranch/RefreshAllBranch/",
@@ -186,6 +186,7 @@ const Urls = {
   // Accounts End
   //Templates
   templates: "/Core/Template/",
+  crm_templates: "/Core/Template/CRM/",
 
   // Tax Treatments
   tax_treatment: "api/tax_treatment/",

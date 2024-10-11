@@ -189,7 +189,7 @@ const ApplicationSettingsAccounts = () => {
         />
         <ERPDataCombobox
           id="defaultSuspenseAcc"
-          value={formState.defaultSuspenseAcc}
+          value={formState?.defaultSuspenseAcc}
           data={formState}
           label="Default Suspense Account"
           field={{
@@ -199,11 +199,11 @@ const ApplicationSettingsAccounts = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data.defaultSuspenseAcc)}
+          onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data?.defaultSuspenseAcc)}
         />
         <ERPDataCombobox
           id="defaultServiceAccount"
-          value={formState.defaultServiceAccount}
+          value={formState?.defaultServiceAccount}
           data={formState}
           label="Default Service Account"
           field={{
@@ -213,11 +213,11 @@ const ApplicationSettingsAccounts = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultServiceAccount', data.defaultServiceAccount)}
+          onChangeData={(data) => handleFieldChange('defaultServiceAccount', data?.defaultServiceAccount)}
         />
         <ERPDataCombobox
           id="defaultBankAcc"
-          value={formState.defaultBankAcc}
+          value={formState?.defaultBankAcc}
           data={formState}
           label="Default Bank Account"
           field={{
@@ -227,7 +227,7 @@ const ApplicationSettingsAccounts = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange('defaultBankAcc', data.defaultBankAcc)}
+          onChangeData={(data) => handleFieldChange('defaultBankAcc', data?.defaultBankAcc)}
         />
         <ERPDataCombobox
           id="defaultCreditCardAcc"

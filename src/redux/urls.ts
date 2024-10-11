@@ -166,7 +166,7 @@ const Urls = {
 
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
-  revertBillModifications:"/Core/AdvancedOptions/RevertBillModification",
+  revertBillModifications:"/Core/AdvancedOptions",
   branchDataReset:"/Core/AdvancedOptions/BranchDataReset",
   // refresh all branches
   refreshAllBranches:"/Core/RefreshAllBranch/RefreshAllBranch/",
@@ -180,9 +180,13 @@ const Urls = {
   account_party_category:"/Accounts/PartyCategory/",
   account_currency_master:"/Accounts/Currency/",
   //Reports
+ acc_reports_aging_payable:"/Accounts/RptAging/AgingPayable",
+
+
   // Accounts End
   //Templates
   templates: "/Core/Template/",
+  crm_templates: "/Core/Template/CRM/",
 
   // Tax Treatments
   tax_treatment: "api/tax_treatment/",

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
@@ -14,35 +14,86 @@ import { initialDataCounter } from "../system/counters-manage-type";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { ResponseModelWithValidation } from "../../../base/response-model";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import SystemSettingsApi from "../system/system-apis";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
-interface UserTypePrivilegeManageData {
-  userType: string;
-  selectAll: boolean;
-  showAll: boolean;
-  showAllAdd: boolean;
-  showAllPrint: boolean;
-  showAllEdit: boolean;
-  showAllExport: boolean;
-  showAllDelete: boolean;
-  userRightType: boolean;
-  userType2: string;
+type PrimitiveFormField = string | number | boolean | Date | null | undefined;
+type ArrayFormField = PrimitiveFormField[];
+type ObjectFormField = { [key: string]: FormField };
+type FormField = PrimitiveFormField | ArrayFormField | ObjectFormField;
+
+interface FormDataStructure {
+  [key: string]: FormField;
 }
 
+interface Validations {
+  [key: string]: string;
+}
+
+interface FormState {
+  data: FormDataStructure;
+  validations: Validations;
+}
+
+interface DynamicFormProps {
+  initialData: FormState;
+  onSubmit: (data: FormDataStructure) => void;
+  onCancel: () => void;
+}
+const initialUserTypePrivilegeManageData = {
+  data: {
+    userType: "",
+    selectAll: false,
+    showAll: false,
+    showAllAdd: false,
+    showAllPrint: false,
+    showAllEdit: false,
+    showAllExport: false,
+    showAllDelete: false,
+    userRightType: false,
+    userType2: "",
+  },
+  validations: {
+    userType: "",
+    selectAll: "",
+    showAll: "",
+    showAllAdd: "",
+    showAllPrint: "",
+    showAllEdit: "",
+    showAllExport: "",
+    showAllDelete: "",
+    userRightType: "",
+    userType2: "",
+  },
+};
+
 const UserTypePrivilegeManage: React.FC = React.memo(() => {
+  const [postData, setPostData] = useState<any>(
+    initialUserTypePrivilegeManageData
+  );
+  const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<UserTypePrivilegeManageData>({
-      url: Urls.UserTypes,
-      onSuccess: useCallback(
-        () =>
-          dispatch(toggleUserTypePrivilegePopup({ isOpen: false, key: null })),
-        [dispatch]
-      ),
-      method: ActionType.POST,
-      useApiClient: true,
-      loadDataRequired: false,
-    });
+  const handleSubmit = useCallback(async () => {
+    setPostUserTypeLoading(true);
+    const response: ResponseModelWithValidation<any, any> =
+      await SystemSettingsApi.postCurrencyExchange(postData?.data); //change this  demo api call
+    setPostUserTypeLoading(false);
+    handleResponse(
+      response,
+      () => {
+        dispatch(toggleUserTypePrivilegePopup({ isOpen: false }));
+      },
+      () => {
+        setPostData((prevData: any) => ({
+          ...prevData,
+          validations: response.validations,
+        }));
+      }
+    );
+  }, [postData?.data]);
 
   const onClose = useCallback(() => {
     dispatch(toggleUserTypePrivilegePopup({ isOpen: false, key: null }));
@@ -53,11 +104,11 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   return (
     <div className="w-full flex justify-start ">
       <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 "></div>
-      
+
       <div className="w-full flex flex-col px-24 py-10 ">
         {/* User Type Combobox */}
         <ERPDataCombobox
-          {...getFieldProps("userType")}
+          id="userType"
           field={{
             id: "userType",
             required: true,
@@ -66,58 +117,166 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label="User Type"
-          onChangeData={(data: any) => handleFieldChange("userType", data)}
+          onChangeData={(data: any) => {
+            setPostData((prev: any) => ({
+              ...prev,
+              data: data,
+            }));
+          }}
+          validation={postData.validations.userType}
+          data={postData?.data}
+          defaultData={postData?.data}
+          value={
+            postData != undefined &&
+            postData?.data != undefined &&
+            postData?.data?.userType != undefined
+              ? postData?.data?.userType
+              : 0
+          }
         />
 
         {/* Checkbox options */}
         <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 py-4 mb-5">
           <ERPCheckbox
-            {...getFieldProps("selectAll")}
+            id="selectAll"
             label="Select All"
-            onChangeData={(data: any) => handleFieldChange("selectAll", data)}
+            data={postData.data}
+            checked={postData.data.selectAll}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data, // Spread previous data properties
+                  selectAll: !prev.data.selectAll, // Toggle the selectAll checkbox state
+                },
+              }));
+            }}
+            validation={postData.validations.selectAll}
           />
           <ERPCheckbox
-            {...getFieldProps("showAll")}
+            id="showAll"
             label="Show All"
-            onChangeData={(data: any) => handleFieldChange("showAll", data)}
+            data={postData.data}
+            checked={postData.data.showAll}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  showAll: !prev.data.showAll,
+                },
+              }));
+            }}
+            validation={postData.validations.showAll}
           />
+
           <ERPCheckbox
-            {...getFieldProps("showAllAdd")}
+            id="showAllAdd"
             label="Select All Add"
-            onChangeData={(data: any) => handleFieldChange("showAllAdd", data)}
+            data={postData.data}
+            checked={postData.data.showAllAdd}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  showAllAdd: !prev.data.showAllAdd,
+                },
+              }));
+            }}
+            validation={postData.validations.showAllAdd}
           />
+
           <ERPCheckbox
-            {...getFieldProps("showAllPrint")}
+            id="showAllPrint"
             label="Select All Print"
-            onChangeData={(data: any) => handleFieldChange("showAllPrint", data)}
+            data={postData.data}
+            checked={postData.data.showAllPrint}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  showAllPrint: !prev.data.showAllPrint,
+                },
+              }));
+            }}
+            validation={postData.validations.showAllPrint}
           />
+
           <ERPCheckbox
-            {...getFieldProps("showAllEdit")}
+            id="showAllEdit"
             label="Select All Edit"
-            onChangeData={(data: any) => handleFieldChange("showAllEdit", data)}
+            data={postData.data}
+            checked={postData.data.showAllEdit}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  showAllEdit: !prev.data.showAllEdit,
+                },
+              }));
+            }}
+            validation={postData.validations.showAllEdit}
           />
+
           <ERPCheckbox
-            {...getFieldProps("showAllExport")}
+            id="showAllExport"
             label="Select All Export"
-            onChangeData={(data: any) => handleFieldChange("showAllExport", data)}
+            data={postData.data}
+            checked={postData.data.showAllExport}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  showAllExport: !prev.data.showAllExport,
+                },
+              }));
+            }}
+            validation={postData.validations.showAllExport}
           />
+
           <ERPCheckbox
-            {...getFieldProps("showAllDelete")}
+            id="showAllDelete"
             label="Select All Delete"
-            onChangeData={(data: any) => handleFieldChange("showAllDelete", data)}
+            data={postData.data}
+            checked={postData.data.showAllDelete}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  showAllDelete: !prev.data.showAllDelete,
+                },
+              }));
+            }}
+            validation={postData.validations.showAllDelete}
           />
         </div>
 
         {/* Inherit Rights From UserType Section */}
         <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
           <ERPCheckbox
-            {...getFieldProps("userRightType")}
+            id="showAllDelete"
             label="Inherit Rights From UserType"
-            onChangeData={(data: any) => handleFieldChange("userRightType", data)}
+            data={postData.data}
+            checked={postData.data.userRightType}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  userRightType: !prev.data.userRightType,
+                },
+              }));
+            }}
+            validation={postData.validations.userRightType}
           />
 
           <ERPDataCombobox
-            {...getFieldProps("userType2")}
+            id="userType2"
             field={{
               id: "userType2",
               required: true,
@@ -126,23 +285,43 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
               labelKey: "name",
             }}
             label="User Type"
-            disabled={!getFieldProps("userRightType").value}
-            onChangeData={(data: any) => handleFieldChange("userType2", data)}
+            onChangeData={(data: any) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: data,
+              }));
+            }}
+            validation={postData.validations.userType2}
+            data={postData?.data}
+            defaultData={postData?.data}
+            value={
+              postData != undefined &&
+              postData?.data != undefined &&
+              postData?.data?.userType2 != undefined
+                ? postData?.data?.userType2
+                : 0
+            }
           />
         </div>
 
         {/* Form Buttons */}
         <div className="flex justify-center mt-6">
-          <ERPFormButtons
-            isEdit={isEdit}
-            isLoading={isLoading}
-            onCancel={onClose}
-            onSubmit={handleSubmit}
+          <ERPButton
+            title="Reset"
+            variant="primary"
+            disabled={postDataLoading}
+            loading={postDataLoading}
+            onClick={handleSubmit}
+          />
+          <ERPButton
+            title="Close"
+            variant="secondary"
+            disabled={postDataLoading}
+            onClick={onClose}
           />
         </div>
       </div>
-      </div>
- 
+    </div>
   );
 });
 

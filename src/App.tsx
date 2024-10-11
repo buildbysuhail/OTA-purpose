@@ -145,6 +145,10 @@ function App() {
                 element={<SettingsLayout setMyClass={setMyClass} />}
               />
               <Route
+                path="reports/_/*"
+                element={<SettingsLayout setMyClass={setMyClass} />}
+              />
+              <Route
                 path="workspace-settings/*"
                 element={<WorkspaceSettingsLayout setMyClass={setMyClass} />}
               />

@@ -8,13 +8,19 @@ import { toggleRevertBillModifications } from '../../../redux/slices/popup-reduc
 import ERPDevGrid from '../../../components/ERPComponents/erp-dev-grid';
 import ERPModal from '../../../components/ERPComponents/erp-modal';
 import Urls from '../../../redux/urls';
+import { APIClient } from '../../../helpers/api-client';
+import { handleResponse } from '../../../utilities/HandleResponse';
 
 export interface RevertBillModificationData {
   invTransactionMasterID: number;
   remarks: string;
   tType: string;
 }
-
+interface DeleteData {
+  invTransactionMasterID: number;
+  remarks: string;
+  tType: string;
+}
 export const initialRevertBillModificationData = {
   data: {
     invTransactionMasterID: 0,
@@ -27,12 +33,21 @@ export const initialRevertBillModificationData = {
     tType: "",
   },
 };
-
+const api = new APIClient();
 const RevertBillModifications: React.FC = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
 
+  const handleDelete = async(data: any) => {
+    debugger;
+    const res = await api.post(Urls.revertBillModifications,{aa:data.invTransactionMasterID})
+    handleResponse(res);
+  }
+  const ActionCell = (cellData: any) => (
+    <div className="chart-cell">
+      <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={() =>handleDelete(cellData)}></i>
+    </div>);
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "invTransactionMasterID",
@@ -118,9 +133,7 @@ const RevertBillModifications: React.FC = () => {
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
-              url: Urls?.revertBillModifications,
-              key: cellElement?.data?.id
-            }}
+              url: Urls?.revertBillModifications}}
           />
         );
       },

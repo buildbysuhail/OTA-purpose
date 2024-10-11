@@ -229,7 +229,7 @@ const ExchangeRates = () => {
                     allowFiltering={true}
                     minWidth={150}
                   />
-                   <Column caption="Dynamics" minWidth={320} cellRender={ChartCell} />
+                   <Column caption="Action" width={80} cellRender={ChartCell} />
                   <Editing
                     mode="cell"
                     allowUpdating={true}

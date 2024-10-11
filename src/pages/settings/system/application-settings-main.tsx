@@ -39,7 +39,7 @@ interface Settings {
   allowSalesRouteArea: boolean;
   enableDayEnd: boolean;
   maintainSalesRouteCreditLimit: boolean;
-  maintainMultilanguage: boolean;
+  maintainMultilanguage__: boolean;
   showUserMessages: boolean;
   maintainBusinessType: string;
 }
@@ -70,7 +70,7 @@ const initialSettings: Settings = {
   allowSalesRouteArea: false,
   enableDayEnd: false,
   maintainSalesRouteCreditLimit: false,
-  maintainMultilanguage: false,
+  maintainMultilanguage__: false,
   showUserMessages: false,
   maintainBusinessType: "General",
 };
@@ -570,14 +570,14 @@ const ERPSettingsFormMain = () => {
           }
         />
         <ERPCheckbox
-          id="maintainMultilanguage"
+          id="maintainMultilanguage__"
           label="Maintain Multilanguage"
           data={settings}
-          checked={settings?.maintainMultilanguage}
+          checked={settings?.maintainMultilanguage__}
           onChangeData={(data) =>
             handleFieldChange(
-              "maintainMultilanguage",
-              data.maintainMultilanguage
+              "maintainMultilanguage__",
+              data.maintainMultilanguage__
             )
           }
         />

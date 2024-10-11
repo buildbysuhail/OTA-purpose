@@ -23,7 +23,7 @@ const Urls = {
   data_industries: "/Data/Industries/",
   data_stock_valuation_methods: "/Data/StockValuationMethods/",
   data_salesRoute: "/Data/SalesRoutes/",
-  data_formtype: "/Data/FormTypes/",
+  data_form_type: "/Data/FormTypes/",
   data_warehouse: "/Data/Warehouses/",
   data_employees: "/Data/Employees",
   data_user_types: "/Data/UserTypes/",
@@ -141,11 +141,8 @@ const Urls = {
   // getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
   patchUserSubscriped: "/Subscription/User/EditUser/",
   UserTypes: "/Core/UserType/",
-<<<<<<< HEAD
   usreRights: "/Core/UserRights",
-=======
-  user_rights:"/Core/UserRights/",
->>>>>>> 6b09e711f7a986d78be76182011843f8185fbc64
+  user_rights: "/Core/UserRights/",
 
   //setting/Administrations
   CompanyProfiles: "/Core/CompanyProfile/",
@@ -187,7 +184,7 @@ const Urls = {
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
   //Reports
- acc_reports_aging_payable:"/Accounts/RptAging/AgingPayable",
+  acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable",
 
 
   // Accounts End

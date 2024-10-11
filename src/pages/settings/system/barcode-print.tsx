@@ -54,6 +54,7 @@ const BarcodePrint: React.FC = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
 
+  
   const [barcodeForm, setBarcodeForm] = useState<BarcodeFormData>({
     formBcode: 0,
     toBcode: 0,
@@ -401,7 +402,7 @@ const BarcodePrint: React.FC = () => {
                         field={{
                           id: "formType",
                           required: true,
-                          // getListUrl: Urls.barcodePrintTransaction,
+                          getListUrl: Urls.data_form_type,
                           valueKey: "id",
                           labelKey: "name",
                         }}
@@ -443,7 +444,7 @@ const BarcodePrint: React.FC = () => {
                     label={t("packed_date")}
                     value={barcodeDesc.packDate}
                     onChange={(e) => handleDescStateChange(e)}
-                    // name="packDate"
+                  // name="packDate"
                   />
                   <ERPInput
                     id="expDesc"
@@ -517,7 +518,7 @@ const BarcodePrint: React.FC = () => {
                           field={{
                             id: "labelDesign",
                             required: true,
-                            getListUrl: Urls.data_formtype,
+                            getListUrl: Urls.data_form_type,
                             valueKey: "id",
                             labelKey: "name",
                           }}
@@ -589,7 +590,7 @@ const BarcodePrint: React.FC = () => {
                           field={{
                             id: "standardLabelDesign",
                             required: true,
-                            getListUrl: Urls.data_formtype,
+                            getListUrl: Urls.data_form_type,
                             valueKey: "id",
                             labelKey: "name",
                           }}
@@ -611,7 +612,7 @@ const BarcodePrint: React.FC = () => {
                           field={{
                             id: "printer",
                             required: true,
-                            getListUrl: Urls.data_formtype,
+                            getListUrl: Urls.data_form_type,
                             valueKey: "id",
                             labelKey: "name",
                           }}

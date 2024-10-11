@@ -90,6 +90,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -99,6 +100,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -108,6 +110,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -117,6 +120,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "openingStockValue",

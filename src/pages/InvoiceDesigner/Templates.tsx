@@ -9,7 +9,7 @@ import stdTempImage from "../../assets/images/templates/Invoice_std.png";
 import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
 
 import { parseAddressTemplate } from "./utils";
-import { TemplateState } from "./Designer/interfaces";
+import { initialTemplateState, TemplateState } from "./Designer/interfaces";
 import { DummyInvoiceData } from "./constants/DummyData";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
@@ -23,7 +23,7 @@ import PSModel from "../../components/common/polosys/ps-modal";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { patchAction, deleteAction, getAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
-import { setTemplatePropertiesState } from "../../redux/slices/templates/reducer";
+import { setTemplate, setTemplatePropertiesState } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 
 interface previewState {
@@ -340,7 +340,19 @@ interface ChooseTemplateProps {
 const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Your async code here
+        const result = await someAsyncFunction();
+        // Do something with result
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, [tempData]);
   const handleChooseTemplate = (template: TemplateState) => {
     const length = tempData?.length || 0;
 
@@ -379,7 +391,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         <div className="py-2">STANDARD</div>
         <div className="flex gap-4 flex-wrap p-5">
           {tempData
-            ?.filter((t: any) => t?.is_primary)
             ?.map((template: any, index: number) => {
               const paperSize = template?.content?.propertiesState?.pageSize?.value;
               const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
@@ -398,9 +409,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
                   </div>
                   <div className="flex flex-col justify-center items-center text-center py-3">
-                    <h1 className="font-medium text-xs capitalize break-words">{template?.content?.propertiesState?.templateName}</h1>
+                    <h1 className="font-medium text-xs capitalize break-words">{template?.templateName}</h1>
                     <div
-                      className="bg-accent cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
+                      className="bg-primary cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
                       onClick={() => handleChooseTemplate(template?.content)}
                     >
                       Use this

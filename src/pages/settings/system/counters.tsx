@@ -61,6 +61,7 @@ const Counters = () => {
         allowSearch: true,
         allowFiltering: true,
         minWidth: 100,
+        visible:false
       },
       {
         dataField: "createdDate",
@@ -70,6 +71,7 @@ const Counters = () => {
         allowSearch: true,
         allowFiltering: true,
         minWidth: 100,
+        visible:false
       },
       {
         dataField: "modifiedUser",
@@ -79,6 +81,7 @@ const Counters = () => {
         allowSearch: true,
         allowFiltering: true,
         minWidth: 100,
+        visible:false
       },
       {
         dataField: "modifiedDate",
@@ -88,6 +91,7 @@ const Counters = () => {
         allowSearch: true,
         allowFiltering: true,
         minWidth: 100,
+        visible:false
       },
       {
         dataField: "cashLedgerID",

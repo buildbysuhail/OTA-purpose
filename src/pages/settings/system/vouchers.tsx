@@ -96,6 +96,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -105,6 +106,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -114,6 +116,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -123,6 +126,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false
     },
 
     {

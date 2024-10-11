@@ -144,6 +144,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false
     },
     {
       dataField: "tin",
@@ -153,6 +154,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false
     },
     {
       dataField: "registrationNumber",
@@ -162,6 +164,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -171,6 +174,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -180,6 +184,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false
     },
     {
       dataField: "remarks",
@@ -189,6 +194,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false
     },
     {
       dataField: "actions",

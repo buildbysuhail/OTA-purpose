@@ -77,9 +77,9 @@ const Urls = {
   password_reset_confirm: "/resetPassword/",
   social_signup: "/socialSignup/",
   set_branch: "/Subscription/Auth/SetBranch/",
-  SendEmailToken:"/Subscription/Auth/SendEmailToken",
-  ValidateToken:"/Subscription/Auth/ValidateToken",
-  
+  SendEmailToken: "/Subscription/Auth/SendEmailToken",
+  ValidateToken: "/Subscription/Auth/ValidateToken",
+
   // App
   application_setting: "/Core/ApplicationSettings/",
   getUserAppSetting: "/User/getUserAppSetting/",
@@ -141,12 +141,12 @@ const Urls = {
   // getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
   patchUserSubscriped: "/Subscription/User/EditUser/",
   UserTypes: "/Core/UserType/",
-  usreRights:"/Core/UserRights",
+  usreRights: "/Core/UserRights",
 
   //setting/Administrations
   CompanyProfiles: "/Core/CompanyProfile/",
   Branch: "/Core/Branch/",
-  BranchInfo:"/Core/Branch/BranchInfo",
+  BranchInfo: "/Core/Branch/BranchInfo",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
@@ -161,24 +161,27 @@ const Urls = {
   postCurrency: "/Accounts/Currency/",
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/",
-  application_settings:"/Core/ApplicationSettings/",
-  sql_commands : "/Core/SQLCommand",
+  application_settings: "/Core/ApplicationSettings/",
+  sql_commands: "/Core/SQLCommand",
 
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
-  revertBillModifications:"/Core/AdvancedOptions",
-  branchDataReset:"/Core/AdvancedOptions/BranchDataReset",
+  revertBillModifications: "/Core/AdvancedOptions",
+  branchDataReset: "/Core/AdvancedOptions/BranchDataReset",
   // refresh all branches
-  refreshAllBranches:"/Core/RefreshAllBranch/RefreshAllBranch/",
+  refreshAllBranches: "/Core/RefreshAllBranch/RefreshAllBranch/",
+  //barcode
+  barcodePrintGrid: "/Core/BarcodePrint/GetBarcodePrintGrid/",
+  barcodePrintTransaction: "/Core/BarcodePrint/GetBarcodePrintGridFromTransaction/",
   // Accounts Start
   // Masters
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",
-  account_privilege_card:"/Accounts/PrivilegeCards",
-  branch_ledger:"/Accounts/BranchLedger/",
-  account_party_category:"/Accounts/PartyCategory/",
-  account_currency_master:"/Accounts/Currency/",
+  account_privilege_card: "/Accounts/PrivilegeCards",
+  branch_ledger: "/Accounts/BranchLedger/",
+  account_party_category: "/Accounts/PartyCategory/",
+  account_currency_master: "/Accounts/Currency/",
   //Reports
   // Accounts End
   //Templates

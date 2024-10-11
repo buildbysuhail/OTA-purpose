@@ -73,7 +73,6 @@ class APIClient {
         // The request was made but no response was received
         console.error('Error request:', error.request);
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.error('Error message:', error.message);
       }
     } else {

@@ -18,8 +18,9 @@ import { SettingsMenuItems } from "./sidemenu/settings";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import ErpAvatar from "../../ERPComponents/erp-avatar";
 import { useTranslation } from "react-i18next";
+import { ReportsMenuItems } from "./sidemenu/reports-routes";
 interface SidebarProps {
-  type: "erp" | "account-settings" | "workspace-settings" | "settings";
+  type: "erp" | "account-settings" | "workspace-settings" | "settings" | "reports";
 }
 
 const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
@@ -31,8 +32,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
         return AccountSettingsMenuItems;
       case "workspace-settings":
         return WorkspaceSettingsMenuItems;
-      case "settings":
-        return SettingsMenuItems;
+        case "settings":
+          return SettingsMenuItems;
+          case "reports":
+            return ReportsMenuItems;
       default:
         return []; // or some default menu items
     }

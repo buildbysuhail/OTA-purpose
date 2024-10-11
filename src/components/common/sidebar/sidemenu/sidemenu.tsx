@@ -1,3 +1,4 @@
+import { Path } from "@react-pdf/renderer";
 
 
 export const MENUITEMS = [
@@ -143,6 +144,7 @@ export const MENUITEMS = [
     active: false,
     selected: false,
     title: 'reports',
+    path: 'reports',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'

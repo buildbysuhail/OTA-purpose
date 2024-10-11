@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import { toggleCommandsPopup, } from "../../../redux/slices/popup-reducer";
+import { toggleCommandsPopup } from "../../../redux/slices/popup-reducer";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { DataGrid } from "devextreme-react";
@@ -14,6 +14,7 @@ import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { ResponseModel } from "../../../base/response-model";
+import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -38,10 +39,14 @@ interface DynamicFormProps {
   onSubmit: (data: FormDataStructure) => void;
   onCancel: () => void;
 }
+
 const api = new APIClient();
+
 const CommandsManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const { t } = useTranslation();
+
   const onClose = useCallback(async () => {
     dispatch(toggleCommandsPopup({ isOpen: false }));
   }, []);
@@ -50,25 +55,35 @@ const CommandsManage = () => {
   const [key, setKey] = useState<any>(queryParams.get("key"));
   const [query, setQuery] = useState("");
   const [checked, setChecked] = useState(false);
-  const [loading, setLoading] = useState(false); const [gridHeight, setGridHeight] = useState<{
+  const [loading, setLoading] = useState(false);
+  const [gridHeight, setGridHeight] = useState<{
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
   const [userData, setUserData] = useState([]);
   const [store, setStore] = useState<any>([]);
+  const [displayText, setDisplayText] = useState("");
 
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = wh - 320; // Assuming 100px is the height to minus for windows
+    let gridHeightMobile = wh - 200;
+    let gridHeightWindows = wh - 320;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, [])
+  }, []);
+
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
+    if (e.target.checked) {
+      setDisplayText(query.replace(/./g, '•'));
+    } else {
+      setDisplayText(query);
+    }
   };
 
   const handleQueryChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setQuery(e.target.value);
+    const newValue = e.target.value;
+    setQuery(newValue);
+    setDisplayText(checked ? newValue.replace(/./g, '•') : newValue);
   };
 
   const handleSelect = () => {
@@ -79,28 +94,21 @@ const CommandsManage = () => {
     try {
       setLoading(true);
       const response: ResponseModel<any> = await api.post(Urls.sql_commands, query);
-      handleResponse(response
-        , () => {
+      handleResponse(
+        response,
+        () => {
           if (response.isOk) {
             if (response.item.isSelect) {
               setStore(response.item.data);
-            }
-            else {
+            } else {
               setStore([]);
             }
-
-            if (response.message != null && response.message != "") {
-
-            }
-          }
-          else {
-
           }
         },
         () => {
 
-        })
-
+        }
+      );
     } catch (error) {
       console.error('Execute failed:', error);
     } finally {
@@ -108,38 +116,50 @@ const CommandsManage = () => {
     }
   };
 
-  const { t } = useTranslation();
+  const handleClear = () => {
+    setQuery("");
+    setDisplayText("");
+  };
 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1">
         <div className="flex gap-5 items-start mb-4">
           <textarea
-            className="w-2/3 h-24 border border-gray-300 rounded-md p-2 "
-            value={query}
+            className="w-2/3 h-24 border border-gray-300 rounded-md p-2"
+            value={displayText}
             onChange={handleQueryChange}
             placeholder="..."
           />
-          <div className="flex flex-col justify-center gap-4 items-center w-1/3 ">
+          <div className="flex flex-col justify-end gap-4 items-end w-1/3">
             <div className="flex gap-4">
               <ERPButton
                 type="reset"
-                title={t("close")}
+                title={t("clear")}
                 variant="secondary"
-                onClick={onClose}
+                onClick={handleClear}
                 disabled={loading}
-              ></ERPButton>
+              />
               <ERPButton
                 type="reset"
-                title={t("submit")}
+                title={t("execute")}
                 variant="primary"
                 onClick={handleExecute}
-              ></ERPButton>
+                disabled={loading}
+              />
+            </div>
+            <div className="flex justify-start">
+              <ERPCheckbox
+                id="autoExecute"
+                label={t("hide")}
+                checked={checked}
+                onChange={handleCheckboxChange}
+              />
             </div>
           </div>
+
         </div>
 
-        {/* Table */}
         <div className="box custom-box">
           <div className="box-body">
             <div style={{ overflowX: 'auto', width: '100%' }}>

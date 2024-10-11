@@ -220,8 +220,8 @@ const ExchangeRates = () => {
                   <Column
                     dataField="rateDate"
                     caption={t("rate_date")}
-                    dataType="string"
-                    allowEditing={false}
+                    dataType="date" 
+                    allowEditing={true}
                     allowSearch={true}
                     allowFiltering={true}
                     minWidth={100}

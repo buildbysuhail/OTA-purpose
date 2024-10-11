@@ -163,7 +163,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  showAll: !prev.showAll,
+                  showAll: !prev.data.showAll,
                 },
               }));
             }}
@@ -180,7 +180,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  showAllAdd: !prev.showAllAdd,
+                  showAllAdd: !prev.data.showAllAdd,
                 },
               }));
             }}
@@ -197,7 +197,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  showAllPrint: !prev.showAllPrint,
+                  showAllPrint: !prev.data.showAllPrint,
                 },
               }));
             }}
@@ -214,7 +214,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  showAllEdit: !prev.showAllEdit,
+                  showAllEdit: !prev.data.showAllEdit,
                 },
               }));
             }}
@@ -231,7 +231,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  showAllExport: !prev.showAllExport,
+                  showAllExport: !prev.data.showAllExport,
                 },
               }));
             }}
@@ -248,7 +248,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  showAllDelete: !prev.showAllDelete,
+                  showAllDelete: !prev.data.showAllDelete,
                 },
               }));
             }}
@@ -268,7 +268,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  userRightType: !prev.userRightType,
+                  userRightType: !prev.data.userRightType,
                 },
               }));
             }}

@@ -8,7 +8,7 @@ interface LayoutProps {
   setMyClass: Dispatch<SetStateAction<string>>;
 }
 
-const SettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
+const ReportsLayout: FC<LayoutProps> = ({setMyClass}) => {
   const Bodyclickk = () => {
     if (localStorage.getItem("ynexverticalstyles") == "icontext") {
       setMyClass("");
@@ -23,7 +23,7 @@ const SettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
   return (
     <>
     <Header />
-            <Sidebar type='reports'/>
+            <Sidebar type='settings'/>
             <div className='content main-index'>
               <div className='main-content'
                 onClick={Bodyclickk}
@@ -35,5 +35,5 @@ const SettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
     </>
   );
 }
-export default SettingsLayout;
+export default ReportsLayout;
 

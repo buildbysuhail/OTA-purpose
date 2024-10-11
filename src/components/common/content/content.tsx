@@ -5,6 +5,8 @@ import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import Flex from '../../../pages/inventory/demo-flex';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
+import Cash from '../../../pages/accounts/masters/reports/cash';
+import ReportList from '../../ERPComponents/reports/reports-list';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -109,12 +111,12 @@ const Content: FC<ContentProps> = () => {
         <Route path="/settings/invoice_designer/:id" element={<InvoiceDesigner />} />
         {/* Templates ends */}
 
-        {/* {routes.map((route, idx) => {
-            if (route.path) {
-              return <Route key={idx} path={route.path} element={<route.component />} />;
-            }
-          })} */}
-
+        {/* Reports */}
+        <Route path="/reports" element={<ReportList />} />
+          {/* Reports - Accounts */}
+          <Route path="/accounts/cash" element={<Cash />} />            
+          {/* Reports - Accounts */}
+        {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
       </Routes>
     </Suspense>

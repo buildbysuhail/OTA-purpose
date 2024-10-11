@@ -18,29 +18,16 @@ import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
 import { CounterManage } from "./counters-manage";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { SelectChangeEvent, TextField } from "@mui/material";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
-import ERPSelect from "../../../components/ERPComponents/erp-select";
-import ERPDatePicker from "../../../components/ERPComponents/erp-date-picker";
-import dayjs, { Dayjs } from "dayjs";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import SelectSmall from "../../../components/ERPComponents/erp-mui-select";
-import ERPMUIDatePicker from "../../../components/ERPComponents/erp-mui-date-picker";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 // Define the FormData interface
 interface FormData {
-  barcodeFrom: string;
-  barcodeTo: string;
-  barcodeComma: string;
-  preview: boolean;
-  type: string;
-  otherType: string;
-  vPrefix: string;
-  formType: string;
-  billNo: string;
+
+ 
   btiValue: string;
   other: string;
   packDate: string;
@@ -57,6 +44,23 @@ interface FormData {
   standardLabelDesign: string;
   printer: string;
   dateField: string;
+}
+
+interface BarcodeFormData
+{
+  barcodeFrom: string;
+  barcodeTo: string;
+  barcodeComma: string;
+  preview: boolean;
+}
+
+interface VoucherFormData
+{
+  type: string;
+  otherType: string;
+  vPrefix: string;
+  formType: string;
+  billNo: string;
 }
 
 type InputChangeEvent = ChangeEvent<HTMLInputElement | HTMLSelectElement>;
@@ -117,35 +121,31 @@ const BarcodePrint: React.FC = () => {
     { value: "adc2", label: "ADC2" },
     { value: "adc3", label: "ADC3" },
   ];
-  const handleChange = (
-    p0: string, event: SelectChangeEvent<string | number> | { id: string; date: string; } | any) => {
-    if ("target" in event) {
-      // Handle SelectChangeEvent
-      const { name, value } = event.target;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    } else if ("date" in event) {
-      // Handle Date change
-      const { id, date } = event;
-      setFormData((prevData) => ({
-        ...prevData,
-        [id]: date,
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [p0]: event.id // or event.value depending on your data structure
-      }));
-    }
-  }
+  // const handleChange = (
+  //   p0: string, event: SelectChangeEvent<string | number> | { id: string; date: string; } | any) => {
+  //   if ("target" in event) {
+  //     // Handle SelectChangeEvent
+  //     const { name, value } = event.target;
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [name]: value,
+  //     }));
+  //   } else if ("date" in event) {
+  //     // Handle Date change
+  //     const { id, date } = event;
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [id]: date,
+  //     }));
+  //   } else {
+  //     setFormData((prevData) => ({
+  //       ...prevData,
+  //       [p0]: event.id // or event.value depending on your data structure
+  //     }));
+  //   }
+  // }
 
-  // const handleSelectChange = (id: string, value: any) => {
-  //   handleChange({
-  //     target: { name: id, value: value.value }
-  //   } as SelectChangeEvent<string | number>);
-  // };
+
 
   const combinedOptions = [...options, ...newOptions];
 
@@ -154,15 +154,8 @@ const BarcodePrint: React.FC = () => {
   const handleDateChange = (id: string, date: string) => {
     setFormData((prev) => ({ ...prev, [id]: date }));
   };
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleBarcodeStateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    // Optional: Validate the input before updating the state
-    if (value.trim() === "") {
-      console.warn(`The value for ${name} is empty.`);
-    }
-
-    // Update the state
     setFormData((prevData) => ({
       ...prevData,
       [name]: value || "", // Ensure value is never undefined
@@ -345,7 +338,7 @@ const BarcodePrint: React.FC = () => {
                       customSize="md"
                       className="w-full"
                       name="barcodeFrom"
-                      onChange={handleInputChange}
+                      onChange={handleBarcodeStateChange}
                       placeholder={t("form")}
                     />
                     <ERPInput
@@ -356,7 +349,7 @@ const BarcodePrint: React.FC = () => {
                       customSize="md"
                       className="w-full"
                       name="barcodeTo"
-                      onChange={handleInputChange}
+                      onChange={handleBarcodeStateChange}
                       placeholder={t("to")}
                     />
                   </div>
@@ -368,7 +361,7 @@ const BarcodePrint: React.FC = () => {
                     customSize="md"
                     className="w-full"
                     name="barcodeComma"
-                    onChange={handleInputChange}
+                    onChange={handleBarcodeStateChange}
                     placeholder={t("comma_separated")}
                   />
                   <div className="flex items-center justify-between">
@@ -376,7 +369,7 @@ const BarcodePrint: React.FC = () => {
                       label={t("preview")}
                       id="preview"
                       data={formData}
-                      onChange={handleInputChange}
+                      onChange={handleBarcodeStateChange}
                     />
                     <ERPButton
                       title={t("show")}
@@ -403,7 +396,7 @@ const BarcodePrint: React.FC = () => {
                             name="type"
                             value={label.toLowerCase()}
                             checked={formData.type === label.toLowerCase()}
-                            onChange={handleInputChange}
+                            onChange={handleBarcodeStateChange}
                             label={label}
                           />
                           {label === "Other" && (
@@ -414,7 +407,7 @@ const BarcodePrint: React.FC = () => {
                               value={formData.otherType}
                               customSize="md"
                               className="w-6/12"
-                              onChange={handleInputChange}
+                              onChange={handleBarcodeStateChange}
                               placeholder={t("other_type")}
                             />
                           )}
@@ -434,7 +427,7 @@ const BarcodePrint: React.FC = () => {
                         customSize="md"
                         className="w-full"
                         name="vPrefix"
-                        onChange={handleInputChange}
+                        onChange={handleBarcodeStateChange}
                         placeholder={t("VPrefix")}
                       />
                       <ERPDataCombobox
@@ -459,7 +452,7 @@ const BarcodePrint: React.FC = () => {
                           customSize="md"
                           className="w-full"
                           name="billNo"
-                          onChange={handleInputChange}
+                          onChange={handleBarcodeStateChange}
                           placeholder={t("bill_no")}
                         />
                         <div className="mt-[11px]">
@@ -498,7 +491,7 @@ const BarcodePrint: React.FC = () => {
                     customSize="md"
                     className="w-full"
                     name="expDesc"
-                    onChange={handleInputChange}
+                    onChange={handleBarcodeStateChange}
                     placeholder={t("exp_desc")}
                   />
                   <ERPInput
@@ -509,7 +502,7 @@ const BarcodePrint: React.FC = () => {
                     customSize="md"
                     className="w-full"
                     name="note1"
-                    onChange={handleInputChange}
+                    onChange={handleBarcodeStateChange}
                     placeholder={t("note_1")}
                   />
                   <ERPInput
@@ -520,7 +513,7 @@ const BarcodePrint: React.FC = () => {
                     customSize="md"
                     className="w-full"
                     name="note2"
-                    onChange={handleInputChange}
+                    onChange={handleBarcodeStateChange}
                     placeholder={t("note_2")}
                   />
                   <ERPInput
@@ -531,7 +524,7 @@ const BarcodePrint: React.FC = () => {
                     customSize="md"
                     className="w-full"
                     name="note3"
-                    onChange={handleInputChange}
+                    onChange={handleBarcodeStateChange}
                     placeholder={t("note_3")}
                   />
                   <ERPInput
@@ -542,7 +535,7 @@ const BarcodePrint: React.FC = () => {
                     customSize="md"
                     className="w-full"
                     name="note4"
-                    onChange={handleInputChange}
+                    onChange={handleBarcodeStateChange}
                     placeholder={t("note_4")}
                   />
                 </div>
@@ -589,7 +582,7 @@ const BarcodePrint: React.FC = () => {
                           customSize="md"
                           className="w-full"
                           name="startRow"
-                          onChange={handleInputChange}
+                          onChange={handleBarcodeStateChange}
                           validation=""
                         />
                       </div>
@@ -602,7 +595,7 @@ const BarcodePrint: React.FC = () => {
                           customSize="md"
                           className="w-full"
                           name="endRow"
-                          onChange={handleInputChange}
+                          onChange={handleBarcodeStateChange}
                           validation=""
                         />
                       </div>
@@ -612,7 +605,7 @@ const BarcodePrint: React.FC = () => {
                         label={t("inSearch")}
                         id="inSearch"
                         data={formData.inSearch}
-                        onChange={handleInputChange}
+                        onChange={handleBarcodeStateChange}
                         validation=""
                       />
                       <ERPButton
@@ -680,7 +673,7 @@ const BarcodePrint: React.FC = () => {
                             id="Standard Preview"
                             label={t("preview")}
                             data={formData.inSearch}
-                            onChange={handleInputChange}
+                            onChange={handleBarcodeStateChange}
                             validation=""
                           />
                         </div>

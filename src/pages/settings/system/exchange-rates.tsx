@@ -223,7 +223,7 @@ const ExchangeRates = () => {
                     dataField="rateDate"
                     caption={t("rate_date")}
                     dataType="string"
-                    allowEditing={true}
+                    allowEditing={false}
                     allowSearch={true}
                     allowFiltering={true}
                     minWidth={100}
@@ -237,7 +237,7 @@ const ExchangeRates = () => {
                     allowFiltering={true}
                     minWidth={150}
                   />
-                   <Column caption="Dynamics" minWidth={320} cellRender={ChartCell} />
+                   <Column caption="Action" width={80} cellRender={ChartCell} />
                   <Editing
                     mode="cell"
                     allowUpdating={true}

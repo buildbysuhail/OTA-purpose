@@ -23,7 +23,7 @@ const SettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
   return (
     <>
     <Header />
-            <Sidebar type='reports'/>
+            <Sidebar type='settings'/>
             <div className='content main-index'>
               <div className='main-content'
                 onClick={Bodyclickk}

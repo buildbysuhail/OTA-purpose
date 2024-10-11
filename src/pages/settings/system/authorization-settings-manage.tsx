@@ -19,6 +19,7 @@ import CustomStore from "devextreme/data/custom_store";
 import "./exchange-rates.css";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
+import { handleResponse } from "../../../utilities/HandleResponse";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
@@ -28,10 +29,10 @@ const AuthorizationSettings = () => {
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const initial = {
-    employeeId: 0,
+    employeeID: 0,
     password: "",
     confirmPassword: "",
-    validations: { employeeId: 0, password: "", confirmPassword: "" },
+    validations: { employeeID: "", password: "", confirmPassword: "" },
   };
   const [gridHeight, setGridHeight] = useState<{
     mobile: number;
@@ -39,11 +40,11 @@ const AuthorizationSettings = () => {
   }>({ mobile: 500, windows: 500 });
 
   const [postData, setPostData] = useState<{
-    employeeId: number;
+    employeeID: number;
     password: string;
     confirmPassword: string;
     validations: {
-      employeeId: number;
+      employeeID: string;
       password: string;
       confirmPassword: string;
     };
@@ -66,23 +67,28 @@ const AuthorizationSettings = () => {
       `${Urls.authorization_settings}`,
       postData
     );
-    if (result != undefined && result != null && result.isOk == true) {
-      load();
-    } else {
+    debugger;
+    handleResponse(result, 
+      () =>{ load();
       onClear();
+      
     }
-
-    setStore(result?.data);
-    setPostDataLoading(false);
-  };
+    , () => {
+      setPostData((previous: any) => ({
+        
+        ...previous, // Use the spread operator with three dots
+        validations: result.validations,
+    }))
+  });
+}
   const onSelectionChanged = useCallback((e: any) => {
     console.log(e);
-
+debugger;
     const data = e.data;
     if (data != undefined && data != null) {
       setPostData((previous: any) => ({
         ...previous, // Use the spread operator with three dots
-        employeeId: data.employeeId,
+        employeeID: data.employeeID,
         password: data.password,
         confirmPassword: data.confirmPassword,
       }));
@@ -165,8 +171,8 @@ const AuthorizationSettings = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
                 <ERPDataCombobox
                   data={postData}
-                  value={postData.employeeId}
-                  id="employeeId"
+                  value={postData.employeeID}
+                  id="employeeID"
                   field={{
                     id: "employeeID",
                     required: true,
@@ -174,10 +180,12 @@ const AuthorizationSettings = () => {
                     valueKey: "id",
                     labelKey: "name",
                   }}
+                  validation ={postData.validations.employeeID}
                   onChangeData={(data: any) => {
+                    debugger;
                     setPostData((previous: any) => ({
                       ...previous, // Use the spread operator with three dots
-                      employeeId: data.employeeId,
+                      employeeID: data.employeeID,
                     }));
                   }}
                   label={t("employee")}

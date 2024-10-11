@@ -68,7 +68,7 @@ const ExchangeRates = () => {
       for (let index = 0; index < remain; index++) {
         data.push({
           cStatus: false,
-          exchRateID: null,
+          exchRateID: 0,
           rate: null,
           rateDate: null,
           toCurrency: null,
@@ -83,9 +83,11 @@ const ExchangeRates = () => {
     const dataToSubmit = store.filter((row: any) => 
       row.toCurrency !== null && row.rate !== null
     );
+    
     debugger;
     const result: any = await api.post(`${Urls.currencyExchange}`, {
       currencyId: postData.baseCurrency,
+      
       data: dataToSubmit,
     });
 
@@ -204,7 +206,7 @@ const ExchangeRates = () => {
                   >
                     <Lookup
                       dataSource={currencies}
-                      valueExpr="id"
+                      valueExpr="name"
                       displayExpr="name"
                     />
                   </Column>
@@ -221,7 +223,7 @@ const ExchangeRates = () => {
                     dataField="rateDate"
                     caption={t("rate_date")}
                     dataType="string"
-                    allowEditing={false}
+                    allowEditing={true}
                     allowSearch={true}
                     allowFiltering={true}
                     minWidth={100}

@@ -16,7 +16,7 @@ import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
 import { TemplateGroupTypes, TemplateTypes } from "./constants/TemplateCategories";
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import ERPToast from "../../components/ERPComponents/erp-toast";
-import { handleResponse } from "../../utilities/HandleResponse";
+import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
 import { showAlert } from "../../components/ERPComponents/erp-alert";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import PSModel from "../../components/common/polosys/ps-modal";
@@ -24,12 +24,14 @@ import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { patchAction, deleteAction, getAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
 import { setTemplatePropertiesState } from "../../redux/slices/templates/reducer";
+import { APIClient } from "../../helpers/api-client";
 
 interface previewState {
   show: boolean;
   template?: TemplateState;
 }
 
+const api = new APIClient();
 const Templates = ({ }) => {
   const navigate = useNavigate();
   const appDispatch = useAppDispatch();
@@ -39,6 +41,7 @@ const Templates = ({ }) => {
 
   const [loading, setLoading] = useState(false);
   const [tempData, setTempData] = useState([]);
+  const [tempCrmData, setTempCRMData] = useState([]);
 
   const companies = useSelector((state: any) => state?.GetUserCompanies);
   const ActiveBranch = companies?.data?.find((item: any) => item?.is_active);
@@ -118,10 +121,18 @@ const Templates = ({ }) => {
   };
 
   const getTemplates = async () => {
+    debugger;
     setLoading(true);
-    var res = await appDispatch(getAction({apiUrl: Urls.templates, params:`voucher_type=${templateGroup}`}) as any).unwrap();
-      setTempData(res?.payload?.data);
+    var res = await api.getAsync(Urls.templates,`template_group=${templateGroup}`);
+    handlePlainResponse(res,() => {
+      setTempData(res);
+    },undefined, false, false)
       setLoading(false);
+      
+      var resCrm = await api.getAsync(Urls.crm_templates,`template_group=${templateGroup}`);
+      handlePlainResponse(resCrm,() => {
+        setTempCRMData(resCrm);
+      },undefined, false, false)
   };
 
   useEffect(() => {
@@ -165,7 +176,7 @@ const Templates = ({ }) => {
             <div className="flex items-center justify-between p-5">
               <h1 className=" font-medium text-xl capitalize">{templateGroup?.replaceAll("_", " ")} Templates</h1>
               <div>
-                <ERPSubmitButton onClick={() => setShowTemplateListing(false)}>
+                <ERPSubmitButton onClick={() => setShowTemplateListing(false)} className="max-w-min" variant="primary">
                   <PlusIcon className=" w-4 h-4" />
                   New
                 </ERPSubmitButton>
@@ -191,7 +202,7 @@ const Templates = ({ }) => {
                     >
                       <div className=" relative">
                         <img
-                          src={temp?.preview ?? thumbImage}
+                          src={temp?.templateImage ?? thumbImage}
                           alt=""
                           className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
                         />
@@ -312,7 +323,7 @@ const Templates = ({ }) => {
           </div>
         </div>
       ) : (
-        <ChooseTemplate templateGroup={templateGroup} setShowTemplateListing={setShowTemplateListing} tempData={tempData} />
+        <ChooseTemplate templateGroup={templateGroup} setShowTemplateListing={setShowTemplateListing} tempData={tempCrmData} />
       )}
     </>
   );
@@ -380,7 +391,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                 >
                   <div className=" relative">
                     <img
-                      src={template?.preview ?? thumbImage}
+                      src={template?.templateImage ?? thumbImage}
                       alt=""
                       className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
                     />

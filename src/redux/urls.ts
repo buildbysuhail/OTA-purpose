@@ -181,6 +181,7 @@ const Urls = {
   // Accounts End
   //Templates
   templates: "/Core/Template/",
+  crm_templates: "/Core/Template/CRM/",
 
   // Tax Treatments
   tax_treatment: "api/tax_treatment/",

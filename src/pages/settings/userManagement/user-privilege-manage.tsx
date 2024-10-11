@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
@@ -18,6 +18,7 @@ import { ResponseModelWithValidation } from "../../../base/response-model";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import SystemSettingsApi from "../system/system-apis";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import { APIClient } from "../../../helpers/api-client";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -68,14 +69,27 @@ const initialUserTypePrivilegeManageData = {
     userType2: "",
   },
 };
-
+const api = new APIClient();
 const UserTypePrivilegeManage: React.FC = React.memo(() => {
   const [postData, setPostData] = useState<any>(
     initialUserTypePrivilegeManageData
   );
   const [postDataLoading, setPostUserTypeLoading] = useState<boolean>(false);
-  const dispatch = useDispatch();
+  const [userRightTypes, setUserRightTypes] = useState<any>();
 
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    if (postData.data.userType) {
+      loadUserType();
+    }
+  }, [postData.data.userType]);
+
+  const loadUserType = async () => {
+    const res: any[] = await api.getAsync( `${Urls.user_rights}${postData.data.userType}`);
+    debugger
+    setUserRightTypes(res);
+  };
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
     const response: ResponseModelWithValidation<any, any> =

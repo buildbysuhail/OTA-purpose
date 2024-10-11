@@ -21,6 +21,7 @@ export const ReportsMenuItems = [
     columns: 2,
     children: [
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/cash`, type: 'link', active: false, selected: false, title: 'cash' },
+      { path: `${import.meta.env.BASE_URL}reports/_/accounts/payable_aging`, type: 'link', active: false, selected: false, title: 'Account Payable Aging Report' },
     ]
   },
 ];

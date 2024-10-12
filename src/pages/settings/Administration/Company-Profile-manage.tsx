@@ -29,7 +29,7 @@ export interface CompanyProfileData {
 }
 
 const CompanyProfileManage: React.FC = React.memo(() => {
-  
+
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const {
@@ -39,15 +39,15 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     getFieldProps,
     isLoading,
   } = useFormManager<CompanyProfileData>({
-    url:Urls.CompanyProfiles,
+    url: Urls.CompanyProfiles,
     onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false })), [dispatch]),
-    method:ActionType.POST,
+    method: ActionType.POST,
     useApiClient: true
-    
+
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleCompanyProfilePopup({ isOpen: false}));
+    dispatch(toggleCompanyProfilePopup({ isOpen: false }));
   }, []);
   return (
     <div className="w-full pt-4">
@@ -111,21 +111,24 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("city", data)}
         />
-        <ERPDataCombobox
-          {...getFieldProps("country")}
-          
-          field={{
-            id: "country",
-            required: true,
-            getListUrl: Urls.data_countries,
-            valueKey: "name",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => { 
-            handleFieldChange("country", data) 
-          }}
-          label={t("country")}
-        />
+        <div>
+          <label className="mb-[2px]">{t("country")}</label>
+          <ERPDataCombobox
+            {...getFieldProps("country")}
+
+            field={{
+              id: "country",
+              required: true,
+              getListUrl: Urls.data_countries,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => {
+              handleFieldChange("country", data)
+            }}
+          // label={t("country")}
+          />
+        </div>
 
         <ERPInput
           {...getFieldProps("postalCode")}

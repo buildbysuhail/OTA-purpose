@@ -24,7 +24,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
     {
       dataField: "branchName",
@@ -33,6 +33,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      width: 100,
     },
     {
       dataField: "companyID",
@@ -42,7 +43,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 100,
     },
     {
       dataField: "country",
@@ -51,7 +52,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "bState",
@@ -60,7 +61,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "district",
@@ -69,7 +70,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "city",
@@ -78,7 +79,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "address1",
@@ -87,7 +88,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "address2",
@@ -96,7 +97,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
 
     {
@@ -106,7 +107,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "mobile",
@@ -115,7 +116,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "phone",
@@ -124,7 +125,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
     {
       dataField: "email",
@@ -133,7 +134,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 200,
     },
     {
       dataField: "fax",
@@ -142,7 +143,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
       visible:false
     },
     {
@@ -152,7 +153,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
       visible:false
     },
     {
@@ -162,7 +163,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
       visible:false
     },
     {
@@ -172,7 +173,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
       visible:false
     },
     {
@@ -182,7 +183,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
       visible:false
     },
     {
@@ -192,7 +193,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
       visible:false
     },
     {

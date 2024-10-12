@@ -13,14 +13,14 @@ interface FormState {
   defaultPrinter: string;
   printGatePass: boolean;
   showReprintAuthorization: boolean;
-  mobileNumberMandatoryInSales: boolean;
+  showReprintAuthorisation: boolean;
 }
 
 const initialState: FormState = {
   defaultPrinter: "",
   printGatePass: false,
   showReprintAuthorization: false,
-  mobileNumberMandatoryInSales: false,
+  showReprintAuthorisation: false,
 };
 
 const PrintSettingForm: React.FC = () => {
@@ -39,7 +39,7 @@ const PrintSettingForm: React.FC = () => {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await api.getAsync(`${Urls.application_settings}print`);
+      const response = await api.getAsync(`${Urls.application_settings}printer`);
       debugger;
       console.log(formState);
       setFormStatePrev(response);
@@ -79,7 +79,7 @@ const PrintSettingForm: React.FC = () => {
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
-        type: "print",
+        type: "printer",
         updateList: modifiedSettings,
       })) as any;
       handleResponse(response);
@@ -131,14 +131,14 @@ const PrintSettingForm: React.FC = () => {
           }
         />
         <ERPCheckbox
-          id="mobileNumberMandatoryInSales"
-          checked={formState.mobileNumberMandatoryInSales}
+          id="showReprintAuthorisation"
+          checked={formState.showReprintAuthorisation}
           data={formState}
-          label="Mobile Number Mandatory in Sales"
+          label="Show Reprint Authorisation"
           onChangeData={(data: any) =>
             handleFieldChange(
-              "mobileNumberMandatoryInSales",
-              data.mobileNumberMandatoryInSales
+              "showReprintAuthorisation",
+              data.showReprintAuthorisation
             )
           }
         />

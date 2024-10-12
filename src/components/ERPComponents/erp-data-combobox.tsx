@@ -221,6 +221,16 @@ export default function ERPDataCombobox({
 
   return (
     <div className="relative">
+      {/* Conditionally render the label */}
+      {!noLabel && (
+        <label
+          htmlFor={id}
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
+          {iLabel}
+          {required && <span className="text-red-500"> *</span>}
+        </label>
+      )}
       <Combobox
         key={id}
         disabled={disableCombobox()}

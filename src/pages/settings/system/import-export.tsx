@@ -41,8 +41,6 @@ const ImportExportManage: React.FC = React.memo(() => {
   const {
     isEdit,
     handleSubmit,
-    handleFieldChange,
-    getFieldProps,
     isLoading,
   } = useFormManager<ImportExportForm>({
     url: Urls.import_parties,
@@ -58,6 +56,7 @@ const ImportExportManage: React.FC = React.memo(() => {
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    debugger
     if (e.target.files && e.target.files.length > 0) {
       const filePath = e.target.files[0].name;
       setPostData((prevState: { data: any; }) => ({

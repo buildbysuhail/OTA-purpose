@@ -225,7 +225,7 @@ export default function ERPDataCombobox({
       {!noLabel && (
         <label
           htmlFor={id}
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-[12px] font-medium text-gray-700 mb-1"
         >
           {iLabel}
           {required && <span className="text-red-500"> *</span>}

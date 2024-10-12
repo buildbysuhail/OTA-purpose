@@ -15,21 +15,21 @@ interface Inventory {
   defaultSalesAcc: number;
   defaultSalesReturnAcc: number;
   defaultPurchaseAcc: number;
-  defaultPurchaseReturnAccount: number;
-  billDiscountGivenLedger: number;
-  billDiscountReceivedLedger: number;
+  defaultPurchaseReturnAcc: number;
+  defaultBillDiscGivenLdg: number;
+  defaultBillDiscRecvdLdg: number;
   couponCardAccount: number;
   defaultRoundOffAccount: number;
   defaultAdditionalAmountAccount: number;
   defaultBrand: number;
-  negativeStock: string;
+  showNegStockWarning: string;
   maintainWarehouse: boolean;
   priceCode: string;
-  barcodeLabel: string;
+  defaultBarcodeLabel: string;
   ifLessSalesRate: string;
-  setLastSalesRateAsProductSalesRate: boolean;
-  setLastPurchaseRateAsProductPurchaseRate: boolean;
-  setAvgPurchaseCostWithLastPurchaseRate: boolean;
+  setLastSalesRateAsProctSaleRate: boolean;
+  setLastPurchaseRateAsProctRate: boolean;
+  setAvgPurchaseCostWithStdPurRate: boolean;
   updatePurchasePriceOnPurchaseTransfer: boolean;
   showCashSalesSeparateMenu: boolean;
   showNonStockItemsInSales: boolean;
@@ -39,16 +39,16 @@ interface Inventory {
   serviceWarrantyInvLedgerID: number
   serviceNonWarrantyInvAccounts: boolean;
   serviceNONWarrantyInvLedgerID:number;
-  defaultServiceSpareWarehouse: number;
-  defaultSalesReturnPayableAccount: number;
-  redeemPoints: string;
-  keepUserActions: number;
+  defaultServiceSpareWareHouse: number;
+  defaultSalesReturnPayableAcc: number;
+  redeeemValuesSeperatedByComma: string;
+  keepUserActionInDays: number;
   blockBillDiscount: string;
-  discountAuthorizationIfDiscountAbove: number;
-  setAuthorizationInSales: boolean;
+  discontAuthorizationIfDiscountAbove: number;
+  setAuthorizationinSales: boolean;
   enableSalesInvoiceDraftOption: boolean;
-  setProductCostAsDeclarationPrice: boolean;
-  setProductCostWithTaxAmount: boolean;
+  setProductCostasPurchasePrice: boolean;
+  setProductCostWithVATAmount: boolean;
   blockNonStockSerialSelling: boolean;
   showProductDuplicationMessage: boolean;
   blockHoldItems: boolean;
@@ -59,7 +59,7 @@ interface Inventory {
   useCostForStockTransferToBranch: boolean;
   showAccountReceivableInPurchase: boolean;
   showPrinterSelection: boolean;
-  btoUsingMsp: boolean;
+  bTOUsingMSP: boolean;
   isReferenceNumberMandatoryInPurchase: boolean;
   showTransitModeStockTransferAlert: boolean;
   showAccountPayableInSales: boolean;
@@ -72,21 +72,21 @@ const InventorySettingsForm = () => {
     defaultSalesAcc: 1,
     defaultSalesReturnAcc: 0,
     defaultPurchaseAcc: 0,
-    defaultPurchaseReturnAccount: 0,
-    billDiscountGivenLedger: 0,
-    billDiscountReceivedLedger: 0,
+    defaultPurchaseReturnAcc: 0,
+    defaultBillDiscGivenLdg: 0,
+    defaultBillDiscRecvdLdg: 0,
     couponCardAccount: 0,
     defaultRoundOffAccount: 0,
     defaultAdditionalAmountAccount: 0,
     defaultBrand: 0,
-    negativeStock: "",
+    showNegStockWarning: "",
     maintainWarehouse: false,
     priceCode: "",
-    barcodeLabel: "",
+    defaultBarcodeLabel: "",
     ifLessSalesRate: "",
-    setLastSalesRateAsProductSalesRate: false,
-    setLastPurchaseRateAsProductPurchaseRate: false,
-    setAvgPurchaseCostWithLastPurchaseRate: false,
+    setLastSalesRateAsProctSaleRate: false,
+    setLastPurchaseRateAsProctRate: false,
+    setAvgPurchaseCostWithStdPurRate: false,
     updatePurchasePriceOnPurchaseTransfer: false,
     showCashSalesSeparateMenu: false,
     showNonStockItemsInSales: false,
@@ -96,16 +96,16 @@ const InventorySettingsForm = () => {
     serviceWarrantyInvLedgerID:0,
     serviceNonWarrantyInvAccounts: false,
     serviceNONWarrantyInvLedgerID:0,
-    defaultServiceSpareWarehouse: 0,
-    defaultSalesReturnPayableAccount: 0,
-    redeemPoints: "",
-    keepUserActions: 0,
+    defaultServiceSpareWareHouse: 0,
+    defaultSalesReturnPayableAcc: 0,
+    redeeemValuesSeperatedByComma: "",
+    keepUserActionInDays: 0,
     blockBillDiscount: "",
-    discountAuthorizationIfDiscountAbove: 0,
-    setAuthorizationInSales: false,
+    discontAuthorizationIfDiscountAbove: 0,
+    setAuthorizationinSales: false,
     enableSalesInvoiceDraftOption: false,
-    setProductCostAsDeclarationPrice: false,
-    setProductCostWithTaxAmount: false,
+    setProductCostasPurchasePrice: false,
+    setProductCostWithVATAmount: false,
     blockNonStockSerialSelling: false,
     showProductDuplicationMessage: false,
     blockHoldItems: false,
@@ -116,7 +116,7 @@ const InventorySettingsForm = () => {
     useCostForStockTransferToBranch: false,
     showAccountReceivableInPurchase: false,
     showPrinterSelection: false,
-    btoUsingMsp: false,
+    bTOUsingMSP: false,
     isReferenceNumberMandatoryInPurchase: false,
     showTransitModeStockTransferAlert: false,
     showAccountPayableInSales: false,
@@ -307,11 +307,11 @@ const InventorySettingsForm = () => {
           />
 
           <ERPDataCombobox
-            id="defaultPurchaseReturnAccount"
-            value={formState.defaultPurchaseReturnAccount}
+            id="defaultPurchaseReturnAcc"
+            value={formState.defaultPurchaseReturnAcc}
             data={formState}
             field={{
-              id: "defaultPurchaseReturnAccount",
+              id: "defaultPurchaseReturnAcc",
               // required: true,
               getListUrl: Urls.data_acc_ledgers,
               params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
@@ -320,8 +320,8 @@ const InventorySettingsForm = () => {
             }}
             onChangeData={(data: any) =>
               handleFieldChange(
-                "defaultPurchaseReturnAccount",
-                data.defaultPurchaseReturnAccount
+                "defaultPurchaseReturnAcc",
+                data.defaultPurchaseReturnAcc
               )
             }
             label="Default Purchase Return Account"
@@ -340,7 +340,7 @@ const InventorySettingsForm = () => {
             }}
             onChangeData={(data: any) =>
               handleFieldChange(
-                "serviceWarrantyInvLedgerID",
+                "serviceNONWarrantyInvLedgerID",
                 data.serviceWarrantyInvLedgerID
               )
             }
@@ -348,11 +348,11 @@ const InventorySettingsForm = () => {
           />
 
           <ERPDataCombobox
-            id="billDiscountGivenLedger"
-            value={formState.billDiscountGivenLedger}
+            id="defaultBillDiscGivenLdg"
+            value={formState.defaultBillDiscGivenLdg}
             data={formState}
             field={{
-              id: "billDiscountGivenLedger",
+              id: "defaultBillDiscGivenLdg",
               // required: true,
               getListUrl: Urls.data_acc_ledgers,
               params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
@@ -361,18 +361,18 @@ const InventorySettingsForm = () => {
             }}
             onChangeData={(data: any) =>
               handleFieldChange(
-                "billDiscountGivenLedger",
-                data.billDiscountGivenLedger
+                "defaultBillDiscGivenLdg",
+                data.defaultBillDiscGivenLdg
               )
             }
             label="Bill Discount Given Ledger"
           />
           <ERPDataCombobox
-            id="defaultServiceSpareWarehouse"
-            value={formState.defaultServiceSpareWarehouse}
+            id="defaultServiceSpareWareHouse"
+            value={formState.defaultServiceSpareWareHouse}
             data={formState}
             field={{
-              id: "defaultServiceSpareWarehouse",
+              id: "defaultServiceSpareWareHouse",
               required: false,
               getListUrl: Urls.data_warehouse,
               valueKey: "id",
@@ -380,19 +380,19 @@ const InventorySettingsForm = () => {
             }}
             onChangeData={(data: any) =>
               handleFieldChange(
-                "defaultServiceSpareWarehouse",
-                data.defaultServiceSpareWarehouse
+                "defaultServiceSpareWareHouse",
+                data.defaultServiceSpareWareHouse
               )
             }
             label="Default Service Spare Warehouse"
           />
 
           <ERPDataCombobox
-            id="billDiscountReceivedLedger"
-            value={formState.billDiscountReceivedLedger}
+            id="defaultBillDiscRecvdLdg"
+            value={formState.defaultBillDiscRecvdLdg}
             data={formState}
             field={{
-              id: "billDiscountReceivedLedger",
+              id: "defaultBillDiscRecvdLdg",
               // required: true,
               getListUrl: Urls.data_acc_ledgers,
               params: `ledgerID=0&ledgerType=${LedgerType.Discount_Received}`,
@@ -401,18 +401,18 @@ const InventorySettingsForm = () => {
             }}
             onChangeData={(data: any) =>
               handleFieldChange(
-                "billDiscountReceivedLedger",
-                data.billDiscountReceivedLedger
+                "defaultBillDiscRecvdLdg",
+                data.defaultBillDiscRecvdLdg
               )
             }
             label="Bill Discount Received Ledger"
           />
           <ERPDataCombobox
-            id="defaultSalesReturnPayableAccount"
-            value={formState.defaultSalesReturnPayableAccount}
+            id="defaultSalesReturnPayableAcc"
+            value={formState.defaultSalesReturnPayableAcc}
             data={formState}
             field={{
-              id: "defaultSalesReturnPayableAccount",
+              id: "defaultSalesReturnPayableAcc",
               required: false,
               getListUrl: Urls.data_acc_ledgers,
               params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
@@ -421,8 +421,8 @@ const InventorySettingsForm = () => {
             }}
             onChangeData={(data: any) =>
               handleFieldChange(
-                "defaultSalesReturnPayableAccount",
-                data.defaultSalesReturnPayableAccount 
+                "defaultSalesReturnPayableAcc",
+                data.defaultSalesReturnPayableAcc 
               )
             }
             label="Default Sales Return Payable Acc:"
@@ -445,13 +445,13 @@ const InventorySettingsForm = () => {
             label="Coupon Card Account"
           />
           <ERPInput
-            id="redeemPoints"
-            value={formState.redeemPoints}
+            id="redeeemValuesSeperatedByComma"
+            value={formState.redeeemValuesSeperatedByComma}
             data={formState}
             label="Redeem Points (Separated by comma)"
             placeholder="Enter redeem points"
             onChangeData={(data: any) =>
-              handleFieldChange("redeemPoints", data.redeemPoints)
+              handleFieldChange("redeeemValuesSeperatedByComma", data.redeeemValuesSeperatedByComma)
             }
           />
           <ERPDataCombobox
@@ -475,16 +475,16 @@ const InventorySettingsForm = () => {
             label="Default Round off Account"
           />
           <ERPInput
-            id="keepUserActions"
-            value={formState.keepUserActions}
+            id="keepUserActionInDays"
+            value={formState.keepUserActionInDays}
             data={formState}
             label="Keep User Actions (in Days)"
             placeholder="Enter number of days"
             type="number"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "keepUserActions",
-                parseInt(data.keepUserActions, 10)
+                "keepUserActionInDays",
+                parseInt(data.keepUserActionInDays, 10)
               )
             }
           />
@@ -511,6 +511,11 @@ const InventorySettingsForm = () => {
           <ERPDataCombobox
             id="blockBillDiscount"
             value={formState.blockBillDiscount}
+            field={{
+              id: "blockBillDiscount",
+              valueKey: "value",
+              labelKey: "label",
+            }}
             data={formState}
             options={[
               { value: "No", label: "No" },
@@ -544,23 +549,28 @@ const InventorySettingsForm = () => {
             label="Default Brand"
           />
           <ERPInput
-            id="discountAuthorizationIfDiscountAbove"
-            value={formState.discountAuthorizationIfDiscountAbove}
+            id="discontAuthorizationIfDiscountAbove"
+            value={formState.discontAuthorizationIfDiscountAbove}
             data={formState}
             label="Discount Authorization if Discount above"
             placeholder="Enter discount threshold"
             type="number"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "discountAuthorizationIfDiscountAbove",
-                parseFloat(data.discountAuthorizationIfDiscountAbove)
+                "discontAuthorizationIfDiscountAbove",
+                parseFloat(data.discontAuthorizationIfDiscountAbove)
               )
             }
           />
 
           <ERPDataCombobox
-            id="negativeStock"
-            value={formState.negativeStock}
+            id="showNegStockWarning"
+            value={formState.showNegStockWarning}
+            field={{
+              id: "showNegStockWarning",
+              valueKey: "value",
+              labelKey: "label",
+            }}
             data={formState}
             options={[
               { value: "Block", label: "Block" },
@@ -568,7 +578,7 @@ const InventorySettingsForm = () => {
               { value: "Ignore", label: "Ignore" },
             ]}
             onChangeData={(data: any) =>
-              handleFieldChange("negativeStock", data.negativeStock)
+              handleFieldChange("showNegStockWarning", data.showNegStockWarning)
             }
             label="Negative Stock"
           />
@@ -583,14 +593,14 @@ const InventorySettingsForm = () => {
             }
           />
           <ERPCheckbox
-            id="setAuthorizationInSales"
-            checked={formState.setAuthorizationInSales}
+            id="setAuthorizationinSales"
+            checked={formState.setAuthorizationinSales}
             data={formState}
             label="Set Authorization in Sales"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "setAuthorizationInSales",
-                data.setAuthorizationInSales
+                "setAuthorizationinSales",
+                data.setAuthorizationinSales
               )
             }
           />
@@ -644,30 +654,30 @@ const InventorySettingsForm = () => {
           />
 
           <ERPDataCombobox
-            id="barcodeLabel"
-            value={formState.barcodeLabel}
+            id="defaultBarcodeLabel"
+            value={formState.defaultBarcodeLabel}
             data={formState}
             field={{
-              id: "barcodeLabel",
+              id: "defaultBarcodeLabel",
               required: false,
               getListUrl: Urls.data_countries,
               valueKey: "id",
               labelKey: "name",
             }}
             onChangeData={(data: any) =>
-              handleFieldChange("barcodeLabel", data.barcodeLabel)
+              handleFieldChange("defaultBarcodeLabel", data.defaultBarcodeLabel)
             }
             label="Barcode Label"
           />
           <ERPCheckbox
-            id="setProductCostAsDeclarationPrice"
-            checked={formState.setProductCostAsDeclarationPrice}
+            id="setProductCostasPurchasePrice"
+            checked={formState.setProductCostasPurchasePrice}
             data={formState}
             label="Set Product Cost as Declaration Price"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "setProductCostAsDeclarationPrice",
-                data.setProductCostAsDeclarationPrice
+                "setProductCostasPurchasePrice",
+                data.setProductCostasPurchasePrice
               )
             }
           />
@@ -701,14 +711,14 @@ const InventorySettingsForm = () => {
             label="If Less Sales Rate"
           />
           <ERPCheckbox
-            id="setProductCostWithTaxAmount"
-            checked={formState.setProductCostWithTaxAmount}
+            id="setProductCostWithVATAmount"
+            checked={formState.setProductCostWithVATAmount}
             data={formState}
             label="Set Product Cost With TAX Amount"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "setProductCostWithTaxAmount",
-                data.setProductCostWithTaxAmount
+                "setProductCostWithVATAmount",
+                data.setProductCostWithVATAmount
               )
             }
           />
@@ -726,14 +736,14 @@ const InventorySettingsForm = () => {
           />
 
           <ERPCheckbox
-            id="setLastSalesRateAsProductSalesRate"
-            checked={formState.setLastSalesRateAsProductSalesRate}
+            id="setLastSalesRateAsProctSaleRate"
+            checked={formState.setLastSalesRateAsProctSaleRate}
             data={formState}
             label="Set Last Sales Rate As Product Sales Rate"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "setLastSalesRateAsProductSalesRate",
-                data.setLastSalesRateAsProductSalesRate
+                "setLastSalesRateAsProctSaleRate",
+                data.setLastSalesRateAsProctSaleRate
               )
             }
           />
@@ -750,24 +760,24 @@ const InventorySettingsForm = () => {
             }
           />
           <ERPCheckbox
-            id="btoUsingMsp"
-            checked={formState.btoUsingMsp}
+            id="bTOUsingMSP"
+            checked={formState.bTOUsingMSP}
             data={formState}
             label="BTO Using MSP"
             onChangeData={(data: any) =>
-              handleFieldChange("btoUsingMsp", data.btoUsingMsp)
+              handleFieldChange("bTOUsingMSP", data.bTOUsingMSP)
             }
           />
 
           <ERPCheckbox
-            id="setLastPurchaseRateAsProductPurchaseRate"
-            checked={formState.setLastPurchaseRateAsProductPurchaseRate}
+            id="setLastPurchaseRateAsProctRate"
+            checked={formState.setLastPurchaseRateAsProctRate}
             data={formState}
             label="Set Last Purchase Rate As Product Purchase Rate"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "setLastPurchaseRateAsProductPurchaseRate",
-                data.setLastPurchaseRateAsProductPurchaseRate
+                "setLastPurchaseRateAsProctRate",
+                data.setLastPurchaseRateAsProctRate
               )
             }
           />
@@ -797,14 +807,14 @@ const InventorySettingsForm = () => {
           />
 
           <ERPCheckbox
-            id="setAvgPurchaseCostWithLastPurchaseRate"
-            checked={formState.setAvgPurchaseCostWithLastPurchaseRate}
+            id="setAvgPurchaseCostWithStdPurRate"
+            checked={formState.setAvgPurchaseCostWithStdPurRate}
             data={formState}
             label="Set Avg. Purchase Cost with Last Purchase Rate"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "setAvgPurchaseCostWithLastPurchaseRate",
-                data.setAvgPurchaseCostWithLastPurchaseRate
+                "setAvgPurchaseCostWithStdPurRate",
+                data.setAvgPurchaseCostWithStdPurRate
               )
             }
           />

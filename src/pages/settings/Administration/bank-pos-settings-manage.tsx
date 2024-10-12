@@ -29,8 +29,8 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
         () => dispatch(toggleBankPosPopup({ isOpen: false})),
         [dispatch]
       ),
-      method: ActionType.POST,
-      useApiClient: true
+      // method: ActionType.POST,
+      // useApiClient: true
     });
 
   const onClose = useCallback(() => {

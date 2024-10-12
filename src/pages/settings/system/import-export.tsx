@@ -4,7 +4,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import { toggleImportExportPopup,} from "../../../redux/slices/popup-reducer";
+import { toggleImportExportPopup, } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
@@ -35,21 +35,21 @@ const ImportExportManage: React.FC = React.memo(() => {
       filePath: "",
     },
   };
-  const [postData, setPostData] = useState(initialData);
+  const [postData, setPostData] = useState<any>(initialData);
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<ImportExportForm>({
-      url: Urls.deleteInactiveTransactions,
-      onSuccess: useCallback(
-        () =>
-          dispatch(
-            toggleImportExportPopup({ isOpen: false, key: null })
-          ),
-        [dispatch]
-      ),
-      method: ActionType.POST,
-    });
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+  } = useFormManager<ImportExportForm>({
+    url: Urls.import_parties,
+    onSuccess: useCallback(() => dispatch(toggleImportExportPopup({ isOpen: false })), [dispatch]),
+    method: ActionType.POST,
+    useApiClient: true
+  });
 
   const onClose = useCallback(() => {
     dispatch(
@@ -60,7 +60,7 @@ const ImportExportManage: React.FC = React.memo(() => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const filePath = e.target.files[0].name;
-      setPostData((prevState) => ({
+      setPostData((prevState: { data: any; }) => ({
         ...prevState,
         data: {
           ...prevState.data,
@@ -89,18 +89,43 @@ const ImportExportManage: React.FC = React.memo(() => {
             onChange={handleFileChange}
           />
         </div>
-       <div className="flex justify-around">
-        <ERPCheckbox
-          {...getFieldProps("product")}
-          label={t("product")}
-          onChangeData={(data: any) => handleFieldChange("product", data)}
-        />
+        <div className="flex justify-around">
+          <ERPCheckbox
+            label={t("product")}
+            id="product"
+            data={postData.data}
+            checked={postData.data.product}
+            validation={postData?.validations?.product}
+            onChangeData={(data: any) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  product: data,
+                  parties: !data ? prev.data.parties : false,
+                },
+              }));
+            }}
+            disabled={true}
+          />
 
-        <ERPCheckbox
-          {...getFieldProps("parties")}
-          label={t("parties")}
-          onChangeData={(data: any) => handleFieldChange("parties", data)}
-        />
+          <ERPCheckbox
+            label={t("parties")}
+            id="parties"
+            data={postData.data}
+            checked={postData.data.parties}
+            validation={postData?.validations?.parties}
+            onChangeData={(data: any) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  parties: data,
+                  product: !data ? prev.data.product : false,
+                },
+              }));
+            }}
+          />
         </div>
       </div>
       <ERPFormButtons

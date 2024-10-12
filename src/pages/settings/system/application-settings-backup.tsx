@@ -121,9 +121,9 @@ const BackupSettingsForm: React.FC = () => {
             }
             label="Backup Methods"
             options={[
-              { value: "0", label: "No BackUp" },
-              { value: "1", label: "BackUp On Close" },
-              { value: "2", label: "Scheduled BackUp" },
+              { value: 0, label: "No BackUp" },
+              { value: 1, label: "BackUp On Close" },
+              { value: 2, label: "Scheduled BackUp" },
             ]}
           />
         </div>

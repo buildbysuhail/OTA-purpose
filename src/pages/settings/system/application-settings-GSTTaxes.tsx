@@ -185,31 +185,33 @@ const ERPSettingsFormGSTTaxes = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className='grid grid-cols-4 gap-6'>
+      <div className='grid grid-cols-7'>
         <label>{t("default_purchase")}</label>
         <ERPCheckbox
           id="normalPurchaseForm"
           checked={formState.defaultPurchaseFormType.normal}
           data={formState}
           label={t("normal")}
-          onChangeData={() => handleFieldChange('normal', formState)}
+          onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, normal: data.normalPurchaseForm })}
         />
         <ERPCheckbox
           id="interStatePurchaseForm"
           checked={formState.defaultPurchaseFormType.interState}
           data={formState}
           label={t("inter_state")}
-          onChangeData={() => handleFieldChange('interState', formState)}
+          onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, interState: data.interStatePurchaseForm })}
         />
         <ERPCheckbox
           id="form62PurchaseForm"
           checked={formState.defaultPurchaseFormType.form62}
           data={formState}
           label={t("form_6(2)")}
-          onChangeData={() => handleFieldChange('form62', formState)}
+          onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, form62: data.form62PurchaseForm })}
         />
       </div>
-      <div className='grid grid-cols-5 gap-6'>
+
+
+      <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
         <ERPDataCombobox
           id="defaultSalesFormType"
           value={formState.defaultSalesFormType}
@@ -343,6 +345,10 @@ const ERPSettingsFormGSTTaxes = () => {
           }}
           onChangeData={(data: any) => handleFieldChange("incomeTaxAccount", data)}
         />
+      </div>
+
+
+      <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
         <ERPDataCombobox
           id="defaultSIFormTypeForPOS"
           value={formState.defaultSIFormTypeForPOS}
@@ -402,7 +408,11 @@ const ERPSettingsFormGSTTaxes = () => {
           }}
           onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data)}
         />
+      </div>
 
+
+
+      <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
         <ERPDataCombobox
           id="inputSGSTAccount"
           value={formState.inputSGSTAccount}
@@ -558,7 +568,7 @@ const ERPSettingsFormGSTTaxes = () => {
           checked={formState.considerSalesPriceAsCalamityIncluded}
           data={formState}
           label={t("consider_sales_price_as_calamity_included")}
-          onChangeData={(data: any) => handleFieldChange("considerSalesPriceAsCalamityIncluded", data)}
+          onChangeData={(data: any) => handleFieldChange("considerSalesPriceAsCalamityIncluded", data.considerSalesPriceAsCalamityIncluded)}
         />
 
         <ERPCheckbox
@@ -566,7 +576,7 @@ const ERPSettingsFormGSTTaxes = () => {
           checked={formState.enableKarnatakaTaxReportFormat}
           data={formState}
           label={t("enable_karnataka_tax_report_format")}
-          onChangeData={(data: any) => handleFieldChange("enableKarnatakaTaxReportFormat", data)}
+          onChangeData={(data: any) => handleFieldChange("enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
         />
 
         <ERPCheckbox
@@ -574,31 +584,37 @@ const ERPSettingsFormGSTTaxes = () => {
           checked={formState.showPrevForms}
           data={formState}
           label={t("show_prev._forms")}
-          onChangeData={(data: any) => handleFieldChange("showPrevForms", data)}
+          onChangeData={(data: any) => handleFieldChange("showPrevForms", data.showPrevForms)}
         />
       </div>
-      <div className='border p-4 rounded-lg '>
-        <div className='flex align-center justify-between'>
-          <ERPCheckbox
-            id="enableEWB"
-            checked={formState.enableEWB}
-            data={formState}
-            label={t("enable_ewb")}
-            onChangeData={(data: any) => handleFieldChange("enableEWB", data)}
-          />
-          <ERPButton title={t("ewb_taxPro")} onClick={() => {/* Handle EWB TaxPro click */ }} />
 
-          <ERPCheckbox
-            id="enableEInvoice"
-            checked={formState.enableEInvoice}
-            data={formState}
-            label={t("enable_e-invoice")}
-            onChangeData={(data: any) => handleFieldChange("enableEInvoice", data)}
-          />
-          <ERPButton title={t("EInvoiceTaxPro")} onClick={() => {/* Handle EInvoiceTaxPro click */ }} />
+
+
+      <div className='border p-4 rounded-lg'>
+        <div className='grid grid-cols-4 gap-6'>
+          <div className='flex justify-between align-center'>
+            <ERPCheckbox
+              id="enableEWB"
+              checked={formState.enableEWB}
+              data={formState}
+              label={t("enable_ewb")}
+              onChangeData={(data: any) => handleFieldChange("enableEWB", data.enableEWB)}
+            />
+            <ERPButton title={t("ewb_taxPro")} onClick={() => {/* Handle EWB TaxPro click */ }} />
+          </div>
+
+          <div className='flex justify-between align-center'>
+            <ERPCheckbox
+              id="enableEInvoice"
+              checked={formState.enableEInvoice}
+              data={formState}
+              label={t("enable_e-invoice")}
+              onChangeData={(data: any) => handleFieldChange("enableEInvoice", data.enableEInvoice)}
+            />
+            <ERPButton title={t("EInvoiceTaxPro")} onClick={() => {/* Handle EInvoiceTaxPro click */ }} />
+          </div>
         </div>
-
-        <div className='grid grid-cols-4 gap-6 mt-5'>
+        <div className='grid grid-cols-3 gap-6 mt-5'>
           <ERPDataCombobox
             field={{
               id: "eInvoiceProviderType",

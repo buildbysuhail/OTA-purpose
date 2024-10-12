@@ -437,11 +437,11 @@ const BranchSettingsForm: React.FC = () => {
                   )
                 }
                 options={[
-                  { value: "0", label: "Manual Sync" },
-                  { value: "1", label: "Auto Sync" },
-                  { value: "2", label: "Auto Sync and Upload Only" },
-                  { value: "3", label: "Manual Sync and Upload Only" },
-                  { value: "4", label: "Upload And Download" },
+                  { value: 0, label: "Manual Sync" },
+                  { value: 1, label: "Auto Sync" },
+                  { value: 2, label: "Auto Sync and Upload Only" },
+                  { value: 3, label: "Manual Sync and Upload Only" },
+                  { value: 4, label: "Upload And Download" },
                 ]}
               />
 
@@ -510,8 +510,8 @@ const BranchSettingsForm: React.FC = () => {
                 handleFieldChange("reportMode", data.reportMode)
               }
               options={[
-                { value: "0", label: "classic" },
-                { value: "1", label: "Standard" },
+                { value: 0, label: "classic" },
+                { value: 1, label: "Standard" },
               ]}
             />
 
@@ -533,8 +533,8 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
             options={[
-              { value: "0", label: "Default" },
-              { value: "1", label: "Standard" },
+              { value: 0, label: "Default" },
+              { value: 1, label: "Standard" },
             ]}
           />
           <ERPDataCombobox
@@ -556,9 +556,9 @@ const BranchSettingsForm: React.FC = () => {
               )
             }
             options={[
-              { value: "0", label: "No" },
-              { value: "1", label: "File System" },
-              { value: "2", label: "Cloud" },
+              { value: 0, label: "No" },
+              { value: 1, label: "File System" },
+              { value: 2, label: "Cloud" },
             ]}
           />
           <ERPInput
@@ -634,6 +634,8 @@ const BranchSettingsForm: React.FC = () => {
             title="Save Settings"
             variant="primary"
             type="submit"
+            loading={isSaving}
+            disabled={isSaving}
           />
         </div>
     </div>

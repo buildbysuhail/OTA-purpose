@@ -33,7 +33,6 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
     },
     {
       dataField: "companyID",

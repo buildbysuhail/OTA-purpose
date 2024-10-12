@@ -584,5 +584,6 @@
   "balance":"Balance",
 
   "hide":"Hide",
-  "account_payable_aging_report":"Account Payable Aging Report"
+  "account_payable_aging_report":"Account Payable Aging Report",
+  "days":"Days"
 }

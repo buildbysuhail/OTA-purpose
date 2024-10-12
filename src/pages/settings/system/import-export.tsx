@@ -76,18 +76,43 @@ const ImportExportManage: React.FC = React.memo(() => {
             onChange={handleFileChange}
           />
         </div>
-       <div className="flex justify-around">
-        <ERPCheckbox
-          {...getFieldProps("product")}
-          label={t("product")}
-          onChangeData={(data: any) => handleFieldChange("product", data)}
-        />
+        <div className="flex justify-around">
+          <ERPCheckbox
+            label={t("product")}
+            id="product"
+            data={postData.data}
+            checked={postData.data.product}
+            validation={postData?.validations?.product}
+            onChangeData={(data: any) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  product: data,
+                  parties: !data ? prev.data.parties : false,
+                },
+              }));
+            }}
+            disabled={true}
+          />
 
-        <ERPCheckbox
-          {...getFieldProps("parties")}
-          label={t("parties")}
-          onChangeData={(data: any) => handleFieldChange("parties", data)}
-        />
+          <ERPCheckbox
+            label={t("parties")}
+            id="parties"
+            data={postData.data}
+            checked={postData.data.parties}
+            validation={postData?.validations?.parties}
+            onChangeData={(data: any) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  parties: data,
+                  product: !data ? prev.data.product : false,
+                },
+              }));
+            }}
+          />
         </div>
       </div>
       <ERPFormButtons

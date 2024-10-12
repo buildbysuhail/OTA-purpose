@@ -83,6 +83,24 @@ const SystemSettingsApi = {
       return '';
     }
   },
+  postBarcodePrint: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.barcodePrintGrid,data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
+  postVoucherPrint: async (data: any) => {
+    try {
+      const responseData = await api.post(Urls.barcodePrintTransaction,data);
+      return responseData;
+    } catch (error) {
+      console.error("Failed to get available agents for DX Grid:", error);
+      return '';
+    }
+  },
 };
 
 export default SystemSettingsApi;

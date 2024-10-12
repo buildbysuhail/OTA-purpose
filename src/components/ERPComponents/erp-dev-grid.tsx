@@ -44,6 +44,7 @@ import { AppDispatch } from "../../redux/store";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "devextreme/localization";
+import { ActionType } from "../../redux/types";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -55,6 +56,8 @@ interface ERPDevGridProps {
   columns: DevGridColumn[];
   gridId: string;
   dataUrl: string;
+  method?: ActionType;
+  postData?: any;
   height?: number | string;
   className?: string;
   showBorders?: boolean;
@@ -131,8 +134,10 @@ const createStore = (
   keyExpr: string | string[] | undefined,
   dataUrl: string,
   allowEditing?: boolean,
-  paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
+  method?: ActionType,
+  postData?: any,
   initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
+  paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
 ) => {
   return new CustomStore({
     key: keyExpr,
@@ -147,16 +152,21 @@ const createStore = (
         });
       }
 
-      const queryString = paramNames
-        .filter((paramName) => isNotEmpty(loadOptions[paramName]))
-        .map(
-          (paramName) =>
-            `${paramName}=${JSON.stringify(loadOptions[paramName])}`
-        )
-        .join("&");
-
+      const params = Object.fromEntries(
+        paramNames
+            .filter((paramName) => isNotEmpty(loadOptions[paramName]))
+            .map((paramName) => [
+                paramName, 
+                JSON.stringify(loadOptions[paramName])
+            ])
+    );
+    debugger;
+    const queryString = new URLSearchParams(params).toString();
+        
+debugger;
       try {
-        const result = await api.get(dataUrl, queryString);
+        const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, postData, queryString) : null;
+        debugger;
         return result
           ? {
               data: result.data,
@@ -197,6 +207,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   columns,
   gridId,
   dataUrl,
+  method = ActionType.GET,
+  postData,
   height,
   className = "custom-data-grid",
   showBorders = true,
@@ -306,7 +318,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const store = useMemo(
     () => {
       if (reload) {
-        const newStore = createStore(keyExpr, dataUrl, allowEditing);
+        const newStore = createStore(keyExpr, dataUrl, allowEditing, method, postData, initialFilters);
         setCurrentStore(newStore);  // Update current store whenever reload is true
         return newStore;
       }

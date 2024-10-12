@@ -581,5 +581,9 @@
   "printer": "الطابعة",
   "debit": "مدين",
   "credit": "دائن",
-  "balance": "الرصيد"
+  "balance": "الرصيد",
+
+  "hide":"يخفي",
+  "account_payable_aging_report": "تقرير تقادم الحسابات الدائنة",
+  "days": "الأيام"
 }

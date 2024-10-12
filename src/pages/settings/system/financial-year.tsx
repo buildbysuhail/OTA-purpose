@@ -80,7 +80,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: false,
       allowFiltering: true,
-      width: 100,
+      width: 170,
     },
     {
       dataField: "createdUser",
@@ -89,7 +89,8 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 170,
+      visible:false
     },
     {
       dataField: "createdDate",
@@ -99,6 +100,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "modifiedUser",
@@ -107,7 +109,8 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 170,
+      visible:false
     },
     {
       dataField: "modifiedDate",
@@ -117,6 +120,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false
     },
     {
       dataField: "openingStockValue",
@@ -125,7 +129,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "actions",

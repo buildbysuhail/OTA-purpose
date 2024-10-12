@@ -23,7 +23,7 @@ interface BranchData {
   city: string;
   district: string;
   bState: string;
-  country: number;
+  country: string;
   pinCode: string;
   phone: string;
   mobile: string;
@@ -52,7 +52,7 @@ export const initialDataBranch = {
     city: "",
     district: "",
     bState: "",
-    country: 0,
+    country: "",
     pinCode: "",
     phone: "",
     mobile: "",
@@ -185,7 +185,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             id: "country",
             required: true,
             getListUrl: Urls.data_countries,
-            valueKey: "id",
+            valueKey: "name",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {

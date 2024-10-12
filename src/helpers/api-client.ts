@@ -92,6 +92,20 @@ class APIClient {
     return headers ? axios.post(url, data, {headers: headers}) : axios.post(url, data);
   };
 
+  postAsync = async(url: string, data: any, params?: any): Promise<any> => {
+    setAuthorization();
+    debugger;
+    const response = await axios.post(`${url}?${params}`, data);
+    debugger;
+    return response;
+    // if (response?.status != undefined && response?.status != null) {
+    //   return response?.data;
+    // }
+    // else
+    // {
+    //   return response
+    // } 
+  };
   /**
    * Updates data
    */

@@ -24,7 +24,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 80,
       },
       {
         dataField: "counter",
@@ -33,7 +33,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 150,
       },
       {
         dataField: "descriptions",
@@ -42,7 +42,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 170,
       },
       {
         dataField: "maintainShift",
@@ -51,7 +51,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 60,
+        width: 150,
       },
       {
         dataField: "createdUser",
@@ -60,7 +60,8 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 170,
+        visible:false
       },
       {
         dataField: "createdDate",
@@ -69,7 +70,8 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 160,
+        visible:false
       },
       {
         dataField: "modifiedUser",
@@ -78,7 +80,8 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 170,
+        visible:false
       },
       {
         dataField: "modifiedDate",
@@ -87,7 +90,8 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 160,
+        visible:false
       },
       {
         dataField: "cashLedgerID",
@@ -96,7 +100,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 120,
       },
       {
         dataField: "ledgerName",
@@ -105,7 +109,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 170,
       },
       {
         dataField: "vrPrefix",
@@ -114,7 +118,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 100,
+        width: 150,
       },
       {
         dataField: "actions",

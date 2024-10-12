@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState, ChangeEvent, FormEvent } from "react";
+import React, { Fragment, useMemo, useState, ChangeEvent, FormEvent, useCallback } from "react";
 import Urls from "../../../redux/urls";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
@@ -15,6 +15,9 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { ResponseModelWithValidation } from "../../../base/response-model";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import SystemSettingsApi from "./system-apis";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -49,27 +52,38 @@ interface StandardBarcodeData {
   printer: string;
 }
 
-const BarcodePrint: React.FC = () => {
-  const { t } = useTranslation();
-  const dispatch = useAppDispatch();
-  const rootState = useRootState();
-
-  
-  const [barcodeForm, setBarcodeForm] = useState<BarcodeFormData>({
+const initialBarcodeFormData = {
+  data: {
     formBcode: 0,
     toBcode: 0,
     barCodes: "",
     isFormTo: false,
-  });
+  },
+  validations: {
+    formBcode: "",
+    toBcode: "",
+    barCodes: "",
+    isFormTo: "",
+  },
+}
 
-  const [voucherForm, setVoucherForm] = useState<VoucherFormData>({
+const initialVoucherFormData = {
+  data: {
     vPrefix: "",
     formType: "",
     vType: "",
     vchNo: 0,
-  });
+  },
+  validations: {
+    vPrefix: "",
+    formType: "",
+    vType: "",
+    vchNo: "",
+  },
+}
 
-  const [barcodeDesc, setBarcodeDesc] = useState<BarcodeDescData>({
+const initialBarcodeDescData = {
+  data: {
     packDate: "",
     expDesc: "",
     note1: "",
@@ -80,29 +94,62 @@ const BarcodePrint: React.FC = () => {
     startRow: "",
     endRow: "",
     inSearch: false,
-  });
+  },
+  validations: {
+    packDate: "",
+    expDesc: "",
+    note1: "",
+    note2: "",
+    note3: "",
+    note4: "",
+    labelDesign: "",
+    startRow: "",
+    endRow: "",
+    inSearch: "",
+  },
+}
 
-  const [standardBarcode, setStandardBarcode] = useState<StandardBarcodeData>({
+const initialStandardBarcodeData = {
+  data: {
     standardPreview: false,
     standardLabelDesign: "",
     printer: "",
-  });
+  },
+  validations: {
+    standardPreview: "",
+    standardLabelDesign: "",
+    printer: "",
+  },
+}
+
+const BarcodePrint: React.FC = () => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const rootState = useRootState();
+
+  const [barcodeFormLoading, setBarcodeFormLoading] = useState<boolean>(false);
+  const [voucherFormLoading, setVoucherFormLoading] = useState<boolean>(false);
+  const [barcodeDescLoading, setBarcodeDescLoading] = useState<boolean>(false);
+  const [standardBarcodeLoading, setStandardBarcodeLoading] = useState<boolean>(false);
+  const [barcodeForm, setBarcodeForm] = useState<any>(initialBarcodeFormData);
+  const [voucherForm, setVoucherForm] = useState<any>(initialVoucherFormData);
+  const [barcodeDesc, setBarcodeDesc] = useState<any>(initialBarcodeDescData);
+  const [standardBarcode, setStandardBarcode] = useState<any>(initialStandardBarcodeData);
 
   const handleBarcodeStateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
-
-    setBarcodeForm(prevData => ({
-      ...prevData,
-      [name]: newValue,
-    }));
   };
 
   const handleVoucherStateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setVoucherForm(prevData => ({
-      ...prevData,
-      [name]: value,
+
+    setVoucherForm((prev: any) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        vType: value,
+      },
     }));
   };
 
@@ -110,7 +157,7 @@ const BarcodePrint: React.FC = () => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
 
-    setBarcodeDesc(prevData => ({
+    setBarcodeDesc((prevData: any) => ({
       ...prevData,
       [name]: newValue,
     }));
@@ -118,7 +165,7 @@ const BarcodePrint: React.FC = () => {
 
   const handleDateChange = (id: string, data: any) => {
     if (id === 'formType') {
-      setVoucherForm(prev => ({ ...prev, formType: data }));
+      setVoucherForm((prev: any) => ({ ...prev, formType: data }));
     }
   };
 
@@ -126,7 +173,7 @@ const BarcodePrint: React.FC = () => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
 
-    setStandardBarcode(prevData => ({
+    setStandardBarcode((prevData: any) => ({
       ...prevData,
       [name]: newValue,
     }));
@@ -135,13 +182,13 @@ const BarcodePrint: React.FC = () => {
   const handleComboboxChange = (id: string, data: any) => {
     switch (id) {
       case 'labelDesign':
-        setBarcodeDesc(prev => ({ ...prev, labelDesign: data }));
+        setBarcodeDesc((prev: any) => ({ ...prev, labelDesign: data }));
         break;
       case 'standardLabelDesign':
-        setStandardBarcode(prev => ({ ...prev, standardLabelDesign: data }));
+        setStandardBarcode((prev: any) => ({ ...prev, standardLabelDesign: data }));
         break;
       case 'printer':
-        setStandardBarcode(prev => ({ ...prev, printer: data }));
+        setStandardBarcode((prev: any) => ({ ...prev, printer: data }));
         break;
     }
   };
@@ -149,6 +196,62 @@ const BarcodePrint: React.FC = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted:", { barcodeForm, voucherForm, barcodeDesc, standardBarcode });
+  };
+
+  const barcodeFormSubmit = useCallback(async () => {
+    setBarcodeFormLoading(true);
+    const response: ResponseModelWithValidation<any, any> =
+      await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
+    setBarcodeFormLoading(false);
+    handleResponse(
+      response,
+      () => {
+        setBarcodeForm((prevData: any) => ({
+          ...prevData,
+          validations: response.validations,
+        }));
+      }
+    );
+  }, [barcodeForm?.data]);
+
+
+  const voucherFormSubmit = useCallback(async () => {
+    setVoucherFormLoading(true);
+    const response: ResponseModelWithValidation<any, any> =
+      await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
+    setVoucherFormLoading(false);
+    handleResponse(
+      response,
+      () => {
+        setVoucherForm((prevData: any) => ({
+          ...prevData,
+          validations: response.validations,
+        }));
+      }
+    );
+  }, [voucherForm?.data]);
+
+
+  const barcodeDescSubmit = useCallback(() => {
+    setBarcodeDescLoading(true);
+    setTimeout(() => {
+      console.log('Form submitted:', barcodeDesc.data);
+      setBarcodeDescLoading(false);
+      setBarcodeDesc((prevData: any) => ({
+        ...prevData,
+        validations: {
+          ...prevData.validations,
+        },
+      }));
+    }, 1000);
+  }, [barcodeDesc?.data]);
+
+  const handleStandardBarcodeSubmit = () => {
+    setStandardBarcodeLoading(true);
+    setTimeout(() => {
+      console.log('Standard Barcode Form submitted:', standardBarcode.data);
+      setStandardBarcodeLoading(false);
+    }, 1000);
   };
 
   // Define columns for the Counters grid
@@ -316,22 +419,34 @@ const BarcodePrint: React.FC = () => {
                       id="formBcode"
                       label={t("barcode_form")}
                       type="text"
-                      value={barcodeForm.formBcode}
                       customSize="md"
                       className="w-full"
-                      name="formBcode"
-                      onChange={handleBarcodeStateChange}
+                      value={barcodeForm.data.formBcode}
+                      data={barcodeForm.data}
+                      validation={barcodeForm?.validations?.formBcode}
+                      onChangeData={(data: any) => {
+                        setBarcodeForm((prev: any) => ({
+                          ...prev,
+                          data: data,
+                        }));
+                      }}
                       placeholder={t("form")}
                     />
                     <ERPInput
                       id="toBcode"
                       label={t("to")}
                       type="text"
-                      value={barcodeForm.toBcode}
+                      value={barcodeForm.data.toBcode}
                       customSize="md"
                       className="w-full"
-                      name="toBcode"
-                      onChange={handleBarcodeStateChange}
+                      data={barcodeForm.data}
+                      validation={barcodeForm?.validations?.toBcode}
+                      onChangeData={(data: any) => {
+                        setBarcodeForm((prev: any) => ({
+                          ...prev,
+                          data: data,
+                        }));
+                      }}
                       placeholder={t("to")}
                     />
                   </div>
@@ -339,24 +454,40 @@ const BarcodePrint: React.FC = () => {
                     id="barCodes"
                     label={t("barcode_comma_seperated")}
                     type="text"
-                    value={barcodeForm.barCodes}
+                    value={barcodeForm.data.barCodes}
                     customSize="md"
                     className="w-full"
-                    name="barCodes"
-                    onChange={handleBarcodeStateChange}
+                    data={barcodeForm.data}
+                    validation={barcodeForm?.validations?.barCodes}
+                    onChangeData={(data: any) => {
+                      setBarcodeForm((prev: any) => ({
+                        ...prev,
+                        data: data,
+                      }));
+                    }}
                     placeholder={t("comma_separated")}
                   />
                   <div className="flex items-center justify-between">
                     <ERPCheckbox
                       label={t("preview")}
                       id="isFormTo"
-                      data={barcodeForm.isFormTo}
-                      onChange={handleBarcodeStateChange}
+                      data={barcodeForm.data}
+                      checked={barcodeForm.data.isFormTo}
+                      validation={barcodeForm?.validations?.isFormTo}
+                      onChangeData={(data: any) => {
+                        setBarcodeForm((prev: any) => ({
+                          ...prev,
+                          data: data,
+                        }));
+                      }}
                     />
                     <ERPButton
                       title={t("show")}
                       className="px-3 py-1"
                       variant="secondary"
+                      disabled={barcodeFormLoading}
+                      loading={barcodeFormLoading}
+                      onClick={barcodeFormSubmit}
                     />
                   </div>
                 </div>
@@ -376,8 +507,10 @@ const BarcodePrint: React.FC = () => {
                             id={`type-${label.toLowerCase()}-${index}`}
                             name="vType"
                             value={label.toLowerCase()}
-                            checked={voucherForm.vType === label.toLowerCase()}
+
+                            checked={voucherForm.data.vType === label.toLowerCase()}
                             onChange={handleVoucherStateChange}
+
                             label={label}
                           />
                         </div>
@@ -390,12 +523,18 @@ const BarcodePrint: React.FC = () => {
                         id="vPrefix"
                         label={t("VPrefix")}
                         type="text"
-                        value={voucherForm.vPrefix}
+                        value={voucherForm.data.vPrefix}
                         customSize="md"
                         className="w-full"
-                        name="vPrefix"
-                        onChange={handleVoucherStateChange}
                         placeholder={t("VPrefix")}
+                        data={voucherForm.data}
+                        validation={voucherForm?.validations?.vPrefix}
+                        onChangeData={(data: any) => {
+                          setVoucherForm((prev: any) => ({
+                            ...prev,
+                            data: data,
+                          }));
+                        }}
                       />
                       <ERPDataCombobox
                         id="formType"
@@ -408,18 +547,33 @@ const BarcodePrint: React.FC = () => {
                         }}
                         label={t("form_type")}
                         required={true}
-                        onChangeData={(data: any) => handleDateChange("formType", data)}
+                        data={voucherForm.data}
+                        defaultData={voucherForm?.data}
+                        value={voucherForm.data.formType}
+                        validation={voucherForm?.validations?.formType}
+                        onChangeData={(data: any) => {
+                          setVoucherForm((prev: any) => ({
+                            ...prev,
+                            data: data,
+                          }));
+                        }}
                       />
                       <div className="flex justify-between gap-4">
                         <ERPInput
                           id="vchNo"
                           label={t("bill_no")}
                           type="text"
-                          value={voucherForm.vchNo}
+                          value={voucherForm.data.vchNo}
                           customSize="md"
                           className="w-full"
-                          name="vchNo"
-                          onChange={handleVoucherStateChange}
+                          data={voucherForm.data}
+                          validation={voucherForm?.validations?.vchNo}
+                          onChangeData={(data: any) => {
+                            setVoucherForm((prev: any) => ({
+                              ...prev,
+                              data: data,
+                            }));
+                          }}
                           placeholder={t("bill_no")}
                         />
                         <div className="mt-[11px]">
@@ -427,6 +581,9 @@ const BarcodePrint: React.FC = () => {
                             title={t("show")}
                             className="px-3 py-1"
                             variant="secondary"
+                            disabled={voucherFormLoading}
+                            loading={voucherFormLoading}
+                            onClick={voucherFormSubmit}
                           />
                         </div>
                       </div>
@@ -441,66 +598,56 @@ const BarcodePrint: React.FC = () => {
                   <ERPDateInput
                     id="packDate"
                     type="date"
-                    label={t("packed_date")}
-                    value={barcodeDesc.packDate}
-                    onChange={(e) => handleDescStateChange(e)}
-                  // name="packDate"
+                    label="Packed Date"
+                    value={barcodeDesc.data.packDate}
+                    data={barcodeDesc.data}
+                    validation={barcodeDesc?.validations?.packDate}
+                    onChangeData={(data: any) => {
+                      setBarcodeDesc((prev: any) => ({
+                        ...prev,
+                        data: data,
+                      }));
+                    }}
                   />
                   <ERPInput
                     id="expDesc"
-                    label={t("expiry_description")}
+                    label="Expiry Description"
                     type="text"
-                    value={barcodeDesc.expDesc}
+                    value={barcodeDesc.data.expDesc}
                     customSize="md"
                     className="w-full"
                     name="expDesc"
-                    onChange={handleBarcodeStateChange}
-                    placeholder={t("exp_desc")}
+                    data={barcodeDesc.data}
+                    validation={barcodeDesc?.validations?.expDesc}
+                    onChangeData={(data: any) => {
+                      setBarcodeDesc((prev: any) => ({
+                        ...prev,
+                        data: data,
+                      }));
+                    }}
+                    placeholder="Expiry Description"
                   />
-                  <ERPInput
-                    id="note1"
-                    label={t("note_1")}
-                    type="text"
-                    value={barcodeDesc.note1}
-                    customSize="md"
-                    className="w-full"
-                    name="note1"
-                    onChange={handleBarcodeStateChange}
-                    placeholder={t("note_1")}
-                  />
-                  <ERPInput
-                    id="note2"
-                    label={t("note_2")}
-                    type="text"
-                    value={barcodeDesc.note2}
-                    customSize="md"
-                    className="w-full"
-                    name="note2"
-                    onChange={handleBarcodeStateChange}
-                    placeholder={t("note_2")}
-                  />
-                  <ERPInput
-                    id="note3"
-                    label={t("note_3")}
-                    type="text"
-                    value={barcodeDesc.note3}
-                    customSize="md"
-                    className="w-full"
-                    name="note3"
-                    onChange={handleBarcodeStateChange}
-                    placeholder={t("note_3")}
-                  />
-                  <ERPInput
-                    id="note4"
-                    label={t("note_4")}
-                    type="text"
-                    value={barcodeDesc.note4}
-                    customSize="md"
-                    className="w-full"
-                    name="note4"
-                    onChange={handleBarcodeStateChange}
-                    placeholder={t("note_4")}
-                  />
+                  {[1, 2, 3, 4].map((num) => (
+                    <ERPInput
+                      key={num}
+                      id={`note${num}`}
+                      label={`Note ${num}`}
+                      type="text"
+                      value={barcodeDesc.data[`note${num}` as keyof typeof barcodeDesc.data]}
+                      customSize="md"
+                      className="w-full"
+                      name={`note${num}`}
+                      data={barcodeDesc.data}
+                      validation={barcodeDesc?.validations[`note${num}` as keyof typeof barcodeDesc.validations]}
+                      onChangeData={(data: any) => {
+                        setBarcodeDesc((prev: any) => ({
+                          ...prev,
+                          data: data,
+                        }));
+                      }}
+                      placeholder={`Note ${num}`}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -522,50 +669,74 @@ const BarcodePrint: React.FC = () => {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          label={t("label_design")}
+                          label="Label Design"
                           required={true}
+                          data={barcodeDesc.data}
+                          defaultData={barcodeDesc?.data}
+                          value={barcodeDesc.data.labelDesign}
+                          validation={barcodeDesc?.validations?.labelDesign}
                           onChangeData={(data: any) => handleComboboxChange("labelDesign", data)}
                         />
                       </div>
                       <div className="flex flex-col">
                         <ERPInput
                           id="startRow"
-                          label={t("start_row")}
+                          label="Start Row"
                           type="text"
-                          value={barcodeDesc.startRow}
+                          value={barcodeDesc.data.startRow}
                           customSize="md"
                           className="w-full"
                           name="startRow"
-                          onChange={handleBarcodeStateChange}
-                          validation=""
+                          data={barcodeDesc.data}
+                          validation={barcodeDesc?.validations?.startRow}
+                          onChangeData={(data: any) => {
+                            setBarcodeDesc((prev: any) => ({
+                              ...prev,
+                              data: data,
+                            }));
+                          }}
                         />
                       </div>
                       <div className="flex flex-col">
                         <ERPInput
                           id="endRow"
-                          label={t("end_row")}
+                          label="End Row"
                           type="text"
-                          value={barcodeDesc.endRow}
+                          value={barcodeDesc.data.endRow}
                           customSize="md"
                           className="w-full"
                           name="endRow"
-                          onChange={handleBarcodeStateChange}
-                          validation=""
+                          data={barcodeDesc.data}
+                          validation={barcodeDesc?.validations?.endRow}
+                          onChangeData={(data: any) => {
+                            setBarcodeDesc((prev: any) => ({
+                              ...prev,
+                              data: data,
+                            }));
+                          }}
                         />
                       </div>
                     </div>
                     <div className="flex justify-between mt-4">
                       <ERPCheckbox
-                        label={t("inSearch")}
+                        label="In Search"
                         id="inSearch"
-                        data={barcodeDesc.inSearch}
-                        onChange={handleBarcodeStateChange}
-                        validation=""
+                        data={barcodeDesc.data}
+                        validation={barcodeDesc?.validations?.inSearch}
+                        onChangeData={(data: any) => {
+                          setBarcodeDesc((prev: any) => ({
+                            ...prev,
+                            data: data,
+                          }));
+                        }}
                       />
                       <ERPButton
-                        title={t("print")}
+                        title="Print"
                         className="px-3 py-1 w-24"
                         variant="secondary"
+                        disabled={barcodeDescLoading}
+                        loading={barcodeDescLoading}
+                        onClick={barcodeDescSubmit}
                       />
                     </div>
                   </div>
@@ -576,37 +747,23 @@ const BarcodePrint: React.FC = () => {
                   <div className="w-full">
                     <div className="flex gap-6 justify-between">
                       <div className="flex flex-col space-y-2 ml-4 flex-grow">
-                        {/* <ERPSelect
-                          id="labelDesign"
-                          label="Label Design"
-                          options={options}
-                          value={selectedFromType}
-                          handleChange={handleChange}
-                          className="w-full"
-                          required={true}
-                        /> */}
                         <ERPDataCombobox
                           id="standardLabelDesign"
                           field={{
                             id: "standardLabelDesign",
                             required: true,
-                            getListUrl: Urls.data_form_type,
+                            getListUrl: Urls.data_form_type, 
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          label={t("label_design")}
+                          label="Label Design"
                           required={true}
+                          data={standardBarcode.data}
+                          defaultData={standardBarcode?.data}
+                          value={standardBarcode.data.standardLabelDesign}
+                          validation={standardBarcode?.validations?.standardLabelDesign}
                           onChangeData={(data: any) => handleComboboxChange("standardLabelDesign", data)}
                         />
-                        {/* <ERPSelect
-                          id="printer"
-                          label="Printer"
-                          options={options}
-                          value={selectedFromType}
-                          handleChange={handleChange}
-                          className="w-full"
-                          required={true}
-                        /> */}
                         <ERPDataCombobox
                           id="printer"
                           field={{
@@ -616,8 +773,12 @@ const BarcodePrint: React.FC = () => {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          label={t("printer")}
+                          label="Printer"
                           required={true}
+                          data={standardBarcode.data}
+                          defaultData={standardBarcode?.data}
+                          value={standardBarcode.data.printer}
+                          validation={standardBarcode?.validations?.printer}
                           onChangeData={(data: any) => handleComboboxChange("printer", data)}
                         />
                       </div>
@@ -625,15 +786,24 @@ const BarcodePrint: React.FC = () => {
                         <div className="flex flex-start mt-5">
                           <ERPCheckbox
                             id="standardPreview"
-                            label={t("preview")}
-                            data={standardBarcode.standardPreview}
-                            onChange={handleStandardBarcodeChange}
+                            label="Preview"
+                            data={standardBarcode.data}
+                            validation={standardBarcode?.validations?.standardPreview}
+                            onChangeData={(data: any) => {
+                              setStandardBarcode((prev: any) => ({
+                                ...prev,
+                                data: data,
+                              }));
+                            }}
                           />
                         </div>
                         <ERPButton
                           title={t("print")}
                           className="px-3 py-1 w-24"
                           variant="secondary"
+                          disabled={standardBarcodeLoading}
+                          loading={standardBarcodeLoading}
+                          onClick={handleStandardBarcodeSubmit}
                         />
                       </div>
                     </div>

@@ -172,7 +172,7 @@ const ERPSettingsFormGSTTaxes = () => {
 
       const response = await api.put(Urls.application_settings, { type: 'accounts', updateList: modifiedSettings }) as any
       handleResponse(response);
-      
+
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {
@@ -343,61 +343,6 @@ const ERPSettingsFormGSTTaxes = () => {
           }}
           onChangeData={(data: any) => handleFieldChange("incomeTaxAccount", data)}
         />
-
-        <ERPCheckbox
-          id="enableEWB"
-          checked={formState.enableEWB}
-          data={formState}
-          label={t("enable_ewb")}
-          onChangeData={(data: any) => handleFieldChange("enableEWB", data)}
-        />
-        <ERPButton title={t("ewb_taxPro")} onClick={() => {/* Handle EWB TaxPro click */ }} />
-
-        <ERPCheckbox
-          id="enableEInvoice"
-          checked={formState.enableEInvoice}
-          data={formState}
-          label={t("enable_e-invoice")}
-          onChangeData={(data: any) => handleFieldChange("enableEInvoice", data)}
-        />
-        <ERPButton title={t("EInvoiceTaxPro")} onClick={() => {/* Handle EInvoiceTaxPro click */ }} />
-
-        <ERPDataCombobox
-          field={{
-            id: "eInvoiceProviderType",
-            valueKey: "value",
-            labelKey: "label",
-          }}
-          id="eInvoiceProviderType"
-          label={t("e-invoice_provider_type")}
-          value={formState.eInvoiceProviderType}
-          data={formState}
-          onChangeData={(data) => {
-
-            handleFieldChange("eInvoiceProviderType", data.eInvoiceProviderType)
-          }}
-          options={[
-            { value: 'Clear Tax', label: 'Clear Tax' },
-            { value: '1Tax Pro', label: 'Tax Pro' },
-          ]}
-        />
-
-        <ERPInput
-          id="clearTaxEInvoiceAuthToken"
-          value={formState.clearTaxEInvoiceAuthToken}
-          data={formState}
-          label={t("clear_tax_token")}
-          onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data)}
-        />
-
-        <ERPInput
-          id="clearTaxEInvoiceOwnerID"
-          value={formState.clearTaxEInvoiceOwnerID}
-          data={formState}
-          label={t("clear_tax_id")}
-          onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data)}
-        />
-
         <ERPDataCombobox
           id="defaultSIFormTypeForPOS"
           value={formState.defaultSIFormTypeForPOS}
@@ -631,13 +576,72 @@ const ERPSettingsFormGSTTaxes = () => {
           label={t("show_prev._forms")}
           onChangeData={(data: any) => handleFieldChange("showPrevForms", data)}
         />
-        <div className="flex justify-end">
-          <ERPButton
-            title={t("save_settings")}
-            variant="primary"
-            type="submit"
+      </div>
+      <div className='border p-4 rounded-lg '>
+        <div className='flex align-center justify-between'>
+          <ERPCheckbox
+            id="enableEWB"
+            checked={formState.enableEWB}
+            data={formState}
+            label={t("enable_ewb")}
+            onChangeData={(data: any) => handleFieldChange("enableEWB", data)}
+          />
+          <ERPButton title={t("ewb_taxPro")} onClick={() => {/* Handle EWB TaxPro click */ }} />
+
+          <ERPCheckbox
+            id="enableEInvoice"
+            checked={formState.enableEInvoice}
+            data={formState}
+            label={t("enable_e-invoice")}
+            onChangeData={(data: any) => handleFieldChange("enableEInvoice", data)}
+          />
+          <ERPButton title={t("EInvoiceTaxPro")} onClick={() => {/* Handle EInvoiceTaxPro click */ }} />
+        </div>
+
+        <div className='grid grid-cols-4 gap-6 mt-5'>
+          <ERPDataCombobox
+            field={{
+              id: "eInvoiceProviderType",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="eInvoiceProviderType"
+            label={t("e-invoice_provider_type")}
+            value={formState.eInvoiceProviderType}
+            data={formState}
+            onChangeData={(data) => {
+
+              handleFieldChange("eInvoiceProviderType", data.eInvoiceProviderType)
+            }}
+            options={[
+              { value: 'Clear Tax', label: 'Clear Tax' },
+              { value: '1Tax Pro', label: 'Tax Pro' },
+            ]}
+          />
+
+          <ERPInput
+            id="clearTaxEInvoiceAuthToken"
+            value={formState.clearTaxEInvoiceAuthToken}
+            data={formState}
+            label={t("clear_tax_token")}
+            onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data)}
+          />
+
+          <ERPInput
+            id="clearTaxEInvoiceOwnerID"
+            value={formState.clearTaxEInvoiceOwnerID}
+            data={formState}
+            label={t("clear_tax_id")}
+            onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data)}
           />
         </div>
+      </div>
+      <div className="flex justify-end">
+        <ERPButton
+          title={t("save_settings")}
+          variant="primary"
+          type="submit"
+        />
       </div>
     </form>
   );

@@ -42,7 +42,7 @@ export const VoucherManage: React.FC = React.memo(() => {
           field={{
             id: "formType",
             required: true,
-            getListUrl: Urls.data_formtype,
+            getListUrl: Urls.data_form_type,
             valueKey: "id",
             labelKey: "name",
           }}

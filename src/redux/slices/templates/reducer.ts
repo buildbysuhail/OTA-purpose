@@ -7,10 +7,11 @@ import {
   PropertiesState,
   TotalState,
 } from "../../../pages/InvoiceDesigner/Designer/interfaces";
+import { templateInitialState } from "../../reducers/TemplateReducer";
 
 const templateSlice = createSlice({
   name: 'template',
-  initialState: initialTemplateState,
+  initialState: templateInitialState,
   extraReducers: (builder) => {
     
   },
@@ -19,40 +20,40 @@ const templateSlice = createSlice({
       state,
       action: PayloadAction<any>
     ) => {
-      state = action.payload;
+      state.activeTemplate = action.payload;
     },
     setTemplateId: (
       state,
       action: PayloadAction<string | number | undefined>
     ) => {
-      state.data.id = action.payload;
+      state.activeTemplate.id = action.payload;
     },
     setTemplateThumbImage: (
       state,
       action: PayloadAction<string | undefined>
     ) => {
-      state.data.thumbImage = action.payload;
+      state.activeTemplate.thumbImage = action.payload;
     },
     setTemplatePropertiesState: (
       state,
       action: PayloadAction<PropertiesState>
     ) => {
-      state.data.propertiesState = action.payload;
+      state.activeTemplate.propertiesState = action.payload;
     },
     setTemplateHeaderState: (state, action: PayloadAction<HeaderState>) => {
-      state.data.headerState = action.payload;
+      state.activeTemplate.headerState = action.payload;
     },
     setTemplateItemTableState: (
       state,
       action: PayloadAction<ItemTableState>
     ) => {
-      state.data.itemTableState = action.payload;
+      state.activeTemplate.itemTableState = action.payload;
     },
     setTemplateTotalState: (state, action: PayloadAction<TotalState>) => {
-      state.data.totalState = action.payload;
+      state.activeTemplate.totalState = action.payload;
     },
     setTemplateFooterState: (state, action: PayloadAction<FooterState>) => {
-      state.data.footerState = action.payload;
+      state.activeTemplate.footerState = action.payload;
     },
   },
 });

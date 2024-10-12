@@ -38,8 +38,10 @@ defaultBankChargeAccount: number;
   // defaultShortageAccount: number;
   // maxShortageAmount: string;
   minimumShiftDuration: number;
+  
 
   // Checkbox fields
+  allowMinimumShiftDuration: boolean;
   blockOnCreditLimit: 'Ignore' | 'Block';
   maintainCostCenter: boolean;
   allowSalesCounter: boolean;
@@ -88,6 +90,7 @@ const ApplicationSettingsAccounts = () => {
     minimumShiftDuration: 12,
 
     // Checkboxes
+    allowMinimumShiftDuration: true,
     blockOnCreditLimit: 'Ignore',
     maintainCostCenter: false,
     allowSalesCounter: false,
@@ -507,11 +510,11 @@ const ApplicationSettingsAccounts = () => {
        </div>
       <div className='flex justify-start gap-5'>
       <ERPCheckbox
-          id="minimumShiftDuration"
-          value={formState.minimumShiftDuration}
+          id="allowMinimumShiftDuration"
+          checked={formState.allowMinimumShiftDuration}
           data={formState}
           label="Minimum Shift Duration"
-          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
+          onChangeData={(data) => handleFieldChange('allowMinimumShiftDuration', data.allowMinimumShiftDuration)}
         />
         <ERPInput
           id="minimumShiftDuration"

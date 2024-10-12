@@ -102,7 +102,7 @@ const InvoiceDesigner = () => {
 
   const [designTabs, setDesignTabs] = useState(designSections);
   const [currentSection, setSection] = useState(designSections[0]);
-  const templateData = useSelector((state: any) => state?.TemplateReducer) as TemplateReducerState;
+  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
   const templateGroup = searchParams?.get("template_group")! as TemplateGroupTypes;
 

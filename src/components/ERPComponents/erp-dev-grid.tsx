@@ -207,7 +207,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   columns,
   gridId,
   dataUrl,
-  method,
+  method = ActionType.GET,
   postData,
   height,
   className = "custom-data-grid",

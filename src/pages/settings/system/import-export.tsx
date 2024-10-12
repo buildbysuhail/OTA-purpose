@@ -1,13 +1,13 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
-import Urls from "../../../redux/urls";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import { toggleImportExportPopup, } from "../../../redux/slices/popup-reducer";
-import { ActionType } from "../../../redux/types";
+import { toggleImportExportPopup,} from "../../../redux/slices/popup-reducer";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
+import { APIClient } from "../../../helpers/api-client";
+import Urls from "../../../redux/urls";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
 interface ImportExportForm {
   filePath: string;
@@ -26,46 +26,40 @@ export const initialImportExportData = {
     parties: "",
   },
 };
+const api = new APIClient();
 const ImportExportManage: React.FC = React.memo(() => {
   const initialData = {
     data: {
-      filePath: "",
+      file: "",
+
     },
     validations: {
       filePath: "",
     },
   };
-  const [postData, setPostData] = useState<any>(initialData);
+  const [loading, setLoading] = useState(false);
+  const [formFile, setFormFile] = useState<FormData>();
+  const [importExport, setImportExport] = useState<any>(initialImportExportData);
   const dispatch = useDispatch();
 
-  const {
-    isEdit,
-    handleSubmit,
-    isLoading,
-  } = useFormManager<ImportExportForm>({
-    url: Urls.import_parties,
-    onSuccess: useCallback(() => dispatch(toggleImportExportPopup({ isOpen: false })), [dispatch]),
-    method: ActionType.POST,
-    useApiClient: true
-  });
-
-  const onClose = useCallback(() => {
-    dispatch(
-      toggleImportExportPopup({ isOpen: false, key: null })
-    );
+  const onSubmit = async() => {
+    setLoading(true);
+    const res = await api.post(Urls.import_parties, formFile, {
+      'Content-Type': 'multipart/form-data',
+      'Accept': 'application/json',
+    });
+    setLoading(false);
+    handleResponse(res, () => {}, () => {}) 
+  };
+  const onClose = useCallback(async () => {
+    dispatch(toggleImportExportPopup({ isOpen: false }));
   }, []);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    debugger
-    if (e.target.files && e.target.files.length > 0) {
-      const filePath = e.target.files[0].name;
-      setPostData((prevState: { data: any; }) => ({
-        ...prevState,
-        data: {
-          ...prevState.data,
-          filePath,
-        },
-      }));
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      let formData = new FormData();
+        formData.append('file', event.target.files[0], event.target.files[0].name);
+      setFormFile(formData);
     }
   };
 
@@ -92,11 +86,11 @@ const ImportExportManage: React.FC = React.memo(() => {
           <ERPCheckbox
             label={t("product")}
             id="product"
-            data={postData.data}
-            checked={postData.data.product}
-            validation={postData?.validations?.product}
+            data={importExport.data}
+            checked={importExport.data.product}
+            validation={importExport?.validations?.product}
             onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
+              setImportExport((prev: any) => ({
                 ...prev,
                 data: {
                   ...prev.data,
@@ -111,11 +105,11 @@ const ImportExportManage: React.FC = React.memo(() => {
           <ERPCheckbox
             label={t("parties")}
             id="parties"
-            data={postData.data}
-            checked={postData.data.parties}
-            validation={postData?.validations?.parties}
+            data={importExport.data}
+            checked={importExport.data.parties}
+            validation={importExport?.validations?.parties}
             onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
+              setImportExport((prev: any) => ({
                 ...prev,
                 data: {
                   ...prev.data,
@@ -127,12 +121,23 @@ const ImportExportManage: React.FC = React.memo(() => {
           />
         </div>
       </div>
-      <ERPFormButtons
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={onClose}
-        onSubmit={handleSubmit}
-      />
+      <div className="w-full p-2 flex justify-end">
+        <ERPButton
+          type="reset"
+          title={t("cancel")}
+          variant="secondary"
+          onClick={onClose}
+        // disabled={emailLoading}
+        ></ERPButton>
+        <ERPButton
+          type="button"
+          disabled={loading}
+          variant="primary"
+          onClick={onSubmit}
+          loading={loading}
+          title={t("import")}
+        ></ERPButton>
+      </div>
     </div>
   );
 });

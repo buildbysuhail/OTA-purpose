@@ -582,8 +582,8 @@
   "debit": "مدين",
   "credit": "دائن",
   "balance": "الرصيد",
-
   "hide":"يخفي",
   "account_payable_aging_report": "تقرير تقادم الحسابات الدائنة",
+  "account_receivable_aging_report": "تقرير تقادم الحسابات المدينة",
   "days": "الأيام"
 }

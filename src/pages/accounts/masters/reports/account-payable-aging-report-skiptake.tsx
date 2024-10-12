@@ -11,11 +11,11 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 
-interface AccountPayableAgingReport {
+interface AccountPayableAgingReportSkipTake {
 
   from: Date
 }
-const AccountPayableAgingReport = () => {
+const AccountPayableAgingReportSkipTake = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -23,7 +23,7 @@ const AccountPayableAgingReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<AccountPayableAgingReport>({from: new Date()});
+  const [filter, setFilter] =useState<AccountPayableAgingReportSkipTake>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -120,7 +120,7 @@ const AccountPayableAgingReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
+                  gridHeader={"skiptake"+t("account_payable_aging_report")}
                   dataUrl= {Urls.acc_reports_aging_payable}
                   method={ActionType.POST}
                   postData={filter}
@@ -141,4 +141,4 @@ const AccountPayableAgingReport = () => {
   );
 };
 
-export default AccountPayableAgingReport;
+export default AccountPayableAgingReportSkipTake;

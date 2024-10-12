@@ -117,7 +117,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
             id: "country",
             required: true,
             getListUrl: Urls.data_countries,
-            valueKey: "id",
+            valueKey: "name",
             labelKey: "name",
           }}
           onChangeData={(data: any) => { 

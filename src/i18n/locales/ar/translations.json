@@ -583,5 +583,6 @@
   "credit": "دائن",
   "balance": "الرصيد",
 
-  "hide":"يخفي"
+  "hide":"يخفي",
+  "account_payable_aging_report": "تقرير تقادم الحسابات الدائنة"
 }

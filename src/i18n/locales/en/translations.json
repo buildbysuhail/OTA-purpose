@@ -583,5 +583,6 @@
   "credit":"Credit",
   "balance":"Balance",
 
-  "hide":"Hide"
+  "hide":"Hide",
+  "account_payable_aging_report":"Account Payable Aging Report"
 }

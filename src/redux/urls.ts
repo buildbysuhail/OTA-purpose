@@ -185,7 +185,7 @@ const Urls = {
   account_currency_master: "/Accounts/Currency/",
   //Reports
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
-
+ acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
 
   // Accounts End
   //Templates

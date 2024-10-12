@@ -9,11 +9,18 @@ import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
+import { useSearchParams } from "react-router-dom";
 
 interface AccountPayableAgingReport {
+
   from: Date
 }
 const AccountPayableAgingReport = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [payable, setPayable] = useState<boolean>(() => {
+    const payableParam = searchParams.get("payable");
+    return payableParam === "true"; // Convert the string to boolean
+  });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [filter, setFilter] =useState<AccountPayableAgingReport>({from: new Date()});
@@ -114,7 +121,7 @@ const AccountPayableAgingReport = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("account_payable_aging_report")}
-                  dataUrl={Urls.acc_reports_aging_payable}
+                  dataUrl= {payable? Urls.acc_reports_aging_payable:Urls.acc_reports_aging_receivable}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

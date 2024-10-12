@@ -70,7 +70,7 @@ const ApplicationSettings = ({ }) => {
           </div>
 
           <div className="flex-1 min-h-full">
-            {/* <h1>{settingsGroup}</h1> */}
+            <h1>{settingsGroup}</h1>
           <div className="p-6 bg-white rounded-lg shadow-md min-h-full">
           
           {/* <ApplicationSettingsAccounts/> */}

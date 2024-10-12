@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
@@ -18,29 +18,48 @@ export interface BankPoseData {
   gediaService?: string;
 }
 
+const initialBankPosData = {
+  data: {
+    machineBrand: "",
+    model: "",
+    comPort: "",
+    geldeaWsPort: "",
+    gediaService: "",
+  },
+  validations: {
+    machineBrand: "",
+    model: "",
+    comPort: "",
+    geldeaWsPort: "",
+    gediaService: "",
+  },
+}
+
 const BankPosSettingsManage: React.FC = React.memo(() => {
-  const{t} = useTranslation();
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BankPoseData>({
       url: Urls.BankPosSettings,
       onSuccess: useCallback(
-        () => dispatch(toggleBankPosPopup({ isOpen: false})),
+        () => dispatch(toggleBankPosPopup({ isOpen: false })),
         [dispatch]
       ),
       // method: ActionType.POST,
       // useApiClient: true
     });
 
+  const [bankPosData, setBankPosData] = useState<any>(initialBankPosData);
+
   const onClose = useCallback(() => {
-    dispatch(toggleBankPosPopup({ isOpen: false}));
+    dispatch(toggleBankPosPopup({ isOpen: false }));
   }, []);
 
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        
+
         <ERPDataCombobox
           {...getFieldProps("machineBrand")}
           id="machineBrand"
@@ -82,21 +101,33 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
           label={t("com_port")}
           onChangeData={(data: any) => handleFieldChange("comPort", data)}
         />
-
         <ERPInput
-          {...getFieldProps("geldeaWsPort")}
+          id="geldeaWsPort"
           label={t("geldea_ws_port")}
           placeholder={t("geldea_ws_port")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("geldeaWsPort", data)}
+          value={bankPosData.data.geldeaWsPort}
+          data={bankPosData.data}
+          validation={bankPosData?.validations?.geldeaWsPort}
+          onChangeData={(data: any) => {
+            setBankPosData((prev: any) => ({
+              ...prev,
+              data: data,
+            }));
+          }}
         />
-
         <ERPInput
-          {...getFieldProps("gediaService")}
+          id="gediaService"
           label={t("gedia_service")}
           placeholder={t("gedia_service")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("gediaService", data)}
+          value={bankPosData.data.gediaService}
+          data={bankPosData.data}
+          validation={bankPosData?.validations?.gediaService}
+          onChangeData={(data: any) => {
+            setBankPosData((prev: any) => ({
+              ...prev,
+              data: data,
+            }));
+          }}
         />
       </div>
       <ERPFormButtons

@@ -1,13 +1,12 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
-import Urls from "../../../redux/urls";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import { toggleImportExportPopup,} from "../../../redux/slices/popup-reducer";
-import { ActionType } from "../../../redux/types";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
+import { APIClient } from "../../../helpers/api-client";
+import Urls from "../../../redux/urls";
+import { handleResponse } from "../../../utilities/HandleResponse";
 
 interface ImportExportForm {
   filePath: string;
@@ -26,6 +25,7 @@ export const initialImportExportData = {
     parties: "",
   },
 };
+const api = new APIClient();
 const ImportExportManage: React.FC = React.memo(() => {
   const initialData = {
     data: {
@@ -36,37 +36,24 @@ const ImportExportManage: React.FC = React.memo(() => {
     },
   };
   const [postData, setPostData] = useState(initialData);
+  const [formFile, setFormFile] = useState<FormData>();
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<ImportExportForm>({
-      url: Urls.deleteInactiveTransactions,
-      onSuccess: useCallback(
-        () =>
-          dispatch(
-            toggleImportExportPopup({ isOpen: false, key: null })
-          ),
-        [dispatch]
-      ),
-      method: ActionType.POST,
+  const onSubmit = async() => {
+    const res = await api.post(Urls.import_parties, {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
     });
+    handleResponse(res, () => {}, () => {}) 
+  };
 
-  const onClose = useCallback(() => {
-    dispatch(
-      toggleImportExportPopup({ isOpen: false, key: null })
-    );
-  }, []);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const filePath = event.target.files[0].name;
+      let formData = new FormData();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const filePath = e.target.files[0].name;
-      setPostData((prevState) => ({
-        ...prevState,
-        data: {
-          ...prevState.data,
-          filePath,
-        },
-      }));
+        formData.append('file', event.target.files[0], event.target.files[0].name);
+      setFormFile(formData);
     }
   };
 

@@ -340,20 +340,8 @@ interface ChooseTemplateProps {
 const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Your async code here
-        const result = await someAsyncFunction();
-        // Do something with result
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
   
-    fetchData();
-  }, [tempData]);
-  const handleChooseTemplate = (template: TemplateState) => {
+  const handleChooseTemplate = async (template: TemplateState) => {
     const length = tempData?.length || 0;
 
     const newTData = {
@@ -362,18 +350,24 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       background_image_header: null,
       background_image_footer: null,
     }
-
+    debugger;
+    let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
+    debugger;
+    const propertiesState = {
+       ...res.propertiesState, 
+       templateName: "Untitled Template " + (length + 1) 
+      };
+    const _template  = {
+      ...res,
+      id:null,
+      templateName:"",
+      propertiesState: propertiesState
+    }
     dispatch(
-      setTemplatePropertiesState(
-        { ...template.propertiesState, templateName: "Untitled Template " + (length + 1) }
+      setTemplate(
+        _template
     ));
-    // dispatch(
-    //   setActiveTemplate({template:{
-    //     ...template,
-    //     propertiesState: { ...template.propertiesState, templateName: "Untitled Template " + (length + 1) },
-    //   }, data:newTData})
-    // );
-    navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    navigate(`/settings/invoice_designer/new?template_group=${templateGroup}`);
   };
 
   return (
@@ -412,7 +406,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                     <h1 className="font-medium text-xs capitalize break-words">{template?.templateName}</h1>
                     <div
                       className="bg-primary cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
-                      onClick={() => handleChooseTemplate(template?.content)}
+                      onClick={() => handleChooseTemplate(template)}
                     >
                       Use this
                     </div>

@@ -11,6 +11,29 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
+// Updated StatusSelector component
+const StatusSelector: React.FC<{
+  value: string;
+  onChange: (value: string) => void;
+}> = ({ value, onChange }) => {
+  const { t } = useTranslation();
+
+  const statusOptions = [
+    { value: 'Active', label: t('active') },
+    { value: 'Inactive', label: t('inactive') },
+    { value: 'Progress', label: t('progress') },
+  ];
+
+  return (
+    <ERPDataCombobox
+      label={t('status')}
+      value={value}
+      onChange={(newValue) => onChange(newValue as string)}
+      options={statusOptions}
+      required id={"fStatus"}    />
+  );
+};
+
 export interface FinancialYearData {
   dateFrom: string;
   dateTo: string;
@@ -43,10 +66,10 @@ export const initialFinancialYearData = {
     dateFrom: "",
     dateTo: "",
     remarks: "",
-    openingStockValue: 0,
+    openingStockValue: "",
     fStatus: "",
     visibleOnStartUp: "",
-    id: undefined,
+    id: "",
     createdUser: "",
     createdDate: "",
     modifiedUser: "",
@@ -57,6 +80,7 @@ export const initialFinancialYearData = {
 export const FinancialYearManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const {
     isEdit,
@@ -64,10 +88,9 @@ export const FinancialYearManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-
   } = useFormManager<FinancialYearData>({
     url: Urls.FinancialYear,
-    onSuccess: useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.financialYear.key,
     useApiClient: true,
     initialData: initialFinancialYearData
@@ -75,9 +98,7 @@ export const FinancialYearManage: React.FC = React.memo(() => {
 
   const onClose = useCallback(() => {
     dispatch(toggleFinancialYearPopup({ isOpen: false, key: null }));
-  }, []);
-
-  const { t } = useTranslation();
+  }, [dispatch]);
 
   return (
     <div className="w-full pt-4">
@@ -109,16 +130,10 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("openingStockValue", data)}
         />
-        <ERPDataCombobox
-          {...getFieldProps("fStatus")}
-          onChange={(data: any) => handleFieldChange("fStatus", data)}
-          options={[
-            { value: 'Active', label: 'active' },
-            { value: 'Inactive', label: 'inactive' },
-            { value: 'Progress', label: 'progress' },
-          ]}
+        <StatusSelector
+          value={getFieldProps("fStatus").value}
+          onChange={(data) => handleFieldChange("fStatus", data)}
         />
-
         <ERPCheckbox
           {...getFieldProps('visibleOnStartUp')}
           label={t("visible_on_startUp")}
@@ -134,3 +149,5 @@ export const FinancialYearManage: React.FC = React.memo(() => {
     </div>
   );
 });
+
+export default FinancialYearManage;

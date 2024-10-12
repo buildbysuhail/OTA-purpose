@@ -581,5 +581,6 @@
   "printer":"Printer",
   "debit":"Debit",
   "credit":"Credit",
-  "balance":"Balance"
+  "balance":"Balance",
+  "account_payable_aging_report":"Account Payable Aging Report"
 }

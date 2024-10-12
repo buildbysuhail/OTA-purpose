@@ -315,7 +315,7 @@
   "sql_commands":"Sql Commands",
   "authorization_settings":"Authorization Settings",
 
-  "execute":"execute",
+  "execute":"Execute",
   "checkbox":"Checkbox",
   "user_id":"userID",
   "branch_id":"branchID",
@@ -582,5 +582,7 @@
   "debit":"Debit",
   "credit":"Credit",
   "balance":"Balance",
+
+  "hide":"Hide",
   "account_payable_aging_report":"Account Payable Aging Report"
 }

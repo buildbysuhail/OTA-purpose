@@ -76,7 +76,7 @@ const DayCloseManage = () => {
         />
         <div className="flex justify-around items-center">
           <ERPCheckbox
-            {...getFieldProps("isSales")}
+            {...getFieldProps("isSales")}                                               
             label={t("Sales")}
             onChangeData={(data: any) => handleFieldChange("isSales", data)}
           />

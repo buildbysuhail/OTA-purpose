@@ -222,7 +222,8 @@ const ApplicationSettingsAccounts = () => {
           label="Default Bank Account"
           field={{
             id: "defaultBankAcc",
-            //required: true,
+            //required: true,            
+            hasCloseButton:true,
             getListUrl: Urls.data_BankAccounts,
             valueKey: "id",
             labelKey: "name",
@@ -320,6 +321,7 @@ const ApplicationSettingsAccounts = () => {
           label="Default Incentive Account 1"
           field={{
             id: "defaultIncentiveAcc1",
+            hasCloseButton:true,
             getListUrl: Urls.data_acc_ledgers,
             params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
             valueKey: "id",

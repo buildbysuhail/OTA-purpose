@@ -11,14 +11,14 @@ import { APIClient } from "../../../helpers/api-client";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 
 interface FormState {
-  backupMethods: string;
+  backupMethods: number;
   backUpPath: string;
   backupDuration: number;
   compressBackupFile: boolean;
 }
 
 const initialState: FormState = {
-  backupMethods: "",
+  backupMethods: 0,
   backUpPath: "",
   backupDuration: 0,
   compressBackupFile: false,
@@ -71,11 +71,11 @@ const BackupSettingsForm: React.FC = () => {
           debugger;
           acc.push({
             settingsName: key,
-            settingsValue: currentValue,
+            settingsValue: currentValue.toString(),
           });
         }
         return acc;
-      }, [] as { settingsName: string; settingsValue: any }[]);
+      }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
@@ -160,7 +160,7 @@ const BackupSettingsForm: React.FC = () => {
             checked={formState.compressBackupFile}
             data={formState}
             label="Compress Backup File"
-            onChangeData={(data: any) =>
+            onChangeData={(data) =>
               handleFieldChange("compressBackupFile", data.compressBackupFile)
             }
           />
@@ -173,6 +173,8 @@ const BackupSettingsForm: React.FC = () => {
             title="Save Settings"
             variant="primary"
             type="submit"
+            loading={isSaving}
+            disabled={isSaving}
           />
         </div>
     </form>

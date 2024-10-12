@@ -20,7 +20,7 @@ interface FormState {
   marginRoundTo: number;
   focusToQtyAfterBarcode: boolean;
   stockTransferNegativeStock: string;
-  allowManualProductSelectionInSales: boolean;
+  allowMannualProductSelectionInSales: boolean;
   useProductImages: boolean;
   productImagePath: string;
   maintainSchemes: boolean;
@@ -69,7 +69,7 @@ const ApplicationSettingsProduct = () => {
     marginRoundTo: 0,
     focusToQtyAfterBarcode: true,
     stockTransferNegativeStock: "Warn",
-    allowManualProductSelectionInSales: true,
+    allowMannualProductSelectionInSales: true,
     useProductImages: false,
     productImagePath: " ",
     maintainSchemes: false,
@@ -153,11 +153,11 @@ const ApplicationSettingsProduct = () => {
           debugger;
           acc.push({
             settingsName: key,
-            settingsValue: currentValue,
+            settingsValue: currentValue.toString(),
           });
         }
         return acc;
-      }, [] as { settingsName: string; settingsValue: any }[]);
+      }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
@@ -213,7 +213,7 @@ const ApplicationSettingsProduct = () => {
               id: "batchCriteria",
 
               getListUrl: Urls.data_batchcriteria,
-              valueKey: "id",
+              valueKey: "name",
               labelKey: "name",
             }}
             data={formState}
@@ -250,7 +250,7 @@ const ApplicationSettingsProduct = () => {
           <ERPDataCombobox
             field={{
               id: "weighingScaleBarcodeType",
-              valueKey: "value",
+              valueKey: "label",
               labelKey: "label",
             }}
             id="weighingScaleBarcodeType"
@@ -264,11 +264,11 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: "0", label: "Standard. No Check Digit" },
-              { value: "1", label: "13 Digit With Check Digit (Qty)" },
-              { value: "2", label: "13 Digit With Check Digit (Value)" },
-              { value: "3", label: "13 Digit With Check Digit (Qty/Value)" },
-              { value: "4", label: "Ignore" },
+              { value: 0, label: "Standard. No Check Digit" },
+              { value: 1, label: "13 Digit With Check Digit (Qty)" },
+              { value: 2, label: "13 Digit With Check Digit (Value)" },
+              { value: 3, label: "13 Digit With Check Digit (Qty/Value)" },
+              { value: 4, label: "Ignore" },
             ]}
           />
           <ERPCheckbox
@@ -286,7 +286,7 @@ const ApplicationSettingsProduct = () => {
           <ERPDataCombobox
             field={{
               id: "stockTransferNegativeStock",
-              valueKey: "value",
+              valueKey: "label",
               labelKey: "label",
             }}
             id="stockTransferNegativeStock"
@@ -300,16 +300,16 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: "0", label: "Block" },
-              { value: "1", label: "Warn" },
-              { value: "2", label: "Ignore" },
+              { value: 0, label: "Block" },
+              { value: 1, label: "Warn" },
+              { value: 2, label: "Ignore" },
             ]}
           />
 
           <ERPDataCombobox
             field={{
               id: "showHSNCodeWarning",
-              valueKey: "value",
+              valueKey: "label",
               labelKey: "label",
             }}
             id="showHSNCodeWarning"
@@ -320,9 +320,9 @@ const ApplicationSettingsProduct = () => {
               handleFieldChange("showHSNCodeWarning", data.showHSNCodeWarning);
             }}
             options={[
-              { value: "0", label: "Block" },
-              { value: "1", label: "Warn" },
-              { value: "2", label: "Ignore" },
+              { value: 0, label: "Block" },
+              { value: 1, label: "Warn" },
+              { value: 2, label: "Ignore" },
             ]}
           />
 
@@ -357,7 +357,7 @@ const ApplicationSettingsProduct = () => {
           <ERPDataCombobox
             field={{
               id: "lPPriceLessThanSellingPrice",
-              valueKey: "value",
+              valueKey: "label",
               labelKey: "label",
             }}
             id="lPPriceLessThanSellingPrice"
@@ -371,16 +371,16 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: "0", label: "Block" },
-              { value: "1", label: "Warn" },
-              { value: "2", label: "Ignore" },
+              { value: 0, label: "Block" },
+              { value: 1, label: "Warn" },
+              { value: 2, label: "Ignore" },
             ]}
           />
 
           <ERPDataCombobox
             field={{
               id: "mRPLessThanSalesPrice",
-              valueKey: "value",
+              valueKey: "label",
               labelKey: "label",
             }}
             id="mRPLessThanSalesPrice"
@@ -394,15 +394,15 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: "0", label: "Block" },
-              { value: "1", label: "Warn" },
-              { value: "2", label: "Ignore" },
+              { value: 0, label: "Block" },
+              { value: 1, label: "Warn" },
+              { value: 2, label: "Ignore" },
             ]}
           />
           <ERPCheckbox
             id="allowMultirate"
             data={formState}
-            label="allow Multi rate"
+            label="Allow Multi rate"
             checked={formState?.allowMultirate}
             onChangeData={(data) =>
               handleFieldChange("allowMultirate", data.allowMultirate)
@@ -427,7 +427,7 @@ const ApplicationSettingsProduct = () => {
           <ERPDataCombobox
             field={{
               id: "zeroMultiRateValidate",
-              valueKey: "value",
+              valueKey: "label",
               labelKey: "label",
             }}
             id="zeroMultiRateValidate"
@@ -441,9 +441,9 @@ const ApplicationSettingsProduct = () => {
               );
             }}
             options={[
-              { value: "0", label: "Block" },
-              { value: "1", label: "Warn" },
-              { value: "2", label: "Ignore" },
+              { value: 0, label: "Block" },
+              { value: 1, label: "Warn" },
+              { value: 2, label: "Ignore" },
             ]}
           />
           <ERPCheckbox
@@ -460,7 +460,7 @@ const ApplicationSettingsProduct = () => {
             id="productImagePath"
             label="Set gift shared Path"
             data={formState}
-            type="number"
+            type="text"
             value={formState?.productImagePath}
             onChangeData={(data) =>
               handleFieldChange("productImagePath", data.productImagePath)
@@ -480,7 +480,7 @@ const ApplicationSettingsProduct = () => {
             <ERPDataCombobox
               field={{
                 id: "giftOnBillingAs",
-                valueKey: "value",
+                valueKey: "label",
                 labelKey: "label",
               }}
               id="giftOnBillingAs"
@@ -490,9 +490,9 @@ const ApplicationSettingsProduct = () => {
                 handleFieldChange("giftOnBillingAs", data.giftOnBillingAs);
               }}
               options={[
-                { value: "0", label: "CashCoupons" },
-                { value: "1", label: "Products" },
-                { value: "2", label: "Special Price" },
+                { value: 0, label: "CashCoupons" },
+                { value: 1, label: "Products" },
+                { value: 2, label: "Special Price" },
               ]}
             />
           </div>
@@ -681,14 +681,14 @@ const ApplicationSettingsProduct = () => {
             }
           />
           <ERPCheckbox
-            id="allowManualProductSelectionInSales"
-            label="allowManual Product Selection In Sales"
+            id="allowMannualProductSelectionInSales"
+            label="Allow Manual Product Selection In Sales"
             data={formState}
-            checked={formState?.allowManualProductSelectionInSales}
+            checked={formState?.allowMannualProductSelectionInSales}
             onChangeData={(data) =>
               handleFieldChange(
-                "allowManualProductSelectionInSales",
-                data.allowManualProductSelectionInSales
+                "allowMannualProductSelectionInSales",
+                data.allowMannualProductSelectionInSales
               )
             }
           />

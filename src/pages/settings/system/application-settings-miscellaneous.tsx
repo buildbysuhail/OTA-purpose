@@ -190,7 +190,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               data={formState}
               label={t("default_incentive_ledger")}
               onChangeData={(data) =>
-              handleFieldChange("defaultIncentiveLedger", data)
+              handleFieldChange("defaultIncentiveLedger", data.default_incentive_ledger)
               }
             />
             <ERPInput

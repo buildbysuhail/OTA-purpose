@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import { toggleImportExportPopup,} from "../../../redux/slices/popup-reducer";
@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
 interface ImportExportForm {
   filePath: string;
@@ -29,29 +30,33 @@ const api = new APIClient();
 const ImportExportManage: React.FC = React.memo(() => {
   const initialData = {
     data: {
-      filePath: "",
+      file: "",
+
     },
     validations: {
       filePath: "",
     },
   };
-  const [postData, setPostData] = useState(initialData);
+  const [loading, setLoading] = useState(false);
   const [formFile, setFormFile] = useState<FormData>();
   const dispatch = useDispatch();
 
   const onSubmit = async() => {
-    const res = await api.post(Urls.import_parties, {
+    setLoading(true);
+    const res = await api.post(Urls.import_parties, formFile, {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     });
+    setLoading(false);
     handleResponse(res, () => {}, () => {}) 
   };
+  const onClose = useCallback(async () => {
+    dispatch(toggleImportExportPopup({ isOpen: false }));
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      const filePath = event.target.files[0].name;
       let formData = new FormData();
-
         formData.append('file', event.target.files[0], event.target.files[0].name);
       setFormFile(formData);
     }
@@ -76,7 +81,7 @@ const ImportExportManage: React.FC = React.memo(() => {
             onChange={handleFileChange}
           />
         </div>
-        <div className="flex justify-around">
+        {/* <div className="flex justify-around">
           <ERPCheckbox
             label={t("product")}
             id="product"
@@ -113,14 +118,25 @@ const ImportExportManage: React.FC = React.memo(() => {
               }));
             }}
           />
-        </div>
+        </div> */}
       </div>
-      <ERPFormButtons
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={onClose}
-        onSubmit={handleSubmit}
-      />
+      <div className="w-full p-2 flex justify-end">
+        <ERPButton
+          type="reset"
+          title={t("cancel")}
+          variant="secondary"
+          onClick={onClose}
+        // disabled={emailLoading}
+        ></ERPButton>
+        <ERPButton
+          type="button"
+          disabled={loading}
+          variant="primary"
+          onClick={onSubmit}
+          loading={loading}
+          title={t("import")}
+        ></ERPButton>
+      </div>
     </div>
   );
 });

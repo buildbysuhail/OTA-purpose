@@ -6,7 +6,7 @@ import { Actions } from "../types";
 import ActionTypes from "../actions/ActionTypes";
 
 export interface TemplateReducerState {
-  activeTemplate?: TemplateState;
+  activeTemplate: TemplateState;
   data?: {
     voucher_type: TemplateGroupTypes;
     content: TemplateState;

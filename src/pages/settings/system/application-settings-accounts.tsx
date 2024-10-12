@@ -394,8 +394,16 @@ const ApplicationSettingsAccounts = () => {
           <ERPDataCombobox
           id="defaultIndirectExpenseAccount"
           value={formState.defaultIndirectExpenseAccount}
+          field={{
+            id: "defaultIndirectExpenseAccount",
+            valueKey: "value",
+            labelKey: "label",
+          }}
           data={formState}
           label="Default Indirect Expense Account"
+          onChangeData={(data) => 
+            handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
+          }
           options={[
             { value: 'All', label: 'All' },
             { value: 'Customer', label: 'Customer' },
@@ -434,11 +442,16 @@ const ApplicationSettingsAccounts = () => {
             { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
             { value: 'Indirect_Income', label: 'Indirect Income' },
           ]}
-          onChangeData={(data) => handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)}
+          
         />
            <ERPDataCombobox
           id="defaultPurchaseAssetsAccount"
           value={formState.defaultPurchaseAssetsAccount}
+          field={{
+            id: "defaultPurchaseAssetsAccount",
+            valueKey: "value",
+            labelKey: "label",
+          }}
           data={formState}
           label="Default Purchase Assets Account"
           options={[

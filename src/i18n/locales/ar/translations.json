@@ -584,5 +584,6 @@
   "balance": "الرصيد",
 
   "hide":"يخفي",
-  "account_payable_aging_report": "تقرير تقادم الحسابات الدائنة"
+  "account_payable_aging_report": "تقرير تقادم الحسابات الدائنة",
+  "days": "الأيام"
 }

@@ -25,7 +25,7 @@ const AccountPayableAgingReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 220,
+      width: 50,
     },
     {
       dataField: "ledgername",
@@ -33,7 +33,6 @@ const AccountPayableAgingReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 220,
     },
     {
       dataField: "Debit",
@@ -41,7 +40,7 @@ const AccountPayableAgingReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 220,
+      width: 150,
     },
     {
       dataField: "Credit",
@@ -49,7 +48,7 @@ const AccountPayableAgingReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 220,
+      width: 150,
     },
     {
       dataField: "balance",
@@ -57,31 +56,31 @@ const AccountPayableAgingReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 220,
+      width: 150,
     },
     {
       dataField: "period1",
-      caption: t("balance"),
+      caption: 10+ t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 220,
+      width: 150,
     },
     {
       dataField: "period2",
-      caption: t("balance"),
+      caption: 20+t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 220,
+      width: 150,
     },
     {
       dataField: "period3",
-      caption: t("balance"),
+      caption: 30+t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 220,
+      width: 150,
     },
     
     // {
@@ -120,9 +119,10 @@ const AccountPayableAgingReport = () => {
                   postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
+                  // allowEditing={false}
+                  hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
-                  gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>
             </div>

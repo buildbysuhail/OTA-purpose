@@ -51,7 +51,8 @@ const StandardPreviewWrapper = ({
   }
 
   return (
-    <div className={`${fontStyle}`}>
+   <div className="">
+     <div className={`${fontStyle} `}>
       <Header
         data={data}
         company={company}
@@ -67,6 +68,7 @@ const StandardPreviewWrapper = ({
       <Total data={data} templateGroupId={templateGroupId} template={template} currency={currency} />
       <Footer data={data} template={template} templateGroupId={templateGroupId} templateImages={templateImages} />
     </div>
+   </div>
   );
 };
 

@@ -53,7 +53,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
   }
 
   const isRetailTemplate = () => {
-    return (["3Inch", "4Inch"]?.includes(propertiesState?.pageSize?.value!));
+    return (["3Inch", "4Inch"]?.includes(propertiesState?.pageSize!));
   }
 
   /* ########################################################################################### */
@@ -94,10 +94,19 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             Page Size
           </label>
           <ERPDataCombobox
-            defaultValue={propertiesState?.pageSize?.value ?? "A4"}
-            value={propertiesState?.pageSize?.value ?? "A4"}
-            handleChange={(id, value) => onChange?.({ ...propertiesState, pageSize: value })}
-            id="page_size"
+            defaultValue={propertiesState?.pageSize ?? "A4"}
+            // value={propertiesState?.pageSize ?? "A4"}
+            field={{
+              id: "pageSize",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={propertiesState}
+            onChangeData={(data: any) => {debugger;
+              onChange?.({ ...propertiesState, pageSize: data.pageSize })
+            }}
+            id="pageSize"
             options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
             noLabel
           />
@@ -105,19 +114,28 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         {/* */}
 
         {/* */}
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <div className="font-light text-sm">Orientation</div>
           <ERPDataCombobox
             id="orientation"
+            field={{
+              id: "orientation",
+              required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={propertiesState?.pageSize}
+            onChangeData={(data: any) => {debugger;
+              onChange?.({ ...propertiesState, orientation: data.orientation} )
+            }}
             defaultValue={propertiesState?.orientation ?? "portrait"}
-            handleChange={(id, value) => onChange?.({ ...propertiesState, orientation: value?.value })}
             options={[
               { label: "Portrait", value: "portrait" },
               { label: "Landscape", value: "landscape" },
             ]}
             noLabel
           />
-        </div>
+        </div> */}
         {/* */}
 
         {/* */}

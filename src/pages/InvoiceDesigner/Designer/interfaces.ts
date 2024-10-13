@@ -26,6 +26,7 @@ export interface TemplateState {
   background_image: string;
   background_image_header: string;
   background_image_footer: string;
+  signature_image: string;
   propertiesState?: PropertiesState;
   headerState?: HeaderState;
   itemTableState?: ItemTableState;
@@ -40,7 +41,7 @@ export interface PropertiesState {
   template_group?: TemplateGroupTypes;
 
   templateName?: string;
-  pageSize?: { label?: string; value?: string };
+  pageSize?: string;
   orientation?: "portrait" | "landscape";
   // Martgins
   margins?: {
@@ -438,12 +439,32 @@ export interface FooterState {
   bg_image_footer_position?: string;
 }
 export interface BarcodeState {
-  showLogo?: boolean;
-  logoSize?: number;
-  showOrgName?: boolean;
-  OrganizationFontColor?: string;
-  OrganizationFontSize?: number;
-  showOrgAddress?: boolean;
+  barcodeType?: string;
+  top?: number;
+  left?: number;
+  width?: number;
+  height?: number;
+  hGaps?: number;
+  vGaps?: number;
+  rows?: number;
+  cols?: number;
+  image?: string;
+  printer?: boolean;
+  length?: number;
+  angle?: number;
+  field?: string;
+  value?: string;
+  format?: string;
+  align?: 'Left' | 'Center' | 'Right';
+  font?: string;
+  fontSize?: number;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  thermalPrintHeight?: number;
+  thermalPrintWidth?: number;
+  deleted?: boolean;
+  cleared?: boolean;
 }
 export const initialTemplateState: ActionState<TemplateState> = {
   loading: false,
@@ -459,7 +480,7 @@ export const initialTemplateState: ActionState<TemplateState> = {
       template_kind: "standard",
       template_group: "sales_invoice",
       templateName: "",
-      pageSize: { label: "A4", value: "A4" },
+      pageSize: "A4",
       orientation: "portrait",
       margins: { top: 10, bottom: 10, left: 10, right: 10 },
       bg_color: "#FFFFFF",

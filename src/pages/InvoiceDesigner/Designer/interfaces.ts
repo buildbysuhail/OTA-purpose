@@ -436,12 +436,19 @@ export interface FooterState {
 
   bg_image_footer_position?: string;
 }
+export interface BarcodeState {
+  /// Notes
+  showNotesLabel?: boolean;
+}
 export const initialTemplateState: ActionState<TemplateState> = {
   loading: false,
   error: null,
   data: {
     id: undefined,
     thumbImage: "",
+    background_image: "",
+    background_image_footer: "",
+    background_image_header: "",
     propertiesState: {
       template_type: "standard",
       template_kind: "standard",

@@ -438,12 +438,32 @@ export interface FooterState {
   bg_image_footer_position?: string;
 }
 export interface BarcodeState {
-  showLogo?: boolean;
-  logoSize?: number;
-  showOrgName?: boolean;
-  OrganizationFontColor?: string;
-  OrganizationFontSize?: number;
-  showOrgAddress?: boolean;
+  barcodeType?: string;
+  top?: number;
+  left?: number;
+  width?: number;
+  height?: number;
+  hGaps?: number;
+  vGaps?: number;
+  rows?: number;
+  cols?: number;
+  image?: string;
+  printer?: boolean;
+  length?: number;
+  angle?: number;
+  field?: string;
+  value?: string;
+  format?: string;
+  align?: 'Left' | 'Center' | 'Right';
+  font?: string;
+  fontSize?: number;
+  bold?: boolean;
+  italic?: boolean;
+  underline?: boolean;
+  thermalPrintHeight?: number;
+  thermalPrintWidth?: number;
+  deleted?: boolean;
+  cleared?: boolean;
 }
 export const initialTemplateState: ActionState<TemplateState> = {
   loading: false,

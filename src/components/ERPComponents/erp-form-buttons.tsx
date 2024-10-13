@@ -12,13 +12,14 @@ interface ERPFormButtonsProps {
 export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoading, onCancel, onSubmit, onClear }) => {
   return (
     <div className="w-full p-2 flex justify-end space-x-2">
+       {onClear && (
       <ERPButton
         type="button"
         title="Clear"
         variant="secondary"
         onClick={onClear}
       />
-
+    )}
       <ERPButton
         type="reset"
         title="Cancel"

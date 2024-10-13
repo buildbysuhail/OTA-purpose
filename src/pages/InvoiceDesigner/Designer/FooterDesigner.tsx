@@ -30,7 +30,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
   return (
     <div className="flex h-full overflow-auto flex-col gap-5 p-4">
       {!["customer", "vendor"]?.includes(templateGroup!) && <>
-        <h1>Notes</h1>
+        <h6 className="bg-[#80808012] p-[2px]">Notes</h6>
         <ERPCheckbox
           checked={footerState?.showNotesLabel}
           id="showNotes"
@@ -68,7 +68,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
         "customer", "vendor",
         "qty_adjustment", "value_adjustment",
         "sales_return", "payment_made"].includes(templateGroup!) && <>
-          <h1>Payment Options</h1>
+          <h6 className="bg-[#80808012] p-[2px]">Payment Options</h6>
           <ERPCheckbox
             checked={footerState?.showOnlinePaymentLink}
             id="showOnlinePaymentLink"
@@ -95,7 +95,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
         "qty_adjustment", "value_adjustment",
         "sales_return", "payment_made"].includes(templateGroup!) &&
         <>
-          <h1>Invoice QR Code</h1>
+          <h6 className="bg-[#80808012] p-[2px]">Invoice QR Code</h6>
           <ERPCheckbox
             checked={footerState?.showInvoiceQRCode}
             id="showInvoiceQRCode"
@@ -114,7 +114,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
         "customer", "vendor",
         "qty_adjustment", "value_adjustment",
         "payment_made"].includes(templateGroup!) && <>
-          <h1>Terms and Conditions</h1>
+          <h6 className="bg-[#80808012] p-[2px]">Terms and Conditions</h6>
           <ERPCheckbox
             checked={footerState?.showTermsAndConditions}
             id="showTermsAndConditions"
@@ -152,7 +152,7 @@ const FooterDesigner = ({ onChange, footerState, tempImages }: FooterDesignerPro
         "customer", "vendor",
         "qty_adjustment", "value_adjustment", "sales_return"].includes(templateGroup!) && <>
 
-          <h1 className="">Signature</h1>
+          <h6 className="bg-[#80808012] p-[2px]">Signature</h6>
           <ERPCheckbox
             checked={footerState?.showSignature}
             id="showSignature"

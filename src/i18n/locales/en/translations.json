@@ -236,7 +236,7 @@
   "add-new-user" : "Add New User",
   "maintain_shift":"Maintain Shift",
   "descriptions":"Descriptions",
-  "SiNo":"Serial No",
+  "SiNo":"S.No",
   "ledger_name":"ledger Name",
   "voucher_prefix":"Voucher Prefix",
   "employee":"Employee",
@@ -586,5 +586,6 @@
   "hide":"Hide",
   "account_payable_aging_report":"Account Payable Aging Report",
   "account_receivable_aging_report":"Account Receivable Aging Report",
-  "days":"Days"
+  "days":"Days",
+  "delete_all":"Delete All"
 }

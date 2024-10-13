@@ -19,6 +19,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import SystemSettingsApi from "../system/system-apis";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
+import UserTypeTree from "./user-rights-tree";
 
 type PrimitiveFormField = string | number | boolean | Date | null | undefined;
 type ArrayFormField = PrimitiveFormField[];
@@ -117,7 +118,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full flex justify-start ">
-      <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 "></div>
+      <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 "><UserTypeTree/></div>
 
       <div className="w-full flex flex-col px-24 py-10 ">
         {/* User Type Combobox */}

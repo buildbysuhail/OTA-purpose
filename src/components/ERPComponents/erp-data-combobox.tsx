@@ -222,11 +222,11 @@ export default function ERPDataCombobox({
   };
 
   const filterItems = (inputValue: string) => {
-    const words = inputValue.toLowerCase().split(/\s+/);
-    return items.filter((item: any) => {
-      const itemWords = item.label.toLowerCase().split(/\s+/);
-      return words.every((word, index) => 
-        index < itemWords.length && itemWords[index].startsWith(word)
+    const words = inputValue?.toLowerCase()?.split(/\s+/);
+    return items?.filter((item: any) => {
+      const itemWords = item?.label?.toLowerCase()?.split(/\s+/);
+      return words?.every((word, index) => 
+        index < itemWords?.length && itemWords[index]?.startsWith(word)
       );
     });
   };

@@ -39,12 +39,13 @@ const ImportExportManage: React.FC = React.memo(() => {
   };
   const [loading, setLoading] = useState(false);
   const [formFile, setFormFile] = useState<FormData>();
+  const [importExport, setImportExport] = useState<any>(initialImportExportData);
   const dispatch = useDispatch();
 
   const onSubmit = async() => {
     setLoading(true);
     const res = await api.post(Urls.import_parties, formFile, {
-      'Content-Type': 'application/json',
+      'Content-Type': 'multipart/form-data',
       'Accept': 'application/json',
     });
     setLoading(false);
@@ -81,15 +82,15 @@ const ImportExportManage: React.FC = React.memo(() => {
             onChange={handleFileChange}
           />
         </div>
-        {/* <div className="flex justify-around">
+        <div className="flex justify-around">
           <ERPCheckbox
             label={t("product")}
             id="product"
-            data={postData.data}
-            checked={postData.data.product}
-            validation={postData?.validations?.product}
+            data={importExport.data}
+            checked={importExport.data.product}
+            validation={importExport?.validations?.product}
             onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
+              setImportExport((prev: any) => ({
                 ...prev,
                 data: {
                   ...prev.data,
@@ -104,11 +105,11 @@ const ImportExportManage: React.FC = React.memo(() => {
           <ERPCheckbox
             label={t("parties")}
             id="parties"
-            data={postData.data}
-            checked={postData.data.parties}
-            validation={postData?.validations?.parties}
+            data={importExport.data}
+            checked={importExport.data.parties}
+            validation={importExport?.validations?.parties}
             onChangeData={(data: any) => {
-              setPostData((prev: any) => ({
+              setImportExport((prev: any) => ({
                 ...prev,
                 data: {
                   ...prev.data,
@@ -118,7 +119,7 @@ const ImportExportManage: React.FC = React.memo(() => {
               }));
             }}
           />
-        </div> */}
+        </div>
       </div>
       <div className="w-full p-2 flex justify-end">
         <ERPButton

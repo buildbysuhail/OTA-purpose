@@ -317,6 +317,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   console.log("store:");
   const store = useMemo(
     () => {
+      debugger;
       if (reload) {
         const newStore = createStore(keyExpr, dataUrl, allowEditing, method, postData, initialFilters);
         setCurrentStore(newStore);  // Update current store whenever reload is true

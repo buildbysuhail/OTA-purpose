@@ -8,6 +8,7 @@ import UserActionReport from '../../../pages/settings/system/user-action-report'
 import Cash from '../../../pages/accounts/masters/reports/cash';
 import ReportList from '../../ERPComponents/reports/reports-list';
 import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
+import AccountReceivableAgingReport from '../../../pages/accounts/masters/reports/account-receivable-aging-report';
 import FullLayout from '../layout/full-layout';
 
 
@@ -123,7 +124,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/reports" element={<ReportList />} />
           {/* Reports - Accounts */}
           <Route path="/accounts/cash" element={<Cash />} />
-          <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />            
+          <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />     
+          <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport/>} />   
+          <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReport/>} />     
+          <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReport/>} />        
           {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}

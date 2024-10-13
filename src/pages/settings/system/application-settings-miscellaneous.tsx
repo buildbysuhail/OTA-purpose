@@ -49,16 +49,14 @@ const MiscellaneousSettingsForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const dispatch = useAppDispatch();
-  //   useEffect(() => {
-  //     loadSettings();
-  //   }, []);
+    useEffect(() => {
+      loadSettings();
+    }, []);
 
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await dispatch(
-        getAction({ apiUrl:`${Urls.application_setting}miscellaneous` }) as any
-      ).unwrap();
+      const response = await api.getAsync(`${Urls.application_setting}miscellaneous`)
 
       setFormStatePrev(response);
       setFormState(response);
@@ -190,7 +188,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               data={formState}
               label={t("default_incentive_ledger")}
               onChangeData={(data) =>
-              handleFieldChange("defaultIncentiveLedger", data)
+              handleFieldChange("defaultIncentiveLedger", data.defaultIncentiveLedger)
               }
             />
             <ERPInput
@@ -311,6 +309,8 @@ const MiscellaneousSettingsForm: React.FC = () => {
             title={t("save_settings")}
             variant="primary"
             type="submit"
+            disabled={isSaving}
+            loading={isSaving}
           />
         </div>
     </form>

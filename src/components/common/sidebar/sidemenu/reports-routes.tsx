@@ -22,6 +22,9 @@ export const ReportsMenuItems = [
     children: [
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/cash`, type: 'link', active: false, selected: false, title: 'cash' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/payable_aging`, type: 'link', active: false, selected: false, title: 'Account Payable Aging Report' },
+      { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging`, type: 'link', active: false, selected: false, title: 'Account Receivable Aging Report', },
+      { path: `${import.meta.env.BASE_URL}reports/_/accounts/payable_aging_skiptake`, type: 'link', active: false, selected: false, title: 'Account Payable Aging Report Skiptake' },
+      { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging_skiptake`, type: 'link', active: false, selected: false, title: 'Account Receivable Aging Report Skiptake', },
     ]
   },
 ];

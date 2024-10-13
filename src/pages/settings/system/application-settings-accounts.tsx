@@ -38,8 +38,10 @@ defaultBankChargeAccount: number;
   // defaultShortageAccount: number;
   // maxShortageAmount: string;
   minimumShiftDuration: number;
+  
 
   // Checkbox fields
+  allowMinimumShiftDuration: boolean;
   blockOnCreditLimit: 'Ignore' | 'Block';
   maintainCostCenter: boolean;
   allowSalesCounter: boolean;
@@ -88,6 +90,7 @@ const ApplicationSettingsAccounts = () => {
     minimumShiftDuration: 12,
 
     // Checkboxes
+    allowMinimumShiftDuration: true,
     blockOnCreditLimit: 'Ignore',
     maintainCostCenter: false,
     allowSalesCounter: false,
@@ -391,8 +394,16 @@ const ApplicationSettingsAccounts = () => {
           <ERPDataCombobox
           id="defaultIndirectExpenseAccount"
           value={formState.defaultIndirectExpenseAccount}
+          field={{
+            id: "defaultIndirectExpenseAccount",
+            valueKey: "value",
+            labelKey: "label",
+          }}
           data={formState}
           label="Default Indirect Expense Account"
+          onChangeData={(data) => 
+            handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
+          }
           options={[
             { value: 'All', label: 'All' },
             { value: 'Customer', label: 'Customer' },
@@ -431,11 +442,16 @@ const ApplicationSettingsAccounts = () => {
             { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
             { value: 'Indirect_Income', label: 'Indirect Income' },
           ]}
-          onChangeData={(data) => handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)}
+          
         />
            <ERPDataCombobox
           id="defaultPurchaseAssetsAccount"
           value={formState.defaultPurchaseAssetsAccount}
+          field={{
+            id: "defaultPurchaseAssetsAccount",
+            valueKey: "value",
+            labelKey: "label",
+          }}
           data={formState}
           label="Default Purchase Assets Account"
           options={[
@@ -507,11 +523,11 @@ const ApplicationSettingsAccounts = () => {
        </div>
       <div className='flex justify-start gap-5'>
       <ERPCheckbox
-          id="minimumShiftDuration"
-          value={formState.minimumShiftDuration}
+          id="allowMinimumShiftDuration"
+          checked={formState.allowMinimumShiftDuration}
           data={formState}
           label="Minimum Shift Duration"
-          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
+          onChangeData={(data) => handleFieldChange('allowMinimumShiftDuration', data.allowMinimumShiftDuration)}
         />
         <ERPInput
           id="minimumShiftDuration"

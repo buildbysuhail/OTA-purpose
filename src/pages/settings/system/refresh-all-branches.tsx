@@ -32,6 +32,7 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
+    handleClear,
     isLoading,
     formState,
   } = useFormManager<RefreshAllBranches>({
@@ -68,6 +69,7 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
         />
         <div>
           <ERPFormButtons
+            // onClear={handleClear}
             isEdit={isEdit}
             isLoading={isLoading}
             onCancel={onClose}

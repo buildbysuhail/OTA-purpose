@@ -23,7 +23,7 @@ export const SampleMange: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<SampleData>({
       url: Urls.UserTypes,
       onSuccess: useCallback(
@@ -96,6 +96,7 @@ export const SampleMange: React.FC = React.memo(() => {
     //     />
     //   </div>
     //   <ERPFormButtons
+    //     onClear={handleClear}
     //     isEdit={isEdit}
     //     isLoading={isLoading}
     //     onCancel={onClose}

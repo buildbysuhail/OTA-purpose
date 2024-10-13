@@ -166,7 +166,7 @@ const InvoiceDesigner = () => {
     if (templateImages?.background_image_footer) postData.background_image_footer = templateImages?.background_image_footer;
     if (templateImages?.signature_image) postData.signature_image , templateImages?.signature_image;
 
-    setLoading(true);
+    setLoading(true); 
     (appDispatch(postAction({ apiUrl: Urls.templates, data: postData })) as any).then((res: any) => {
       debugger;
       handleResponse(res, () => {

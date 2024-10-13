@@ -153,7 +153,7 @@ const InvoiceDesigner = () => {
       is_default: false, is_primary: false,
       voucher_type: templateGroup, preview: dataUrl,
     };
-    // const postFormData = DataToForm(postData);
+    const postFormData = DataToForm(postData);
 
     if (templateImages?.background_image) postFormData?.append("background_image", templateImages?.background_image);
     if (templateImages?.background_image_header) postFormData?.append("background_image_header", templateImages?.background_image_header);

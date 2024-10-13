@@ -113,6 +113,8 @@ export default function ERPDataCombobox({
   const [loading, setLoading] = useState<any>([]);
   const [hasValue, setHasValue] = useState<boolean>(false);
   const [initial, setInitial] = useState<any>(initialValue);
+  const [filteredItems, setFilteredItems] = useState<any>([]);
+
 
   useEffect(() => {
     if (!disabledApiCall) {
@@ -219,6 +221,20 @@ export default function ERPDataCombobox({
     return disabled;
   };
 
+  const filterItems = (inputValue: string) => {
+    const words = inputValue.toLowerCase().split(/\s+/);
+    return items.filter((item: any) => {
+      const itemWords = item.label.toLowerCase().split(/\s+/);
+      return words.every((word, index) => 
+        index < itemWords.length && itemWords[index].startsWith(word)
+      );
+    });
+  };
+
+  useEffect(() => {
+    setFilteredItems(filterItems(query));
+  }, [query, items]);
+
   return (
     <div className="relative">
       {/* Conditionally render the label */}
@@ -300,7 +316,9 @@ export default function ERPDataCombobox({
                   No data found
                 </div>
               ) : (
-                items?.map((person: any, index: number) => (
+                // items?.map((person: any, index: number) => (
+                filteredItems.map((person: any, index: number) => (
+
                   <ComboboxOption
                     key={`cb_${person?.value}-${index}`}
                     className={({ active }) =>

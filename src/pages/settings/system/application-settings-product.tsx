@@ -164,7 +164,7 @@ const ApplicationSettingsProduct = () => {
         type: "products",
         updateList: modifiedSettings,
       })) as any;
-     handleResponse(response);
+      handleResponse(response);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -187,26 +187,28 @@ const ApplicationSettingsProduct = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="erp-settings-form">
         <div className="grid grid-cols-1  sm;grid-cols-2 lg:grid-cols-3 gap-6">
-          <ERPCheckbox
-            id="useProductImages"
-            label="Use Product Images"
-            data={formState}
-            checked={formState?.useProductImages}
-            onChangeData={(data) =>
-              handleFieldChange("useProductImages", data.useProductImages)
-            }
-          />
-          <ERPInput
-            id="productImagePath"
-            value={formState.productImagePath}
-            data={formState}
-            label="Product Image Path"
-            placeholder="Product Image Path"
-            type="text"
-            onChangeData={(data: any) =>
-              handleFieldChange("productImagePath", data.productImagePath)
-            }
-          />
+          <div className="flex align-center justify-between">
+            <ERPCheckbox
+              id="useProductImages"
+              label="Use Product Images"
+              data={formState}
+              checked={formState?.useProductImages}
+              onChangeData={(data) =>
+                handleFieldChange("useProductImages", data.useProductImages)
+              }
+            />
+            <ERPInput
+              id="productImagePath"
+              value={formState.productImagePath}
+              data={formState}
+              label="Product Image Path"
+              placeholder="Product Image Path"
+              type="text"
+              onChangeData={(data: any) =>
+                handleFieldChange("productImagePath", data.productImagePath)
+              }
+            />
+          </div>
           <ERPDataCombobox
             id="batchCriteria"
             field={{
@@ -222,18 +224,6 @@ const ApplicationSettingsProduct = () => {
               handleFieldChange("batchCriteria", data.batchCriteria)
             }
             label="Batch Criteria"
-          />
-          <ERPCheckbox
-            data={formState}
-            id="allowOnlyScanProductMarkedAsWeighingScaleItems"
-            label="allow OnlyScan Product Marked As Weighing Scale Items"
-            checked={formState?.allowOnlyScanProductMarkedAsWeighingScaleItems}
-            onChangeData={(data) =>
-              handleFieldChange(
-                "allowOnlyScanProductMarkedAsWeighingScaleItems",
-                data.allowOnlyScanProductMarkedAsWeighingScaleItems
-              )
-            }
           />
 
           <ERPInput
@@ -271,18 +261,7 @@ const ApplicationSettingsProduct = () => {
               { value: 4, label: "Ignore" },
             ]}
           />
-          <ERPCheckbox
-            id="setQty1ForWeighingScaleItem_ValueMode"
-            data={formState}
-            label="Set Qty1 For Weighing ScaleItem ValueMode"
-            checked={formState?.setQty1ForWeighingScaleItem_ValueMode}
-            onChangeData={(data) =>
-              handleFieldChange(
-                "setQty1ForWeighingScaleItem_ValueMode",
-                data.setQty1ForWeighingScaleItem_ValueMode
-              )
-            }
-          />
+
           <ERPDataCombobox
             field={{
               id: "stockTransferNegativeStock",
@@ -326,7 +305,7 @@ const ApplicationSettingsProduct = () => {
             ]}
           />
 
-          <div className="flex  items-start gap-5">
+          <div className="flex align-center justify-between">
             <ERPCheckbox
               id="lastSystemGeneratedBarcodetrue"
               data={formState}
@@ -346,6 +325,7 @@ const ApplicationSettingsProduct = () => {
               data={formState}
               noLabel={true}
               type="text"
+              className="mt-5"
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "lastSystemGeneratedBarcode",
@@ -399,15 +379,7 @@ const ApplicationSettingsProduct = () => {
               { value: 2, label: "Ignore" },
             ]}
           />
-          <ERPCheckbox
-            id="allowMultirate"
-            data={formState}
-            label="Allow Multi rate"
-            checked={formState?.allowMultirate}
-            onChangeData={(data) =>
-              handleFieldChange("allowMultirate", data.allowMultirate)
-            }
-          />
+
           <ERPDataCombobox
             field={{
               id: "pPOsPriceCategory",
@@ -446,15 +418,6 @@ const ApplicationSettingsProduct = () => {
               { value: 2, label: "Ignore" },
             ]}
           />
-          <ERPCheckbox
-            id="allowMultiUnits"
-            label="Allow Multi Units"
-            data={formState}
-            checked={formState?.allowMultiUnits}
-            onChangeData={(data) =>
-              handleFieldChange("allowMultiUnits", data.allowMultiUnits)
-            }
-          />
 
           <ERPInput
             id="productImagePath"
@@ -467,7 +430,7 @@ const ApplicationSettingsProduct = () => {
             }
           />
 
-          <div className="flex  items-start gap-5">
+          <div className="flex align-center justify-between gap-5">
             <ERPCheckbox
               id="giftOnBilling"
               data={formState}
@@ -496,6 +459,52 @@ const ApplicationSettingsProduct = () => {
               ]}
             />
           </div>
+
+          <ERPCheckbox
+            data={formState}
+            id="allowOnlyScanProductMarkedAsWeighingScaleItems"
+            label="allow Only Scan Product Marked As Weighing Scale Items"
+            checked={formState?.allowOnlyScanProductMarkedAsWeighingScaleItems}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "allowOnlyScanProductMarkedAsWeighingScaleItems",
+                data.allowOnlyScanProductMarkedAsWeighingScaleItems
+              )
+            }
+          />
+
+          <ERPCheckbox
+            id="setQty1ForWeighingScaleItem_ValueMode"
+            data={formState}
+            label="Set Qty1 For Weighing ScaleItem ValueMode"
+            checked={formState?.setQty1ForWeighingScaleItem_ValueMode}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "setQty1ForWeighingScaleItem_ValueMode",
+                data.setQty1ForWeighingScaleItem_ValueMode
+              )
+            }
+          />
+
+          <ERPCheckbox
+            id="allowMultirate"
+            data={formState}
+            label="Allow Multi rate"
+            checked={formState?.allowMultirate}
+            onChangeData={(data) =>
+              handleFieldChange("allowMultirate", data.allowMultirate)
+            }
+          />
+
+          <ERPCheckbox
+            id="allowMultiUnits"
+            label="Allow Multi Units"
+            data={formState}
+            checked={formState?.allowMultiUnits}
+            onChangeData={(data) =>
+              handleFieldChange("allowMultiUnits", data.allowMultiUnits)
+            }
+          />
 
           <ERPCheckbox
             id="stopScanningOnWrongBarcode"

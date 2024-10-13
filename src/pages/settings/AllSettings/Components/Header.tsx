@@ -1,21 +1,39 @@
-import { Cog6ToothIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useNavigation } from "react-router-dom";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { RootState } from "../../../../redux/store";
+import {
+  Cog6ToothIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { SettingsMenuItems } from "../../../../components/common/sidebar/sidemenu/settings";
 import { useTranslation } from "react-i18next";
 
-const Header = () => {
+interface MenuItem {
+  title: string;
+  path?: string;
+  children?: MenuItem[];
+}
+
+interface SearchResultBarProps {
+  isOpen: boolean;
+  searchResults: MenuItem[];
+  selectedIndex: number;
+  onItemClick: (item: MenuItem) => void;
+}
+
+const Header: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [search, setSearch] = useState<any>(null);
-  const [open, setIsOpen] = useState(false);
-  const [searchResults, setSearchResults] = useState<any>();
-  const [routes, setRoutes] = useState(SettingsMenuItems);
+  const [search, setSearch] = useState<string>("");
+  const [open, setIsOpen] = useState<boolean>(false);
+  const [searchResults, setSearchResults] = useState<MenuItem[]>([]);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
+  const handleNavigation = () => {
+    navigate("/");
+  };
 
   useEffect(() => {
     if (search) {
@@ -25,33 +43,69 @@ const Header = () => {
     }
   }, [search]);
 
-  const handleSearch = (event: any) => {
-    const searchTerm = event?.target?.value?.toLowerCase();
-    let AllRoutes: any[] = [];
-  
-    // Recursively extract all routes from children, regardless of depth
-    const extractRoutes = (menuItems: any[]) => {
-      menuItems?.forEach((item) => {
-        if (item?.children) {
-          extractRoutes(item?.children); // Recurse deeper into children if present
-        } else if (item?.path) {
-          AllRoutes.push(item); // Push route items into AllRoutes array
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearch(searchTerm);
+
+    let AllRoutes: MenuItem[] = [];
+
+    const extractRoutes = (menuItems: MenuItem[]) => {
+      menuItems.forEach((item) => {
+        if (item.children) {
+          extractRoutes(item.children);
+        } else if (item.path) {
+          AllRoutes.push(item);
         }
       });
     };
-  
-    // Start the recursive extraction
+
     extractRoutes(SettingsMenuItems);
-  
-    // Perform the search filtering
-    let searchResult = AllRoutes?.filter((item: any) =>
-      item?.title?.toLowerCase()?.includes(searchTerm)
+
+    let searchResult = AllRoutes.filter((item) =>
+      item.title.toLowerCase().includes(searchTerm)
     );
-  
-    // Set the filtered search results
+
     setSearchResults(searchResult);
+    setSelectedIndex(-1);
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (open) {
+      switch (event.key) {
+        case "ArrowDown":
+          event.preventDefault();
+          setSelectedIndex((prevIndex) =>
+            prevIndex < searchResults.length - 1 ? prevIndex + 1 : prevIndex
+          );
+          break;
+        case "ArrowUp":
+          event.preventDefault();
+          setSelectedIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : 0));
+          break;
+        case "Enter":
+          event.preventDefault();
+          if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
+            handleItemClick(searchResults[selectedIndex]);
+          }
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  const handleItemClick = (item: MenuItem) => {
+    if (item.path) {
+      navigate(item.path);
+    } else {
+      ERPToast.showWith(
+        "This Feature is under development. Please try later!",
+        "warning"
+      );
+    }
+    setIsOpen(false);
+    setSearch("");
+  };
 
   return (
     <div className="py-6 px-4 flex flex-col gap-4">
@@ -62,12 +116,7 @@ const Header = () => {
         </div>
         <div
           className="flex gap-1 items-center py-1 px-2 bg-gray-50 rounded-md border cursor-pointer"
-          onClick={() => {
-            dispatch({ type: "minimize", minimize: false });
-            setTimeout(() => {
-              navigate(-1);
-            }, 500);
-          }}
+          onClick={handleNavigation}
         >
           <p className="text-[10px]">Close</p>
           <XMarkIcon className="w-4 aspect-square stroke-red-600" />
@@ -81,15 +130,8 @@ const Header = () => {
           <input
             className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
             value={search}
-            onChange={(e: any) => {
-              
-              if (e?.target?.value) {
-                setSearch(e?.target?.value);
-                handleSearch(e);
-              } else {
-                setSearch(null);
-              }
-            }}
+            onChange={handleSearch}
+            onKeyDown={handleKeyDown}
           />
           {search && (
             <XMarkIcon
@@ -100,7 +142,12 @@ const Header = () => {
             />
           )}
         </div>
-        <SearchResultBar isOpen={open} searchResults={searchResults} />
+        <SearchResultBar
+          isOpen={open}
+          searchResults={searchResults}
+          selectedIndex={selectedIndex}
+          onItemClick={handleItemClick}
+        />
       </div>
     </div>
   );
@@ -108,31 +155,31 @@ const Header = () => {
 
 export default Header;
 
-const SearchResultBar = ({ isOpen, searchResults }: any) => {
-  const{t} = useTranslation();
-  const navigate = useNavigate();
+const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, searchResults, selectedIndex, onItemClick }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       className={`${
         isOpen ? "max-h-[300px]" : "h-0"
-      } absolute w-full overflow-y-auto  bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
+      } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
     >
       <div className="flex flex-col">
-        {searchResults?.length > 0 ? (
-          searchResults?.map((item: any, idx: number) => {
-            return (
-              <div className="w-full p-1" key={`SR_${idx}`}>
-                <p
-                  className="text-[13px] hover:bg-accent hover:text-white rounded-lg p-2 cursor-pointer"
-                  onClick={() => {
-                    item?.path ? navigate(item?.path) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
-                  }}
-                >
-                  { t(item?.title)}
-                </p>
-              </div>
-            );
-          })
+        {searchResults.length > 0 ? (
+          searchResults.map((item, idx) => (
+            <div className="w-full p-1" key={`SR_${idx}`}>
+              <p
+                className={`text-[13px] rounded-lg p-2 cursor-pointer ${
+                  idx === selectedIndex
+                    ? "bg-primary text-white"
+                    : "hover:bg-primary hover:text-white"
+                }`}
+                onClick={() => onItemClick(item)}
+              >
+                {t(item.title as any)}
+              </p>
+            </div>
+          ))
         ) : (
           <div className="w-full p-1">
             <p className="text-xs italic text-center p-2">No Data Found</p>

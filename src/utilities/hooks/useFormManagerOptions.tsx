@@ -165,6 +165,7 @@ export function useFormManager<T>({
           response,
           () => {
             onSuccess?.();
+            handleClear();
           },
           () => {
             setLocalFormState((prevState) => ({
@@ -192,6 +193,7 @@ export function useFormManager<T>({
           response,
           () => {
             onSuccess?.();
+            handleClear();
           },
           () => {
             reduxManager.setState(rName, {
@@ -247,6 +249,28 @@ export function useFormManager<T>({
     [formState?.data, rName, useApiClient]
   );
 
+  const handleClear = useCallback(() => {
+    // const clearedData = Object.keys(formState?.data || {}).reduce((acc, key) => {
+    //   acc[key] = "";
+    //   return acc;
+    // }, {} as Record<string, any>);
+
+    if (useApiClient) {
+      setLocalFormState((prevState: any) => ({
+        ...prevState,
+        data: initialData,
+        validations: {},
+      }));
+    } else {
+      reduxManager.setState(rName, {
+        data: initialData,
+        validations: {},
+        loading: false,
+        error: null,
+      });
+    }
+  }, [formState?.data, rName, useApiClient]);
+
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
       return {
@@ -265,6 +289,7 @@ export function useFormManager<T>({
     formState,
     handleSubmit,
     handleFieldChange,
+    handleClear,
     getFieldProps,
     isLoading,
   };

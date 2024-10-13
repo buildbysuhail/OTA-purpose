@@ -19,6 +19,7 @@ export const UserManage: React.FC = React.memo(() => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
+    handleClear,
     isLoading,
     formState
   } = useFormManager<UserData>({
@@ -143,6 +144,7 @@ export const UserManage: React.FC = React.memo(() => {
         isLoading={isLoading}
         onCancel={onClose}
         onSubmit={handleSubmit}
+        onClear={handleClear}
       />
     </div>
   );

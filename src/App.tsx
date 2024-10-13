@@ -30,6 +30,7 @@ import Settings from "./pages/settings/AllSettings/Settings";
 import SettingsLayout from "./components/common/layout/settings-layout";
 import { useTranslation } from "react-i18next";
 import ReportsLayout from "./components/common/layout/reports-layout";
+import FullLayout from "./components/common/layout/full-layout";
 
 export const LoadingAnimation = () => {
   return (

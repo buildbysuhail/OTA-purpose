@@ -67,7 +67,7 @@ const CommandsManage = () => {
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - 200;
-    let gridHeightWindows = wh - 320;
+    let gridHeightWindows = wh - 450;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 

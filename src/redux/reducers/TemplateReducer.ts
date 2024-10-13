@@ -30,19 +30,19 @@ export const templateInitialState: TemplateReducerState = {
   activeTemplate: DefaultSITemplates[0]?.content,
 };
 
-const TemplateReducer = () => {
-  return (state = templateInitialState, action: any) => {
-    switch (action.type) {
-      case ActionTypes.SET_ACTIVE_TEMPLATE:
-        return {
-          ...state,
-          activeTemplate: action?.payload,
-          data: { ...state?.data, ...action?.data },
-        };
-      default:
-        return state;
-    }
-  };
-};
+// const TemplateReducer = () => {
+//   return (state = templateInitialState, action: any) => {
+//     switch (action.type) {
+//       case ActionTypes.SET_ACTIVE_TEMPLATE:
+//         return {
+//           ...state,
+//           activeTemplate: action?.payload,
+//           data: { ...state?.data, ...action?.data },
+//         };
+//       default:
+//         return state;
+//     }
+//   };
+// };
 
-export default TemplateReducer;
+// export default TemplateReducer;

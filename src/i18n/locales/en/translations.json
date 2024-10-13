@@ -585,5 +585,6 @@
 
   "hide":"Hide",
   "account_payable_aging_report":"Account Payable Aging Report",
+  "account_receivable_aging_report":"Account Receivable Aging Report",
   "days":"Days"
 }

@@ -18,7 +18,7 @@ interface Inventory {
   defaultPurchaseReturnAcc: number;
   defaultBillDiscGivenLdg: number;
   defaultBillDiscRecvdLdg: number;
-  couponCardAccount: number;
+  defaultCouponSalesAccount: number;
   defaultRoundOffAccount: number;
   defaultAdditionalAmountAccount: number;
   defaultBrand: number;
@@ -31,8 +31,8 @@ interface Inventory {
   setLastPurchaseRateAsProctRate: boolean;
   setAvgPurchaseCostWithStdPurRate: boolean;
   updatePurchasePriceOnPurchaseTransfer: boolean;
-  showCashSalesSeparateMenu: boolean;
-  showNonStockItemsInSales: boolean;
+  showCashSalesSeperateMenu: boolean;
+  showNonStockItemsinSales: boolean;
   defaultBTOAccount: number;
   defaultBTIAccount: number;
   serviceWarrantyInvAccounts: boolean;
@@ -52,8 +52,8 @@ interface Inventory {
   blockNonStockSerialSelling: boolean;
   showProductDuplicationMessage: boolean;
   blockHoldItems: boolean;
-  printAfterSave: boolean;
-  needPoApprovalForPrintout: boolean;
+  printInvAfterSave: boolean;
+  needPOApprovalForPrintout: boolean;
   enableAddStockAdjustment: boolean;
   carryForwardPurchaseOrderQtyToPurchase: boolean;
   useCostForStockTransferToBranch: boolean;
@@ -64,7 +64,7 @@ interface Inventory {
   showTransitModeStockTransferAlert: boolean;
   showAccountPayableInSales: boolean;
   holdSalesMan: boolean;
-  mobileNumberMandatoryInSales: boolean;
+  mobileNumberMandotryInSales: boolean;
 }
 const api = new APIClient();
 const InventorySettingsForm = () => {
@@ -75,7 +75,7 @@ const InventorySettingsForm = () => {
     defaultPurchaseReturnAcc: 0,
     defaultBillDiscGivenLdg: 0,
     defaultBillDiscRecvdLdg: 0,
-    couponCardAccount: 0,
+    defaultCouponSalesAccount: 0,
     defaultRoundOffAccount: 0,
     defaultAdditionalAmountAccount: 0,
     defaultBrand: 0,
@@ -88,8 +88,8 @@ const InventorySettingsForm = () => {
     setLastPurchaseRateAsProctRate: false,
     setAvgPurchaseCostWithStdPurRate: false,
     updatePurchasePriceOnPurchaseTransfer: false,
-    showCashSalesSeparateMenu: false,
-    showNonStockItemsInSales: false,
+    showCashSalesSeperateMenu: false,
+    showNonStockItemsinSales: false,
     defaultBTOAccount: 0,
     defaultBTIAccount: 0,
     serviceWarrantyInvAccounts: false,
@@ -109,8 +109,8 @@ const InventorySettingsForm = () => {
     blockNonStockSerialSelling: false,
     showProductDuplicationMessage: false,
     blockHoldItems: false,
-    printAfterSave: false,
-    needPoApprovalForPrintout: false,
+    printInvAfterSave: false,
+    needPOApprovalForPrintout: false,
     enableAddStockAdjustment: false,
     carryForwardPurchaseOrderQtyToPurchase: false,
     useCostForStockTransferToBranch: false,
@@ -121,7 +121,7 @@ const InventorySettingsForm = () => {
     showTransitModeStockTransferAlert: false,
     showAccountPayableInSales: false,
     holdSalesMan: false,
-    mobileNumberMandatoryInSales: false,
+    mobileNumberMandotryInSales: false,
   };
 
   const dispatch = useAppDispatch();
@@ -428,11 +428,11 @@ const InventorySettingsForm = () => {
             label="Default Sales Return Payable Acc:"
           />
           <ERPDataCombobox
-            id="couponCardAccount"
-            value={formState.couponCardAccount}
+            id="defaultCouponSalesAccount"
+            value={formState.defaultCouponSalesAccount}
             data={formState}
             field={{
-              id: "couponCardAccount",
+              id: "defaultCouponSalesAccount",
               required: false,
               getListUrl: Urls.data_acc_ledgers,
               params: `ledgerID=0&ledgerType=${LedgerType.All}`,
@@ -440,7 +440,7 @@ const InventorySettingsForm = () => {
               labelKey: "name",
             }}
             onChangeData={(data: any) =>
-              handleFieldChange("couponCardAccount", data.couponCardAccount)
+              handleFieldChange("defaultCouponSalesAccount", data.defaultCouponSalesAccount)
             }
             label="Coupon Card Account"
           />
@@ -853,12 +853,12 @@ const InventorySettingsForm = () => {
             }
           />
           <ERPCheckbox
-            id="printAfterSave"
-            checked={formState.printAfterSave}
+            id="printInvAfterSave"
+            checked={formState.printInvAfterSave}
             data={formState}
             label="Print After Save"
             onChangeData={(data: any) =>
-              handleFieldChange("printAfterSave", data.printAfterSave)
+              handleFieldChange("printInvAfterSave", data.printInvAfterSave)
             }
           />
           <ERPCheckbox
@@ -875,26 +875,26 @@ const InventorySettingsForm = () => {
           />
 
           <ERPCheckbox
-            id="showCashSalesSeparateMenu"
-            checked={formState.showCashSalesSeparateMenu}
+            id="showCashSalesSeperateMenu"
+            checked={formState.showCashSalesSeperateMenu}
             data={formState}
             label="Show Cash Sales Separate Menu"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "showCashSalesSeparateMenu",
-                data.showCashSalesSeparateMenu
+                "showCashSalesSeperateMenu",
+                data.showCashSalesSeperateMenu
               )
             }
           />
           <ERPCheckbox
-            id="needPoApprovalForPrintout"
-            checked={formState.needPoApprovalForPrintout}
+            id="needPOApprovalForPrintout"
+            checked={formState.needPOApprovalForPrintout}
             data={formState}
             label="Need PO Approval For Printout"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "needPoApprovalForPrintout",
-                data.needPoApprovalForPrintout
+                "needPOApprovalForPrintout",
+                data.needPOApprovalForPrintout
               )
             }
           />
@@ -909,14 +909,14 @@ const InventorySettingsForm = () => {
           />
 
           <ERPCheckbox
-            id="showNonStockItemsInSales"
-            checked={formState.showNonStockItemsInSales}
+            id="showNonStockItemsinSales"
+            checked={formState.showNonStockItemsinSales}
             data={formState}
             label="Show Non Stock Items in Sales"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "showNonStockItemsInSales",
-                data.showNonStockItemsInSales
+                "showNonStockItemsinSales",
+                data.showNonStockItemsinSales
               )
             }
           />
@@ -933,20 +933,26 @@ const InventorySettingsForm = () => {
             }
           />
           <ERPCheckbox
-            id="mobileNumberMandatoryInSales"
-            checked={formState.mobileNumberMandatoryInSales}
+            id="mobileNumberMandotryInSales"
+            checked={formState.mobileNumberMandotryInSales}
             data={formState}
             label="Mobile Number Mandatory in Sales"
             onChangeData={(data: any) =>
               handleFieldChange(
-                "mobileNumberMandatoryInSales",
-                data.mobileNumberMandatoryInSales
+                "mobileNumberMandotryInSales",
+                data.mobileNumberMandotryInSales
               )
             }
           />
         </div>
         <div className="flex justify-end">
-          <ERPButton title="Save Settings" variant="primary" type="submit" />
+          <ERPButton 
+          title="Save Settings"
+           variant="primary"
+            type="submit" 
+            disabled={isSaving}
+            loading={isSaving}
+            />
         </div>
       </div>
     </form>

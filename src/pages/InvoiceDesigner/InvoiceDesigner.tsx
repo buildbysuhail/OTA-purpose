@@ -20,6 +20,7 @@ import ERPToast from "../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { DataToForm, isFile } from "../../utilities/Utils";
+import save_svg from "../../assets/svg/save.svg";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getDetailAction, postAction, patchAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
@@ -161,6 +162,7 @@ const InvoiceDesigner = () => {
 
     setLoading(true);
     (appDispatch(postAction({apiUrl:Urls.templates, data:postFormData})) as any).then((res: any) => {
+      debugger;
       handleResponse(res, () => {
         ERPToast.show("Template saved successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);
@@ -200,7 +202,8 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const manageSaveTemplate = async () => {
-    if (!templateData.activeTemplate?.propertiesState?.templateName) {
+    debugger;
+    if (!templateData?.activeTemplate?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
     } else {
       const node = document.getElementById("invoicePreview");
@@ -262,9 +265,9 @@ const InvoiceDesigner = () => {
             <button
               title="Save Template"
               onClick={manageSaveTemplate}
-              className="flex gap-1 text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
+              className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
             >
-              <img src="/svg/save.svg" className="w-5 h-5 text-red-500" /> <span className="text-sm">Save</span>
+              <img src={save_svg} className="w-5 h-5 text-red-500" /> <span className="text-sm">Save</span>
               {loading && <div className=" bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>}
             </button>
           </div>
@@ -275,7 +278,7 @@ const InvoiceDesigner = () => {
           <PropertiesDesigner
             templateGroup={templateGroup}
             tempImages={{ templateImages, setTemplateImages }}
-            propertiesState={templateData.activeTemplate?.propertiesState}
+            propertiesState={templateData?.activeTemplate?.propertiesState}
             onChange={(propertiesState) => dispatch(setTemplatePropertiesState(propertiesState))}
           />
         )}
@@ -283,31 +286,31 @@ const InvoiceDesigner = () => {
         {currentSection.type == "header&footer" && (
           <HeaderFooterDesigner
             tempImages={{ templateImages, setTemplateImages }}
-            footerState={templateData.activeTemplate?.footerState}
-            headerState={templateData.activeTemplate?.headerState}
-          // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData.activeTemplate, footerState: footerState }))}
+            footerState={templateData?.activeTemplate?.footerState}
+            headerState={templateData?.activeTemplate?.headerState}
+          // onChange={(footerState) => dispatch(setActiveTemplate({ ...templateData?.activeTemplate, footerState: footerState }))}
           />
         )}
 
-        {/* {currentSection.type == "transactions" && (
+        {currentSection.type == "transactions" && (
           <TransactionDetailsDesigner
-            template={templateData.activeTemplate}
-            headerState={templateData.activeTemplate?.headerState}
+            template={templateData?.activeTemplate}
+            headerState={templateData?.activeTemplate?.headerState}
             onChange={(headerState) => dispatch(setTemplateHeaderState( headerState ))}
           />
-        )} */}
+        )}
 
         {currentSection.type == "table" && (
           <ItemTableDesigner
-            template={templateData.activeTemplate}
-            itemTableState={templateData.activeTemplate?.itemTableState}
+            template={templateData?.activeTemplate}
+            itemTableState={templateData?.activeTemplate?.itemTableState}
             onChange={(itemTableState) => dispatch(setTemplateItemTableState(itemTableState))}
           />
         )}
 
         {currentSection.type == "total" && (
           <TotalDesigner
-            totalState={templateData.activeTemplate?.totalState}
+            totalState={templateData?.activeTemplate?.totalState}
             onChange={(totalState) => dispatch(setTemplateTotalState(totalState ))}
           />
         )}
@@ -315,7 +318,7 @@ const InvoiceDesigner = () => {
         {currentSection.type == "others" && (
           <FooterDesigner
             tempImages={{ templateImages, setTemplateImages }}
-            footerState={templateData.activeTemplate?.footerState}
+            footerState={templateData?.activeTemplate?.footerState}
             onChange={(footerState) => dispatch(setTemplateFooterState(footerState))}
           />
         )}

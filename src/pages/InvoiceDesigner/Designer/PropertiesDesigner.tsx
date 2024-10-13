@@ -7,10 +7,10 @@ import { TemplateImagesTypes } from "../InvoiceDesigner";
 import { isFile } from "../../../utilities/Utils";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPSelect from "../../../components/ERPComponents/erp-select";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { TemplateGroupTypes } from "../constants/TemplateCategories";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -93,8 +93,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           <label htmlFor="page_size" className="font-light text-sm">
             Page Size
           </label>
-          <ERPSelect
+          <ERPDataCombobox
             defaultValue={propertiesState?.pageSize?.value ?? "A4"}
+            value={propertiesState?.pageSize?.value ?? "A4"}
             handleChange={(id, value) => onChange?.({ ...propertiesState, pageSize: value })}
             id="page_size"
             options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}
@@ -106,7 +107,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
         {/* */}
         <div className="flex items-center justify-between">
           <div className="font-light text-sm">Orientation</div>
-          <ERPSelect
+          <ERPDataCombobox
             id="orientation"
             defaultValue={propertiesState?.orientation ?? "portrait"}
             handleChange={(id, value) => onChange?.({ ...propertiesState, orientation: value?.value })}
@@ -211,7 +212,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 value={propertiesState?.amount_enclosed_label ?? "Amount Enclosed"}
                 onChange={(e) => onChange?.({ ...propertiesState, amount_enclosed_label: e.target.value })}
               />
-              <ERPSelect
+              <ERPDataCombobox
                 id="Payment Stub Position"
                 defaultValue={propertiesState?.payment_stub_position ?? "new_page"}
                 handleChange={(id, value) => onChange?.({ ...propertiesState, payment_stub_position: value?.value })}
@@ -239,7 +240,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
       {currentTab === "font_props" && <div className="transition-all  flex flex-col gap-4 bg-white p-4">
         <div className="flex flex-col gap-2 mt-1">
-          <ERPSelect
+          <ERPDataCombobox
             id="font"
             label="PDF Font"
             defaultValue={propertiesState?.font ?? "Helvetica"}
@@ -339,7 +340,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 </> : <></>
             }
 
-            <ERPSelect
+            <ERPDataCombobox
               label="Image Position"
               id="position"
               defaultValue={propertiesState?.bg_image_position ?? "top left"}

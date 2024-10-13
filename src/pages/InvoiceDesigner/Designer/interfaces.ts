@@ -23,11 +23,15 @@ type TemplateKindType =
 export interface TemplateState {
   id?: string | number | undefined;
   thumbImage?: string;
+  background_image: string;
+  background_image_header: string;
+  background_image_footer: string;
   propertiesState?: PropertiesState;
   headerState?: HeaderState;
   itemTableState?: ItemTableState;
   totalState?: TotalState;
   footerState?: FooterState;
+  barcodeState?: BarcodeState;
 }
 
 export interface PropertiesState {
@@ -433,12 +437,23 @@ export interface FooterState {
 
   bg_image_footer_position?: string;
 }
+export interface BarcodeState {
+  showLogo?: boolean;
+  logoSize?: number;
+  showOrgName?: boolean;
+  OrganizationFontColor?: string;
+  OrganizationFontSize?: number;
+  showOrgAddress?: boolean;
+}
 export const initialTemplateState: ActionState<TemplateState> = {
   loading: false,
   error: null,
   data: {
     id: undefined,
     thumbImage: "",
+    background_image: "",
+    background_image_footer: "",
+    background_image_header: "",
     propertiesState: {
       template_type: "standard",
       template_kind: "standard",

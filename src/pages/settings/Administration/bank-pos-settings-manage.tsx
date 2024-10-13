@@ -39,7 +39,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BankPoseData>({
       url: Urls.BankPosSettings,
       onSuccess: useCallback(
@@ -131,6 +131,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
         />
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

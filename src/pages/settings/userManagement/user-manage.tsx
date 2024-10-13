@@ -140,11 +140,11 @@ export const UserManage: React.FC = React.memo(() => {
         />
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}
         onSubmit={handleSubmit}
-        onClear={handleClear}
       />
     </div>
   );

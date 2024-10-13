@@ -18,6 +18,7 @@ export const RemainderManage: React.FC = React.memo(() => {
     isEdit,
     handleSubmit,
     handleFieldChange,
+    handleClear,
     getFieldProps,
     isLoading
   } = useFormManager<RemainderData>({
@@ -72,6 +73,7 @@ export const RemainderManage: React.FC = React.memo(() => {
 
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

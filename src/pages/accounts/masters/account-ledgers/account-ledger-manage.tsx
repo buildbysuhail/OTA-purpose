@@ -22,6 +22,7 @@ export const AccountLedgerManage = () => {
     formState: postData,
     handleSubmit,
     handleFieldChange,
+    handleClear,
     getFieldProps,
     isLoading
   } = useFormManager<AccountLedgerData>({
@@ -153,6 +154,7 @@ export const AccountLedgerManage = () => {
 
       <div className="w-full p-2 flex justify-center space-x-2 mt-5">
         <ERPFormButtons
+          onClear={handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
           onCancel={onClose}

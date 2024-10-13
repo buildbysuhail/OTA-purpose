@@ -23,6 +23,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
   const {
     isEdit,
     handleSubmit,
+    handleClear,
     handleFieldChange,
     getFieldProps,
     isLoading
@@ -75,6 +76,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
         />
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

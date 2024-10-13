@@ -20,6 +20,7 @@ export const PrivilegeCardManage : React.FC = React.memo(() => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
+    handleClear,
     isLoading,
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
@@ -135,6 +136,7 @@ export const PrivilegeCardManage : React.FC = React.memo(() => {
         
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

@@ -21,7 +21,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<PartyCategoryData>({
       url: Urls.account_party_category,
       onSuccess: useCallback(
@@ -73,6 +73,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

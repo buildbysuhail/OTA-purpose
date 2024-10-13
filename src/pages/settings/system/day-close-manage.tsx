@@ -37,6 +37,7 @@ const DayCloseManage = () => {
   const {
     isEdit,
     handleSubmit,
+    handleClear,
     handleFieldChange,
     getFieldProps,
     isLoading
@@ -98,6 +99,7 @@ const DayCloseManage = () => {
         />
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

@@ -26,7 +26,7 @@ export interface UserActionReport {
 const UserActionReportFilter: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<UserActionReport>({
       url: Urls.userActionReport,
       onSuccess: useCallback(
@@ -144,6 +144,7 @@ const UserActionReportFilter: React.FC = React.memo(() => {
         </div>
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

@@ -21,6 +21,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
+    handleClear,
     isLoading,
     formState
   } = useFormManager<AccountGroupData>({
@@ -101,6 +102,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         />
       </div>
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

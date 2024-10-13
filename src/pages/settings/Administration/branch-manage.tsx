@@ -108,7 +108,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const rootState = useRootState();
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BranchData>({
       url: Urls.Branch,
       onSuccess: useCallback(
@@ -314,6 +314,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
       </div>
 
       <ERPFormButtons
+        onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

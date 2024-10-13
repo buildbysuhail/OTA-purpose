@@ -129,7 +129,7 @@ const SearchResultBar = ({ isOpen, searchResults }: any) => {
             return (
               <div className="w-full p-1" key={`SR_${idx}`}>
                 <p
-                  className="text-[13px] hover:bg-accent hover:text-white rounded-lg p-2 cursor-pointer"
+                  className="text-[13px] hover:bg-primary hover:text-white rounded-lg p-2 cursor-pointer"
                   onClick={() => {
                     item?.path
                       ? navigate(item?.path)

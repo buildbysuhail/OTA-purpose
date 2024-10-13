@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  BarcodeState,
   FooterState,
   HeaderState,
   initialTemplateState,
@@ -55,6 +56,9 @@ const templateSlice = createSlice({
     setTemplateFooterState: (state, action: PayloadAction<FooterState>) => {
       state.activeTemplate.footerState = action.payload;
     },
+    setTemplateBarcodeState: (state, action: PayloadAction<BarcodeState>) => {
+      state.activeTemplate.barcodeState = action.payload;
+    },
   },
 });
 
@@ -67,6 +71,7 @@ export const {
   setTemplateItemTableState,
   setTemplateTotalState,
   setTemplateFooterState,
+  setTemplateBarcodeState,
 } = templateSlice.actions;
 
 export default templateSlice.reducer;

@@ -31,6 +31,7 @@ export interface TemplateState {
   itemTableState?: ItemTableState;
   totalState?: TotalState;
   footerState?: FooterState;
+  barcodeState?: BarcodeState;
 }
 
 export interface PropertiesState {
@@ -437,8 +438,12 @@ export interface FooterState {
   bg_image_footer_position?: string;
 }
 export interface BarcodeState {
-  /// Notes
-  showNotesLabel?: boolean;
+  showLogo?: boolean;
+  logoSize?: number;
+  showOrgName?: boolean;
+  OrganizationFontColor?: string;
+  OrganizationFontSize?: number;
+  showOrgAddress?: boolean;
 }
 export const initialTemplateState: ActionState<TemplateState> = {
   loading: false,

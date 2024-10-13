@@ -1,4 +1,8 @@
-import { Cog6ToothIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  Cog6ToothIcon,
+  MagnifyingGlassIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useNavigation } from "react-router-dom";
@@ -16,6 +20,9 @@ const Header = () => {
   const [searchResults, setSearchResults] = useState<any>();
   const [routes, setRoutes] = useState(SettingsMenuItems);
 
+  const handleNavigation = () => {
+    navigate("/");
+  };
 
   useEffect(() => {
     if (search) {
@@ -28,7 +35,7 @@ const Header = () => {
   const handleSearch = (event: any) => {
     const searchTerm = event?.target?.value?.toLowerCase();
     let AllRoutes: any[] = [];
-  
+
     // Recursively extract all routes from children, regardless of depth
     const extractRoutes = (menuItems: any[]) => {
       menuItems?.forEach((item) => {
@@ -39,19 +46,18 @@ const Header = () => {
         }
       });
     };
-  
+
     // Start the recursive extraction
     extractRoutes(SettingsMenuItems);
-  
+
     // Perform the search filtering
     let searchResult = AllRoutes?.filter((item: any) =>
       item?.title?.toLowerCase()?.includes(searchTerm)
     );
-  
+
     // Set the filtered search results
     setSearchResults(searchResult);
   };
-
 
   return (
     <div className="py-6 px-4 flex flex-col gap-4">
@@ -62,12 +68,13 @@ const Header = () => {
         </div>
         <div
           className="flex gap-1 items-center py-1 px-2 bg-gray-50 rounded-md border cursor-pointer"
-          onClick={() => {
-            dispatch({ type: "minimize", minimize: false });
-            setTimeout(() => {
-              navigate(-1);
-            }, 500);
-          }}
+          // onClick={() => {
+          //   dispatch({ type: "minimize", minimize: false });
+          //   setTimeout(() => {
+          //     navigate(-1);
+          //   }, 500);
+          // }}
+          onClick={handleNavigation}
         >
           <p className="text-[10px]">Close</p>
           <XMarkIcon className="w-4 aspect-square stroke-red-600" />
@@ -82,7 +89,6 @@ const Header = () => {
             className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
             value={search}
             onChange={(e: any) => {
-              
               if (e?.target?.value) {
                 setSearch(e?.target?.value);
                 handleSearch(e);
@@ -109,7 +115,7 @@ const Header = () => {
 export default Header;
 
 const SearchResultBar = ({ isOpen, searchResults }: any) => {
-  const{t} = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   return (
     <div
@@ -125,10 +131,15 @@ const SearchResultBar = ({ isOpen, searchResults }: any) => {
                 <p
                   className="text-[13px] hover:bg-accent hover:text-white rounded-lg p-2 cursor-pointer"
                   onClick={() => {
-                    item?.path ? navigate(item?.path) : ERPToast.showWith("This Feature is under development. Please try later!", "warning");
+                    item?.path
+                      ? navigate(item?.path)
+                      : ERPToast.showWith(
+                          "This Feature is under development. Please try later!",
+                          "warning"
+                        );
                   }}
                 >
-                  { t(item?.title)}
+                  {t(item?.title)}
                 </p>
               </div>
             );

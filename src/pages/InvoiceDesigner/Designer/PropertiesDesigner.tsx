@@ -95,6 +95,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
           </label>
           <ERPDataCombobox
             defaultValue={propertiesState?.pageSize?.value ?? "A4"}
+            value={propertiesState?.pageSize?.value ?? "A4"}
             handleChange={(id, value) => onChange?.({ ...propertiesState, pageSize: value })}
             id="page_size"
             options={isRetailTemplate() ? retailPageSizes : pageSizeOptions}

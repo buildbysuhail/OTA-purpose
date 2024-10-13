@@ -24,8 +24,9 @@ import save_svg from "../../assets/svg/save.svg";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getDetailAction, postAction, patchAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
-import { setTemplateBarcodeState, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState } from "../../redux/slices/templates/reducer";
+import { setTemplate, setTemplateBarcodeState, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import LabelDesigner from "./Designer/LabelDesigner";
+import { APIClient } from "../../helpers/api-client";
 
 interface DesignSectionType {
   id: number;
@@ -94,7 +95,7 @@ export interface TemplateImagesTypes {
   background_image_footer: string | null;
 }
 
-
+const api = new APIClient()
 const InvoiceDesigner = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -155,26 +156,30 @@ const InvoiceDesigner = () => {
 
   /* ########################################################################################### */
 
-  const handleSave = (dataUrl: string) => {
-    let postData = templateData?.activeTemplate;
-    postData.thumbImage = dataUrl;
-    postData.propertiesState ??= {};
-    postData.propertiesState.template_group = templateGroup;
+  const handleSave = async (dataUrl: string) => {
+    const activeTemplate = {
+      ...templateData.activeTemplate,
+      thumbImage: dataUrl,
+      propertiesState: {
+        ...templateData.activeTemplate.propertiesState,
+        template_group: templateGroup
+      }
 
-    if (postData != undefined && templateImages?.background_image) { postData.background_image = templateImages?.background_image };
-    if (templateImages?.background_image_header) postData.background_image_header = templateImages?.background_image_header;
-    if (templateImages?.background_image_footer) postData.background_image_footer = templateImages?.background_image_footer;
-    if (templateImages?.signature_image) postData.signature_image , templateImages?.signature_image;
+    }
+    await dispatch(setTemplate(activeTemplate));
+    // if (postData != undefined && templateImages?.background_image) { postData.background_image = templateImages?.background_image };
+    // if (templateImages?.background_image_header) postData.background_image_header = templateImages?.background_image_header;
+    // if (templateImages?.background_image_footer) postData.background_image_footer = templateImages?.background_image_footer;
+    // if (templateImages?.signature_image) postData.signature_image , templateImages?.signature_image;
 
     setLoading(true); 
-    (appDispatch(postAction({ apiUrl: Urls.templates, data: postData })) as any).then((res: any) => {
+    var res = await api.postAsync(Urls.templates, activeTemplate);
       debugger;
       handleResponse(res, () => {
         ERPToast.show("Template saved successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);
       });
       setLoading(false);
-    });
   };
 
   /* ########################################################################################### */
@@ -217,7 +222,7 @@ const InvoiceDesigner = () => {
         try {
           const canvas = await html2canvas(node);
           const dataUrl = canvas.toDataURL("image/png");
-          if (templateData?.activeTemplate && id === "new") handleSave(dataUrl);
+          if (templateData?.activeTemplate && id === "new") await handleSave(dataUrl);
           if (templateData?.activeTemplate && id && id !== "new") handleUpdate(dataUrl, id);
         } catch (error) {
           console.error("Error capturing canvas:", error);

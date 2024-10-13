@@ -6,7 +6,7 @@ import { HeaderState, TemplateState } from "./interfaces";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPSelect from "../../../components/ERPComponents/erp-select";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-select";
 import ERPSlider from "../../../components/ERPComponents/erp-slider";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 
@@ -833,7 +833,7 @@ const ReceiptHeaderDesigner = ({ template, headerState, onChange }: HeaderDesign
         />
       </div>
 
-      <ERPSelect
+      <ERPDataCombobox
         label="Currency Symbol"
         id="font"
         defaultValue={headerState?.recieptInfo?.currencySymbolPosition ?? "before"}

@@ -7,12 +7,12 @@ import { FooterState, HeaderState } from "./interfaces";
 import { TemplateImagesTypes } from "../InvoiceDesigner";
 import { isFile } from "../../../utilities/Utils";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPSelect from "../../../components/ERPComponents/erp-select";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 import { setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 interface TempImageProps {
     setTemplateImages: Dispatch<SetStateAction<TemplateImagesTypes>>,
@@ -132,7 +132,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                                 Remove
                             </div>
                             <div className="font-light text-sm">Image Position</div>
-                            <ERPSelect
+                            <ERPDataCombobox
                                 noLabel
                                 id="position"
                                 defaultValue={headerState?.bg_image_header_position ?? "top left"}
@@ -258,7 +258,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                                     Remove
                                 </div>
                                 <div className="font-light text-sm">Image Position</div>
-                                <ERPSelect
+                                <ERPDataCombobox
                                     noLabel
                                     id="position"
                                     defaultValue={footerState?.bg_image_footer_position ?? "top left"}

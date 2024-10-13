@@ -4,9 +4,9 @@ import { TotalState } from "./interfaces";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPSelect from "../../../components/ERPComponents/erp-select";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPTab from "../../../components/ERPComponents/erp-tab";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 interface TotalDesignerProps {
   totalState?: TotalState;
@@ -189,7 +189,7 @@ const LabelsEditor = ({ totalState, onChange }: TotalDesignerProps) => {
             />
           )}
 
-          <ERPSelect
+          <ERPDataCombobox
             defaultValue={totalState?.currencyPosition?.value ?? "Before"}
             handleChange={(id, value) => onChange?.({ ...totalState, currencyPosition: value })}
             id="pos_currency"

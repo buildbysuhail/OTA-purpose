@@ -24,13 +24,13 @@ import save_svg from "../../assets/svg/save.svg";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getDetailAction, postAction, patchAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
-import { setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState } from "../../redux/slices/templates/reducer";
+import { setTemplateBarcodeState, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import LabelDesigner from "./Designer/LabelDesigner";
 
 interface DesignSectionType {
   id: number;
   name: string;
-  type: "properties" | "transactions" | "table" | "total" | "others" | "header&footer" | "label";
+  type: "properties" | "transactions" | "table" | "total" | "others" | "header&footer" | "barcode";
   description: string;
   icon?: JSX.Element;
 }
@@ -81,7 +81,7 @@ const designSections: Array<DesignSectionType> = [
     id: 7,
     name: "Barcode",
     description: "Barcode Design",
-    type: "label",
+    type: "barcode",
     icon: <TicketIcon />,
   },
 ];
@@ -89,9 +89,9 @@ const designSections: Array<DesignSectionType> = [
 
 export interface TemplateImagesTypes {
   signature_image: string | null;
-  background_image:string | null;
+  background_image: string | null;
   background_image_header: string | null;
-  background_image_footer:  string | null;
+  background_image_footer: string | null;
 }
 
 
@@ -118,7 +118,7 @@ const InvoiceDesigner = () => {
   /* ####################################################################### */
 
   const getPDFTemplateData = () => {
-    (appDispatch(getDetailAction({apiUrl:Urls.templates, id:id||""})) as any).then((res: any) => {
+    (appDispatch(getDetailAction({ apiUrl: Urls.templates, id: id || "" })) as any).then((res: any) => {
       setTemplateImages({
         background_image: res?.payload?.data?.background_image as string | null,
         background_image_header: res?.payload?.data?.background_image_header as string | null,
@@ -156,18 +156,18 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const handleSave = (dataUrl: string) => {
-      let postData = templateData?.activeTemplate;
-      postData.thumbImage = dataUrl;
-      postData.propertiesState ??= {};
-      postData.propertiesState.template_group = templateGroup;
+    let postData = templateData?.activeTemplate;
+    postData.thumbImage = dataUrl;
+    postData.propertiesState ??= {};
+    postData.propertiesState.template_group = templateGroup;
 
-    if (postData != undefined && templateImages?.background_image) { postData.background_image = templateImages?.background_image};
+    if (postData != undefined && templateImages?.background_image) { postData.background_image = templateImages?.background_image };
     if (templateImages?.background_image_header) postFormData?.append("background_image_header", templateImages?.background_image_header);
     if (templateImages?.background_image_footer) postFormData?.append("background_image_footer", templateImages?.background_image_footer);
     if (templateImages?.signature_image) postFormData?.append("signature_image", templateImages?.signature_image);
 
     setLoading(true);
-    (appDispatch(postAction({apiUrl:Urls.templates, data:postData})) as any).then((res: any) => {
+    (appDispatch(postAction({ apiUrl: Urls.templates, data: postData })) as any).then((res: any) => {
       debugger;
       handleResponse(res, () => {
         ERPToast.show("Template saved successfully", "success");
@@ -196,7 +196,7 @@ const InvoiceDesigner = () => {
       postFormData?.append("signature_image", templateImages?.signature_image);
 
     setLoading(true);
-    (appDispatch(patchAction({apiUrl:Urls.templates, params:postFormData, id})) as any).then((res: any) => {
+    (appDispatch(patchAction({ apiUrl: Urls.templates, params: postFormData, id })) as any).then((res: any) => {
       handleResponse(res, () => {
         ERPToast.show("Template updated successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);
@@ -302,7 +302,7 @@ const InvoiceDesigner = () => {
           <TransactionDetailsDesigner
             template={templateData?.activeTemplate}
             headerState={templateData?.activeTemplate?.headerState}
-            onChange={(headerState) => dispatch(setTemplateHeaderState( headerState ))}
+            onChange={(headerState) => dispatch(setTemplateHeaderState(headerState))}
           />
         )}
 
@@ -317,7 +317,7 @@ const InvoiceDesigner = () => {
         {currentSection.type == "total" && (
           <TotalDesigner
             totalState={templateData?.activeTemplate?.totalState}
-            onChange={(totalState) => dispatch(setTemplateTotalState(totalState ))}
+            onChange={(totalState) => dispatch(setTemplateTotalState(totalState))}
           />
         )}
 
@@ -328,11 +328,11 @@ const InvoiceDesigner = () => {
             onChange={(footerState) => dispatch(setTemplateFooterState(footerState))}
           />
         )}
-        {currentSection.type == "label" && (
-         <LabelDesigner
-            tempImages={{ templateImages, setTemplateImages }}
-            footerState={templateData?.activeTemplate?.footerState}
-            onChange={(footerState) => dispatch(setTemplateFooterState(footerState))}
+        {currentSection.type == "barcode" && (
+          <LabelDesigner
+            // tempImages={{ templateImages, setTemplateImages }}
+            barcodeState={templateData?.activeTemplate?.barcodeState}
+            onChange={(barcodeState) => dispatch(setTemplateBarcodeState(barcodeState))}
           />
         )}
       </div>

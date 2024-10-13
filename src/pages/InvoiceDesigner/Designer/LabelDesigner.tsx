@@ -1,13 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { Dispatch, SetStateAction, useRef } from "react";
-
-import { BarcodeState, FooterState } from "./interfaces";
-import { isFile } from "../../../utilities/Utils";
-import { TemplateImagesTypes } from "../InvoiceDesigner";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
-import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { useRef, useState } from "react";
+import { BarcodeState } from "./interfaces";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
 interface LabelDesignerProps {
   onChange: (state: BarcodeState) => void;
@@ -16,13 +10,16 @@ interface LabelDesignerProps {
 
 const LabelDesigner = ({ onChange, barcodeState }: LabelDesignerProps) => {
   const [searchParams] = useSearchParams();
-  const inputSignatureFile = useRef<any>(null);
-  const templateGroup = searchParams?.get("template_group");
-  
+  const [currentTab, setTab] = useState<"barcode_details" | "common_settings" | "other_settings" | "">("barcode_details");
+
 
   return (
     <div className="flex h-full overflow-auto flex-col gap-5 p-4">
-      safvan
+      <div className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
+        onClick={() => setTab(currentTab === "barcode_details" ? "" : "barcode_details")}>
+        Common Settings<ChevronDownIcon className={`h-5  ${currentTab === "barcode_details" ? "" : "-rotate-90"} transition-all`} />
+      </div>
+      
     </div>
   );
 };

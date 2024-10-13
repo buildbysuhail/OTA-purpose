@@ -33,6 +33,7 @@ const templateSlice = createSlice({
       state,
       action: PayloadAction<string | undefined>
     ) => {
+      debugger;
       state.activeTemplate.thumbImage = action.payload;
     },
     setTemplatePropertiesState: (

@@ -81,7 +81,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
   const gstTreatmentReducerName = reducerNameFromUrl(Urls.tax_treatment, "GET");
   const gstTreatmentList = useSelector((state: any) => state?.[gstTreatmentReducerName])?.data?.results;
 
-  const reduxTemplateData = useSelector((state: any) => state?.TemplateReducer) as TemplateReducerState;
+  const reduxTemplateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
   const comapanies = useSelector((state: any) => state?.GetUserCompanies);
   const ActiveBranch = comapanies?.data?.find((item: any) => item?.is_active);

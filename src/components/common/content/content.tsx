@@ -8,6 +8,7 @@ import UserActionReport from '../../../pages/settings/system/user-action-report'
 import Cash from '../../../pages/accounts/masters/reports/cash';
 import ReportList from '../../ERPComponents/reports/reports-list';
 import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
+import FullLayout from '../layout/full-layout';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -53,6 +54,7 @@ const loading = (
 );
 const Content: FC<ContentProps> = () => {
 
+  const [myClass, setMyClass] = useState("");
   return (
     <Suspense fallback={loading}>
       <Routes>
@@ -109,7 +111,12 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts End */}
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />
-        <Route path="/settings/invoice_designer/:id" element={<InvoiceDesigner />} />
+        
+        <Route
+                path="/templates/invoice_designer/*"
+                element={<FullLayout  />}
+              />
+        
         {/* Templates ends */}
 
         {/* Reports */}

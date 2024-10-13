@@ -58,7 +58,7 @@ const Templates = ({ }) => {
   /* ########################################################################################### */
 
   let paperWidth;
-  const paperSize = showPreview?.template?.propertiesState?.pageSize?.value || "A4";
+  const paperSize = showPreview?.template?.propertiesState?.pageSize || "A4";
 
   switch (paperSize) {
     case "A5":
@@ -191,7 +191,7 @@ const Templates = ({ }) => {
                 )}
 
                 {tempData?.map((temp: any) => {
-                  const paperSize = temp?.content?.propertiesState?.pageSize?.value;
+                  const paperSize = temp?.content?.propertiesState?.pageSize;
                   const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
                   return (
                     <div
@@ -386,7 +386,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         <div className="flex gap-4 flex-wrap p-5">
           {tempData
             ?.map((template: any, index: number) => {
-              const paperSize = template?.content?.propertiesState?.pageSize?.value;
+              const paperSize = template?.content?.propertiesState?.pageSize;
               const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
               return (
                 <div

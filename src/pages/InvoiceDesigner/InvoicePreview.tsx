@@ -153,7 +153,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
 
   let paperWidth;
   const backgroundColor = templateData?.propertiesState?.bg_color || "#fff";
-  const paperSize = templateData?.propertiesState?.pageSize?.value || "A4";
+  const paperSize = templateData?.propertiesState?.pageSize || "A4";
 
   switch (paperSize) {
     case "A5":

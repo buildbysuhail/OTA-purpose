@@ -62,7 +62,7 @@ const ERPChangeTemplateSidebar = ({
   /* ########################################################################################### */
 
   let paperWidth;
-  const paperSize = showPreview?.template?.propertiesState?.pageSize?.value || "A4";
+  const paperSize = showPreview?.template?.propertiesState?.pageSize || "A4";
 
   switch (paperSize) {
     case "A5":
@@ -137,7 +137,7 @@ const ERPChangeTemplateSidebar = ({
       </div>
       <div className="grid grid-cols-2 px-8 py-5 gap-8">
         {tempData?.map((template: any, index: number) => {
-          const paperSize = template?.content?.propertiesState?.pageSize?.value;
+          const paperSize = template?.content?.propertiesState?.pageSize;
           const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
           return (
             <div

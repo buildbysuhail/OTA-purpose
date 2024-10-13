@@ -25,7 +25,7 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         label_font_size: 12,
         label_font_color: "#000000",
         label_font_weight: 400,
-        pageSize: { label: "A4", value: "A4" },
+        pageSize: "A4",
         margins: {
           top: 40,
           bottom: 40,
@@ -137,7 +137,7 @@ const DefaultSITemplates: DeafultTemplateProps[] = [
         label_font_color: "#000000",
         label_font_size: 8,
         label_font_weight: 600,
-        pageSize: { label: '3 "', value: "3Inch" },
+        pageSize: "3Inch",
         margins: {
           top: 20,
           bottom: 20,

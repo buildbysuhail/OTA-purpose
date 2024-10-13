@@ -41,12 +41,12 @@ const DownloadRetailPreview = ({
 
   // Selection of paper size from the template
 
-  let paperSize = (template?.propertiesState?.pageSize?.value as TemplatePageSizes) || "A4";
-  if (template?.propertiesState?.pageSize?.value === "3Inch") {
+  let paperSize = (template?.propertiesState?.pageSize as TemplatePageSizes) || "A4";
+  if (template?.propertiesState?.pageSize === "3Inch") {
     paperSize = {
       width: 3 * 72, // 3 inches in points
     };
-  } else if (template?.propertiesState?.pageSize?.value === "4Inch") {
+  } else if (template?.propertiesState?.pageSize === "4Inch") {
     paperSize = {
       width: 4 * 72, // 4 inches in points
     };

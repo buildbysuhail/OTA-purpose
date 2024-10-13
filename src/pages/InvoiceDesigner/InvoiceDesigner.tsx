@@ -162,9 +162,9 @@ const InvoiceDesigner = () => {
     postData.propertiesState.template_group = templateGroup;
 
     if (postData != undefined && templateImages?.background_image) { postData.background_image = templateImages?.background_image };
-    if (templateImages?.background_image_header) postFormData?.append("background_image_header", templateImages?.background_image_header);
-    if (templateImages?.background_image_footer) postFormData?.append("background_image_footer", templateImages?.background_image_footer);
-    if (templateImages?.signature_image) postFormData?.append("signature_image", templateImages?.signature_image);
+    if (templateImages?.background_image_header) postData.background_image_header = templateImages?.background_image_header;
+    if (templateImages?.background_image_footer) postData.background_image_footer = templateImages?.background_image_footer;
+    if (templateImages?.signature_image) postData.signature_image , templateImages?.signature_image;
 
     setLoading(true);
     (appDispatch(postAction({ apiUrl: Urls.templates, data: postData })) as any).then((res: any) => {

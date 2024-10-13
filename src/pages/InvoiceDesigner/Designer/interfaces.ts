@@ -26,6 +26,7 @@ export interface TemplateState {
   background_image: string;
   background_image_header: string;
   background_image_footer: string;
+  signature_image: string;
   propertiesState?: PropertiesState;
   headerState?: HeaderState;
   itemTableState?: ItemTableState;
@@ -40,7 +41,7 @@ export interface PropertiesState {
   template_group?: TemplateGroupTypes;
 
   templateName?: string;
-  pageSize?: { label?: string; value?: string };
+  pageSize?: string;
   orientation?: "portrait" | "landscape";
   // Martgins
   margins?: {
@@ -459,7 +460,7 @@ export const initialTemplateState: ActionState<TemplateState> = {
       template_kind: "standard",
       template_group: "sales_invoice",
       templateName: "",
-      pageSize: { label: "A4", value: "A4" },
+      pageSize: "A4",
       orientation: "portrait",
       margins: { top: 10, bottom: 10, left: 10, right: 10 },
       bg_color: "#FFFFFF",

@@ -59,10 +59,9 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         />
       </div>
       <ERPFormButtons
-        onClear={handleClear}
         isEdit={isEdit}
+        title={t("delete_all")}
         isLoading={isLoading}
-        onCancel={onClose}
         onSubmit={handleSubmit}
       />
     </div>

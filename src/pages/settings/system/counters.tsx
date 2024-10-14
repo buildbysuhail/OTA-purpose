@@ -24,7 +24,7 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 80,
+        width: 70,
       },
       {
         dataField: "counter",
@@ -33,7 +33,6 @@ const Counters = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 150,
       },
       {
         dataField: "descriptions",

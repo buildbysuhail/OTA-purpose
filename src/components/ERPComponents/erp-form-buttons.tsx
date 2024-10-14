@@ -4,12 +4,13 @@ import ERPButton from './erp-button';
 interface ERPFormButtonsProps {
   isEdit: boolean;
   isLoading: boolean;
-  onCancel: () => void;
+  title?: string;
+  onCancel?: () => void;
   onSubmit?: () => void;
   onClear?: () => void;
 }
 
-export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoading, onCancel, onSubmit, onClear }) => {
+export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoading, title, onCancel, onSubmit, onClear }) => {
   return (
     <div className="w-full p-2 flex justify-end space-x-2">
        {onClear && (
@@ -20,12 +21,14 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoadin
         onClick={onClear}
       />
     )}
+       {onCancel && (
       <ERPButton
         type="reset"
         title="Cancel"
         variant="secondary"
         onClick={onCancel}
       />
+      )}
        {onSubmit && (
         <ERPButton
           type="button"
@@ -33,7 +36,7 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoadin
           variant="primary"
           onClick={onSubmit}
           loading={isLoading}
-          title={isEdit ? 'Update' : 'Submit'}
+          title={title ? title:  isEdit ? 'Update' : 'Submit'}
         />
       )}
     </div>

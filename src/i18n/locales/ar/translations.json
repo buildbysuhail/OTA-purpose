@@ -585,5 +585,6 @@
   "hide":"يخفي",
   "account_payable_aging_report": "تقرير تقادم الحسابات الدائنة",
   "account_receivable_aging_report": "تقرير تقادم الحسابات المدينة",
-  "days": "الأيام"
+  "days": "الأيام",
+  "delete_all":"Delete All"
 }

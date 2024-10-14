@@ -319,7 +319,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           />
           <ERPButton
             title="Load Rights"
-            variant="secondary"
+            variant="primary"
             disabled={true}
             // disabled={postDataLoading}
             // loading={postDataLoading}

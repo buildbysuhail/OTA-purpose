@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
+  toggleCurrencyMasterPopup,
   togglePartyCategoryPopup,
 } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -21,32 +22,25 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<CurrencyData>({
       url: Urls.account_currency_master,
-      onSuccess: useCallback(
-        () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null })),
-        [dispatch]
-      ),
+      // onSuccess: useCallback(
+      //   () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null })),
+      //   [dispatch]
+      // ),
+      onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,reload:true })), [dispatch]),
       key: rootState.PopupData.currencyMaster.key,
       useApiClient: true,
       initialData: initialCurrency,
     });
 
   const onClose = useCallback(() => {
-    dispatch(togglePartyCategoryPopup({ isOpen: false, key: null }));
+    dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
   }, []);
 
   const { t } = useTranslation();
-//   currencyId: number;
-//   currencyCode: string;
-//   currencyName: string;
-//   currencySymbol: string;
-//   subUnit: string;
-//   subUnitSymbol: string;
-//   countryId: number;
-//   countryName: string;
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
-      <ERPDataCombobox
+        <ERPDataCombobox
           {...getFieldProps("countryId")}
           field={{
             id: "countryId",
@@ -62,14 +56,50 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("currencyCode")}
-          label="currencyCode"
+          label="Currency Code"
           placeholder="currencyCode"
-          required={true}
+          required={false}
           onChangeData={(data: any) =>
             handleFieldChange("currencyCode", data)
           }
         />
-        <ERPCheckbox
+        <ERPInput
+          {...getFieldProps("currencyName")}
+          label="Currency Name"
+          placeholder="currencyName"
+          required={true}
+          onChangeData={(data: any) =>
+            handleFieldChange("currencyName", data)
+          }
+        />
+        <ERPInput
+          {...getFieldProps("currencySymbol")}
+          label="Currency Symbol"
+          placeholder="currencySymbol"
+          required={false}
+          onChangeData={(data: any) =>
+            handleFieldChange("currencySymbol", data)
+          }
+        />
+        <ERPInput
+          {...getFieldProps("subUnit")}
+          label="sub Unit"
+          placeholder="subUnit"
+          required={false}
+          onChangeData={(data: any) =>
+            handleFieldChange("subUnit", data)
+          }
+        />
+        <ERPInput
+          {...getFieldProps("subUnitSymbol")}
+          label="Sub Unit Symbol"
+          placeholder="subUnitSymbol"
+          required={false}
+          onChangeData={(data: any) =>
+            handleFieldChange("subUnitSymbol", data)
+          }
+        />
+        {/* <ERPCheckbox
           {...getFieldProps("isEdit")}
           label="isEdit"
           onChangeData={(data: any) => handleFieldChange("isEdit", data)}
@@ -78,7 +108,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           {...getFieldProps("isDelete")}
           label="isDelete"
           onChangeData={(data: any) => handleFieldChange("isDelete", data)}
-        />
+        /> */}
       </div>
       <ERPFormButtons
         onClear={handleClear}

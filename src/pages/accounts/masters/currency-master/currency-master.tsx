@@ -8,6 +8,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
+import { PartyCategoryManage } from "./currency-master-manage";
 
 
 const  CurrencyMaster = () => {
@@ -97,12 +98,12 @@ const  CurrencyMaster = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.countryId }) }}
+          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.countryId }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url:Urls?.account_party_category,key: cellElement?.data?.id
+            url:Urls?.account_currency_master,key: cellElement?.data?.countryId
           }}
         />
       ),
@@ -132,13 +133,13 @@ const  CurrencyMaster = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
-        title={"Privilege Card"}
+        title={t("currency")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
         }}
-        // content={<PartyCategoryManage/>}
+        content={<PartyCategoryManage/>}
       />
     </Fragment>
   );

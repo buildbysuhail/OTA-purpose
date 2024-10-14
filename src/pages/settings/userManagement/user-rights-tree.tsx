@@ -42,7 +42,7 @@ const UserTypeTree = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ height: '620px', overflowY: 'scroll', overflowX: 'hidden' }}>
       <TreeList
         id="employees"
         dataSource={employees}

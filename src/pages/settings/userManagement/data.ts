@@ -124,6 +124,177 @@ export const employees = [{
     Head_ID: 5,
     Full_Name: 'Print',
   },
+  {
+    ID: 27,
+    Head_ID: 6,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 28,
+    Head_ID: 6,
+    Full_Name: 'Edit',
+  },{
+    ID: 29,
+    Head_ID: 6,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 30,
+    Head_ID: 6,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 31,
+    Head_ID: 7,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 32,
+    Head_ID: 7,
+    Full_Name: 'Edit',
+  },{
+    ID: 33,
+    Head_ID: 7,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 34,
+    Head_ID: 7,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 35,
+    Head_ID: 8,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 36,
+    Head_ID: 8,
+    Full_Name: 'Edit',
+  },{
+    ID: 37,
+    Head_ID: 8,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 38,
+    Head_ID: 8,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 39,
+    Head_ID: 9,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 40,
+    Head_ID: 9,
+    Full_Name: 'Edit',
+  },{
+    ID: 41,
+    Head_ID: 9,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 42,
+    Head_ID: 9,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 43,
+    Head_ID: 10,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 44,
+    Head_ID: 10,
+    Full_Name: 'Edit',
+  },{
+    ID: 45,
+    Head_ID: 10,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 46,
+    Head_ID: 10,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 47,
+    Head_ID: 11,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 48,
+    Head_ID: 11,
+    Full_Name: 'Edit',
+  },{
+    ID: 49,
+    Head_ID: 11,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 50,
+    Head_ID: 11,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 47,
+    Head_ID: 12,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 48,
+    Head_ID: 12,
+    Full_Name: 'Edit',
+  },{
+    ID: 49,
+    Head_ID: 12,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 50,
+    Head_ID: 12,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 51,
+    Head_ID: 13,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 52,
+    Head_ID: 13,
+    Full_Name: 'Edit',
+  },{
+    ID: 53,
+    Head_ID: 13,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 54,
+    Head_ID: 13,
+    Full_Name: 'Print',
+  },
+  {
+    ID: 55,
+    Head_ID: 14,
+    Full_Name: 'Add',
+    Prefix: 'Mr.',
+  }, {
+    ID: 56,
+    Head_ID: 14,
+    Full_Name: 'Edit',
+  },{
+    ID: 57,
+    Head_ID: 14,
+    Full_Name: 'Delete',
+  },
+  {
+    ID: 58,
+    Head_ID: 14,
+    Full_Name: 'Print',
+  },
 
 ];
   

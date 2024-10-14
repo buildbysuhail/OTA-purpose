@@ -55,7 +55,7 @@ const UserTypeTree = () => {
         parentIdExpr="Head_ID"
         onSelectionChanged={onSelectionChanged}
       >
-        <Selection recursive={recursive} mode="multiple" />
+        <Selection recursive={true} mode="multiple" />
         <Column dataField="Full_Name" />
         {/* <Column dataField="Title" caption="Position" />
         <Column dataField="City" />

@@ -25,7 +25,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
     useFormManager<PartyCategoryData>({
       url: Urls.account_party_category,
       onSuccess: useCallback(
-        () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null })),
+        () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null ,reload:true  })),
         [dispatch]
       ),
       key: rootState.PopupData.partyCategory.key,

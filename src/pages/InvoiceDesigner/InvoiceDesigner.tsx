@@ -167,14 +167,10 @@ const InvoiceDesigner = () => {
 
     }
     await dispatch(setTemplate(activeTemplate));
-    // if (postData != undefined && templateImages?.background_image) { postData.background_image = templateImages?.background_image };
-    // if (templateImages?.background_image_header) postData.background_image_header = templateImages?.background_image_header;
-    // if (templateImages?.background_image_footer) postData.background_image_footer = templateImages?.background_image_footer;
-    // if (templateImages?.signature_image) postData.signature_image , templateImages?.signature_image;
-
     setLoading(true); 
     var res = await api.postAsync(Urls.templates, activeTemplate);
-      debugger;
+      debugger;      
+      setLoading(false);
       handleResponse(res, () => {
         ERPToast.show("Template saved successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);

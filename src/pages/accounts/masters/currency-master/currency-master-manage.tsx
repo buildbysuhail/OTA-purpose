@@ -41,16 +41,16 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPDataCombobox
-          {...getFieldProps("countryId")}
+          {...getFieldProps("countryID")}
           field={{
-            id: "countryId",
+            id: "countryID",
             required: true,
             getListUrl: Urls.data_countries,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("countryId", data);
+            handleFieldChange("countryID", data);
           }}
           label={t("country")}
         />

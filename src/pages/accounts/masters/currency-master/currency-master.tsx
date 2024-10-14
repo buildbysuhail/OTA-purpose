@@ -16,15 +16,15 @@ const  CurrencyMaster = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    {
-        dataField: "currencyId",
-        caption: "Currency ID", 
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
+      // {
+      //   dataField: "currencyid",
+      //   caption: "Currency ID", 
+      //   dataType: "number",
+      //   allowSorting: true,
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   minWidth: 100,
+      // },
       {
         dataField: "currencyCode",
         caption: "Currency Code", 
@@ -71,6 +71,15 @@ const  CurrencyMaster = () => {
         minWidth: 100,
       },
       {
+        dataField: "countryName",
+        caption: "Country Name", 
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 150,
+      },
+      {
         dataField: "countryId",
         caption: "Country ID", 
         dataType: "number",
@@ -79,15 +88,7 @@ const  CurrencyMaster = () => {
         allowFiltering: true,
         minWidth: 100,
       },
-      {
-        dataField: "countryName",
-        caption: "Country Name", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-    },
+      
     {
       dataField: "actions",
       caption: "Actions",
@@ -98,12 +99,12 @@ const  CurrencyMaster = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.countryId }) }}
-          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.countryId }) }}
+          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
+          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url:Urls?.account_currency_master,key: cellElement?.data?.countryId
+            url:Urls?.account_currency_master,key: cellElement?.data?.currencyId
           }}
         />
       ),

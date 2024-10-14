@@ -62,7 +62,7 @@ const UserTypeTree = () => {
         <Column dataField="State" /> */}
         {/* <Column width={120} dataField="Hire_Date" dataType="date" /> */}
       </TreeList>
-      <div className="options">
+      {/* <div className="options">
         <div className="caption">Options</div>
         <div className="option">
           <span>Selection Mode</span>{' '}
@@ -86,9 +86,10 @@ const UserTypeTree = () => {
           <span>
             { selectedEmployeeNames }
           </span>
-        </div>
+        </div> */}
       </div>
-    </div>
+     
+    // </div>
   );
 };
 

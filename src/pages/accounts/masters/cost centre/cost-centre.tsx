@@ -57,12 +57,13 @@ const CostCentre = () => {
       width: 180,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.costCentreID }) }}
+          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.costCentreID }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
+            url: Urls?.cost_center,
+            key: cellElement?.data?.costCentreID,
           }}
         />
       ),
@@ -83,7 +84,7 @@ const CostCentre = () => {
                   popupAction={toggleCostCentrePopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.costCentre?.reload}
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
             </div>

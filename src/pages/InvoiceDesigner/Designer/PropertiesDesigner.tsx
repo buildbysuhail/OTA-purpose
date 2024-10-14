@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 
@@ -11,6 +11,7 @@ import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { TemplateGroupTypes } from "../constants/TemplateCategories";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { setTemplateThumbImage } from "../../../redux/slices/templates/reducer";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -34,23 +35,14 @@ const retailPageSizes = [
 ]
 
 
-const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup, tempImages }) => {
+const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState, onChange, templateGroup }) => {
 
   /* ########################################################################################### */
 
+  const dispatch = useDispatch();
   const inputFile = useRef<HTMLInputElement>(null);
   const [currentTab, setTab] = useState<"temp_props" | "font_props" | "bg_props" | "">("temp_props");
-  const { templateImages, setTemplateImages } = tempImages
 
-
-  const bgImage = templateImages?.background_image
-  let backgroundImageThumbnail: string | null = null;
-
-  if (bgImage && isFile(bgImage)) {
-    if (bgImage.size < 1e6) { backgroundImageThumbnail = URL.createObjectURL(bgImage) }
-  } else {
-    backgroundImageThumbnail = bgImage;
-  }
 
   const isRetailTemplate = () => {
     return (["3Inch", "4Inch"]?.includes(propertiesState?.pageSize!));
@@ -344,10 +336,10 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               bgImage ?
                 <>
                   <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
-                  {backgroundImageThumbnail && <img src={backgroundImageThumbnail} alt="background_image" height={100} width={100} className="size-5" />}
+                  {backgroundImageThumbnail && <img src={backgroundImageThumbnail} alt="background_image" height={100} width={100} className="size-5" />}21`1`
                   <div
                     className="text-accent text-xs cursor-pointer max-w-min"
-                    onClick={() => {
+                    onClick={() => { dispatch(setTemplateThumbImage(''))
                       setTemplateImages((prevData) => ({ ...prevData, background_image: null }));
                       inputFile.current!.value = ""
                     }}

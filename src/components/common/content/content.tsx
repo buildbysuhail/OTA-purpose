@@ -106,7 +106,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/party-category" element={<PartyCategory />} />
         <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
         {/* cost center */}
-        <Route path="account-masters/cost-center" element={<CostCenter />} />
+        <Route path="/account-masters/cost-center" element={<CostCenter />} />
         {/* Branch Ledger */}
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         {/* Accounts End */}

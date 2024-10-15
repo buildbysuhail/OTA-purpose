@@ -165,7 +165,8 @@ const Urls = {
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
   sql_commands: "/Core/SQLCommand",
-
+ get_notification_settings:"/Core/TransactionNotification",
+ notification_template:"/Core/NotificationTemplate",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",
@@ -189,6 +190,8 @@ const Urls = {
  acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
 
   // Accounts End
+
+  
   //Templates
   templates: "/Core/Template/",
   crm_templates: "/Core/Template/CRM/",

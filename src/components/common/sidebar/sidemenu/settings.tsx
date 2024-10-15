@@ -112,6 +112,7 @@ export const SettingsMenuItems = [
       { action: toggleResetBranchDataForSync, type: 'popup', active: false, selected: false, title: 'reset_branch_data_for_sync' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications' },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'Notification Settings' },
     ]
   },
   {

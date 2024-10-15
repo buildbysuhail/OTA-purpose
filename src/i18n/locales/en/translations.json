@@ -216,7 +216,7 @@
 
   "actions" : "Actions",
   "users":"Users",
-  "si_no" : "SI",
+  "si_no" : "SiNo",
   "user" : "User",
   "counter" : "Counter" ,
   "created_user" : "Created User",

@@ -18,7 +18,7 @@ const SystemVoucher = () => {
   const columns: DevGridColumn[] = useMemo( () => [
     {
       dataField: "siNo",
-      caption: t("SiNo"),
+      caption:  t("si_no"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -77,12 +77,14 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
       minWidth: 100,
     },
     {
       dataField: "printDesignFileName",
       caption: t("printDesign_fileName"),
       dataType: "string",
+      visible:false,
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,

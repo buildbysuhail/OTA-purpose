@@ -1,0 +1,57 @@
+export const initialBankCards = {
+  data: {
+    accGroupID: 0,
+    branchID: 0,
+    accGroupName: '',
+    shortName: '',
+    parentGroupID: 0,
+    remarks: '',
+    isEditable: true,
+    isDeletable: true,
+    isProtected: true,
+    isCommon: true,
+    createdUserID: 0,
+    aStatus: '',
+    displayOrder: 0,
+    arabicName: '',
+    modifiedUserID: 0,
+    reasonForModification: ''
+  },
+  validations: {
+    accGroupID: '',
+    branchID: '',
+    accGroupName: '',
+    shortName: '',
+    parentGroupID: '',
+    remarks: '',
+    isEditable: '',
+    isDeletable: '',
+    isProtected: '',
+    isCommon: '',
+    createdUserID: '',
+    aStatus: '',
+    displayOrder: '',
+    arabicName: '',
+    modifiedUserID: '',
+    reasonForModification: ''
+  },
+};
+
+ export interface BankCardsData {
+  accGroupID: number,
+  branchID: number,
+  accGroupName: string,
+  shortName: string,
+  parentGroupID: number,
+  remarks: string,
+  isEditable: boolean,
+  isDeletable: boolean,
+  isProtected: boolean,
+  isCommon: boolean,
+  createdUserID: number,
+  aStatus: string,
+  displayOrder: number,
+  arabicName: string,
+  modifiedUserID: number,
+  reasonForModification: string
+}

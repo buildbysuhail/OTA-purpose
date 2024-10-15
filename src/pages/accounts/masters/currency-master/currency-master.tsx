@@ -8,6 +8,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
+import { PartyCategoryManage } from "./currency-master-manage";
 
 
 const  CurrencyMaster = () => {
@@ -15,15 +16,15 @@ const  CurrencyMaster = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    {
-        dataField: "currencyId",
-        caption: "Currency ID", 
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
+      // {
+      //   dataField: "currencyid",
+      //   caption: "Currency ID", 
+      //   dataType: "number",
+      //   allowSorting: true,
+      //   allowSearch: true,
+      //   allowFiltering: true,
+      //   minWidth: 100,
+      // },
       {
         dataField: "currencyCode",
         caption: "Currency Code", 
@@ -70,6 +71,15 @@ const  CurrencyMaster = () => {
         minWidth: 100,
       },
       {
+        dataField: "countryName",
+        caption: "Country Name", 
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 150,
+      },
+      {
         dataField: "countryId",
         caption: "Country ID", 
         dataType: "number",
@@ -78,15 +88,7 @@ const  CurrencyMaster = () => {
         allowFiltering: true,
         minWidth: 100,
       },
-      {
-        dataField: "countryName",
-        caption: "Country Name", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-    },
+      
     {
       dataField: "actions",
       caption: "Actions",
@@ -97,12 +99,12 @@ const  CurrencyMaster = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
+          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url:Urls?.account_party_category,key: cellElement?.data?.id
+            url:Urls?.account_currency_master,key: cellElement?.data?.currencyId
           }}
         />
       ),
@@ -132,13 +134,13 @@ const  CurrencyMaster = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
-        title={"Privilege Card"}
+        title={t("currency")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
         }}
-        // content={<PartyCategoryManage/>}
+        content={<PartyCategoryManage/>}
       />
     </Fragment>
   );

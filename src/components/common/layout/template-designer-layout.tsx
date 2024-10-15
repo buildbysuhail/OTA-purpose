@@ -22,7 +22,7 @@ const loading = (
     <div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
   </div>
 );
-const FullLayout: FC<LayoutProps> = ({  }) => {
+const TemplateDesignerLayout: FC<LayoutProps> = ({  }) => {
   // const Bodyclickk = () => {
   //   if (localStorage.getItem("ynexverticalstyles") == "icontext") {
   //     setMyClass("");
@@ -46,4 +46,4 @@ const FullLayout: FC<LayoutProps> = ({  }) => {
     </>
   );
 };
-export default FullLayout;
+export default TemplateDesignerLayout;

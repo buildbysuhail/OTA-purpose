@@ -9,7 +9,7 @@ import Cash from '../../../pages/accounts/masters/reports/cash';
 import ReportList from '../../ERPComponents/reports/reports-list';
 import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
 import AccountReceivableAgingReport from '../../../pages/accounts/masters/reports/account-receivable-aging-report';
-import FullLayout from '../layout/full-layout';
+import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -113,10 +113,7 @@ const Content: FC<ContentProps> = () => {
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />
         
-        <Route
-                path="/templates/invoice_designer/*"
-                element={<FullLayout  />}
-              />
+       
         
         {/* Templates ends */}
 

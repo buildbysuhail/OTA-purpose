@@ -317,12 +317,20 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
                 : 0
             }
           />
+          <ERPButton
+            title="Load Rights"
+            variant="primary"
+            disabled={true}
+            // disabled={postDataLoading}
+            // loading={postDataLoading}
+            // onClick={handleSubmit}
+          />
         </div>
 
         {/* Form Buttons */}
         <div className="flex justify-center mt-6">
           <ERPButton
-            title="Reset"
+            title="Save"
             variant="primary"
             disabled={postDataLoading}
             loading={postDataLoading}

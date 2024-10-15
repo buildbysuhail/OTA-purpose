@@ -144,6 +144,9 @@ const popupDataSlice = createSlice({
     toggleAccountGroupPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.accountGroup = action.payload;
     },
+    toggleBankCardsPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.accountGroup = action.payload;
+    },
     toggleAccountLedgerPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.accountLedger = action.payload;
     },
@@ -211,6 +214,7 @@ export const {
   toggleResetDataBasePopup,
   toggleCommandsPopup,
   toggleAccountGroupPopup,
+  toggleBankCardsPopup,
   toggleAccountLedgerPopup,
   toggleCostCentrePopup,
   toggleBranchLedgerPopup,

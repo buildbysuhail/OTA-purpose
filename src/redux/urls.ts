@@ -35,6 +35,7 @@ const Urls = {
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
+  data_Bank_Cards: "/Accounts/Data/BankCards/",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
   data_costcentres: "/Accounts/Data/CostCentres/",
   data_parties: "/Accounts/Data/Parties/",
@@ -180,7 +181,7 @@ const Urls = {
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",
   account_privilege_card: "/Accounts/PrivilegeCards",
-  branch_ledger: "/Accounts/BranchLedger/",
+  branch_ledger: "/Accounts/BranchLedgers/",
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
   //Reports

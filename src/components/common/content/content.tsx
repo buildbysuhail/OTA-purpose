@@ -37,6 +37,7 @@ const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transacti
 // Inventory End
 // Acc Starts
 const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/account-groups/account-group'));
+const BankCards = lazy(() => import('../../../pages/accounts/masters/bank-cards/bank-cards'));
 const AccountsLedger = lazy(() => import('../../../pages/accounts/masters/account-ledgers/account-ledger'));
 const CostCenter = lazy(() => import('../../../pages/accounts/masters/cost centre/cost-centre'));
 const BranchLedger = lazy(() => import('../../../pages/accounts/masters/branch ledger/branch-ledger'));
@@ -44,9 +45,13 @@ const PartyCategory = lazy(() => import('../../../pages/accounts/masters/account
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
 const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
-
-
 // Acc End
+
+//integration 
+const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
+const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
+const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
+
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -101,16 +106,21 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Start */}
         {/* Masters */}
         <Route path="account-masters/account-group" element={<AccountsMasters />} />
+        <Route path="account-masters/Bank-Cards" element={<BankCards />} />
         <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
         <Route path="account-masters/party-category" element={<PartyCategory />} />
         <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
-        {/* cost center */}
-        <Route path="account-masters/cost-center" element={<CostCenter />} />
-        {/* Branch Ledger */}
+        <Route path="/account-masters/cost-center" element={<CostCenter />} />
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         {/* Accounts End */}
         {/* Templates starts */}
+
+        {/* Integration Start */}
+        <Route path="/integration/sms" element={<SmsIntegration />} />
+        <Route path="/integration/whatsapp" element={<WhatsappIntegration/>} />
+        <Route path="/integration/email" element={<EmailIntegration />} />
+        {/* Integration End */}
         <Route path="/templates" element={<Templates />} />
         
        

@@ -113,5 +113,22 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications' },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
     ]
-  }
+  },
+  {
+    icon: (<UserIcon className="side-menu__icon" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'integration',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    children: [
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'Sms Integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'WhatsApp Integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'Email Integration' },
+    
+    ]
+  },
 ];

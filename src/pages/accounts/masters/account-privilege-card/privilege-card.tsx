@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { PrivilegeCardManage } from "./privilege-card-manage";
 
 
-const  PrivilegeCard = () => {
+const PrivilegeCard = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -165,7 +165,8 @@ const  PrivilegeCard = () => {
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
+            url: Urls?.account_privilege_card,
+            key: cellElement?.data?.id,
           }}
         />
       ),
@@ -201,7 +202,7 @@ const  PrivilegeCard = () => {
         closeModal={() => {
           dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null }));
         }}
-        content={<PrivilegeCardManage/>}
+        content={<PrivilegeCardManage />}
       />
     </Fragment>
   );

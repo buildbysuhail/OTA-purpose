@@ -247,7 +247,7 @@ const Templates = ({ }) => {
                                 <PencilIcon
                                   title="Edit"
                                   className="w-3 text-accent cursor-pointer"
-                                  onClick={() => navigate(`/templates/invoice_designer/${temp?.id}?template_group=${templateGroup}`)}
+                                  onClick={() => navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`)}
                                 />
                               </div>
                             )}
@@ -367,7 +367,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
     ));
-    navigate(`/templates/invoice_designer/new?template_group=${templateGroup}`);
+    navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };
 
   return (

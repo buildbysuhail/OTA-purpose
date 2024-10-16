@@ -11,7 +11,7 @@ import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { TemplateGroupTypes } from "../constants/TemplateCategories";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { setTemplateThumbImage } from "../../../redux/slices/templates/reducer";
+import { setTemplate, setTemplateThumbImage } from "../../../redux/slices/templates/reducer";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -314,7 +314,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
                 if (e.target.files[0].size > 2097152) {
                   ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
                 } else {
-                  setTemplateImages((prevData) => ({ ...prevData, background_image: e.target.files[0] }))
+                  setTemplate((prevData: any) => ({ ...prevData, background_image: e.target.files[0]}))
                 }
               }}
               className={"hidden"}

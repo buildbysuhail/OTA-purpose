@@ -53,6 +53,7 @@ const AssociatedCustomerPDFList = [
 const AssociatedVendorPDFList = ["purchase_invoice", "purchase_order"];
 
 const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_invoice", showOptions = true, endpointUrl }: InvoicePreviewProps) => {
+  debugger;
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();

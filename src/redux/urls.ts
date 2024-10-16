@@ -165,7 +165,8 @@ const Urls = {
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
   sql_commands: "/Core/SQLCommand",
-
+  notification_provider:"/Core/NotificationProvider/",
+ 
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",

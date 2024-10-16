@@ -587,5 +587,8 @@
   "account_payable_aging_report":"Account Payable Aging Report",
   "account_receivable_aging_report":"Account Receivable Aging Report",
   "days":"Days",
-  "delete_all":"Delete All"
+  "delete_all":"Delete All" ,
+
+  "sms_integration": "SMS Integration" ,
+  "twilio": "Twilio" 
 }

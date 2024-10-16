@@ -24,7 +24,7 @@ const AccountGroupType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
       isLocked: true,
     },
     {
@@ -33,7 +33,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "accGroupName",
@@ -41,7 +41,6 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "shortName",
@@ -49,7 +48,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "parentGroup",
@@ -57,7 +56,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "remarks",
@@ -65,7 +64,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "isEditable",
@@ -73,7 +72,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "isDeletable",
@@ -81,7 +80,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "isProtected",
@@ -89,7 +88,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "isCommon",
@@ -97,7 +96,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "createdUser",
@@ -105,7 +104,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "createdDate",
@@ -113,7 +112,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "modifiedUser",
@@ -121,7 +120,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "modifiedDate",
@@ -129,7 +128,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "reasonForModification",
@@ -137,7 +136,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "parentGroupId",
@@ -145,7 +144,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "arabicName",
@@ -153,7 +152,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "displayOrder",
@@ -161,7 +160,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "actions",

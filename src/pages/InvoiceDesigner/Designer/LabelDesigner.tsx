@@ -4,10 +4,12 @@ import { BarcodeState, TemplateState } from "./interfaces";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-select";
+// import ERPDataCombobox from "../../../components/ERPComponents/erp-select";
 import { useSelector } from "react-redux";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+
 
 interface LabelDesignerProps {
   onChange: (state: BarcodeState) => void;
@@ -54,7 +56,7 @@ const barcodeData = [
 ];
 const LabelDesigner = ({ template, onChange }: LabelDesignerProps) => {
   const [searchParams] = useSearchParams();
-  const [currentTab, setTab] = useState<"common_settings" | "another_settings" | "">("");
+  const [currentTab, setTab] = useState<"common_settings" | "another_settings" | "other_settings" | "">("");
   const templateGroup = searchParams?.get("template_group");
 
   const barcodeState = template?.barcodeState;
@@ -207,8 +209,7 @@ const LabelDesigner = ({ template, onChange }: LabelDesignerProps) => {
       }
 
       <div className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
-        onClick={() => setTab(currentTab === "another_settings" ? "" : "another_settings")}
-      >
+        onClick={() => setTab(currentTab === "another_settings" ? "" : "another_settings")}>
         Another Settings<ChevronDownIcon className={`h-5 ${currentTab === "another_settings" ? "" : "-rotate-90"} transition-all`} />
       </div>
 
@@ -277,7 +278,7 @@ const LabelDesigner = ({ template, onChange }: LabelDesignerProps) => {
               defaultValue={barcodeState?.field}
               handleChange={(id, value) => onChange({ ...barcodeState, field: value.value })}
               options={[
-                // Add your field options here
+
               ]}
             />
 
@@ -296,7 +297,7 @@ const LabelDesigner = ({ template, onChange }: LabelDesignerProps) => {
               handleChange={(id, value) => onChange({ ...barcodeState, format: value.value })}
               options={[
                 { label: "NONE", value: "NONE" },
-                // Add other format options here
+
               ]}
             />
 
@@ -379,14 +380,52 @@ const LabelDesigner = ({ template, onChange }: LabelDesignerProps) => {
               variant="secondary"
               onClick={handleClear}
             />
-            {/* <ERPButton
-            type="reset"
-            title="Delete"
-            variant="primary"
-            onClick={handleDelete}
-          /> */}
+            <ERPButton
+              type="reset"
+              title="Delete"
+              variant="primary"
+            // onClick={handleDelete}
+            />
           </div>
         </div>}
+
+      <div className="flex justify-between items-center pb-4 border-b cursor-pointer bg-white p-4"
+        onClick={() => setTab(currentTab === "other_settings" ? "" : "other_settings")}>
+        Other Settings<ChevronDownIcon className={`h-5 ${currentTab === "other_settings" ? "" : "-rotate-90"} transition-all`} />
+      </div>
+      {currentTab === "other_settings" &&
+        <div className="flex flex-col gap-5 bg-white p-4">
+          <div className="grid grid-cols-1 gap-6">
+            <ERPCheckbox
+              checked={barcodeState?.autoSave}
+              id="autoSave"
+              label="Auto Save Designer File"
+              onChange={(e) => onChange({ ...barcodeState, autoSave: e.target.checked })}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <ERPButton
+              type="button"
+              title="Set Default"
+              variant="secondary"
+              className="text-xs px-4 py-2 font-bold"
+            />
+
+            <ERPButton
+              type="button"
+              title="Set Default2"
+              variant="secondary"
+            // onClick={handleDefault2}
+            />
+            <ERPButton
+              type="button"
+              title="Set Default Tag"
+              variant="secondary"
+            // onClick={handleDefaultTag}
+            />
+          </div>
+        </div>
+      }
     </div>
   );
 };

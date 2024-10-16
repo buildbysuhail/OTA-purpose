@@ -24,7 +24,7 @@ const AccountLedgerType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
       isLocked: true,
     },
     {
@@ -33,7 +33,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "ledgerCode",
@@ -41,7 +41,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "ledger",
@@ -49,7 +49,6 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
     },
     {
       dataField: "accGroupName",
@@ -57,7 +56,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "aliasName",
@@ -65,7 +64,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "remarks",
@@ -73,7 +72,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      minWidth: 150,
     },
     {
       dataField: "isDeletable",
@@ -81,7 +80,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "isEditable",
@@ -89,7 +88,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "createdUser",
@@ -97,7 +96,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "createdDate",
@@ -105,7 +104,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "modifiedUser",
@@ -113,7 +112,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "modifiedDate",
@@ -121,7 +120,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width:100,
     },
     {
       dataField: "accountGroupId",
@@ -129,7 +128,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "isBillwiseApplicable",
@@ -137,7 +136,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "isActive",
@@ -145,7 +144,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "isCostCenterApplicable",
@@ -153,7 +152,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "isCommon",
@@ -161,7 +160,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 100,
     },
     {
       dataField: "arabicName",
@@ -169,7 +168,7 @@ const AccountLedgerType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "actions",

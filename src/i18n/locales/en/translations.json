@@ -587,5 +587,10 @@
   "account_payable_aging_report":"Account Payable Aging Report",
   "account_receivable_aging_report":"Account Receivable Aging Report",
   "days":"Days",
-  "delete_all":"Delete All"
+  "delete_all":"Delete All",
+
+  "sub_unit_symbol":"Sub Unit Symbol",
+  "country_name":"Country Name",
+  "country_ID":"Country ID",
+  "update":"Update"
 }

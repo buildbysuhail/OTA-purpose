@@ -23,7 +23,7 @@ const  PrivilegeCard = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "branchID",
@@ -31,7 +31,7 @@ const  PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "cardNumber",
@@ -47,7 +47,6 @@ const  PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "address1",
@@ -55,7 +54,6 @@ const  PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "address2",
@@ -63,7 +61,6 @@ const  PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "phone",
@@ -71,7 +68,7 @@ const  PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "mobile",
@@ -79,7 +76,7 @@ const  PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "email",
@@ -87,7 +84,7 @@ const  PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "dob",
@@ -103,7 +100,7 @@ const  PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "cardType",
@@ -119,7 +116,7 @@ const  PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "expiryDate",
@@ -143,7 +140,7 @@ const  PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
       dataField: "opBalance",

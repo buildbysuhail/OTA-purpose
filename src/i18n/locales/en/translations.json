@@ -592,5 +592,8 @@
   "sub_unit_symbol":"Sub Unit Symbol",
   "country_name":"Country Name",
   "country_ID":"Country ID",
-  "update":"Update"
+  "update":"Update",
+
+  "sms_integration": "SMS Integration" ,
+  "twilio": "Twilio" 
 }

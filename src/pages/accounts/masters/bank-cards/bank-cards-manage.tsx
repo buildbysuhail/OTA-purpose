@@ -1,17 +1,14 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
+import { toggleBankCardsPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { ActionType } from "../../../../redux/types";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
-import { BankCardsData } from "./bank-cards-type";
-import { initialAccountGroup } from "../account-groups/account-group-types";
+import { BankCardsData, initialBankCards } from "./bank-cards-type";
 
 export const BankCardsManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -26,15 +23,15 @@ export const BankCardsManage: React.FC = React.memo(() => {
     isLoading,
     formState
   } = useFormManager<BankCardsData>({
-    url: Urls.account_group,
-    onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
-    key: rootState.PopupData.accountGroup.key,
+    url: Urls.data_Bank_Cards,
+    onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    key: rootState.PopupData.bankCard.key,
     useApiClient: true,
-    initialData: initialAccountGroup,
+    initialData: initialBankCards,
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
+    dispatch(toggleBankCardsPopup({ isOpen: false, key: null }));
   }, []);
 
   const { t } = useTranslation();
@@ -43,48 +40,46 @@ export const BankCardsManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
+          {...getFieldProps("paymentType")}
           field={{
-            id: "accGroupID",
+            id: "paymentType",
             required: true,
-            getListUrl: Urls.data_acc_groups,
+            getListUrl: Urls.data_Bank_Cards,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data)
+            handleFieldChange("paymentType", data)
           }}
-          // label={t("group_under")}
           label={("Debit Cards")}
         />
         <ERPInput
-          {...getFieldProps('accGroupName')}
+          {...getFieldProps('paymentName')}
           label= "Card Name"
           placeholder= "Card Name"
           required={true}
-          onChangeData={(data: any) => {  handleFieldChange('accGroupName', data) }}
+          onChangeData={(data: any) => {  handleFieldChange('paymentName', data) }}
         />
         <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
+          {...getFieldProps("ledgerID")}
           field={{
-            id: "accGroupID",
+            id: "ledgerID",
             required: true,
-            getListUrl: Urls.data_acc_groups,
+            getListUrl: Urls.data_Bank_Cards,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data)
+            handleFieldChange("ledgerID", data)
           }}
-          // label={t("group_under")}
           label={("Ledger")}
         />
         <ERPInput
-          {...getFieldProps('arabicName')}
+          {...getFieldProps('remarks')}
           label= "Remark"
           placeholder= "Remark"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('arabicName', data)}
+          onChangeData={(data: any) => handleFieldChange('remarks', data)}
         />
         
       </div>

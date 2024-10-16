@@ -37,6 +37,7 @@ interface popupData {
   revertBillModifications: popupDataProps
   resetBranchDataForSync: popupDataProps
   refreshAllBranches: popupDataProps
+  bankCard: popupDataProps
 }
 const initialState: popupData = {
   userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true},
@@ -70,6 +71,7 @@ const initialState: popupData = {
   revertBillModifications: { isOpen: false, key: null, mode: "edit", reload: true },
   resetBranchDataForSync: { isOpen: false, key: null, mode: "edit", reload: true },
   refreshAllBranches: { isOpen: false, key: null, mode: "edit", reload: true },
+  bankCard: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -145,7 +147,7 @@ const popupDataSlice = createSlice({
       state.accountGroup = action.payload;
     },
     toggleBankCardsPopup: (state, action: PayloadAction<popupDataProps>) => {
-      state.accountGroup = action.payload;
+      state.bankCard = action.payload;
     },
     toggleSMSIntegrationPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.accountGroup = action.payload;

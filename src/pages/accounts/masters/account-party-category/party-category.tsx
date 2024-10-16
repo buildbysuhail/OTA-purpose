@@ -17,79 +17,76 @@ const PartyCategory = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
-      caption: "Serial Number",
+      caption: t("si_no"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 50,
+      width: 100,
     },
     {
       dataField: "id",
-      caption: "ID",
+      caption: t("id"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 50,
+      width: 100,
     },
     {
       dataField: "partyCategory",
-      caption: "Party Category",
+      caption: t("party_category"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
     },
     {
       dataField: "remarks",
-      caption: "Remarks",
+      caption: t("remarks"),
       dataType: "string",
       allowSorting: false,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 150,
     },
     {
       dataField: "createdUser",
-      caption: "Created User",
+      caption: t("created_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
     },
     {
       dataField: "createdDate",
-      caption: "Created Date",
+      caption: t("created_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 150,
     },
     {
       dataField: "modifiedUser",
-      caption: "Modified User",
+      caption: t("modified_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
     },
     {
       dataField: "modifiedDate",
-      caption: "Modified Date",
+      caption: t("modified_date"),
       dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      width: 150,
     },
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -132,7 +129,7 @@ const PartyCategory = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Party Category"
+                  gridHeader={t("party_category")}
                   dataUrl={Urls.account_party_category}
                   gridId="grd__party_category"
                   popupAction={togglePartyCategoryPopup}
@@ -147,7 +144,7 @@ const PartyCategory = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.partyCategory.isOpen || false}
-        title={"Privilege Card"}
+        title={t("party_category")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

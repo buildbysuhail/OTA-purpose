@@ -8,6 +8,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
 import { BranchLedgerData, initialBranchLedger } from "./branch-ledger-types";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 
 export const BranchLedgerManage = () => {
   const rootState = useRootState();
@@ -15,14 +16,14 @@ export const BranchLedgerManage = () => {
 
   const {
     isEdit,
-    formState: postData,
+    handleClear,
     handleSubmit,
     handleFieldChange,
     getFieldProps,
     isLoading
   } = useFormManager<BranchLedgerData>({
     url: Urls.branch_ledger,
-    onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.branchLedger.key,
     useApiClient: true,
     initialData: initialBranchLedger
@@ -38,82 +39,70 @@ export const BranchLedgerManage = () => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
+          {...getFieldProps("refBranchID")}
           field={{
-            id: "accGroupID",
+            id: "refBranchID",
             required: true,
             getListUrl: Urls.data_acc_ledgers,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data)
+            handleFieldChange("refBranchID", data)
           }}
           label={t("reference_branch")}
         />
         <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
+          {...getFieldProps("purchaseLedgerID")}
           field={{
-            id: "accGroupID",
+            id: "purchaseLedgerID",
             required: true,
             getListUrl: Urls.data_acc_ledgers,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data)
+            handleFieldChange("purchaseLedgerID", data)
           }}
           label={t("purchase_ledger")}
         />
         <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
+          {...getFieldProps("receivableLedgerID")}
           field={{
-            id: "accGroupID",
+            id: "receivableLedgerID",
             required: true,
             getListUrl: Urls.data_acc_ledgers,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data)
+            handleFieldChange("receivableLedgerID", data)
           }}
           label={t("receivable_ledger")}
         />
         <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
+          {...getFieldProps("branchPayableLedgerID")}
           field={{
-            id: "accGroupID",
+            id: "branchPayableLedgerID",
             required: true,
             getListUrl: Urls.data_acc_ledgers,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data)
+            handleFieldChange("branchPayableLedgerID", data)
           }}
           label={t("branch_payable_ledger")}
         />
       </div>
 
       <div className="w-full p-2 flex justify-center space-x-2 mt-5">
-        <ERPButton
-          type="button"
-          title={t("save")}
-          variant="primary"
-          onClick={handleSubmit}
-          loading={isLoading}
-          disabled={isLoading}
-        />
-        <ERPButton
-          type="button"
-          title={t("clear")}
-          variant="secondary"
-        />
-        <ERPButton
-          type="button"
-          title={t("close")}
-          variant="secondary"
-          onClick={onClose}
+        <ERPFormButtons
+          onClear={handleClear}
+          isEdit={isEdit}
+          isLoading={isLoading}
+          onCancel={onClose}
+          onSubmit={handleSubmit}
         />
       </div>
     </div>

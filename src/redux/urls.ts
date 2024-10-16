@@ -35,7 +35,7 @@ const Urls = {
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
-  data_Bank_Cards: "/Accounts/Data/BankCards/",
+  data_Bank_Cards: "/Accounts/BankCards/",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
   data_costcentres: "/Accounts/Data/CostCentres/",
   data_parties: "/Accounts/Data/Parties/",
@@ -43,7 +43,7 @@ const Urls = {
   data_privilage_cards: "/Accounts/Data/PrivilageCards/",
   data_projects: "/Accounts/Data/Projects/{partyID}}",
   data_upis: "/Accounts/Data/UPIs/",
-  data_bankcards: "/Accounts/Data/BankCards",
+  data_bankcards: "/Accounts/BankCards/",
   data_vouchertype: "/Accounts/Data/VoucherType",
   data_InputCalamity: "/Accounts/Data/InputCalamity",
   data_FormTypeBySI: "/Accounts/Data/FormTypeBySI",
@@ -165,9 +165,8 @@ const Urls = {
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
   sql_commands: "/Core/SQLCommand",
- get_notification_settings:"/Core/TransactionNotification",
- notification_template:"/Core/NotificationTemplate/",
- notification_provider:"/Core/NotificationProvider/",
+ notification_transaction:"/Core/TransactionNotification",
+ notification_template:"/Core/NotificationTemplate",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",

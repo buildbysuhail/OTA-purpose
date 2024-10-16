@@ -64,7 +64,6 @@ const CostCentre = () => {
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.cost_center,
             key: cellElement?.data?.costCentreID,
-           
           }}
         />
       ),

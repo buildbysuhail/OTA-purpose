@@ -24,7 +24,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
     formState
   } = useFormManager<BankCardsData>({
     url: Urls.data_Bank_Cards,
-    onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.bankCard.key,
     useApiClient: true,
     initialData: initialBankCards,
@@ -40,25 +40,25 @@ export const BankCardsManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPDataCombobox
-          {...getFieldProps("paymentName")}
+          {...getFieldProps("paymentType")}
           field={{
-            id: "paymentName",
+            id: "paymentType",
             required: true,
             getListUrl: Urls.data_Bank_Cards,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("paymentName", data)
+            handleFieldChange("paymentType", data)
           }}
-          label={("Debit Cards")}
+          label={t("debit_cards")}
         />
         <ERPInput
-          {...getFieldProps('paymentType')}
-          label= "Card Name"
-          placeholder= "Card Name"
+          {...getFieldProps('paymentName')}
+          label={t("card_name")}
+          placeholder={t("card_name")}
           required={true}
-          onChangeData={(data: any) => {  handleFieldChange('paymentType', data) }}
+          onChangeData={(data: any) => { handleFieldChange('paymentName', data) }}
         />
         <ERPDataCombobox
           {...getFieldProps("ledgerID")}
@@ -72,16 +72,16 @@ export const BankCardsManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("ledgerID", data)
           }}
-          label={("Ledger")}
+          label={t("ledger")}
         />
         <ERPInput
           {...getFieldProps('remarks')}
-          label= "Remark"
-          placeholder= "Remark"
+          label={t("remarks")}
+          placeholder={t("remarks")}
           required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data)}
         />
-        
+
       </div>
       <ERPFormButtons
         onClear={handleClear}

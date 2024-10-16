@@ -165,8 +165,9 @@ const Urls = {
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
   sql_commands: "/Core/SQLCommand",
- notification_transaction:"/Core/TransactionNotification",
- notification_template:"/Core/NotificationTemplate",
+  notification_provider: "/Core/NotificationProvider/",
+  notification_transaction: "/Core/TransactionNotification",
+  notification_template: "/Core/NotificationTemplate",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",
@@ -187,11 +188,11 @@ const Urls = {
   account_currency_master: "/Accounts/Currency/",
   //Reports
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
- acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
+  acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
 
   // Accounts End
 
-  
+
   //Templates
   templates: "/Core/Template/",
   crm_templates: "/Core/Template/CRM/",
@@ -200,7 +201,7 @@ const Urls = {
   tax_treatment: "api/tax_treatment/",
 
   //Import Excel
-  import_parties:"/Accounts/Import/Parties"
+  import_parties: "/Accounts/Import/Parties"
 };
 
 export default Urls;

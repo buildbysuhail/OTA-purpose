@@ -166,7 +166,8 @@ const Urls = {
   application_settings: "/Core/ApplicationSettings/",
   sql_commands: "/Core/SQLCommand",
  get_notification_settings:"/Core/TransactionNotification",
- notification_template:"/Core/NotificationTemplate",
+ notification_template:"/Core/NotificationTemplate/",
+ notification_provider:"/Core/NotificationProvider/",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",

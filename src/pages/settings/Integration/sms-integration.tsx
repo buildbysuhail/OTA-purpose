@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
@@ -17,34 +17,91 @@ import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import { APIClient } from "../../../helpers/api-client";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import { handleResponse } from "../../../utilities/HandleResponse";
 
 const api = new APIClient();
+interface information {
+  AccountSid: string;
+  AuthToken: string;
+  FromPhone: string;
+}
 const SMSIntegration: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  // useEffect(() => {
-  //   loadSettings();
-  // }, []);
-
-  // const loadSettings = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const response = await api.getAsync(
-  //       `${Urls.notification_provider}GetByChannel?channel=1`
-  //     );
-
-  //     setInitalData(response);
-  //   } catch (error) {
-  //     console.error("Error loading settings:", error);
-  //   } finally {
-  //     setLoading(false);
-  //     console.log(initalData);
-  //   }
-  // };
 
   const { t } = useTranslation();
- 
 
-  const TwilioConnectPopup: React.FC = () => {
+  const SMSTwilioConnectPopup: React.FC = () => {
+    const initialState: information = {
+      AccountSid: "",
+      AuthToken: "",
+      FromPhone: "",
+    };
+    const [formState, setFormState] = useState<SMSIntegrationData[]>([]);
+    const [information, setInformation] = useState<information>(initialState);
+    const [loading, setLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
+
+    useEffect(() => {
+      if (isOpen) {
+        loadSettings();
+      }
+    }, [isOpen]);
+
+    const loadSettings =  useCallback( async() => { 
+      setLoading(true);
+      try {
+        const response: SMSIntegrationData[] = await api.getAsync(
+          `${Urls.notification_provider}GetByChannel?channel=1`
+        );
+
+        setFormState(response);
+
+        if (response.length > 0 && response[0].configJson) {
+          try {
+            const parsedConfig = JSON.parse(response[0].configJson);
+            setInformation({
+              AccountSid: parsedConfig.AccountSid || "",
+              AuthToken: parsedConfig.AuthToken || "",
+              FromPhone: parsedConfig.FromPhone || "",
+            });
+          } catch (parseError) {
+            console.error("Error parsing configJson:", parseError);
+          }
+        }
+      } catch (error) {
+        console.error("Error loading settings:", error);
+      } finally {
+        setLoading(false);
+      }
+    },[]);
+
+    const handleFieldChange = (settingName: any, value: any) => {
+      setInformation((prevSettings = {} as information) => ({
+        ...prevSettings,
+        [settingName]: value ?? "",
+      }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      const configJson = JSON.stringify(information);
+      const updatedFormState = formState.map((item) => ({
+        ...item,
+        configJson,
+      }));
+
+      try {
+        const requestBody = updatedFormState[0];
+        const response = await api.post(
+          `${Urls.notification_provider}`,
+          requestBody
+        );
+        handleResponse(response);
+      } catch (error) {
+        console.error("Error saving settings:", error);
+      }
+    };
     return (
       <div className="w-full pt-4">
         <div className="grid grid-cols-1 sm:grid-cols-1 gap-3">
@@ -76,55 +133,51 @@ const SMSIntegration: React.FC = () => {
               Enter the following details to connect Polosys Books with your
               Twilio account.
             </p>
-            {/* id: number;
-            branchId: number;
-            provider: number;
-            channel: number;
-            configJson: string;
-            isEnable: boolean; */}
 
-            <form onSubmit={(e) => e.preventDefault()}>
-              {/* <div className="mb-4"> */}
-                {/* <ERPInput
-                  {...getFieldProps("accGroupName")}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="mb-4">
+               
+                <ERPInput
+                  id="AccountSid"
+                  value={information.AccountSid}
+                  data={information}
                   label="Account SID"
-                  placeholder="Account SID*"
-                  required={true}
-                  onChangeData={(data: any) => {
-                    handleFieldChange("accGroupName", data);
-                  }}
+                  placeholder="Account SID"
+                  onChangeData={(data) =>
+                    handleFieldChange("AccountSid", data.AccountSid)
+                  }
                 />
               </div>
               <div className="mb-4">
                 <ERPInput
-                  {...getFieldProps("accGroupName")}
+                  id="AuthToken"
+                  value={information.AuthToken}
+                  data={information}
                   label="Auth Token"
-                  placeholder="Auth Token*"
-                  required={true}
-                  onChangeData={(data: any) => {
-                    handleFieldChange("accGroupName", data);
-                  }}
+                  placeholder="Auth Token"
+                  onChangeData={(data) =>
+                    handleFieldChange("AuthToken", data.AuthToken)
+                  }
                 />
               </div>
               <div className="mb-6">
                 <ERPInput
-                  {...getFieldProps("accGroupName")}
-                  label="Phone Number or Sender ID"
-                  placeholder="Phone Number or Sender ID*"
-                  required={true}
-                  onChangeData={(data: any) => {
-                    handleFieldChange("accGroupName", data);
-                  }}
+                  id="FromPhone"
+                  value={information.FromPhone}
+                  data={information}
+                  label="From Phone"
+                  placeholder="From Phone"
+                  onChangeData={(data) =>
+                    handleFieldChange("FromPhone", data.FromPhone)
+                  }
                 />
               </div>
-              <ERPFormButtons
+
+              <ERPButton
                 title="Connect with Twilio"
-                onClear={handleClear}
-                isEdit={isEdit}
-                isLoading={isLoading}
-                onCancel={() => setIsOpen(false)}
-                onSubmit={handleSubmit}
-              /> */}
+                variant="primary"
+                type="submit"
+              />
             </form>
           </div>
         </div>
@@ -213,7 +266,7 @@ const SMSIntegration: React.FC = () => {
         closeModal={() => {
           setIsOpen(false);
         }}
-        content={<TwilioConnectPopup />}
+        content={<SMSTwilioConnectPopup />}
       />
     </div>
   );

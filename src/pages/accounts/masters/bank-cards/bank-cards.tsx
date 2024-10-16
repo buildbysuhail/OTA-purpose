@@ -17,7 +17,7 @@ const BankCards = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "paymentTypeID",
-      caption: ("Payment Type ID"),
+      caption: t("payment_type_ID"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -26,7 +26,7 @@ const BankCards = () => {
     },
     {
       dataField: "branchID",
-      caption: ('Branch ID'),
+      caption: t('branch_ID'),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -34,21 +34,21 @@ const BankCards = () => {
     },
     {
       dataField: "ledgerID",
-      caption: ("Ledger ID"),
+      caption: t("ledger_ID"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
       dataField: "paymentType",
-      caption: ("Payment Type"),
+      caption: t("payment_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
       dataField: "paymentName",
-      caption: "Payment Name",
+      caption: t("payment_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -56,7 +56,7 @@ const BankCards = () => {
     },
     {
       dataField: "createdUserID",
-      caption: ("createdUserID"),
+      caption: t("created_user_ID"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -64,7 +64,7 @@ const BankCards = () => {
     },
     {
       dataField: "createdDate",
-      caption: ("Created Date"),
+      caption: t("created_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -72,7 +72,7 @@ const BankCards = () => {
     },
     {
       dataField: "modifiedUserID",
-      caption: ("Modified User ID"),
+      caption: t("modified_user_ID"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -80,7 +80,7 @@ const BankCards = () => {
     },
     {
       dataField: "modifiedDate",
-      caption: ("Modified Date"),
+      caption: t("modified_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -88,7 +88,7 @@ const BankCards = () => {
     },
     {
       dataField: "remark",
-      caption: ("Remark"),
+      caption: t("remarks"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -122,7 +122,7 @@ const BankCards = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={"Bank Cards"}
+                  gridHeader={t("bank_cards")}
                   dataUrl={Urls.data_bankcards}
                   gridId="grd_bank_cards"
                   popupAction={toggleBankCardsPopup}
@@ -137,7 +137,7 @@ const BankCards = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.bankCard.isOpen || false}
-        title={"Bank Cards"}
+        title={t("bank_cards")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

@@ -101,27 +101,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
       setIsSaving(false);
     }
   };
-  // const handleSubmit = async () => {
-  //   const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-  //     const currentValue = formState[key as keyof FormState];
-  //     const prevValue = formStatePrev[key as keyof FormState];
-
-  //     if (currentValue !== prevValue) {
-  //       acc.push({
-  //         settingsName: key,
-  //         settingsValue: currentValue.toString(),
-  //       });
-  //     }
-  //     return acc;
-  //   }, [] as { settingsName: string; settingsValue: string }[]);
-  //   const response: any = (await postAction({
-  //     apiUrl: Urls.application_setting,
-  //     data: modifiedSettings,
-  //   })) as any;
-  //   handleResponse(response);
-  //   console.log(modifiedSettings);
-  //   // You can send this list to your API or handle it as needed
-  // };
+ 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">

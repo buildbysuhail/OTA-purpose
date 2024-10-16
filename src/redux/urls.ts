@@ -165,7 +165,7 @@ const Urls = {
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
   sql_commands: "/Core/SQLCommand",
- get_notification_settings:"/Core/TransactionNotification",
+ notification_transaction:"/Core/TransactionNotification",
  notification_template:"/Core/NotificationTemplate",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",

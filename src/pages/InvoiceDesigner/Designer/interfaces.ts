@@ -465,6 +465,7 @@ export interface BarcodeState {
   thermalPrintWidth?: number;
   deleted?: boolean;
   cleared?: boolean;
+  autoSave?:boolean;
 }
 export const initialTemplateState: ActionState<TemplateState> = {
   loading: false,

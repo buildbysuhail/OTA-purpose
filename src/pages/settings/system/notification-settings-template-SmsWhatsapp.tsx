@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Urls from "../../../redux/urls";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
@@ -20,7 +20,7 @@ interface NotificationTemplate {
 
 interface SmsWhatsappTemplateProps {
   channel: string;
-  transactionCode: string;
+  isOpen:boolean;
   closeModal: () => void;
 }
 const initialState: NotificationTemplate = {
@@ -34,7 +34,7 @@ const initialState: NotificationTemplate = {
   isActive: false,
 };
 const api = new APIClient();
-const SmsWhatsappTemplate: React.FC<SmsWhatsappTemplateProps> = React.memo(({ channel, transactionCode, closeModal }) => {
+const SmsWhatsappTemplate: React.FC<SmsWhatsappTemplateProps> = React.memo(({ channel, isOpen, closeModal }) => {
     const [formState, setFormState] =useState<NotificationTemplate>(initialState);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
@@ -77,6 +77,25 @@ const SmsWhatsappTemplate: React.FC<SmsWhatsappTemplateProps> = React.memo(({ ch
       }
     };
 
+    // useEffect(() => {
+    //     if(isOpen){
+    //     loadNotification();
+    //     }
+    //   }, [isOpen]);
+    
+    //   const loadNotification = async () => {
+    //     setLoading(true);
+    //     try {
+    //       const response = await api.getAsync(`${Urls.notification_template}?Channel=${channelNo}`);
+    //       debugger;
+    //       setFormState(response);
+    //     } catch (error) {
+    //       console.error("Error loading settings:", error);
+    //     } finally {
+    //       setLoading(false);
+    //     }
+    //   };
+    
     return (
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="w-full pt-4">

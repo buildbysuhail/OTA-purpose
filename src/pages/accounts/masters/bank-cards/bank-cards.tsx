@@ -103,13 +103,11 @@ const BankCards = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.paymentTypeID }) }}
-          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.paymentTypeID }) }}
+          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url: Urls?.data_bankcards,
-            key: cellElement?.data?.paymentTypeID,
           }}
         />
       ),

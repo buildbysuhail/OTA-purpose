@@ -40,25 +40,25 @@ export const BankCardsManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPDataCombobox
-          {...getFieldProps("paymentName")}
+          {...getFieldProps("paymentType")}
           field={{
-            id: "paymentName",
+            id: "paymentType",
             required: true,
             getListUrl: Urls.data_Bank_Cards,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("paymentName", data)
+            handleFieldChange("paymentType", data)
           }}
           label={("Debit Cards")}
         />
         <ERPInput
-          {...getFieldProps('paymentType')}
+          {...getFieldProps('paymentName')}
           label= "Card Name"
           placeholder= "Card Name"
           required={true}
-          onChangeData={(data: any) => {  handleFieldChange('paymentType', data) }}
+          onChangeData={(data: any) => {  handleFieldChange('paymentName', data) }}
         />
         <ERPDataCombobox
           {...getFieldProps("ledgerID")}

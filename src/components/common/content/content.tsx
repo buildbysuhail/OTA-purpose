@@ -12,6 +12,8 @@ import AccountReceivableAgingReport from '../../../pages/accounts/masters/report
 import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 
+
+
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -28,7 +30,7 @@ const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
 const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
 const BranchGrid = lazy(() => import("../../../pages/settings/Administration/branch"));
-
+const NotificationSettings = lazy(() => import('../../../pages/settings/system/notification-settings'));
 
 // Inventory Starts
 
@@ -94,6 +96,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
+        <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="settings" element={<Settings />} />
 
         {/* Inventory Starts */}
@@ -114,16 +117,18 @@ const Content: FC<ContentProps> = () => {
         <Route path="/account-masters/cost-center" element={<CostCenter />} />
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         {/* Accounts End */}
-        {/* Templates starts */}
+        
 
         {/* Integration Start */}
         <Route path="/integration/sms" element={<SmsIntegration />} />
         <Route path="/integration/whatsapp" element={<WhatsappIntegration/>} />
         <Route path="/integration/email" element={<EmailIntegration />} />
         {/* Integration End */}
+      
+        {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />
         
-       
+        <Route path="/templates/invoice_designer/*"  element={<TemplateDesignerLayout />}/>
         
         {/* Templates ends */}
 

@@ -184,9 +184,10 @@ const Urls = {
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
   //Reports
-  acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
+ acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
  acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
-
+ acc_reports_aging_payable_direct: "/Accounts/RptAging/AgingPayableskiptake/",
+ acc_reports_aging_receivable_direct: "/Accounts/RptAging/AgingReceivableSkiptake/",
   // Accounts End
   //Templates
   templates: "/Core/Template/",

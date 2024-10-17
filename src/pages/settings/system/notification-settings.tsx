@@ -284,7 +284,7 @@ const NotificationSettings = () => {
           }}
           content={<SmsWhatsappTemplate 
             channel={tooltip.channel} 
-            transactionCode={tooltip.transactionCode}
+            isOpen={tooltip.isOpen}
             closeModal={() => setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))} 
             />}
         

@@ -12,6 +12,8 @@ import AccountReceivableAgingReport from '../../../pages/accounts/masters/report
 import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 
+import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-payable-aging-report-skiptake';
+import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-receivable-aging-report-skiptake';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -47,6 +49,7 @@ const PartyCategory = lazy(() => import('../../../pages/accounts/masters/account
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
 const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
+const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
 // Acc End
 
 //integration 
@@ -116,6 +119,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
         <Route path="/account-masters/cost-center" element={<CostCenter />} />
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
+        <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
         {/* Accounts End */}
         
 
@@ -138,8 +142,8 @@ const Content: FC<ContentProps> = () => {
           <Route path="/accounts/cash" element={<Cash />} />
           <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />     
           <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport/>} />   
-          <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReport/>} />     
-          <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReport/>} />        
+          <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReportSkipTake/>} />     
+          <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReportSkipTake/>} />        
           {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}

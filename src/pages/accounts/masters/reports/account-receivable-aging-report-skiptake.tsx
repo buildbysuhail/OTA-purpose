@@ -118,10 +118,11 @@ const AccountReceivableAgingReportSkipTake = () => {
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
+                dsfdsdfdf
+                <ErpDevGrid 
                   columns={columns}
                   gridHeader={"skiptake"+t("account_receivable_aging_report")}
-                  dataUrl= {Urls.acc_reports_aging_receivable}
+                  dataUrl= {Urls.acc_reports_aging_receivable_direct}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

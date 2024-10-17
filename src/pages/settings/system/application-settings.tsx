@@ -62,7 +62,7 @@ const ApplicationSettings = ({ }) => {
                 >
                   <div>
                     <Link to={`${location.pathname}?settings_group_id=${settings.settings_group_id}`}></Link>
-                    <h1 className=" text-sm ">{settings.name}</h1>
+                    {/* <h1 className=" text-sm ">{settings.name}</h1> */}
                   </div>
                 </div>
               ))}

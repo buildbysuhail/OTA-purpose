@@ -18,8 +18,9 @@ interface NotificationTemplate {
   isActive: boolean;
 }
 
-interface SmsWhatsappTemplateProps {
+interface TemplateProps {
   channel: string;
+  templateKey:string;
   isOpen:boolean;
   closeModal: () => void;
 }
@@ -34,14 +35,14 @@ const initialState: NotificationTemplate = {
   isActive: false,
 };
 const api = new APIClient();
-const SmsWhatsappTemplate: React.FC<SmsWhatsappTemplateProps> = React.memo(({ channel, isOpen, closeModal }) => {
+const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templateKey, isOpen, closeModal }) => {
     const [formState, setFormState] =useState<NotificationTemplate>(initialState);
     const [loading, setLoading] = useState(true);
     const { t } = useTranslation();
 
-    const onClose = useCallback(() => {
-      closeModal();
-    }, [closeModal]);
+    // const onClose = useCallback(() => {
+    //   closeModal();
+    // }, [closeModal]);
 
     const handleFieldChange = (
       field: keyof typeof initialState,
@@ -66,10 +67,12 @@ const SmsWhatsappTemplate: React.FC<SmsWhatsappTemplateProps> = React.memo(({ ch
         const requestBody = {
           ...formState,
           channel: channelNo,
+          templateKey,
           templateName:channel
         };
         const response = await api.post(`${Urls.notification_template}`,requestBody);
-        handleResponse(response);
+        handleResponse(response,()=>{closeModal()});
+        
       } catch (error) {
         console.error("Error saving settings:", error);
       } finally {
@@ -77,24 +80,24 @@ const SmsWhatsappTemplate: React.FC<SmsWhatsappTemplateProps> = React.memo(({ ch
       }
     };
 
-    // useEffect(() => {
-    //     if(isOpen){
-    //     loadNotification();
-    //     }
-    //   }, [isOpen]);
+    useEffect(() => {
+        if(isOpen){
+        loadNotification();
+        }
+      }, [isOpen]);
     
-    //   const loadNotification = async () => {
-    //     setLoading(true);
-    //     try {
-    //       const response = await api.getAsync(`${Urls.notification_template}?Channel=${channelNo}`);
-    //       debugger;
-    //       setFormState(response);
-    //     } catch (error) {
-    //       console.error("Error loading settings:", error);
-    //     } finally {
-    //       setLoading(false);
-    //     }
-    //   };
+      const loadNotification = async () => {
+        setLoading(true);
+        try {
+          const response = await api.getAsync(`${Urls.notification_template}?templatekey=${templateKey}&Channel=${channelNo}`);
+          debugger;
+          setFormState(response);
+        } catch (error) {
+          console.error("Error loading settings:", error);
+        } finally {
+          setLoading(false);
+        }
+      };
     
     return (
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -105,7 +108,7 @@ const SmsWhatsappTemplate: React.FC<SmsWhatsappTemplateProps> = React.memo(({ ch
                 htmlFor="content"
                 className="block text-sm font-medium text-gray-700"
               >
-                Template Content
+              {channel} Content
               </label>
               <textarea
                 id="content"

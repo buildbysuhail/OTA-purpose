@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import SmsWhatsappTemplate from "./notification-settings-template-SmsWhatsapp";
+import EmailTemplate from "./notification-settings-template-email";
 
 const api = new APIClient();
 
@@ -22,17 +23,11 @@ interface NotificationSettings {
   sms: string;
   whatsapp: string;
   email: string;
-  appNotification:string
+  inAppNotification: string;
 }
 
 const NotificationSettings = () => {
-  const T_Head = [
-    "Transaction",
-    "Email",
-    "whatsApp",
-    "Sms",
-    "App Notification",
-  ];
+  const T_Head = [ "Transaction","Email","whatsApp","Sms","App Notification",];
   const [TableBody, setTableBody] = useState<NotificationSettings[]>([]);
   const [loading, setLoading] = useState(false);
   const [tooltip, setTooltip] = useState({
@@ -78,16 +73,13 @@ const NotificationSettings = () => {
 
       // Map the `field` to the appropriate enum value
       const fieldToChannelMap: Record<string, NotificationsChannel> = {
-        email: NotificationsChannel.Sms,
+        sms: NotificationsChannel.Sms,
         whatsapp: NotificationsChannel.Whatsapp,
-        sms: NotificationsChannel.Email,
-        appNotification: NotificationsChannel.InAppNotification,
+        email: NotificationsChannel.Email,
+        inAppNotification: NotificationsChannel.InAppNotification,
       };
-
-      // Get the channel value from the map
       const channel = fieldToChannelMap[field];
 
-      // Prepare the request body
       const requestBody = {
         transactionCode: transactionCode,
         channel: channel,
@@ -95,7 +87,10 @@ const NotificationSettings = () => {
       };
 
       // Send PATCH request to the server
-      const response = await api.patch(`${Urls.notification_transaction}`,requestBody );
+      const response = await api.patch(
+        `${Urls.notification_transaction}`,
+        requestBody
+      );
       handleResponse(response);
     } catch (error) {
       console.error("Error saving settings:", error);
@@ -170,83 +165,81 @@ const NotificationSettings = () => {
 
                               {/* Email Switch */}
                               <td>
-                                <ERPSwitch
-                                  size="sm"
-                                  value={item.email === "1"}
-                                  onChange={(e) =>
-                                    handleSwitchChange(
-                                      item.transactionCode,
-                                      "email",
-                                      e.target.checked
-                                    )
-                                  }
-                                />
-                                {item.email === "1" && (
-                                  <span
-                                    onClick={() =>
-                                      toggleTooltip(
-                                        item.transactionCode,
-                                        "email"
-                                      )
-                                    }
-                                    className="text-[.675rem] text-center pt-1 text-[#fde047] underline decoration-sky-600 hover:decoration-blue-400 cursor-pointer "
-                                  >
-                                    templates
-                                  </span>
-                                )}
+                                <div className="flex items-center justify-center">
+                                  <ERPSwitch
+                                    size="sm"
+                                    defaultValue={item.email === "1"}
+                                    value={item.email === "1"}
+                                    onChange={(e) => handleSwitchChange(item.transactionCode, "email", e.target.checked)}
+                                  />
+                                  {item.email === "1" && (
+                                    <span
+                                    onClick={() => toggleTooltip(item.transactionCode, "email")}
+                                  //  className="invisible hover:visible"
+                                    >
+                                      <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+
+                                    </span>
+                                  )}
+                                </div>
                               </td>
 
                               {/* WhatsApp Switch */}
                               <td>
-                                <ERPSwitch
-                                  size="sm"
-                                  value={item.whatsapp === "1"}
-                                  onChange={(e) =>
-                                    handleSwitchChange(
-                                      item.transactionCode,
-                                      "whatsapp",
-                                      e.target.checked
-                                    )
-                                  }
-                                />
-                                {item.whatsapp === "1" && (
-                                  <span
-                                    onClick={() =>
-                                      toggleTooltip(
-                                        item.transactionCode,
-                                        "whatsapp"
-                                      )
-                                    }
-                                    className="text-[.675rem] text-center pt-1 text-[#fde047] underline decoration-sky-600 hover:decoration-blue-400 cursor-pointer "
-                                  >
-                                    templates
-                                  </span>
-                                )}
+                                <div className="flex items-center justify-center gap-3">
+                                  <ERPSwitch
+                                    size="sm"
+                                    defaultValue={item.whatsapp === "1"}
+                                    value={item.whatsapp === "1"}
+                                    onChange={(e) => handleSwitchChange(item.transactionCode, "whatsapp", e.target.checked)}
+                                  />
+                                  {item.whatsapp === "1" && (
+                                    <span
+                                    onClick={() => toggleTooltip(item.transactionCode, "whatsapp")}
+                                    >
+                                     <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+                                    </span>
+                                  )}
+                                </div>
                               </td>
 
                               {/* SMS Switch */}
                               <td>
-                                <ERPSwitch
-                                  size="sm"
-                                  value={item.sms === "1"}
-                                  onChange={(e) =>
-                                    handleSwitchChange(
-                                      item.transactionCode,
-                                      "sms",
-                                      e.target.checked
-                                    )
-                                  }
-                                />
-                                {item.sms === "1" && (
-                                  <span
-                                    onClick={() =>
-                                      toggleTooltip(item.transactionCode, "sms")
-                                    }
-                                    className="text-[.675rem] text-center pt-1 text-[#fde047] underline decoration-sky-600 hover:decoration-blue-400 cursor-pointer "
-                                  >
-                                    templates
-                                  </span>
-                                )}
+                                <div className="flex items-center justify-center gap-3">
+                                  <ERPSwitch
+                                    size="sm"
+                                    defaultValue={item.sms === "1"}
+                                    value={item.sms === "1"}
+                                    onChange={(e) => handleSwitchChange(item.transactionCode,"sms",e.target.check)}
+                                  />
+                                  {item.sms === "1" && (
+                                    <span
+                                      onClick={() => toggleTooltip(item.transactionCode,"sms")}
+                                    >
+                                     <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+
+                              {/* In-App Notification Switch */}
+                              <td>
+                                <div className="flex items-center justify-center gap-3">
+                                  <ERPSwitch
+                                    size="sm"
+                                    defaultValue={item.inAppNotification === "1" }
+                                    value={item.inAppNotification === "1"}
+                                    onChange={(e) => handleSwitchChange(item.transactionCode, "inAppNotification", e.target.checked)}
+                                  />
+                                  {item.inAppNotification === "1" && (
+                                    <span
+                                    onClick={() => toggleTooltip(item.transactionCode, "inAppNotification")}
+                                    >
+                                       <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+                                    </span>
+                                  )}
+                                </div>
                               </td>
                             </tr>
                           ))
@@ -265,9 +258,8 @@ const NotificationSettings = () => {
             </div>
           </div>
         </div>
-
-        <div className="xxl:col-span-2 col-span-12"></div>
       </div>
+      
       {(tooltip.channel === "sms" || tooltip.channel === "whatsapp") && (
         <ERPModal
           isOpen={tooltip.isOpen || false}
@@ -282,12 +274,41 @@ const NotificationSettings = () => {
               isOpen: !prevTooltip.isOpen,
             }));
           }}
-          content={<SmsWhatsappTemplate 
-            channel={tooltip.channel} 
-            isOpen={tooltip.isOpen}
-            closeModal={() => setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))} 
-            />}
-        
+          content={
+            <SmsWhatsappTemplate
+              channel={tooltip.channel}
+              templateKey={tooltip.transactionCode}
+              isOpen={tooltip.isOpen}
+              closeModal={() =>
+                setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))
+              }
+            />
+          }
+        />
+      )}
+
+      {tooltip.channel === "email" && (
+        <ERPModal
+          isOpen={tooltip.isOpen || false}
+          title={"Email Template"}
+          width="w-full max-w-[800px]"
+          isForm={true}
+          closeModal={() => {
+            setTooltip((prevTooltip) => ({
+              ...prevTooltip,
+              isOpen: !prevTooltip.isOpen,
+            }));
+          }}
+          content={
+            <EmailTemplate
+              channel={tooltip.channel}
+              templateKey={tooltip.transactionCode}
+              isOpen={tooltip.isOpen}
+              closeModal={() =>
+                setTooltip((prevTooltip) => ({ ...prevTooltip, isOpen: false }))
+              }
+            />
+          }
         />
       )}
     </>

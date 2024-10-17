@@ -606,5 +606,7 @@
   "modified_user_ID":"Modified User ID",
   "bank_cards":"Bank Cards",
   "debit_cards":"Debit Cards",
-  "card_name":"Card Name"
+  "card_name":"Card Name",
+
+  "currency_master":"Currency Master"
 }

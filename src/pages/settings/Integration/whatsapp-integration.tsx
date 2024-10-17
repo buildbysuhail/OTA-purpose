@@ -19,6 +19,7 @@ import { ActionType } from "../../../redux/types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import WhatsAppDemo from "./whatsapp-demo"
 
 const api = new APIClient();
 interface information {
@@ -209,7 +210,7 @@ const WhatsappIntegration = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
+    <div className="p-6 max-w-8xl mx-auto bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4 text-gray-800">
         whatsapp Integrations
       </h1>
@@ -279,6 +280,7 @@ const WhatsappIntegration = () => {
             </a>
           </li>
         </ul>
+        <WhatsAppDemo/>
       </div>
 
       <ERPModal

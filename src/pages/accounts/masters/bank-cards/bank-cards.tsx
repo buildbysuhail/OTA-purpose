@@ -1,12 +1,12 @@
-import React, { Fragment, useCallback, useMemo } from "react";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import { toggleBankCardsPopup } from "../../../../redux/slices/popup-reducer";
-import Urls from "../../../../redux/urls";
+import { Fragment } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+import { toggleBankCardsPopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../redux/urls";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { BankCardsManage } from "./bank-cards-manage";
 
@@ -28,6 +28,7 @@ const BankCards = () => {
       dataField: "branchID",
       caption: t('branch_ID'),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 100,
@@ -36,6 +37,7 @@ const BankCards = () => {
       dataField: "ledgerID",
       caption: t("ledger_ID"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
     },
@@ -43,6 +45,7 @@ const BankCards = () => {
       dataField: "paymentType",
       caption: t("payment_type"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
     },
@@ -50,6 +53,7 @@ const BankCards = () => {
       dataField: "paymentName",
       caption: t("payment_name"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -58,6 +62,7 @@ const BankCards = () => {
       dataField: "createdUserID",
       caption: t("created_user_ID"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -66,6 +71,7 @@ const BankCards = () => {
       dataField: "createdDate",
       caption: t("created_date"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -74,6 +80,7 @@ const BankCards = () => {
       dataField: "modifiedUserID",
       caption: t("modified_user_ID"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -82,6 +89,7 @@ const BankCards = () => {
       dataField: "modifiedDate",
       caption: t("modified_date"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -90,6 +98,7 @@ const BankCards = () => {
       dataField: "remark",
       caption: t("remarks"),
       dataType: "string",
+      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
     },
@@ -103,11 +112,13 @@ const BankCards = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.paymentTypeID }) }}
+          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.paymentTypeID }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
+            url: Urls?.data_bankcards,
+            key: cellInfo?.data?.paymentTypeID
           }}
         />
       ),

@@ -3,7 +3,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import {
-  toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleCommandsPopup, toggleCompanyProfilePopup,
+  toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleChartOfAccounts, toggleCommandsPopup, toggleCompanyProfilePopup,
   toggleDayClosePopup,
   toggleDeleteInactiveTransactionPopup,
   toggleExchangeRatesPopup,
@@ -38,6 +38,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cost-center`, type: 'link', active: false, selected: false, title: 'costcenter' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/branch-ledgers`, type: 'link', active: false, selected: false, title: 'branch_ledger' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/chart-of-accounts`, type: 'link', active: false, selected: false, title: 'chart_of_accounts' },
+      // { action: toggleChartOfAccounts, type: 'popup', active: false, selected: false, title: 'chart_of_accounts' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/opening-balance`, type: 'link', active: false, selected: false, title: 'opening_balance' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/party-category`, type: 'link', active: false, selected: false, title: 'party_category' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/supplier-customer-master`, type: 'link', active: false, selected: false, title: 'supp_cust_master' },
@@ -60,7 +61,7 @@ export const SettingsMenuItems = [
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/user-management/users`, type: 'link', active: false, selected: false, title: 'users' },
       { path: `${import.meta.env.BASE_URL}settings/_/user-management/userstypes`, type: 'link', active: false, selected: false, title: 'usertype' },
-      { action:toggleUserTypePrivilegePopup, type: 'popup', active: false, selected: false, title: 'user_type_privilege' },
+      { action: toggleUserTypePrivilegePopup, type: 'popup', active: false, selected: false, title: 'user_type_privilege' },
     ]
   },
   {
@@ -128,7 +129,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'Sms Integration' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'WhatsApp Integration' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'Email Integration' },
-    
+
     ]
   },
 ];

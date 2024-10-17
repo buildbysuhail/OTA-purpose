@@ -7,6 +7,8 @@ import CurrencyFormatter from '../../../components/formatters/currency-formatter
 import SummaryCard from './summaryCard';
 import { APIClient } from '../../../helpers/api-client';
 import CashflowChart from './cashflowChart';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
 
 interface CrmProps { }
 class ItemSummaryCard {total: number = 0; currency: string = ""; summary:ItemSummaryCardStateSummary[] = new Array<ItemSummaryCardStateSummary>();monthVariation: number=0; for:string=""; branchData:ItemSummaryCardBranchSummary[] = new Array<ItemSummaryCardBranchSummary>; totalBranches: number = 0; contextBranches: number = 0; branches:string[] = new Array<string>;}
@@ -26,8 +28,10 @@ const Crm: FC<CrmProps> = () => {
   const [cashSummary, setCashSummary] = useState<ItemSummaryCard>(new ItemSummaryCard());
   const [bankSummary, setBankSummary] = useState<ItemSummaryCard>(new ItemSummaryCard());
   const [topExpenses, setTopExpenses] = useState<[]>([]);
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   useEffect(() => {
-    
+    alert(deviceInfo.platform);
+    alert(deviceInfo);
     api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
       setSalesSummary(res);
     });

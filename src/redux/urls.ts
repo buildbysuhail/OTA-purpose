@@ -186,6 +186,7 @@ const Urls = {
   branch_ledger: "/Accounts/BranchLedgers/",
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
+  chart_of_accounts:"/Accounts/ChartofAccounts/",
   //Reports
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",

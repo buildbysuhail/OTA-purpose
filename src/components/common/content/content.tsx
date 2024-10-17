@@ -47,6 +47,7 @@ const PartyCategory = lazy(() => import('../../../pages/accounts/masters/account
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
 const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
+const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
 // Acc End
 
 //integration 
@@ -116,6 +117,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
         <Route path="/account-masters/cost-center" element={<CostCenter />} />
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
+        <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
         {/* Accounts End */}
         
 

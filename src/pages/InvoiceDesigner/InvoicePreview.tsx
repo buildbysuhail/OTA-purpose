@@ -100,7 +100,9 @@ const InvoicePreview = ({
   const [templatesInfo, setTemplatesInfo] = useState<any>({ loading: true });
   const [voucherType, setVoucherType] = useState<PDFVoucherTypes>("normal");
 
-  const templateWrap = useSelector((state: any) => state?.template) as TemplateReducerState;
+  const templateWrap = useSelector(
+    (state: any) => state?.Template
+  ) as TemplateReducerState;
 
   const gstTreatmentReducerName = reducerNameFromUrl(Urls.tax_treatment, "GET");
   const gstTreatmentList = useSelector(
@@ -120,11 +122,15 @@ const InvoicePreview = ({
   );
 
   /* ########################################################################################### */
-  const getTemplateInfo = (): { content?: TemplateState;} => {
+  const getTemplateInfo = (): { content?: TemplateState } => {
     // checking  :  if  voucher wise templpate Id available
     // pathname?.includes("/invoice_designer/") ? reduxTemplateData?.activeTemplate : getTemplateInfo().content
     if (data?.template?.id) {
-      let result = templateWrap.templates?.find((template: any) => template?.voucher_type === templateGroupId && template?.id === data?.template?.id);
+      let result = templateWrap.templates?.find(
+        (template: any) =>
+          template?.voucher_type === templateGroupId &&
+          template?.id === data?.template?.id
+      );
       return {
         content: result,
       };
@@ -133,7 +139,9 @@ const InvoicePreview = ({
     // checking : if  customer/vendor associated templpate Id available
     else if (associatedTempInfo?.[templateGroupId]) {
       let result = templateWrap.templates?.find(
-        (template: any) => template?.voucher_type === templateGroupId && template?.id === associatedTempInfo?.[templateGroupId]
+        (template: any) =>
+          template?.voucher_type === templateGroupId &&
+          template?.id === associatedTempInfo?.[templateGroupId]
       );
       return {
         content: result,
@@ -142,15 +150,24 @@ const InvoicePreview = ({
     //
     // Appplying default template of the templates group
     else {
-      let result = templateWrap?.templates?.find((template: any) => template?.voucher_type === templateGroupId && template?.is_default);
+      let result = templateWrap?.templates?.find(
+        (template: any) =>
+          template?.voucher_type === templateGroupId && template?.is_default
+      );
       return {
         content: result,
       };
     }
   };
   /* ########################################################################################### */
-
-  const templateData = pathname?.includes("/invoice_designer/") ? templateWrap?.activeTemplate : getTemplateInfo().content; 
+  const [templateData, setTemplateData] = useState<TemplateState | undefined>();
+  useEffect(() => {
+    debugger;
+    setTemplateData(pathname?.includes("/invoice_designer/")
+      ? templateWrap?.activeTemplate
+      : getTemplateInfo().content);
+  },[templateWrap?.activeTemplate]);
+  debugger;
 
   /* ########################################################################################### */
 
@@ -331,7 +348,7 @@ const InvoicePreview = ({
   };
 
   /* ####################################################################### */
-const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (data) {
       // if (AssociatedCustomerPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
@@ -347,7 +364,7 @@ const dispatch = useAppDispatch();
       appDispatch(
         getAction({
           apiUrl: Urls.templates,
-          params: `voucher_type=${templateGroupId}`,
+          params: `template_group=${templateGroupId}`,
         })
       );
     }
@@ -371,15 +388,16 @@ const dispatch = useAppDispatch();
   }, []);
   useEffect(() => {
     debugger;
-      setGeneralBackGroundStyle((previous: any) => ({
-        ...previous,
-        backgroundImage: templateData?.background_image ? `url(${templateData?.background_image})`: '',
-        backgroundRepeat: "no-repeat",
-        backgroundColor: templateData?.propertiesState?.bg_color,
-        backgroundPosition:
-          templateData?.propertiesState?.bg_image_position ?? "top left",
-      }));
-    
+    setGeneralBackGroundStyle((previous: any) => ({
+      ...previous,
+      backgroundImage: templateData?.background_image
+        ? `url(${templateData?.background_image})`
+        : "",
+      backgroundRepeat: "no-repeat",
+      backgroundColor: templateData?.propertiesState?.bg_color,
+      backgroundPosition:
+        templateData?.propertiesState?.bg_image_position ?? "top left",
+    }));
   }, [templateData, templateData?.propertiesState?.bg_image_position]);
 
   /* ####################################################################### */

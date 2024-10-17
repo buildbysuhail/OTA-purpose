@@ -19,6 +19,7 @@ import { ActionType } from "../../../redux/types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import SmsDemo from "./sms-demo";
 
 const api = new APIClient();
 interface information {
@@ -256,6 +257,7 @@ const SMSIntegration: React.FC = () => {
             </a>
           </li>
         </ul>
+        <SmsDemo/>
       </div>
 
       <ERPModal

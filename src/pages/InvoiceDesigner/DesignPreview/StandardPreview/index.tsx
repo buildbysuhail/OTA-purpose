@@ -38,6 +38,7 @@ const StandardPreviewWrapper = ({
   templateImages
 }: StandardPreviewProps) => {
 
+  debugger;
   let fontStyle = "font-Poppins"
 
   switch (template?.propertiesState?.font) {

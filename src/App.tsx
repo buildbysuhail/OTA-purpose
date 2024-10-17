@@ -31,6 +31,9 @@ import SettingsLayout from "./components/common/layout/settings-layout";
 import { useTranslation } from "react-i18next";
 import ReportsLayout from "./components/common/layout/reports-layout";
 import TemplateDesignerLayout from "./components/common/layout/template-designer-layout";
+import { Device } from '@capacitor/device';
+import { useDispatch } from "react-redux";
+import { setDeviceInfo } from "./redux/slices/device/reducer";
 
 export const LoadingAnimation = () => {
   return (
@@ -41,7 +44,17 @@ export const LoadingAnimation = () => {
 };
 
 function App() {
-  
+  const _dispatch = useAppDispatch();
+  const _setDeviceInfo = async () => {
+      try {
+        const info = await Device.getInfo();
+        _dispatch(setDeviceInfo(info));
+      } catch (error) {
+        console.error('Error getting device info:', error);
+      }
+    };
+
+    _setDeviceInfo();
   // const { appState, updateAppState } = useAppState();
   let api = new APIClient();
   const dispatch = useAppDispatch();
@@ -80,6 +93,7 @@ function App() {
   const language = userProfileDetails?.language;
   
   useEffect(() => {
+
     if (locale && i18n && typeof i18n.changeLanguage === 'function') {
       i18n.changeLanguage(language);
     } else {

@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import {togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer";
+import { togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
@@ -14,6 +14,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 export const PrivilegeCardManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const {
     isEdit,
@@ -24,17 +25,28 @@ export const PrivilegeCardManage = () => {
     isLoading,
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
-    onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.privilegeCard.key,
     useApiClient: true,
-    initialData:initialPrivilegeCard.data,
+    initialData: initialPrivilegeCard
   });
 
   const onClose = useCallback(() => {
     dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null }));
-  }, []);
-  
- const { t } = useTranslation();
+  }, [dispatch]);
+
+  const handleDateChange = (field: string, value: string | null) => {
+    if (value) {
+      const date = new Date(value);
+      if (date.getFullYear() < 1753) {
+        handleFieldChange(field, '1753-01-01T00:00:00Z');
+      } else {
+        handleFieldChange(field, value);
+      }
+    } else {
+      handleFieldChange(field, null);
+    }
+  };
 
   return (
     <div className="w-full pt-4">
@@ -44,42 +56,49 @@ export const PrivilegeCardManage = () => {
           label={t("card_number")}
           placeholder={t("card_number")}
           required={true}
-          onChangeData={(data: any) => {  handleFieldChange('cardNumber', data) }}
+          onChangeData={(data: string) => handleFieldChange('cardNumber', data)}
         />
         <ERPInput
           {...getFieldProps('cardHolderName')}
           label={t("card_holder_name")}
           placeholder={t("card_holder_name")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('cardHolderName', data)}
+          onChangeData={(data: string) => handleFieldChange('cardHolderName', data)}
         />
         <ERPInput
           {...getFieldProps('address1')}
           label={t("address1")}
           placeholder={t("address1")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('address1', data)}
+          onChangeData={(data: string) => handleFieldChange('address1', data)}
         />
-         <ERPInput
+        <ERPInput
           {...getFieldProps('address2')}
           label={t("address2")}
           placeholder={t("address2")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('address2', data)}
+          required={false}
+          onChangeData={(data: string) => handleFieldChange('address2', data)}
         />
         <ERPInput
           {...getFieldProps('phone')}
           label={t("phone")}
           placeholder={t("phone")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('phone', data)}
+          onChangeData={(data: string) => handleFieldChange('phone', data)}
         />
         <ERPInput
           {...getFieldProps('mobile')}
           label={t("mobile")}
           placeholder={t("mobile")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('mobile', data)}
+          onChangeData={(data: string) => handleFieldChange('mobile', data)}
+        />
+        <ERPInput
+          {...getFieldProps('email')}
+          label={t("email")}
+          placeholder={t("email")}
+          required={false}
+          onChangeData={(data: string) => handleFieldChange('email', data)}
         />
         <ERPDataCombobox
           {...getFieldProps("priceCategoryID")}
@@ -90,50 +109,47 @@ export const PrivilegeCardManage = () => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("priceCategoryID", data)
-          }}
+          onChangeData={(data: number) => handleFieldChange("priceCategoryID", data)}
           label={t("price_category")}
         />
-
         <ERPDataCombobox
           {...getFieldProps("cardType")}
           field={{
             id: "cardType",
             required: true,
-            getListUrl: Urls.data_acc_groups,
+            getListUrl: Urls.data_privilage_cards,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("cardType", data)
-          }}
+          onChangeData={(data: string) => handleFieldChange("cardType", data)}
           label={t("card_type")}
         />
-       
         <ERPInput
           {...getFieldProps('opBalance')}
           label={t("op_balance")}
           placeholder={t("op_balance")}
           type="number"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('opBalance', data)}
+          onChangeData={(data: string) => handleFieldChange('opBalance', parseFloat(data))}
         />
-         <ERPDateInput
+        <ERPDateInput
           {...getFieldProps("activateDate")}
-          type="date"
-          id="activateDate"
+          required={true}
           label={t("activate_date")}
-          onChangeData={(data: any) => handleFieldChange("activateDate", data)}
+          onChangeData={(data: string) => handleDateChange("activateDate", data)}
         />
         <ERPDateInput
           {...getFieldProps("expiryDate")}
-          type="date"
-          id="expiryDate"
+          required={true}
           label={t("expiry_date")}
-          onChangeData={(data: any) => handleFieldChange("expiryDate", data)}
+          onChangeData={(data: string) => handleDateChange("expiryDate", data)}
         />
-        
+        <ERPDateInput
+          {...getFieldProps("dob")}
+          required={false}
+          label={t("date_of_birth")}
+          onChangeData={(data: string) => handleDateChange("dob", data)}
+        />
       </div>
       <ERPFormButtons
         onClear={handleClear}
@@ -144,4 +160,6 @@ export const PrivilegeCardManage = () => {
       />
     </div>
   );
-}
+};
+
+export default PrivilegeCardManage;

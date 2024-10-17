@@ -83,48 +83,46 @@ const EmailIntegration = () => {
       }));
     };
 
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //   e.preventDefault();
-    //   const configJson = JSON.stringify(information);
-    //   const updatedFormState = formState.map((item) => ({
-    //     ...item,
-    //     configJson,
-    //     provider: 2,
-    //     channel: 2,
-    //   }));
-
-    //   try {
-    //     const requestBody = updatedFormState[0];
-    //     const response = await api.post(
-    //       `${Urls.notification_provider}`,
-    //       requestBody
-    //     );
-    //     handleResponse(response);
-    //   } catch (error) {
-    //     console.error("Error saving settings:", error);
-    //   }
-    // };
-
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-    
-      // Create the request body according to your model structure
-      const requestBody = {
-        id: 0,  // Set this to an appropriate value if needed
-        branchId: 0, // Set this if relevant, or adjust as necessary
-        provider: 3, // Assuming Twilio is provider 2
-        channel: 3, 
-        configJson: JSON.stringify(information),
-        isEnable: true, // Assuming you want this enabled by default
-      };
-    
+      const configJson = JSON.stringify(information);
+      const updatedFormState = formState.map((item) => ({
+        ...item,
+        configJson,
+      }));
+
       try {
-        const response = await api.post(`${Urls.notification_provider}`, requestBody);
+        const requestBody = updatedFormState[0];
+        const response = await api.post(
+          `${Urls.notification_provider}`,
+          requestBody
+        );
         handleResponse(response);
       } catch (error) {
         console.error("Error saving settings:", error);
       }
     };
+
+    // const handleSubmit = async (e: React.FormEvent) => {
+    //   e.preventDefault();
+    
+    //   // Create the request body according to your model structure
+    //   const requestBody = {
+    //     id: 0,  // Set this to an appropriate value if needed
+    //     branchId: 0, // Set this if relevant, or adjust as necessary
+    //     provider: 3, // Assuming Twilio is provider 2
+    //     channel: 3, 
+    //     configJson: JSON.stringify(information),
+    //     isEnable: true, // Assuming you want this enabled by default
+    //   };
+    
+    //   try {
+    //     const response = await api.post(`${Urls.notification_provider}`, requestBody);
+    //     handleResponse(response);
+    //   } catch (error) {
+    //     console.error("Error saving settings:", error);
+    //   }
+    // };
     
 
     return (

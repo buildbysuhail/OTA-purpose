@@ -93,7 +93,7 @@ function App() {
   const language = userProfileDetails?.language;
   
   useEffect(() => {
-
+    
     if (locale && i18n && typeof i18n.changeLanguage === 'function') {
       i18n.changeLanguage(language);
     } else {

@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getAppState, uploadAppState } from './thunk';
-import usFlag from '../../../assets/images/flags/us_flag.png'
 import { DeviceState } from './types';
 import { Device, DeviceInfo } from '@capacitor/device';
 

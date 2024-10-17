@@ -510,8 +510,8 @@ const BranchSettingsForm: React.FC = () => {
                 handleFieldChange("reportMode", data.reportMode)
               }
               options={[
-                { value: 0, label: "classic" },
-                { value: 1, label: "Standard" },
+                { value: "classic", label: "classic" },
+                { value: "Standard", label: "Standard" },
               ]}
             />
 

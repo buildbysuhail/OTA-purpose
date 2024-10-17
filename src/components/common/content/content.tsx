@@ -12,6 +12,8 @@ import AccountReceivableAgingReport from '../../../pages/accounts/masters/report
 import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 
+import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-payable-aging-report-skiptake';
+import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-receivable-aging-report-skiptake';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -140,8 +142,8 @@ const Content: FC<ContentProps> = () => {
           <Route path="/accounts/cash" element={<Cash />} />
           <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />     
           <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport/>} />   
-          <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReport/>} />     
-          <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReport/>} />        
+          <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReportSkipTake/>} />     
+          <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReportSkipTake/>} />        
           {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}

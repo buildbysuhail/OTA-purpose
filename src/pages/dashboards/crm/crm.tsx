@@ -9,6 +9,8 @@ import { APIClient } from '../../../helpers/api-client';
 import CashflowChart from './cashflowChart';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
+import QuickCreate from './quick-create';
+import Footer from './footer';
 
 interface CrmProps { }
 class ItemSummaryCard {total: number = 0; currency: string = ""; summary:ItemSummaryCardStateSummary[] = new Array<ItemSummaryCardStateSummary>();monthVariation: number=0; for:string=""; branchData:ItemSummaryCardBranchSummary[] = new Array<ItemSummaryCardBranchSummary>; totalBranches: number = 0; contextBranches: number = 0; branches:string[] = new Array<string>;}
@@ -30,8 +32,6 @@ const Crm: FC<CrmProps> = () => {
   const [topExpenses, setTopExpenses] = useState<[]>([]);
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
   useEffect(() => {
-    alert(deviceInfo.platform);
-    alert(deviceInfo);
     api.get('/Inventory/Dashboard/GetSalesMonthwiseSummary').then(res =>{
       setSalesSummary(res);
     });
@@ -111,6 +111,7 @@ const Crm: FC<CrmProps> = () => {
           <div className="grid grid-cols-12 gap-x-6">
             <div className="xxl:col-span-4 xl:col-span-4  col-span-12">
               <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+              {!deviceInfo?.isMobile && (
                 <div className="box crm-highlight-card">
                   <div className="box-body">
                     <div className="flex items-center justify-between">
@@ -124,14 +125,20 @@ const Crm: FC<CrmProps> = () => {
                             here</u></Link></span>
                       </div>
                       <div>
-                        <div id="crm-main">
+                        <div id="crm-main"> 
                           <Profit />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                )}
               </div>
+              {deviceInfo?.isMobile && (
+              <div>
+              <QuickCreate/>
+              </div>
+              )}
               <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
                 <div className="box">
                   <div className="box-header flex justify-between">
@@ -670,6 +677,11 @@ const Crm: FC<CrmProps> = () => {
         </div>
       </div>
       <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
+      {deviceInfo?.isMobile && (
+      <div className="w-full h-16 bg-white fixed bottom-0 left-0">
+        <Footer/>
+      </div>
+    )}
     </Fragment>
   );
 }

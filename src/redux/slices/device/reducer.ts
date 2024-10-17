@@ -56,8 +56,8 @@ const deviceStateSlice = createSlice({
         // Determine if mobile
         const isMobile = ['ios', 'android'].includes(info.platform) 
           ? !isTablet
-          : width <= 500 ? true : (!runningInElectron && width <= 768);
-        
+          : width <= 650 ? true : (!runningInElectron && width <= 768);
+        debugger;
         // // Determine if desktop
         // const isDesktop = runningInElectron || 
         //   (info.platform === 'web' && width > 1024 && !isTabletDevice());

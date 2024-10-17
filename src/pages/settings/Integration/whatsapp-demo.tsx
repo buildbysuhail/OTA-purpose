@@ -1,24 +1,10 @@
 import React, { useState } from "react";
-import {
-  IconChevronLeft,
-  IconDotsVertical,
-  IconFileCheck,
-  IconFileDots,
-  IconFileSpreadsheet,
-  IconFileText,
-  IconPhone,
-  IconShoppingCart,
-  IconUsers,
-  IconVideo,
-} from "../../../assets/iconfonts/tabler-icons/icons-react";
-
 export default function Component() {
   const [selectedMenu, setSelectedMenu] = useState("Customers");
 
   const menuItems = [
     {
       name: "Credit Notes",
-    //   icon: <IconFileDots stroke={2} />,
       content:
         "Send Credit Notes: Share the credit note details with your customers and keep them informed on the amount you owe them. Also, you can choose to attach and send a PDF copy of the sales receipt along with the message.",
       smsDemo:
@@ -26,7 +12,6 @@ export default function Component() {
     },
     {
       name: "Payment Receipts",
-    //   icon: <IconFileCheck stroke={2} />,
       content:
         "Thank Customers for Prompt Payments: Send thank you messages to your customers once they've paid you. Also, you can choose to attach and send a PDF copy of the payment receipt along with the message.",
       smsDemo:
@@ -34,7 +19,6 @@ export default function Component() {
     },
     {
       name: "Customers",
-    //   icon: <IconUsers stroke={2} />,
       content:
         "To send promotional messages or customer statement to your customers, you will have to create those messages as templates and get them approved by WhatsApp.",
       smsDemo:
@@ -42,7 +26,6 @@ export default function Component() {
     },
     {
       name: "Quotes",
-    //   icon: <IconFileSpreadsheet stroke={2} />,
       content:
         "Share Quotes: Send the quote details to your customers as soon as you create the quote. Also, you can choose to attach and send a PDF copy of the along with the message.",
       smsDemo:
@@ -50,18 +33,17 @@ export default function Component() {
     },
     {
       name: "Invoices",
-    //   icon: <IconFileText stroke={2} />,
       content:
         "Send Invoices: Send the invoice details to your customers as soon as you create the invoice. Also, you can choose to attach and send a PDF copy of the invoice along with the message.",
       smsDemo:
         "Invoice #INV456 for $750.00 is due on 05/15/2024. Payment details in the attached PDF. Thank you for your business!",
     },
     {
-      name: "Sales Orders",
+      name: "Sales Orders1",
       content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
+        "Share1 Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
       smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
+        "Your1 sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
     },
     {
       name: "Sales Orders",
@@ -130,13 +112,10 @@ export default function Component() {
 
   const WhatsAppDemo = ({ message }: { message: string; sender: string }) => (
     <div className="bg-gray p-4 rounded-lg mt-4 w-full max-w-sm">
-        {/* safvan
-        <i className="ti ti-phone"></i> */}
-
       <div className="bg-white rounded-lg shadow-lg overflow-hidden max-w-xs mx-auto">
         <div className="bg-green text-white px-4 py-3 flex items-center justify-between">
           <div className="flex items-center">
-            {/* <IconChevronLeft className="mr-2" size={24} stroke={2} /> */}
+            <i className="ti ti-chevron-left mr-2 text-[15px]"></i>
             <div className="w-8 h-8 bg-[#dee2e6] rounded-full mr-2"></div>
             <span className="font-semibold">Customer</span>
           </div>
@@ -144,9 +123,6 @@ export default function Component() {
           <i className="ti ti-phone mr-4 text-[15px]"></i>
           <i className="ti ti-video mr-4 text-[15px]"></i>
           <i className="ti ti-dots-vertical text-[15px]"></i>
-            {/* <IconPhone className="mr-4" size={20} stroke={2} />
-            <IconVideo className="mr-4" size={20} stroke={2} />
-            <IconDotsVertical size={20} stroke={2} /> */}
           </div>
         </div>
 
@@ -190,12 +166,10 @@ export default function Component() {
 
     return (
       <div className="flex flex-row min-h-screen p-6">
-        {/* <div className="w-full max-w-4xl"> */}
         <div className="w-1/2">
           <h2 className="text-2xl font-bold mb-4">{selectedMenu}</h2>
           <p className="mb-4">{selectedItem?.content}</p>
         </div>
-        {/* <div className="flex-grow flex justify-center items-center"> */}
         <div className="w-1/2">
           <WhatsAppDemo
             message={selectedItem?.smsDemo || ""}
@@ -207,9 +181,8 @@ export default function Component() {
   };
 
   return (
-    // <div className="flex h-screen bg-gray-100">
     <div className="flex h-[389px] bg-gray">
-      <aside className="w-64 h-auto bg-white shadow overflow-y-auto">
+      <aside className="w-64 h-auto bg-white shadow overflow-y-auto rounded-lg">
         <nav className="mt-6">
           {menuItems.map((item) => (
             <a
@@ -228,8 +201,7 @@ export default function Component() {
           ))}
         </nav>
       </aside>
-      <main className="flex-1 overflow-y-auto">
-      {/* <main className="d-flex p-5"> */}
+      <main className="flex-1 overflow-y-auto shadow rounded-lg">
         <MainContent />
       </main>
     </div>

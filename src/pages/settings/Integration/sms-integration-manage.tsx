@@ -1,11 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
-import {
-  toggleAccountGroupPopup,
-  toggleSMSIntegrationPopup,
-} from "../../../redux/slices/popup-reducer";
+import { toggleAccountGroupPopup } from "../../../redux/slices/popup-reducer";
 import {
   initialSMSIntegration,
   SMSIntegrationData,
@@ -13,98 +10,60 @@ import {
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useDispatch } from "react-redux";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../redux/types";
-import { APIClient } from "../../../helpers/api-client";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import { handleResponse } from "../../../utilities/HandleResponse";
 
-const api = new APIClient();
-interface information {
-  AccountSid: string;
-  AuthToken: string;
-  FromPhone: string;
-}
 const SMSIntegration: React.FC = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [accountSid, setAccountSid] = useState("");
+  const [authToken, setAuthToken] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const rootState = useRootState();
+  const dispatch = useDispatch();
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    handleClear,
+    isLoading,
+    formState,
+  } = useFormManager<SMSIntegrationData>({
+    url: Urls.account_group,
+    onSuccess: useCallback(
+      () =>
+        dispatch(
+          toggleAccountGroupPopup({ isOpen: false, key: null, reload: true })
+        ),
+      [dispatch]
+    ),
+    key: rootState.PopupData.accountGroup.key,
+    useApiClient: true,
+    initialData: initialSMSIntegration,
+  });
 
-  const { t } = useTranslation();
+  const onClose = useCallback(() => {
+    dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
+  }, []);
 
-  const SMSTwilioConnectPopup: React.FC = () => {
-    const initialState: information = {
-      AccountSid: "",
-      AuthToken: "",
-      FromPhone: "",
-    };
-    const [formState, setFormState] = useState<SMSIntegrationData[]>([]);
-    const [information, setInformation] = useState<information>(initialState);
-    const [loading, setLoading] = useState(true);
-    const [isSaving, setIsSaving] = useState(false);
+  const TwilioConnectPopup: React.FC = () => {
+    if (!isPopupOpen) return null;
 
-    useEffect(() => {
-      if (isOpen) {
-        loadSettings();
-      }
-    }, [isOpen]);
-
-    const loadSettings =  useCallback( async() => { 
-      setLoading(true);
-      try {
-        const response: SMSIntegrationData[] = await api.getAsync(
-          `${Urls.notification_provider}GetByChannel?channel=1`
-        );
-
-        setFormState(response);
-
-        if (response.length > 0 && response[0].configJson) {
-          try {
-            const parsedConfig = JSON.parse(response[0].configJson);
-            setInformation({
-              AccountSid: parsedConfig.AccountSid || "",
-              AuthToken: parsedConfig.AuthToken || "",
-              FromPhone: parsedConfig.FromPhone || "",
-            });
-          } catch (parseError) {
-            console.error("Error parsing configJson:", parseError);
-          }
-        }
-      } catch (error) {
-        console.error("Error loading settings:", error);
-      } finally {
-        setLoading(false);
-      }
-    },[]);
-
-    const handleFieldChange = (settingName: any, value: any) => {
-      setInformation((prevSettings = {} as information) => ({
-        ...prevSettings,
-        [settingName]: value ?? "",
-      }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-      e.preventDefault();
-      const configJson = JSON.stringify(information);
-      const updatedFormState = formState.map((item) => ({
-        ...item,
-        configJson,
-      }));
-
-      try {
-        const requestBody = updatedFormState[0];
-        const response = await api.post(
-          `${Urls.notification_provider}`,
-          requestBody
-        );
-        handleResponse(response);
-      } catch (error) {
-        console.error("Error saving settings:", error);
-      }
-    };
     return (
-      <div className="w-full pt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-1 gap-3">
+      
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+          <div className="flex justify-between items-center p-4 border-b">
+            <div className="flex items-center">
+              <span className="text-xl font-semibold">twilio</span>
+            </div>
+            <button
+              onClick={() => setIsPopupOpen(false)}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <i className="ri-close-line text-2xl"></i>
+            </button>
+          </div>
+
           <div className="p-4">
             <h2 className="text-lg font-semibold mb-3">
               Don't have an account?
@@ -134,49 +93,47 @@ const SMSIntegration: React.FC = () => {
               Twilio account.
             </p>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={(e) => e.preventDefault()}>
               <div className="mb-4">
-               
                 <ERPInput
-                  id="AccountSid"
-                  value={information.AccountSid}
-                  data={information}
+                  {...getFieldProps("accGroupName")}
                   label="Account SID"
-                  placeholder="Account SID"
-                  onChangeData={(data) =>
-                    handleFieldChange("AccountSid", data.AccountSid)
-                  }
+                  placeholder="Account SID*"
+                  required={true}
+                  onChangeData={(data: any) => {
+                    handleFieldChange("accGroupName", data);
+                  }}
                 />
               </div>
               <div className="mb-4">
                 <ERPInput
-                  id="AuthToken"
-                  value={information.AuthToken}
-                  data={information}
+                  {...getFieldProps("accGroupName")}
                   label="Auth Token"
-                  placeholder="Auth Token"
-                  onChangeData={(data) =>
-                    handleFieldChange("AuthToken", data.AuthToken)
-                  }
+                  placeholder="Auth Token*"
+                  required={true}
+                  onChangeData={(data: any) => {
+                    handleFieldChange("accGroupName", data);
+                  }}
                 />
               </div>
               <div className="mb-6">
                 <ERPInput
-                  id="FromPhone"
-                  value={information.FromPhone}
-                  data={information}
-                  label="From Phone"
-                  placeholder="From Phone"
-                  onChangeData={(data) =>
-                    handleFieldChange("FromPhone", data.FromPhone)
-                  }
+                  {...getFieldProps("accGroupName")}
+                  label="Phone Number or Sender ID"
+                  placeholder="Phone Number or Sender ID*"
+                  required={true}
+                  onChangeData={(data: any) => {
+                    handleFieldChange("accGroupName", data);
+                  }}
                 />
               </div>
-
-              <ERPButton
+              <ERPFormButtons
                 title="Connect with Twilio"
-                variant="primary"
-                type="submit"
+                onClear={handleClear}
+                isEdit={isEdit}
+                isLoading={isLoading}
+                onCancel={onClose}
+                onSubmit={handleSubmit}
               />
             </form>
           </div>
@@ -203,7 +160,7 @@ const SMSIntegration: React.FC = () => {
           </div>
         </div>
         <button
-          onClick={() => setIsOpen(true)}
+          onClick={() => setIsPopupOpen(true)}
           className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors"
         >
           Connect
@@ -258,16 +215,7 @@ const SMSIntegration: React.FC = () => {
         </ul>
       </div>
 
-      <ERPModal
-        isOpen={isOpen}
-        title={t("twilio")}
-        width="w-full max-w-[600px]"
-        isForm={true}
-        closeModal={() => {
-          setIsOpen(false);
-        }}
-        content={<SMSTwilioConnectPopup />}
-      />
+      <TwilioConnectPopup />
     </div>
   );
 };

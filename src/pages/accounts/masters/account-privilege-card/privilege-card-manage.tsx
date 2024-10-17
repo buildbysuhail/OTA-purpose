@@ -11,7 +11,7 @@ import { initialPrivilegeCard, PrivilegeCardData } from "./privilege-card-types"
 import { useTranslation } from "react-i18next";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
-export const PrivilegeCardManage : React.FC = React.memo(() => {
+export const PrivilegeCardManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -25,7 +25,7 @@ export const PrivilegeCardManage : React.FC = React.memo(() => {
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
     onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
-    key: rootState.PopupData.voucher.key,
+    key: rootState.PopupData.privilegeCard.key,
     useApiClient: true,
     initialData:initialPrivilegeCard
   });
@@ -144,4 +144,4 @@ export const PrivilegeCardManage : React.FC = React.memo(() => {
       />
     </div>
   );
-});
+}

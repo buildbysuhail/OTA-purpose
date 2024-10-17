@@ -1,57 +1,30 @@
 export const initialBankCards = {
   data: {
-    accGroupID: 0,
     branchID: 0,
-    accGroupName: '',
-    shortName: '',
-    parentGroupID: 0,
-    remarks: '',
-    isEditable: true,
-    isDeletable: true,
-    isProtected: true,
-    isCommon: true,
+    paymentName: "",
+    paymentType: "",
     createdUserID: 0,
-    aStatus: '',
-    displayOrder: 0,
-    arabicName: '',
-    modifiedUserID: 0,
-    reasonForModification: ''
+    ledgerID: 0,
+    remarks: "",
+    paymentTypeID: 0
   },
   validations: {
-    accGroupID: '',
-    branchID: '',
-    accGroupName: '',
-    shortName: '',
-    parentGroupID: '',
-    remarks: '',
-    isEditable: '',
-    isDeletable: '',
-    isProtected: '',
-    isCommon: '',
-    createdUserID: '',
-    aStatus: '',
-    displayOrder: '',
-    arabicName: '',
-    modifiedUserID: '',
-    reasonForModification: ''
+    branchID: "",
+    paymentName: "",
+    paymentType: "",
+    createdUserID: "",
+    ledgerID: "",
+    remarks: "",
+    paymentTypeID: ""
   },
 };
 
- export interface BankCardsData {
-  accGroupID: number,
+export interface BankCardsData {
   branchID: number,
-  accGroupName: string,
-  shortName: string,
-  parentGroupID: number,
-  remarks: string,
-  isEditable: boolean,
-  isDeletable: boolean,
-  isProtected: boolean,
-  isCommon: boolean,
+  paymentName: string,
+  paymentType: string,
   createdUserID: number,
-  aStatus: string,
-  displayOrder: number,
-  arabicName: string,
-  modifiedUserID: number,
-  reasonForModification: string
+  ledgerID: number,
+  remarks: string,
+  paymentTypeID: number
 }

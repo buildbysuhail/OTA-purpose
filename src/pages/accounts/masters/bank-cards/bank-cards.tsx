@@ -7,117 +7,91 @@ import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import { AccountGroupManage } from "../account-groups/account-group-manage";
 import { useTranslation } from "react-i18next";
 import { BankCardsManage } from "./bank-cards-manage";
 
-const AccountGroupType = () => {
-
-  const MemoizedBankCardsManage = useMemo(() => React.memo(BankCardsManage), []);
+const BankCards = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-
-  const columns: DevGridColumn[] = useMemo(() => [
+  const columns: DevGridColumn[] = [
     {
-      dataField: "s.No",
-    //   caption: t("SiNo"),
-      caption: ("Payment Type ID"),
+      dataField: "paymentTypeID",
+      caption: t("payment_type_ID"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
-    //   isLocked: true,
+      width: 100,
     },
     {
-      dataField: "id",
-    //   caption: t('id'),
-      caption: ('Branch ID'),
+      dataField: "branchID",
+      caption: t('branch_ID'),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
+      width: 100,
     },
     {
-      dataField: "accGroupName",
-    //   caption: t("acc_group"),
-      caption:("Ledger ID"),
+      dataField: "ledgerID",
+      caption: t("ledger_ID"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
     },
     {
-      dataField: "shortName",
-    //   caption: t("short_name"),
-      caption: ("Payment Type"),
+      dataField: "paymentType",
+      caption: t("payment_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
     },
     {
-      dataField: "parentGroup",
-      caption: t("parent_group"),
+      dataField: "paymentName",
+      caption: t("payment_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
+      width: 150,
     },
     {
-      dataField: "remarks",
-    //   caption: t("remarks"),
-      caption: ("Payment Name"),
+      dataField: "createdUserID",
+      caption: t("created_user_ID"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
+      width: 150,
     },
     {
-      dataField: "isEditable",
-    //   caption: t("is_editable"),
-      caption: ("Created User ID"),
+      dataField: "createdDate",
+      caption: t("created_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
+      width: 150,
     },
     {
-      dataField: "isDeletable",
-    //   caption: t("is_deletable"),
-      caption: ("Created Date"),
+      dataField: "modifiedUserID",
+      caption: t("modified_user_ID"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
+      width: 150,
     },
     {
-      dataField: "isProtected",
-    //   caption: t("is_protected"),
-      caption: ("Modified User ID"),
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
+      width: 150,
     },
     {
-      dataField: "isCommon",
-    //   caption: t("is_common"),
-      caption: ("Modified Date"),
+      dataField: "remark",
+      caption: t("remarks"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 130,
-    },
-    {
-      dataField: "createdUser",
-    //   caption: t("created_user"),
-      caption: ("Remark"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 130,
     },
     {
       dataField: "actions",
@@ -127,22 +101,18 @@ const AccountGroupType = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => {
-
-        return (
-          <ERPGridActions
-            view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            delete={{
-              confirmationRequired: true,
-              confirmationMessage: "Are you sure you want to delete this item?",
-              // action: () => handleDelete(cellInfo?.data?.id),
-            }}
-          />
-        )
-      },
-    }
-  ], []);
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <ERPGridActions
+          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
+          delete={{
+            confirmationRequired: true,
+            confirmationMessage: "Are you sure you want to delete this item?",
+          }}
+        />
+      ),
+    },
+  ];
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -152,14 +122,13 @@ const AccountGroupType = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                //   gridHeader={t("acc_group")}
-                  gridHeader={"Bank Cards"}
-                  dataUrl={Urls.account_group}
-                  gridId="grd_acc_group"
+                  gridHeader={t("bank_cards")}
+                  dataUrl={Urls.data_bankcards}
+                  gridId="grd_bank_cards"
                   popupAction={toggleBankCardsPopup}
                   gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.accountGroup?.reload}
-                  gridAddButtonIcon=""
+                  reload={rootState?.PopupData?.bankCard?.reload}
+                  gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
             </div>
@@ -167,9 +136,8 @@ const AccountGroupType = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.accountGroup.isOpen || false}
-        // title={t("acc_group")}
-        title={"Bank Cards"}
+        isOpen={rootState.PopupData.bankCard.isOpen || false}
+        title={t("bank_cards")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -181,4 +149,4 @@ const AccountGroupType = () => {
   );
 };
 
-export default React.memo(AccountGroupType);
+export default BankCards;

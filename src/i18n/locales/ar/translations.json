@@ -586,5 +586,25 @@
   "account_payable_aging_report": "تقرير تقادم الحسابات الدائنة",
   "account_receivable_aging_report": "تقرير تقادم الحسابات المدينة",
   "days": "الأيام",
-  "delete_all":"Delete All"
+  "delete_all": "حذف الكل",
+
+  "sub_unit_symbol": "رمز الوحدة الفرعية",
+  "country_name": "اسم الدولة",
+  "country_ID": "معرف الدولة",
+  "update": "تحديث",
+
+  "sms_integration": "تكامل الرسائل القصيرة",
+  "twilio": "Twilio",
+  
+  "payment_type_ID": "معرف نوع الدفع",
+  "branch_ID": "معرف الفرع",
+  "ledger_ID": "معرف دفتر الأستاذ",
+  "payment_type": "نوع الدفع",
+  "payment_name": "اسم الدفع",
+  "created_user_ID": "معرف المستخدم المُنشئ",
+  "modified_user_ID": "معرف المستخدم المعدل",
+  "bank_cards": "بطاقات بنكية",
+  "debit_cards": "بطاقات الخصم",
+  "card_name": "اسم البطاقة"
+
 }

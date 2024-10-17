@@ -587,5 +587,24 @@
   "account_payable_aging_report":"Account Payable Aging Report",
   "account_receivable_aging_report":"Account Receivable Aging Report",
   "days":"Days",
-  "delete_all":"Delete All"
+  "delete_all":"Delete All",
+
+  "sub_unit_symbol":"Sub Unit Symbol",
+  "country_name":"Country Name",
+  "country_ID":"Country ID",
+  "update":"Update",
+
+  "sms_integration": "SMS Integration" ,
+  "twilio": "Twilio",
+
+  "payment_type_ID":"Payment Type ID",
+  "branch_ID":"Branch ID",
+  "ledger_ID":"Ledger ID",
+  "payment_type":"Payment Type",
+  "payment_name":"Payment Name",
+  "created_user_ID":"Created User ID",
+  "modified_user_ID":"Modified User ID",
+  "bank_cards":"Bank Cards",
+  "debit_cards":"Debit Cards",
+  "card_name":"Card Name"
 }

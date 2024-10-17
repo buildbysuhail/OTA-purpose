@@ -1,115 +1,143 @@
-import { Fragment } from "react";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { ResponseModelWithValidation } from "../../../../base/response-model";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import { APIClient } from "../../../../helpers/api-client";
 import { toggleChartOfAccounts } from "../../../../redux/slices/popup-reducer";
-import { ChartOfAccountsManage } from "./chart-of-accounts-manage";
+import Urls from "../../../../redux/urls";
+import { handleResponse } from "../../../../utilities/HandleResponse";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
+import UserTypeTree from "../../../settings/userManagement/user-rights-tree";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { TreeList } from "devextreme-react";
+import { Column, Selection } from "devextreme-react/cjs/tree-list";
 
-const ChartOfAccounts = () => {
+const api = new APIClient();
+
+interface ChartOfAccountsData {
+  accountGroup: string;
+  aliasName: string;
+  code: string;
+  isGroup: number;
+  balance: string;
+  parentID: number;
+  createdUser: string;
+  createdDate: string;
+  refBranchID: string;
+  purchaseLedgerID: string;
+  receivableLedgerID: string;
+  branchPayableLedgerID: string;
+}
+
+interface FormState {
+  data: ChartOfAccountsData;
+  validations: { [K in keyof ChartOfAccountsData]: string };
+}
+
+const initialChartOfAccountsData: FormState = {
+  data: {
+    accountGroup: "",
+    aliasName: "",
+    code: "",
+    isGroup: 1,
+    balance: "",
+    parentID: 1,
+    createdUser: "",
+    createdDate: "",
+    refBranchID: "",
+    purchaseLedgerID: "",
+    receivableLedgerID: "",
+    branchPayableLedgerID: "",
+  },
+  validations: {
+    accountGroup: "",
+    aliasName: "",
+    code: "",
+    isGroup: "",
+    balance: "",
+    parentID: "",
+    createdUser: "",
+    createdDate: "",
+    refBranchID: "",
+    purchaseLedgerID: "",
+    receivableLedgerID: "",
+    branchPayableLedgerID: "",
+  },
+};
+
+const ChartOfAccounts: React.FC = React.memo(() => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const rootState = useRootState();
+  const [data, setData] = useState<any>();
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const columns: DevGridColumn[] = [
-    {
-      dataField: "accountGroup",
-      caption: t("chart_of_accounts"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 220,
-    },
-    {
-      dataField: "aliasName",
-      caption: t("alias_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 220,
-    },
-    {
-      dataField: "code",
-      caption: t("code"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "createdUser",
-      caption: t("created_user"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 220,
-    },
-    {
-      dataField: "createdDate",
-      caption: t("created_date"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 220,
-    },
-    {
-      dataField: "actions",
-      caption: t("actions"),
-      allowSearch: false,
-      allowFiltering: false,
-      fixed: true,
-      fixedPosition: "right",
-      width: 180,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <ERPGridActions
-          view={{ type: "popup", action: () => toggleChartOfAccounts({ isOpen: true, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleChartOfAccounts({ isOpen: true, key: cellInfo?.data?.id }) }}
-          delete={{
-            confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
-          }}
-        />
-      ),
-    },
-  ];
+  useEffect(() => {
+    loadAccountStructure();
+  }, []);
 
+  const loadAccountStructure = async () => {
+    setLoading(true);
+    const res: any = await api.getAsync(`${Urls.chart_of_accounts}`);
+    setData(res);
+    setLoading(false);
+  };
   return (
-    <Fragment>
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("chart_of_accounts")}
-                  dataUrl={Urls.chart_of_accounts}
-                  gridId="grd_chart_of_accounts"
-                  popupAction={toggleChartOfAccounts}
-                  gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.chartOfAccounts?.reload}
-                  gridAddButtonIcon=""
-                ></ErpDevGrid>
+    <div className="w-full flex justify-start">
+      <Fragment>
+        <div className="grid grid-cols-12 gap-x-6">
+          <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+            <div className="box custom-box">
+              <div className="box-body">
+                {data ? (
+                  <div className="grid grid-cols-1 gap-3">
+                    <TreeList
+                      id="id"
+                      dataSource={data}
+                      showRowLines={true}
+                      showBorders={true}
+                      columnAutoWidth={true}
+                      // defaultExpandedRowKeys={expandedRowKeys}
+                      // selectedRowKeys={selectedRowKeys}
+                      keyExpr="id"
+                      parentIdExpr="parentID"
+                    // onSelectionChanged={onSelectionChanged}
+                    >
+                      <Selection recursive={true} mode="multiple" />
+                      <Column dataField="accountGroup"
+                        caption={t("chart_of_accounts")}
+                        dataType="string"
+                        allowSearch={true}
+                        allowFiltering={true}
+                      />
+                    </TreeList>
+                  </div>
+                ) : (
+                  <>
+                    {
+                      loading ? (
+                        <div> loading...</div>
+                      ) : (
+                        <div> No data...</div>
+                      )}
+                  </>
+
+
+                )}
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <ERPModal
-        isOpen={rootState.PopupData.chartOfAccounts.isOpen || false}
-        title={t("chart_of_accounts")}
-        width="w-full max-w-[600px]"
-        isForm={true}
-        closeModal={() => {
-          dispatch(toggleChartOfAccounts({ isOpen: false, key: null }));
-        }}
-        content={<ChartOfAccountsManage />}
-      />
-    </Fragment>
+
+      </Fragment>
+    </div>
   );
-};
+});
 
 export default ChartOfAccounts;

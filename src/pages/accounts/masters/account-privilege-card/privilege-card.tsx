@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { toggleAccountLedgerPopup, togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer";
+import { togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
@@ -18,7 +18,7 @@ const PrivilegeCard = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "privilegeCardID",
-      caption: "Privilege Card ID",
+      caption: t("privilege_card_ID"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -27,7 +27,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "branchID",
-      caption: "Branch ID",
+      caption: t("branch_ID"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -35,7 +35,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "cardNumber",
-      caption: "Card Number",
+      caption: t("card_number"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -43,28 +43,28 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "cardHolderName",
-      caption: "Card Holder Name",
+      caption: t("card_holder_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
       dataField: "address1",
-      caption: "Address 1",
+      caption: t("address1"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
       dataField: "address2",
-      caption: "Address 2",
+      caption: t("address2"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
       dataField: "phone",
-      caption: "Phone",
+      caption: t("phone"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -72,7 +72,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "mobile",
-      caption: "Mobile",
+      caption: t("mobile"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -80,7 +80,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "email",
-      caption: "Email",
+      caption: t("email"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -88,7 +88,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "dob",
-      caption: "Date of Birth",
+      caption: t("date_of_birth"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -96,7 +96,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "changeID",
-      caption: "Change ID",
+      caption: t("change_ID"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -104,7 +104,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "cardType",
-      caption: "Card Type",
+      caption: t("card_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -112,7 +112,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "priceCategoryID",
-      caption: "Price Category ID",
+      caption: t("price_category_ID"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -120,7 +120,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "expiryDate",
-      caption: "Expiry Date",
+      caption: t("expiry_date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -128,7 +128,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "activateDate",
-      caption: "Activate Date",
+      caption: t("activate_date"),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
@@ -136,7 +136,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "createdUserID",
-      caption: "Created User ID",
+      caption: t("created_user_ID"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -144,7 +144,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "opBalance",
-      caption: "Opening Balance",
+      caption: t("opening_balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -152,7 +152,7 @@ const PrivilegeCard = () => {
     },
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -179,7 +179,7 @@ const PrivilegeCard = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Privilege Card"
+                  gridHeader={t("privilege_card")}
                   dataUrl={Urls.account_privilege_card}
                   gridId="grd_privilege_card"
                   popupAction={togglePrivilegeCardPopup}
@@ -194,7 +194,7 @@ const PrivilegeCard = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.privilegeCard.isOpen || false}
-        title={"Privilege Card"}
+        title={t("privilege_card")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

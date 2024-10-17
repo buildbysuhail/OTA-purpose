@@ -608,5 +608,17 @@
   "debit_cards":"Debit Cards",
   "card_name":"Card Name",
 
-  "currency_master":"Currency Master"
+  "currency_master":"Currency Master",
+  "privilege_card_ID":"Privilege Card ID",
+  "card_number":"Card Number",
+  "card_holder_name":"Card Holder Name",
+  "date_of_birth":"Date Of Birth",
+  "change_ID":"Change ID",
+  "card_type":"Card Type",
+  "price_category_ID":"Price Category ID",
+  "expiry_date":"Expiry Date",
+  "activate_date":"Activate Date",
+  "privilege_card":"Privilege Card",
+  "price_category":"Price Category",
+  "op_balance":"Op Balance"
 }

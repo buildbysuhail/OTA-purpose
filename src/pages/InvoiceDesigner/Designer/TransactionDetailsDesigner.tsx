@@ -9,6 +9,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-select";
 import ERPSlider from "../../../components/ERPComponents/erp-slider";
 import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
+import { RootState } from "../../../redux/store";
 
 
 interface HeaderDesignerProps {
@@ -25,8 +26,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
 
   const headerState = template?.headerState;
 
-  const comapanies = useSelector((state: any) => state?.GetUserCompanies);
-  const activeBranch = comapanies?.data?.find((item: any) => item?.is_active);
+  const userSession = useSelector((state: RootState) => state?.UserSession);
 
   const isCustomer = !["purchase_order", "vendor", "payment_made"]?.includes(templateGroup!)
 
@@ -48,7 +48,7 @@ const TransactionDetailsDesigner = ({ template, onChange }: HeaderDesignerProps)
         />
         {headerState?.showLogo && (
           <div className="flex flex-col gap-2">
-            <img src={activeBranch?.company?.image} className="border border-dashed mb-2 h-16 w-full object-contain" />
+            <img src={userSession?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo} className="border border-dashed mb-2 h-16 w-full object-contain" />
             <ERPSlider
               id="logoSize"
               label="Logo Size"

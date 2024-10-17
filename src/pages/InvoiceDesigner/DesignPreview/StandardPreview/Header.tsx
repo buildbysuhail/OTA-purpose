@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { StandardPreviewProps } from ".";
 import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
 
 const Header = ({ template, data, docTitle, docIDKey, templateGroupId, addressTemplates, currency, company}: StandardPreviewProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
@@ -37,6 +39,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, addressTe
   const docTitleVal = docTitle || headerState?.docTitle;
   const numberField = docTitle && headerState?.numberField;
   const docID = data?.[docIDKey || "sales_invoice_no"] || "";
+  const userSession = useSelector((state: RootState) => state?.UserSession);
 
 
   /* ######################################################################################### */
@@ -78,8 +81,8 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, addressTe
       {/* Company Info */}
       <div style={{ paddingLeft, paddingRight }} className=" relative flex w-full z-10 flex-wrap">
         <div className="flex-1 flex flex-col text-xs ">
-          {headerState?.showLogo && <img src={company?.image} style={{ width: 80 * logoWidthRatio }} className="mt-2 mb-2" draggable={false} />}
-          {headerState?.showOrgName && <a style={{ color: orgNameFontColor, fontSize: orgNameFontSize }} className="capitalize font-semibold">{company?.name}</a>}
+          {headerState?.showLogo && <img src={userSession?.branches?.find(x => x.id == userSession.currentBranchId && x.clientId == userSession.currentClientId)?.logo} style={{ width: 80 * logoWidthRatio }} className="mt-2 mb-2" draggable={false} />}
+          {headerState?.showOrgName && <a style={{ color: orgNameFontColor, fontSize: orgNameFontSize }} className="capitalize font-semibold">{userSession?.currentBranchName}</a>}
           {headerState?.showOrgAddress && (
             <div style={styles.labelStyles} className="flex flex-col">
               {addressTemplates?.orgAddressTemplate?.map((org: any, idx: number) => (

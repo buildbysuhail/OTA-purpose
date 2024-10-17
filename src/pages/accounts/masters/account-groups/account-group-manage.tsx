@@ -29,7 +29,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
-    initialData: initialAccountGroup,
+    initialData: initialAccountGroup.data,
   });
 
   const onClose = useCallback(() => {
@@ -63,16 +63,16 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange('shortName', data)}
         />
         <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
+          {...getFieldProps("parentGroupID")}
           field={{
-            id: "accGroupID",
+            id: "parentGroupID",
             required: true,
             getListUrl: Urls.data_acc_groups,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data)
+            handleFieldChange("parentGroupID", data)
           }}
           label={t("group_under")}
         />

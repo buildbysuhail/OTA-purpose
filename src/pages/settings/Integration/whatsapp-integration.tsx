@@ -19,6 +19,7 @@ import { ActionType } from "../../../redux/types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import WhatsAppDemo from "./whatsapp-demo"
 
 const api = new APIClient();
 interface information {
@@ -83,48 +84,46 @@ const WhatsappIntegration = () => {
       }));
     };
 
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //   e.preventDefault();
-    //   const configJson = JSON.stringify(information);
-    //   const updatedFormState = formState.map((item) => ({
-    //     ...item,
-    //     configJson,
-    //     provider: 2,
-    //     channel: 2,
-    //   }));
-
-    //   try {
-    //     const requestBody = updatedFormState[0];
-    //     const response = await api.post(
-    //       `${Urls.notification_provider}`,
-    //       requestBody
-    //     );
-    //     handleResponse(response);
-    //   } catch (error) {
-    //     console.error("Error saving settings:", error);
-    //   }
-    // };
-
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-    
-      // Create the request body according to your model structure
-      const requestBody = {
-        id: 0,  // Set this to an appropriate value if needed
-        branchId: 0, // Set this if relevant, or adjust as necessary
-        provider: 2, // Assuming Twilio is provider 2
-        channel: 2, // Assuming this is for WhatsApp
-        configJson: JSON.stringify(information),
-        isEnable: true, // Assuming you want this enabled by default
-      };
-    
+      const configJson = JSON.stringify(information);
+      const updatedFormState = formState.map((item) => ({
+        ...item,
+        configJson,
+      }));
+
       try {
-        const response = await api.post(`${Urls.notification_provider}`, requestBody);
+        const requestBody = updatedFormState[0];
+        const response = await api.post(
+          `${Urls.notification_provider}`,
+          requestBody
+        );
         handleResponse(response);
       } catch (error) {
         console.error("Error saving settings:", error);
       }
     };
+
+    // const handleSubmit = async (e: React.FormEvent) => {
+    //   e.preventDefault();
+    
+    //   // Create the request body according to your model structure
+    //   const requestBody = {
+    //     id: 0,  // Set this to an appropriate value if needed
+    //     branchId: 0, // Set this if relevant, or adjust as necessary
+    //     provider: 2, // Assuming Twilio is provider 2
+    //     channel: 2, // Assuming this is for WhatsApp
+    //     configJson: JSON.stringify(information),
+    //     isEnable: true, // Assuming you want this enabled by default
+    //   };
+    
+    //   try {
+    //     const response = await api.post(`${Urls.notification_provider}`, requestBody);
+    //     handleResponse(response);
+    //   } catch (error) {
+    //     console.error("Error saving settings:", error);
+    //   }
+    // };
     
 
     return (
@@ -211,7 +210,7 @@ const WhatsappIntegration = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
+    <div className="p-6 max-w-8xl mx-auto bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4 text-gray-800">
         whatsapp Integrations
       </h1>
@@ -281,6 +280,7 @@ const WhatsappIntegration = () => {
             </a>
           </li>
         </ul>
+        <WhatsAppDemo/>
       </div>
 
       <ERPModal

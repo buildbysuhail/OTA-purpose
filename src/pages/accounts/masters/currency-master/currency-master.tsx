@@ -117,7 +117,7 @@ const CurrencyMaster = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader="Currency Master"
+                  gridHeader={t("currency_master")}
                   dataUrl={Urls.account_currency_master}
                   gridId="grd_currency_master"
                   popupAction={toggleCurrencyMasterPopup}

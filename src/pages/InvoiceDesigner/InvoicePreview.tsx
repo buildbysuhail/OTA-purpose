@@ -2,7 +2,10 @@ import { Fragment, useEffect, useState } from "react";
 import { Popover } from "@headlessui/react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Cog6ToothIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/outline";
+import {
+  Cog6ToothIcon,
+  EllipsisHorizontalIcon,
+} from "@heroicons/react/24/outline";
 import { PDFViewer, PDFDownloadLink, View } from "@react-pdf/renderer";
 import { PrinterIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 
@@ -16,18 +19,31 @@ import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import { parseAddressTemplate } from "./utils";
 import DNPSTemplate from "./DownloadPreview/DeliveryNote_PackingSlip";
 import { TemplateState } from "./Designer/interfaces";
-import { getAmountInWords, getCurrentCurrencySymbol } from "../../utilities/Utils";
+import {
+  getAmountInWords,
+  getCurrentCurrencySymbol,
+} from "../../utilities/Utils";
 import usePreferenceData from "../../utilities/hooks/usePreference";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
-import { isTaxApplicable, taxListFinder, taxListFinderInclusive } from "../../utilities/ERPUtils";
+import {
+  isTaxApplicable,
+  taxListFinder,
+  taxListFinderInclusive,
+} from "../../utilities/ERPUtils";
 import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPPopover from "../../components/ERPComponents/erp-popover";
 import ERPSideView from "../../components/ERPComponents/erp-side-view";
 import ERPChangeTemplateSidebar from "../../components/ERPComponents/erp-change-template-sidebar";
-import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../utilities/hooks/useAppDispatch";
 import { getAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
 import { RootState } from "../../redux/store";
+import { APIClient } from "../../helpers/api-client";
+import { Template } from "devextreme-react";
+import { getTemplates } from "../../redux/slices/templates/thunk";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -51,8 +67,16 @@ const AssociatedCustomerPDFList = [
 ];
 
 const AssociatedVendorPDFList = ["purchase_invoice", "purchase_order"];
+const api = new APIClient();
 
-const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_invoice", showOptions = true, endpointUrl }: InvoicePreviewProps) => {
+const InvoicePreview = ({
+  data,
+  docIDKey,
+  docTitle,
+  templateGroupId = "sales_invoice",
+  showOptions = true,
+  endpointUrl,
+}: InvoicePreviewProps) => {
   debugger;
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -76,79 +100,74 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
   const [templatesInfo, setTemplatesInfo] = useState<any>({ loading: true });
   const [voucherType, setVoucherType] = useState<PDFVoucherTypes>("normal");
 
-  const templatesReducerName = reducerNameFromUrl(Urls.templates, "GET");
-  const templatesList = useSelector((state: any) => state?.[templatesReducerName]);
+  const templateWrap = useSelector(
+    (state: any) => state?.Template
+  ) as TemplateReducerState;
 
   const gstTreatmentReducerName = reducerNameFromUrl(Urls.tax_treatment, "GET");
-  const gstTreatmentList = useSelector((state: any) => state?.[gstTreatmentReducerName])?.data?.results;
-
-  const reduxTemplateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+  const gstTreatmentList = useSelector(
+    (state: any) => state?.[gstTreatmentReducerName]
+  )?.data?.results;
 
   const comapanies = useSelector((state: any) => state?.GetUserCompanies);
   const ActiveBranch = comapanies?.data?.find((item: any) => item?.is_active);
 
-  const totalAmountInwords = getAmountInWords(isNaN(+data?.total_price) ? 0 : +data?.total_price, currencySymbol||'');
-  const orgAddressTemplate = parseAddressTemplate(generalPrefData?.organization_address_format, ActiveBranch?.company);
+  const totalAmountInwords = getAmountInWords(
+    isNaN(+data?.total_price) ? 0 : +data?.total_price,
+    currencySymbol || ""
+  );
+  const orgAddressTemplate = parseAddressTemplate(
+    generalPrefData?.organization_address_format,
+    ActiveBranch?.company
+  );
 
   /* ########################################################################################### */
-
-  const getTemplateInfo = (): { content: TemplateState; data: any } => {
+  const getTemplateInfo = (): { content?: TemplateState } => {
     // checking  :  if  voucher wise templpate Id available
+    // pathname?.includes("/invoice_designer/") ? reduxTemplateData?.activeTemplate : getTemplateInfo().content
     if (data?.template?.id) {
-      let result = templatesList?.data?.find((template: any) => template?.voucher_type === templateGroupId && template?.id === data?.template?.id);
+      let result = templateWrap.templates?.find(
+        (template: any) =>
+          template?.voucher_type === templateGroupId &&
+          template?.id === data?.template?.id
+      );
       return {
-        content: result?.content,
-        data: {
-          background_image: result?.background_image,
-          background_image_header: result?.background_image_header,
-          background_image_footer: result?.background_image_footer,
-          signature_image: result?.signature_image,
-        },
+        content: result,
       };
     }
     //
     // checking : if  customer/vendor associated templpate Id available
     else if (associatedTempInfo?.[templateGroupId]) {
-      let result = templatesList?.data?.find(
-        (template: any) => template?.voucher_type === templateGroupId && template?.id === associatedTempInfo?.[templateGroupId]
+      let result = templateWrap.templates?.find(
+        (template: any) =>
+          template?.voucher_type === templateGroupId &&
+          template?.id === associatedTempInfo?.[templateGroupId]
       );
       return {
-        content: result?.content,
-        data: {
-          background_image: result?.background_image,
-          background_image_header: result?.background_image_header,
-          background_image_footer: result?.background_image_footer,
-          signature_image: result?.signature_image,
-        },
+        content: result,
       };
     }
     //
     // Appplying default template of the templates group
     else {
-      let result = templatesList?.data?.find((template: any) => template?.voucher_type === templateGroupId && template?.is_default);
+      let result = templateWrap?.templates?.find(
+        (template: any) =>
+          template?.voucher_type === templateGroupId && template?.is_default
+      );
       return {
-        content: result?.content,
-        data: {
-          background_image: result?.background_image,
-          background_image_header: result?.background_image_header,
-          background_image_footer: result?.background_image_footer,
-          signature_image: result?.signature_image,
-        },
+        content: result,
       };
     }
   };
-
   /* ########################################################################################### */
-
-  const templateData = pathname?.includes("/invoice_designer/") ? reduxTemplateData?.activeTemplate : getTemplateInfo().content;
-  const templateImages = pathname?.includes("/invoice_designer/")
-    ? {
-        background_image: reduxTemplateData?.data?.background_image,
-        background_image_header: reduxTemplateData?.data?.background_image_header,
-        background_image_footer: reduxTemplateData?.data?.background_image_footer,
-        signature_image: reduxTemplateData?.data?.signature_image,
-      }
-    : getTemplateInfo().data;
+  const [templateData, setTemplateData] = useState<TemplateState | undefined>();
+  useEffect(() => {
+    debugger;
+    setTemplateData(pathname?.includes("/invoice_designer/")
+      ? templateWrap?.activeTemplate
+      : getTemplateInfo().content);
+  },[templateWrap?.activeTemplate]);
+  debugger;
 
   /* ########################################################################################### */
 
@@ -180,18 +199,35 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
 
   const tableSummary = useSelector((state: any) => state.ERPTableSummary);
 
-  const hasTax = isTaxApplicable(pathname, data, gstTreatmentList, data?.items, data);
+  const hasTax = isTaxApplicable(
+    pathname,
+    data,
+    gstTreatmentList,
+    data?.items,
+    data
+  );
 
   const updatedTableData = data?.items?.map((item: any) => ({
     ...item,
-    tax_split: item?.item_tax_category?.tax_split?.map((split: any) => ({ ...split, name: item?.item_tax_category?.name })),
+    tax_split: item?.item_tax_category?.tax_split?.map((split: any) => ({
+      ...split,
+      name: item?.item_tax_category?.name,
+    })),
   }));
 
   let taxInfo: any = {};
   if (data?.is_tax == "inclusive") {
-    taxInfo = hasTax ? taxListFinderInclusive(updatedTableData, tableSummary, data?.discount_type) : [];
+    taxInfo = hasTax
+      ? taxListFinderInclusive(
+          updatedTableData,
+          tableSummary,
+          data?.discount_type
+        )
+      : [];
   } else {
-    taxInfo = hasTax ? taxListFinder(updatedTableData, tableSummary, data?.discount_type) : [];
+    taxInfo = hasTax
+      ? taxListFinder(updatedTableData, tableSummary, data?.discount_type)
+      : [];
   }
 
   /* ####################################################################### */
@@ -202,14 +238,18 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
         {hasPermissionForTemplates && (
           <Popover.Button
             className=" p-2 w-full rounded-t hover:bg-accent hover:text-white text-left"
-            onClick={() => navigate(`/templates?template_group=${templateGroupId}`)}
+            onClick={() =>
+              navigate(`/templates?template_group=${templateGroupId}`)
+            }
           >
             Edit Template
           </Popover.Button>
         )}
         {hasPermissionToUpdateProfile && (
           <Popover.Button
-            className={`p-2 border-t  ${templateGroupId !== "sales_invoice" && "rounded-b"} hover:bg-accent hover:text-white text-left`}
+            className={`p-2 border-t  ${
+              templateGroupId !== "sales_invoice" && "rounded-b"
+            } hover:bg-accent hover:text-white text-left`}
             onClick={() => navigate("/settings/organization")}
           >
             Update Logo & Address
@@ -258,7 +298,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
           docIDKey={docIDKey}
           docTitle={docTitle}
           ActiveBranch={ActiveBranch}
-          currencySymbol={currencySymbol||''}
+          currencySymbol={currencySymbol || ""}
           totalAmountInwords={totalAmountInwords}
           AddressTemplates={{ orgAddressTemplate }}
         />
@@ -272,8 +312,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
           docTitle={docTitle}
           template={templateData}
           ActiveBranch={ActiveBranch}
-          currencySymbol={currencySymbol||''}
-          templateImages={templateImages}
+          currencySymbol={currencySymbol || ""}
           totalAmountInwords={totalAmountInwords}
           templateGroupId={templateGroupId}
           AddressTemplates={{ orgAddressTemplate }}
@@ -296,7 +335,11 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
               template={templateData}
               company={ActiveBranch?.company}
               addressTemplates={{ orgAddressTemplate }}
-              preference={PDFType === "deliveryNote" ? deliveryNotePrefData : packingSlipPrefData}
+              preference={
+                PDFType === "deliveryNote"
+                  ? deliveryNotePrefData
+                  : packingSlipPrefData
+              }
             />
           )}
         </PDFViewer>
@@ -305,7 +348,7 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
   };
 
   /* ####################################################################### */
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
     if (data) {
       // if (AssociatedCustomerPDFList?.includes(templateGroupId) && !pathname?.includes("/invoice_designer/")) {
@@ -318,12 +361,24 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
       //     setAssociatedTempInfo(res?.payload?.data[0]);
       //   });
       // }
-      appDispatch(getAction({apiUrl: Urls.templates, params:`voucher_type=${templateGroupId}`}));
+      appDispatch(
+        getAction({
+          apiUrl: Urls.templates,
+          params: `template_group=${templateGroupId}`,
+        })
+      );
     }
   }, [data]);
+  const [generalBackGroundStyle, setGeneralBackGroundStyle] = useState<any>({
+    backgroundRepeat: "no-repeat",
+    backgroundColor: templateData?.propertiesState?.bg_color || "#fff",
+    backgroundPosition:
+      templateData?.propertiesState?.bg_image_position ?? "top left",
+  });
 
   // Used setTimeout for adding Loader which wait for completing re-render  of the preview
   useEffect(() => {
+    dispatch(getTemplates("template_group='sales_invoice'"));
     setTimeout(() => {
       setTemplatesInfo((prevData: any) => ({ ...prevData, loading: false }));
       if (searchParams?.get("print_voucher")) {
@@ -331,18 +386,21 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
       }
     }, 2000);
   }, []);
+  useEffect(() => {
+    debugger;
+    setGeneralBackGroundStyle((previous: any) => ({
+      ...previous,
+      backgroundImage: templateData?.background_image
+        ? `url(${templateData?.background_image})`
+        : "",
+      backgroundRepeat: "no-repeat",
+      backgroundColor: templateData?.propertiesState?.bg_color,
+      backgroundPosition:
+        templateData?.propertiesState?.bg_image_position ?? "top left",
+    }));
+  }, [templateData, templateData?.propertiesState?.bg_image_position]);
 
   /* ####################################################################### */
-
-  let generalBackGroundStyle: any = { backgroundColor };
-
-  if (templateImages?.background_image) {
-    generalBackGroundStyle = {
-      backgroundImage: `url(${templateImages?.background_image})`,
-      backgroundRepeat: "no-repeat",
-      backgroundPosition: templateData?.propertiesState?.bg_image_position ?? "top left",
-    };
-  }
 
   /* ####################################################################### */
 
@@ -385,7 +443,6 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
                 templateGroupId={templateGroupId}
                 addressTemplates={{ orgAddressTemplate }}
                 preferences={{ invoicePreference: invoicePrefData }}
-                templateImages={templateImages}
               />
             )}
           </div>
@@ -406,7 +463,12 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
 
               {/* ############################ Download Option ############################ */}
 
-              <PDFDownloadLink document={<DownloadPreviewTemplate />} fileName={`${data?.[docIDKey || "sales_invoice_no"] || "voucher"}.pdf`}>
+              <PDFDownloadLink
+                document={<DownloadPreviewTemplate />}
+                fileName={`${
+                  data?.[docIDKey || "sales_invoice_no"] || "voucher"
+                }.pdf`}
+              >
                 {/* {({ blob, url, loading, error }) => (
                   <div
                     title="Download Invoice"
@@ -446,7 +508,11 @@ const InvoicePreview = ({ data, docIDKey, docTitle, templateGroupId = "sales_inv
                 </ERPPopover>
               )}
 
-              <ERPSideView title="Model" show={showChangeTemplate} onClose={() => setShowChangeTemplate(false)}>
+              <ERPSideView
+                title="Model"
+                show={showChangeTemplate}
+                onClose={() => setShowChangeTemplate(false)}
+              >
                 <ERPChangeTemplateSidebar
                   data={data}
                   templateId={templateGroupId}

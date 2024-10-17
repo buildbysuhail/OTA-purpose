@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { StandardPreviewProps } from ".";
 
 const Footer = ({ template, data, templateGroupId, templateImages }: StandardPreviewProps) => {
@@ -20,20 +21,21 @@ const Footer = ({ template, data, templateGroupId, templateImages }: StandardPre
   const footerFontColor = template?.footerState?.footerFontColor || "#000";
 
   /* ######################################################################################### */
+ 
+  const [generalFooterBGStyle, setGeneralFooterBGStyle] = useState<any>({ height: paddingBottom, backgroundColor, color: footerFontColor});
 
-  let generalFooterBGStyle: any = { height: paddingBottom, backgroundColor, color: footerFontColor }
-
-
-  if (templateImages?.background_image_footer) {
-    generalFooterBGStyle = {
-      height: paddingBottom,
-      backgroundImage: `url(${templateImages?.background_image_footer})`,
+  useEffect(() => {
+    debugger;
+    setGeneralFooterBGStyle((previous: any) => ({
+        ...previous,
+        height: paddingBottom,
+      backgroundImage: `url(${template?.background_image_footer})`,
       backgroundRepeat: "no-repeat",
       backgroundPosition: template?.footerState?.bg_image_footer_position ?? "top left",
-      backgroundSize: "cover",
-    }
-  }
-
+      backgroundSize: "cover"
+      }));
+    
+  }, [template, template?.footerState?.bg_image_footer_position])
   /* ######################################################################################### */
 
   return (

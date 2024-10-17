@@ -22,12 +22,14 @@ export interface TemplateReducerState {
     background_image_header: string | null;
     background_image_footer: string | null;
   };
+  templates: TemplateState[];
 }
 
 //
 
 export const templateInitialState: TemplateReducerState = {
   activeTemplate: DefaultSITemplates[0]?.content,
+  templates: []
 };
 
 // const TemplateReducer = () => {

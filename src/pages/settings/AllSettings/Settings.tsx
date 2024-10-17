@@ -22,8 +22,10 @@ import {
   toggleUserTypePrivilegePopup,
   toggleResetBranchDataForSync,
   toggleRefreshAllBranches,
+  toggleChartOfAccounts,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
+import ChartOfAccounts from "../../accounts/masters/chart-of-accounts/chart-of-accounts";
 
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));

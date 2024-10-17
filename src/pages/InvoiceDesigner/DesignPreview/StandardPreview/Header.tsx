@@ -1,7 +1,8 @@
+import { useEffect, useState } from "react";
 import { StandardPreviewProps } from ".";
 import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
 
-const Header = ({ template, data, docTitle, docIDKey, templateGroupId, addressTemplates, currency, company, templateImages }: StandardPreviewProps) => {
+const Header = ({ template, data, docTitle, docIDKey, templateGroupId, addressTemplates, currency, company}: StandardPreviewProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
 
@@ -40,17 +41,20 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, addressTe
 
   /* ######################################################################################### */
 
-  let generalHeaderBGStyle: any = { height: paddingTop, backgroundColor }
+  const [generalHeaderBGStyle, setGeneralHeaderBGStyle] = useState<any>({ height: paddingTop, backgroundColor, backgroundPosition: 'top left' });
 
-  if (templateImages?.background_image_header) {
-    generalHeaderBGStyle = {
-      height: paddingTop,
-      backgroundImage: `url(${templateImages?.background_image_header})`,
+  useEffect(() => {
+    debugger;
+    setGeneralHeaderBGStyle((previous: any) => ({
+        ...previous,
+        height: paddingTop,
+      backgroundImage: `url(${template?.background_image_header})`,
       backgroundRepeat: "no-repeat",
       backgroundPosition: template?.headerState?.bg_image_header_position ?? "top left",
-      backgroundSize: "cover",
-    }
-  }
+      backgroundSize: "cover"
+      }));
+    
+  }, [template, template?.headerState?.bg_image_header_position])
 
   /* ######################################################################################### */
 
@@ -374,11 +378,11 @@ export const AccountSummaryPreview = ({ data, template, currency }: StandardPrev
             <div className="flex px-2">
               <div className="w-1/2 ">{headerState?.accountSummary?.invoicedAmountLabel || "Invoiced Amount"}</div>
               <div className="flex  w-1/2  justify-end">
-                {data &&
+                {/* {data &&
                   data?.statementData?.[1] &&
                   (`${currency} ${data?.statementData?.[1]?.invoice_amount ?? "0.00"}` ??
                     `${currency} ${data?.statementData?.[1]?.billed_amount ?? "0.00"}` ??
-                    "0.00")}
+                    "0.00")} */}
               </div>
             </div>
           )}
@@ -387,7 +391,7 @@ export const AccountSummaryPreview = ({ data, template, currency }: StandardPrev
             <div className="flex px-2">
               <div className="w-1/2 ">{headerState?.accountSummary?.amountPaidLabel || "Amount Paid"}</div>
               <div className="flex  w-1/2  justify-end">
-                {data && data?.statementData?.[2] && (`${currency} ${data?.statementData?.[2]?.payment_received ?? "0.00"}` ?? "0.00")}
+                {/* {data && data?.statementData?.[2] && (`${currency} ${data?.statementData?.[2]?.payment_received ?? "0.00"}` ?? "0.00")} */}
               </div>
             </div>
           )}

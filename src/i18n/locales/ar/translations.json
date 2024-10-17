@@ -605,6 +605,19 @@
   "modified_user_ID": "معرف المستخدم المعدل",
   "bank_cards": "بطاقات بنكية",
   "debit_cards": "بطاقات الخصم",
-  "card_name": "اسم البطاقة"
+  "card_name": "اسم البطاقة",
 
+  "currency_master": "العملة الرئيسية",
+  "privilege_card_ID": "معرف بطاقة الامتياز",
+  "card_number": "رقم البطاقة",
+  "card_holder_name": "اسم حامل البطاقة",
+  "date_of_birth": "تاريخ الميلاد",
+  "change_ID": "معرف التغيير",
+  "card_type": "نوع البطاقة",
+  "price_category_ID": "معرف فئة السعر",
+  "expiry_date": "تاريخ الانتهاء",
+  "activate_date": "تاريخ التفعيل",
+  "privilege_card": "بطاقة الامتياز",
+  "price_category": "فئة السعر",
+  "op_balance": "الرصيد الافتتاحي"
 }

@@ -186,7 +186,7 @@ const SMSIntegration: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-md">
+    <div className="p-6 max-w-8xl mx-auto bg-white rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-4 text-gray-800">
         SMS Integrations
       </h1>

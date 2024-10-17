@@ -23,10 +23,10 @@ type TemplateKindType =
 export interface TemplateState {
   id?: string | number | undefined;
   thumbImage?: string;
-  background_image: string;
-  background_image_header: string;
-  background_image_footer: string;
-  signature_image: string;
+  background_image?: string;
+  background_image_header?: string;
+  background_image_footer?: string;
+  signature_image?: string;
   propertiesState?: PropertiesState;
   headerState?: HeaderState;
   itemTableState?: ItemTableState;

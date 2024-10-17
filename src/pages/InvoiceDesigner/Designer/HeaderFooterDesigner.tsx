@@ -11,12 +11,10 @@ import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
-import { setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
+import { handleSetTemplateBackgroundImageFooter, handleSetTemplateBackgroundImageHeader, setTemplateBackgroundImageFooter, setTemplateBackgroundImageHeader, setTemplateFooterState, setTemplateHeaderState } from "../../../redux/slices/templates/reducer";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
 interface TempImageProps {
-    setTemplateImages: Dispatch<SetStateAction<TemplateImagesTypes>>,
-    templateImages: TemplateImagesTypes,
 }
 
 interface FooterDesignerProps {
@@ -34,36 +32,16 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
     const [currentTab, setTab] = useState<"header" | "footer" | "">("header");
 
     const templateGroup = searchParams?.get("template_group");
-    const { templateImages, setTemplateImages } = tempImages
 
 
     /* ######################################################################################### */
 
-    const bgHeaderImage = templateImages?.background_image_header
-    let bgHeaderThumbnail: string | null = null;
-
-    if (bgHeaderImage && isFile(bgHeaderImage)) {
-        if (bgHeaderImage.size < 1e6) { bgHeaderThumbnail = URL.createObjectURL(bgHeaderImage) }
-    } else {
-        bgHeaderThumbnail = bgHeaderImage;
-    }
-
-    const bgFooterImage = templateImages?.background_image_footer
-    let bgFooterThumbnail: string | null = null;
-
-    if (bgFooterImage && isFile(bgFooterImage)) {
-        if (bgFooterImage.size < 1e6) { bgFooterThumbnail = URL.createObjectURL(bgFooterImage) }
-    } else {
-        bgFooterThumbnail = bgFooterImage;
-    }
-
-    /* ######################################################################################### */
+    const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
     const dispatch = useDispatch();
-    const templateData = useSelector((state: any) => state?.TemplateReducer) as TemplateReducerState;
-
     const handleChange = (type: "header" | "footer", key: keyof HeaderState | keyof FooterState, value: string | number | boolean) => {
         if (type === "header") {
+            debugger;
             dispatch(setTemplateHeaderState({ ...headerState, [key]: value }));
         } else {
             dispatch(setTemplateFooterState({ ...footerState, [key]: value } ));
@@ -98,7 +76,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                             if (e.target.files[0].size > 2097152) {
                                 ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
                             } else {
-                                setTemplateImages((prevData) => ({ ...prevData, background_image_header: e.target.files[0] }))
+                                handleSetTemplateBackgroundImageHeader(e.target.files[0], dispatch);
                             }
                         }}
                         className={"hidden"}
@@ -110,24 +88,24 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                     <label htmlFor="background_image">
                         <div
                             onClick={() => inputFile?.current?.click()}
-                            className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${bgHeaderImage ? "hidden" : ""}`}
+                            className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData?.activeTemplate?.background_image_header ? "hidden" : ""}`}
                         >
                             Choose from Desktop</div>
                     </label>
 
-                    {bgHeaderImage &&
+                    {templateData?.activeTemplate?.background_image_header &&
                         <>
                             <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
-                            {bgHeaderThumbnail && <img
+                            {templateData?.activeTemplate?.background_image_header && <img
                                 draggable={false}
-                                src={bgHeaderThumbnail}
+                                src={templateData?.activeTemplate?.background_image_header}
                                 alt="background_image"
                                 height={100} width={100}
                                 className="size-5" />
                             }
                             <div
                                 className="text-accent text-xs cursor-pointer  max-w-min"
-                                onClick={() => setTemplateImages((prevData) => ({ ...prevData, background_image_header: null }))}
+                                onClick={() => handleSetTemplateBackgroundImageHeader(undefined, dispatch)}
                             >
                                 Remove
                             </div>
@@ -136,7 +114,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                                 noLabel
                                 id="position"
                                 defaultValue={headerState?.bg_image_header_position ?? "top left"}
-                                handleChange={(id, value) => handleChange("header", "bg_image_header_position", value?.value)}
+                                handleChange={(id, value) => handleChange("header", "bg_image_header_position", value)}
                                 options={[
                                     { label: "Top Left", value: "top left" },
                                     { label: "Top Center", value: "top center" },
@@ -230,7 +208,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                                 if (e.target.files[0].size > 2097152) {
                                     ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
                                 } else {
-                                    setTemplateImages((prevData) => ({ ...prevData, background_image_footer: e.target.files[0] }))
+                                    handleSetTemplateBackgroundImageFooter(e.target.files[0], dispatch);
                                 }
                             }}
                             className={"hidden"}
@@ -242,18 +220,18 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
                         <label htmlFor="background_image">
                             <div
                                 onClick={() => inputFooterFile?.current?.click()}
-                                className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${bgFooterImage ? "hidden" : ""}`}
+                                className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData?.activeTemplate?.background_image_footer ? "hidden" : ""}`}
                             >
                                 Choose from Desktop</div>
                         </label>
 
-                        {bgFooterImage &&
+                        {templateData?.activeTemplate?.background_image_footer &&
                             <>
                                 <div className="text-xs bg-[#FEF4EA] px-2 py-2 mb-2 rounded">Click Save to apply the selected background image</div>
-                                {bgFooterThumbnail && <img src={bgFooterThumbnail} alt="background_image" height={100} width={100} className="size-5" />}
+                                {templateData?.activeTemplate?.background_image_footer && <img src={templateData?.activeTemplate?.background_image_footer} alt="background_image" height={100} width={100} className="size-5" />}
                                 <div
                                     className="text-accent text-xs cursor-pointer  max-w-min"
-                                    onClick={() => setTemplateImages((prevData) => ({ ...prevData, background_image_footer: null }))}
+                                    onClick={() => handleSetTemplateBackgroundImageFooter(undefined, dispatch)}
                                 >
                                     Remove
                                 </div>

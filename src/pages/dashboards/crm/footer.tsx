@@ -10,11 +10,11 @@ export default function Footer() {
           <i className="ti ti-home w-6 h-6 text-[23px]"></i>
           <span className="text-xs mt-1">HOME</span>
         </a>
-        <a href="/dashboard" className="flex flex-col items-center text-gray-600">
+        <a href="/settings/_/system/counters" className="flex flex-col items-center text-gray-600">
           <i className="ti ti-chart-bar  w-6 h-6 text-[23px]"></i>
           <span className="text-xs mt-1">DASHBOARD</span>
         </a>
-        <a href="/items" className="flex flex-col items-center text-gray-600">
+        <a href="/settings/_/system/notification-settings" className="flex flex-col items-center text-gray-600">
           <i className="ti ti-package  w-6 h-6 text-[23px]"></i>
           <span className="text-xs mt-1">ITEMS</span>
         </a>

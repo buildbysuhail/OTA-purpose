@@ -160,12 +160,12 @@ const InvoicePreview = ({
     }
   };
   /* ########################################################################################### */
-  let templateData: TemplateState | undefined;
+  const [templateData, setTemplateData] = useState<TemplateState | undefined>();
   useEffect(() => {
     debugger;
-    templateData = pathname?.includes("/invoice_designer/")
+    setTemplateData(pathname?.includes("/invoice_designer/")
       ? templateWrap?.activeTemplate
-      : getTemplateInfo().content;
+      : getTemplateInfo().content);
   },[templateWrap?.activeTemplate]);
   debugger;
 

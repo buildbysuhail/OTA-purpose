@@ -9,7 +9,9 @@ import Cash from '../../../pages/accounts/masters/reports/cash';
 import ReportList from '../../ERPComponents/reports/reports-list';
 import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
 import AccountReceivableAgingReport from '../../../pages/accounts/masters/reports/account-receivable-aging-report';
-import FullLayout from '../layout/full-layout';
+import TemplateDesignerLayout from '../layout/template-designer-layout';
+
+
 import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-payable-aging-report-skiptake';
 import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-receivable-aging-report-skiptake';
 
@@ -30,7 +32,7 @@ const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
 const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
 const BranchGrid = lazy(() => import("../../../pages/settings/Administration/branch"));
-
+const NotificationSettings = lazy(() => import('../../../pages/settings/system/notification-settings'));
 
 // Inventory Starts
 
@@ -39,6 +41,7 @@ const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transacti
 // Inventory End
 // Acc Starts
 const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/account-groups/account-group'));
+const BankCards = lazy(() => import('../../../pages/accounts/masters/bank-cards/bank-cards'));
 const AccountsLedger = lazy(() => import('../../../pages/accounts/masters/account-ledgers/account-ledger'));
 const CostCenter = lazy(() => import('../../../pages/accounts/masters/cost centre/cost-centre'));
 const BranchLedger = lazy(() => import('../../../pages/accounts/masters/branch ledger/branch-ledger'));
@@ -46,9 +49,14 @@ const PartyCategory = lazy(() => import('../../../pages/accounts/masters/account
 const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account-privilege-card/privilege-card'));
 const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
-
-
+const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
 // Acc End
+
+//integration 
+const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
+const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
+const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
+
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -91,6 +99,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
+        <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="settings" element={<Settings />} />
 
         {/* Inventory Starts */}
@@ -103,22 +112,27 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Start */}
         {/* Masters */}
         <Route path="account-masters/account-group" element={<AccountsMasters />} />
+        <Route path="account-masters/Bank-Cards" element={<BankCards />} />
         <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
         <Route path="account-masters/party-category" element={<PartyCategory />} />
         <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
-        {/* cost center */}
-        <Route path="account-masters/cost-center" element={<CostCenter />} />
-        {/* Branch Ledger */}
+        <Route path="/account-masters/cost-center" element={<CostCenter />} />
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
+        <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
         {/* Accounts End */}
+        
+
+        {/* Integration Start */}
+        <Route path="/integration/sms" element={<SmsIntegration />} />
+        <Route path="/integration/whatsapp" element={<WhatsappIntegration/>} />
+        <Route path="/integration/email" element={<EmailIntegration />} />
+        {/* Integration End */}
+      
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />
         
-        <Route
-                path="/templates/invoice_designer/*"
-                element={<FullLayout  />}
-              />
+        <Route path="/templates/invoice_designer/*"  element={<TemplateDesignerLayout />}/>
         
         {/* Templates ends */}
 

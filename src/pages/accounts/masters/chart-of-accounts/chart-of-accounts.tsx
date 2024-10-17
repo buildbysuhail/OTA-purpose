@@ -3,86 +3,57 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { togglePartyCategoryPopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { PartyCategoryManage } from "./party-category-manage";
+import { toggleChartOfAccounts } from "../../../../redux/slices/popup-reducer";
+import { ChartOfAccountsManage } from "./chart-of-accounts-manage";
 
-const PartyCategory = () => {
+const ChartOfAccounts = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
+
   const columns: DevGridColumn[] = [
     {
-      dataField: "siNo",
-      caption: t("si_no"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "id",
-      caption: t("id"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
-    {
-      dataField: "partyCategory",
-      caption: t("party_category"),
+      dataField: "accountGroup",
+      caption: t("chart_of_accounts"),
       dataType: "string",
-      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      width: 220,
     },
     {
-      dataField: "remarks",
-      caption: t("remarks"),
+      dataField: "aliasName",
+      caption: t("alias_name"),
       dataType: "string",
-      allowSorting: false,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 220,
+    },
+    {
+      dataField: "code",
+      caption: t("code"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
     },
     {
       dataField: "createdUser",
       caption: t("created_user"),
       dataType: "string",
-      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      width: 220,
     },
     {
       dataField: "createdDate",
       caption: t("created_date"),
-      dataType: "date",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "modifiedUser",
-      caption: t("modified_user"),
       dataType: "string",
-      allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-    },
-    {
-      dataField: "modifiedDate",
-      caption: t("modified_date"),
-      dataType: "date",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
+      width: 220,
     },
     {
       dataField: "actions",
@@ -91,35 +62,20 @@ const PartyCategory = () => {
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
-      width: 100,
+      width: 180,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{
-            type: "popup",
-            action: () =>
-              togglePartyCategoryPopup({
-                isOpen: true,
-                key: cellElement?.data?.id,
-              }),
-          }}
-          edit={{
-            type: "popup",
-            action: () =>
-              togglePartyCategoryPopup({
-                isOpen: true,
-                key: cellElement?.data?.id,
-              }),
-          }}
+          view={{ type: "popup", action: () => toggleChartOfAccounts({ isOpen: true, key: cellInfo?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleChartOfAccounts({ isOpen: true, key: cellInfo?.data?.id }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url: Urls?.account_party_category,
-            key: cellElement?.data?.id,
           }}
         />
       ),
     },
   ];
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -129,13 +85,13 @@ const PartyCategory = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("party_category")}
-                  dataUrl={Urls.account_party_category}
-                  gridId="grd__party_category"
-                  popupAction={togglePartyCategoryPopup}
+                  gridHeader={t("chart_of_accounts")}
+                  dataUrl={Urls.chart_of_accounts}
+                  gridId="grd_chart_of_accounts"
+                  popupAction={toggleChartOfAccounts}
                   gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.partyCategory?.reload}
-                  gridAddButtonIcon="ri-add-line"
+                  reload={rootState?.PopupData?.chartOfAccounts?.reload}
+                  gridAddButtonIcon=""
                 ></ErpDevGrid>
               </div>
             </div>
@@ -143,17 +99,17 @@ const PartyCategory = () => {
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.partyCategory.isOpen || false}
-        title={t("party_category")}
+        isOpen={rootState.PopupData.chartOfAccounts.isOpen || false}
+        title={t("chart_of_accounts")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(togglePartyCategoryPopup({ isOpen: false, key: null }));
+          dispatch(toggleChartOfAccounts({ isOpen: false, key: null }));
         }}
-        content={<PartyCategoryManage />}
+        content={<ChartOfAccountsManage />}
       />
     </Fragment>
   );
 };
 
-export default PartyCategory;
+export default ChartOfAccounts;

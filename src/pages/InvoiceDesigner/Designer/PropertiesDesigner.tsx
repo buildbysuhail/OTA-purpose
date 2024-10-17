@@ -11,7 +11,8 @@ import ERPStepInput from "../../../components/ERPComponents/erp-step-input";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { TemplateGroupTypes } from "../constants/TemplateCategories";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { setTemplateThumbImage } from "../../../redux/slices/templates/reducer";
+import { handleSetTemplateBackgroundImage, setTemplateBackgroundImage, setTemplatePropertiesState, setTemplateThumbImage } from "../../../redux/slices/templates/reducer";
+import { TemplateReducerState } from "../../../redux/reducers/TemplateReducer";
 
 interface PropertiesDesignerProps {
   propertiesState?: PropertiesState;
@@ -39,6 +40,9 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
   /* ########################################################################################### */
 
+  
+  const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
+
   const dispatch = useDispatch();
   const inputFile = useRef<HTMLInputElement>(null);
   const [currentTab, setTab] = useState<"temp_props" | "font_props" | "bg_props" | "">("temp_props");
@@ -47,7 +51,6 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
   const isRetailTemplate = () => {
     return (["3Inch", "4Inch"]?.includes(propertiesState?.pageSize!));
   }
-
   /* ########################################################################################### */
 
   return (
@@ -311,10 +314,11 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               ref={inputFile}
               type="file"
               onChange={(e: any) => {
+                debugger;
                 if (e.target.files[0].size > 2097152) {
                   ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
                 } else {
-                  setTemplateImages((prevData) => ({ ...prevData, background_image: e.target.files[0] }))
+                  handleSetTemplateBackgroundImage(e.target.files[0], dispatch);
                 }
               }}
               className={"hidden"}
@@ -327,20 +331,20 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
             <label htmlFor="background_image">
               <div
                 onClick={() => inputFile?.current?.click()}
-                className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${bgImage ? "hidden" : ""}`}
+                className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData.activeTemplate.background_image ? "hidden" : ""}`}
               >
                 Choose from Desktop</div>
             </label>
 
             {
-              bgImage ?
+              templateData.activeTemplate.background_image ?
                 <>
                   <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
-                  {backgroundImageThumbnail && <img src={backgroundImageThumbnail} alt="background_image" height={100} width={100} className="size-5" />}21`1`
+                  {templateData.activeTemplate.background_image && <img src={templateData.activeTemplate.background_image} alt="background_image" height={100} width={100} className="size-5" />}21`1`
                   <div
                     className="text-accent text-xs cursor-pointer max-w-min"
-                    onClick={() => { dispatch(setTemplateThumbImage(''))
-                      setTemplateImages((prevData) => ({ ...prevData, background_image: null }));
+                    onClick={() => { 
+                      handleSetTemplateBackgroundImage(undefined, dispatch);
                       inputFile.current!.value = ""
                     }}
                   >
@@ -354,7 +358,13 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               label="Image Position"
               id="position"
               defaultValue={propertiesState?.bg_image_position ?? "top left"}
-              handleChange={(id, value) => onChange?.({ ...propertiesState, bg_image_position: value?.value })}
+              handleChange={(id, value) => {
+                debugger;
+                dispatch(setTemplatePropertiesState({
+                  ...templateData,
+                  bg_image_position: value
+                }))
+              }}
               options={[
                 { label: "Top Left", value: "top left" },
                 { label: "Top Center", value: "top center" },
@@ -373,7 +383,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
           <ERPInput
             value={propertiesState?.bg_color}
-            onChange={(e) => onChange?.({ ...propertiesState, bg_color: e.target.value })}
+            onChange={(e) => {debugger;onChange?.({ ...propertiesState, bg_color: e.target.value })}}
             label="Color"
             id="bg_color"
             type="color"

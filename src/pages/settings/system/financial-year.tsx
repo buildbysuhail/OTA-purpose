@@ -44,7 +44,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+     
     },
     {
       dataField: "toDate",
@@ -53,7 +53,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+     
     },
     {
       dataField: "status",

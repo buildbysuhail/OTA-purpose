@@ -155,7 +155,7 @@ const Header: React.FC = () => {
 
 export default Header;
 
-const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, searchResults, selectedIndex, onItemClick }) => {
+export const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, searchResults, selectedIndex, onItemClick }) => {
   const { t } = useTranslation();
 
   return (
@@ -189,3 +189,4 @@ const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, searchResults
     </div>
   );
 };
+

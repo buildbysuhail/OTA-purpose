@@ -26,7 +26,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
       //   () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null })),
       //   [dispatch]
       // ),
-      onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,reload:true })), [dispatch]),
+      onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
       key: rootState.PopupData.currencyMaster.key,
       useApiClient: true,
       initialData: initialCurrency,
@@ -41,23 +41,23 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPDataCombobox
-          {...getFieldProps("countryId")}
+          {...getFieldProps("countryID")}
           field={{
-            id: "countryId",
+            id: "countryID",
             required: true,
             getListUrl: Urls.data_countries,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("countryId", data);
+            handleFieldChange("countryID", data);
           }}
           label={t("country")}
         />
         <ERPInput
           {...getFieldProps("currencyCode")}
-          label="Currency Code"
-          placeholder="currencyCode"
+          label={t("currency_code")}
+          placeholder={t("currency_code")}
           required={false}
           onChangeData={(data: any) =>
             handleFieldChange("currencyCode", data)
@@ -65,8 +65,8 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("currencyName")}
-          label="Currency Name"
-          placeholder="currencyName"
+          label={t("currency_name")}
+          placeholder={t("currency_name")}
           required={true}
           onChangeData={(data: any) =>
             handleFieldChange("currencyName", data)
@@ -74,8 +74,8 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("currencySymbol")}
-          label="Currency Symbol"
-          placeholder="currencySymbol"
+          label={t("currency_symbol")}
+          placeholder={t("currency_symbol")}
           required={false}
           onChangeData={(data: any) =>
             handleFieldChange("currencySymbol", data)
@@ -83,8 +83,8 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("subUnit")}
-          label="sub Unit"
-          placeholder="subUnit"
+          label={t("sub_unit")}
+          placeholder={t("sub_unit")}
           required={false}
           onChangeData={(data: any) =>
             handleFieldChange("subUnit", data)
@@ -92,8 +92,8 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("subUnitSymbol")}
-          label="Sub Unit Symbol"
-          placeholder="subUnitSymbol"
+          label={t("sub_unit_symbol")}
+          placeholder={t("sub_unit_symbol")}
           required={false}
           onChangeData={(data: any) =>
             handleFieldChange("subUnitSymbol", data)

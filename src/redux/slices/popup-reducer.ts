@@ -37,6 +37,8 @@ interface popupData {
   revertBillModifications: popupDataProps
   resetBranchDataForSync: popupDataProps
   refreshAllBranches: popupDataProps
+  bankCard: popupDataProps
+  chartOfAccounts: popupDataProps
 }
 const initialState: popupData = {
   userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true},
@@ -70,6 +72,8 @@ const initialState: popupData = {
   revertBillModifications: { isOpen: false, key: null, mode: "edit", reload: true },
   resetBranchDataForSync: { isOpen: false, key: null, mode: "edit", reload: true },
   refreshAllBranches: { isOpen: false, key: null, mode: "edit", reload: true },
+  bankCard: { isOpen: false, key: null, mode: "edit", reload: true },
+  chartOfAccounts: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -144,6 +148,12 @@ const popupDataSlice = createSlice({
     toggleAccountGroupPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.accountGroup = action.payload;
     },
+    toggleBankCardsPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.bankCard = action.payload;
+    },
+    toggleSMSIntegrationPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.accountGroup = action.payload;
+    },
     toggleAccountLedgerPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.accountLedger = action.payload;
     },
@@ -183,6 +193,9 @@ const popupDataSlice = createSlice({
     toggleRefreshAllBranches: (state, action: PayloadAction<popupDataProps>) => {
       state.refreshAllBranches = action.payload;
     },
+    toggleChartOfAccounts: (state, action: PayloadAction<popupDataProps>) => {
+      state.chartOfAccounts = action.payload;
+    },
   },
 });
 
@@ -211,6 +224,8 @@ export const {
   toggleResetDataBasePopup,
   toggleCommandsPopup,
   toggleAccountGroupPopup,
+  toggleBankCardsPopup,
+  toggleSMSIntegrationPopup,
   toggleAccountLedgerPopup,
   toggleCostCentrePopup,
   toggleBranchLedgerPopup,
@@ -219,6 +234,7 @@ export const {
   toggleRevertBillModifications,
   toggleResetBranchDataForSync,
   toggleRefreshAllBranches,
+  toggleChartOfAccounts,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

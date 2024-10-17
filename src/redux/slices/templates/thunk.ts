@@ -12,13 +12,25 @@ let api = new APIClient();
    
  }
  export const getTemplateData = createAsyncThunk(
-   'templates/getTemplates',
+   'templates/getTemplateData',
    async ({ templateId }: { templateId: string }, { rejectWithValue }) => {
      const response = await getDetailAction({apiUrl: Urls.templates, id: templateId})
      return response;
    });
-   export const getCRMTemplateData = createAsyncThunk(
+   export const getTemplatees = createAsyncThunk(
      'templates/getTemplates',
+     async ({ templateGroup }: { templateGroup: string }, { rejectWithValue }) => {
+       const response = await getDetailAction({apiUrl: Urls.templates, id: templateGroup})
+       return response;
+     });
+     export const getTemplates = createAsyncThunk<any, any>('login/loginUser', async (params) => {
+  
+      const response = await api.getAsync(Urls.templates,params);
+      
+      return response;
+    });
+   export const getCRMTemplateData = createAsyncThunk(
+     'templates/getCRMTemplateData',
      async ({ templateId }: { templateId: string }, { rejectWithValue }) => {
        const response = await getDetailAction({apiUrl: Urls.crm_templates, id: templateId})
        return response;

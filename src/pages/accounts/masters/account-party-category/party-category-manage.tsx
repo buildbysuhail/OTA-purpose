@@ -25,7 +25,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
     useFormManager<PartyCategoryData>({
       url: Urls.account_party_category,
       onSuccess: useCallback(
-        () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null ,reload:true  })),
+        () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: true })),
         [dispatch]
       ),
       key: rootState.PopupData.partyCategory.key,
@@ -44,18 +44,18 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("partyCategoryName")}
-          label="Name"
-          placeholder="Name"
+          label={t("name")}
+          placeholder={t("name")}
           required={true}
           onChangeData={(data: any) => {
-            
+
             handleFieldChange("partyCategoryName", data);
           }}
         />
         <ERPInput
           {...getFieldProps("remarks")}
-          label="Remarks"
-          placeholder="Remarks"
+          label={t("remarks")}
+          placeholder={t("remarks")}
           required={true}
           onChangeData={(data: any) =>
             handleFieldChange("remarks", data)
@@ -63,12 +63,12 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         />
         <ERPCheckbox
           {...getFieldProps("isEdit")}
-          label="isEdit"
+          label={t("is_editable")}
           onChangeData={(data: any) => handleFieldChange("isEdit", data)}
         />
         <ERPCheckbox
           {...getFieldProps("isDelete")}
-          label="isDelete"
+          label={t("is_deletable")}
           onChangeData={(data: any) => handleFieldChange("isDelete", data)}
         />
       </div>

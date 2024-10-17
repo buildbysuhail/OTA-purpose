@@ -3,6 +3,7 @@ import { StandardPreviewProps } from ".";
 import { dateTrimmer } from "../../../../utilities/Utils";
 
 const ItemTable = ({ template, data, templateGroupId, preferences, currency }: StandardPreviewProps) => {
+  debugger;
   //   /// Font
   //   const fontSize = template?.itemTableState?.headerFontSize || 12;
   //   const fontColor = template?.itemTableState?.headerFontColor || "#000";

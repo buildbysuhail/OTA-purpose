@@ -3,7 +3,7 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import {toggleCurrencyMasterPopup} from "../../../../redux/slices/popup-reducer";
+import { toggleCurrencyMasterPopup } from "../../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
@@ -11,86 +11,85 @@ import { useTranslation } from "react-i18next";
 import { PartyCategoryManage } from "./currency-master-manage";
 
 
-const  CurrencyMaster = () => {
+const CurrencyMaster = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
+    // {
+    //   dataField: "currencyid",
+    //   caption: "Currency ID", 
+    //   dataType: "number",
+    //   allowSorting: true,
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    // },
     {
-        dataField: "currencyId",
-        caption: "Currency ID", 
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "currencyCode",
-        caption: "Currency Code", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "currencyName",
-        caption: "Currency Name", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "currencySymbol",
-        caption: "Currency Symbol", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "subUnit",
-        caption: "Sub Unit", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "subUnitSymbol",
-        caption: "Sub Unit Symbol", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "countryId",
-        caption: "Country ID", 
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "countryName",
-        caption: "Country Name", 
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
+      dataField: "currencyCode",
+      caption: t("currency_code"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
     },
     {
+      dataField: "currencyName",
+      caption: t("currency_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "currencySymbol",
+      caption: t("currency_symbol"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "subUnit",
+      caption: t("sub_unit"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "subUnitSymbol",
+      caption: t("sub_unit_symbol"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "countryName",
+      caption: t("country_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "countryId",
+      caption: t("country_ID"),
+      dataType: "number",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+
+    {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
@@ -98,12 +97,12 @@ const  CurrencyMaster = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.countryId }) }}
-          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.countryId }) }}
+          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
+          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url:Urls?.account_currency_master,key: cellElement?.data?.countryId
+            url: Urls?.account_currency_master, key: cellElement?.data?.currencyId
           }}
         />
       ),
@@ -139,7 +138,7 @@ const  CurrencyMaster = () => {
         closeModal={() => {
           dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
         }}
-        content={<PartyCategoryManage/>}
+        content={<PartyCategoryManage />}
       />
     </Fragment>
   );

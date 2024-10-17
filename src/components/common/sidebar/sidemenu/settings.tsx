@@ -38,13 +38,13 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cost-center`, type: 'link', active: false, selected: false, title: 'costcenter' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/branch-ledgers`, type: 'link', active: false, selected: false, title: 'branch_ledger' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/chart-of-accounts`, type: 'link', active: false, selected: false, title: 'chart_of_accounts' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/chart-of-accounts/cost-center`, type: 'link', active: false, selected: false, title: 'costcenter_coa' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/opening-balance`, type: 'link', active: false, selected: false, title: 'opening_balance' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/party-category`, type: 'link', active: false, selected: false, title: 'party_category' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/supplier-customer-master`, type: 'link', active: false, selected: false, title: 'supp_cust_master' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cash-bank-master`, type: 'link', active: false, selected: false, title: 'cash_bank_master' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/privilege-cards`, type: 'link', active: false, selected: false, title: 'privilege_cards' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customer-supplier-ledger`, type: 'link', active: false, selected: false, title: 'cust_supp_ledger' },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/bank-cards`, type: 'link', active: false, selected: false, title: 'Bank Cards' },
     ]
   },
   {
@@ -111,6 +111,24 @@ export const SettingsMenuItems = [
       { action: toggleResetBranchDataForSync, type: 'popup', active: false, selected: false, title: 'reset_branch_data_for_sync' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications' },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'Notification Settings' },
     ]
-  }
+  },
+  {
+    icon: (<UserIcon className="side-menu__icon" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'integration',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    children: [
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'Sms Integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'WhatsApp Integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'Email Integration' },
+    
+    ]
+  },
 ];

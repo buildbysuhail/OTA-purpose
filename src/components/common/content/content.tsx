@@ -16,6 +16,7 @@ import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/r
 import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-receivable-aging-report-skiptake';
 
 
+
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -36,7 +37,7 @@ const NotificationSettings = lazy(() => import('../../../pages/settings/system/n
 
 // Inventory Starts
 
-const InvTransaction = lazy(() => import("../../../pages/inventory/inv-transaction"));
+const InvTransaction = lazy(() => import("../../../pages/inventory/acc-transaction"));
 
 // Inventory End
 // Acc Starts
@@ -53,6 +54,8 @@ const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart
 const Parties = lazy(() => import('../../../pages/accounts/masters/parties/parties'));
 // Acc End
 
+//side menu account
+const AccTransaction = lazy(() => import('../../../pages/inventory/acc-transaction'));
 //integration 
 const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
@@ -149,6 +152,9 @@ const Content: FC<ContentProps> = () => {
         {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
+
+        {/* side menu */}
+        <Route path="cash-payments" element={<AccTransaction />} />
       </Routes>
     </Suspense>
   );

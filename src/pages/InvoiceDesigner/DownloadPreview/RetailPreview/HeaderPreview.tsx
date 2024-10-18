@@ -1,7 +1,8 @@
+import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { DownloadPreviewProps } from "./DownloadPreview";
 import { Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
-const HeaderPreview = ({ template, data, docIDKey, docTitle, ActiveBranch, currencySymbol, AddressTemplates }: DownloadPreviewProps) => {
+const HeaderPreview = ({ template, data, docIDKey, docTitle, currencySymbol }: DownloadPreviewProps) => {
   const headerState = template?.headerState;
 
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
@@ -24,6 +25,7 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle, ActiveBranch, curre
   const labelFontSize = template?.propertiesState?.label_font_size || 12;
   const labelColor = template?.propertiesState?.label_font_color || "#000";
   const labelFontWeight = template?.propertiesState?.label_font_weight || "normal";
+  const currentBranch = useCurrentBranch();
 
   return (
     <View
@@ -57,7 +59,7 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle, ActiveBranch, curre
           }}
         >
           {headerState?.showLogo && (
-            <Image style={{ width: 80 * logoWidthRatio }} src={{ uri: ActiveBranch?.company?.image, method: "GET", headers: {}, body: "" }} />
+            <Image style={{ width: 80 * logoWidthRatio }} src={{ uri: currentBranch?.logo??"", method: "GET", headers: {}, body: "" }} />
             // <Image style={{ width: 80 * logoWidthRatio }} src={ActiveBranch?.company?.image} />
           )}
           {headerState?.showOrgName && (
@@ -71,7 +73,7 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle, ActiveBranch, curre
                 paddingVertical: "5px",
               }}
             >
-              <Text>{ActiveBranch?.company?.name}</Text>
+              <Text>{currentBranch?.company?.name}</Text>
             </View>
           )}
           {headerState?.showOrgAddress && (
@@ -85,7 +87,7 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle, ActiveBranch, curre
                 alignItems: "center",
               }}
             >
-              {AddressTemplates?.orgAddressTemplate?.map((org: any, idx: number) => (
+              {currentBranch?.address?.map((org: any, idx: number) => (
                 <Text key={`ADDRE_${idx}`}>{org}</Text>
               ))}
             </View>

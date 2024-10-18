@@ -104,13 +104,11 @@ const DownloadStandardPreview = ({
             template={template}
             docIDKey={docIDKey}
             docTitle={docTitle}
-            ActiveBranch={ActiveBranch}
             currencySymbol={currencySymbol}
-            AddressTemplates={AddressTemplates}
           />
           {/*   */}
           {/* Table Section  */}
-          <ItemTablePreview templateGroupId={templateGroupId} template={template} data={data} preferences={preferences} />
+          <ItemTablePreview templateGroupId={templateGroupId} template={template} data={data} />
           {/*   */}
           {/* Total Summary Section  */}
           <TotalSummaryPreview
@@ -123,7 +121,7 @@ const DownloadStandardPreview = ({
           />
           {/*   */}
           {/* Bottom  Section  */}
-          <BottomPreview ActiveBranch={ActiveBranch} templateGroupId={templateGroupId} template={template} data={data} />
+          <BottomPreview templateGroupId={templateGroupId} template={template} data={data} />
           {/*   */}
         </View>
 

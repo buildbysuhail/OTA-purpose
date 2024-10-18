@@ -2,7 +2,7 @@ import { dateTrimmer } from "../../../../utilities/Utils";
 import { DownloadPreviewProps } from "./DownloadPreview";
 import { Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 
-const BottomPreview = ({ template, data, templateGroupId, ActiveBranch }: DownloadPreviewProps) => {
+const BottomPreview = ({ template, data, templateGroupId }: DownloadPreviewProps) => {
   /// Padings
   const paddingLeft = template?.propertiesState?.margins?.left || 10;
   const paddingRight = template?.propertiesState?.margins?.right || 10;
@@ -158,7 +158,7 @@ const BottomPreview = ({ template, data, templateGroupId, ActiveBranch }: Downlo
             </View>
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: 16, marginBottom: 12 }}>{template?.propertiesState?.payment_stub_label ?? "Payment Stub"}</Text>
-              <Text>{ActiveBranch?.company?.payment_stub_address}</Text>
+              {/* <Text>{ActiveBranch?.company?.payment_stub_address}</Text> */}
             </View>
           </View>
         }

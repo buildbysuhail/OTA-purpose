@@ -40,7 +40,7 @@ const BranchSettingsForm: React.FC = () => {
     }
   };
 
-  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+  const handleFieldChange = (field: keyof typeof ApplicationBranchSettingsInitialState, value: any) => {
     setFormState((prevState) => ({
       ...prevState,
       [field]: value,

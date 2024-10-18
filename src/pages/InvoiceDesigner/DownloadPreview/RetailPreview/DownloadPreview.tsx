@@ -76,9 +76,7 @@ const DownloadRetailPreview = ({
             data={data}
             docIDKey={docIDKey}
             docTitle={docTitle}
-            ActiveBranch={ActiveBranch}
             currencySymbol={currencySymbol}
-            AddressTemplates={AddressTemplates}
           />
           <ItemTablePreview template={template} data={data} />
           <TotalSummaryPreview template={template} data={data} currencySymbol={currencySymbol} totalAmountInwords={totalAmountInwords} />

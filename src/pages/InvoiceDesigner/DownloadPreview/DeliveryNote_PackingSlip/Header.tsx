@@ -1,8 +1,9 @@
 import { View, Text, Image } from "@react-pdf/renderer";
 import { DNSPTEmpProps } from ".";
 import { dateTrimmer } from "../../../../utilities/Utils";
+import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 
-const Header = ({ data, template, preference, company, addressTemplates }: DNSPTEmpProps) => {
+const Header = ({ data, template }: DNSPTEmpProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const billingAddress = data?.addresses?.find((val: any) => val?.address?.address_type?.is_for == "customer");
 
@@ -10,6 +11,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
   const fontSize = template?.propertiesState?.font_size || 12;
   const color = template?.propertiesState?.font_color || "#000";
   const fontWeight = template?.propertiesState?.font_weight || "normal";
+  const currentBranch = useCurrentBranch();
 
   /// label font size and color
   const labelFontSize = template?.propertiesState?.label_font_size || 12;
@@ -48,7 +50,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
           <Image
             style={{ width: 80 * logoWidthRatio }}
             src={{
-              uri: company?.image,
+              uri: currentBranch?.logo??"",
               method: "GET",
               headers: { "Cache-Control": "no-cache" },
               body: "",
@@ -64,7 +66,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
               paddingVertical: "10px",
             }}
           >
-            <Text>{company?.name}</Text>
+            <Text>{currentBranch?.name}</Text>
           </View>
           <View
             style={{
@@ -75,7 +77,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
               flexDirection: "column",
             }}
           >
-            {addressTemplates?.orgAddressTemplate?.map((org: any, index: number) => (
+            {currentBranch?.address?.map((org: any, index: number) => (
               <Text key={`ADDR_${index}`}>{org}</Text>
             ))}
           </View>
@@ -91,7 +93,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
             justifyContent: "flex-start",
           }}
         >
-          <Text style={{ fontSize: "18px", fontWeight: 500, marginBottom: "0.5pt", color: "#be3a31" }}>{preference?.document_title}</Text>
+          {/* <Text style={{ fontSize: "18px", fontWeight: 500, marginBottom: "0.5pt", color: "#be3a31" }}>{preference?.document_title}</Text> */}
           <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
             <Text
               style={{
@@ -101,10 +103,10 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
                 paddingVertical: "5px",
               }}
             >
-              {preference?.transaction_number || "#"} : {data?.sales_invoice_no}
+              {/* {preference?.transaction_number || "#"} : {data?.sales_invoice_no} */}
             </Text>
           </View>
-          {preference?.balance_due_enable && (
+          {/* {preference?.balance_due_enable && (
             <View style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
               <Text
                 style={{
@@ -117,7 +119,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
                 {preference?.balance_due || "Balance Due"} : {data?.balance_due}
               </Text>
             </View>
-          )}
+          )} */}
         </View>
       </View>
       <View
@@ -139,7 +141,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
             gap: "2pt",
           }}
         >
-          {preference?.bill_to_enable && (
+          {/* {preference?.bill_to_enable && (
             <View
               style={{
                 fontSize,
@@ -163,9 +165,9 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
               <Text>{data?.customer?.billing_address?.city}</Text>
               <Text>{data?.customer?.billing_address?.country}</Text>
             </View>
-          )}
+          )} */}
 
-          {preference?.delivery_to_enable && (
+          {/* {preference?.delivery_to_enable && (
             <View
               style={{
                 display: "flex",
@@ -201,7 +203,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
                 </View>
               )}
             </View>
-          )}
+          )} */}
         </View>
         <View
           style={{
@@ -227,14 +229,14 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
             }}
           >
             <View style={{ width: "50%" }}>
-              <Text> {preference?.date_field || "Date"} :</Text>
+              {/* <Text> {preference?.date_field || "Date"} :</Text> */}
             </View>
             <View style={{ width: "50%" }}>
               <Text>{dateTrimmer(data?.created_at)}</Text>
             </View>
           </View>
 
-          {preference?.reference_field_enable && data?.ref_number && (
+          {/* {preference?.reference_field_enable && data?.ref_number && (
             <View
               style={{
                 fontSize: labelFontSize,
@@ -252,7 +254,7 @@ const Header = ({ data, template, preference, company, addressTemplates }: DNSPT
                 <Text>{data?.ref_number}</Text>
               </View>
             </View>
-          )}
+          )} */}
         </View>
       </View>
     </View>

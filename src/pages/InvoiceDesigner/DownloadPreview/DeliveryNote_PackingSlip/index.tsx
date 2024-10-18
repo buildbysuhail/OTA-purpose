@@ -41,9 +41,9 @@ const DNPSTemplate = ({ data, template }: DNSPTEmpProps) => {
         {/*   */}
 
         <View style={{ paddingLeft, paddingRight, fontSize: 12 }}>
-          <Header data={data} preference={preference} company={company} template={template} addressTemplates={addressTemplates} />
-          <Table data={data} preference={preference} template={template} />
-          <Footer data={data} preference={preference} template={template} />
+          <Header data={data}  template={template} />
+          <Table data={data}  template={template} />
+          <Footer data={data} template={template} />
         </View>
 
         {/* Footer  Section  */}

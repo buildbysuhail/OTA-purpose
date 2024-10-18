@@ -620,5 +620,27 @@
   "activate_date":"Activate Date",
   "privilege_card":"Privilege Card",
   "price_category":"Price Category",
-  "op_balance":"Op Balance"
+  "op_balance":"Op Balance",
+
+  "party":"Party",
+  "display_name":"Display Name",
+  "ifsc":"IFSC",
+  "office_phone":"Office Phone",
+  "work_phone":"Work Phone",
+  "contact_phone":"Contact Phone",
+  "care_of_party":"Care Of Party",
+  "web_URL":"WebURL",
+  "start_date":"Start Date",
+  "credit_days":"Credit Days",
+  "credit_amount":"Credit Amount",
+  "price_category_name":"Price Category Name",
+  "tax_number":"Tax Number",
+  "cst_number":"CST Number",
+  "route_name":"Route Name",
+  "plot_identification_number":"Plot Identification Number",
+  "city_sub_division":"City Sub Division",
+  "country_sub_entity":"Country Sub Entity",
+  "id_type":"ID Type",
+  "id_number":"ID Number",
+  "parent_route":"Parent Route"
 }

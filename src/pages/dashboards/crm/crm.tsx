@@ -10,7 +10,7 @@ import CashflowChart from './cashflowChart';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import QuickCreate from './quick-create';
-import Footer from './footer';
+import MobileFooter from './mobile-footer';
 
 interface CrmProps { }
 class ItemSummaryCard {total: number = 0; currency: string = ""; summary:ItemSummaryCardStateSummary[] = new Array<ItemSummaryCardStateSummary>();monthVariation: number=0; for:string=""; branchData:ItemSummaryCardBranchSummary[] = new Array<ItemSummaryCardBranchSummary>; totalBranches: number = 0; contextBranches: number = 0; branches:string[] = new Array<string>;}
@@ -679,7 +679,7 @@ const Crm: FC<CrmProps> = () => {
       <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
       {deviceInfo?.isMobile && (
       <div className="w-full h-16 bg-white fixed bottom-0 left-0">
-        <Footer/>
+        <MobileFooter/>
       </div>
     )}
     </Fragment>

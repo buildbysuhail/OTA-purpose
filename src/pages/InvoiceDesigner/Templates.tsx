@@ -300,18 +300,14 @@ const Templates = ({ }) => {
                             data={DummyInvoiceData}
                             template={showPreview.template}
                             currency={currencySymbol || undefined}
-                            company={ActiveBranch?.company}
                             templateGroupId={templateGroup}
-                            addressTemplates={{ orgAddressTemplate }}
                           />
                         ) : (
                           <StandardPreviewWrapper
                             data={DummyInvoiceData}
                             template={showPreview.template}
-                            company={ActiveBranch?.company}
                             currency={currencySymbol || undefined}
                             templateGroupId={templateGroup}
-                            addressTemplates={{ orgAddressTemplate }}
                           />
                         )}
                       </div>

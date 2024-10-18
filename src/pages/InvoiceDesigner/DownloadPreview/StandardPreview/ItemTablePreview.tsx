@@ -156,7 +156,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     height: "auto",
                     padding: "5pt",
                     display: "flex",
-                    color: Itemscolor,
+                    color: Itemscolor, 
                     flexDirection: "row",
                     fontSize: ItemsfontSize,
                     justifyContent: "center",

@@ -676,12 +676,12 @@ const Crm: FC<CrmProps> = () => {
           </div>
         </div>
       </div>
-      <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
+      {/* <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
       {deviceInfo?.isMobile && (
       <div className="w-full h-16 bg-white fixed bottom-0 left-0">
         <MobileFooter/>
       </div>
-    )}
+    )} */}
     </Fragment>
   );
 }

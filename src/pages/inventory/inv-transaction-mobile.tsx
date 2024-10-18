@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
-import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
-import Urls from "../../../redux/urls";
+import ERPButton from "../../components/ERPComponents/erp-button";
+import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
+import ERPModal from "../../components/ERPComponents/erp-modal";
+import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
+import Urls from "../../redux/urls";
 
 interface BilledItem {
   id: number;

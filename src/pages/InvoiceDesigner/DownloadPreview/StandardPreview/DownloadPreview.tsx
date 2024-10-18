@@ -12,13 +12,10 @@ export interface DownloadPreviewProps {
   data: any;
   docTitle?: any;
   docIDKey?: string;
-  ActiveBranch?: any;
-  AddressTemplates?: any;
   currencySymbol?: string;
   template?: TemplateState;
   totalAmountInwords?: string;
   templateGroupId?: TemplateGroupTypes;
-  preferences?: any;
   templateImages?: any;
   taxInfo?: any
 }
@@ -32,12 +29,9 @@ const DownloadStandardPreview = ({
   template,
   docIDKey,
   docTitle,
-  ActiveBranch,
   currencySymbol,
   templateGroupId,
   totalAmountInwords,
-  AddressTemplates,
-  preferences,
   templateImages, taxInfo
 }: DownloadPreviewProps) => {
 

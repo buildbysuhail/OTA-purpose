@@ -1,89 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { getAction, postAction } from "../../../redux/slices/app-thunks";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { APIClient } from "../../../helpers/api-client";
+import { ApplicationBranchSettings, ApplicationBranchSettingsInitialState } from "./application-settings-types";
 
-interface FormState {
-    maintainTax: boolean;
-    showFinancialYearSelector: boolean;
-    countryName: string;
-    maintainSynchronization: boolean;
-    maintainSynchronizationdata: string;
-    autoPostingTransaction: boolean;
-    allowEditPostedTransactions: boolean;
-    maintainMasterEntry: boolean;
-    maintainInventoryTransactionsEntry: boolean;
-    syncMethod: string;
-    syncIntervals: number;
-    reportMode: string;
-    useBranchWiseSalesPrice: boolean;
-    useTemplateSelectionForPrinting: boolean;
-    showBTINotification: boolean;
-    applyVATOnPurchaseToBTO: boolean;
-    maintainCounterWisePrefixForTransaction: boolean;
-    refreshStockAfterSync: boolean;
-    refreshServerStockAfterSync: boolean;
-    maintainKSA_EInvoice: boolean;
-    invoicePrintingStyle: string;
-    enableTaxOnBillDiscount: boolean;
-    apply_KSA_EInvoice_Validation_Rules: boolean;
-    kSA_EInvoice_Sync_SystemCode: string;
-    createCreditNoteAutomaticallyOnSalesEdit: boolean;
-    enableVanSale: boolean;
-    clientPPOSBranchID: string;
-    vanSaleProductSerial: string;
-    pPosEmail: string;
-    maximum_Allowed_LineItem_Amount: number;
-    fileAttachmentMethod: string;
-    fileAttachmentFolder: string;
-  }
-  
+
 
 const BranchSettingsForm: React.FC = () => {
-  const initialState: FormState = {
-    maintainTax: true,
-    showFinancialYearSelector: false,
-    countryName: "1",
-    maintainSynchronization: false,
-    autoPostingTransaction: true,
-    allowEditPostedTransactions: true,
-    maintainMasterEntry: true,
-    maintainInventoryTransactionsEntry: true,
-    maintainSynchronizationdata: "",
-    syncMethod: "",
-    syncIntervals: 0,
-    reportMode: "Classic",
-    useBranchWiseSalesPrice: false,
-    useTemplateSelectionForPrinting: false,
-    showBTINotification: false,
-    applyVATOnPurchaseToBTO: true,
-    maintainCounterWisePrefixForTransaction: false,
-    refreshStockAfterSync: true,
-    refreshServerStockAfterSync: true,
-    maintainKSA_EInvoice: false,
-    invoicePrintingStyle: "Default",
-    enableTaxOnBillDiscount: false,
-    apply_KSA_EInvoice_Validation_Rules: false,
-    kSA_EInvoice_Sync_SystemCode: "",
-    createCreditNoteAutomaticallyOnSalesEdit: false,
-    enableVanSale: false,
-    clientPPOSBranchID: "",
-    vanSaleProductSerial: "",
-    pPosEmail: "",
-    maximum_Allowed_LineItem_Amount: 0.0,
-    fileAttachmentMethod: "No",
-    fileAttachmentFolder: "",
-  };
-
-  const [formState, setFormState] = useState<FormState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  
+  const [formState, setFormState] = useState<ApplicationBranchSettings>(ApplicationBranchSettingsInitialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationBranchSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -121,8 +52,8 @@ const BranchSettingsForm: React.FC = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof FormState];
-        const prevValue = formStatePrev[key as keyof FormState];
+        const currentValue = formState?.[key as keyof ApplicationBranchSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationBranchSettings];
 
         if (currentValue !== prevValue) {
           debugger;

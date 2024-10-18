@@ -34,6 +34,7 @@ import TemplateDesignerLayout from "./components/common/layout/template-designer
 import { Device } from '@capacitor/device';
 import { useDispatch } from "react-redux";
 import { setDeviceInfo } from "./redux/slices/device/reducer";
+import { getApplicationSettings } from "./redux/slices/app/thunk";
 
 export const LoadingAnimation = () => {
   return (
@@ -92,6 +93,9 @@ function App() {
   syncAppStates(dispatch,userThemes, userProfileDetails, locale);
   const language = userProfileDetails?.language;
   
+  useEffect(() => {
+    dispatch(getApplicationSettings());
+  }, [dispatch]);
   useEffect(() => {
     
     if (locale && i18n && typeof i18n.changeLanguage === 'function') {

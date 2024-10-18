@@ -1,7 +1,7 @@
 import { dateTrimmer } from "../../../../utilities/Utils";
 import { RetailPreviewProps } from "./PreviewWrapper";
 
-const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency, addressTemplates, company }: RetailPreviewProps) => {
+const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency, addressTemplates }: RetailPreviewProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
 

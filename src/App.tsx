@@ -43,6 +43,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setDeviceInfo } from "./redux/slices/device/reducer";
 import { RootState } from "./redux/store";
 import MobileFooter from "./pages/dashboards/crm/mobile-footer";
+import { getApplicationSettings } from "./redux/slices/app/thunk";
 
 export const LoadingAnimation = () => {
   return (
@@ -97,7 +98,10 @@ function App() {
   ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
   syncAppStates(dispatch, userThemes, userProfileDetails, locale);
   const language = userProfileDetails?.language;
-
+  
+  useEffect(() => {
+    dispatch(getApplicationSettings());
+  }, [dispatch]);
   useEffect(() => {
     if (locale && i18n && typeof i18n.changeLanguage === "function") {
       i18n.changeLanguage(language);

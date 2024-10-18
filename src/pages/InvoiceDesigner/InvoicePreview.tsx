@@ -1,13 +1,13 @@
 import { Fragment, useEffect, useState } from "react";
 import { Popover } from "@headlessui/react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   Cog6ToothIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/24/outline";
-import { PDFViewer, PDFDownloadLink, View } from "@react-pdf/renderer";
-import { PrinterIcon, ArrowDownTrayIcon } from "@heroicons/react/24/solid";
+import { PDFViewer, PDFDownloadLink } from "@react-pdf/renderer";
+import { PrinterIcon } from "@heroicons/react/24/solid";
 
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
 
@@ -16,14 +16,12 @@ import DownloadRetailPreview from "./DownloadPreview/RetailPreview/DownloadPrevi
 import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { TemplateGroupTypes } from "./constants/TemplateCategories";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
-import { parseAddressTemplate } from "./utils";
 import DNPSTemplate from "./DownloadPreview/DeliveryNote_PackingSlip";
 import { TemplateState } from "./Designer/interfaces";
 import {
   getAmountInWords,
   getCurrentCurrencySymbol,
 } from "../../utilities/Utils";
-import usePreferenceData from "../../utilities/hooks/usePreference";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 import {
   isTaxApplicable,
@@ -42,8 +40,8 @@ import { getAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
 import { RootState } from "../../redux/store";
 import { APIClient } from "../../helpers/api-client";
-import { Template } from "devextreme-react";
 import { getTemplates } from "../../redux/slices/templates/thunk";
+import useApplicationSetting from "../../utilities/hooks/use-application-settings";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -85,12 +83,9 @@ const InvoicePreview = ({
 
   const currencySymbol = getCurrentCurrencySymbol();
 
-  const generalPrefData = usePreferenceData("GeneralPreference");
-  const invoicePrefData = usePreferenceData("InvoicePreference");
-  const packingSlipPrefData = usePreferenceData("PackingSlipPreference");
-  const deliveryNotePrefData = usePreferenceData("DeliveryNotePreference");
+  const branchSettings = useApplicationSetting("branch");
 
-  const userProfile = useAppSelector((state: RootState) => state?.UserRights);
+  const userProfile = useAppSelector((state: RootState) => state?.UserSession);
   const hasPermissionToUpdateProfile = true;
   const hasPermissionForTemplates = true;
 
@@ -109,16 +104,10 @@ const InvoicePreview = ({
     (state: any) => state?.[gstTreatmentReducerName]
   )?.data?.results;
 
-  const comapanies = useSelector((state: any) => state?.GetUserCompanies);
-  const ActiveBranch = comapanies?.data?.find((item: any) => item?.is_active);
 
   const totalAmountInwords = getAmountInWords(
     isNaN(+data?.total_price) ? 0 : +data?.total_price,
     currencySymbol || ""
-  );
-  const orgAddressTemplate = parseAddressTemplate(
-    generalPrefData?.organization_address_format,
-    ActiveBranch?.company
   );
 
   /* ########################################################################################### */
@@ -297,10 +286,8 @@ const InvoicePreview = ({
           data={data}
           docIDKey={docIDKey}
           docTitle={docTitle}
-          ActiveBranch={ActiveBranch}
           currencySymbol={currencySymbol || ""}
           totalAmountInwords={totalAmountInwords}
-          AddressTemplates={{ orgAddressTemplate }}
         />
       );
     } else
@@ -311,12 +298,9 @@ const InvoicePreview = ({
           docIDKey={docIDKey}
           docTitle={docTitle}
           template={templateData}
-          ActiveBranch={ActiveBranch}
           currencySymbol={currencySymbol || ""}
           totalAmountInwords={totalAmountInwords}
           templateGroupId={templateGroupId}
-          AddressTemplates={{ orgAddressTemplate }}
-          preferences={{ invoicePreference: invoicePrefData }}
         />
       );
   };
@@ -333,13 +317,6 @@ const InvoicePreview = ({
             <DNPSTemplate // delivery note & payment slip
               data={data}
               template={templateData}
-              company={ActiveBranch?.company}
-              addressTemplates={{ orgAddressTemplate }}
-              preference={
-                PDFType === "deliveryNote"
-                  ? deliveryNotePrefData
-                  : packingSlipPrefData
-              }
             />
           )}
         </PDFViewer>
@@ -427,10 +404,8 @@ const InvoicePreview = ({
                 docIDKey={docIDKey}
                 docTitle={docTitle}
                 template={templateData}
-                company={ActiveBranch?.company}
                 currency={currencySymbol || undefined}
                 templateGroupId={templateGroupId}
-                addressTemplates={{ orgAddressTemplate }}
               />
             ) : (
               <StandardPreviewWrapper
@@ -438,11 +413,8 @@ const InvoicePreview = ({
                 docIDKey={docIDKey}
                 docTitle={docTitle}
                 template={templateData}
-                company={ActiveBranch?.company}
                 currency={currencySymbol || undefined}
                 templateGroupId={templateGroupId}
-                addressTemplates={{ orgAddressTemplate }}
-                preferences={{ invoicePreference: invoicePrefData }}
               />
             )}
           </div>

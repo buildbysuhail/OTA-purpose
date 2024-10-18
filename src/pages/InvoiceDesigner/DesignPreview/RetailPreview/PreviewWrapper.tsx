@@ -7,16 +7,14 @@ import { TemplateGroupTypes } from "../../constants/TemplateCategories";
 
 export interface RetailPreviewProps {
   data: any;
-  company?: any;
   currency?: string;
   docTitle?: string;
   docIDKey?: string;
-  addressTemplates?: any;
   template?: TemplateState;
   templateGroupId?: TemplateGroupTypes;
 }
 
-const RetailPreviewWrapper = ({ data, templateGroupId, docTitle, docIDKey, template, currency, addressTemplates, company }: RetailPreviewProps) => {
+const RetailPreviewWrapper = ({ data, templateGroupId, docTitle, docIDKey, template, currency }: RetailPreviewProps) => {
 
   let fontStyle = "font-Poppins"
 
@@ -34,13 +32,11 @@ const RetailPreviewWrapper = ({ data, templateGroupId, docTitle, docIDKey, templ
     <div className={`${fontStyle}`}>
       <Header
         data={data}
-        company={company}
         template={template}
         docIDKey={docIDKey}
         docTitle={docTitle}
         currency={currency}
         templateGroupId={templateGroupId}
-        addressTemplates={addressTemplates}
       />
       <ItemTable templateGroupId={templateGroupId} template={template} data={data} />
       <Total templateGroupId={templateGroupId} template={template} data={data} currency={currency} />

@@ -14,28 +14,20 @@ interface TemplateImages {
 }
 export interface StandardPreviewProps {
   data: any;
-  company?: any;
   currency?: string;
   docTitle?: string;
   docIDKey?: string;
-  addressTemplates?: any;
   template?: TemplateState;
   templateGroupId?: TemplateGroupTypes;
-  preferences?: any;
-  templateImages?: TemplateImages
 }
 
 const StandardPreviewWrapper = ({
   data,
   template,
-  company,
   templateGroupId,
-  addressTemplates,
   docIDKey,
   docTitle,
   currency,
-  preferences,
-  templateImages
 }: StandardPreviewProps) => {
 
   debugger;
@@ -56,7 +48,6 @@ const StandardPreviewWrapper = ({
      <div className={`${fontStyle} `}>
       <Header
         data={data}
-        company={company}
         template={template}
         docTitle={docTitle}
         docIDKey={docIDKey}

@@ -7,13 +7,10 @@ import { TemplateState } from "../../Designer/interfaces";
 
 export interface DNSPTEmpProps {
   data: any;
-  preference: any;
-  company?: any;
   template?: TemplateState;
-  addressTemplates?: any;
 }
 
-const DNPSTemplate = ({ data, preference, company, addressTemplates, template }: DNSPTEmpProps) => {
+const DNPSTemplate = ({ data, template }: DNSPTEmpProps) => {
   const backgroundColor = template?.propertiesState?.bg_color || "#fff";
   const topBackgroundColor = template?.headerState?.bgColor || "#fff";
   const bottomBackgroundColor = template?.footerState?.bg_color || "#fff";

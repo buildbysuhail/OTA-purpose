@@ -50,7 +50,7 @@ const Header = ({ data, template }: DNSPTEmpProps) => {
           <Image
             style={{ width: 80 * logoWidthRatio }}
             src={{
-              uri: company?.image,
+              uri: currentBranch?.logo??"",
               method: "GET",
               headers: { "Cache-Control": "no-cache" },
               body: "",
@@ -141,7 +141,7 @@ const Header = ({ data, template }: DNSPTEmpProps) => {
             gap: "2pt",
           }}
         >
-          {preference?.bill_to_enable && (
+          {/* {preference?.bill_to_enable && (
             <View
               style={{
                 fontSize,
@@ -165,7 +165,7 @@ const Header = ({ data, template }: DNSPTEmpProps) => {
               <Text>{data?.customer?.billing_address?.city}</Text>
               <Text>{data?.customer?.billing_address?.country}</Text>
             </View>
-          )}
+          )} */}
 
           {/* {preference?.delivery_to_enable && (
             <View

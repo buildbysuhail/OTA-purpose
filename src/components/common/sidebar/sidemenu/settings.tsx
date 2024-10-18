@@ -40,7 +40,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/chart-of-accounts`, type: 'link', active: false, selected: false, title: 'chart_of_accounts' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/opening-balance`, type: 'link', active: false, selected: false, title: 'opening_balance' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/party-category`, type: 'link', active: false, selected: false, title: 'party_category' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/supplier-customer-master`, type: 'link', active: false, selected: false, title: 'supp_cust_master' },
+      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/parties`, type: 'link', active: false, selected: false, title: 'parties' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cash-bank-master`, type: 'link', active: false, selected: false, title: 'cash_bank_master' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/privilege-cards`, type: 'link', active: false, selected: false, title: 'privilege_cards' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customer-supplier-ledger`, type: 'link', active: false, selected: false, title: 'cust_supp_ledger' },

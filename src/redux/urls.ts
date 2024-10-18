@@ -186,12 +186,13 @@ const Urls = {
   branch_ledger: "/Accounts/BranchLedgers/",
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
-  chart_of_accounts:"/Accounts/ChartofAccounts/",
+  chart_of_accounts: "/Accounts/ChartofAccounts/",
+  parties: "/Accounts/Parties/",
   //Reports
- acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
+  acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
- acc_reports_aging_payable_direct: "/Accounts/RptAging/AgingPayableskiptake/",
- acc_reports_aging_receivable_direct: "/Accounts/RptAging/AgingReceivableSkiptake/",
+  acc_reports_aging_payable_direct: "/Accounts/RptAging/AgingPayableskiptake/",
+  acc_reports_aging_receivable_direct: "/Accounts/RptAging/AgingReceivableSkiptake/",
   // Accounts End
 
 

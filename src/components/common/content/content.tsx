@@ -50,6 +50,7 @@ const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account
 const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
 const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
+const Parties = lazy(() => import('../../../pages/accounts/masters/parties/parties'));
 // Acc End
 
 //integration 
@@ -120,31 +121,32 @@ const Content: FC<ContentProps> = () => {
         <Route path="/account-masters/cost-center" element={<CostCenter />} />
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
+        <Route path="account-masters/parties" element={<Parties />} />
         {/* Accounts End */}
-        
+
 
         {/* Integration Start */}
         <Route path="/integration/sms" element={<SmsIntegration />} />
-        <Route path="/integration/whatsapp" element={<WhatsappIntegration/>} />
+        <Route path="/integration/whatsapp" element={<WhatsappIntegration />} />
         <Route path="/integration/email" element={<EmailIntegration />} />
         {/* Integration End */}
-      
+
         {/* Templates starts */}
         <Route path="/templates" element={<Templates />} />
-        
-        <Route path="/templates/invoice_designer/*"  element={<TemplateDesignerLayout />}/>
-        
+
+        <Route path="/templates/invoice_designer/*" element={<TemplateDesignerLayout />} />
+
         {/* Templates ends */}
 
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
-          {/* Reports - Accounts */}
-          <Route path="/accounts/cash" element={<Cash />} />
-          <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />     
-          <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport/>} />   
-          <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReportSkipTake/>} />     
-          <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReportSkipTake/>} />        
-          {/* Reports - Accounts */}
+        {/* Reports - Accounts */}
+        <Route path="/accounts/cash" element={<Cash />} />
+        <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
+        <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />
+        <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReportSkipTake />} />
+        <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReportSkipTake />} />
+        {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
       </Routes>

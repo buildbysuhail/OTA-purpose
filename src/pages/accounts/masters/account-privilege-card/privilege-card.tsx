@@ -164,7 +164,9 @@ const PrivilegeCard = () => {
           edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
           delete={{
             confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?"
+            confirmationMessage: "Are you sure you want to delete this item?",
+            url: Urls?.account_privilege_card, 
+            key: cellElement?.data?.id
           }}
         />
       ),

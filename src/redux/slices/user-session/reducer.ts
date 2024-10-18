@@ -20,6 +20,7 @@ export const initialUserSessionData: UserModel = {
   email: '',
   currentClientId: 0,
   currentClientName: '',
+  currentBranchAddress:[],
   currentBranchId: 0,
   currentBranchName: '',
   currency: null,

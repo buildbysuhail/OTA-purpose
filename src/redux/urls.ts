@@ -187,7 +187,7 @@ const Urls = {
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
   chart_of_accounts: "/Accounts/ChartofAccounts/",
-  parties: "/Accounts/CustSuppLedger/",
+  parties: "/Accounts/Parties/",
   //Reports
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",

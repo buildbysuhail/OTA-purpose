@@ -16,15 +16,6 @@ const Parties = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    // {
-    //   dataField: "currencyid",
-    //   caption: "Currency ID", 
-    //   dataType: "number",
-    //   allowSorting: true,
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 100,
-    // },
     {
       dataField: "currencyCode",
       caption: t("currency_code"),
@@ -117,7 +108,7 @@ const Parties = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("currency_master")}
+                  gridHeader={t("parties")}
                   dataUrl={Urls.parties}
                   gridId="grd_parties"
                   popupAction={toggleParties}

@@ -97,6 +97,8 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
           [field]: value,
         },
       }));
+      console.log(formState);
+      
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -139,7 +141,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
         setLoading(false);
       }
     };
-    //htmlEditor state handler
+   
     const valueChanged = (e: any) => {
         handleFieldChange("body", e.value);
       };

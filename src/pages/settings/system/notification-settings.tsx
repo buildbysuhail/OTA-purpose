@@ -164,7 +164,7 @@ const NotificationSettings = () => {
                               </td>
 
                               {/* Email Switch */}
-                              <td>
+                              <td >
                                 <div className="flex items-center justify-center">
                                   <ERPSwitch
                                     size="sm"
@@ -175,9 +175,11 @@ const NotificationSettings = () => {
                                   {item.email === "1" && (
                                     <span
                                     onClick={() => toggleTooltip(item.transactionCode, "email")}
-                                  //  className="invisible hover:visible"
+                                     className=""
                                     >
-                                      <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+                                      <i title="template" 
+                                      className="ri-edit-box-line text-xl  text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300">
+                                      </i>
 
                                     </span>
                                   )}
@@ -197,7 +199,10 @@ const NotificationSettings = () => {
                                     <span
                                     onClick={() => toggleTooltip(item.transactionCode, "whatsapp")}
                                     >
-                                     <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+                                        <i title="template" 
+                                        className="ri-edit-box-line text-xl text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300">
+
+                                        </i>
                                     </span>
                                   )}
                                 </div>
@@ -216,7 +221,8 @@ const NotificationSettings = () => {
                                     <span
                                       onClick={() => toggleTooltip(item.transactionCode,"sms")}
                                     >
-                                     <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+                                  <i title="template" 
+                                  className="ri-edit-box-line text-xl text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300"></i>
 
                                     </span>
                                   )}
@@ -235,8 +241,10 @@ const NotificationSettings = () => {
                                   {item.inAppNotification === "1" && (
                                     <span
                                     onClick={() => toggleTooltip(item.transactionCode, "inAppNotification")}
+                                    
                                     >
-                                       <i className="ri-edit-box-line text-xl transition-transform duration-300 ease-in-out transform hover:scale-125 cursor-pointer"></i>
+                                    <i title="template" 
+                                    className="ri-edit-box-line text-xl cursor-pointer text-[#047857] opacity-0 hover:opacity-100 transition-opacity duration-300"></i>
                                     </span>
                                   )}
                                 </div>

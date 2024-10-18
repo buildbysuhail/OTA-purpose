@@ -8,7 +8,7 @@ import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous
 import Urls from "../../../redux/urls";
 
 interface BilledItem {
-  id: number;
+  id?: number;
   name: string;
   price: number;
   quantity: number;
@@ -125,33 +125,11 @@ const AccTransactionMobile = () => {
         <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
           Cash payment
         </h1>
-        {/* <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
-          <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${
-              activeButton === "credit"
-                ? " bg-green text-white rounded-full"
-                : "bg-transparent text-zinc rounded-full"
-            }`}
-            onClick={() => setActiveButton("credit")}
-          >
-            Credit
-          </button>
-          <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${
-              activeButton === "cash"
-                ? "bg-green text-white rounded-full"
-                : "bg-transparent text-zinc rounded-full"
-            }`}
-            onClick={() => setActiveButton("cash")}
-          >
-            Cash
-          </button>
-        </div> */}
         <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i>
       </div>
 
       {/* Invoice and Date Section */}
-      <div className="flex items-center space-x-0 bg-white mb-0 p-0 rounded-lg text-gray-600">
+      {/* <div className="flex items-center space-x-0 bg-white mb-0 p-0 rounded-lg text-gray-600">
         <div className="flex-1 border-gray-300 p-0 border-none rounded-md">
           <label className="block mb-1 font-medium text-center text-sm">
             Voucher No
@@ -164,17 +142,47 @@ const AccTransactionMobile = () => {
             />
             <i className="ri-arrow-down-s-line"></i>
           </div>
-        </div>
+        </div> */}
 
-        {/* Centered divider */}
-        <div className="border-gray-300 border-l h-6"></div>
+      {/* Centered divider */}
+      {/* <div className="border-gray-300 border-l h-6"></div> */}
 
-        <div className="flex-1 border-gray-300 p-2 border-none rounded-md">
+      {/* <div className="flex-1 border-gray-300 p-2 border-none rounded-md">
           <label className="block mb-1 font-medium text-center text-sm">
             Date
           </label>
           <div className="relative">
             <input type="date" name="" id="" className="border-none" />
+          </div>
+        </div> */}
+      {/* </div> */}
+      <div className="flex items-center space-x-4 bg-white mb-0 p-0 rounded-none shadow-md text-gray-600">
+        <div className="flex-1  px-2  rounded-md">
+          <label className="block mb-0 font-medium text-center text-sm text-gray-700">
+            Voucher No
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              defaultValue="3"
+              className="bg-transparent px-3 py-2 w-full text-center border-none rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[10px]"
+            />
+            {/* <i className="ri-arrow-down-s-line absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"></i> */}
+          </div>
+        </div>
+
+        {/* Centered divider */}
+        <div className="border-gray-300 border-l h-12"></div>
+
+        <div className="flex-1  px-2 rounded-md">
+          <label className="block mb-0 font-medium text-center text-sm text-gray-700">
+            Date
+          </label>
+          <div className="relative">
+            <input
+              type="date"
+              className="bg-transparent px-3 py-2 w-full text-center border-none rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-[10px]"
+            />
           </div>
         </div>
       </div>
@@ -230,7 +238,10 @@ const AccTransactionMobile = () => {
                 />
               </div>
               <div className="mb-1">
-                <label className="pl-2" htmlFor="">
+                <label
+                  className="block font-medium text-gray-700 text-sm"
+                  htmlFor=""
+                >
                   Ref Date
                 </label>
                 <input
@@ -285,13 +296,13 @@ const AccTransactionMobile = () => {
                 className="bg-[#f3f3f3] shadow-md mb-3 p-2 rounded-lg"
               >
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-gray-500 text-sm">#{item.id}</span>
-                  <span className="font-bold text-sm">
+                  {/* <span className="text-gray-500 text-sm">#{item.id}</span> */}
+                  {/* <span className="font-bold text-sm">
                     ₹ {item.price * item.quantity}
-                  </span>
+                  </span> */}
                 </div>
-                <h3 className="mb-2 font-bold text-[20px]">{item.name}</h3>
-                <p className="mb-2 text-gray text-sm">
+                <h6 className="mb-1 font-bold text-[20px]">{item.name}</h6>
+                <p className="mb-1 text-gray text-sm">
                   Item Subtotal: {item.quantity} x ₹{item.price} = ₹
                   {item.price * item.quantity}
                 </p>
@@ -378,7 +389,7 @@ const AccTransactionMobile = () => {
               closeButton="LeftArrow"
               hasSubmit={false}
               closeTitle="Close"
-              title="Add Items"
+              title="Add Ledger"
               width="w-full"
               isFullHeight={true}
               closeModal={() => setIsOpen(false)}
@@ -387,7 +398,7 @@ const AccTransactionMobile = () => {
                   className="flex flex-col gap-0 px-0 py-0 pb-[60px]   "
                   style={{}} // Inline styles for full screen
                 >
-                  <div className="mx-auto max-w-md flex-grow h-full">
+                  <div className=" max-w-md flex-grow h-full">
                     <div className="flex justify-between items-center mb-6">
                       <div className="text-gray-600"></div>
 
@@ -396,173 +407,86 @@ const AccTransactionMobile = () => {
 
                     <form onSubmit={handleSubmit}>
                       <div className="mb-4">
-                        <ERPDataCombobox
-                          id="counterID"
-                          field={{
-                            id: "counterID",
-                            required: true,
-                            getListUrl: Urls.data_countries,
-                            valueKey: "id",
-                            labelKey: "name",
-                          }}
-                          // onChangeData={(data: any) => {
-                          //   setPostData((prev: any) => ({
-                          //     ...prev,
-                          //     data: {
-                          //       ...data,
-                          //       counterID: data.counterID,
-                          //     },
-                          //   }));
-                          // }}
-                          // validation={postData.validations.counterID}
-                          // data={postData?.data}
-                          // defaultData={postData?.data}
-                          // value={
-                          //   postData != undefined &&
-                          //     postData?.data != undefined &&
-                          //     postData?.data?.counterID != undefined
-                          //     ? postData?.data?.counterID
-                          //     : 0
-                          // }
-                          label="counterID"
-                        />
-                        <div className="relative">
+                        <div className="mb-1">
                           <label
-                            htmlFor="itemName"
                             className="block font-medium text-gray-700 text-sm"
+                            htmlFor=""
                           >
-                            Item Name
+                            Ledger Code
                           </label>
                           <input
                             type="text"
-                            id="itemName"
-                            name="itemName"
-                            value={formData.itemName}
-                            onChange={handleInputChange}
-                            placeholder="e.g. Chocolate Cake"
-                            onClick={() => setShowPopup(true)}
-                            onMouseEnter={() => setIsHovered(true)} // Show popup on hover
-                            onMouseLeave={() => {
-                              if (!showPopup) setIsHovered(false); // Only hide if popup is not shown
-                            }}
+                            placeholder="Ledger Code"
+                            // className="bg-white p-2 border rounded w-full"
                             className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-                            // className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-                          />
-                          {(showPopup || isHovered) && (
-                            <div
-                              ref={setPopupRef}
-                              className="absolute bg-white shadow-md rounded-lg p-4 mt-0 w-full border border-gray-300 border-t-0 rounded-tr-none rounded-tl-none"
-                              // style={{ top: "calc(100% + 8px)", zIndex: 10 }}
-                            >
-                              <div className="flex justify-between items-center mb-2">
-                                <span className="text-gray-600 font-medium">
-                                  Showing Saved Items
-                                </span>
-                                <a href="#" className="text-blue font-medium">
-                                  Add New Item
-                                </a>
-                              </div>
-                              <hr className="mb-2" />
-                              <div className="flex justify-between items-center">
-                                <div onClick={() => setShowTotalsPopup(true)}>
-                                  {" "}
-                                  {/* Trigger Totals Popup */}
-                                  <div className="text-gray-800 font-medium">
-                                    Apple
-                                  </div>
-                                  <div className="text-gray-600 flex justify-between">
-                                    <span>Purchase Price: 80.00</span>
-                                    <span className="text-red-600 ml-5">
-                                      In Stock:{" "}
-                                      <span className="text-red">-1</span>
-                                    </span>
-                                  </div>
-                                  {/* <div className="text-gray-600 ">
-                                    In Stock:{" "}
-                                    <span className="text-red-600">-1</span>
-                                  </div> */}
-                                </div>
-                                <div>
-                                  <i className="fas fa-chevron-right text-gray-400"></i>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="gap-4 grid grid-cols-2 mb-4">
-                        <div>
-                          <label
-                            htmlFor="quantity"
-                            className="block font-medium text-gray-700 text-sm"
-                          >
-                            Quantity
-                          </label>
-                          <input
-                            type="text"
-                            id="quantity"
-                            name="quantity"
-                            value={formData.quantity}
-                            onChange={handleInputChange}
-                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
                           />
                         </div>
-                        <div>
+                        <div className="mb-1">
                           <label
-                            htmlFor="unit"
+                            htmlFor="cashacc"
                             className="block font-medium text-gray-700 text-sm"
                           >
-                            Unit
+                            Ledger
                           </label>
                           <select
-                            id="unit"
-                            name="unit"
-                            value={formData.unit}
+                            id="cashacc"
+                            name="cashacc"
+                            value={formData.cashacc}
                             onChange={handleInputChange}
                             className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
                           >
-                            <option value="">Select Unit</option>
-                            <option value="piece">Piece</option>
-                            <option value="kg">Kg</option>
-                            <option value="liter">Liter</option>
+                            <option value="">Select Ledger</option>
+                            <option value="cash">cash</option>
+                            <option value="bank">bank</option>
+                            <option value="upi">upi</option>
                           </select>
                         </div>
-                      </div>
-
-                      <div className="gap-4 grid grid-cols-2 mb-6">
-                        <div>
+                        <div className="mb-1">
                           <label
-                            htmlFor="rate"
                             className="block font-medium text-gray-700 text-sm"
+                            htmlFor=""
                           >
-                            Rate (Price/Unit)
+                            Amount
+                          </label>
+                          <input
+                            type="number"
+                            placeholder="Amount"
+                            // className="bg-white p-2 border rounded w-full"
+                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                          />
+                        </div>
+                        <div className="mb-1">
+                          <label
+                            className="block font-medium text-gray-700 text-sm"
+                            htmlFor=""
+                          >
+                            Narration
                           </label>
                           <input
                             type="text"
-                            id="rate"
-                            name="rate"
-                            value={formData.rate}
-                            onChange={handleInputChange}
-                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
+                            placeholder="Narration"
+                            // className="bg-white p-2 border rounded w-full"
+                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
                           />
                         </div>
-                        <div>
+                        <div className="mb-1">
                           <label
-                            htmlFor="taxOption"
+                            htmlFor="cashacc"
                             className="block font-medium text-gray-700 text-sm"
                           >
-                            Tax Option
+                            Cost Center
                           </label>
                           <select
-                            id="taxOption"
-                            name="taxOption"
-                            value={formData.taxOption}
+                            id="cashacc"
+                            name="cashacc"
+                            value={formData.cashacc}
                             onChange={handleInputChange}
                             className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
                           >
-                            <option value="Without Tax">Without Tax</option>
-                            <option value="With Tax">With Tax</option>
+                            <option value="">Select Cost Center</option>
+                            <option value="cash">cash</option>
+                            <option value="bank">bank</option>
+                            <option value="upi">upi</option>
                           </select>
                         </div>
                       </div>
@@ -602,27 +526,27 @@ const AccTransactionMobile = () => {
                   </button> */}
                   <div>
                     {/* Totals & Taxes Popup */}
-                    {showTotalsPopup && (
-                      <div className="max-w-md mx-auto mt-10 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
-                        <h2 className="text-lg font-semibold mb-4">
-                          Totals & Taxes
-                        </h2>
-                        <div className="border-t border-gray-200 pt-4">
-                          <div className="flex justify-between items-center mb-4">
-                            <span className="text-gray-600">
-                              Subtotal{" "}
-                              <span className="text-sm text-gray-500">
-                                (Rate x Qty)
-                              </span>
+                    {/* {showTotalsPopup && ( */}
+                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                      {/* <h2 className="text-lg font-semibold mb-4">
+                        Totals & Discount
+                      </h2> */}
+                      <div className=" pt-1">
+                        {/* <div className="flex justify-between items-center mb-4">
+                          <span className="text-gray-600">
+                            Subtotal{" "}
+                            <span className="text-sm text-gray-500">
+                              (Rate x Qty)
                             </span>
-                            <span className="text-gray-600">₹</span>
-                            <span className="text-gray-600">200.00</span>
-                          </div>
+                          </span>
+                          <span className="text-gray-600">₹</span>
+                          <span className="text-gray-600">200.00</span>
+                        </div> */}
 
-                          {/* Discount Section */}
-                          <div className="flex justify-between items-center mb-4">
-                            <span className="text-gray-600">Discount</span>
-                            {/* <div className="flex items-center">
+                        {/* Discount Section */}
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="text-gray-600">Discount</span>
+                          {/* <div className="flex items-center">
                               <button className="px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none">
                                 0
                               </button>
@@ -633,61 +557,59 @@ const AccTransactionMobile = () => {
                                 ₹ 0.00
                               </button>
                             </div> */}
-                            <div className="flex items-center">
-                              <input
-                                type="number"
-                                defaultValue="0"
-                                className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
-                              />
-                              <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
-                                %
-                              </button>
-                              {/* <button className="ml-1 px-4 py-2 border border-gray-300 rounded-r-md text-gray-600 focus:outline-none">
+                          <div className="flex items-center">
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
+                            />
+                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
+                              %
+                            </button>
+                            {/* <button className="ml-1 px-4 py-2 border border-gray-300 rounded-r-md text-gray-600 focus:outline-none">
                                 ₹ 0.00
                               </button> */}
-                              <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
-                                ₹
-                              </button>
-                              <input
-                                type="number"
-                                defaultValue="0"
-                                className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
-                              />
-                            </div>
-                          </div>
-
-                          {/* Tax Section */}
-                          <div className="flex justify-between items-center mb-4">
-                            <span className="text-gray-600">Tax %</span>
-                            <div className="flex items-center">
-                              <select className="pr-[50px] mr-2 border border-gray-400 rounded-md px-4 py-2 focus:outline-none">
-                                <option>None</option>
-                              </select>
-                              <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
-                                ₹
-                              </button>
-                              <input
-                                type="number"
-                                defaultValue="0"
-                                className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="flex justify-between items-center mt-4 pt-4 border-t border-gray-200">
-                            <span className="text-lg font-semibold">
-                              Total Amount:
-                            </span>
-                            <span className="ml-[206px] text-lg font-semibold">
+                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
                               ₹
-                            </span>
-                            <span className="text-lg font-semibold">
-                              200.00
-                            </span>
+                            </button>
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
+                            />
                           </div>
                         </div>
+
+                        {/* Tax Section */}
+                        {/* <div className="flex justify-between items-center mb-4">
+                          <span className="text-gray-600">Tax %</span>
+                          <div className="flex items-center">
+                            <select className="pr-[50px] mr-2 border border-gray-400 rounded-md px-4 py-2 focus:outline-none">
+                              <option>None</option>
+                            </select>
+                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
+                              ₹
+                            </button>
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
+                            />
+                          </div>
+                        </div> */}
+
+                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
+                          <span className="text-sm font-semibold">
+                            Total Amount:
+                          </span>
+                          <span className="ml-[206px] text-lg font-semibold">
+                            ₹
+                          </span>
+                          <span className="text-sm font-semibold">200.00</span>
+                        </div>
                       </div>
-                    )}
+                    </div>
+                    {/* )} */}
                   </div>
                 </div>
               }

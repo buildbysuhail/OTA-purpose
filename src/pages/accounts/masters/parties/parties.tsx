@@ -27,7 +27,7 @@ const Parties = () => {
       isLocked: true,
     },
     {
-      dataField: "id",
+      dataField: "partyID",
       caption: t('id'),
       dataType: "string",
       allowSearch: true,
@@ -44,7 +44,7 @@ const Parties = () => {
       width: 100,
     },
     {
-      dataField: "partyID",
+      dataField: "partyName",
       caption: t("party"),
       dataType: "string",
       allowSorting: true,
@@ -359,12 +359,12 @@ const Parties = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.currencyId }) }}
-          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.currencyId }) }}
+          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.partyID }) }}
+          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.partyID }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url: Urls?.parties, key: cellElement?.data?.currencyId
+            url: Urls?.parties, key: cellElement?.data?.partyID
           }}
         />
       ),
@@ -394,8 +394,8 @@ const Parties = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.parties.isOpen || false}
-        title={t("currency")}
-        width="w-full max-w-[600px]"
+        title={t("parties")}
+        width="w-full max-w-[1024px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleParties({ isOpen: false, key: null }));

@@ -191,6 +191,7 @@ const Urls = {
   parties: "/Accounts/Parties/",
   cust_supp_ledger: "/Accounts/CustSuppLedger",
   //Reports
+  acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
   acc_reports_aging_payable_direct: "/Accounts/RptAging/AgingPayableskiptake/",

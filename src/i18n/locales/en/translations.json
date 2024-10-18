@@ -676,5 +676,11 @@
   "legal_name":"Legal Name",
   "trade_name":"Trade Name",
   "project_name":"Project Name",
-  "address3":"Address3"
+  "address3":"Address3",
+   "date":"Date",
+   "voucher_no":"Voucher Number",
+   "account":"Account",
+   "ref_no":"Ref No",
+   "ref_date":"Ref Date",
+   "narration":"Narration"
 }

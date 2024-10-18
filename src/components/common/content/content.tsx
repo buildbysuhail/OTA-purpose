@@ -13,6 +13,7 @@ import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-payable-aging-report-skiptake';
 import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-receivable-aging-report-skiptake';
+import LedgerReport from '../../../pages/accounts/masters/reports/ledger-report';
 
 
 
@@ -145,6 +146,7 @@ const Content: FC<ContentProps> = () => {
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
         {/* Reports - Accounts */}
+        <Route path="/accounts/ledger_report" element={<LedgerReport/>} />
         <Route path="/accounts/cash" element={<Cash />} />
         <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
         <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />

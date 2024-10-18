@@ -52,13 +52,11 @@ const StandardPreviewWrapper = ({
         docTitle={docTitle}
         docIDKey={docIDKey}
         templateGroupId={templateGroupId}
-        addressTemplates={addressTemplates}
         currency={currency}
-        templateImages={templateImages}
       />
-      <ItemTable data={data} templateGroupId={templateGroupId} template={template} preferences={preferences} currency={currency} />
+      <ItemTable data={data} templateGroupId={templateGroupId} template={template}  currency={currency} />
       <Total data={data} templateGroupId={templateGroupId} template={template} currency={currency} />
-      <Footer data={data} template={template} templateGroupId={templateGroupId} templateImages={templateImages} />
+      <Footer data={data} template={template} templateGroupId={templateGroupId}  />
     </div>
    </div>
   );

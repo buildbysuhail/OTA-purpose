@@ -180,12 +180,12 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
           }
         />
         <ERPInput
-          {...getFieldProps("ifsc")}
+          {...getFieldProps("address4")}
           label={t("ifsc")}
           placeholder={t("ifsc")}
           required={false}
           onChangeData={(data: any) =>
-            handleFieldChange("ifsc", data)
+            handleFieldChange("address4", data)
           }
         />
         <ERPInput
@@ -216,7 +216,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("registrationType", data);
+            handleFieldChange("registrationType", data !== null && data !== undefined ? data.toString() : "");
           }}
           label={t("registration_type")}
         />
@@ -467,7 +467,9 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => handleFieldChange("stateName", data)}
+          onChangeData={(data: any) => {
+            handleFieldChange("stateName", data !== null && data !== undefined ? data.toString() : "");
+          }}
           label={t("state_name")}
         />
         <ERPInput

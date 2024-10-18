@@ -7,6 +7,7 @@ import {
   toggleDayClosePopup,
   toggleDeleteInactiveTransactionPopup,
   toggleExchangeRatesPopup,
+  toggleHeaderFooterPopup,
   toggleImportExportPopup,
   toggleRefreshAllBranches,
   toggleResetBranchDataForSync,
@@ -112,6 +113,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications' },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'Notification Settings' },
+      { action: toggleHeaderFooterPopup, type: 'popup', active: false, selected: false, title: 'Headers & Footers' },
     ]
   },
   {

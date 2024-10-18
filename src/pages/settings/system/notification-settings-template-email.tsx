@@ -15,8 +15,8 @@ import HtmlEditor, {
 } from "devextreme-react/html-editor";
 
 interface NotificationContent {
-  subject: string;
-  body: string;
+  Subject: string;
+  Body: string;
 }
 
 interface NotificationTemplate {
@@ -42,8 +42,8 @@ const initialState: NotificationTemplate = {
   templateName: "",
   templateKey: "",
   content: {
-    subject: "",
-    body: "",
+    Subject: "",
+    Body: "",
   },
   channel: 0,
   isAttachFile: false,
@@ -80,9 +80,9 @@ const headerOptions = {
 const api = new APIClient();
 const EmailTemplate: React.FC<TemplateProps> = React.memo(
   ({ channel, isOpen, templateKey, closeModal }) => {
-    const [formState, setFormState] =
-      useState<NotificationTemplate>(initialState);
-    const [loading, setLoading] = useState(true);
+    const [formState, setFormState] = useState<NotificationTemplate>(initialState);
+    const [loading, setLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const { t } = useTranslation();
 
     // const onClose = useCallback(() => {
@@ -103,21 +103,21 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
+      setIsSaving(true);
       try {
         const requestBody = {
           ...formState,
+          content: JSON.stringify(formState.content),
           channel: NotificationsChannel.Email,
           templateKey,
           templateName: channel,
         };
-        const response = await api.post(
-          `${Urls.notification_template}`,
-          requestBody
-        );
-        handleResponse(response);
+        const response = await api.post(`${Urls.notification_template}`,requestBody );
+        handleResponse(response,()=>{closeModal()});
       } catch (error) {
         console.error("Error saving settings:", error);
       } finally {
+        setIsSaving(false);
       }
     };
 
@@ -133,8 +133,15 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
         const response = await api.getAsync(
           `${Urls.notification_template}?templatekey=${templateKey}&Channel=${NotificationsChannel.Email}`
         );
-        debugger;
-        setFormState(response);
+           
+        const parsedContent = JSON.parse(response.content);
+        setFormState({
+          ...response,
+          content: {
+            Subject: parsedContent.Subject || "",
+            Body: parsedContent.Body || "",
+          },
+        });
       } catch (error) {
         console.error("Error loading settings:", error);
       } finally {
@@ -143,7 +150,7 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
     };
    
     const valueChanged = (e: any) => {
-        handleFieldChange("body", e.value);
+        handleFieldChange("Body", e.value);
       };
       
     return (
@@ -151,16 +158,16 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
         <div className="w-full pt-4">
           <div className="grid grid-cols-1 gap-3">
             <ERPInput
-              id="subject"
-              value={formState.content?.subject || ""}
+              id="Subject"
+              value={formState.content?.Subject || ""}
               data={formState.content}
               label="Subject"
-              onChange={(e) => handleFieldChange("subject", e.target.value)}
+              onChange={(e) => handleFieldChange("Subject", e.target.value)}
             />
             <div className="form-group">
               <HtmlEditor
                 height={300}
-                defaultValue={formState.content?.body}
+                value={formState.content?.Body}
                 onValueChanged={valueChanged}
               >
                 <MediaResizing enabled={true} />
@@ -217,21 +224,27 @@ const EmailTemplate: React.FC<TemplateProps> = React.memo(
               checked={formState.isAttachFile}
               data={formState}
               label="Attach File"
-              onChangeData={(data) =>
-                handleFieldChange("isAttachFile", data.isAttachFile)
-              }
+              onChangeData={(data) => {
+                setFormState((prevState) => ({
+                  ...prevState,
+                  isAttachFile: data.isAttachFile, 
+                }));
+              }}
             />
           </div>
           <div className="flex justify-end items-center gap-5">
             <ERPButton
               title={t("save")}
               variant="primary"
+              loading={isSaving}
+              disabled={isSaving}
               type="submit"
               startIcon="ri-save-line"
             />
              <ERPButton
               title={t("cancel")}
               variant="secondary"
+              disabled={isSaving}
               type="button"
               onClick={()=>closeModal()}
               startIcon="ri-close-circle-line"

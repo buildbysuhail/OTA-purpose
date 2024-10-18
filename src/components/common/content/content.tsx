@@ -51,6 +51,8 @@ const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/curren
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
 const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
 const Parties = lazy(() => import('../../../pages/accounts/masters/parties/parties'));
+const CustomerSupplierLedger = lazy(() => import('../../../pages/accounts/masters/customer/supplier/ledger/customer-supplier-ledger'));
+
 // Acc End
 
 //side menu account
@@ -123,6 +125,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
         <Route path="account-masters/parties" element={<Parties />} />
+        <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
         {/* Accounts End */}
 
 

@@ -24,7 +24,7 @@ interface FormData {
   taxOption: "Without Tax" | "With Tax";
 }
 
-const InvTransaction = () => {
+const AccTransaction = () => {
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([
     { id: 1, name: "Apple", price: 100, quantity: 2, discount: 0, tax: 0 },
@@ -617,4 +617,4 @@ const InvTransaction = () => {
   );
 };
 
-export default InvTransaction;
+export default AccTransaction;

@@ -619,5 +619,27 @@
   "activate_date": "تاريخ التفعيل",
   "privilege_card": "بطاقة الامتياز",
   "price_category": "فئة السعر",
-  "op_balance": "الرصيد الافتتاحي"
+  "op_balance": "الرصيد الافتتاحي",
+
+  "party": "الطرف",
+  "display_name": "اسم العرض",
+  "ifsc": "IFSC",
+  "office_phone": "هاتف المكتب",
+  "work_phone": "هاتف العمل",
+  "contact_phone": "هاتف الاتصال",
+  "care_of_party": "عناية بالطرف",
+  "web_URL": "رابط الموقع",
+  "start_date": "تاريخ البدء",
+  "credit_days": "أيام الائتمان",
+  "credit_amount": "مبلغ الائتمان",
+  "price_category_name": "اسم فئة السعر",
+  "tax_number": "رقم الضريبة",
+  "cst_number": "رقم CST",
+  "route_name": "اسم الطريق",
+  "plot_identification_number": "رقم تعريف القطعة",
+  "city_sub_division": "التقسيم الفرعي للمدينة",
+  "country_sub_entity": "الكيان الفرعي للدولة",
+  "id_type": "نوع الهوية",
+  "id_number": "رقم الهوية",
+  "parent_route": "الطريق الرئيسي"
 }

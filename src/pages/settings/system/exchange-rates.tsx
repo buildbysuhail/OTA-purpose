@@ -143,7 +143,7 @@ const ExchangeRates = () => {
       </div>
     );
   };
-
+  
   const [enterKeyAction, setEnterKeyAction] =
     useState<DataGridTypes.EnterKeyAction>("startEdit");
   const [enterKeyDirection, setEnterKeyDirection] =

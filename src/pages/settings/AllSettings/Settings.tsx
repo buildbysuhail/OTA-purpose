@@ -23,6 +23,7 @@ import {
   toggleResetBranchDataForSync,
   toggleRefreshAllBranches,
   toggleChartOfAccounts,
+  toggleHeaderFooterPopup,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import ChartOfAccounts from "../../accounts/masters/chart-of-accounts/chart-of-accounts";
@@ -42,6 +43,8 @@ const ExchangeRates = lazy(() => import("../system/exchange-rates"));
 const UserTypePrivilegeManage = lazy(() => import("../userManagement/user-privilege-manage"));
 const ResetBranchDataForSync = lazy(() => import("../system/reset-branch-data-for-sync"));
 const RefreshAllBranches = lazy(() => import("../system/refresh-all-branches"));
+const HeadersAndFooters = lazy(() => import("../system/headres-footer"));
+
 const Settings = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -238,6 +241,16 @@ const Settings = () => {
           dispatch(toggleRefreshAllBranches({ isOpen: false }));
         }}
         content={<RefreshAllBranches/>}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.headAndFooter.isOpen || false}
+        title="Headers And Footers"
+        width="w-full max-w-[700px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleHeaderFooterPopup({ isOpen: false }));
+        }}
+        content={<HeadersAndFooters/>}
       />
     </Fragment>
   );

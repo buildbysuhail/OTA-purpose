@@ -37,12 +37,9 @@ const initialState: NotificationTemplate = {
 const api = new APIClient();
 const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templateKey, isOpen, closeModal }) => {
     const [formState, setFormState] =useState<NotificationTemplate>(initialState);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
     const { t } = useTranslation();
-
-    // const onClose = useCallback(() => {
-    //   closeModal();
-    // }, [closeModal]);
 
     const handleFieldChange = (
       field: keyof typeof initialState,
@@ -62,6 +59,7 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
+      setIsSaving(true);
       try {
       
         const requestBody = {
@@ -76,7 +74,7 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
       } catch (error) {
         console.error("Error saving settings:", error);
       } finally {
-     
+     setIsSaving(false)
       }
     };
 
@@ -134,6 +132,8 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
             <ERPButton
               title={t("save")}
               variant="primary"
+              loading={isSaving}
+              disabled={isSaving}
               type="submit"
               startIcon="ri-save-line"
             />

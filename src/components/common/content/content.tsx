@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import ApplicationSettings from '../../../pages/settings/system/application-settings';
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
-import Flex from '../../../pages/inventory/demo-flex';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
 import Cash from '../../../pages/accounts/masters/reports/cash';
 import ReportList from '../../ERPComponents/reports/reports-list';
@@ -37,7 +36,7 @@ const NotificationSettings = lazy(() => import('../../../pages/settings/system/n
 
 // Inventory Starts
 
-const InvTransaction = lazy(() => import("../../../pages/inventory/acc-transaction"));
+const InvTransactionMobile = lazy(() => import("../../../pages/inventory/inv-transaction-mobile"));
 
 // Inventory End
 // Acc Starts
@@ -57,7 +56,7 @@ const CustomerSupplierLedger = lazy(() => import('../../../pages/accounts/master
 // Acc End
 
 //side menu account
-const AccTransaction = lazy(() => import('../../../pages/inventory/acc-transaction'));
+const AccTransactionMobile = lazy(() => import('../../../pages/accounts/transactions/acc-transaction-mobile'));
 //integration 
 const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
@@ -110,8 +109,7 @@ const Content: FC<ContentProps> = () => {
 
         {/* Inventory Starts */}
 
-        <Route path="sales/new" element={<InvTransaction />} />
-        <Route path="vat-sales-invoice" element={<Flex />} />
+        <Route path="sales/new" element={<InvTransactionMobile />} />
 
 
         {/* Inventory End */}
@@ -157,7 +155,7 @@ const Content: FC<ContentProps> = () => {
         {/* <Route path="/*" element={<NotFound />} /> */}
 
         {/* side menu */}
-        <Route path="cash-payments" element={<AccTransaction />} />
+        <Route path="cash-payments" element={<AccTransactionMobile />} />
       </Routes>
     </Suspense>
   );

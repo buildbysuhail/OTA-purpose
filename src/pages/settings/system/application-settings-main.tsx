@@ -3,82 +3,19 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPSelect from "../../../components/ERPComponents/erp-select";
 import Urls from "../../../redux/urls";
-import Pageheader from "../../../components/common/pageheader/pageheader";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { postAction } from "../../../redux/slices/app-thunks";
 import { APIClient } from "../../../helpers/api-client";
-import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "./application-settings-types";
 
-interface Settings {
-  currency: string;
-  unitPrice_decimalPoint: string;
-  decimalPoints: number;
-  cashSalesVoucherPrefix: string;
-  roundingMethod: string;
-  pOSRoundingMethod: string;
-  tax_DecimalPoint: string;
-  roundingMethodGLOBAL: string;
-  autoChangeTransactionDateByMidnight: boolean;
-  autoUpdateReleaseUpTo: number;
-  oTPEmail: string;
-  oTPVerification: string;
-  allowPrivilegeCard: boolean;
-  previlegeCardPerc: number;
-  allowPostdatedTrans: boolean;
-  postDatedTransInNumbers: number;
-  allowPredatedTrans: boolean;
-  preDatedTransInNumbers: number;
-  maintainSeperatePrefixforCashSales: boolean;
-  saveModTransSum: boolean;
-  maintainProduction: boolean;
-  showReminders: boolean;
-  enableSecondDisplay: boolean;
-  allowSalesRouteArea: boolean;
-  enableDayEnd: boolean;
-  maintainSalesRouteCreditLimit: boolean;
-  maintainMultilanguage__: boolean;
-  showUserMessages: boolean;
-  maintainBusinessType: string;
-}
-const initialSettings: Settings = {
-  currency: "2",
-  unitPrice_decimalPoint: "2",
-  decimalPoints: 2,
-  cashSalesVoucherPrefix: "Millions",
-  roundingMethod: "Normal",
-  pOSRoundingMethod: "No Rounding",
-  tax_DecimalPoint: "2",
-  roundingMethodGLOBAL: "Normal",
-  autoChangeTransactionDateByMidnight: false,
-  autoUpdateReleaseUpTo: 0,
-  oTPEmail: "",
-  oTPVerification: "",
-  allowPrivilegeCard: false,
-  previlegeCardPerc: 1,
-  allowPostdatedTrans: true,
-  postDatedTransInNumbers: 0,
-  allowPredatedTrans: true,
-  preDatedTransInNumbers: 110,
-  maintainSeperatePrefixforCashSales: false,
-  saveModTransSum: false,
-  maintainProduction: false,
-  showReminders: false,
-  enableSecondDisplay: false,
-  allowSalesRouteArea: false,
-  enableDayEnd: false,
-  maintainSalesRouteCreditLimit: false,
-  maintainMultilanguage__: false,
-  showUserMessages: false,
-  maintainBusinessType: "General",
-};
+
+
 const api = new APIClient();
 const ERPSettingsFormMain = () => {
   const dispatch = useAppDispatch();
-  const [settings, setSettings] = useState<Settings>(initialSettings);
-  const [settingsPrev, setSettingsPrev] = useState<Partial<Settings>>({});
+  const [settings, setSettings] = useState<ApplicationMainSettings>(ApplicationMainSettingsInitialState);
+  const [settingsPrev, setSettingsPrev] = useState<Partial<ApplicationMainSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -109,7 +46,7 @@ const ERPSettingsFormMain = () => {
         token: settings.oTPVerification,
       });
       handleResponse(response);
-      const data: Settings = await response.json();
+      const data: ApplicationMainSettings = await response.json();
       setSettings(data);
     } catch (error) {
       console.error("Error loading settings:", error);
@@ -124,7 +61,7 @@ const ERPSettingsFormMain = () => {
         email: settings.oTPEmail,
       });
       handleResponse(response);
-      const data: Settings = await response.json();
+      const data: ApplicationMainSettings = await response.json();
       setSettings(data);
     } catch (error) {
       console.error("Error loading settings:", error);
@@ -133,7 +70,7 @@ const ERPSettingsFormMain = () => {
     }
   };
   const handleFieldChange = (settingName: any, value: any) => {
-    setSettings((prevSettings = {} as Settings) => ({
+    setSettings((prevSettings = {} as ApplicationMainSettings) => ({
       ...prevSettings,
       [settingName]: value ?? "",
     }));
@@ -144,8 +81,8 @@ const ERPSettingsFormMain = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
-        const currentValue = settings?.[key as keyof Settings];
-        const prevValue = settingsPrev[key as keyof Settings];
+        const currentValue = settings?.[key as keyof ApplicationMainSettings];
+        const prevValue = settingsPrev[key as keyof ApplicationMainSettings];
 
         if (currentValue !== prevValue) {
           debugger;

@@ -1,8 +1,9 @@
 import { StyleSheet } from "@react-pdf/renderer";
 import { StandardPreviewProps } from ".";
 import { dateTrimmer } from "../../../../utilities/Utils";
+import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 
-const ItemTable = ({ template, data, templateGroupId, preferences, currency }: StandardPreviewProps) => {
+const ItemTable = ({ template, data, templateGroupId, currency }: StandardPreviewProps) => {
   debugger;
   //   /// Font
   //   const fontSize = template?.itemTableState?.headerFontSize || 12;
@@ -81,9 +82,10 @@ const ItemTable = ({ template, data, templateGroupId, preferences, currency }: S
           {data?.items
             ?.filter((item: any) => {
               // Hiding Zero value items in the list : Invoice Preference controlled
-              if (preferences?.invoicePreference?.can_hide_zero_value_line_items && data?.voucher_code === "SI" && data?.total_price !== "0.00")
-                return item?.item_rate !== "0.00";
-              else return item;
+              // if (preferences?.invoicePreference?.can_hide_zero_value_line_items && data?.voucher_code === "SI" && data?.total_price !== "0.00")
+              //   return item?.item_rate !== "0.00";
+              // else 
+              return item;
             })
             ?.map((val: any, index: number) => (
               <tr key={`tbr${index} `}>

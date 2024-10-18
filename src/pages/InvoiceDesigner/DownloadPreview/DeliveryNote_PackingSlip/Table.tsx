@@ -1,7 +1,7 @@
 import { View, Text } from "@react-pdf/renderer";
 import { DNSPTEmpProps } from ".";
 
-const Table = ({ data, template, preference }: DNSPTEmpProps) => {
+const Table = ({ data, template }: DNSPTEmpProps) => {
   const itemTableState = template?.itemTableState;
 
   /// Header
@@ -52,7 +52,7 @@ const Table = ({ data, template, preference }: DNSPTEmpProps) => {
           }}
         >
           <Text>
-            {preference?.item || "Item"} & {preference?.description || "Description"}
+            {/* {preference?.item || "Item"} & {preference?.description || "Description"} */}
           </Text>
         </View>
         <View
@@ -67,7 +67,7 @@ const Table = ({ data, template, preference }: DNSPTEmpProps) => {
             padding: "5pt",
           }}
         >
-          <Text>{preference?.quantity || "Qty"}</Text>
+          {/* <Text>{preference?.quantity || "Qty"}</Text> */}
         </View>
       </View>
       <View>

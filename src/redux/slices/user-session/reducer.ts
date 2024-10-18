@@ -20,6 +20,7 @@ export const initialUserSessionData: UserModel = {
   email: '',
   currentClientId: 0,
   currentClientName: '',
+  currentBranchAddress:[],
   currentBranchId: 0,
   currentBranchName: '',
   currency: null,
@@ -40,6 +41,7 @@ export interface UserModel {
   currentClientId: number;
   currentClientName: string;
   currentBranchId: number;
+  currentBranchAddress: string[];
   currentBranchName: string;
   currency: string | null;
   currencySymbol: string | null;
@@ -60,6 +62,7 @@ export const initialState: UserModel = {
   currentClientId: 0,
   currentClientName: '',
   currentBranchId: 0,
+  currentBranchAddress: [],
   currentBranchName: '',
   currency: null,
   currencySymbol: null,

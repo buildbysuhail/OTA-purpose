@@ -2,7 +2,7 @@ import { dateTrimmer } from "../../../../utilities/Utils";
 import { DownloadPreviewProps } from "./DownloadPreview";
 import { Text, View, StyleSheet } from "@react-pdf/renderer";
 
-const ItemTablePreview = ({ template, data, templateGroupId, preferences }: DownloadPreviewProps) => {
+const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewProps) => {
   const itemTableState = template?.itemTableState;
 
   /// Header
@@ -142,9 +142,10 @@ const ItemTablePreview = ({ template, data, templateGroupId, preferences }: Down
         {data?.items
           ?.filter((item: any) => {
             // Hiding Zero value items in the list : Invoice Preference controlled
-            if (preferences?.invoicePreference?.can_hide_zero_value_line_items && data?.voucher_code === "SI" && data?.total_price !== "0.00")
-              return item?.item_rate !== "0.00";
-            else return item;
+            // if (preferences?.invoicePreference?.can_hide_zero_value_line_items && data?.voucher_code === "SI" && data?.total_price !== "0.00")
+            //   return item?.item_rate !== "0.00";
+            // else 
+            return item;
           })
           ?.map((val: any, index: number) => (
             <View key={index} style={styles?.trStyle} wrap={false}>
@@ -155,7 +156,7 @@ const ItemTablePreview = ({ template, data, templateGroupId, preferences }: Down
                     height: "auto",
                     padding: "5pt",
                     display: "flex",
-                    color: Itemscolor,
+                    color: Itemscolor, 
                     flexDirection: "row",
                     fontSize: ItemsfontSize,
                     justifyContent: "center",

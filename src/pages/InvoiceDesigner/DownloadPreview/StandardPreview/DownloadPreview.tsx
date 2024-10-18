@@ -12,13 +12,10 @@ export interface DownloadPreviewProps {
   data: any;
   docTitle?: any;
   docIDKey?: string;
-  ActiveBranch?: any;
-  AddressTemplates?: any;
   currencySymbol?: string;
   template?: TemplateState;
   totalAmountInwords?: string;
   templateGroupId?: TemplateGroupTypes;
-  preferences?: any;
   templateImages?: any;
   taxInfo?: any
 }
@@ -32,12 +29,9 @@ const DownloadStandardPreview = ({
   template,
   docIDKey,
   docTitle,
-  ActiveBranch,
   currencySymbol,
   templateGroupId,
   totalAmountInwords,
-  AddressTemplates,
-  preferences,
   templateImages, taxInfo
 }: DownloadPreviewProps) => {
 
@@ -110,13 +104,11 @@ const DownloadStandardPreview = ({
             template={template}
             docIDKey={docIDKey}
             docTitle={docTitle}
-            ActiveBranch={ActiveBranch}
             currencySymbol={currencySymbol}
-            AddressTemplates={AddressTemplates}
           />
           {/*   */}
           {/* Table Section  */}
-          <ItemTablePreview templateGroupId={templateGroupId} template={template} data={data} preferences={preferences} />
+          <ItemTablePreview templateGroupId={templateGroupId} template={template} data={data} />
           {/*   */}
           {/* Total Summary Section  */}
           <TotalSummaryPreview
@@ -129,7 +121,7 @@ const DownloadStandardPreview = ({
           />
           {/*   */}
           {/* Bottom  Section  */}
-          <BottomPreview ActiveBranch={ActiveBranch} templateGroupId={templateGroupId} template={template} data={data} />
+          <BottomPreview templateGroupId={templateGroupId} template={template} data={data} />
           {/*   */}
         </View>
 

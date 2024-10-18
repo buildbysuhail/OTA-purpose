@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import ERPModal from "../../components/ERPComponents/erp-modal";
-import ERPButton from "../../components/ERPComponents/erp-button";
-import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../redux/urls";
-import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
+import ERPButton from "../../../components/ERPComponents/erp-button";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
+import Urls from "../../../redux/urls";
 
 interface BilledItem {
   id: number;
   name: string;
   price: number;
   quantity: number;
+  cashacc?: string;
   discount: number;
   tax: number;
 }
@@ -19,12 +20,13 @@ interface BilledItem {
 interface FormData {
   itemName: string;
   quantity: string;
+  cashacc?: string;
   unit: string;
   rate: string;
   taxOption: "Without Tax" | "With Tax";
 }
 
-const InvTransaction = () => {
+const AccTransactionMobile = () => {
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([
     { id: 1, name: "Apple", price: 100, quantity: 2, discount: 0, tax: 0 },
@@ -113,13 +115,17 @@ const InvTransaction = () => {
     return null; // Don't render anything if the page is hidden
   }
 
+  const [showInputBox, setShowInputBox] = useState(false);
+
   return (
     <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
       {/* Sale Header */}
       <div className="flex items-center bg-white shadow-sm p-4 border-b-2">
-       <ERPPreviousUrlButton></ERPPreviousUrlButton>
-        <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
-        <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
+        <ERPPreviousUrlButton></ERPPreviousUrlButton>
+        <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
+          Cash payment
+        </h1>
+        {/* <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
           <button
             className={`px-4 py-2 text-sm transition-colors duration-200 ${
               activeButton === "credit"
@@ -140,7 +146,7 @@ const InvTransaction = () => {
           >
             Cash
           </button>
-        </div>
+        </div> */}
         <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i>
       </div>
 
@@ -148,7 +154,7 @@ const InvTransaction = () => {
       <div className="flex items-center space-x-0 bg-white mb-0 p-0 rounded-lg text-gray-600">
         <div className="flex-1 border-gray-300 p-0 border-none rounded-md">
           <label className="block mb-1 font-medium text-center text-sm">
-            Invoice No.
+            Voucher No
           </label>
           <div className="relative mt-2">
             <input
@@ -176,21 +182,97 @@ const InvTransaction = () => {
       <div className="pt-1 pb-20">
         <div className="bg-white mb-0 p-4 rounded-lg text-zinc-800 ">
           <div className="mb-4">
-            <input
-              type="text"
-              placeholder="Customer *"
-              // className="bg-white p-2 border rounded w-full"
-              className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-            />
+            <label
+              htmlFor="cashacc"
+              className="block font-medium text-gray-700 text-sm"
+            >
+              Cash Account
+            </label>
+            <select
+              id="cashacc"
+              name="cashacc"
+              value={formData.cashacc}
+              onChange={handleInputChange}
+              className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
+            >
+              <option value="">Select Cash Account</option>
+              <option value="cash">cash</option>
+              <option value="bank">bank</option>
+              <option value="upi">upi</option>
+            </select>
           </div>
           <div className="mb-4">
             <input
-              type="number"
-              placeholder="Phone Number"
-              className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+              type="text"
+              placeholder="Remark"
               // className="bg-white p-2 border rounded w-full"
+              className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
             />
           </div>
+
+          <div className="flex justify-center mb-4">
+            <button
+              className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
+              onClick={() => setShowInputBox(!showInputBox)}
+            >
+              {showInputBox ? "View Less" : "View More"}
+            </button>
+          </div>
+          {showInputBox && (
+            // <div className="flex justify-center">
+            <div>
+              <div className="mb-1">
+                <input
+                  type="text"
+                  placeholder="Ref No"
+                  // className="bg-white p-2 border rounded w-full"
+                  className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                />
+              </div>
+              <div className="mb-1">
+                <label className="pl-2" htmlFor="">
+                  Ref Date
+                </label>
+                <input
+                  type="date"
+                  placeholder="Ref Date"
+                  // className="bg-white p-2 border rounded w-full"
+                  className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  htmlFor="cashacc"
+                  className="block font-medium text-gray-700 text-sm"
+                >
+                  Paid By
+                </label>
+                <select
+                  id="cashacc"
+                  name="cashacc"
+                  value={formData.cashacc}
+                  onChange={handleInputChange}
+                  className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
+                >
+                  <option value="">Select Paid By</option>
+                  <option value="ajmal">ajmal</option>
+                  <option value="vajid">vajid</option>
+                  <option value="nizam">nizam</option>
+                  <option value="safvan">safvan</option>
+                  <option value="sreeram">sreeram</option>
+                  <option value="javad">javad</option>
+                </select>
+              </div>
+              <div className="mb-1">
+                <input
+                  type="text"
+                  placeholder="Notes"
+                  // className="bg-white p-2 border rounded w-full"
+                  className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Billed Items Section */}
           <div className="bg-custom-blue mb-1 p-1 rounded-lg text-white">
@@ -617,4 +699,4 @@ const InvTransaction = () => {
   );
 };
 
-export default InvTransaction;
+export default AccTransactionMobile;

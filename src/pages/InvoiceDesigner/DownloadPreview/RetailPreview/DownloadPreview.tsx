@@ -11,10 +11,8 @@ export interface DownloadPreviewProps {
   template?: TemplateState;
   docIDKey?: string;
   docTitle?: any;
-  ActiveBranch?: any;
   currencySymbol?: string;
   totalAmountInwords?: string;
-  AddressTemplates?: any;
 }
 
 type TemplatePageSizes = "A4" | "A5" | "LETTER" | { width: string | number; height?: string | number };
@@ -24,10 +22,8 @@ const DownloadRetailPreview = ({
   data,
   docIDKey,
   docTitle,
-  ActiveBranch,
   currencySymbol,
   totalAmountInwords,
-  AddressTemplates,
 }: DownloadPreviewProps) => {
   const backgroundColor = template?.propertiesState?.bg_color || "#fff";
   const topBackgroundColor = template?.headerState?.bgColor || "#fff";
@@ -80,9 +76,7 @@ const DownloadRetailPreview = ({
             data={data}
             docIDKey={docIDKey}
             docTitle={docTitle}
-            ActiveBranch={ActiveBranch}
             currencySymbol={currencySymbol}
-            AddressTemplates={AddressTemplates}
           />
           <ItemTablePreview template={template} data={data} />
           <TotalSummaryPreview template={template} data={data} currencySymbol={currencySymbol} totalAmountInwords={totalAmountInwords} />

@@ -7,13 +7,10 @@ import { TemplateState } from "../../Designer/interfaces";
 
 export interface DNSPTEmpProps {
   data: any;
-  preference: any;
-  company?: any;
   template?: TemplateState;
-  addressTemplates?: any;
 }
 
-const DNPSTemplate = ({ data, preference, company, addressTemplates, template }: DNSPTEmpProps) => {
+const DNPSTemplate = ({ data, template }: DNSPTEmpProps) => {
   const backgroundColor = template?.propertiesState?.bg_color || "#fff";
   const topBackgroundColor = template?.headerState?.bgColor || "#fff";
   const bottomBackgroundColor = template?.footerState?.bg_color || "#fff";
@@ -44,9 +41,9 @@ const DNPSTemplate = ({ data, preference, company, addressTemplates, template }:
         {/*   */}
 
         <View style={{ paddingLeft, paddingRight, fontSize: 12 }}>
-          <Header data={data} preference={preference} company={company} template={template} addressTemplates={addressTemplates} />
-          <Table data={data} preference={preference} template={template} />
-          <Footer data={data} preference={preference} template={template} />
+          <Header data={data}  template={template} />
+          <Table data={data}  template={template} />
+          <Footer data={data} template={template} />
         </View>
 
         {/* Footer  Section  */}

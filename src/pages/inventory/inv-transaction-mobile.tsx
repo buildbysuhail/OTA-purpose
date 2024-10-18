@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../redux/urls";
+import ERPModal from "../../components/ERPComponents/erp-modal";
 import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
+import Urls from "../../redux/urls";
 
 interface BilledItem {
   id: number;
@@ -24,7 +22,7 @@ interface FormData {
   taxOption: "Without Tax" | "With Tax";
 }
 
-const AccTransaction = () => {
+const InvTransactionMobile = () => {
   const [activeButton, setActiveButton] = useState("credit");
   const [items, setItems] = useState<BilledItem[]>([
     { id: 1, name: "Apple", price: 100, quantity: 2, discount: 0, tax: 0 },
@@ -617,4 +615,4 @@ const AccTransaction = () => {
   );
 };
 
-export default AccTransaction;
+export default InvTransactionMobile;

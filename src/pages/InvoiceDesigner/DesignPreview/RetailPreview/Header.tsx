@@ -1,7 +1,8 @@
+import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { dateTrimmer } from "../../../../utilities/Utils";
 import { RetailPreviewProps } from "./PreviewWrapper";
 
-const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency, addressTemplates, company }: RetailPreviewProps) => {
+const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency }: RetailPreviewProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
 
@@ -22,6 +23,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency,
 
   /// Header background color
   const backgroundColor = template?.headerState?.bgColor || "#fff";
+  const currentBranch = useCurrentBranch();
 
   const billingAddress = data?.addresses?.find((val: any) => val?.address?.address_type?.is_for == "customer");
 
@@ -48,8 +50,8 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency,
         className=" relative flex flex-col w-full z-10 flex-wrap"
       >
         <div className="flex-1 flex flex-col text-xs text-center justify-center items-center w-full ">
-          {headerState?.showLogo && <img src={company?.image} style={{ width: 80 * logoWidthRatio }} className="mb-2" />}
-          {headerState?.showOrgName && <a className=" capitalize font-semibold">{company?.name}</a>}
+          {headerState?.showLogo && <img src={currentBranch?.logo} style={{ width: 80 * logoWidthRatio }} className="mb-2" />}
+          {headerState?.showOrgName && <a className=" capitalize font-semibold">{currentBranch?.name}</a>}
           {headerState?.showOrgAddress && (
             <div
               style={{
@@ -60,7 +62,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency,
               className="flex flex-col"
             >
               {/* <p dangerouslySetInnerHTML={{ __html: orgTemplate }}></p> */}
-              {addressTemplates?.orgAddressTemplate?.map((org: any, index: number) => (
+              {currentBranch?.address?.map((org: any, index: number) => (
                 <div key={`ORGTE_${index}`}>{org}</div>
               ))}
             </div>

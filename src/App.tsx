@@ -22,18 +22,28 @@ import AccountSettingsLayout from "./components/common/layout/account-settings-l
 import WorkspaceSettingsLayout from "./components/common/layout/workspace-settings-layout";
 import Logout from "./pages/auth/Logout";
 import OrgSelect from "./pages/OrgSelect";
-import { initialUserSessionData, UserModel } from "./redux/slices/user-session/reducer";
+import {
+  initialUserSessionData,
+  UserModel,
+} from "./redux/slices/user-session/reducer";
 import { customJsonParse } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
-import { initialThemeData, languagesData, Theme } from "./redux/slices/app/types";
+import {
+  initialThemeData,
+  languagesData,
+  Theme,
+} from "./redux/slices/app/types";
 import Settings from "./pages/settings/AllSettings/Settings";
 import SettingsLayout from "./components/common/layout/settings-layout";
 import { useTranslation } from "react-i18next";
 import ReportsLayout from "./components/common/layout/reports-layout";
 import TemplateDesignerLayout from "./components/common/layout/template-designer-layout";
-import { Device } from '@capacitor/device';
-import { useDispatch } from "react-redux";
+import { Device } from "@capacitor/device";
+import { useDispatch, useSelector } from "react-redux";
 import { setDeviceInfo } from "./redux/slices/device/reducer";
+import { RootState } from "./redux/store";
+import MobileFooter from "./pages/dashboards/crm/mobile-footer";
+import { getApplicationSettings } from "./redux/slices/app/thunk";
 
 export const LoadingAnimation = () => {
   return (
@@ -46,15 +56,15 @@ export const LoadingAnimation = () => {
 function App() {
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
-      try {
-        const info = await Device.getInfo();
-        _dispatch(setDeviceInfo(info));
-      } catch (error) {
-        console.error('Error getting device info:', error);
-      }
-    };
+    try {
+      const info = await Device.getInfo();
+      _dispatch(setDeviceInfo(info));
+    } catch (error) {
+      console.error("Error getting device info:", error);
+    }
+  };
 
-    _setDeviceInfo();
+  _setDeviceInfo();
   // const { appState, updateAppState } = useAppState();
   let api = new APIClient();
   const dispatch = useAppDispatch();
@@ -62,46 +72,44 @@ function App() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const token = Cookies.get("token");
-  
-  
+
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
+
   let upt = Cookies.get("up");
   let utt = Cookies.get("ut");
 
-  
-
   let userProfileDetails: UserModel = initialUserSessionData;
   try {
-  if(upt != undefined && upt != null && upt != '' ) {
-    userProfileDetails = customJsonParse(atob(upt));
-  }  
-  } catch (error) {
-    
-  }
-  
+    if (upt != undefined && upt != null && upt != "") {
+      userProfileDetails = customJsonParse(atob(upt));
+    }
+  } catch (error) {}
+
   let userThemes: Theme = initialThemeData;
   try {
-  if(utt != undefined && utt != null && utt != '' ) {
-    userThemes = customJsonParse(atob(utt));
-  }  
-  } catch (error) {
-    
-  }
+    if (utt != undefined && utt != null && utt != "") {
+      userThemes = customJsonParse(atob(utt));
+    }
+  } catch (error) {}
   const { i18n } = useTranslation();
-  
-  let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false }
-  syncAppStates(dispatch,userThemes, userProfileDetails, locale);
+
+  let locale = languagesData.find(
+    (l) => l.code == userProfileDetails.language
+  ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
+  syncAppStates(dispatch, userThemes, userProfileDetails, locale);
   const language = userProfileDetails?.language;
   
   useEffect(() => {
-    
-    if (locale && i18n && typeof i18n.changeLanguage === 'function') {
+    dispatch(getApplicationSettings());
+  }, [dispatch]);
+  useEffect(() => {
+    if (locale && i18n && typeof i18n.changeLanguage === "function") {
       i18n.changeLanguage(language);
     } else {
-      console.error('i18n is not properly initialized:', i18n);
+      console.error("i18n is not properly initialized:", i18n);
     }
   }, [i18n, language, locale]);
   useEffect(() => {
-    
     if (!token && pathname !== "/shared-view") {
       navigate("/login");
     } else {
@@ -155,7 +163,7 @@ function App() {
                 path="account-settings/*"
                 element={<AccountSettingsLayout setMyClass={setMyClass} />}
               />
-              
+
               <Route
                 path="settings/_/*"
                 element={<SettingsLayout setMyClass={setMyClass} />}
@@ -164,9 +172,9 @@ function App() {
                 path="reports/_/*"
                 element={<ReportsLayout setMyClass={setMyClass} />}
               />
-               <Route
+              <Route
                 path="invoice_designer/*"
-                element={<TemplateDesignerLayout  />}
+                element={<TemplateDesignerLayout />}
               />
               <Route
                 path="workspace-settings/*"
@@ -176,8 +184,15 @@ function App() {
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
           </Suspense>
+          
         </div>
       </HelmetProvider>
+      <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
+          {deviceInfo?.isMobile && (
+            <div className="w-full h-16 bg-white fixed bottom-0 left-0">
+              <MobileFooter />
+            </div>
+          )}
     </Fragment>
   );
 }

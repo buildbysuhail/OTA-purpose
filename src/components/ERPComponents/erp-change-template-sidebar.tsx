@@ -214,19 +214,15 @@ const ERPChangeTemplateSidebar = ({
                 <RetailPreviewWrapper
                   data={DummyInvoiceData}
                   template={showPreview.template}
-                  company={ActiveBranch?.company}
                   currency={currencySymbol || undefined}
                   templateGroupId={templateId}
-                  addressTemplates={{ orgAddressTemplate }}
                 />
               ) : (
                 <StandardPreviewWrapper
                   data={DummyInvoiceData}
                   template={showPreview.template}
-                  company={ActiveBranch?.company}
                   currency={currencySymbol || undefined}
                   templateGroupId={templateId}
-                  addressTemplates={{ orgAddressTemplate }}
                 />
               )}
             </div>

@@ -14,28 +14,20 @@ interface TemplateImages {
 }
 export interface StandardPreviewProps {
   data: any;
-  company?: any;
   currency?: string;
   docTitle?: string;
   docIDKey?: string;
-  addressTemplates?: any;
   template?: TemplateState;
   templateGroupId?: TemplateGroupTypes;
-  preferences?: any;
-  templateImages?: TemplateImages
 }
 
 const StandardPreviewWrapper = ({
   data,
   template,
-  company,
   templateGroupId,
-  addressTemplates,
   docIDKey,
   docTitle,
   currency,
-  preferences,
-  templateImages
 }: StandardPreviewProps) => {
 
   debugger;
@@ -56,18 +48,15 @@ const StandardPreviewWrapper = ({
      <div className={`${fontStyle} `}>
       <Header
         data={data}
-        company={company}
         template={template}
         docTitle={docTitle}
         docIDKey={docIDKey}
         templateGroupId={templateGroupId}
-        addressTemplates={addressTemplates}
         currency={currency}
-        templateImages={templateImages}
       />
-      <ItemTable data={data} templateGroupId={templateGroupId} template={template} preferences={preferences} currency={currency} />
+      <ItemTable data={data} templateGroupId={templateGroupId} template={template}  currency={currency} />
       <Total data={data} templateGroupId={templateGroupId} template={template} currency={currency} />
-      <Footer data={data} template={template} templateGroupId={templateGroupId} templateImages={templateImages} />
+      <Footer data={data} template={template} templateGroupId={templateGroupId}  />
     </div>
    </div>
   );

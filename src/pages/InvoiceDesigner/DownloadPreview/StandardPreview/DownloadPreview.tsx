@@ -17,7 +17,8 @@ export interface DownloadPreviewProps {
   totalAmountInwords?: string;
   templateGroupId?: TemplateGroupTypes;
   templateImages?: any;
-  taxInfo?: any
+  taxInfo?: any;
+  currentBranch?: any;
 }
 
 type TemplatePageSizes = "A4" | "A5" | "LETTER" | { width: string | number; height?: string | number };

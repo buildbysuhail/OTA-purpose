@@ -5,6 +5,7 @@ import HeaderPreview from "./HeaderPreview";
 import ItemTablePreview from "./ItemTablePreview";
 import TotalSummaryPreview from "./TotalSummaryPreview";
 import { TemplateState } from "../../Designer/interfaces";
+import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 
 export interface DownloadPreviewProps {
   data: any;
@@ -13,6 +14,7 @@ export interface DownloadPreviewProps {
   docTitle?: any;
   currencySymbol?: string;
   totalAmountInwords?: string;
+  currentBranch?: any;
 }
 
 type TemplatePageSizes = "A4" | "A5" | "LETTER" | { width: string | number; height?: string | number };
@@ -65,6 +67,7 @@ const DownloadRetailPreview = ({
 
   const templateFont = template?.propertiesState?.font === "Poppins" ? "Courier" : template?.propertiesState?.font
 
+  const currentBranch = useCurrentBranch();
   return (
     <Document>
       <Page size={paperSize} orientation="portrait" style={{ fontFamily: templateFont }} wrap>
@@ -77,6 +80,7 @@ const DownloadRetailPreview = ({
             docIDKey={docIDKey}
             docTitle={docTitle}
             currencySymbol={currencySymbol}
+            currentBranch={currentBranch}
           />
           <ItemTablePreview template={template} data={data} />
           <TotalSummaryPreview template={template} data={data} currencySymbol={currencySymbol} totalAmountInwords={totalAmountInwords} />

@@ -39,6 +39,7 @@ interface popupData {
   refreshAllBranches: popupDataProps
   bankCard: popupDataProps
   chartOfAccounts: popupDataProps
+  parties: popupDataProps
 }
 const initialState: popupData = {
   userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true},
@@ -74,6 +75,7 @@ const initialState: popupData = {
   refreshAllBranches: { isOpen: false, key: null, mode: "edit", reload: true },
   bankCard: { isOpen: false, key: null, mode: "edit", reload: true },
   chartOfAccounts: { isOpen: false, key: null, mode: "edit", reload: true },
+  parties: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -196,6 +198,9 @@ const popupDataSlice = createSlice({
     toggleChartOfAccounts: (state, action: PayloadAction<popupDataProps>) => {
       state.chartOfAccounts = action.payload;
     },
+    toggleParties: (state, action: PayloadAction<popupDataProps>) => {
+      state.parties = action.payload;
+    },
   },
 });
 
@@ -235,6 +240,7 @@ export const {
   toggleResetBranchDataForSync,
   toggleRefreshAllBranches,
   toggleChartOfAccounts,
+  toggleParties,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

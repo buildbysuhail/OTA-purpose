@@ -188,7 +188,7 @@ const NotificationSettings = () => {
 
                               {/* WhatsApp Switch */}
                               <td>
-                                <div className="flex items-center justify-center gap-3">
+                                <div className="flex items-center justify-center ">
                                   <ERPSwitch
                                     size="sm"
                                     defaultValue={item.whatsapp === "1"}
@@ -210,7 +210,7 @@ const NotificationSettings = () => {
 
                               {/* SMS Switch */}
                               <td>
-                                <div className="flex items-center justify-center gap-3">
+                                <div className="flex items-center justify-center ">
                                   <ERPSwitch
                                     size="sm"
                                     defaultValue={item.sms === "1"}
@@ -231,7 +231,7 @@ const NotificationSettings = () => {
 
                               {/* In-App Notification Switch */}
                               <td>
-                                <div className="flex items-center justify-center gap-3">
+                                <div className="flex items-center justify-center ">
                                   <ERPSwitch
                                     size="sm"
                                     defaultValue={item.inAppNotification === "1" }

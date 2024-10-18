@@ -168,6 +168,7 @@ const Urls = {
   notification_provider: "/Core/NotificationProvider/",
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate",
+  headers_footers: "/Core/HeaderFooter/",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",
@@ -188,6 +189,7 @@ const Urls = {
   account_currency_master: "/Accounts/Currency/",
   chart_of_accounts: "/Accounts/ChartofAccounts/",
   parties: "/Accounts/Parties/",
+  cust_supp_ledger: "/Accounts/CustSuppLedger",
   //Reports
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",

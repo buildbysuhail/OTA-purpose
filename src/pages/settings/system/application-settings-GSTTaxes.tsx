@@ -11,6 +11,8 @@ import { APIClient } from '../../../helpers/api-client';
 import { useTranslation } from 'react-i18next';
 import { t } from 'i18next';
 import { handleResponse } from '../../../utilities/HandleResponse';
+import EInvoiceTaxPro from './e-invoice-taxpro';
+import EWBTaxPro from './ewb-taxpro';
 
 interface TaxSettingsFormState {
   defaultPurchaseFormType: {
@@ -98,7 +100,18 @@ const ERPSettingsFormGSTTaxes = () => {
   const [formStatePrev, setFormStatePrev] = useState<Partial<TaxSettingsFormState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [showEInvoiceApi, setShowEInvoiceApi] = useState(false);
+  const [showEWBTaxPro, setShowEWBTaxPro] = useState(false);
 
+  const handleShowComponent = (component: string) => {
+    if (component === 'eInvoice') {
+      setShowEInvoiceApi(true);
+      setShowEWBTaxPro(false);
+    } else if (component === 'ewb') {
+      setShowEInvoiceApi(false);
+      setShowEWBTaxPro(true);
+    }
+  };
   useEffect(() => {
     loadSettings();
   }, []);
@@ -184,482 +197,505 @@ const ERPSettingsFormGSTTaxes = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className='grid grid-cols-7'>
-        <label>{t("default_purchase")}</label>
-        <ERPCheckbox
-          id="normalPurchaseForm"
-          checked={formState.defaultPurchaseFormType.normal}
-          data={formState}
-          label={t("normal")}
-          onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, normal: data.normalPurchaseForm })}
-        />
-        <ERPCheckbox
-          id="interStatePurchaseForm"
-          checked={formState.defaultPurchaseFormType.interState}
-          data={formState}
-          label={t("inter_state")}
-          onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, interState: data.interStatePurchaseForm })}
-        />
-        <ERPCheckbox
-          id="form62PurchaseForm"
-          checked={formState.defaultPurchaseFormType.form62}
-          data={formState}
-          label={t("form_6(2)")}
-          onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, form62: data.form62PurchaseForm })}
-        />
-      </div>
-
-
-      <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
-        <ERPDataCombobox
-          id="defaultSalesFormType"
-          value={formState.defaultSalesFormType}
-          data={formState}
-          label={t("default_sales_form_type")}
-          options={[
-            { value: 'Form 8B', label: 'Form 8B' },
-            { value: 'Form 8', label: 'Form 8' },
-            { value: 'Normal', label: 'Normal' },
-            { value: 'VAT', label: 'VAT' },
-          ]}
-          onChangeData={(data: any) => handleFieldChange("defaultSalesFormType", data)}
-        />
-
-        <ERPDataCombobox
-          id="inputCSTAccount"
-          value={formState.inputCSTAccount}
-          data={formState}
-          label={t("input_cst_account")}
-          field={{
-            id: "inputCSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("inputCSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="outputCSTAccount"
-          value={formState.outputCSTAccount}
-          data={formState}
-          label={t("output_cst_account")}
-          field={{
-            id: "outputCSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("outputCSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="inputCessAccount"
-          value={formState.inputCessAccount}
-          field={{
-            id: "inputCessAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          data={formState}
-          label={t("input_cess_account")}
-          onChangeData={(data: any) => handleFieldChange("inputCessAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="outputCessAccount"
-          value={formState.outputCessAccount}
-          data={formState}
-          label={t("output_cess_account")}
-          field={{
-            id: "outputCessAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("outputCessAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="inputAddCessAccount"
-          value={formState.inputAddCessAccount}
-          data={formState}
-          label={t("input_add_cess_account")}
-          field={{
-            id: "inputAddCessAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("inputAddCessAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="outputAddCessAccount"
-          value={formState.outputAddCessAccount}
-          data={formState}
-          label={t("output_add_cess_account")}
-          field={{
-            id: "outputAddCessAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("outputAddCessAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="expensesTaxAccount"
-          value={formState.expensesTaxAccount}
-          data={formState}
-          label={t("expenses_tax_account")}
-          field={{
-            id: "expensesTaxAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("expensesTaxAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="incomeTaxAccount"
-          value={formState.incomeTaxAccount}
-          data={formState}
-          label={t("income_tax_account")}
-          field={{
-            id: "incomeTaxAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("incomeTaxAccount", data)}
-        />
-      </div>
-
-
-      <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
-        <ERPDataCombobox
-          id="defaultSIFormTypeForPOS"
-          value={formState.defaultSIFormTypeForPOS}
-          data={formState}
-          label={t("default_SI_form_type_for_POS")}
-          field={{
-            id: "defaultSIFormTypeForPOS",
-            // required: true,
-            getListUrl: Urls.data_FormTypeBySI,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("defaultSIFormTypeForPOS", data)}
-        />
-
-        <ERPDataCombobox
-          id="defaultSIPrefixForPOS"
-          value={formState.defaultSIPrefixForPOS}
-          data={formState}
-          label={t("default_SI_prefix_for_POS")}
-          field={{
-            id: "defaultSIPrefixForPOS",
-            // required: true,
-            getListUrl: Urls.data_VPrefixForSI,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("defaultSIPrefixForPOS", data)}
-        />
-
-        <ERPDataCombobox
-          id="defaultSRFormTypeForPOS"
-          value={formState.defaultSRFormTypeForPOS}
-          data={formState}
-          label={t("default_SR_form_type_for_POS")}
-          field={{
-            id: "defaultSRFormTypeForPOS",
-            // required: true,
-            getListUrl: Urls.data_FormTypeBySR,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("defaultSRFormTypeForPOS", data)}
-        />
-
-        <ERPDataCombobox
-          id="defaultSRPrefixForPOS"
-          value={formState.defaultSRPrefixForPOS}
-          data={formState}
-          label={t("default_SR_prefix_for_POS")}
-          field={{
-            id: "defaultSRPrefixForPOS",
-            // required: true,
-            getListUrl: Urls.data_VPrefixForSR,
-            valueKey: "VoucherID",
-            labelKey: "FormType",
-          }}
-          onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data)}
-        />
-      </div>
-
-
-
-      <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
-        <ERPDataCombobox
-          id="inputSGSTAccount"
-          value={formState.inputSGSTAccount}
-          data={formState}
-          label={t("input_SGST_account")}
-          field={{
-            id: "inputSGSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("inputSGSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="outputSGSTAccount"
-          value={formState.outputSGSTAccount}
-          data={formState}
-          label={t("output_SGST_account")}
-          field={{
-            id: "outputSGSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("outputSGSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="inputCGSTAccount"
-          value={formState.inputCGSTAccount}
-          data={formState}
-          label={t("input_CGST_ccount")}
-          field={{
-            id: "inputCGSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("inputCGSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="outputCGSTAccount"
-          value={formState.outputCGSTAccount}
-          data={formState}
-          label={t("output_CGST_account")}
-          field={{
-            id: "outputCGSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("outputCGSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="inputIGSTAccount"
-          value={formState.inputIGSTAccount}
-          data={formState}
-          label={t("input_IGST_account")}
-          field={{
-            id: "inputIGSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("inputIGSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="outputIGSTAccount"
-          value={formState.outputIGSTAccount}
-          data={formState}
-          label={t("output_IGST_account")}
-          field={{
-            id: "outputIGSTAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("outputIGSTAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="TCSPaidAccount"
-          value={formState.TCSPaidAccount}
-          data={formState}
-          label={t("TCS_paid_account")}
-          field={{
-            id: "TCSPaidAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("TCSPaidAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="TCSPayableAccount"
-          value={formState.TCSPayableAccount}
-          data={formState}
-          label={t("TCS_payable_account")}
-          field={{
-            id: "TCSPayableAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("TCSPayableAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="inputCalamityCessAccount"
-          value={formState.inputCalamityCessAccount}
-          data={formState}
-          label={t("input_calamity_cess_account")}
-          field={{
-            id: "inputCSTAccount",
-            // required: true,
-            getListUrl: Urls.data_InputCalamity,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("inputCalamityCessAccount", data)}
-        />
-
-        <ERPDataCombobox
-          id="outputCalamityCessAccount"
-          value={formState.outputCalamityCessAccount}
-          data={formState}
-          label={t("output_calamity_cess_account")}
-          field={{
-            id: "outputCalamityCessAccount",
-            // required: true,
-            getListUrl: Urls.data_duties_taxes,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => handleFieldChange("outputCalamityCessAccount", data)}
-        />
-
-        <ERPCheckbox
-          id="considerSalesPriceAsCalamityIncluded"
-          checked={formState.considerSalesPriceAsCalamityIncluded}
-          data={formState}
-          label={t("consider_sales_price_as_calamity_included")}
-          onChangeData={(data: any) => handleFieldChange("considerSalesPriceAsCalamityIncluded", data.considerSalesPriceAsCalamityIncluded)}
-        />
-
-        <ERPCheckbox
-          id="enableKarnatakaTaxReportFormat"
-          checked={formState.enableKarnatakaTaxReportFormat}
-          data={formState}
-          label={t("enable_karnataka_tax_report_format")}
-          onChangeData={(data: any) => handleFieldChange("enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
-        />
-
-        <ERPCheckbox
-          id="showPrevForms"
-          checked={formState.showPrevForms}
-          data={formState}
-          label={t("show_prev._forms")}
-          onChangeData={(data: any) => handleFieldChange("showPrevForms", data.showPrevForms)}
-        />
-      </div>
-
-
-
-      <div className='border p-4 rounded-lg'>
-        <div className='grid grid-cols-4 gap-6'>
-          <div className='flex justify-between align-center'>
-            <ERPCheckbox
-              id="enableEWB"
-              checked={formState.enableEWB}
-              data={formState}
-              label={t("enable_ewb")}
-              onChangeData={(data: any) => handleFieldChange("enableEWB", data.enableEWB)}
-            />
-            <ERPButton title={t("ewb_taxPro")} onClick={() => {/* Handle EWB TaxPro click */ }} />
-          </div>
-
-          <div className='flex justify-between align-center'>
-            <ERPCheckbox
-              id="enableEInvoice"
-              checked={formState.enableEInvoice}
-              data={formState}
-              label={t("enable_e-invoice")}
-              onChangeData={(data: any) => handleFieldChange("enableEInvoice", data.enableEInvoice)}
-            />
-            <ERPButton title={t("EInvoiceTaxPro")} onClick={() => {/* Handle EInvoiceTaxPro click */ }} />
-          </div>
+    <>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className='grid grid-cols-7'>
+          <label>{t("default_purchase")}</label>
+          <ERPCheckbox
+            id="normalPurchaseForm"
+            checked={formState.defaultPurchaseFormType.normal}
+            data={formState}
+            label={t("normal")}
+            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, normal: data.normalPurchaseForm })}
+          />
+          <ERPCheckbox
+            id="interStatePurchaseForm"
+            checked={formState.defaultPurchaseFormType.interState}
+            data={formState}
+            label={t("inter_state")}
+            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, interState: data.interStatePurchaseForm })}
+          />
+          <ERPCheckbox
+            id="form62PurchaseForm"
+            checked={formState.defaultPurchaseFormType.form62}
+            data={formState}
+            label={t("form_6(2)")}
+            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState.defaultPurchaseFormType, form62: data.form62PurchaseForm })}
+          />
         </div>
-        <div className='grid grid-cols-3 gap-6 mt-5'>
+
+
+        <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
           <ERPDataCombobox
-            field={{
-              id: "eInvoiceProviderType",
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            id="eInvoiceProviderType"
-            label={t("e-invoice_provider_type")}
-            value={formState.eInvoiceProviderType}
+            id="defaultSalesFormType"
+            value={formState.defaultSalesFormType}
             data={formState}
-            onChangeData={(data) => {
-
-              handleFieldChange("eInvoiceProviderType", data.eInvoiceProviderType)
-            }}
+            label={t("default_sales_form_type")}
             options={[
-              { value: 'Clear Tax', label: 'Clear Tax' },
-              { value: '1Tax Pro', label: 'Tax Pro' },
+              { value: 'Form 8B', label: 'Form 8B' },
+              { value: 'Form 8', label: 'Form 8' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'VAT', label: 'VAT' },
             ]}
+            onChangeData={(data: any) => handleFieldChange("defaultSalesFormType", data)}
           />
 
-          <ERPInput
-            id="clearTaxEInvoiceAuthToken"
-            value={formState.clearTaxEInvoiceAuthToken}
+          <ERPDataCombobox
+            id="inputCSTAccount"
+            value={formState.inputCSTAccount}
             data={formState}
-            label={t("clear_tax_token")}
-            onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data)}
+            label={t("input_cst_account")}
+            field={{
+              id: "inputCSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("inputCSTAccount", data)}
           />
 
-          <ERPInput
-            id="clearTaxEInvoiceOwnerID"
-            value={formState.clearTaxEInvoiceOwnerID}
+          <ERPDataCombobox
+            id="outputCSTAccount"
+            value={formState.outputCSTAccount}
             data={formState}
-            label={t("clear_tax_id")}
-            onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data)}
+            label={t("output_cst_account")}
+            field={{
+              id: "outputCSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("outputCSTAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="inputCessAccount"
+            value={formState.inputCessAccount}
+            field={{
+              id: "inputCessAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            data={formState}
+            label={t("input_cess_account")}
+            onChangeData={(data: any) => handleFieldChange("inputCessAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="outputCessAccount"
+            value={formState.outputCessAccount}
+            data={formState}
+            label={t("output_cess_account")}
+            field={{
+              id: "outputCessAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("outputCessAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="inputAddCessAccount"
+            value={formState.inputAddCessAccount}
+            data={formState}
+            label={t("input_add_cess_account")}
+            field={{
+              id: "inputAddCessAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("inputAddCessAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="outputAddCessAccount"
+            value={formState.outputAddCessAccount}
+            data={formState}
+            label={t("output_add_cess_account")}
+            field={{
+              id: "outputAddCessAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("outputAddCessAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="expensesTaxAccount"
+            value={formState.expensesTaxAccount}
+            data={formState}
+            label={t("expenses_tax_account")}
+            field={{
+              id: "expensesTaxAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("expensesTaxAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="incomeTaxAccount"
+            value={formState.incomeTaxAccount}
+            data={formState}
+            label={t("income_tax_account")}
+            field={{
+              id: "incomeTaxAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("incomeTaxAccount", data)}
           />
         </div>
-      </div>
-      <div className="flex justify-end">
-        <ERPButton
-          title={t("save_settings")}
-          variant="primary"
-          type="submit"
-        />
-      </div>
-    </form>
+
+
+        <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
+          <ERPDataCombobox
+            id="defaultSIFormTypeForPOS"
+            value={formState.defaultSIFormTypeForPOS}
+            data={formState}
+            label={t("default_SI_form_type_for_POS")}
+            field={{
+              id: "defaultSIFormTypeForPOS",
+              // required: true,
+              getListUrl: Urls.data_FormTypeBySI,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("defaultSIFormTypeForPOS", data)}
+          />
+
+          <ERPDataCombobox
+            id="defaultSIPrefixForPOS"
+            value={formState.defaultSIPrefixForPOS}
+            data={formState}
+            label={t("default_SI_prefix_for_POS")}
+            field={{
+              id: "defaultSIPrefixForPOS",
+              // required: true,
+              getListUrl: Urls.data_VPrefixForSI,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("defaultSIPrefixForPOS", data)}
+          />
+
+          <ERPDataCombobox
+            id="defaultSRFormTypeForPOS"
+            value={formState.defaultSRFormTypeForPOS}
+            data={formState}
+            label={t("default_SR_form_type_for_POS")}
+            field={{
+              id: "defaultSRFormTypeForPOS",
+              // required: true,
+              getListUrl: Urls.data_FormTypeBySR,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("defaultSRFormTypeForPOS", data)}
+          />
+
+          <ERPDataCombobox
+            id="defaultSRPrefixForPOS"
+            value={formState.defaultSRPrefixForPOS}
+            data={formState}
+            label={t("default_SR_prefix_for_POS")}
+            field={{
+              id: "defaultSRPrefixForPOS",
+              // required: true,
+              getListUrl: Urls.data_VPrefixForSR,
+              valueKey: "VoucherID",
+              labelKey: "FormType",
+            }}
+            onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data)}
+          />
+        </div>
+
+
+
+        <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
+          <ERPDataCombobox
+            id="inputSGSTAccount"
+            value={formState.inputSGSTAccount}
+            data={formState}
+            label={t("input_SGST_account")}
+            field={{
+              id: "inputSGSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("inputSGSTAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="outputSGSTAccount"
+            value={formState.outputSGSTAccount}
+            data={formState}
+            label={t("output_SGST_account")}
+            field={{
+              id: "outputSGSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("outputSGSTAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="inputCGSTAccount"
+            value={formState.inputCGSTAccount}
+            data={formState}
+            label={t("input_CGST_ccount")}
+            field={{
+              id: "inputCGSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("inputCGSTAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="outputCGSTAccount"
+            value={formState.outputCGSTAccount}
+            data={formState}
+            label={t("output_CGST_account")}
+            field={{
+              id: "outputCGSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("outputCGSTAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="inputIGSTAccount"
+            value={formState.inputIGSTAccount}
+            data={formState}
+            label={t("input_IGST_account")}
+            field={{
+              id: "inputIGSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("inputIGSTAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="outputIGSTAccount"
+            value={formState.outputIGSTAccount}
+            data={formState}
+            label={t("output_IGST_account")}
+            field={{
+              id: "outputIGSTAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("outputIGSTAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="TCSPaidAccount"
+            value={formState.TCSPaidAccount}
+            data={formState}
+            label={t("TCS_paid_account")}
+            field={{
+              id: "TCSPaidAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("TCSPaidAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="TCSPayableAccount"
+            value={formState.TCSPayableAccount}
+            data={formState}
+            label={t("TCS_payable_account")}
+            field={{
+              id: "TCSPayableAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("TCSPayableAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="inputCalamityCessAccount"
+            value={formState.inputCalamityCessAccount}
+            data={formState}
+            label={t("input_calamity_cess_account")}
+            field={{
+              id: "inputCSTAccount",
+              // required: true,
+              getListUrl: Urls.data_InputCalamity,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("inputCalamityCessAccount", data)}
+          />
+
+          <ERPDataCombobox
+            id="outputCalamityCessAccount"
+            value={formState.outputCalamityCessAccount}
+            data={formState}
+            label={t("output_calamity_cess_account")}
+            field={{
+              id: "outputCalamityCessAccount",
+              // required: true,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => handleFieldChange("outputCalamityCessAccount", data)}
+          />
+
+          <ERPCheckbox
+            id="considerSalesPriceAsCalamityIncluded"
+            checked={formState.considerSalesPriceAsCalamityIncluded}
+            data={formState}
+            label={t("consider_sales_price_as_calamity_included")}
+            onChangeData={(data: any) => handleFieldChange("considerSalesPriceAsCalamityIncluded", data.considerSalesPriceAsCalamityIncluded)}
+          />
+
+          <ERPCheckbox
+            id="enableKarnatakaTaxReportFormat"
+            checked={formState.enableKarnatakaTaxReportFormat}
+            data={formState}
+            label={t("enable_karnataka_tax_report_format")}
+            onChangeData={(data: any) => handleFieldChange("enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
+          />
+
+          <ERPCheckbox
+            id="showPrevForms"
+            checked={formState.showPrevForms}
+            data={formState}
+            label={t("show_prev._forms")}
+            onChangeData={(data: any) => handleFieldChange("showPrevForms", data.showPrevForms)}
+          />
+        </div>
+
+
+
+        <div className='border p-4 rounded-lg'>
+          <div className='grid grid-cols-4 gap-6'>
+            <div className='flex justify-between align-center'>
+              <ERPCheckbox
+                id="enableEWB"
+                checked={formState.enableEWB}
+                data={formState}
+                label={t("enable_ewb")}
+                onChangeData={(data: any) => handleFieldChange("enableEWB", data.enableEWB)}
+              />
+              <ERPButton title={t("ewb_taxPro")} onClick={() => handleShowComponent('ewb')} />
+            </div>
+
+            <div className='flex justify-between align-center'>
+              <ERPCheckbox
+                id="enableEInvoice"
+                checked={formState.enableEInvoice}
+                data={formState}
+                label={t("enable_e-invoice")}
+                onChangeData={(data: any) => handleFieldChange("enableEInvoice", data.enableEInvoice)}
+              />
+              <ERPButton title={t("EInvoiceTaxPro")} onClick={() => handleShowComponent('eInvoice')} />
+            </div>
+          </div>
+          {showEInvoiceApi && (
+            <div>
+              <ERPButton
+                title={t("EInvoiceTaxPro")}
+                onClick={() => setShowEInvoiceApi(false)}
+                className="mb-4"
+              />
+              <EInvoiceTaxPro />
+            </div>
+          )}
+
+          {showEWBTaxPro && (
+            <div>
+              <ERPButton
+                title={t("enable_ewb")}
+                onClick={() => setShowEWBTaxPro(false)}
+                className="mb-4"
+              />
+              <EWBTaxPro />
+            </div>
+          )}
+          <div className='grid grid-cols-3 gap-6 mt-5'>
+            <ERPDataCombobox
+              field={{
+                id: "eInvoiceProviderType",
+                valueKey: "value",
+                labelKey: "label",
+              }}
+              id="eInvoiceProviderType"
+              label={t("e-invoice_provider_type")}
+              value={formState.eInvoiceProviderType}
+              data={formState}
+              onChangeData={(data) => {
+
+                handleFieldChange("eInvoiceProviderType", data.eInvoiceProviderType)
+              }}
+              options={[
+                { value: 'Clear Tax', label: 'Clear Tax' },
+                { value: '1Tax Pro', label: 'Tax Pro' },
+              ]}
+            />
+
+            <ERPInput
+              id="clearTaxEInvoiceAuthToken"
+              value={formState.clearTaxEInvoiceAuthToken}
+              data={formState}
+              label={t("clear_tax_token")}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data)}
+            />
+
+            <ERPInput
+              id="clearTaxEInvoiceOwnerID"
+              value={formState.clearTaxEInvoiceOwnerID}
+              data={formState}
+              label={t("clear_tax_id")}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data)}
+            />
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <ERPButton
+            title={t("save_settings")}
+            variant="primary"
+            type="submit"
+          />
+        </div>
+      </form>
+    </>
   );
 };
 

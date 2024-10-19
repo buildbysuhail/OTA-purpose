@@ -120,42 +120,15 @@ const AccTransactionMobile = () => {
   return (
     <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
       {/* Sale Header */}
-      <div className="flex items-center bg-white shadow-sm p-4 border-b-2">
+      <div className="flex items-center bg-white shadow-sm p-3 border-b-2 fixed top-0 left-0 w-full z-50">
         <ERPPreviousUrlButton></ERPPreviousUrlButton>
         <h1 className="flex-grow font-semibold text-[18px] text-zinc-800">
           Cash payment
         </h1>
         <i className="ri-settings-3-line" style={{ fontSize: "23px" }}></i>
       </div>
-
-      {/* Invoice and Date Section */}
-      {/* <div className="flex items-center space-x-0 bg-white mb-0 p-0 rounded-lg text-gray-600">
-        <div className="flex-1 border-gray-300 p-0 border-none rounded-md">
-          <label className="block mb-1 font-medium text-center text-sm">
-            Voucher No
-          </label>
-          <div className="relative mt-2">
-            <input
-              type="text"
-              defaultValue="3"
-              className="bg-transparent px-3 py-0 w-full text-center border-none focus:outline-none"
-            />
-            <i className="ri-arrow-down-s-line"></i>
-          </div>
-        </div> */}
-
-      {/* Centered divider */}
-      {/* <div className="border-gray-300 border-l h-6"></div> */}
-
-      {/* <div className="flex-1 border-gray-300 p-2 border-none rounded-md">
-          <label className="block mb-1 font-medium text-center text-sm">
-            Date
-          </label>
-          <div className="relative">
-            <input type="date" name="" id="" className="border-none" />
-          </div>
-        </div> */}
-      {/* </div> */}
+      {/* Scrollable Content */}
+      <div className="flex flex-col mt-[58px] w-full overflow-scroll"></div>
       <div className="flex items-center space-x-4 bg-white mb-0 p-0 rounded-none shadow-md text-gray-600">
         <div className="flex-1  px-2  rounded-md">
           <label className="block mb-0 font-medium text-center text-sm text-gray-700">
@@ -187,7 +160,7 @@ const AccTransactionMobile = () => {
         </div>
       </div>
 
-      <div className="pt-1 pb-20">
+      <div className="pt-1 pb-[54px]">
         <div className="bg-white mb-0 p-4 rounded-lg text-zinc-800 ">
           <div className="mb-4">
             <label
@@ -395,11 +368,11 @@ const AccTransactionMobile = () => {
               closeModal={() => setIsOpen(false)}
               content={
                 <div
-                  className="flex flex-col gap-0 px-0 py-0 pb-[60px]   "
+                  className="flex flex-col gap-0 px-0 py-0 pb-[130px] h-screen overflow-y-auto   "
                   style={{}} // Inline styles for full screen
                 >
                   <div className=" max-w-md flex-grow h-full">
-                    <div className="flex justify-between items-center mb-6">
+                    <div className="flex justify-between items-center mb-2">
                       <div className="text-gray-600"></div>
 
                       <div className="text-gray-600"></div>
@@ -492,7 +465,8 @@ const AccTransactionMobile = () => {
                       </div>
                     </form>
                   </div>
-                  <div className=" flex space-x-4 fixed bottom-0 w-full z-10 p-2 pr-[52px]">
+                  {/* <div className=" flex space-x-4 fixed bottom-0 w-full z-10 p-2 pr-[52px]"> */}
+                  <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
                     <ERPButton
                       title="Save &amp; New"
                       onClick={() => {
@@ -528,35 +502,11 @@ const AccTransactionMobile = () => {
                     {/* Totals & Taxes Popup */}
                     {/* {showTotalsPopup && ( */}
                     <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
-                      {/* <h2 className="text-lg font-semibold mb-4">
-                        Totals & Discount
-                      </h2> */}
                       <div className=" pt-1">
-                        {/* <div className="flex justify-between items-center mb-4">
-                          <span className="text-gray-600">
-                            Subtotal{" "}
-                            <span className="text-sm text-gray-500">
-                              (Rate x Qty)
-                            </span>
-                          </span>
-                          <span className="text-gray-600">₹</span>
-                          <span className="text-gray-600">200.00</span>
-                        </div> */}
 
                         {/* Discount Section */}
                         <div className="flex justify-between items-center mb-4">
                           <span className="text-gray-600">Discount</span>
-                          {/* <div className="flex items-center">
-                              <button className="px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none">
-                                0
-                              </button>
-                              <button className="px-4 py-2 border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
-                                %
-                              </button>
-                              <button className="ml-1 px-4 py-2 border border-gray-300 rounded-r-md text-gray-600 focus:outline-none">
-                                ₹ 0.00
-                              </button>
-                            </div> */}
                           <div className="flex items-center">
                             <input
                               type="number"
@@ -566,9 +516,6 @@ const AccTransactionMobile = () => {
                             <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
                               %
                             </button>
-                            {/* <button className="ml-1 px-4 py-2 border border-gray-300 rounded-r-md text-gray-600 focus:outline-none">
-                                ₹ 0.00
-                              </button> */}
                             <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
                               ₹
                             </button>
@@ -580,13 +527,38 @@ const AccTransactionMobile = () => {
                           </div>
                         </div>
 
-                        {/* Tax Section */}
-                        {/* <div className="flex justify-between items-center mb-4">
-                          <span className="text-gray-600">Tax %</span>
+                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
+                          <div>
+                            <span className="text-sm font-semibold">
+                              Total Amount:
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-sm  font-semibold">
+                              ₹
+                            </span>
+                            <span className="text-sm font-semibold">
+                              200.00
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                      <div className=" pt-1">
+
+                        {/* Discount Section */}
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="text-gray-600">Discount</span>
                           <div className="flex items-center">
-                            <select className="pr-[50px] mr-2 border border-gray-400 rounded-md px-4 py-2 focus:outline-none">
-                              <option>None</option>
-                            </select>
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
+                            />
+                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
+                              %
+                            </button>
                             <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
                               ₹
                             </button>
@@ -596,16 +568,108 @@ const AccTransactionMobile = () => {
                               className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
                             />
                           </div>
-                        </div> */}
+                        </div>
 
                         <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
-                          <span className="text-sm font-semibold">
-                            Total Amount:
-                          </span>
-                          <span className="ml-[206px] text-lg font-semibold">
-                            ₹
-                          </span>
-                          <span className="text-sm font-semibold">200.00</span>
+                          <div>
+                            <span className="text-sm font-semibold">
+                              Total Amount:
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-sm  font-semibold">
+                              ₹
+                            </span>
+                            <span className="text-sm font-semibold">
+                              200.00
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                      <div className=" pt-1">
+
+                        {/* Discount Section */}
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="text-gray-600">Discount</span>
+                          <div className="flex items-center">
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
+                            />
+                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
+                              %
+                            </button>
+                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
+                              ₹
+                            </button>
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
+                          <div>
+                            <span className="text-sm font-semibold">
+                              Total Amount:
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-sm  font-semibold">
+                              ₹
+                            </span>
+                            <span className="text-sm font-semibold">
+                              200.00
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                      <div className=" pt-1">
+
+                        {/* Discount Section */}
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="text-gray-600">Discount</span>
+                          <div className="flex items-center">
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
+                            />
+                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
+                              %
+                            </button>
+                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
+                              ₹
+                            </button>
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
+                          <div>
+                            <span className="text-sm font-semibold">
+                              Total Amount:
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-sm  font-semibold">
+                              ₹
+                            </span>
+                            <span className="text-sm font-semibold">
+                              200.00
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

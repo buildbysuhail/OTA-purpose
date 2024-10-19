@@ -682,5 +682,6 @@
    "account":"Account",
    "ref_no":"Ref No",
    "ref_date":"Ref Date",
-   "narration":"Narration"
+   "narration":"Narration",
+   "upload_photo":"Upload Photo"
 }

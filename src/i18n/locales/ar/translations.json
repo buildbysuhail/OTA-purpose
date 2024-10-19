@@ -681,5 +681,6 @@
    "account": "الحساب",
    "ref_no": "رقم المرجع",
    "ref_date": "تاريخ المرجع",
-   "narration": "الوصف"
+   "narration": "الوصف",
+   "upload_photo":"تحميل الصورة"
 }

@@ -216,7 +216,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("registrationType", data !== null && data !== undefined ? data.toString() : "");
+            handleFieldChange("registrationType", data !== null && data !== undefined ? data.toString() : data);
           }}
           label={t("registration_type")}
         />
@@ -451,7 +451,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           field={{
             id: "tcsCategoryID",
             required: false,
-            getListUrl: Urls.data_pricectegory,
+            getListUrl: Urls.account_party_category,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -574,6 +574,23 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           required={false}
           onChangeData={(data: any) => handleFieldChange("tradeName", data)}
         />
+        <div className="flex flex-col gap-2">
+          <label htmlFor="fileInput" className="text-[12px] text-gray-700">
+            {t("upload_photo")}
+          </label>
+          <input
+            type="file"
+            id="partyPhoto"
+            name="partyPhoto"
+            onChange={(e) => {
+              const files = e.target.files;
+              if (files && files.length > 0) {
+                handleFieldChange("partyPhoto", files[0]);
+              }
+            }}
+            className="border rounded-lg p-2"
+          />
+        </div>
       </div>
     </div>
   </>

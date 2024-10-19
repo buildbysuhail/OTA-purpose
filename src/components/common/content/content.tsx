@@ -13,6 +13,7 @@ import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-payable-aging-report-skiptake';
 import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-receivable-aging-report-skiptake';
+import LedgerReport from '../../../pages/accounts/masters/reports/ledger-report';
 
 
 
@@ -51,6 +52,8 @@ const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/curren
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
 const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
 const Parties = lazy(() => import('../../../pages/accounts/masters/parties/parties'));
+const CustomerSupplierLedger = lazy(() => import('../../../pages/accounts/masters/customer/supplier/ledger/customer-supplier-ledger'));
+
 // Acc End
 
 //side menu account
@@ -123,6 +126,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
         <Route path="account-masters/parties" element={<Parties />} />
+        <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
         {/* Accounts End */}
 
 
@@ -142,6 +146,7 @@ const Content: FC<ContentProps> = () => {
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
         {/* Reports - Accounts */}
+        <Route path="/accounts/ledger_report" element={<LedgerReport/>} />
         <Route path="/accounts/cash" element={<Cash />} />
         <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
         <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />

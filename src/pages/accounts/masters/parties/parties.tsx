@@ -68,6 +68,7 @@ const Parties = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      width: 100,
     },
     {
       dataField: "address1",
@@ -124,7 +125,7 @@ const Parties = () => {
       width: 100,
     },
     {
-      dataField: "careOfParty",
+      dataField: "faxNumber",
       caption: t("care_of_party"),
       dataType: "number",
       allowSorting: true,

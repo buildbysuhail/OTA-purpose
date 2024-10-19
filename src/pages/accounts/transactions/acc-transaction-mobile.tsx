@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import ERPButton from "../../../components/ERPComponents/erp-button";
@@ -6,6 +6,20 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import Urls from "../../../redux/urls";
+import ERPInput from "../../../components/ERPComponents/erp-input";
+import {
+  AccountGroupData,
+  initialAccountGroup,
+} from "../masters/account-groups/account-group-types";
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
+// import { t } from "i18next";
+import { toggleAccountGroupPopup } from "../../../redux/slices/popup-reducer";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import { useDispatch } from "react-redux";
+import {
+  ApplicationMainSettings,
+  ApplicationMainSettingsInitialState,
+} from "../../settings/system/application-settings-types";
 
 interface BilledItem {
   id?: number;
@@ -76,6 +90,19 @@ const AccTransactionMobile = () => {
     }));
   };
 
+  // const handleFieldChange = (keys: any, value: any) => {
+  //   setFormData((prevSettings = {} as FormData) => ({
+  //     ...prevSettings,
+  //     [keys]: value ?? "",
+  //   }));
+  // };
+  const handleFieldChange = (settingName: any, value: any) => {
+    setSettings((prevSettings = {} as ApplicationMainSettings) => ({
+      ...prevSettings,
+      [settingName]: value ?? "",
+    }));
+  };
+
   const [popupRef, setPopupRef] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -116,6 +143,10 @@ const AccTransactionMobile = () => {
   }
 
   const [showInputBox, setShowInputBox] = useState(false);
+
+  const [settings, setSettings] = useState<ApplicationMainSettings>(
+    ApplicationMainSettingsInitialState
+  );
 
   return (
     <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
@@ -162,7 +193,7 @@ const AccTransactionMobile = () => {
 
       <div className="pt-1 pb-[54px]">
         <div className="bg-white mb-0 p-4 rounded-lg text-zinc-800 ">
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label
               htmlFor="cashacc"
               className="block font-medium text-gray-700 text-sm"
@@ -181,17 +212,51 @@ const AccTransactionMobile = () => {
               <option value="bank">bank</option>
               <option value="upi">upi</option>
             </select>
+          </div> */}
+          <div className="mb-1">
+            <ERPDataCombobox
+              id="cashacc"
+              field={{
+                id: "cashacc",
+                // required: true,
+                getListUrl: Urls.data_CashLedgers,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              data={formData}
+              value={formData?.cashacc}
+              onChangeData={(data) =>
+                handleFieldChange("cashacc", data.cashacc)
+              }
+              // label={t("cost_center")}
+              label="Cash Account"
+            />
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <input
               type="text"
               placeholder="Remark"
               // className="bg-white p-2 border rounded w-full"
               className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
             />
+          </div> */}
+          <div className="mb-1">
+            <ERPInput
+              id="autoUpdateReleaseUpTo"
+              label="Remark"
+              type="text"
+              data={settings}
+              value={settings?.autoUpdateReleaseUpTo}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "autoUpdateReleaseUpTo",
+                  data.autoUpdateReleaseUpTo
+                )
+              }
+            />
           </div>
 
-          <div className="flex justify-center mb-4">
+          <div className="flex justify-center mb-2">
             <button
               className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
               onClick={() => setShowInputBox(!showInputBox)}
@@ -202,12 +267,27 @@ const AccTransactionMobile = () => {
           {showInputBox && (
             // <div className="flex justify-center">
             <div>
-              <div className="mb-1">
+              {/* <div className="mb-1">
                 <input
                   type="text"
                   placeholder="Ref No"
                   // className="bg-white p-2 border rounded w-full"
                   className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                />
+              </div> */}
+              <div className="mb-1">
+                <ERPInput
+                  id="autoUpdateReleaseUpTo"
+                  label="Ref No"
+                  type="text"
+                  data={settings}
+                  value={settings?.autoUpdateReleaseUpTo}
+                  onChangeData={(data) =>
+                    handleFieldChange(
+                      "autoUpdateReleaseUpTo",
+                      data.autoUpdateReleaseUpTo
+                    )
+                  }
                 />
               </div>
               <div className="mb-1">
@@ -224,7 +304,7 @@ const AccTransactionMobile = () => {
                   className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
                 />
               </div>
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <label
                   htmlFor="cashacc"
                   className="block font-medium text-gray-700 text-sm"
@@ -246,13 +326,47 @@ const AccTransactionMobile = () => {
                   <option value="sreeram">sreeram</option>
                   <option value="javad">javad</option>
                 </select>
-              </div>
+              </div> */}
               <div className="mb-1">
+                <ERPDataCombobox
+                  id="cashacc"
+                  field={{
+                    id: "cashacc",
+                    // required: true,
+                    getListUrl: Urls.data_employees,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  data={formData}
+                  value={formData?.cashacc}
+                  onChangeData={(data) =>
+                    handleFieldChange("cashacc", data.cashacc)
+                  }
+                  // label={t("cost_center")}
+                  label="Paid By"
+                />
+              </div>
+              {/* <div className="mb-1">
                 <input
                   type="text"
                   placeholder="Notes"
                   // className="bg-white p-2 border rounded w-full"
                   className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                />
+              </div> */}
+              <div className="mb-2">
+                <ERPInput
+                  id="autoUpdateReleaseUpTo"
+                  label="Notes"
+                  type="text"
+                  data={settings}
+                  value={settings?.autoUpdateReleaseUpTo}
+                  onChangeData={(data) =>
+                    handleFieldChange(
+                      "autoUpdateReleaseUpTo",
+                      data.autoUpdateReleaseUpTo
+                    )
+                  }
                 />
               </div>
             </div>
@@ -380,7 +494,7 @@ const AccTransactionMobile = () => {
 
                     <form onSubmit={handleSubmit}>
                       <div className="mb-4">
-                        <div className="mb-1">
+                        {/* <div className="mb-1">
                           <label
                             className="block font-medium text-gray-700 text-sm"
                             htmlFor=""
@@ -393,28 +507,42 @@ const AccTransactionMobile = () => {
                             // className="bg-white p-2 border rounded w-full"
                             className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
                           />
+                        </div> */}
+                        <div className="mb-4">
+                          <ERPInput
+                            id="autoUpdateReleaseUpTo"
+                            label="Ledger Code"
+                            type="text"
+                            data={settings}
+                            value={settings?.autoUpdateReleaseUpTo}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "autoUpdateReleaseUpTo",
+                                data.autoUpdateReleaseUpTo
+                              )
+                            }
+                          />
                         </div>
                         <div className="mb-1">
-                          <label
-                            htmlFor="cashacc"
-                            className="block font-medium text-gray-700 text-sm"
-                          >
-                            Ledger
-                          </label>
-                          <select
+                          <ERPDataCombobox
                             id="cashacc"
-                            name="cashacc"
-                            value={formData.cashacc}
-                            onChange={handleInputChange}
-                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
-                          >
-                            <option value="">Select Ledger</option>
-                            <option value="cash">cash</option>
-                            <option value="bank">bank</option>
-                            <option value="upi">upi</option>
-                          </select>
+                            field={{
+                              id: "cashacc",
+                              // required: true,
+                              getListUrl: Urls.data_acc_ledgers,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            data={formData}
+                            value={formData?.cashacc}
+                            onChangeData={(data) =>
+                              handleFieldChange("cashacc", data.cashacc)
+                            }
+                            // label={t("cost_center")}
+                            label="Ledger"
+                          />
                         </div>
-                        <div className="mb-1">
+                        {/* <div className="mb-1">
                           <label
                             className="block font-medium text-gray-700 text-sm"
                             htmlFor=""
@@ -427,8 +555,23 @@ const AccTransactionMobile = () => {
                             // className="bg-white p-2 border rounded w-full"
                             className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
                           />
+                        </div> */}
+                        <div className="mb-4">
+                          <ERPInput
+                            id="autoUpdateReleaseUpTo"
+                            label="Amount"
+                            type="number"
+                            data={settings}
+                            value={settings?.autoUpdateReleaseUpTo}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "autoUpdateReleaseUpTo",
+                                data.autoUpdateReleaseUpTo
+                              )
+                            }
+                          />
                         </div>
-                        <div className="mb-1">
+                        {/* <div className="mb-1">
                           <label
                             className="block font-medium text-gray-700 text-sm"
                             htmlFor=""
@@ -441,26 +584,41 @@ const AccTransactionMobile = () => {
                             // className="bg-white p-2 border rounded w-full"
                             className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
                           />
+                        </div> */}
+                        <div className="mb-4">
+                          <ERPInput
+                            id="autoUpdateReleaseUpTo"
+                            label="Narration"
+                            type="string"
+                            data={settings}
+                            value={settings?.autoUpdateReleaseUpTo}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "autoUpdateReleaseUpTo",
+                                data.autoUpdateReleaseUpTo
+                              )
+                            }
+                          />
                         </div>
+
                         <div className="mb-1">
-                          <label
-                            htmlFor="cashacc"
-                            className="block font-medium text-gray-700 text-sm"
-                          >
-                            Cost Center
-                          </label>
-                          <select
+                          <ERPDataCombobox
                             id="cashacc"
-                            name="cashacc"
-                            value={formData.cashacc}
-                            onChange={handleInputChange}
-                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full"
-                          >
-                            <option value="">Select Cost Center</option>
-                            <option value="cash">cash</option>
-                            <option value="bank">bank</option>
-                            <option value="upi">upi</option>
-                          </select>
+                            field={{
+                              id: "cashacc",
+                              // required: true,
+                              getListUrl: Urls.data_costcentres,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            data={formData}
+                            value={formData?.cashacc}
+                            onChangeData={(data) =>
+                              handleFieldChange("cashacc", data.cashacc)
+                            }
+                            // label={t("cost_center")}
+                            label="Cost Center"
+                          />
                         </div>
                       </div>
                     </form>
@@ -503,7 +661,6 @@ const AccTransactionMobile = () => {
                     {/* {showTotalsPopup && ( */}
                     <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                       <div className=" pt-1">
-
                         {/* Discount Section */}
                         <div className="flex justify-between items-center mb-4">
                           <span className="text-gray-600">Discount</span>
@@ -534,9 +691,7 @@ const AccTransactionMobile = () => {
                             </span>
                           </div>
                           <div>
-                            <span className="text-sm  font-semibold">
-                              ₹
-                            </span>
+                            <span className="text-sm  font-semibold">₹</span>
                             <span className="text-sm font-semibold">
                               200.00
                             </span>
@@ -546,7 +701,6 @@ const AccTransactionMobile = () => {
                     </div>
                     <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                       <div className=" pt-1">
-
                         {/* Discount Section */}
                         <div className="flex justify-between items-center mb-4">
                           <span className="text-gray-600">Discount</span>
@@ -577,9 +731,7 @@ const AccTransactionMobile = () => {
                             </span>
                           </div>
                           <div>
-                            <span className="text-sm  font-semibold">
-                              ₹
-                            </span>
+                            <span className="text-sm  font-semibold">₹</span>
                             <span className="text-sm font-semibold">
                               200.00
                             </span>
@@ -589,7 +741,6 @@ const AccTransactionMobile = () => {
                     </div>
                     <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                       <div className=" pt-1">
-
                         {/* Discount Section */}
                         <div className="flex justify-between items-center mb-4">
                           <span className="text-gray-600">Discount</span>
@@ -620,9 +771,7 @@ const AccTransactionMobile = () => {
                             </span>
                           </div>
                           <div>
-                            <span className="text-sm  font-semibold">
-                              ₹
-                            </span>
+                            <span className="text-sm  font-semibold">₹</span>
                             <span className="text-sm font-semibold">
                               200.00
                             </span>
@@ -632,7 +781,6 @@ const AccTransactionMobile = () => {
                     </div>
                     <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                       <div className=" pt-1">
-
                         {/* Discount Section */}
                         <div className="flex justify-between items-center mb-4">
                           <span className="text-gray-600">Discount</span>
@@ -663,9 +811,7 @@ const AccTransactionMobile = () => {
                             </span>
                           </div>
                           <div>
-                            <span className="text-sm  font-semibold">
-                              ₹
-                            </span>
+                            <span className="text-sm  font-semibold">₹</span>
                             <span className="text-sm font-semibold">
                               200.00
                             </span>

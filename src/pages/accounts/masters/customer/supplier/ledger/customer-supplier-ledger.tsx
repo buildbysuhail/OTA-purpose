@@ -29,6 +29,8 @@ import {
 import { APIClient } from "../../../../../../helpers/api-client";
 import { handleResponse } from "../../../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
+import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
+import { useNavigate } from "react-router-dom";
 
 interface LedgerInf {
   customer: boolean;
@@ -57,29 +59,25 @@ const CustomerSupplierLedger = () => {
   const [storePrev, setStorePrev] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
+  const navigate = useNavigate();
   const handleLoad = async () => {
     setLoading(true);
     debugger;
     const partyType = gridType.customer ? "Cust" : "Supp";
-    const result: any = await api.get(
-      `${Urls.cust_supp_ledger}?PartyType=${partyType}`
-    );
+    const result: any = await api.get(`${Urls.cust_supp_ledger}?PartyType=${partyType}`);
     setStore(result);
     setStorePrev([...result]);
     setLoading(false);
   };
-
   const handleCheckboxChange = (rowIndex: number) => {
-    console.log("Current1 change Store:", store[rowIndex].show);
-    console.log("Previous1 change Store:", storePrev[rowIndex].show);
     setStore((prevStore: any[]) => {
       const updatedStore = [...prevStore];
-      updatedStore[rowIndex].show = !updatedStore[rowIndex].show;
+      updatedStore[rowIndex] = {
+        ...updatedStore[rowIndex],
+        show: !updatedStore[rowIndex].show, 
+      };
       return updatedStore;
     });
-    console.log("Current change Store:", store[rowIndex].show);
-    console.log("Previous change Store:", storePrev[rowIndex].show);
   };
 
   const handleSubmit = async () => {
@@ -93,8 +91,8 @@ const CustomerSupplierLedger = () => {
 
     const payload = changedData.map((item: any) => ({
       ledgerID: item.ledgerID,
-      showInCustomers: gridType.customer ? item.show : false,
-      showInSuppliers: gridType.supplier ? item.show : false,
+      showInCustomers: gridType.customer ? false: item.show ,
+      showInSuppliers: gridType.supplier ? false: item.show,
     }));
     console.log("Payload to be submitted:", payload);
     if (payload.length > 0) {
@@ -109,11 +107,13 @@ const CustomerSupplierLedger = () => {
         console.error("Error submitting data:", error);
       }
     } else {
-      console.log("No changes detected.");
+      ERPToast.show("No changes to save");
     }
     setIsSaving(false);
   };
-
+  const handleClose = () => {
+    navigate("/settings"); 
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -170,7 +170,8 @@ const CustomerSupplierLedger = () => {
                   <FilterRow visible={true} />
                   <SearchPanel visible={false} />
                   <ColumnFixing enabled={true} />
-                  <Scrolling mode="standard" />
+                  {/* <Scrolling mode="virtual"/> */}
+                  <Scrolling mode="standard"/>
                   <Paging defaultPageSize={100} />
                   <LoadPanel visible={loading} />
 
@@ -200,7 +201,7 @@ const CustomerSupplierLedger = () => {
                   <Column
                     width={200}
                     allowSearch={true}
-                    allowEditing={true}
+                    allowEditing={false}
                     allowFiltering={true}
                     dataField="show"
                     caption={
@@ -211,7 +212,7 @@ const CustomerSupplierLedger = () => {
                     dataType="boolean"
                     cellRender={(cellData) => (
                       <ERPCheckbox
-                        id="show"
+                        id={`show-${cellData.rowIndex}`}
                         checked={cellData.data.show}
                         data={cellData.data}
                         noLabel={true}
@@ -221,15 +222,12 @@ const CustomerSupplierLedger = () => {
                   />
 
                   <Toolbar></Toolbar>
-                  <Editing mode="cell" allowUpdating={true} />
                 </DataGrid>
                 <div className="flex justify-end items-center m-3">
                   <ERPButton
                     title="Close"
                     variant="secondary"
-                    // disabled={loading}
-                    // loading={loading}
-                    // onClick={handleLoad}
+                    onClick={handleClose}
                     type="button"
                   />
                   <ERPButton

@@ -11,6 +11,8 @@ const useCurrentBranch = () => {
       name: userSession.currentClientName,
     }
   }  
+  console.log(ActiveBranch);
+  
   return ActiveBranch;
 };
 

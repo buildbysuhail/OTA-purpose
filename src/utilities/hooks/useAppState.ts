@@ -6,8 +6,6 @@ export const useAppState = () => {
   const dispatch = useDispatch();
   const entireState = useSelector((state: RootState) => state);
   const appState = useSelector((state: RootState) => state.AppState?.appState);
-  console.log('Entire state:', entireState);
-  console.log('Entire state appState:', appState);
   
   const updateAppState = (newState: (typeof appState)) => {
     

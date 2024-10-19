@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { XMarkIcon } from "@heroicons/react/20/solid";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
@@ -8,8 +8,7 @@ import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/
 import stdTempImage from "../../assets/images/templates/Invoice_std.png";
 import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
 
-import { parseAddressTemplate } from "./utils";
-import { initialTemplateState, TemplateState } from "./Designer/interfaces";
+import { TemplateState } from "./Designer/interfaces";
 import { DummyInvoiceData } from "./constants/DummyData";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
@@ -21,9 +20,9 @@ import { showAlert } from "../../components/ERPComponents/erp-alert";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import PSModel from "../../components/common/polosys/ps-modal";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
-import { patchAction, deleteAction, getAction } from "../../redux/slices/app-thunks";
+import { patchAction, deleteAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
-import { setTemplate, setTemplatePropertiesState } from "../../redux/slices/templates/reducer";
+import { setTemplate } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 
 interface previewState {
@@ -42,12 +41,6 @@ const Templates = ({ }) => {
   const [loading, setLoading] = useState(false);
   const [tempData, setTempData] = useState([]);
   const [tempCrmData, setTempCRMData] = useState([]);
-
-  const companies = useSelector((state: any) => state?.GetUserCompanies);
-  const ActiveBranch = companies?.data?.find((item: any) => item?.is_active);
-
-  const generalPrefData = useSelector((state: any) => state?.GeERPeneralPreference)?.data?.results[0];
-  const orgAddressTemplate = parseAddressTemplate(generalPrefData?.organization_address_format, ActiveBranch?.company);
 
   const [showPreview, setShowPreview] = useState<previewState>({ show: false });
   const [showTemplateListing, setShowTemplateListing] = useState<boolean>(true);

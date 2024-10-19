@@ -1,6 +1,4 @@
-import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "./useAppDispatch";
 import { RootState } from "../../redux/store";
 
 
@@ -12,7 +10,9 @@ const useCurrentBranch = () => {
     company: {
       name: userSession.currentClientName,
     }
-  }
+  }  
+  console.log(ActiveBranch);
+  
   return ActiveBranch;
 };
 

@@ -1,9 +1,9 @@
-import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
+
 import { dateTrimmer } from "../../../../utilities/Utils";
 import { DownloadPreviewProps } from "./DownloadPreview";
 import { Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
-const HeaderPreview = ({ template, data, docIDKey, docTitle,  currencySymbol }: DownloadPreviewProps) => {
+const HeaderPreview = ({ template, data, docIDKey, docTitle,  currencySymbol, currentBranch }: DownloadPreviewProps) => {
   const headerState = template?.headerState;
 
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
@@ -35,7 +35,6 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle,  currencySymbol }: 
   const custNameFontColor = headerState?.customerNameFontColor;
   const custNameFontSize = headerState?.customerNameFontSize || 12;
 
-  const currentBranch = useCurrentBranch();
 
   const styles = StyleSheet.create({
     labelStyle: { color: labelColor, fontSize: labelFontSize, fontWeight: labelFontWeight },

@@ -1,21 +1,31 @@
-import { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
+// import { Fragment, useState } from "react";
+// import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+// import { useRootState } from "../../../../utilities/hooks/useRootState";
+// import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+// import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+// import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
+// import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+// import Urls from "../../../../redux/urls";
+// import ERPModal from "../../../../components/ERPComponents/erp-modal";
+// import { useTranslation } from "react-i18next";
+// import { ActionType } from "../../../../redux/types";
+// import { useSearchParams } from "react-router-dom";
 
-interface LedgerReport {
+import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
+import { Fragment, useState } from "react";
+import { useRootState } from "../../../../../utilities/hooks/useRootState";
+import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../../redux/urls";
+import { ActionType } from "../../../../../redux/types";
+import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+
+interface CashBookSummary {
 
   from: Date
 }
-const LedgerReport = () => {
+const CashBookSummary = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -23,32 +33,55 @@ const LedgerReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<LedgerReport>({from: new Date()});
+  const [filter, setFilter] =useState<CashBookSummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
+      dataField: "SiNo",
+      caption: t('si_no'),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 80,
     },
     {
-      dataField: "form",
-      caption: t("form"),
+      dataField: "ledgerName",
+      caption: t("ledger_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 90,
     },
     {
-      dataField: "vchNo",
-      caption:  t("voucher_no"),
+      dataField: "debit",
+      caption: t('debit'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200,
+    },
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200,
+    },
+    {
+      dataField: "balance",
+      caption: t("balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200,
+    },
+    {
+      dataField: "branch",
+      caption:  t("branch"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
     // {
     //   dataField: "ledger",
@@ -58,61 +91,39 @@ const LedgerReport = () => {
     //   allowFiltering: true,
     //   width: 150,
     // },
-    {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "debit",
-      caption: t('debit'),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 170,
-    },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 170,
-    },
-    {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 170,
-    },
+    // {
+    //   dataField: "particulars",
+    //   caption: t("account"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "refNo",
+    //   caption: t("ref_no"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "refDate",
+    //   caption: t("ref_date"),
+    //   dataType: "date",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "narration",
+    //   caption: t("narration"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    
   
    
     // {
@@ -163,8 +174,8 @@ const LedgerReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("ledger_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("cash_book")}
+                  dataUrl= {Urls.acc_reports_cash_book}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"
@@ -184,4 +195,4 @@ const LedgerReport = () => {
   );
 };
 
-export default LedgerReport;
+export default CashBookSummary;

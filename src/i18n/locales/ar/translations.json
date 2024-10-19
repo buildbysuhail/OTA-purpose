@@ -681,5 +681,8 @@
    "account": "الحساب",
    "ref_no": "رقم المرجع",
    "ref_date": "تاريخ المرجع",
-   "narration": "الوصف"
+   "narration": "الوصف",
+   "ledger_report": "تقرير الأستاذ",
+   "cash_book": "دفتر النقدية",
+   "day_book_detailed": "تقرير دفتر اليومية التفصيلي"
 }

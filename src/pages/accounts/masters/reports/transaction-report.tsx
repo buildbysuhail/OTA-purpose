@@ -11,11 +11,11 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 
-interface AccountReceivableAgingReportSkipTake {
+interface TransactionReport {
 
   from: Date
 }
-const AccountReceivableAgingReportSkipTake = () => {
+const TransactionReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -23,34 +23,82 @@ const AccountReceivableAgingReportSkipTake = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<AccountReceivableAgingReportSkipTake>({from: new Date()});
+  const [filter, setFilter] =useState<TransactionReport>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "si",
-      caption: t('si_no'),
-      dataType: "number",
+      dataField: "date",
+      caption: t('date'),
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 50,
     },
     {
-      dataField: "ledgername",
-      caption: t("ledger_name"),
+      dataField: "form",
+      caption: t("form"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
-      dataField: "Debit",
-      caption: t('debit'),
+      dataField: "vchNo",
+      caption:  t("voucher_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    // {
+    //   dataField: "ledger",
+    //   caption: t("account"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    {
+      dataField: "particulars",
+      caption: t("account"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "Credit",
+      dataField: "refNo",
+      caption: t("ref_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "refDate",
+      caption: t("ref_date"),
+      dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "narration",
+      caption: t("narration"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "debit",
+      caption: t('debit'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "credit",
       caption: t("credit"),
       dataType: "number",
       allowSearch: true,
@@ -65,30 +113,25 @@ const AccountReceivableAgingReportSkipTake = () => {
       allowFiltering: true,
       width: 150,
     },
-    {
-      dataField: "period1",
-      caption: 10+ t("days"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "period2",
-      caption: 20+t("days"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "period3",
-      caption: 30+t("days"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+  
+   
+    // {
+    //   dataField: "invTransactionID",
+    //   caption: t("balance"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "isOpening",
+    //   caption: t("balance"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+   
     
     // {
     //   dataField: "actions",
@@ -118,11 +161,10 @@ const AccountReceivableAgingReportSkipTake = () => {
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                dsfdsdfdf
-                <ErpDevGrid 
+                <ErpDevGrid
                   columns={columns}
-                  gridHeader={"skiptake"+t("account_receivable_aging_report")}
-                  dataUrl= {Urls.acc_reports_aging_receivable_direct}
+                  gridHeader={t("account_payable_aging_report")}
+                  dataUrl= {Urls.acc_reports_ledger}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"
@@ -142,4 +184,4 @@ const AccountReceivableAgingReportSkipTake = () => {
   );
 };
 
-export default AccountReceivableAgingReportSkipTake;
+export default TransactionReport;

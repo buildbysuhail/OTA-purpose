@@ -682,5 +682,8 @@
    "account":"Account",
    "ref_no":"Ref No",
    "ref_date":"Ref Date",
-   "narration":"Narration"
+   "narration":"Narration",
+   "ledger_report":"Ledger Report",
+   "cash_book":"Cash Book",
+  "day_book_detailed":"Day Book Detailed Report"
 }

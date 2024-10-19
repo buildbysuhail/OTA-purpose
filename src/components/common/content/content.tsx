@@ -4,16 +4,35 @@ import ApplicationSettings from '../../../pages/settings/system/application-sett
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
-import Cash from '../../../pages/accounts/masters/reports/cash';
+import Cash from '../../../pages/accounts/masters/reports/payment-report';
 import ReportList from '../../ERPComponents/reports/reports-list';
 import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
 import AccountReceivableAgingReport from '../../../pages/accounts/masters/reports/account-receivable-aging-report';
 import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 
-import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-payable-aging-report-skiptake';
-import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/account-receivable-aging-report-skiptake';
+import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
+import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
 import LedgerReport from '../../../pages/accounts/masters/reports/ledger-report';
+import CashBookSummary from '../../../pages/accounts/masters/reports/cashBook/cash-book-summary';
+import DayBookDetailed from '../../../pages/accounts/masters/reports/dayBook/day-book-detailed';
+import DayBookSummary from '../../../pages/accounts/masters/reports/dayBook/dayBookSummary/day-book-summary';
+import PaymentReport from '../../../pages/accounts/masters/reports/payment-report';
+import CollectionReport from '../../../pages/accounts/masters/reports/collection-report';
+import CashSummary from '../../../pages/accounts/masters/reports/cash-summary';
+import TransactionReport from '../../../pages/accounts/masters/reports/transaction-report';
+import AccountsHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/accountsHistory/accounts-history-report';
+import DailySummary from '../../../pages/accounts/masters/reports/dailySummary/dailySummary/daily-summary';
+import BillwiseProfit from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit';
+import PartySummaryBasicInfo from '../../../pages/accounts/masters/reports/partywise-summary/party-summary-basic-info';
+import OutstandingAccountPayableReport from '../../../pages/accounts/masters/reports/outStandingReports/outstanding-account-payable-report';
+import OutstandingAccountReceivableReport from '../../../pages/accounts/masters/reports/outStandingReports/outstanding-account-receivable-report';
+import OutstandingAccountPayableAgingReport from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
+import OutstandingAccountReceivableAgingReport from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
+import ProfitAndLoss from '../../../pages/accounts/masters/reports/profit-and-loss';
+import TrialBalance from '../../../pages/accounts/masters/reports/trial-balance';
+import BalanceSheet from '../../../pages/accounts/masters/reports/balace-sheet';
+import InventoryHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/InventoryHistory/inventory-history-report';
 
 
 
@@ -147,11 +166,24 @@ const Content: FC<ContentProps> = () => {
         <Route path="/reports" element={<ReportList />} />
         {/* Reports - Accounts */}
         <Route path="/accounts/ledger_report" element={<LedgerReport/>} />
-        <Route path="/accounts/cash" element={<Cash />} />
-        <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
-        <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />
-        <Route path="/accounts/payable_aging_skiptake" element={<AccountPayableAgingReportSkipTake />} />
-        <Route path="/accounts/receivable_aging_skiptake" element={<AccountReceivableAgingReportSkipTake />} />
+        <Route path="/accounts/cash_book" element={<CashBookSummary/>} />
+        <Route path="/accounts/day_book_detailed" element={<DayBookDetailed/>} />
+        <Route path="/accounts/day_book_summary" element={<DayBookSummary/>} />
+        <Route path="/accounts/payment_report" element={<PaymentReport/>} />
+        <Route path="/accounts/collection_report" element={<CollectionReport/>} />
+        <Route path="/accounts/cash_summary" element={<CashSummary/>} />
+        <Route path="/accounts/transaction_report" element={<TransactionReport/>} />
+        <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport/>} />
+        <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport/>} />
+        <Route path="/accounts/billwise_profit" element={<BillwiseProfit/>} />
+        <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport/>} />
+        <Route path="/accounts/outstanding_receivable" element={<OutstandingAccountReceivableReport/>} />
+        <Route path="/accounts/outstanding_aging_payable" element={<OutstandingAccountPayableAgingReport/>} />
+        <Route path="/accounts/outstanding_aging_receivable" element={<OutstandingAccountReceivableAgingReport/>} />
+        <Route path="/accounts/trial_balance" element={<TrialBalance/>} />
+        <Route path="/accounts/profit_and_loss" element={<ProfitAndLoss/>} />
+        <Route path="/accounts/balance_sheet" element={<BalanceSheet/>} />
+
         {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}

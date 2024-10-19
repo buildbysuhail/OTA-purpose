@@ -1,21 +1,18 @@
-import { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
+import { useAppDispatch } from "../../../../../../utilities/hooks/useAppDispatch";
+import { Fragment, useState } from "react";
+import { useRootState } from "../../../../../../utilities/hooks/useRootState";
+import { DevGridColumn } from "../../../../../../components/types/dev-grid-column";
+import ErpDevGrid from "../../../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../../../redux/urls";
+import { ActionType } from "../../../../../../redux/types";
+import { toggleCostCentrePopup } from "../../../../../../redux/slices/popup-reducer";
 
-interface LedgerReport {
+interface DailySummary {
 
   from: Date
 }
-const LedgerReport = () => {
+const DailySummary = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -23,7 +20,7 @@ const LedgerReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<LedgerReport>({from: new Date()});
+  const [filter, setFilter] =useState<DailySummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -32,7 +29,7 @@ const LedgerReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 50,
     },
     {
       dataField: "form",
@@ -40,7 +37,6 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 90,
     },
     {
       dataField: "vchNo",
@@ -64,6 +60,7 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
     },
     {
       dataField: "refNo",
@@ -95,7 +92,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
     },
     {
       dataField: "credit",
@@ -103,7 +100,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
     },
     {
       dataField: "balance",
@@ -111,7 +108,7 @@ const LedgerReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      width: 150,
     },
   
    
@@ -163,7 +160,7 @@ const LedgerReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("ledger_report")}
+                  gridHeader={t("account_payable_aging_report")}
                   dataUrl= {Urls.acc_reports_ledger}
                   method={ActionType.POST}
                   postData={filter}
@@ -184,4 +181,4 @@ const LedgerReport = () => {
   );
 };
 
-export default LedgerReport;
+export default DailySummary;

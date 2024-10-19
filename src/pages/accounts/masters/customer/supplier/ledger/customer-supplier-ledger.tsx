@@ -30,6 +30,7 @@ import { APIClient } from "../../../../../../helpers/api-client";
 import { handleResponse } from "../../../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
 import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
+import { useNavigate } from "react-router-dom";
 
 interface LedgerInf {
   customer: boolean;
@@ -58,7 +59,7 @@ const CustomerSupplierLedger = () => {
   const [storePrev, setStorePrev] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
+  const navigate = useNavigate();
   const handleLoad = async () => {
     setLoading(true);
     debugger;
@@ -110,7 +111,9 @@ const CustomerSupplierLedger = () => {
     }
     setIsSaving(false);
   };
-
+  const handleClose = () => {
+    navigate("/settings"); 
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -224,9 +227,7 @@ const CustomerSupplierLedger = () => {
                   <ERPButton
                     title="Close"
                     variant="secondary"
-                    // disabled={loading}
-                    // loading={loading}
-                    // onClick={handleLoad}
+                    onClick={handleClose}
                     type="button"
                   />
                   <ERPButton

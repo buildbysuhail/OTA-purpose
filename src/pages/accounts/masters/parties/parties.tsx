@@ -68,6 +68,7 @@ const Parties = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      width: 100,
     },
     {
       dataField: "address1",
@@ -124,7 +125,7 @@ const Parties = () => {
       width: 100,
     },
     {
-      dataField: "careOfParty",
+      dataField: "faxNumber",
       caption: t("care_of_party"),
       dataType: "number",
       allowSorting: true,
@@ -395,12 +396,16 @@ const Parties = () => {
       <ERPModal
         isOpen={rootState.PopupData.parties.isOpen || false}
         title={t("parties")}
-        width="w-full max-w-[1024px]"
+        width="w-full max-w-[1400px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleParties({ isOpen: false, key: null }));
         }}
-        content={<PartiesManage />}
+        content={
+          <div className="h-[700px] overflow-y-auto">
+            <PartiesManage />
+          </div>
+        }
       />
     </Fragment>
   );

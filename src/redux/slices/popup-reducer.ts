@@ -41,8 +41,10 @@ interface popupData {
   chartOfAccounts: popupDataProps
   parties: popupDataProps
   headAndFooter:popupDataProps
+  miscellaneousSettings:popupDataProps
 }
 const initialState: popupData = {
+  miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true},
   headAndFooter: { isOpen: false, key: null, mode: "edit", reload: true},
   userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true},
   userType: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -206,11 +208,16 @@ const popupDataSlice = createSlice({
     toggleHeaderFooterPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.headAndFooter = action.payload;
     },
+    toggleMiscellaneousSettingsPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.miscellaneousSettings = action.payload;
+    },
+  
   },
 });
 
 // Extract the actions
 export const {
+  toggleMiscellaneousSettingsPopup,
   toggleHeaderFooterPopup,
   toggleUserTypePrivilegePopup,
   toggleCurrencyMasterPopup,

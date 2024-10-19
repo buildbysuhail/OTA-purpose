@@ -2,7 +2,7 @@ import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 import { DownloadPreviewProps } from "./DownloadPreview";
 import { Text, View, StyleSheet, Image } from "@react-pdf/renderer";
 
-const HeaderPreview = ({ template, data, docIDKey, docTitle, currencySymbol }: DownloadPreviewProps) => {
+const HeaderPreview = ({ template, data, docIDKey, docTitle, currencySymbol, currentBranch }: DownloadPreviewProps) => {
   const headerState = template?.headerState;
 
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
@@ -25,7 +25,6 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle, currencySymbol }: D
   const labelFontSize = template?.propertiesState?.label_font_size || 12;
   const labelColor = template?.propertiesState?.label_font_color || "#000";
   const labelFontWeight = template?.propertiesState?.label_font_weight || "normal";
-  const currentBranch = useCurrentBranch();
 
   return (
     <View

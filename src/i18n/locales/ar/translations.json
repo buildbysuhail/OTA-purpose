@@ -682,6 +682,7 @@
    "ref_no": "رقم المرجع",
    "ref_date": "تاريخ المرجع",
    "narration": "الوصف",
+   "upload_photo":"تحميل الصورة",
    "ledger_report": "تقرير الأستاذ",
    "cash_book": "دفتر النقدية",
    "day_book_detailed": "تقرير دفتر اليومية التفصيلي"

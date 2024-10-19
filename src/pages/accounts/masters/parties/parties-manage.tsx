@@ -20,314 +20,338 @@ interface Tab1ContentProps {
   t: TFunction;
 }
 
-const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldChange, t }) => (
-  <>
-    <div className="border p-4 rounded-lg">
-      <div className="grid grid-cols-3 gap-3">
-        <ERPInput
-          {...getFieldProps("partyCode")}
-          label={t("code")}
-          placeholder={t("code")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("partyCode", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("partyName")}
-          label={t("name")}
-          placeholder={t("name")}
-          required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange("partyName", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("displayName")}
-          label={t("display_name")}
-          placeholder={t("display_name")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("displayName", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("arabicName")}
-          label={t("arabic_name")}
-          placeholder={t("arabic_name")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("arabicName", data)
-          }
-        />
-        <ERPDataCombobox
-          {...getFieldProps("ledgerID")}
-          field={{
-            id: "ledgerID",
-            required: true,
-            getListUrl: Urls.data_acc_ledgers,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => {
-            handleFieldChange("ledgerID", data);
-          }}
-          label={t("ledger_name")}
-        />
-        <ERPDataCombobox
-          {...getFieldProps("partyCategoryID")}
-          field={{
-            id: "partyCategoryID",
-            required: true,
-            getListUrl: Urls.data_party_categories,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => {
-            handleFieldChange("partyCategoryID", data);
-          }}
-          label={t("party_category")}
-        />
-        <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
-          field={{
-            id: "accGroupID",
-            required: true,
-            getListUrl: Urls.data_acc_groups,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data);
-          }}
-          label={t("referred_by")}
-        />
-        <ERPInput
-          {...getFieldProps("address1")}
-          label={t("address")}
-          placeholder={t("address")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("address1", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("mobilePhone")}
-          label={t("mobile_phone")}
-          placeholder={t("mobile_phone")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("mobilePhone", data)
-          }
-        />
-        <ERPDataCombobox
-          {...getFieldProps("salesRouteID")}
-          field={{
-            id: "salesRouteID",
-            required: true,
-            getListUrl: Urls.data_salesRoute,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => {
-            handleFieldChange("salesRouteID", data);
-          }}
-          label={t("sales_route")}
-        />
-        <ERPInput
-          {...getFieldProps("taxNumber")}
-          label={t("tax_number")}
-          placeholder={t("tax_number")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("taxNumber", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("cstNumber")}
-          label={t("cr_no")}
-          placeholder={t("cr_no")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("cstNumber", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("creditDays")}
-          label={t("credit_days")}
-          placeholder={t("credit_days")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("creditDays", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("creditAmount")}
-          label={t("credit_amount")}
-          placeholder={t("credit_amount")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("creditAmount", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("opBalance")}
-          label={t("op_balance")}
-          placeholder={t("op_balance")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("opBalance", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("address4")}
-          label={t("ifsc")}
-          placeholder={t("ifsc")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("address4", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("panNo")}
-          label={t("pan_no")}
-          placeholder={t("pan_no")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("panNo", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("aadharNo")}
-          label={t("aadhar_no")}
-          placeholder={t("aadhar_no")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("aadharNo", data)
-          }
-        />
-        <ERPDataCombobox
-          {...getFieldProps("registrationType")}
-          field={{
-            id: "registrationType",
-            required: true,
-            getListUrl: Urls.data_salesRoute,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data: any) => {
-            handleFieldChange("registrationType", data !== null && data !== undefined ? data.toString() : data);
-          }}
-          label={t("registration_type")}
-        />
+const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldChange, t }) => {
+  const [isBankDetailsOpen, setIsBankDetailsOpen] = useState(false);
+  const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
+
+  const toggleBankDetails = () => {
+    setIsBankDetailsOpen(!isBankDetailsOpen);
+  };
+
+  const toggleMoreInfo = () => {
+    setIsMoreInfoOpen(!isMoreInfoOpen);
+  };
+  return (
+    <>
+      <div className="border p-4 rounded-lg mt-[3rem]">
+        <div className="grid grid-cols-3 gap-3">
+          <ERPInput
+            {...getFieldProps("partyCode")}
+            label={t("code")}
+            placeholder={t("code")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("partyCode", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("partyName")}
+            label={t("name")}
+            placeholder={t("name")}
+            required={true}
+            onChangeData={(data: any) =>
+              handleFieldChange("partyName", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("displayName")}
+            label={t("display_name")}
+            placeholder={t("display_name")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("displayName", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("arabicName")}
+            label={t("arabic_name")}
+            placeholder={t("arabic_name")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("arabicName", data)
+            }
+          />
+          <ERPDataCombobox
+            {...getFieldProps("ledgerID")}
+            field={{
+              id: "ledgerID",
+              required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => {
+              handleFieldChange("ledgerID", data);
+            }}
+            label={t("ledger_name")}
+          />
+          <ERPDataCombobox
+            {...getFieldProps("partyCategoryID")}
+            field={{
+              id: "partyCategoryID",
+              required: true,
+              getListUrl: Urls.data_party_categories,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => {
+              handleFieldChange("partyCategoryID", data);
+            }}
+            label={t("party_category")}
+          />
+          <ERPDataCombobox
+            {...getFieldProps("accGroupID")}
+            field={{
+              id: "accGroupID",
+              required: true,
+              getListUrl: Urls.data_acc_groups,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => {
+              handleFieldChange("accGroupID", data);
+            }}
+            label={t("referred_by")}
+          />
+          <ERPInput
+            {...getFieldProps("address1")}
+            label={t("address")}
+            placeholder={t("address")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("address1", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("mobilePhone")}
+            label={t("mobile_phone")}
+            placeholder={t("mobile_phone")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("mobilePhone", data)
+            }
+          />
+          <ERPDataCombobox
+            {...getFieldProps("salesRouteID")}
+            field={{
+              id: "salesRouteID",
+              required: true,
+              getListUrl: Urls.data_salesRoute,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => {
+              handleFieldChange("salesRouteID", data);
+            }}
+            label={t("sales_route")}
+          />
+          <ERPInput
+            {...getFieldProps("taxNumber")}
+            label={t("tax_number")}
+            placeholder={t("tax_number")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("taxNumber", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("cstNumber")}
+            label={t("cr_no")}
+            placeholder={t("cr_no")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("cstNumber", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("creditDays")}
+            label={t("credit_days")}
+            placeholder={t("credit_days")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("creditDays", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("creditAmount")}
+            label={t("credit_amount")}
+            placeholder={t("credit_amount")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("creditAmount", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("opBalance")}
+            label={t("op_balance")}
+            placeholder={t("op_balance")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("opBalance", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("address4")}
+            label={t("ifsc")}
+            placeholder={t("ifsc")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("address4", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("panNo")}
+            label={t("pan_no")}
+            placeholder={t("pan_no")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("panNo", data)
+            }
+          />
+          <ERPInput
+            {...getFieldProps("aadharNo")}
+            label={t("aadhar_no")}
+            placeholder={t("aadhar_no")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("aadharNo", data)
+            }
+          />
+          <ERPDataCombobox
+            {...getFieldProps("registrationType")}
+            field={{
+              id: "registrationType",
+              required: true,
+              getListUrl: Urls.data_salesRoute,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => {
+              handleFieldChange("registrationType", data !== null && data !== undefined ? data.toString() : data);
+            }}
+            label={t("registration_type")}
+          />
+          <ERPCheckbox
+            {...getFieldProps("billwiseBillApplicable")}
+            label={t("bill_wise_applicable")}
+            onChangeData={(data: any) => handleFieldChange("billwiseBillApplicable", data)}
+          />
+          <ERPCheckbox
+            {...getFieldProps("isActive")}
+            label={t("is_Active")}
+            onChangeData={(data: any) => handleFieldChange("isActive", data)}
+          />
+          <div className="mt-3">
+            <ERPCheckbox
+              {...getFieldProps("isCommon")}
+              label={t("is_common")}
+              onChangeData={(data: any) => handleFieldChange("isCommon", data)}
+            />
+          </div>
+        </div>
+        <div className="flex align-center justify-end">
+          <ERPButton
+            type="reset"
+            title={t("print_label")}
+            variant="secondary"
+          />
+        </div>
       </div>
-    </div>
-    <div className="border p-4 rounded-lg mt-5">
-      <div className="grid grid-cols-3 gap-6">
-        <ERPCheckbox
-          {...getFieldProps("billwiseBillApplicable")}
-          label={t("bill_wise_applicable")}
-          onChangeData={(data: any) => handleFieldChange("billwiseBillApplicable", data)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("isActive")}
-          label={t("is_Active")}
-          onChangeData={(data: any) => handleFieldChange("isActive", data)}
-        />
-        <ERPCheckbox
-          {...getFieldProps("isCommon")}
-          label={t("is_common")}
-          onChangeData={(data: any) => handleFieldChange("isCommon", data)}
-        />
+      <div className="border p-4 rounded-lg mt-5">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={toggleBankDetails}
+        >
+          <span className="mr-2">{isBankDetailsOpen ? '▼' : '▶'}</span>
+          <h6 className="font-bold">Bank Details</h6>
+        </div>
+
+        {isBankDetailsOpen && (
+          <div className="mt-4">
+            <div className="mb-6">
+              <h6 className="font-bold mb-3">Bank 1</h6>
+              <div className="grid grid-cols-3 gap-6">
+                <ERPInput
+                  {...getFieldProps("bankAcNumber1")}
+                  label={t("account_number")}
+                  placeholder={t("account_number")}
+                  required={false}
+                  onChangeData={(data: any) => handleFieldChange("bankAcNumber1", data)}
+                />
+                <ERPInput
+                  {...getFieldProps("bankAcName1")}
+                  label={t("account_name")}
+                  placeholder={t("account_name")}
+                  required={false}
+                  onChangeData={(data: any) => handleFieldChange("bankAcName1", data)}
+                />
+                <ERPInput
+                  {...getFieldProps("bankDetails1")}
+                  label={t("remarks")}
+                  placeholder={t("remarks")}
+                  required={false}
+                  onChangeData={(data: any) => handleFieldChange("bankDetails1", data)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <h6 className="font-bold mb-3">Bank 2</h6>
+              <div className="grid grid-cols-3 gap-6">
+                <ERPInput
+                  {...getFieldProps("bankAcNumber2")}
+                  label={t("account_number")}
+                  placeholder={t("account_number")}
+                  required={false}
+                  onChangeData={(data: any) => handleFieldChange("bankAcNumber2", data)}
+                />
+                <ERPInput
+                  {...getFieldProps("bankAcName2")}
+                  label={t("account_name")}
+                  placeholder={t("account_name")}
+                  required={false}
+                  onChangeData={(data: any) => handleFieldChange("bankAcName2", data)}
+                />
+                <ERPInput
+                  {...getFieldProps("bankDetails2")}
+                  label={t("remarks")}
+                  placeholder={t("remarks")}
+                  required={false}
+                  onChangeData={(data: any) => handleFieldChange("bankDetails2", data)}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-      <div className="mt-5">
-        <ERPButton
-          type="reset"
-          title={t("print_label")}
-          variant="secondary"
-        />
+      <div className="border p-4 rounded-lg mt-5">
+        <div
+          className="flex items-center cursor-pointer"
+          onClick={toggleMoreInfo}
+        >
+          <span className="mr-2">{isMoreInfoOpen ? '▼' : '▶'}</span>
+          <h6 className="font-bold">More Info</h6>
+        </div>
+
+        {isMoreInfoOpen && (
+          <div className="mt-4">
+            <div className="grid grid-cols-3 gap-6">
+              <ERPInput
+                {...getFieldProps("postalCode")}
+                label={t("postal_code")}
+                placeholder={t("postal_code")}
+                required={false}
+                onChangeData={(data: any) =>
+                  handleFieldChange("postalCode", data)
+                }
+              />
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-    <div className="border p-4 rounded-lg mt-5">
-      <h6>Bank Details 1</h6>
-      <div className="grid grid-cols-3 gap-6 mt-3">
-        <ERPInput
-          {...getFieldProps("bankAcNumber1")}
-          label={t("account_number")}
-          placeholder={t("account_number")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("bankAcNumber1", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("bankAcName1")}
-          label={t("account_name")}
-          placeholder={t("account_name")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("bankAcName1", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("bankDetails1")}
-          label={t("remarks")}
-          placeholder={t("remarks")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("bankDetails1", data)
-          }
-        />
-      </div>
-    </div>
-    <div className="border p-4 rounded-lg mt-5">
-      <h6>Bank Details 2</h6>
-      <div className="grid grid-cols-3 gap-6 mt-3">
-        <ERPInput
-          {...getFieldProps("bankAcNumber2")}
-          label={t("account_number")}
-          placeholder={t("account_number")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("bankAcNumber2", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("bankAcName2")}
-          label={t("account_name")}
-          placeholder={t("account_name")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("bankAcName2", data)
-          }
-        />
-        <ERPInput
-          {...getFieldProps("bankDetails2")}
-          label={t("remarks")}
-          placeholder={t("remarks")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("bankDetails2", data)
-          }
-        />
-      </div>
-    </div>
-    <div className="border p-4 rounded-lg mt-5">
-      <h6>More Info</h6>
-      <div className="grid grid-cols-3 gap-6 mt-3">
-        <ERPInput
-          {...getFieldProps("postalCode")}
-          label={t("postal_code")}
-          placeholder={t("postal_code")}
-          required={false}
-          onChangeData={(data: any) =>
-            handleFieldChange("postalCode", data)
-          }
-        />
-      </div>
-    </div>
-  </>
-);
+    </>
+  )
+};
 
 interface Tab2ContentProps {
   getFieldProps: (fieldName: string) => any;
@@ -337,7 +361,7 @@ interface Tab2ContentProps {
 
 const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldChange, t }) => (
   <>
-    <div className="border p-4 rounded-lg">
+    <div className="border p-4 rounded-lg mt-[3rem]">
       <div className="grid grid-cols-3 gap-6">
         <ERPInput
           {...getFieldProps("address2")}
@@ -603,7 +627,7 @@ interface Tab3ContentProps {
 }
 
 const Tab3Content: React.FC<Tab3ContentProps> = ({ getFieldProps, handleFieldChange, t }) => (
-  <div className="border p-4 rounded-lg">
+  <div className="border p-4 rounded-lg mt-[3rem]">
     <div className="grid grid-cols-2 gap-6">
       <ERPInput
         {...getFieldProps("projectName")}
@@ -678,19 +702,26 @@ export const PartiesManage: React.FC = React.memo(() => {
     }
   };
 
+  const tabs = [
+    { number: 1, name: "Main" },
+    { number: 2, name: "Details" },
+    { number: 3, name: "Projects / Job" }
+  ];
+
+
   return (
     <div className="w-full">
-      <div className="flex mb-4">
-        {[1, 2, 3].map((tabNumber) => (
+      <div className="fixed top-12  left-0 w-full bg-white z-10 flex align-center justify-end mb-4 p-4">
+        {tabs.map((tab) => (
           <button
-            key={tabNumber}
-            className={`px-4 py-2 mr-2 ${activeTab === tabNumber
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-gray-700"
-              } rounded`}
-            onClick={() => setActiveTab(tabNumber)}
+            key={tab.number}
+            className={`px-4 py-2 mr-2 ${activeTab === tab.number
+              ? "bg-blue text-white"
+              : "bg-gray text-gray-700"
+              } rounded-md text-[14px] font-bold`}
+            onClick={() => setActiveTab(tab.number)}
           >
-            {tabNumber}
+            {tab.name}
           </button>
         ))}
       </div>

@@ -80,7 +80,7 @@ const designSections: Array<DesignSectionType> = [
   },
   {
     id: 7,
-    name: "Barcode",
+    name: "General",
     description: "Barcode Design",
     type: "barcode",
     icon: <TicketIcon />,
@@ -146,6 +146,9 @@ const InvoiceDesigner = () => {
 
     if (templateGroup && (["qty_adjustment", "value_adjustment"]?.includes(templateGroup)))
       setDesignTabs(designSections?.filter((tab) => tab?.id !== 5));
+
+    if (templateGroup && (["barcode"]?.includes(templateGroup)))
+      setDesignTabs(designSections?.filter((tab) => tab?.id == 7 ));
 
   }, [templateGroup]);
   //

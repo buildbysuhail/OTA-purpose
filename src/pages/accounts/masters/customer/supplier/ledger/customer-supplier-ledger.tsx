@@ -1,4 +1,10 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../../../utilities/hooks/useRootState";
@@ -13,11 +19,18 @@ import { DataGrid, LoadPanel, Toolbar } from "devextreme-react";
 import {
   Column,
   ColumnFixing,
+  Editing,
+  FilterRow,
   Item,
   Paging,
   Scrolling,
+  SearchPanel,
 } from "devextreme-react/cjs/tree-list";
 import { APIClient } from "../../../../../../helpers/api-client";
+import { handleResponse } from "../../../../../../utilities/HandleResponse";
+import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
+import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
+import { useNavigate } from "react-router-dom";
 
 interface LedgerInf {
   customer: boolean;
@@ -29,30 +42,78 @@ const initialState: LedgerInf = {
   supplier: false,
 };
 const api = new APIClient();
+
 const CustomerSupplierLedger = () => {
-    const [gridHeight, setGridHeight] = useState<{
-        mobile: number;
-        windows: number;
-      }>({ mobile: 500, windows: 500 });
-    useEffect(() => {
-        let wh = window.innerHeight;
-        let gridHeightMobile = wh - 200; 
-        let gridHeightWindows = wh - 260;
-        setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-    }, []);
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeightMobile = wh - 200;
+    let gridHeightWindows = wh - 260;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, []);
   const [gridType, setGridType] = useState<LedgerInf>(initialState);
   const [store, setStore] = useState<any>([]);
-  const [postDataLoading, setPostDataLoading] = useState(false);
-
-  const handleSubmit = async () => {
-    setPostDataLoading(true);
+  const [storePrev, setStorePrev] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const navigate = useNavigate();
+  const handleLoad = async () => {
+    setLoading(true);
     debugger;
-    const partyType = gridType.customer ? 'Cust' : 'Supp'; 
+    const partyType = gridType.customer ? "Cust" : "Supp";
     const result: any = await api.get(`${Urls.cust_supp_ledger}?PartyType=${partyType}`);
-    setStore(result?.data);
-    setPostDataLoading(false);
+    setStore(result);
+    setStorePrev([...result]);
+    setLoading(false);
+  };
+  const handleCheckboxChange = (rowIndex: number) => {
+    setStore((prevStore: any[]) => {
+      const updatedStore = [...prevStore];
+      updatedStore[rowIndex] = {
+        ...updatedStore[rowIndex],
+        show: !updatedStore[rowIndex].show, 
+      };
+      return updatedStore;
+    });
   };
 
+  const handleSubmit = async () => {
+    setIsSaving(true);
+    console.log("Current Store:", store);
+    console.log("Previous Store:", storePrev);
+    const changedData = store.filter((item: any, index: number) => {
+      const prevItem = storePrev[index];
+      return item.show !== prevItem.show;
+    });
+
+    const payload = changedData.map((item: any) => ({
+      ledgerID: item.ledgerID,
+      showInCustomers: gridType.customer ? false: item.show ,
+      showInSuppliers: gridType.supplier ? false: item.show,
+    }));
+    console.log("Payload to be submitted:", payload);
+    if (payload.length > 0) {
+      try {
+        const response: any = await api.post(
+          `${Urls.cust_supp_ledger}`,
+          payload
+        );
+        handleResponse(response);
+        console.log("API Response:", response);
+      } catch (error) {
+        console.error("Error submitting data:", error);
+      }
+    } else {
+      ERPToast.show("No changes to save");
+    }
+    setIsSaving(false);
+  };
+  const handleClose = () => {
+    navigate("/settings"); 
+  };
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -61,40 +122,34 @@ const CustomerSupplierLedger = () => {
             <div className="box-body">
               <div className="flex justify-around items-center mb-5">
                 <div className="flex space-x-5">
-                <ERPRadio
-                  id="customer"
-                  name="customer"
-                  data={gridType}
-                  checked={gridType.customer}
-                  onChange={() => {
-                    setGridType({
-                      customer: true,
-                      supplier: false,
-                    });
-                  }}
-                  label="Customer"
-                />
-                <ERPRadio
-                  id="supplier"
-                  name="supplier"
-                  data={gridType}
-                  checked={gridType.supplier}
-                  onChange={() => {
-                    setGridType({
-                      customer: false,
-                      supplier: true,
-                    });
-                  }}
-                  label="supplier"
-                />
+                  <ERPRadio
+                    id="customer"
+                    name="customer"
+                    data={gridType}
+                    checked={gridType.customer}
+                    onChange={() => {
+                      setGridType({ customer: true, supplier: false });
+                    }}
+                    label="Customer"
+                  />
+                  <ERPRadio
+                    id="supplier"
+                    name="supplier"
+                    data={gridType}
+                    checked={gridType.supplier}
+                    onChange={() => {
+                      setGridType({ customer: false, supplier: true });
+                    }}
+                    label="supplier"
+                  />
                 </div>
-               
+
                 <ERPButton
                   title="Show"
                   variant="primary"
-                  //   loading={isSaving}
-                  //   disabled={isSaving}
-                  onClick={handleSubmit}
+                  disabled={loading}
+                  loading={loading}
+                  onClick={handleLoad}
                   type="button"
                   startIcon="ri-eye-line"
                 />
@@ -109,41 +164,81 @@ const CustomerSupplierLedger = () => {
                   columnAutoWidth={true}
                   showColumnLines={false}
                   showRowLines={true}
-              
-                  
+                  allowColumnResizing={true}
+                  allowColumnReordering={true}
                 >
+                  <FilterRow visible={true} />
+                  <SearchPanel visible={false} />
                   <ColumnFixing enabled={true} />
-                  <Scrolling mode="standard" />
-                  
+                  {/* <Scrolling mode="virtual"/> */}
+                  <Scrolling mode="standard"/>
                   <Paging defaultPageSize={100} />
+                  <LoadPanel visible={loading} />
+
+                  {/* Ledger Name Column */}
                   <Column
                     allowSearch={true}
+                    allowEditing={false}
                     allowFiltering={true}
-                    dataField="branchName"
-                    caption="  Branch Name"
+                    dataField="ledgerName"
+                    caption="Name"
                     dataType="string"
                     minWidth={200}
                   />
+
+                  {/* Address Column */}
                   <Column
                     minWidth={200}
                     allowSearch={true}
+                    allowEditing={false}
                     allowFiltering={true}
-                    dataField="browser"
-                    caption={"Browser"}
+                    dataField="address1"
+                    caption="Address"
                     dataType="string"
                   />
+
+                  {/* Show Field (Checkbox for boolean) */}
                   <Column
-                    minWidth={200}
+                    width={200}
                     allowSearch={true}
+                    allowEditing={false}
                     allowFiltering={true}
-                    dataField="ipAddress"
-                    caption={"IP Address"}
-                    dataType="string"
+                    dataField="show"
+                    caption={
+                      gridType.customer
+                        ? "Show In Suppliers"
+                        : "Show In Customers"
+                    }
+                    dataType="boolean"
+                    cellRender={(cellData) => (
+                      <ERPCheckbox
+                        id={`show-${cellData.rowIndex}`}
+                        checked={cellData.data.show}
+                        data={cellData.data}
+                        noLabel={true}
+                        onChange={() => handleCheckboxChange(cellData.rowIndex)}
+                      />
+                    )}
                   />
-                  <Toolbar>
-                    <Item location="before" cssClass="mb-4"></Item>
-                  </Toolbar>
+
+                  <Toolbar></Toolbar>
                 </DataGrid>
+                <div className="flex justify-end items-center m-3">
+                  <ERPButton
+                    title="Close"
+                    variant="secondary"
+                    onClick={handleClose}
+                    type="button"
+                  />
+                  <ERPButton
+                    title="Save"
+                    variant="primary"
+                    disabled={isSaving}
+                    loading={isSaving}
+                    onClick={handleSubmit}
+                    type="button"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -153,4 +248,4 @@ const CustomerSupplierLedger = () => {
   );
 };
 
-export default React.memo(CustomerSupplierLedger);
+export default CustomerSupplierLedger;

@@ -396,12 +396,16 @@ const Parties = () => {
       <ERPModal
         isOpen={rootState.PopupData.parties.isOpen || false}
         title={t("parties")}
-        width="w-full max-w-[1024px]"
+        width="w-full max-w-[1400px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleParties({ isOpen: false, key: null }));
         }}
-        content={<PartiesManage />}
+        content={
+          <div className="h-[700px] overflow-y-auto">
+            <PartiesManage />
+          </div>
+        }
       />
     </Fragment>
   );

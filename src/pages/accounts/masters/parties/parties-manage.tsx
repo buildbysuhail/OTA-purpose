@@ -678,19 +678,26 @@ export const PartiesManage: React.FC = React.memo(() => {
     }
   };
 
+  const tabs = [
+    { number: 1, name: "Main" },
+    { number: 2, name: "Details" },
+    { number: 3, name: "Projects / Job" }
+  ];
+  
+
   return (
     <div className="w-full">
-      <div className="flex mb-4">
-        {[1, 2, 3].map((tabNumber) => (
+      <div className="flex align-center justify-center mb-4">
+        {tabs.map((tab) => (
           <button
-            key={tabNumber}
-            className={`px-4 py-2 mr-2 ${activeTab === tabNumber
+            key={tab.number}
+            className={`px-4 py-2 mr-2 ${activeTab === tab.number
               ? "bg-blue-500 text-white"
               : "bg-gray-200 text-gray-700"
-              } rounded`}
-            onClick={() => setActiveTab(tabNumber)}
+              } rounded-md text-[14px] font-bold`}
+            onClick={() => setActiveTab(tab.number)}
           >
-            {tabNumber}
+            {tab.name}
           </button>
         ))}
       </div>

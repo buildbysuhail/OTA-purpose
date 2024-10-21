@@ -627,8 +627,6 @@ const ERPSettingsFormGSTTaxes = () => {
           />
         </div>
 
-
-
         <div className='border p-4 rounded-lg'>
           <div className='grid grid-cols-4 gap-6'>
             <div className='flex justify-between align-center'>
@@ -639,7 +637,11 @@ const ERPSettingsFormGSTTaxes = () => {
                 label={t("enable_ewb")}
                 onChangeData={(data: any) => handleFieldChange("enableEWB", data.enableEWB)}
               />
-              <ERPButton title={t("ewb_taxPro")} onClick={() => handleShowComponent('ewb')} />
+              <ERPButton
+                title={t("ewb_taxPro")}
+                onClick={() => handleShowComponent('ewb')}
+                disabled={!formState.enableEWB}
+              />
             </div>
 
             <div className='flex justify-between align-center'>
@@ -650,7 +652,11 @@ const ERPSettingsFormGSTTaxes = () => {
                 label={t("enable_e-invoice")}
                 onChangeData={(data: any) => handleFieldChange("enableEInvoice", data.enableEInvoice)}
               />
-              <ERPButton title={t("EInvoiceTaxPro")} onClick={() => handleShowComponent('eInvoice')} />
+              <ERPButton
+                title={t("EInvoiceTaxPro")}
+                onClick={() => handleShowComponent('eInvoice')}
+                disabled={!formState.enableEInvoice}
+              />
             </div>
           </div>
 
@@ -688,7 +694,7 @@ const ERPSettingsFormGSTTaxes = () => {
               value={formState.clearTaxEInvoiceAuthToken}
               data={formState}
               label={t("clear_tax_token")}
-              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data)}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data.clearTaxEInvoiceAuthToken)}
             />
 
             <ERPInput
@@ -696,7 +702,7 @@ const ERPSettingsFormGSTTaxes = () => {
               value={formState.clearTaxEInvoiceOwnerID}
               data={formState}
               label={t("clear_tax_id")}
-              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data)}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data.clearTaxEInvoiceOwnerID)}
             />
           </div>
         </div>

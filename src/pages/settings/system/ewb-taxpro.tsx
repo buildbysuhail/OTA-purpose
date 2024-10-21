@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useFormManager } from '../../../utilities/hooks/useFormManagerOptions';
@@ -7,6 +7,7 @@ import { useRootState } from '../../../utilities/hooks/useRootState';
 import { toggleEWayBillTaxPro } from '../../../redux/slices/popup-reducer';
 import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
 import ERPButton from '../../../components/ERPComponents/erp-button';
+import { ActionType } from '../../../redux/types';
 
 type EWBTaxProData = {
     ewbApiSetting: {
@@ -59,25 +60,27 @@ const EWBTaxPro = () => {
     const dispatch = useDispatch();
 
     const {
-        isEdit,
         handleSubmit,
-        handleClear,
         handleFieldChange,
-        getFieldProps,
-        isLoading
+        getFieldProps
     } = useFormManager<EWBTaxProData>({
         url: Urls.eWayBill,
         onSuccess: useCallback(
             () => dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null })),
             [dispatch]
         ),
+        loadDataRequired: true,
+        method: ActionType.POST,
         key: rootState.PopupData.eWayBillTaxPro?.key,
         useApiClient: true,
         initialData: initialEWBTaxProData
     });
 
-    const onClose = useCallback(() => {
-        dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null }));
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
     }, []);
 
     return (
@@ -91,6 +94,7 @@ const EWBTaxPro = () => {
                             label="Client ID"
                             placeholder="Enter Client ID"
                             readOnly
+                            style={{ color: 'black' }}
                             required={false}
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientId', data)}
                         />
@@ -99,6 +103,7 @@ const EWBTaxPro = () => {
                             label="Client Secret"
                             placeholder="Enter Client Secret"
                             readOnly
+                            style={{ color: 'black' }}
                             type="password"
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientSecret', data)}
                         />
@@ -107,6 +112,7 @@ const EWBTaxPro = () => {
                             label="GSP User ID"
                             placeholder="Enter GSP User ID"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbgspUserID', data)}
                         />
                         <ERPInput
@@ -114,6 +120,7 @@ const EWBTaxPro = () => {
                             label="GSP Name"
                             placeholder="Enter GSP Name"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.gspName', data)}
                         />
@@ -137,6 +144,7 @@ const EWBTaxPro = () => {
                             label="Base URL"
                             placeholder="Enter Base URL"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.baseUrl', data)}
                         />
@@ -172,6 +180,7 @@ const EWBTaxPro = () => {
                             label="App Key"
                             placeholder="Enter App Key"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAppKey', data)}
                         />
                         <ERPInput
@@ -179,6 +188,7 @@ const EWBTaxPro = () => {
                             label="Auth Token"
                             placeholder="Enter Auth Token"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAuthToken', data)}
                         />
                         <ERPDateInput
@@ -186,7 +196,7 @@ const EWBTaxPro = () => {
                             label="Token Expiry"
                             required={true}
                             placeholder="Enter Token Expiry"
-                            disabled
+                            readonly
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbTokenExp', data)}
                         />
                         <ERPInput
@@ -194,6 +204,7 @@ const EWBTaxPro = () => {
                             label="SEK"
                             placeholder="Enter SEK"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbSEK', data)}
                         />
                     </div>

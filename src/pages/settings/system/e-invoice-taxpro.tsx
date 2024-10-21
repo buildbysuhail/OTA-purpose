@@ -61,28 +61,21 @@ const EInvoiceTaxPro = () => {
     const dispatch = useDispatch();
 
     const {
-        isEdit,
         handleSubmit,
-        handleClear,
         handleFieldChange,
-        getFieldProps,
-        isLoading
+        getFieldProps
     } = useFormManager<EInvoiceTaxProData>({
         url: Urls.eInvoiceGST,
         onSuccess: useCallback(
             () => dispatch(toggleEInvoiceGST({ isOpen: false, key: null })),
             [dispatch]
         ),
-        loadDataRequired:true,
-        method:ActionType.POST,
+        loadDataRequired: true,
+        method: ActionType.POST,
         key: rootState.PopupData.eInvoiceGST?.key,
         useApiClient: true,
         initialData: initialEInvoiceTaxProData
     });
-
-    const onClose = useCallback(() => {
-        dispatch(toggleEInvoiceGST({ isOpen: false, key: null }));
-    }, [dispatch]);
 
     return (
         <div className="w-full pt-2">
@@ -95,6 +88,7 @@ const EInvoiceTaxPro = () => {
                             label="Client ID"
                             placeholder="Enter Client ID"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.client_id', data)}
                         />
                         <ERPInput
@@ -103,6 +97,7 @@ const EInvoiceTaxPro = () => {
                             placeholder="Enter Client Secret"
                             type="password"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.client_secret', data)}
                         />
                         <ERPInput
@@ -110,6 +105,7 @@ const EInvoiceTaxPro = () => {
                             label="GSP Name"
                             placeholder="Enter GSP Name"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.gspName', data)}
                         />
@@ -133,6 +129,7 @@ const EInvoiceTaxPro = () => {
                             label="Auth URL"
                             placeholder="Enter Auth URL"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.authUrl', data)}
                         />
@@ -141,6 +138,7 @@ const EInvoiceTaxPro = () => {
                             label="Base URL"
                             placeholder="Enter Base URL"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.baseUrl', data)}
                         />
@@ -149,6 +147,7 @@ const EInvoiceTaxPro = () => {
                             label="EWB URL"
                             placeholder="Enter EWB URL"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.ewbByIRN', data)}
                         />
@@ -184,6 +183,7 @@ const EInvoiceTaxPro = () => {
                             label="App Key"
                             placeholder="Enter App Key"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.appKey', data)}
                         />
@@ -192,6 +192,7 @@ const EInvoiceTaxPro = () => {
                             label="Auth Token"
                             placeholder="Enter Auth Token"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.authToken', data)}
                         />
@@ -200,6 +201,7 @@ const EInvoiceTaxPro = () => {
                             label="SEK"
                             placeholder="Enter SEK"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.sek', data)}
                         />
@@ -208,7 +210,7 @@ const EInvoiceTaxPro = () => {
                             label="Token Expiry"
                             required={true}
                             placeholder="Enter Token Expiry"
-                            disabled
+                            readonly
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.e_InvoiceTokenExp', data)}
                         />
                     </div>
@@ -217,6 +219,7 @@ const EInvoiceTaxPro = () => {
                         label="Cancel EWB URL"
                         placeholder="Enter Cancel EWB URL"
                         readOnly
+                        style={{ color: 'black' }}
                         onChangeData={(data: any) => handleFieldChange('eInvApiSetting.cancelEwbUrl', data)}
                     />
                 </div>

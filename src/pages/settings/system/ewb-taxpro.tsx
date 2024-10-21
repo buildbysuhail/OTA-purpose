@@ -58,7 +58,6 @@ const initialEWBTaxProData: EWBTaxProData = {
 const EWBTaxPro = () => {
     const rootState = useRootState();
     const dispatch = useDispatch();
-    const [data, setData] = useState()
 
     const {
         handleSubmit,
@@ -88,6 +87,7 @@ const EWBTaxPro = () => {
                             label="Client ID"
                             placeholder="Enter Client ID"
                             readOnly
+                            style={{ color: 'black' }}
                             required={false}
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientId', data)}
                         />
@@ -96,6 +96,7 @@ const EWBTaxPro = () => {
                             label="Client Secret"
                             placeholder="Enter Client Secret"
                             readOnly
+                            style={{ color: 'black' }}
                             type="password"
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientSecret', data)}
                         />
@@ -104,6 +105,7 @@ const EWBTaxPro = () => {
                             label="GSP User ID"
                             placeholder="Enter GSP User ID"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbgspUserID', data)}
                         />
                         <ERPInput
@@ -111,6 +113,7 @@ const EWBTaxPro = () => {
                             label="GSP Name"
                             placeholder="Enter GSP Name"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.gspName', data)}
                         />
@@ -134,6 +137,7 @@ const EWBTaxPro = () => {
                             label="Base URL"
                             placeholder="Enter Base URL"
                             readOnly
+                            style={{ color: 'black' }}
                             required
                             onChangeData={(data: any) => handleFieldChange('ewbApiSetting.baseUrl', data)}
                         />
@@ -169,6 +173,7 @@ const EWBTaxPro = () => {
                             label="App Key"
                             placeholder="Enter App Key"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAppKey', data)}
                         />
                         <ERPInput
@@ -176,6 +181,7 @@ const EWBTaxPro = () => {
                             label="Auth Token"
                             placeholder="Enter Auth Token"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAuthToken', data)}
                         />
                         <ERPDateInput
@@ -183,7 +189,7 @@ const EWBTaxPro = () => {
                             label="Token Expiry"
                             required={true}
                             placeholder="Enter Token Expiry"
-                            disabled
+                            readonly
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbTokenExp', data)}
                         />
                         <ERPInput
@@ -191,6 +197,7 @@ const EWBTaxPro = () => {
                             label="SEK"
                             placeholder="Enter SEK"
                             readOnly
+                            style={{ color: 'black' }}
                             onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbSEK', data)}
                         />
                     </div>

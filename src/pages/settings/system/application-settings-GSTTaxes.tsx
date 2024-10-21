@@ -688,7 +688,7 @@ const ERPSettingsFormGSTTaxes = () => {
               value={formState.clearTaxEInvoiceAuthToken}
               data={formState}
               label={t("clear_tax_token")}
-              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data)}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data.clearTaxEInvoiceAuthToken)}
             />
 
             <ERPInput
@@ -696,7 +696,7 @@ const ERPSettingsFormGSTTaxes = () => {
               value={formState.clearTaxEInvoiceOwnerID}
               data={formState}
               label={t("clear_tax_id")}
-              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data)}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data.clearTaxEInvoiceOwnerID)}
             />
           </div>
         </div>

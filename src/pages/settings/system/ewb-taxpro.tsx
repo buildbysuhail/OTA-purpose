@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useFormManager } from '../../../utilities/hooks/useFormManagerOptions';
@@ -7,6 +7,7 @@ import { useRootState } from '../../../utilities/hooks/useRootState';
 import { toggleEWayBillTaxPro } from '../../../redux/slices/popup-reducer';
 import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
 import ERPButton from '../../../components/ERPComponents/erp-button';
+import { ActionType } from '../../../redux/types';
 
 type EWBTaxProData = {
     ewbApiSetting: {
@@ -57,28 +58,24 @@ const initialEWBTaxProData: EWBTaxProData = {
 const EWBTaxPro = () => {
     const rootState = useRootState();
     const dispatch = useDispatch();
+    const [data, setData] = useState()
 
     const {
-        isEdit,
         handleSubmit,
-        handleClear,
         handleFieldChange,
-        getFieldProps,
-        isLoading
+        getFieldProps
     } = useFormManager<EWBTaxProData>({
         url: Urls.eWayBill,
         onSuccess: useCallback(
             () => dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null })),
             [dispatch]
         ),
+        loadDataRequired: true,
+        method: ActionType.POST,
         key: rootState.PopupData.eWayBillTaxPro?.key,
         useApiClient: true,
         initialData: initialEWBTaxProData
     });
-
-    const onClose = useCallback(() => {
-        dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null }));
-    }, []);
 
     return (
         <div className="w-full pt-2">

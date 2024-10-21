@@ -8,6 +8,7 @@ import { ERPFormButtons } from '../../../components/ERPComponents/erp-form-butto
 import { toggleEInvoiceGST } from '../../../redux/slices/popup-reducer';
 import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
 import ERPButton from '../../../components/ERPComponents/erp-button';
+import { ActionType } from '../../../redux/types';
 
 type EInvoiceTaxProData = {
     eInvApiSetting: {
@@ -72,6 +73,8 @@ const EInvoiceTaxPro = () => {
             () => dispatch(toggleEInvoiceGST({ isOpen: false, key: null })),
             [dispatch]
         ),
+        loadDataRequired:true,
+        method:ActionType.POST,
         key: rootState.PopupData.eInvoiceGST?.key,
         useApiClient: true,
         initialData: initialEInvoiceTaxProData

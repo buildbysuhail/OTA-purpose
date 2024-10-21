@@ -1,115 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { APIClient } from "../../../helpers/api-client";
+import Urls from "../../../redux/urls";
+import { NotificationsChannel } from "../../../enums/notification-chanal";
+import { handleResponse } from "../../../utilities/HandleResponse";
+const api = new APIClient();
 export default function Component() {
   const [selectedMenu, setSelectedMenu] = useState("Customers");
+  const [menuItems, setMenuItems] = useState([]);
 
-  const menuItems = [
-    {
-      name: "Credit Notes",
-      content:
-        "Send Credit Notes: Share the credit note details with your customers and keep them informed on the amount you owe them. Also, you can choose to attach and send a PDF copy of the sales receipt along with the message.",
-      smsDemo:
-        "Dear valued customer, we've issued a credit note #CN001 for $50.00. This amount will be credited to your account. Find attached PDF for details. Thank you for your business!",
-    },
-    {
-      name: "Payment Receipts",
-      content:
-        "Thank Customers for Prompt Payments: Send thank you messages to your customers once they've paid you. Also, you can choose to attach and send a PDF copy of the payment receipt along with the message.",
-      smsDemo:
-        "Thank you for your prompt payment of $500.00 for invoice #INV123. We've attached the receipt for your records. We appreciate your business!",
-    },
-    {
-      name: "Customers",
-      content:
-        "To send promotional messages or customer statement to your customers, you will have to create those messages as templates and get them approved by WhatsApp.",
-      smsDemo:
-        "Hi John, Get 10% off on all products with ABC credit cards! Shop now and enjoy the discounts until 12 PM tomorrow.",
-    },
-    {
-      name: "Quotes",
-      content:
-        "Share Quotes: Send the quote details to your customers as soon as you create the quote. Also, you can choose to attach and send a PDF copy of the along with the message.",
-      smsDemo:
-        "Dear customer, your requested quote #Q001 for Project X is ready. Total amount: $1,000.00. Valid for 30 days. PDF attached for your review. Let us know if you have any questions!",
-    },
-    {
-      name: "Invoices",
-      content:
-        "Send Invoices: Send the invoice details to your customers as soon as you create the invoice. Also, you can choose to attach and send a PDF copy of the invoice along with the message.",
-      smsDemo:
-        "Invoice #INV456 for $750.00 is due on 05/15/2024. Payment details in the attached PDF. Thank you for your business!",
-    },
-    {
-      name: "Sales Orders1",
-      content:
-        "Share1 Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your1 sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-    {
-      name: "Sales Orders",
-      content:
-        "Share Sales Orders: Once you have a finalised sales order, send it to your customer via WhatsApp to share the details of the confirmed sale.",
-      smsDemo:
-        "Your sales order #SO789 has been confirmed. Total items: 5, Amount: $1,200.00. Estimated delivery: 7-10 business days. Thank you for choosing us!",
-    },
-  ];
-
+  useEffect(() => {
+   
+  });
+const loadData = async() => {
+  const res = await api.getAsync(`${Urls.notification_template}${NotificationsChannel.Sms}`);
+  handleResponse(res,() => { 
+    setMenuItems(res);
+  }, () => {},false,false)
+}
   const SmsDemo = ({ message }: { message: string; sender: string }) => (
     <div className="bg-gray p-4 rounded-lg mt-4 w-full max-w-sm">
       <div className="bg-white rounded-lg shadow-lg  border overflow-hidden max-w-xs mx-auto">
@@ -162,7 +69,7 @@ export default function Component() {
   );
 
   const MainContent = () => {
-    const selectedItem = menuItems.find((item) => item.name === selectedMenu);
+    const selectedItem: any = menuItems.find((item: any) => item.name === selectedMenu);
 
     return (
       <div className="flex flex-row min-h-screen p-6">
@@ -184,7 +91,7 @@ export default function Component() {
     <div className="flex h-[389px] bg-gray">
       <aside className="w-64 h-auto bg-white shadow overflow-y-auto rounded-lg">
         <nav className="mt-6">
-          {menuItems.map((item) => (
+          {menuItems.map((item: any) => (
             <a
               key={item.name}
               href="#"

@@ -22,6 +22,7 @@ type ERPModalProps = {
   closeTitle?: string;
   className?: string;
   isFullHeight?: boolean;
+  isRemoveSomething?: boolean;
   width?: string;
   closeOnSubmit?: boolean;
   closeButton?: "Button" | "LeftArrow" | "None";
@@ -42,6 +43,7 @@ const ERPModal = ({
   closeTitle = "Cancel",
   className,
   isFullHeight = false,
+  isRemoveSomething = false,
   width = "w-full",
   closeOnSubmit = true,
   disableOutsideClickClose = true,
@@ -100,8 +102,10 @@ const ERPModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 <DialogPanel
-                  className={`transform bg-white px-5 py-3 text-left align-middle shadow-xl transition-all ${width} ${
+                  className={`transform bg-white  py-3 text-left align-middle shadow-xl transition-all ${width} ${
                     isFullHeight ? "min-h-full h-screen" : "rounded-md"
+                  } ${
+                    isRemoveSomething ? "px-0" : "px-5"
                   }`}
                 >
                   <DialogTitle

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useFormManager } from '../../../utilities/hooks/useFormManagerOptions';
@@ -75,6 +75,13 @@ const EWBTaxPro = () => {
         useApiClient: true,
         initialData: initialEWBTaxProData
     });
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     return (
         <div className="w-full pt-2">

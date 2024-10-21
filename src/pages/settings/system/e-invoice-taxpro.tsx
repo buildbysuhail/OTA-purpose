@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { useFormManager } from '../../../utilities/hooks/useFormManagerOptions';
 import Urls from '../../../redux/urls';
 import { useRootState } from '../../../utilities/hooks/useRootState';
-import { ERPFormButtons } from '../../../components/ERPComponents/erp-form-buttons';
 import { toggleEInvoiceGST } from '../../../redux/slices/popup-reducer';
 import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
 import ERPButton from '../../../components/ERPComponents/erp-button';
@@ -76,6 +75,13 @@ const EInvoiceTaxPro = () => {
         useApiClient: true,
         initialData: initialEInvoiceTaxProData
     });
+
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     return (
         <div className="w-full pt-2">

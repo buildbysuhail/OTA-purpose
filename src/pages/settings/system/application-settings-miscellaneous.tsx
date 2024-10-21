@@ -463,7 +463,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </span>
           </div>
         </div> */}
-        <div className="flex justify-end">
+        <div className="flex justify-end mt-4">
           <ERPButton
             title={t("save_settings")}
             variant="primary"

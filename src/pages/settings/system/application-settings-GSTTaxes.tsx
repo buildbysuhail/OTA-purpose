@@ -66,8 +66,12 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ isOpen, onClose, childr
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-lg max-w-6xl w-full max-h-[80vh] overflow-y-auto">
-        <div className="flex justify-end mb-4">
-          <ERPButton title={t("close")} onClick={onClose} />
+        <div className="flex justify-start">
+          <i
+            onClick={onClose}
+            className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line cursor-pointer"
+            style={{ fontSize: "23px" }}>
+          </i>
         </div>
         {children}
       </div>

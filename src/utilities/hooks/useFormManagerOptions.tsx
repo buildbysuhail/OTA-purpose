@@ -271,14 +271,34 @@ export function useFormManager<T>({
     }
   }, [formState?.data, rName, useApiClient]);
 
+  // const getFieldProps = useCallback(
+  //   (fieldId: string): FormField => {
+  //     return {
+  //       id: fieldId,
+  //       data: formState?.data,
+  //       value: formState?.data?.[fieldId] || "",
+  //       validation: formState?.validations?.[fieldId],
+  //       checked: formState?.data?.[fieldId] || false,
+  //     };
+  //   },
+  //   [formState?.data]
+  // );
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  };
+
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
+      const value = getNestedValue(formState?.data, fieldId) || "";
+      const validation = getNestedValue(formState?.validations, fieldId);
+      const checked = getNestedValue(formState?.data, fieldId) || false;
+
       return {
         id: fieldId,
         data: formState?.data,
-        value: formState?.data?.[fieldId] || "",
-        validation: formState?.validations?.[fieldId],
-        checked: formState?.data?.[fieldId] || false,
+        value,
+        validation,
+        checked,
       };
     },
     [formState?.data]

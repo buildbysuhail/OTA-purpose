@@ -169,6 +169,7 @@ const Urls = {
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate",
   headers_footers: "/Core/HeaderFooter/",
+  eWayBill: "/Core/EWayBillGST/",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",

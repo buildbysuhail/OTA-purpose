@@ -322,7 +322,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               </h6>
             
          
-            <div className="h-40 overflow-y-scroll snap-x  mb-2 p-3 rounded-sm shadow-sm  border  border-gray-400">
+            <div className="h-40 overflow-y-scroll snap-x  mb-2  rounded-sm shadow-sm  ">
               
               {!dataLoaded ?(
                 // Show default content before data is loaded
@@ -356,7 +356,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             <li className="flex justify-end mb-2">
             <ERPButton
                 
-                className=" w-0 h-0 p-0 bg-white"
+                className=" w-0 h-0 p-0 bg-white "
                 type="button"
                 onClick={() => setAddSystemCode(!addSystemCode)}
                 startIcon="ri-pencil-line"
@@ -384,7 +384,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 // title={t("load")}
                 startIcon="ri-refresh-line"
                 variant="secondary"
-                className="h-6 w-8"
+                className="h-6 w-8 rounded-[2px]"
                 type="button"
                 loading={loadSystemCode}
                 disabled={loadSystemCode}
@@ -392,7 +392,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               />
               <ERPButton
                 startIcon="ri-save-line"
-                className="h-6 w-8"
+                className="h-6 w-8 rounded-[2px]"
                 variant="primary"
                 type="button"
                 loading={isSavingSystemCode}

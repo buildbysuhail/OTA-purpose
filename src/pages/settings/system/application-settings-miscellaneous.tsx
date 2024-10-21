@@ -173,8 +173,8 @@ const MiscellaneousSettingsForm: React.FC = () => {
 
   return (
     <Fragment>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 justify-start gap-10">
+      <form onSubmit={handleSubmit} className="">
+        <div className="flex justify-start items-start space-x-10">
           <div className="grid grid-cols-1">
             <div className="grid grid-cols-2 justify-start gap-4">
               <ERPCheckbox
@@ -314,42 +314,54 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </div>
           </div>
 
-          <div className="max-w-[250px] max-h-[350px] p-4 border border-gray-300 rounded-sm shadow-sm">
-            <div className="flex justify-around items-center mb-2">
-              <h6 className="text-center font-medium ">
+          <div className="w-[250px] max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm">
+          
+              <h6 className="text-center font-medium mb-5">
                 {" "}
                 {t("sync_systemCode")}
               </h6>
-              <ERPButton
-                variant="primary"
-                className=" w-3 h-6 p-0"
-                type="button"
-                onClick={() => setAddSystemCode(!addSystemCode)}
-                startIcon="ri-add-line"
-              />
-            </div>
-            <div className="max-h-40 overflow-y-scroll snap-x  mb-5">
-            <ul className="list-none text-center snap-center">
-              {!dataLoaded ? (
+            
+         
+            <div className="h-40 overflow-y-scroll snap-x  mb-2 p-3 rounded-sm shadow-sm  border  border-gray-400">
+              
+              {!dataLoaded ?(
                 // Show default content before data is loaded
-          
-                <li>
+                <div className="my-10 ">
+                <ul className="list-none text-center text-gray-500 snap-center">
+                <li className="py-10 px-3">
                   {"Click load to fetch system code"}
                   {/* Default message */}
                 </li>
-               
-              ) : systemCode && systemCode.length > 0 ? (
-                systemCode.map((code: systemCode, index: number) => (
-                  <li className="p-1 text-xs " key={index}>
-                    {code.systemCode}{" "}
-                  </li>
-                ))
-              ) : (
-                <li className="">{"No data available"}</li>
+               </ul>
+               </div>
+              ) :(
+                <ul className="list-none text-center snap-center">
+                { systemCode && systemCode.length > 0 ? (
+                   systemCode.map((code: systemCode, index: number) => (
+                     <li className="p-1 text-xs " key={index}>
+                       {code.systemCode}{" "}
+                     </li>
+                   ))
+                 ) : (
+                   <li className="">{"No data available"}</li>
+                 )}
+                 
+             
+               </ul>
               )}
-            
-            </ul>
+             
+             
+             
             </div>
+            <li className="flex justify-end mb-2">
+            <ERPButton
+                
+                className=" w-0 h-0 p-0 bg-white"
+                type="button"
+                onClick={() => setAddSystemCode(!addSystemCode)}
+                startIcon="ri-pencil-line"
+              />
+            </li>
             {addSystemCode && (
               
                   <ERPInput
@@ -367,17 +379,20 @@ const MiscellaneousSettingsForm: React.FC = () => {
                   />
               
               )}
-            <div className="flex  justify-around">
+            <div className="flex  justify-end ">
               <ERPButton
-                title={t("load")}
+                // title={t("load")}
+                startIcon="ri-refresh-line"
                 variant="secondary"
+                className="h-6 w-8"
                 type="button"
                 loading={loadSystemCode}
                 disabled={loadSystemCode}
                 onClick={getSystemCode}
               />
               <ERPButton
-                title={t("save")}
+                startIcon="ri-save-line"
+                className="h-6 w-8"
                 variant="primary"
                 type="button"
                 loading={isSavingSystemCode}
@@ -448,7 +463,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </span>
           </div>
         </div> */}
-        <div className="flex justify-center">
+        <div className="flex justify-end">
           <ERPButton
             title={t("save_settings")}
             variant="primary"

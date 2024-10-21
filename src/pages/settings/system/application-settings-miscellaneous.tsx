@@ -21,7 +21,7 @@ interface FormState {
   salesmanIncentive: number;
   defaultIncentiveLedger: number;
   sendSMS: boolean;
-  smsURL: string;
+  sMSURL: string;
   maintainAllBranchWithCommonInventory: boolean;
   weighingScalePluFilePath: string;
   secondDisplayImagesPath: string;
@@ -30,11 +30,16 @@ interface FormState {
   maintainUntalliedBills: boolean;
   password: string;
 }
+
+interface systemCode {
+  systemCode: string;
+}
+
 const initialState: FormState = {
   salesmanIncentive: 0,
   defaultIncentiveLedger: 0,
   sendSMS: false,
-  smsURL: "",
+  sMSURL: "",
   maintainAllBranchWithCommonInventory: false,
   weighingScalePluFilePath: "",
   secondDisplayImagesPath: "",
@@ -45,13 +50,20 @@ const initialState: FormState = {
 };
 const api = new APIClient();
 const MiscellaneousSettingsForm: React.FC = () => {
-
   const rootState = useRootState();
   const [formState, setFormState] = useState<FormState>(initialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-
+  const [systemCode, setSystemCode] = useState<systemCode[]>([]);
+  const [loadSystemCode, setLoadSystemCode] = useState(false);
+  const [isSavingSystemCode, setIsSavingSystemCode] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const [addSystemCode, setAddSystemCode] = useState(false);
+  const [SystemCodeAddData, setSystemCodeAddData] = useState<systemCode>({
+    systemCode: "",
+  });
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   useEffect(() => {
     loadSettings();
@@ -71,7 +83,41 @@ const MiscellaneousSettingsForm: React.FC = () => {
     } finally {
       setLoading(false);
     }
-    const { t } = useTranslation();
+  };
+
+  const getSystemCode = async () => {
+    setLoadSystemCode(true);
+    try {
+      const response = await api.getAsync(
+        `${Urls.application_setting}GetSyncSystemCode`
+      );
+      setSystemCode(response);
+      setDataLoaded(true);
+    } catch (error) {
+      console.error("Error get System Code settings:", error);
+    } finally {
+      setLoadSystemCode(false);
+    }
+  };
+
+  const postSystemCode = async () => {
+    setIsSavingSystemCode(true);
+    const updatedSystemCodes = [...systemCode, SystemCodeAddData];
+    setSystemCodeAddData({
+      systemCode: "",
+    })
+    setAddSystemCode(false)
+    try {
+      const response = await api.post(
+        `${Urls.application_settings}UpdateSyncSystemCode`,
+        updatedSystemCodes
+      );
+      handleResponse(response);
+    } catch (error) {
+      console.error("Error post System Code settings:", error);
+    } finally {
+      setIsSavingSystemCode(false);
+    }
   };
 
   const handleFieldChange = (settingName: any, value: any) => {
@@ -110,6 +156,19 @@ const MiscellaneousSettingsForm: React.FC = () => {
       setIsSaving(false);
     }
   };
+
+  // const handleDecimalPointSubmit = async () => {
+  //   try {
+  //   const response = (await api.post(`${Urls.application_settings}/UpdateDecimalPoint`, {
+
+  //     })) ;
+  //     handleResponse(response);
+  //   } catch (error) {
+  //     console.error("Error saving settings:", error);
+  //   } finally {
+  //     setIsSaving(false);
+  //   }
+  // };
 
   return (
     <Fragment>
@@ -243,50 +302,115 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 }
               />
               <ERPInput
-                id="smsURL"
-                value={formState.smsURL}
+                id="sMSURL"
+                value={formState.sMSURL}
                 data={formState}
                 label={t("url")}
                 onChangeData={(data) =>
-                  handleFieldChange("smsURL", data.smsURL)
+                  handleFieldChange("sMSURL", data.sMSURL)
                 }
               />
             </div>
-            <div className="flex gap-5 items-center">
-              <div className="overflow-x-auto basis-[80%] scroll snap-x">
-                <table className="table-auto border-collapse w-full">
-                  <thead>
+          </div>
+          <div className="flex flex-col h-auto">
+            <div className="flex justify-end items-end">
+              <ERPButton
+                variant="primary"
+                className=" w-3 h-6 p-0"
+                type="button"
+                onClick={() => setAddSystemCode(!addSystemCode)}
+                startIcon="ri-add-line"
+              />
+            </div>
+            <div className="scroll snap-y overflow-y-auto max-h-[300px]">
+              <table className="table-auto border-collapse w-full">
+                <thead>
+                  <tr>
+                    <th className="border border-black px-4 py-2">
+                      {t("sync_systemCode")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!dataLoaded ? (
+                    // Show default content before data is loaded
                     <tr>
-                      <th className="border border-black px-4 py-2">
-                        {t("sync_systemCode")}
-                      </th>
+                      <td
+                        className="border border-black px-4 py-2 text-center"
+                        colSpan={1}
+                      >
+                        {"Click load to fetch system code"}
+                        {/* Default message */}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
+                  ) : systemCode && systemCode.length > 0 ? (
+                    systemCode.map((code: systemCode, index: number) => (
+                      <tr key={index}>
+                        <td
+                          className={`border border-black px-4 py-2 text-center ${
+                            index % 2 === 0 ? "bg-gray-200" : "bg-gray-400"
+                          }`}
+                        >
+                          {code.systemCode}{" "}
+                          {/* Replace `someField` with the field from your API response */}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    // Show this only after data is loaded and is empty
                     <tr>
-                      <td className="border border-black px-4 py-2 bg-gray-200"></td>
+                      <td
+                        className="border border-black px-4 py-2 text-center"
+                        colSpan={1}
+                      >
+                        {"No data available"}
+                      </td>
                     </tr>
+                  )}
+
+                  {/* New row for adding a system code */}
+                  {addSystemCode && (
                     <tr>
-                      <td className="border border-black px-4 py-2 bg-gray-400"></td>
+                      <td className="border border-black px-4 py-2">
+                        <ERPInput
+                          id="newSystemCode"
+                          noLabel={true}
+                          data={SystemCodeAddData}
+                          value={SystemCodeAddData.systemCode}
+                          onChange={(e) => {
+                            setSystemCodeAddData({
+                              ...SystemCodeAddData,
+                              systemCode: e.target.value,
+                            });
+                          }}
+                          placeholder={"enter_new_system_code"}
+                        />
+                      </td>
                     </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="flex flex-col items-end">
-                <ERPButton
-                  title={t("load")}
-                  variant="secondary"
-                  type="submit"
-                />
-                <ERPButton
-                  title={t("save")}
-                  variant="secondary"
-                  type="submit"
-                />
-              </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className="flex items-center justify-center">
+              <ERPButton
+                title={t("load")}
+                variant="secondary"
+                type="button"
+                loading={loadSystemCode}
+                disabled={loadSystemCode}
+                onClick={getSystemCode}
+              />
+              <ERPButton
+                title={t("save")}
+                variant="secondary"
+                type="button"
+                loading={isSavingSystemCode}
+                disabled={isSavingSystemCode}
+                onClick={postSystemCode}
+              />
             </div>
           </div>
-          <div className="border border-gray-300 flex flex-col justify-around p-5">
+          {/* <div className="border border-gray-300 flex flex-col justify-around p-5">
             <h4 className="text-red font-medium text-center">
               {t("set_decimal")}
             </h4>
@@ -318,9 +442,9 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 type="submit"
               />
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="flex items-center justify-end my-4">
+        {/* <div className="flex items-center justify-end my-4">
           <div className="bg-gray-100 p-4  ml-10 shadow-md">
             <h2 className="text-lg font-semibold mb-4">
               {t("synchronize_remote_database")}
@@ -343,11 +467,11 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 startIcon="ri-refresh-line"
               />
             </div>
-            {/* <span className="ml-2 text-red-500">
+            <span className="ml-2 text-red-500">
               {t("processing...")}
-            </span> */}
+            </span>
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-end">
           <ERPButton
             title={t("save_settings")}

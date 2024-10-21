@@ -105,8 +105,8 @@ const MiscellaneousSettingsForm: React.FC = () => {
     const updatedSystemCodes = [...systemCode, SystemCodeAddData];
     setSystemCodeAddData({
       systemCode: "",
-    });
-    setAddSystemCode(false);
+    })
+    setAddSystemCode(false)
     try {
       const response = await api.post(
         `${Urls.application_settings}UpdateSyncSystemCode`,
@@ -174,7 +174,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
   return (
     <Fragment>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 justify-start gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 justify-start gap-5">
           <div className="grid grid-cols-1">
             <div className="grid grid-cols-2 justify-start gap-4">
               <ERPCheckbox
@@ -313,13 +313,8 @@ const MiscellaneousSettingsForm: React.FC = () => {
               />
             </div>
           </div>
-
-          <div className="max-w-[250px] max-h-[350px] p-4 border border-gray-300 rounded-sm shadow-sm">
-            <div className="flex justify-around items-center mb-2">
-              <h6 className="text-center font-medium ">
-                {" "}
-                {t("sync_systemCode")}
-              </h6>
+          <div className="flex flex-col max-h-[400px]">
+            <div className="flex justify-end items-end">
               <ERPButton
                 variant="primary"
                 className=" w-3 h-6 p-0"
@@ -328,46 +323,76 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 startIcon="ri-add-line"
               />
             </div>
-            <div className="max-h-40 overflow-y-scroll snap-x  mb-5">
-            <ul className="list-none text-center snap-center">
-              {!dataLoaded ? (
-                // Show default content before data is loaded
-          
-                <li>
-                  {"Click load to fetch system code"}
-                  {/* Default message */}
-                </li>
-               
-              ) : systemCode && systemCode.length > 0 ? (
-                systemCode.map((code: systemCode, index: number) => (
-                  <li className="p-1 text-xs " key={index}>
-                    {code.systemCode}{" "}
-                  </li>
-                ))
-              ) : (
-                <li className="">{"No data available"}</li>
-              )}
-            
-            </ul>
+            <div className="overflow-y-auto max-h-[200px] border border-black relativ">
+              <table className="table-auto border-collapse w-full">
+                <thead className="sticky">
+                  <tr>
+                    <th className="border border-black px-4 py-2">
+                      {t("sync_systemCode")}
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {!dataLoaded ? (
+                    // Show default content before data is loaded
+                    <tr>
+                      <td
+                        className="border border-black px-4 py-2 text-center"
+                        colSpan={1}
+                      >
+                        {"Click load to fetch system code"}
+                        {/* Default message */}
+                      </td>
+                    </tr>
+                  ) : systemCode && systemCode.length > 0 ? (
+                    systemCode.map((code: systemCode, index: number) => (
+                      <tr key={index}>
+                        <td
+                          className={`border border-black px-4 py-2 text-center ${
+                            index % 2 === 0 ? "bg-gray-200" : "bg-gray-400"
+                          }`}
+                        >
+                          {code.systemCode}{" "}
+                          {/* Replace `someField` with the field from your API response */}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    // Show this only after data is loaded and is empty
+                    <tr>
+                      <td
+                        className="border border-black px-4 py-2 text-center"
+                        colSpan={1}
+                      >
+                        {"No data available"}
+                      </td>
+                    </tr>
+                  )}
+
+                  {/* New row for adding a system code */}
+                  {addSystemCode && (
+                    <tr>
+                      <td className="border border-black px-4 py-2">
+                        <ERPInput
+                          id="newSystemCode"
+                          noLabel={true}
+                          data={SystemCodeAddData}
+                          value={SystemCodeAddData.systemCode}
+                          onChange={(e) => {
+                            setSystemCodeAddData({
+                              ...SystemCodeAddData,
+                              systemCode: e.target.value,
+                            });
+                          }}
+                          placeholder={"enter_new_system_code"}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-            {addSystemCode && (
-              
-                  <ERPInput
-                    id="newSystemCode"
-                    noLabel={true}
-                    data={SystemCodeAddData}
-                    value={SystemCodeAddData.systemCode}
-                    onChange={(e) => {
-                      setSystemCodeAddData({
-                        ...SystemCodeAddData,
-                        systemCode: e.target.value,
-                      });
-                    }}
-                    placeholder={"enter_new_system_code"}
-                  />
-              
-              )}
-            <div className="flex  justify-around">
+            <div className="flex items-center justify-center">
               <ERPButton
                 title={t("load")}
                 variant="secondary"
@@ -378,7 +403,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
               />
               <ERPButton
                 title={t("save")}
-                variant="primary"
+                variant="secondary"
                 type="button"
                 loading={isSavingSystemCode}
                 disabled={isSavingSystemCode}
@@ -448,7 +473,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </span>
           </div>
         </div> */}
-        <div className="flex justify-center">
+        <div className="flex justify-end">
           <ERPButton
             title={t("save_settings")}
             variant="primary"

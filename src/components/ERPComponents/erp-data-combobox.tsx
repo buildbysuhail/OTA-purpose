@@ -210,16 +210,6 @@ export default function ERPDataCombobox({
     onSelectItem && onSelectItem(null); // Notify parent
   };
 
-  // =================== Disable field based on data =============
-  const disableCombobox = () => {
-    if (
-      pathname?.includes("/accountant/chart_of_accounts") &&
-      field?.id == "currency_id" &&
-      defaultData?.has_transactions
-    )
-      return true;
-    return disabled;
-  };
 
   const filterItems = (inputValue: string) => {
     const words = inputValue?.toLowerCase()?.split(/\s+/);
@@ -249,7 +239,7 @@ export default function ERPDataCombobox({
       )}
       <Combobox
         key={id}
-        disabled={disableCombobox()}
+        disabled={disabled}
         value={initial}
         onChange={(value) => {
           setInitial(value);
@@ -272,7 +262,7 @@ export default function ERPDataCombobox({
               <ComboboxInput
                 multiple={multiple}
                 className={`w-full appearance-none rounded border border-gray-300 h-9 ${
-                  disableCombobox() ? "text-gray-400" : "bg-white text-gray-900"
+                  disabled ? "text-gray-400" : "bg-white text-gray-900"
                 } px-3 py-2 pr-20 placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
                 displayValue={(person: any) => person?.label}
                 onChange={(event) => setQuery(event.target.value)}

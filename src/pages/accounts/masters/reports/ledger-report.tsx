@@ -50,21 +50,6 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 150,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
     {
       dataField: "refNo",
       caption: t("ref_no"),
@@ -89,6 +74,23 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 150,
     },
+    // {
+    //   dataField: "ledger",
+    //   caption: t("account"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    {
+      dataField: "particulars",
+      caption: t("account"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    
+   
     {
       dataField: "debit",
       caption: t('debit'),

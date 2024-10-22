@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import { toggleImportExportPopup,} from "../../../redux/slices/popup-reducer";
+import { toggleImportExportPopup, } from "../../../redux/slices/popup-reducer";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import { APIClient } from "../../../helpers/api-client";
@@ -42,14 +42,14 @@ const ImportExportManage: React.FC = React.memo(() => {
   const [importExport, setImportExport] = useState<any>(initialImportExportData);
   const dispatch = useDispatch();
 
-  const onSubmit = async() => {
+  const onSubmit = async () => {
     setLoading(true);
     const res = await api.post(Urls.import_parties, formFile, {
       'Content-Type': 'multipart/form-data',
       'Accept': 'application/json',
     });
     setLoading(false);
-    handleResponse(res, () => {}, () => {}) 
+    handleResponse(res, () => { }, () => { })
   };
   const onClose = useCallback(async () => {
     dispatch(toggleImportExportPopup({ isOpen: false }));
@@ -58,7 +58,7 @@ const ImportExportManage: React.FC = React.memo(() => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       let formData = new FormData();
-        formData.append('file', event.target.files[0], event.target.files[0].name);
+      formData.append('file', event.target.files[0], event.target.files[0].name);
       setFormFile(formData);
     }
   };

@@ -397,7 +397,7 @@ const ApplicationSettingsProduct = () => {
                 handleFieldChange("productImagePath", data.productImagePath)
               }
             /> */}
-            <div>
+            <div className="w-2/4">
               <label
                 htmlFor="productImagePath"
                 className="block text-sm font-medium text-gray-700">

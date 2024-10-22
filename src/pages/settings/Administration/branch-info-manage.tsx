@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -64,13 +64,16 @@ const initialBranchData: BranchDataInfo = {
   modifiedUserID: 0,
   modifiedDate: "",
   settingsDone: true,
-  useMainBranchInventory: true,
+  useMainBranchInventory: false
 };
 
 const BranchManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const [formData, setFormData] = useState<BranchDataInfo>(initialBranchData);
+
+  const onClose = useCallback(() => {
+    dispatch(toggleBranchPopup({ isOpen: false }));
+  }, [dispatch]);
 
   const {
     isEdit,
@@ -78,7 +81,8 @@ const BranchManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-    handleClear
+    handleClear,
+    formState
   } = useFormManager<BranchDataInfo>({
     url: Urls.BranchInfo,
     onSuccess: useCallback(() => {
@@ -90,17 +94,17 @@ const BranchManage: React.FC = React.memo(() => {
     initialData: initialBranchData
   });
 
-
   return (
-    <form className="w-full p-4">
+    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="w-full p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <ERPInput
-          {...getFieldProps("id")}
-          label={t("id")}
+          {...getFieldProps("branchID")}
+          label={t("branch_id")}
           placeholder={t("enter_id")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("id", data)}
+          disabled={true}
+          onChangeData={(value) => handleFieldChange("branchID", value.branchID)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("companyID")}
           field={{
@@ -108,70 +112,75 @@ const BranchManage: React.FC = React.memo(() => {
             required: true,
             getListUrl: Urls.data_company_id,
             valueKey: "companyID",
-            labelKey: "companyID",
+            labelKey: "companyName",
           }}
-          onChange={(data: any) =>
-            handleFieldChange("companyID", data.companyID)
-          }
+          onChange={(data: any) => handleFieldChange("companyID", data.companyID)}
           label={t("company_id")}
         />
         <ERPDateInput
-          {...getFieldProps("dateFrom")}
+          {...getFieldProps("createdDate")}
           label={t("date_from")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
+          onChangeData={(data: any) => handleFieldChange("createdDate", data)}
         />
         <ERPDateInput
-          {...getFieldProps("dateTo")}
+          {...getFieldProps("modifiedDate")}
           label={t("date_to")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("dateTo", data)}
+          onChangeData={(data: any) => handleFieldChange("modifiedDate", data)}
         />
         <ERPInput
           {...getFieldProps("branchCode")}
           label={t("branch_code")}
           placeholder={t("branch_code")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("branchCode", data)}
+          onChangeData={(value) => handleFieldChange("branchCode", value.branchCode)}
         />
+
         <ERPInput
           {...getFieldProps("branchName")}
           label={t("branch_name")}
           placeholder={t("branch_name")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("branchName", data)}
+          onChangeData={(value) => handleFieldChange("branchName", value.branchName)}
         />
+
         <ERPInput
           {...getFieldProps("address1")}
           label={t("address_line_1")}
           placeholder={t("address_line_1")}
-          onChangeData={(data: any) => handleFieldChange("address1", data)}
+          onChangeData={(value) => handleFieldChange("address1", value.address1)}
         />
+
         <ERPInput
           {...getFieldProps("address2")}
           label={t("address_line_2")}
           placeholder={t("address_line_2")}
-          onChangeData={(data: any) => handleFieldChange("address2", data)}
+          onChangeData={(value) => handleFieldChange("address2", value.address2)}
         />
+
         <ERPInput
           {...getFieldProps("city")}
           label={t("city")}
           placeholder={t("city")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("city", data)}
+          onChangeData={(value) => handleFieldChange("city", value.city)}
         />
+
         <ERPInput
           {...getFieldProps("district")}
           label={t("district")}
           placeholder={t("district")}
-          onChangeData={(data: any) => handleFieldChange("district", data)}
+          onChangeData={(value) => handleFieldChange("district", value.district)}
         />
+
         <ERPInput
           {...getFieldProps("bState")}
           label={t("state")}
           placeholder={t("state")}
-          onChangeData={(data: any) => handleFieldChange("bState", data)}
+          onChangeData={(value) => handleFieldChange("bState", value.bState)}
         />
+
         <ERPDataCombobox
           {...getFieldProps("country")}
           field={{
@@ -181,95 +190,90 @@ const BranchManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("country", data);
-          }}
+          onChange={(data: any) => handleFieldChange("country", data.id.country)}
           label={t("country")}
         />
+
         <ERPInput
           {...getFieldProps("pinCode")}
           label={t("pin_code")}
           placeholder={t("pin_code")}
-          onChangeData={(data: any) => handleFieldChange("pinCode", data)}
+          onChangeData={(value) => handleFieldChange("pinCode", value.pinCode)}
         />
+
         <ERPInput
           {...getFieldProps("phone")}
           label={t("phone")}
           placeholder={t("phone")}
-          onChangeData={(data: any) => handleFieldChange("phone", data)}
+          onChangeData={(value) => handleFieldChange("phone", value.phone)}
         />
+
         <ERPInput
           {...getFieldProps("mobile")}
           label={t("mobile")}
           placeholder={t("mobile")}
-          onChangeData={(data: any) => handleFieldChange("mobile", data)}
+          onChangeData={(value) => handleFieldChange("mobile", value.mobile)}
         />
+
         <ERPInput
           {...getFieldProps("fax")}
           label={t("fax")}
           placeholder={t("fax")}
-          onChangeData={(data: any) => handleFieldChange("fax", data)}
+          onChangeData={(value) => handleFieldChange("fax", value.fax)}
         />
+
         <ERPInput
           {...getFieldProps("email")}
           label={t("email")}
           placeholder={t("email")}
-          onChangeData={(data: any) => handleFieldChange("email", data)}
+          onChangeData={(value) => handleFieldChange("email", value.email)}
         />
+
         <ERPInput
           {...getFieldProps("tin")}
           label={t("tin")}
           placeholder={t("tax_identification_number")}
-          onChangeData={(data: any) => handleFieldChange("tin", data)}
+          onChangeData={(value) => handleFieldChange("tin", value.tin)}
         />
+
         <ERPInput
           {...getFieldProps("registrationNumber")}
           label={t("registration_number")}
           placeholder={t("registration_number")}
-          onChangeData={(data: any) =>
-            handleFieldChange("registrationNumber", data)
-          }
+          onChangeData={(value) => handleFieldChange("registrationNumber", value.registrationNumber)}
         />
+
         <ERPInput
           {...getFieldProps("branchManager")}
           label={t("branch_manager")}
           placeholder={t("branch_manager")}
-          onChangeData={(data: any) => handleFieldChange("branchManager", data)}
+          onChangeData={(value) => handleFieldChange("branchManager", value.branchManager)}
         />
-        <ERPInput
-          {...getFieldProps("userName")}
-          label={t("username")}
-          placeholder={t("username")}
-          onChangeData={(data: any) => handleFieldChange("userName", data)}
-        />
-        <ERPInput
-          {...getFieldProps("password")}
-          label={t("password")}
-          placeholder={t("password")}
-          type="password"
-          onChangeData={(data: any) => handleFieldChange("password", data)}
-        />
+
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
-          placeholder={t("remarks")}
-          onChangeData={(data: any) => handleFieldChange("remarks", data)}
+          placeholder={t("enter_remarks")}
+          onChangeData={(value) => handleFieldChange("remarks", value.remarks)}
         />
 
-        <ERPCheckbox
-          {...getFieldProps("useMainBranchInventory")}
-          label={t("use_main_branch_inventory")}
-          onChangeData={(data: any) => handleFieldChange("useMainBranchInventory", data)}
-        />
+        <div className="col-span-full">
+          <ERPCheckbox
+            {...getFieldProps("useMainBranchInventory")}
+            label={t("use_main_branch_inventory")}
+            onChangeData={(value) => handleFieldChange("useMainBranchInventory", value.useMainBranchInventory)}
+          />
+        </div>
       </div>
 
-      {/* <ERPFormButtons
-        onClear={handleClear}
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={onClose}
-       
-      /> */}
+      <div className="mt-4">
+        <ERPFormButtons
+          onClear={handleClear}
+          isEdit={isEdit}
+          isLoading={isLoading}
+          onCancel={onClose}
+        />
+      </div>
     </form>
   );
 });

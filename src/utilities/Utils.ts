@@ -37,7 +37,7 @@ export const capitalizeAndAddSpace = (input: string): string => {
  * @param input - The input string to transform.
  * @returns A camelCase or PascalCase string with no spaces.
  */
-export const removeSpacesAndCapitalize =(input: string): string =>   {
+export const removeSpacesAndCapitalize = (input: string): string => {
   if (!input) return '';
 
   return input
@@ -66,6 +66,22 @@ export const Decode = (token: string) => {
   return JSON.parse(jsonPayload);
 };
 
+export const setNestedValue = (obj: any, path: string, value: any) => {
+  const keys = path.split('.');
+  const lastKey = keys.pop() as string;
+  const deepClone = { ...obj }; // Create a shallow clone of the object
+
+  let nestedObj = deepClone;
+
+  keys.forEach((key) => {
+    nestedObj[key] = nestedObj[key] ? { ...nestedObj[key] } : {};
+    nestedObj = nestedObj[key];
+  });
+
+  nestedObj[lastKey] = value;
+
+  return deepClone;
+};
 export const bytesToSize = (bytes: number) => {
   const kilobyte = 1024;
   const megabyte = kilobyte * 1024;
@@ -329,7 +345,7 @@ export const warning = () => {
 
 // Get User Currency symbol
 export const getCurrentCurrencySymbol = () => {
-  const profileState = useSelector((state: RootState) => state.UserSession) ;
+  const profileState = useSelector((state: RootState) => state.UserSession);
   return profileState.currencySymbol;
 };
 

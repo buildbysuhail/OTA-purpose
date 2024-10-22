@@ -71,7 +71,7 @@ const initialVoucherFormData = {
   data: {
     vPrefix: "",
     formType: "",
-    vType: "",
+    vType: "si",
     vchNo: 0,
   },
   validations: {
@@ -131,6 +131,7 @@ const BarcodePrint: React.FC = () => {
   const [voucherFormLoading, setVoucherFormLoading] = useState<boolean>(false);
   const [barcodeDescLoading, setBarcodeDescLoading] = useState<boolean>(false);
   const [standardBarcodeLoading, setStandardBarcodeLoading] = useState<boolean>(false);
+  const [isOther, setIsOther] = useState<boolean>(false);
   const [barcodeForm, setBarcodeForm] = useState<any>(initialBarcodeFormData);
   const [voucherForm, setVoucherForm] = useState<any>(initialVoucherFormData);
   const [barcodeDesc, setBarcodeDesc] = useState<any>(initialBarcodeDescData);
@@ -141,9 +142,12 @@ const BarcodePrint: React.FC = () => {
     const newValue = type === 'checkbox' ? checked : value;
   };
 
-  const handleVoucherStateChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-
+  const handleVoucherStateChange = (e: any) => {
+    debugger;
+    const { name, value } = e.target ? e.target : e;
+    if(["si","pi","bti","bto","os"].includes(value)) {
+      setIsOther(false);
+    }
     setVoucherForm((prev: any) => ({
       ...prev,
       data: {
@@ -498,23 +502,50 @@ const BarcodePrint: React.FC = () => {
                 <div className="flex gap-4 items-start">
                   <div className="flex-1">
                     <div className="space-y-2">
-                      {[t("sales"), t("purchase"), t("bto"), t("bti"), t("os"), t("other")].map((label, index) => (
+                      
+                      {[{key:"si", label: t("sales")},{key:"pi", label: t("purchase")},{key:"bti", label: t("bti")},{key:"bto", label: t("bto")},{key:"os", label: t("os")}].map((_item, index) => (
+                      
                         <div
-                          key={`type-${label.toLowerCase()}-${index}`}
+                          key={`type-${_item.key.toLowerCase()}-${index}`}
                           className="flex items-center space-x-2"
                         >
                           <ERPRadio
-                            id={`type-${label.toLowerCase()}-${index}`}
+                            id={`type-${_item.key.toLowerCase()}-${index}`}
                             name="vType"
-                            value={label.toLowerCase()}
+                            value={_item.key.toLowerCase()}
 
-                            checked={voucherForm.data.vType === label.toLowerCase()}
+                            checked={!isOther && voucherForm.data.vType === _item.key.toLowerCase()}
                             onChange={handleVoucherStateChange}
 
-                            label={label}
+                            label={_item.label}
                           />
                         </div>
                       ))}
+                      <div  className="flex items-center space-x-2"
+                        >
+                          <ERPRadio
+                            id=""
+                            name="vType"
+                            checked={isOther}
+                            onChange={() =>{setIsOther(!isOther); handleVoucherStateChange({value: ""})}}
+
+                            label={t("other")}
+                          />
+                        </div>
+                      {isOther && (
+                        <div className="flex items-center space-x-2">
+                        <ERPInput
+                        id="vType_"
+                        type="text"
+                        inputClassName="w-[100px]"
+                        value={voucherForm.data.vType}
+                        customSize="md"
+                        className="w-full"
+                        placeholder={t("voucher_type")}
+                        onChange={handleVoucherStateChange}
+                      />
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex-1">
@@ -542,7 +573,7 @@ const BarcodePrint: React.FC = () => {
                           id: "formType",
                           required: true,
                           getListUrl: Urls.data_form_type,
-                          valueKey: "id",
+                          valueKey: "name",
                           labelKey: "name",
                         }}
                         label={t("form_type")}
@@ -825,7 +856,8 @@ const BarcodePrint: React.FC = () => {
                   hideDefaultSearchPanel={true}
                   hideDefaultExportButton={true}
                   dataUrl={Urls.Counter}
-                  gridId="grd_counter"
+                  
+                  gridId="grd_barcode_print"
                   popupAction={toggleCounterPopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.barcodeprint?.reload}

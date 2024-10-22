@@ -174,7 +174,8 @@ const MiscellaneousSettingsForm: React.FC = () => {
   return (
     <Fragment>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="flex flex-col border p-4 w-full rounded-lg shadow-sm justify-center items-center gap-5 lg:flex-row lg:justify-start lg:p-8 lg:items-start lg:gap-10 xxl:justify-around xxl:p-10">
+        <div className="flex flex-col border p-4 w-full rounded-lg shadow-sm justify-center items-center gap-5 
+        lg:flex-row lg:justify-start lg:p-8 lg:items-start lg:gap-10 xxl:justify-around xxl:p-10">
           <div className="grid grid-cols-1">
             <div className="grid grid-cols-2 xxl:grid-cols-4 gap-4 ">
               <ERPCheckbox

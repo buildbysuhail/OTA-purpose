@@ -88,7 +88,7 @@ const EInvoiceTaxPro = () => {
             <div className='flex items-stretch gap-3'>
                 <div className="w-2/4">
                     <h3 className="font-semibold text-sm mb-3 ml-2">E-Invoice API Setting</h3>
-                    <div className=' p-4 rounded-lg flex flex-col gap-5 flex-grow'>
+                    <div className='border p-4 rounded-lg flex flex-col gap-5 flex-grow'>
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.client_id')}
                             label="Client ID"
@@ -120,7 +120,7 @@ const EInvoiceTaxPro = () => {
                             label="ASP User ID"
                             placeholder="Enter ASP User ID"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspUserId', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspUserId', data.eInvApiSetting.aspUserId)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.aspPassword')}
@@ -128,7 +128,7 @@ const EInvoiceTaxPro = () => {
                             required
                             placeholder="Enter ASP Password"
                             type="password"
-                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspPassword', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspPassword', data.eInvApiSetting.aspPassword)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.authUrl')}
@@ -157,6 +157,14 @@ const EInvoiceTaxPro = () => {
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.ewbByIRN', data)}
                         />
+                        <ERPInput
+                            {...getFieldProps('eInvApiSetting.cancelEwbUrl')}
+                            label="Cancel EWB URL"
+                            placeholder="Enter Cancel EWB URL"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.cancelEwbUrl', data)}
+                        />
                     </div>
                 </div>
                 <div className='w-2/4'>
@@ -167,7 +175,7 @@ const EInvoiceTaxPro = () => {
                             label="Username"
                             placeholder="Enter Username"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.userName', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.userName', data.eInvApiLoginDetails.userName)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.password')}
@@ -175,14 +183,14 @@ const EInvoiceTaxPro = () => {
                             placeholder="Enter Password"
                             type="password"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.password', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.password', data.eInvApiLoginDetails.password)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.gstin')}
                             label="GSTIN"
                             placeholder="Enter GSTIN"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.gstin', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.gstin', data.eInvApiLoginDetails.gstin)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.appKey')}
@@ -220,14 +228,6 @@ const EInvoiceTaxPro = () => {
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.e_InvoiceTokenExp', data)}
                         />
                     </div>
-                    <ERPInput
-                        {...getFieldProps('eInvApiSetting.cancelEwbUrl')}
-                        label="Cancel EWB URL"
-                        placeholder="Enter Cancel EWB URL"
-                        readOnly
-                        style={{ color: 'black' }}
-                        onChangeData={(data: any) => handleFieldChange('eInvApiSetting.cancelEwbUrl', data)}
-                    />
                 </div>
             </div>
             <div className='text-right mt-3'>

@@ -9,6 +9,7 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { APIClient } from "../../../helpers/api-client";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import { t } from "i18next";
 
 interface FormState {
   setDefaultQty1: boolean;
@@ -185,30 +186,8 @@ const ApplicationSettingsProduct = () => {
   }
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="erp-settings-form">
-        <div className="grid grid-cols-1  sm;grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="flex align-center justify-between">
-            <ERPCheckbox
-              id="useProductImages"
-              label="Use Product Images"
-              data={formState}
-              checked={formState?.useProductImages}
-              onChangeData={(data) =>
-                handleFieldChange("useProductImages", data.useProductImages)
-              }
-            />
-            <ERPInput
-              id="productImagePath"
-              value={formState.productImagePath}
-              data={formState}
-              label="Product Image Path"
-              placeholder="Product Image Path"
-              type="text"
-              onChangeData={(data: any) =>
-                handleFieldChange("productImagePath", data.productImagePath)
-              }
-            />
-          </div>
+      <div className="border p-4 rounded-lg">
+        <div className="grid grid-cols-4 gap-6">
           <ERPDataCombobox
             id="batchCriteria"
             field={{
@@ -236,32 +215,6 @@ const ApplicationSettingsProduct = () => {
               handleFieldChange("marginRoundTo", data.marginRoundTo)
             }
           />
-
-          <ERPDataCombobox
-            field={{
-              id: "weighingScaleBarcodeType",
-              valueKey: "label",
-              labelKey: "label",
-            }}
-            id="weighingScaleBarcodeType"
-            label="Weighing Scale Barcode Type"
-            value={formState?.weighingScaleBarcodeType}
-            data={formState}
-            onChangeData={(data) => {
-              handleFieldChange(
-                "weighingScaleBarcodeType",
-                data.weighingScaleBarcodeType
-              );
-            }}
-            options={[
-              { value: 0, label: "Standard. No Check Digit" },
-              { value: 1, label: "13 Digit With Check Digit (Qty)" },
-              { value: 2, label: "13 Digit With Check Digit (Value)" },
-              { value: 3, label: "13 Digit With Check Digit (Qty/Value)" },
-              { value: 4, label: "Ignore" },
-            ]}
-          />
-
           <ERPDataCombobox
             field={{
               id: "stockTransferNegativeStock",
@@ -304,36 +257,6 @@ const ApplicationSettingsProduct = () => {
               { value: 2, label: "Ignore" },
             ]}
           />
-
-          <div className="flex align-center justify-between">
-            <ERPCheckbox
-              id="lastSystemGeneratedBarcodetrue"
-              data={formState}
-              label="Last System Generated Barcode"
-              checked={formState?.lastSystemGeneratedBarcodetrue}
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "lastSystemGeneratedBarcodetrue",
-                  data.lastSystemGeneratedBarcodetrue
-                )
-              }
-            />
-
-            <ERPInput
-              id="lastSystemGeneratedBarcode"
-              value={formState.lastSystemGeneratedBarcode}
-              data={formState}
-              noLabel={true}
-              type="text"
-              className="mt-5"
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "lastSystemGeneratedBarcode",
-                  data.lastSystemGeneratedBarcode
-                )
-              }
-            />
-          </div>
           <ERPDataCombobox
             field={{
               id: "lPPriceLessThanSellingPrice",
@@ -379,23 +302,6 @@ const ApplicationSettingsProduct = () => {
               { value: 2, label: "Ignore" },
             ]}
           />
-
-          <ERPDataCombobox
-            field={{
-              id: "pPOsPriceCategory",
-              valueKey: "id",
-              labelKey: "name",
-              getListUrl: Urls.data_pricectegory,
-            }}
-            id="pPOsPriceCategory"
-            label="PPOs Price Category"
-            value={formState?.pPOsPriceCategory}
-            data={formState}
-            onChangeData={(data) => {
-              handleFieldChange("pPOsPriceCategory", data.pPOsPriceCategory);
-            }}
-          />
-
           <ERPDataCombobox
             field={{
               id: "zeroMultiRateValidate",
@@ -418,8 +324,31 @@ const ApplicationSettingsProduct = () => {
               { value: 2, label: "Ignore" },
             ]}
           />
-
-          <ERPInput
+          <ERPDataCombobox
+            field={{
+              id: "weighingScaleBarcodeType",
+              valueKey: "label",
+              labelKey: "label",
+            }}
+            id="weighingScaleBarcodeType"
+            label="Weighing Scale Barcode Type"
+            value={formState?.weighingScaleBarcodeType}
+            data={formState}
+            onChangeData={(data) => {
+              handleFieldChange(
+                "weighingScaleBarcodeType",
+                data.weighingScaleBarcodeType
+              );
+            }}
+            options={[
+              { value: 0, label: "Standard. No Check Digit" },
+              { value: 1, label: "13 Digit With Check Digit (Qty)" },
+              { value: 2, label: "13 Digit With Check Digit (Value)" },
+              { value: 3, label: "13 Digit With Check Digit (Qty/Value)" },
+              { value: 4, label: "Ignore" },
+            ]}
+          />
+          {/* <ERPInput
             id="productImagePath"
             label="Set gift shared Path"
             data={formState}
@@ -428,9 +357,62 @@ const ApplicationSettingsProduct = () => {
             onChangeData={(data) =>
               handleFieldChange("productImagePath", data.productImagePath)
             }
-          />
-
-          <div className="flex align-center justify-between gap-5">
+          /> */}
+          <div className="mb-2">
+            <label
+              htmlFor="productImagePath"
+              className="block text-[13px] font-medium text-gray-700">
+              Set gift shared Path
+            </label>
+            <input
+              type="file"
+              id="productImagePath"
+              className="mt-1 w-full border border-gray-300 p-2 rounded-md"
+              onChange={(data: any) =>
+                handleFieldChange("productImagePath", data.productImagePath)
+              }
+            />
+          </div>
+        </div>
+        <div className="grid grid-cols-3 gap-6 mt-4">
+          <div className="flex items-center justify-between">
+            <ERPCheckbox
+              id="useProductImages"
+              label="Use Product Images"
+              data={formState}
+              checked={formState?.useProductImages}
+              onChangeData={(data) =>
+                handleFieldChange("useProductImages", data.useProductImages)
+              }
+            />
+            {/* <ERPInput
+              id="productImagePath"
+              value={formState.productImagePath}
+              data={formState}
+              label=" "
+              placeholder="Set Image Location"
+              type="text"
+              disabled={!formState?.useProductImages}
+              onChangeData={(data: any) =>
+                handleFieldChange("productImagePath", data.productImagePath)
+              }
+            /> */}
+            <div className="w-2/4">
+              <label
+                htmlFor="productImagePath"
+                className="block text-sm font-medium text-gray-700">
+              </label>
+              <input
+                type="file"
+                id="productImagePath"
+                className="mt-1 w-full border border-gray-300 p-2 rounded-md"
+                onChange={(data: any) =>
+                  handleFieldChange("productImagePath", data.productImagePath)
+                }
+              />
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
             <ERPCheckbox
               id="giftOnBilling"
               data={formState}
@@ -455,15 +437,50 @@ const ApplicationSettingsProduct = () => {
               options={[
                 { value: 0, label: "CashCoupons" },
                 { value: 1, label: "Products" },
-                { value: 2, label: "Special Price" },
+                { value: 2, label: "Special Price" },
               ]}
+              disabled={!formState?.giftOnBilling}
+              label=" "
             />
           </div>
+          <div className="flex items-center justify-between">
+            <ERPCheckbox
+              id="lastSystemGeneratedBarcodetrue"
+              data={formState}
+              label="Last Generated Barcode"
+              checked={formState?.lastSystemGeneratedBarcodetrue}
+              onChangeData={(data) =>
+                handleFieldChange(
+                  "lastSystemGeneratedBarcodetrue",
+                  data.lastSystemGeneratedBarcodetrue
+                )
+              }
+            />
+            <ERPInput
+              id="lastSystemGeneratedBarcode"
+              label=" "
+              value={formState.lastSystemGeneratedBarcode}
+              data={formState}
+              noLabel={true}
+              type="text"
+              disabled={!formState?.lastSystemGeneratedBarcodetrue}
+              onChangeData={(data: any) =>
+                handleFieldChange(
+                  "lastSystemGeneratedBarcode",
+                  data.lastSystemGeneratedBarcode
+                )
+              }
+            />
+          </div>
+        </div>
+      </div>
 
+      <div className="border p-4 rounded-lg">
+        <div className="grid grid-cols-3 gap-6">
           <ERPCheckbox
             data={formState}
             id="allowOnlyScanProductMarkedAsWeighingScaleItems"
-            label="allow Only Scan Product Marked As Weighing Scale Items"
+            label="Allow Only Scan Product Marked As Weighing Scale Items"
             checked={formState?.allowOnlyScanProductMarkedAsWeighingScaleItems}
             onChangeData={(data) =>
               handleFieldChange(
@@ -472,20 +489,6 @@ const ApplicationSettingsProduct = () => {
               )
             }
           />
-
-          <ERPCheckbox
-            id="setQty1ForWeighingScaleItem_ValueMode"
-            data={formState}
-            label="Set Qty1 For Weighing ScaleItem ValueMode"
-            checked={formState?.setQty1ForWeighingScaleItem_ValueMode}
-            onChangeData={(data) =>
-              handleFieldChange(
-                "setQty1ForWeighingScaleItem_ValueMode",
-                data.setQty1ForWeighingScaleItem_ValueMode
-              )
-            }
-          />
-
           <ERPCheckbox
             id="allowMultirate"
             data={formState}
@@ -495,17 +498,27 @@ const ApplicationSettingsProduct = () => {
               handleFieldChange("allowMultirate", data.allowMultirate)
             }
           />
-
+          <ERPCheckbox
+            id="setQty1ForWeighingScaleItem_ValueMode"
+            data={formState}
+            label="Set Default Qty 1"
+            checked={formState?.setQty1ForWeighingScaleItem_ValueMode}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "setQty1ForWeighingScaleItem_ValueMode",
+                data.setQty1ForWeighingScaleItem_ValueMode
+              )
+            }
+          />
           <ERPCheckbox
             id="allowMultiUnits"
-            label="Allow Multi Units"
+            label="Allow Multi Unit"
             data={formState}
             checked={formState?.allowMultiUnits}
             onChangeData={(data) =>
               handleFieldChange("allowMultiUnits", data.allowMultiUnits)
             }
           />
-
           <ERPCheckbox
             id="stopScanningOnWrongBarcode"
             label="Stop Scanning On Wrong Barcode(POS)"
@@ -520,7 +533,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="stopScanningOnWrongBarcodeInSales"
-            label="Stop Scanning On Wrong Barcode In Sales"
+            label="Stop Scanning On Wrong Barcode (Sales)"
             data={formState}
             checked={formState?.stopScanningOnWrongBarcodeInSales}
             onChangeData={(data) =>
@@ -531,20 +544,8 @@ const ApplicationSettingsProduct = () => {
             }
           />
           <ERPCheckbox
-            id="loadCustomerLastRate"
-            label="Load Customer Last Sales Rate"
-            data={formState}
-            checked={formState?.loadCustomerLastRate}
-            onChangeData={(data) =>
-              handleFieldChange(
-                "loadCustomerLastRate",
-                data.loadCustomerLastRate
-              )
-            }
-          />
-          <ERPCheckbox
             id="blockQtyChangeOptionInPOS"
-            label="Block Qty Change Option(POS)"
+            label="Block Qty Change Option in POS"
             data={formState}
             checked={formState?.blockQtyChangeOptionInPOS}
             onChangeData={(data) =>
@@ -567,20 +568,8 @@ const ApplicationSettingsProduct = () => {
             }
           />
           <ERPCheckbox
-            id="focusToQtyAfterBarcode"
-            label="Focus To Qty After Barcode"
-            data={formState}
-            checked={formState?.focusToQtyAfterBarcode}
-            onChangeData={(data) =>
-              handleFieldChange(
-                "focusToQtyAfterBarcode",
-                data.focusToQtyAfterBarcode
-              )
-            }
-          />
-          <ERPCheckbox
             id="loadListedProductPrices"
-            label="Load Listed Product Prices"
+            label="Check Listed Product From Privilege Card Calculations"
             data={formState}
             checked={formState?.loadListedProductPrices}
             onChangeData={(data) =>
@@ -601,7 +590,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="excludeSchemeProductAmountFromPrivilegeCard"
-            label="Exclude Scheme Product Amount From Privilege Card"
+            label="Exclude Scheme Product From Privilege Card Calculations"
             data={formState}
             checked={formState?.excludeSchemeProductAmountFromPrivilegeCard}
             onChangeData={(data) =>
@@ -613,7 +602,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="includeSearchItemAlias_ItemName2"
-            label="Include Search ItemAlias ItemName2"
+            label="Include Search Item Alias and ItemName2"
             data={formState}
             checked={formState?.includeSearchItemAlias_ItemName2}
             onChangeData={(data) =>
@@ -625,7 +614,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="advancedProductSearching"
-            label="Advanced Product Searching "
+            label="Advanced Product Searching"
             data={formState}
             checked={formState?.advancedProductSearching}
             onChangeData={(data) =>
@@ -649,7 +638,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="allowUpdateMultiRateinPurchase"
-            label="allow Update Multi Ratein Purchase"
+            label="Allow Update MultiRate in Purchase"
             data={formState}
             checked={formState?.allowUpdateMultiRateinPurchase}
             onChangeData={(data) =>
@@ -670,7 +659,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="setProductQtyLimitinSales"
-            label="Set Product Qty Limitin Sales"
+            label="Set Product Qty Limit in Sales"
             data={formState}
             checked={formState?.setProductQtyLimitinSales}
             onChangeData={(data) =>
@@ -690,6 +679,33 @@ const ApplicationSettingsProduct = () => {
             }
           />
           <ERPCheckbox
+            id="loadCustomerLastRate"
+            label="Load Customer Last Sales Rate"
+            data={formState}
+            checked={formState?.loadCustomerLastRate}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "loadCustomerLastRate",
+                data.loadCustomerLastRate
+              )
+            }
+          />
+
+          <ERPCheckbox
+            id="focusToQtyAfterBarcode"
+            label="Focus To Qty After Barcode"
+            data={formState}
+            checked={formState?.focusToQtyAfterBarcode}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "focusToQtyAfterBarcode",
+                data.focusToQtyAfterBarcode
+              )
+            }
+          />
+
+
+          <ERPCheckbox
             id="allowMannualProductSelectionInSales"
             label="Allow Manual Product Selection In Sales"
             data={formState}
@@ -703,7 +719,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="showRateBeforeTax"
-            label="Show Rate Before Tax on Sales"
+            label="Show Rate Before Tax on Sales (Tax Inclusive)"
             data={formState}
             checked={formState?.showRateBeforeTax}
             onChangeData={(data) =>
@@ -733,7 +749,7 @@ const ApplicationSettingsProduct = () => {
           />
           <ERPCheckbox
             id="enableSupplierWiseItemCode"
-            label="Enable Supplie rWise Item Code"
+            label="Enable Supplier Wise Item Code"
             data={formState}
             checked={formState?.enableSupplierWiseItemCode}
             onChangeData={(data) =>
@@ -779,23 +795,16 @@ const ApplicationSettingsProduct = () => {
               )
             }
           />
-          {/* <ERPCheckbox
-          id="allowMultiUnits"
-          label="Allow Multi Units"
-          data={forState}
-          checked={formState?.allowMultiUnits}
-          onChangeData={(data) => handleFieldChange("allowMultiUnits", data.allowMultiUnits)}
-        /> */}
         </div>
-        <div className="flex justify-end">
-          <ERPButton
-            title="Save Changes"
-            variant="primary"
-            disabled={isSaving}
-            loading={isSaving}
-            type="submit"
-          />
-        </div>
+      </div>
+      <div className="flex justify-end">
+        <ERPButton
+          title="Save Settings"
+          variant="primary"
+          disabled={isSaving}
+          loading={isSaving}
+          type="submit"
+        />
       </div>
     </form>
   );

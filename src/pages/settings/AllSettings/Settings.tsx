@@ -37,7 +37,7 @@ const UserActionReport = lazy(() => import("../system/user-action-report-manage"
 const ImportExportManage = lazy(() => import("../system/import-export"));
 const CommandsManage = lazy(() => import("../system/commands"));
 const AuthorizationSettings = lazy(() => import("../system/authorization-settings-manage"));
-const  ResetDbManage= lazy(() => import("../system/reset-database-manage"));
+const ResetDbManage = lazy(() => import("../system/reset-database-manage"));
 const Barcodeprint = lazy(() => import("../system/barcode-print"));
 const ExchangeRates = lazy(() => import("../system/exchange-rates"));
 const UserTypePrivilegeManage = lazy(() => import("../userManagement/user-privilege-manage"));
@@ -138,7 +138,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleBranchPopup({ isOpen: false }));
         }}
-        content={<BranchManage/>}
+        content={<BranchManage />}
       />
       <ERPModal
         isOpen={rootState.PopupData.dayClose.isOpen || false}
@@ -179,7 +179,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleResetDataBasePopup({ isOpen: false }));
         }}
-      content={<ResetDbManage/>}
+        content={<ResetDbManage />}
       />
 
       <ERPModal
@@ -202,7 +202,7 @@ const Settings = () => {
         }}
         content={<AuthorizationSettings />}
       />
-        <ERPModal
+      <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
         title="Barcode Print"
         width="w-full max-w-full"
@@ -210,7 +210,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleBarcodePrintPopup({ isOpen: false }));
         }}
-        content={<Barcodeprint/>}
+        content={<Barcodeprint />}
       />
       <ERPModal
         isOpen={rootState.PopupData.exchangeRates.isOpen || false}
@@ -220,7 +220,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleExchangeRatesPopup({ isOpen: false }));
         }}
-        content={<ExchangeRates/>}
+        content={<ExchangeRates />}
       />
       <ERPModal
         isOpen={rootState.PopupData.resetBranchDataForSync.isOpen || false}
@@ -230,7 +230,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleResetBranchDataForSync({ isOpen: false }));
         }}
-        content={<ResetBranchDataForSync/>}
+        content={<ResetBranchDataForSync />}
       />
       <ERPModal
         isOpen={rootState.PopupData.refreshAllBranches.isOpen || false}
@@ -240,7 +240,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleRefreshAllBranches({ isOpen: false }));
         }}
-        content={<RefreshAllBranches/>}
+        content={<RefreshAllBranches />}
       />
       <ERPModal
         isOpen={rootState.PopupData.headAndFooter.isOpen || false}
@@ -250,7 +250,7 @@ const Settings = () => {
         closeModal={() => {
           dispatch(toggleHeaderFooterPopup({ isOpen: false }));
         }}
-        content={<HeadersAndFooters/>}
+        content={<HeadersAndFooters />}
       />
     </Fragment>
   );

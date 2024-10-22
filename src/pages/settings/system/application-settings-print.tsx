@@ -105,7 +105,7 @@ const PrintSettingForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-    <div className="erp-settings-form">
+    <div className="border p-4 rounded-lg">
       <div className="form-row grid grid-cols-1 gap-3 my-3">
         <ERPInput
           id="defaultPrinter"
@@ -120,7 +120,7 @@ const PrintSettingForm: React.FC = () => {
         />
       </div>
 
-      <div className="form-row grid grid-cols-2 gap-3 my-3">
+      <div className="form-row grid grid-cols-3 gap-3 my-3">
         <ERPCheckbox
           id="printGatePass"
           checked={formState.printGatePass}
@@ -144,9 +144,9 @@ const PrintSettingForm: React.FC = () => {
         />
       </div>
 
-      <div className="my-4 flex items-center justify-center">
+      <div className="flex justify-end mt-2">
         <ERPButton
-          title="Save Changes"
+          title="Save Settings"
           variant="primary"
           disabled={isSaving}
           loading={isSaving}

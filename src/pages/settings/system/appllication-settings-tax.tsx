@@ -116,8 +116,8 @@ const TaxSettingsForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="erp-settings-form">
-        <div className="form-row grid grid-cols-1  sm:grid-cols-2 gap-3 my-3">
+      <div className="border rounded-lg p-4">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
           <ERPDataCombobox
             id="purchaseFormType"
             value={formState?.purchaseFormType}
@@ -250,7 +250,7 @@ const TaxSettingsForm: React.FC = () => {
         </div>
         <div className="my-4 flex items-center justify-end">
           <ERPButton
-            title={t("save_changes")}
+            title="Save Settings"
             variant="primary"
             disabled={isSaving}
             loading={isSaving}

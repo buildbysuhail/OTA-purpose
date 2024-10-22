@@ -129,7 +129,7 @@ const EWBTaxPro = () => {
                             label="ASP User ID"
                             placeholder="Enter ASP User ID"
                             required
-                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspUserId', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspUserId', data.ewbApiSetting.aspUserId)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.aspPassword')}
@@ -137,7 +137,7 @@ const EWBTaxPro = () => {
                             placeholder="Enter ASP Password"
                             required
                             type="password"
-                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspPassword', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspPassword', data.ewbApiSetting.aspPassword)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.baseUrl')}
@@ -158,14 +158,14 @@ const EWBTaxPro = () => {
                             label="GSTIN"
                             placeholder="Enter GSTIN"
                             required
-                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbGstin', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbGstin', data.ewbApiLoginDetails.ewbGstin)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbUserID')}
                             label="EWB User ID"
                             placeholder="Enter EWB User ID"
                             required
-                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbUserID', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbUserID', data.ewbApiLoginDetails.ewbUserID)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbPassword')}
@@ -173,7 +173,7 @@ const EWBTaxPro = () => {
                             placeholder="Enter EWB Password"
                             type="password"
                             required
-                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbPassword', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbPassword', data.ewbApiLoginDetails.ewbPassword)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbAppKey')}

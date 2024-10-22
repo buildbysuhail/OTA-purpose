@@ -29,10 +29,8 @@ const config: Config = {
   },
   api: {
     // APP_API_URL: "https://192.65.25.12",
-    //  APP_API_URL: "https://localhost:7213" 
-    // APP_API_URL: "http://api.polerp.work:81"
-    APP_API_URL: "https://polosys-001-site1.ctempurl.com"
-
+      // APP_API_URL: "https://localhost:7213" 
+    APP_API_URL: "http://api.polerp.work:81"
   },
   webDir: 'dist/my-app'
 };

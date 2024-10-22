@@ -15,6 +15,7 @@ interface Inventory {
   defaultSalesAcc: number;
   defaultSalesReturnAcc: number;
   defaultPurchaseAcc: number;
+  defaultWareHouse: number;
   defaultPurchaseReturnAcc: number;
   defaultBillDiscGivenLdg: number;
   defaultBillDiscRecvdLdg: number;
@@ -80,6 +81,7 @@ const InventorySettingsForm = () => {
     defaultAdditionalAmountAccount: 0,
     defaultBrand: 0,
     showNegStockWarning: "",
+    defaultWareHouse: 0,
     maintainWarehouse: false,
     priceCode: "",
     defaultBarcodeLabel: "",
@@ -192,314 +194,325 @@ const InventorySettingsForm = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="erp-settings-form">
         <div className="flex flex-col justify-start items-stretch p-5 ">
-          <div
-            className="grid grid-cols-1 border rounded-md shadow-sm 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-5 gap-4 mb-3 xxl:mb-6 p-3  xxl:p-10"
-          >
-            <ERPDataCombobox
-              id="defaultSalesAcc"
-              value={formState?.defaultSalesAcc}
-              data={formState}
-              field={{
-                id: "defaultSalesAcc",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange("defaultSalesAcc", data.defaultSalesAcc)
-              }
-              label="Default Sales Account"
-            />
+          <div className="flex flex-col gap-4 border rounded-md shadow-sm p-3  xxl:p-10 mb-3 xxl:mb-6">
+            <div
+              className="grid grid-cols-1 
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 justify-items-stretch gap-3 "
+            >
+              <ERPDataCombobox
+                id="defaultSalesAcc"
+                value={formState?.defaultSalesAcc}
+                data={formState}
+                field={{
+                  id: "defaultSalesAcc",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("defaultSalesAcc", data.defaultSalesAcc)
+                }
+                label="Default Sales Account"
+              />
 
-            <ERPDataCombobox
-              id="defaultSalesReturnAcc"
-              value={formState.defaultSalesReturnAcc}
-              data={formState}
-              field={{
-                id: "defaultSalesReturnAcc",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultSalesReturnAcc",
-                  data.defaultSalesReturnAcc
-                )
-              }
-              label="Default Sales Return Account"
-            />
-            <ERPDataCombobox
-              id="defaultPurchaseAcc"
-              value={formState.defaultPurchaseAcc}
-              data={formState}
-              field={{
-                id: "defaultPurchaseAcc",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange("defaultPurchaseAcc", data.defaultPurchaseAcc)
-              }
-              label="Default Purchase Account"
-            />
-            <ERPDataCombobox
-              id="defaultPurchaseReturnAcc"
-              value={formState.defaultPurchaseReturnAcc}
-              data={formState}
-              field={{
-                id: "defaultPurchaseReturnAcc",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultPurchaseReturnAcc",
-                  data.defaultPurchaseReturnAcc
-                )
-              }
-              label="Default Purchase Return Account"
-            />
-            <ERPDataCombobox
-              id="defaultBillDiscGivenLdg"
-              value={formState.defaultBillDiscGivenLdg}
-              data={formState}
-              field={{
-                id: "defaultBillDiscGivenLdg",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultBillDiscGivenLdg",
-                  data.defaultBillDiscGivenLdg
-                )
-              }
-              label="Bill Discount Given Ledger"
-            />
-            <ERPDataCombobox
-              id="defaultBillDiscRecvdLdg"
-              value={formState.defaultBillDiscRecvdLdg}
-              data={formState}
-              field={{
-                id: "defaultBillDiscRecvdLdg",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Discount_Received}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultBillDiscRecvdLdg",
-                  data.defaultBillDiscRecvdLdg
-                )
-              }
-              label="Bill Discount Received Ledger"
-            />
+              <ERPDataCombobox
+                id="defaultSalesReturnAcc"
+                value={formState.defaultSalesReturnAcc}
+                data={formState}
+                field={{
+                  id: "defaultSalesReturnAcc",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultSalesReturnAcc",
+                    data.defaultSalesReturnAcc
+                  )
+                }
+                label="Default Sales Return Account"
+              />
+              <ERPDataCombobox
+                id="defaultPurchaseAcc"
+                value={formState.defaultPurchaseAcc}
+                data={formState}
+                field={{
+                  id: "defaultPurchaseAcc",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultPurchaseAcc",
+                    data.defaultPurchaseAcc
+                  )
+                }
+                label="Default Purchase Account"
+              />
+              <ERPDataCombobox
+                id="defaultPurchaseReturnAcc"
+                value={formState.defaultPurchaseReturnAcc}
+                data={formState}
+                field={{
+                  id: "defaultPurchaseReturnAcc",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultPurchaseReturnAcc",
+                    data.defaultPurchaseReturnAcc
+                  )
+                }
+                label="Default Purchase Return Account"
+              />
+              <ERPDataCombobox
+                id="defaultBillDiscGivenLdg"
+                value={formState.defaultBillDiscGivenLdg}
+                data={formState}
+                field={{
+                  id: "defaultBillDiscGivenLdg",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultBillDiscGivenLdg",
+                    data.defaultBillDiscGivenLdg
+                  )
+                }
+                label="Bill Discount Given Ledger"
+              />
+              <ERPDataCombobox
+                id="defaultBillDiscRecvdLdg"
+                value={formState.defaultBillDiscRecvdLdg}
+                data={formState}
+                field={{
+                  id: "defaultBillDiscRecvdLdg",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Discount_Received}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultBillDiscRecvdLdg",
+                    data.defaultBillDiscRecvdLdg
+                  )
+                }
+                label="Bill Discount Received Ledger"
+              />
 
-            <ERPDataCombobox
-              id="defaultCouponSalesAccount"
-              value={formState.defaultCouponSalesAccount}
-              data={formState}
-              field={{
-                id: "defaultCouponSalesAccount",
-                required: false,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.All}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultCouponSalesAccount",
-                  data.defaultCouponSalesAccount
-                )
-              }
-              label="Coupon Card Account"
-            />
+              <ERPDataCombobox
+                id="defaultCouponSalesAccount"
+                value={formState.defaultCouponSalesAccount}
+                data={formState}
+                field={{
+                  id: "defaultCouponSalesAccount",
+                  required: false,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultCouponSalesAccount",
+                    data.defaultCouponSalesAccount
+                  )
+                }
+                label="Coupon Card Account"
+              />
 
-            <ERPDataCombobox
-              id="defaultRoundOffAccount"
-              value={formState.defaultRoundOffAccount}
-              data={formState}
-              field={{
-                id: "defaultRoundOffAccount",
-                required: false,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Indirect_Expenses}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultRoundOffAccount",
-                  data.defaultRoundOffAccount
-                )
-              }
-              label="Default Round off Account"
-            />
-            <ERPDataCombobox
-              id="defaultAdditionalAmountAccount"
-              value={formState.defaultAdditionalAmountAccount}
-              data={formState}
-              field={{
-                id: "defaultAdditionalAmountAccount",
-                required: false,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.All}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultAdditionalAmountAccount",
-                  data.defaultAdditionalAmountAccount
-                )
-              }
-              label="Default Additional Amount Account"
-            />
-            <ERPDataCombobox
-              id="defaultBTOAccount"
-              value={formState.defaultBTOAccount}
-              data={formState}
-              field={{
-                id: "defaultBTOAccount",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange("defaultBTOAccount", data.defaultBTOAccount)
-              }
-              label="Default BTO Account"
-            />
-            <ERPDataCombobox
-              id="defaultBTIAccount"
-              value={formState.defaultBTIAccount}
-              data={formState}
-              field={{
-                id: "defaultBTIAccount",
-                // required: true,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange("defaultBTIAccount", data.defaultBTIAccount)
-              }
-              label="Default BTI Account"
-            />
-            <ERPDataCombobox
-              id="defaultSalesReturnPayableAcc"
-              value={formState.defaultSalesReturnPayableAcc}
-              data={formState}
-              field={{
-                id: "defaultSalesReturnPayableAcc",
-                required: false,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "defaultSalesReturnPayableAcc",
-                  data.defaultSalesReturnPayableAcc
-                )
-              }
-              label="Default Sales Return Payable Acc:"
-            />
-
-            <ERPCheckbox
-              id="serviceWarrantyInvAccounts"
-              checked={formState.serviceWarrantyInvAccounts}
-              data={formState}
-              label="Service Warranty Inv Accounts"
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "serviceWarrantyInvAccounts",
-                  data.serviceWarrantyInvAccounts
-                )
-              }
-            />
-            <ERPDataCombobox
-              id="serviceWarrantyInvLedgerID"
-              value={formState.serviceWarrantyInvLedgerID}
-              disabled={formState.serviceWarrantyInvAccounts !== true}
-              data={formState}
-              field={{
-                id: "serviceWarrantyInvLedgerID",
-                required: false,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.All}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "serviceWarrantyInvLedgerID",
-                  data.serviceWarrantyInvLedgerID
-                )
-              }
-              label="Service Warranty Inv Accounts Info"
-            />
-
-            <ERPCheckbox
-              id="serviceNonWarrantyInvAccounts"
-              checked={formState.serviceNonWarrantyInvAccounts}
-              data={formState}
-              label="Service Non Warranty Inv Accounts"
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "serviceNonWarrantyInvAccounts",
-                  data.serviceNonWarrantyInvAccounts
-                )
-              }
-            />
-            <ERPDataCombobox
-              id="serviceNONWarrantyInvLedgerID"
-              disabled={formState.serviceNonWarrantyInvAccounts !== true}
-              value={formState.serviceNONWarrantyInvLedgerID}
-              data={formState}
-              field={{
-                id: "serviceNONWarrantyInvLedgerID",
-                required: false,
-                getListUrl: Urls.data_acc_ledgers,
-                params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
-                valueKey: "id",
-                labelKey: "name",
-              }}
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "serviceNONWarrantyInvLedgerID",
-                  data.serviceWarrantyInvLedgerID
-                )
-              }
-              label="Service Non Warranty Inv Accounts Info"
-            />
+              <ERPDataCombobox
+                id="defaultRoundOffAccount"
+                value={formState.defaultRoundOffAccount}
+                data={formState}
+                field={{
+                  id: "defaultRoundOffAccount",
+                  required: false,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Indirect_Expenses}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultRoundOffAccount",
+                    data.defaultRoundOffAccount
+                  )
+                }
+                label="Default Round off Account"
+              />
+              <ERPDataCombobox
+                id="defaultAdditionalAmountAccount"
+                value={formState.defaultAdditionalAmountAccount}
+                data={formState}
+                field={{
+                  id: "defaultAdditionalAmountAccount",
+                  required: false,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultAdditionalAmountAccount",
+                    data.defaultAdditionalAmountAccount
+                  )
+                }
+                label="Default Additional Amount Account"
+              />
+              <ERPDataCombobox
+                id="defaultBTOAccount"
+                value={formState.defaultBTOAccount}
+                data={formState}
+                field={{
+                  id: "defaultBTOAccount",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("defaultBTOAccount", data.defaultBTOAccount)
+                }
+                label="Default BTO Account"
+              />
+              <ERPDataCombobox
+                id="defaultBTIAccount"
+                value={formState.defaultBTIAccount}
+                data={formState}
+                field={{
+                  id: "defaultBTIAccount",
+                  // required: true,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("defaultBTIAccount", data.defaultBTIAccount)
+                }
+                label="Default BTI Account"
+              />
+              <ERPDataCombobox
+                id="defaultSalesReturnPayableAcc"
+                value={formState.defaultSalesReturnPayableAcc}
+                data={formState}
+                field={{
+                  id: "defaultSalesReturnPayableAcc",
+                  required: false,
+                  getListUrl: Urls.data_acc_ledgers,
+                  params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "defaultSalesReturnPayableAcc",
+                    data.defaultSalesReturnPayableAcc
+                  )
+                }
+                label="Default Sales Return Payable Acc:"
+              />
+            </div>
+            <div className="flex justify-start gap-3">
+              <div className="flex gap-1">
+                <ERPCheckbox
+                  id="serviceWarrantyInvAccounts"
+                  checked={formState.serviceWarrantyInvAccounts}
+                  data={formState}
+                  label="Service Warranty Inv Accounts"
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "serviceWarrantyInvAccounts",
+                      data.serviceWarrantyInvAccounts
+                    )
+                  }
+                />
+                <ERPDataCombobox
+                  id="serviceWarrantyInvLedgerID"
+                  value={formState.serviceWarrantyInvLedgerID}
+                  disabled={formState.serviceWarrantyInvAccounts !== true}
+                  data={formState}
+                  field={{
+                    id: "serviceWarrantyInvLedgerID",
+                    required: false,
+                    getListUrl: Urls.data_acc_ledgers,
+                    params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "serviceWarrantyInvLedgerID",
+                      data.serviceWarrantyInvLedgerID
+                    )
+                  }
+                  label="Service Warranty Inv Accounts Info"
+                  noLabel={true}
+                />
+              </div>
+              <div className="flex gap-1">
+                <ERPCheckbox
+                  id="serviceNonWarrantyInvAccounts"
+                  checked={formState.serviceNonWarrantyInvAccounts}
+                  data={formState}
+                  // noLabel={true}
+                  label="Service Non Warranty Inv Accounts"
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "serviceNonWarrantyInvAccounts",
+                      data.serviceNonWarrantyInvAccounts
+                    )
+                  }
+                />
+                <ERPDataCombobox
+                  id="serviceNONWarrantyInvLedgerID"
+                  disabled={formState.serviceNonWarrantyInvAccounts !== true}
+                  value={formState.serviceNONWarrantyInvLedgerID}
+                  data={formState}
+                  field={{
+                    id: "serviceNONWarrantyInvLedgerID",
+                    getListUrl: Urls.data_acc_ledgers,
+                    params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "serviceNONWarrantyInvLedgerID",
+                      data.serviceWarrantyInvLedgerID
+                    )
+                  }
+                  label="Service Non Warranty Inv Accounts Info"
+                  noLabel={true}
+                />
+              </div>
+            </div>
           </div>
 
           <div
             className="grid grid-cols-1 border rounded-md shadow-sm 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-5 gap-4 mb-3 xxl:mb-6 p-3  xxl:p-10"
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-4 mb-3 xxl:mb-6 p-3  xxl:p-10"
           >
             <ERPDataCombobox
               id="defaultBrand"
@@ -550,27 +563,20 @@ const InventorySettingsForm = () => {
               }
             />
             <ERPDataCombobox
-              id="showNegStockWarning"
+              id="defaultWareHouse"
               disabled={formState.maintainWarehouse !== true}
-              value={formState.showNegStockWarning}
+              value={formState.defaultWareHouse}
               field={{
-                id: "showNegStockWarning",
-                valueKey: "value",
-                labelKey: "label",
+                id: "defaultWareHouse",
+                getListUrl: Urls.data_warehouse,
+                valueKey: "id",
+                labelKey: "name",
               }}
               data={formState}
-              options={[
-                { value: "Block", label: "Block" },
-                { value: "Warn", label: "Warn" },
-                { value: "Ignore", label: "Ignore" },
-              ]}
               onChangeData={(data: any) =>
-                handleFieldChange(
-                  "showNegStockWarning",
-                  data.showNegStockWarning
-                )
+                handleFieldChange("defaultWareHouse", data.defaultWareHouse)
               }
-              label="Maintain Warehouse Info"
+              label="Ware House"
             />
             <ERPInput
               id="priceCode"
@@ -709,7 +715,7 @@ const InventorySettingsForm = () => {
 
           <div
             className="grid grid-cols-1 border rounded-md shadow-sm 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-5 gap-4 mb-3 xxl:mb-6 p-3  xxl:p-10"
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-4 mb-3 xxl:mb-6 p-3  xxl:p-10"
           >
             <ERPCheckbox
               id="setAuthorizationinSales"
@@ -760,26 +766,16 @@ const InventorySettingsForm = () => {
                 )
               }
             />
-
-            {/* <ERPCheckbox
-              id="setProductCostasPurchasePrice"
-              checked={formState.setProductCostasPurchasePrice}
-              data={formState}
-              label="Set Product Cost as Declaration Price"
-              onChangeData={(data: any) =>
-                handleFieldChange(
-                  "setProductCostasPurchasePrice",
-                  data.setProductCostasPurchasePrice
-                )
-              }
-            /> */}
             <ERPCheckbox
               id="setProductCostasPurchasePrice"
               checked={formState.setProductCostasPurchasePrice}
               data={formState}
               label="Set Product Cost as Declaration Price"
               onChangeData={(data: any) => {
-                handleFieldChange("setProductCostasPurchasePrice", data.setProductCostasPurchasePrice);
+                handleFieldChange(
+                  "setProductCostasPurchasePrice",
+                  data.setProductCostasPurchasePrice
+                );
               }}
             />
 
@@ -855,18 +851,6 @@ const InventorySettingsForm = () => {
               }
             />
 
-            {/* <ERPCheckbox
-            id="setLastPurchaseRateAsProctRate"
-            checked={formState.setLastPurchaseRateAsProctRate}
-            data={formState}
-            labe="Set Last Purchase Rate As Product Purchase Rate"
-            onChangeData={(data: any) =>
-              handleFieldChange(
-                "setLastPurchaseRateAsProctRate",
-                data.setLastPurchaseRateAsProctRate
-              )
-            }
-          /> */}
             <ERPCheckbox
               id="setLastPurchaseRateAsProctRate"
               checked={formState.setLastPurchaseRateAsProctRate}

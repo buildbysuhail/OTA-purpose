@@ -149,6 +149,7 @@ const Urls = {
   CompanyProfiles: "/Core/CompanyProfile/",
   Branch: "/Subscription/Branch/",
   BranchInfo: "/Core/Branch/BranchInfo",
+  branch_code:"/Branch/GetNextBranchCode/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
@@ -169,6 +170,8 @@ const Urls = {
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate",
   headers_footers: "/Core/HeaderFooter/",
+  eWayBill: "/Core/EWayBillGST/",
+  eInvoiceGST: "/Core/EInvoiceGST/",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
   revertBillModifications: "/Core/AdvancedOptions",

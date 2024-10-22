@@ -222,14 +222,57 @@ export function useFormManager<T>({
     url,
   ]);
 
-  const handleFieldChange = useCallback(
+  // const handleFieldChange = useCallback(
 
+  //   (fieldId: string, value: any) => {
+  //     debugger;
+  //     const newData = {
+  //       ...formState?.data,
+  //       [fieldId]: value[fieldId],
+  //     };
+
+  //     if (useApiClient) {
+  //       setLocalFormState((prevState: any) => ({
+  //         ...prevState,
+  //         data: newData,
+  //         validations: { ...prevState?.validations },
+  //       }));
+  //     } else {
+  //       reduxManager.setState(rName, {
+  //         data: newData,
+  //         validations: { ...formState?.validations },
+  //         loading: false,
+  //         error: null,
+  //       });
+  //     }
+  //   },
+  //   [formState?.data, rName, useApiClient]
+  // );
+
+  // Utility function to set nested value by path
+  const setNestedValue = (obj: any, path: string, value: any) => {
+    const keys = path.split('.');
+    const lastKey = keys.pop() as string;
+    const deepClone = { ...obj }; // Create a shallow clone of the object
+
+    let nestedObj = deepClone;
+
+    keys.forEach((key) => {
+      nestedObj[key] = nestedObj[key] ? { ...nestedObj[key] } : {};
+      nestedObj = nestedObj[key];
+    });
+
+    nestedObj[lastKey] = value;
+
+    return deepClone;
+  };
+
+  const handleFieldChange = useCallback(
     (fieldId: string, value: any) => {
       debugger;
-      const newData = {
-        ...formState?.data,
-        [fieldId]: value[fieldId],
-      };
+
+      // Update the nested field
+      const newData = setNestedValue(formState?.data, fieldId, value);
 
       if (useApiClient) {
         setLocalFormState((prevState: any) => ({
@@ -248,6 +291,7 @@ export function useFormManager<T>({
     },
     [formState?.data, rName, useApiClient]
   );
+
 
   const handleClear = useCallback(() => {
     // const clearedData = Object.keys(formState?.data || {}).reduce((acc, key) => {
@@ -271,14 +315,35 @@ export function useFormManager<T>({
     }
   }, [formState?.data, rName, useApiClient]);
 
+  // const getFieldProps = useCallback(
+  //   (fieldId: string): FormField => {
+  //     return {
+  //       id: fieldId,
+  //       data: formState?.data,
+  //       value: formState?.data?.[fieldId] || "",
+  //       validation: formState?.validations?.[fieldId],
+  //       checked: formState?.data?.[fieldId] || false,
+  //     };
+  //   },
+  //   [formState?.data]
+  // );
+  const getNestedValue = (obj: any, path: string) => {
+    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+  };
+
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
+      debugger;
+      const value = getNestedValue(formState?.data, fieldId) || "";
+      const validation = getNestedValue(formState?.validations, fieldId);
+      const checked = getNestedValue(formState?.data, fieldId) || false;
+
       return {
         id: fieldId,
         data: formState?.data,
-        value: formState?.data?.[fieldId] || "",
-        validation: formState?.validations?.[fieldId],
-        checked: formState?.data?.[fieldId] || false,
+        value,
+        validation,
+        checked,
       };
     },
     [formState?.data]

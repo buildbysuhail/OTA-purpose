@@ -1,182 +1,225 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPButton from "../../../components/ERPComponents/erp-button";
+import { useFormManager } from '../../../utilities/hooks/useFormManagerOptions';
+import Urls from '../../../redux/urls';
+import { useRootState } from '../../../utilities/hooks/useRootState';
+import { toggleEWayBillTaxPro } from '../../../redux/slices/popup-reducer';
+import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
+import ERPButton from '../../../components/ERPComponents/erp-button';
+import { ActionType } from '../../../redux/types';
+
+type EWBTaxProData = {
+    ewbApiSetting: {
+        gspName: string;
+        aspUserId: string;
+        aspPassword: string;
+        ewbClientId: string;
+        ewbClientSecret: string;
+        ewbgspUserID: string;
+        authUrl: string;
+        baseUrl: string;
+        aspUrl: string;
+    };
+    ewbApiLoginDetails: {
+        ewbGstin: string;
+        ewbUserID: string;
+        ewbPassword: string;
+        ewbAppKey: string;
+        ewbAuthToken: string;
+        ewbTokenExp: string;
+        ewbSEK: string;
+    };
+};
+
+const initialEWBTaxProData: EWBTaxProData = {
+    ewbApiSetting: {
+        gspName: '',
+        aspUserId: '',
+        aspPassword: '',
+        ewbClientId: '',
+        ewbClientSecret: '',
+        ewbgspUserID: '',
+        authUrl: '',
+        baseUrl: '',
+        aspUrl: ''
+    },
+    ewbApiLoginDetails: {
+        ewbGstin: '',
+        ewbUserID: '',
+        ewbPassword: '',
+        ewbAppKey: '',
+        ewbAuthToken: '',
+        ewbTokenExp: '',
+        ewbSEK: ''
+    }
+};
 
 const EWBTaxPro = () => {
-    const [formData, setFormData] = useState({
-        clientId: '',
-        clientSecret: '',
-        gspUserId: '',
-        gapName: '',
-        aapUserId: '',
-        aspPassword: '',
-        baseUrl: '',
-        gstin: '',
-        ewbUserId: '',
-        ewbPassword: '',
-        appKey: '',
-        authToken: '',
-        tokenExp: '',
-        sek: '',
+    const rootState = useRootState();
+    const dispatch = useDispatch();
+
+    const {
+        handleSubmit,
+        handleFieldChange,
+        getFieldProps
+    } = useFormManager<EWBTaxProData>({
+        url: Urls.eWayBill,
+        onSuccess: useCallback(
+            () => dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null })),
+            [dispatch]
+        ),
+        loadDataRequired: true,
+        method: ActionType.POST,
+        key: rootState.PopupData.eWayBillTaxPro?.key,
+        useApiClient: true,
+        initialData: initialEWBTaxProData
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log('Form data submitted:', formData);
-    };
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow">
-            <form onSubmit={handleSubmit}>
-                <div className='flex align-center justify-between w-full gap-2'>
-                    <div className="p-4 border rounded-md w-2/4">
-                        <h3 className="font-semibold text-sm mb-3">E-WayBill API Setting</h3>
+        <div className="w-full pt-2">
+            <div className='flex align-center gap-3'>
+                <div className='w-2/4'>
+                    <h3 className="font-semibold text-sm mb-3 ml-2">E-WayBill API Setting</h3>
+                    <div className='border p-4 rounded-lg flex flex-col gap-5'>
                         <ERPInput
-                            id="clientId"
-                            label="Client Id"
-                            type="text"
-                            name="clientId"
-                            value={formData.clientId}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, ...data }))}
+                            {...getFieldProps('ewbApiSetting.ewbClientId')}
+                            label="Client ID"
+                            placeholder="Enter Client ID"
+                            readOnly
+                            style={{ color: 'black' }}
+                            required={false}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientId', data)}
                         />
-
                         <ERPInput
-                            id="clientSecret"
+                            {...getFieldProps('ewbApiSetting.ewbClientSecret')}
                             label="Client Secret"
+                            placeholder="Enter Client Secret"
+                            readOnly
+                            style={{ color: 'black' }}
                             type="password"
-                            name="clientSecret"
-                            value={formData.clientSecret}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, clientSecret: data.clientSecret }))}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientSecret', data)}
                         />
                         <ERPInput
-                            id="gspUserId"
-                            label="Gsp Name"
-                            type="text"
-                            name="gspUserId"
-                            value={formData.gspUserId}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, gspUserId: data.gspUserId }))}
+                            {...getFieldProps('ewbApiSetting.ewbgspUserID')}
+                            label="GSP User ID"
+                            placeholder="Enter GSP User ID"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbgspUserID', data)}
+                        />
+                        <ERPInput
+                            {...getFieldProps('ewbApiSetting.gspName')}
+                            label="GSP Name"
+                            placeholder="Enter GSP Name"
+                            readOnly
+                            style={{ color: 'black' }}
                             required
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.gspName', data)}
                         />
                         <ERPInput
-                            id="gapName"
-                            label="Asp User Id"
-                            type="text"
-                            name="gapName"
-                            value={formData.gapName}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, gapName: data.gapName }))}
+                            {...getFieldProps('ewbApiSetting.aspUserId')}
+                            label="ASP User ID"
+                            placeholder="Enter ASP User ID"
                             required
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspUserId', data.ewbApiSetting.aspUserId)}
                         />
                         <ERPInput
-                            id="aapUserId"
-                            label="Asp Password"
+                            {...getFieldProps('ewbApiSetting.aspPassword')}
+                            label="ASP Password"
+                            placeholder="Enter ASP Password"
+                            required
                             type="password"
-                            name="aapUserId"
-                            value={formData.aapUserId}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, aapUserId: data.aapUserId }))}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.aspPassword', data.ewbApiSetting.aspPassword)}
                         />
                         <ERPInput
-                            id="aspPassword"
-                            label="Auth Url"
-                            type="text"
-                            name="aspPassword"
-                            value={formData.aspPassword}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, aspPassword: data.aspPassword }))}
+                            {...getFieldProps('ewbApiSetting.baseUrl')}
+                            label="Base URL"
+                            placeholder="Enter Base URL"
+                            readOnly
+                            style={{ color: 'black' }}
                             required
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.baseUrl', data)}
                         />
-                        <ERPInput
-                            id="baseUrl"
-                            label="Base Url"
-                            type="text"
-                            name="baseUrl"
-                            value={formData.baseUrl}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, baseUrl: data.baseUrl }))}
-                            required
-                        />
-
-
                     </div>
-                    <div className="p-4 border rounded-md w-2/4">
-                        <h3 className="font-semibold text-sm mb-3">E-WayBill API Login Details</h3>
+                </div>
+                <div className='w-2/4'>
+                    <h3 className="font-semibold text-sm mb-3 ml-2">E-WayBill API Setting</h3>
+                    <div className='border p-4 rounded-lg flex flex-col gap-5'>
                         <ERPInput
-                            id="gstin"
-                            label="EWB Url"
-                            type="text"
-                            name="gstin"
-                            value={formData.gstin}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, gstin: data.gstin }))}
-                        />
-                        <ERPInput
-                            id="ewbUserId"
-                            label="Cancel EWB Url"
-                            type="text"
-                            name="ewbUserId"
-                            value={formData.ewbUserId}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, ewbUserId: data.ewbUserId }))}
-                        />
-                        <ERPInput
-                            id="ewbPassword"
-                            label="User Name"
-                            type="text"
-                            name="ewbPassword"
-                            value={formData.ewbPassword}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, ewbPassword: data.ewbPassword }))}
+                            {...getFieldProps('ewbApiLoginDetails.ewbGstin')}
+                            label="GSTIN"
+                            placeholder="Enter GSTIN"
                             required
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbGstin', data.ewbApiLoginDetails.ewbGstin)}
                         />
                         <ERPInput
-                            id="appKey"
-                            label="appKey"
-                            type="text"
-                            name="appKey"
-                            value={formData.appKey}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, appKey: data.appKey }))}
+                            {...getFieldProps('ewbApiLoginDetails.ewbUserID')}
+                            label="EWB User ID"
+                            placeholder="Enter EWB User ID"
                             required
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbUserID', data.ewbApiLoginDetails.ewbUserID)}
                         />
                         <ERPInput
-                            id="authToken"
+                            {...getFieldProps('ewbApiLoginDetails.ewbPassword')}
+                            label="EWB Password"
+                            placeholder="Enter EWB Password"
+                            type="password"
+                            required
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbPassword', data.ewbApiLoginDetails.ewbPassword)}
+                        />
+                        <ERPInput
+                            {...getFieldProps('ewbApiLoginDetails.ewbAppKey')}
                             label="App Key"
-                            type="text"
-                            name="authToken"
-                            value={formData.authToken}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, authToken: data.authToken }))}
-                            required
+                            placeholder="Enter App Key"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAppKey', data)}
                         />
                         <ERPInput
-                            id="tokenExp"
+                            {...getFieldProps('ewbApiLoginDetails.ewbAuthToken')}
                             label="Auth Token"
-                            type="text"
-                            name="tokenExp"
-                            value={formData.tokenExp}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, tokenExp: data.tokenExp }))}
-                            required
+                            placeholder="Enter Auth Token"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAuthToken', data)}
+                        />
+                        <ERPDateInput
+                            {...getFieldProps('ewbApiLoginDetails.ewbTokenExp')}
+                            label="Token Expiry"
+                            required={true}
+                            placeholder="Enter Token Expiry"
+                            readonly
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbTokenExp', data)}
                         />
                         <ERPInput
-                            id="sek"
-                            label="Sek"
-                            type="text"
-                            name="sek"
-                            value={formData.sek}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, sek: data.sek }))}
+                            {...getFieldProps('ewbApiLoginDetails.ewbSEK')}
+                            label="SEK"
+                            placeholder="Enter SEK"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbSEK', data)}
                         />
                     </div>
                 </div>
-                <div className="col-span-1 md:col-span-2 flex justify-end mt-4">
-                    <ERPButton
-                        title="Save"
-                        type="submit"
-                        className="px-4 py-2"
-                        variant="primary"
-                    />
-                </div>
-            </form>
-        </div>
+            </div>
+            <div className='text-right mt-3'>
+                <ERPButton
+                    className="justify-self-end"
+                    type="button"
+                    variant="primary"
+                    onClick={handleSubmit}
+                    title="Save"
+                ></ERPButton>
+            </div>
+        </div >
     );
 };
 

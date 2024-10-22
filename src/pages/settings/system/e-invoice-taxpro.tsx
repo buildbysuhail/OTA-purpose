@@ -1,199 +1,245 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import ERPButton from "../../../components/ERPComponents/erp-button";
+import { useFormManager } from '../../../utilities/hooks/useFormManagerOptions';
+import Urls from '../../../redux/urls';
+import { useRootState } from '../../../utilities/hooks/useRootState';
+import { toggleEInvoiceGST } from '../../../redux/slices/popup-reducer';
+import ERPDateInput from '../../../components/ERPComponents/erp-date-input';
+import ERPButton from '../../../components/ERPComponents/erp-button';
+import { ActionType } from '../../../redux/types';
 
-const EInvoiceTaxPro = () => {
-    const [formData, setFormData] = useState({
-        clientId: '',
-        clientSecret: '',
+type EInvoiceTaxProData = {
+    eInvApiSetting: {
+        gspName: string;
+        aspUserId: string;
+        aspPassword: string;
+        client_id: string;
+        client_secret: string;
+        authUrl: string;
+        baseUrl: string;
+        ewbByIRN: string;
+        cancelEwbUrl: string;
+    };
+    eInvApiLoginDetails: {
+        userName: string;
+        password: string;
+        gstin: string;
+        appKey: string;
+        authToken: string;
+        sek: string;
+        e_InvoiceTokenExp: string;
+    };
+};
+
+const initialEInvoiceTaxProData: EInvoiceTaxProData = {
+    eInvApiSetting: {
         gspName: '',
         aspUserId: '',
         aspPassword: '',
+        client_id: '',
+        client_secret: '',
         authUrl: '',
         baseUrl: '',
-        ewbUrl: '',
-        cancelEwbUrl: '',
+        ewbByIRN: '',
+        cancelEwbUrl: ''
+    },
+    eInvApiLoginDetails: {
         userName: '',
         password: '',
         gstin: '',
         appKey: '',
         authToken: '',
         sek: '',
-        tokenExp: ''
+        e_InvoiceTokenExp: ''
+    }
+};
+
+const EInvoiceTaxPro = () => {
+    const rootState = useRootState();
+    const dispatch = useDispatch();
+
+    const {
+        handleSubmit,
+        handleFieldChange,
+        getFieldProps
+    } = useFormManager<EInvoiceTaxProData>({
+        url: Urls.eInvoiceGST,
+        onSuccess: useCallback(
+            () => dispatch(toggleEInvoiceGST({ isOpen: false, key: null })),
+            [dispatch]
+        ),
+        loadDataRequired: true,
+        method: ActionType.POST,
+        key: rootState.PopupData.eInvoiceGST?.key,
+        useApiClient: true,
+        initialData: initialEInvoiceTaxProData
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
-    };
-
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log('Form data submitted:', formData);
-    };
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
     return (
-        <div className="p-4 bg-white rounded-lg shadow">
-            <form onSubmit={handleSubmit}>
-                <div className='flex align-center justify-between w-full gap-2'>
-                    <div className="p-4 border rounded-md w-2/4">
-                        <h3 className="font-semibold text-sm mb-3">EInvoice API Setting</h3>
+        <div className="w-full pt-2">
+            <div className='flex items-stretch gap-3'>
+                <div className="w-2/4">
+                    <h3 className="font-semibold text-sm mb-3 ml-2">E-Invoice API Setting</h3>
+                    <div className='border p-4 rounded-lg flex flex-col gap-5 flex-grow'>
                         <ERPInput
-                            id="clientId"
-                            label="Client Id"
-                            type="text"
-                            name="clientId"
-                            value={formData.clientId}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, ...data }))}
+                            {...getFieldProps('eInvApiSetting.client_id')}
+                            label="Client ID"
+                            placeholder="Enter Client ID"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.client_id', data)}
                         />
-
                         <ERPInput
-                            id="clientSecret"
+                            {...getFieldProps('eInvApiSetting.client_secret')}
                             label="Client Secret"
+                            placeholder="Enter Client Secret"
                             type="password"
-                            name="clientSecret"
-                            value={formData.clientSecret}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, clientSecret: data.clientSecret }))}
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.client_secret', data)}
                         />
                         <ERPInput
-                            id="gspName"
-                            label="Gsp Name"
-                            type="text"
-                            name="gspName"
-                            value={formData.gspName}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, gspName: data.gspName }))}
+                            {...getFieldProps('eInvApiSetting.gspName')}
+                            label="GSP Name"
+                            placeholder="Enter GSP Name"
+                            readOnly
+                            style={{ color: 'black' }}
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.gspName', data)}
                         />
                         <ERPInput
-                            id="aspUserId"
-                            label="Asp User Id"
-                            type="text"
-                            name="aspUserId"
-                            value={formData.aspUserId}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, aspUserId: data.aspUserId }))}
+                            {...getFieldProps('eInvApiSetting.aspUserId')}
+                            label="ASP User ID"
+                            placeholder="Enter ASP User ID"
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspUserId', data.eInvApiSetting.aspUserId)}
                         />
                         <ERPInput
-                            id="aspPassword"
-                            label="Asp Password"
+                            {...getFieldProps('eInvApiSetting.aspPassword')}
+                            label="ASP Password"
+                            required
+                            placeholder="Enter ASP Password"
                             type="password"
-                            name="aspPassword"
-                            value={formData.aspPassword}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, aspPassword: data.aspPassword }))}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspPassword', data.eInvApiSetting.aspPassword)}
                         />
                         <ERPInput
-                            id="authUrl"
-                            label="Auth Url"
-                            type="text"
-                            name="authUrl"
-                            value={formData.authUrl}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, authUrl: data.authUrl }))}
+                            {...getFieldProps('eInvApiSetting.authUrl')}
+                            label="Auth URL"
+                            placeholder="Enter Auth URL"
+                            readOnly
+                            style={{ color: 'black' }}
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.authUrl', data)}
                         />
                         <ERPInput
-                            id="baseUrl"
-                            label="Base Url"
-                            type="text"
-                            name="baseUrl"
-                            value={formData.baseUrl}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, baseUrl: data.baseUrl }))}
+                            {...getFieldProps('eInvApiSetting.baseUrl')}
+                            label="Base URL"
+                            placeholder="Enter Base URL"
+                            readOnly
+                            style={{ color: 'black' }}
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.baseUrl', data)}
                         />
                         <ERPInput
-                            id="ewbUrl"
-                            label="EWB Url"
-                            type="text"
-                            name="ewbUrl"
-                            value={formData.ewbUrl}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, ewbUrl: data.ewbUrl }))}
+                            {...getFieldProps('eInvApiSetting.ewbByIRN')}
+                            label="EWB URL"
+                            placeholder="Enter EWB URL"
+                            readOnly
+                            style={{ color: 'black' }}
+                            required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.ewbByIRN', data)}
                         />
                         <ERPInput
-                            id="cancelEwbUrl"
-                            label="Cancel EWB Url"
-                            type="text"
-                            name="cancelEwbUrl"
-                            value={formData.cancelEwbUrl}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, cancelEwbUrl: data.cancelEwbUrl }))}
+                            {...getFieldProps('eInvApiSetting.cancelEwbUrl')}
+                            label="Cancel EWB URL"
+                            placeholder="Enter Cancel EWB URL"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.cancelEwbUrl', data)}
                         />
                     </div>
-                    <div className="p-4 border rounded-md w-2/4">
-                        <h3 className="font-semibold text-sm mb-3">EInvoice API Login Details</h3>
+                </div>
+                <div className='w-2/4'>
+                    <h3 className="font-semibold text-sm mb-3 ml-2">E-Invoice API Login Details</h3>
+                    <div className='border p-4 rounded-lg flex flex-col gap-5 flex-grow'>
                         <ERPInput
-                            id="userName"
-                            label="User Name"
-                            type="text"
-                            name="userName"
-                            value={formData.userName}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, userName: data.userName }))}
+                            {...getFieldProps('eInvApiLoginDetails.userName')}
+                            label="Username"
+                            placeholder="Enter Username"
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.userName', data.eInvApiLoginDetails.userName)}
                         />
                         <ERPInput
-                            id="password"
+                            {...getFieldProps('eInvApiLoginDetails.password')}
                             label="Password"
+                            placeholder="Enter Password"
                             type="password"
-                            name="password"
-                            value={formData.password}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, password: data.password }))}
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.password', data.eInvApiLoginDetails.password)}
                         />
                         <ERPInput
-                            id="gstin"
+                            {...getFieldProps('eInvApiLoginDetails.gstin')}
                             label="GSTIN"
-                            type="text"
-                            name="gstin"
-                            value={formData.gstin}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, gstin: data.gstin }))}
+                            placeholder="Enter GSTIN"
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.gstin', data.eInvApiLoginDetails.gstin)}
                         />
                         <ERPInput
-                            id="appKey"
+                            {...getFieldProps('eInvApiLoginDetails.appKey')}
                             label="App Key"
-                            type="text"
-                            name="appKey"
-                            value={formData.appKey}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, appKey: data.appKey }))}
+                            placeholder="Enter App Key"
+                            readOnly
+                            style={{ color: 'black' }}
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.appKey', data)}
                         />
                         <ERPInput
-                            id="authToken"
+                            {...getFieldProps('eInvApiLoginDetails.authToken')}
                             label="Auth Token"
-                            type="text"
-                            name="authToken"
-                            value={formData.authToken}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, authToken: data.authToken }))}
+                            placeholder="Enter Auth Token"
+                            readOnly
+                            style={{ color: 'black' }}
                             required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.authToken', data)}
                         />
                         <ERPInput
-                            id="sek"
-                            label="Sek"
-                            type="text"
-                            name="sek"
-                            value={formData.sek}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, sek: data.sek }))}
+                            {...getFieldProps('eInvApiLoginDetails.sek')}
+                            label="SEK"
+                            placeholder="Enter SEK"
+                            readOnly
+                            style={{ color: 'black' }}
+                            required
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.sek', data)}
                         />
-                        <ERPInput
-                            id="tokenExp"
-                            label="Token Exp"
-                            type="text"
-                            name="tokenExp"
-                            value={formData.tokenExp}
-                            onChangeData={(data) => setFormData(prev => ({ ...prev, tokenExp: data.tokenExp }))}
+                        <ERPDateInput
+                            {...getFieldProps('eInvApiLoginDetails.e_InvoiceTokenExp')}
+                            label="Token Expiry"
+                            required={true}
+                            placeholder="Enter Token Expiry"
+                            readonly
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.e_InvoiceTokenExp', data)}
                         />
                     </div>
                 </div>
-                <div className="col-span-1 md:col-span-2 flex justify-end mt-4">
-                    <ERPButton
-                        title="Save"
-                        type="submit"
-                        className="px-4 py-2"
-                        variant="primary"
-                    />
-                </div>
-            </form>
-        </div>
+            </div>
+            <div className='text-right mt-3'>
+                <ERPButton
+                    className="justify-self-end"
+                    type="button"
+                    variant="primary"
+                    onClick={handleSubmit}
+                    title="Save"
+                ></ERPButton>
+            </div>
+        </div >
     );
 };
 

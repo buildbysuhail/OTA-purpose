@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ReactNode } from 'react';
 import ERPDataCombobox from '../../../components/ERPComponents/erp-data-combobox';
 import ERPButton from '../../../components/ERPComponents/erp-button';
 import ERPCheckbox from '../../../components/ERPComponents/erp-checkbox';
@@ -53,6 +53,32 @@ interface TaxSettingsFormState {
   showPrevForms: boolean;
 }
 const api = new APIClient();
+
+interface PopupComponentProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+}
+
+const PopupComponent: React.FC<PopupComponentProps> = ({ isOpen, onClose, children }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white p-6 rounded-lg max-w-6xl w-full max-h-[80vh] overflow-y-auto">
+        <div className="flex justify-start">
+          <i
+            onClick={onClose}
+            className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line cursor-pointer"
+            style={{ fontSize: "23px" }}>
+          </i>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+
 const ERPSettingsFormGSTTaxes = () => {
   const initialState: TaxSettingsFormState = {
     // const ERPSettingsFormGSTTaxes = () => {
@@ -100,18 +126,17 @@ const ERPSettingsFormGSTTaxes = () => {
   const [formStatePrev, setFormStatePrev] = useState<Partial<TaxSettingsFormState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  const [showEInvoiceApi, setShowEInvoiceApi] = useState(false);
-  const [showEWBTaxPro, setShowEWBTaxPro] = useState(false);
+  const [showEInvoicePopup, setShowEInvoicePopup] = useState<boolean>(false);
+  const [showEWBPopup, setShowEWBPopup] = useState<boolean>(false);
 
-  const handleShowComponent = (component: string) => {
+  const handleShowComponent = (component: 'eInvoice' | 'ewb') => {
     if (component === 'eInvoice') {
-      setShowEInvoiceApi(true);
-      setShowEWBTaxPro(false);
+      setShowEInvoicePopup(true);
     } else if (component === 'ewb') {
-      setShowEInvoiceApi(false);
-      setShowEWBTaxPro(true);
+      setShowEWBPopup(true);
     }
   };
+
   useEffect(() => {
     loadSettings();
   }, []);
@@ -602,8 +627,6 @@ const ERPSettingsFormGSTTaxes = () => {
           />
         </div>
 
-
-
         <div className='border p-4 rounded-lg'>
           <div className='grid grid-cols-4 gap-6'>
             <div className='flex justify-between align-center'>
@@ -614,7 +637,11 @@ const ERPSettingsFormGSTTaxes = () => {
                 label={t("enable_ewb")}
                 onChangeData={(data: any) => handleFieldChange("enableEWB", data.enableEWB)}
               />
-              <ERPButton title={t("ewb_taxPro")} onClick={() => handleShowComponent('ewb')} />
+              <ERPButton
+                title={t("ewb_taxPro")}
+                onClick={() => handleShowComponent('ewb')}
+                disabled={!formState.enableEWB}
+              />
             </div>
 
             <div className='flex justify-between align-center'>
@@ -625,30 +652,22 @@ const ERPSettingsFormGSTTaxes = () => {
                 label={t("enable_e-invoice")}
                 onChangeData={(data: any) => handleFieldChange("enableEInvoice", data.enableEInvoice)}
               />
-              <ERPButton title={t("EInvoiceTaxPro")} onClick={() => handleShowComponent('eInvoice')} />
-            </div>
-          </div>
-          {showEInvoiceApi && (
-            <div>
               <ERPButton
                 title={t("EInvoiceTaxPro")}
-                onClick={() => setShowEInvoiceApi(false)}
-                className="mb-4"
+                onClick={() => handleShowComponent('eInvoice')}
+                disabled={!formState.enableEInvoice}
               />
-              <EInvoiceTaxPro />
             </div>
-          )}
+          </div>
 
-          {showEWBTaxPro && (
-            <div>
-              <ERPButton
-                title={t("enable_ewb")}
-                onClick={() => setShowEWBTaxPro(false)}
-                className="mb-4"
-              />
-              <EWBTaxPro />
-            </div>
-          )}
+          <PopupComponent isOpen={showEInvoicePopup} onClose={() => setShowEInvoicePopup(false)}>
+            <EInvoiceTaxPro />
+          </PopupComponent>
+
+          <PopupComponent isOpen={showEWBPopup} onClose={() => setShowEWBPopup(false)}>
+            <EWBTaxPro />
+          </PopupComponent>
+
           <div className='grid grid-cols-3 gap-6 mt-5'>
             <ERPDataCombobox
               field={{
@@ -675,7 +694,7 @@ const ERPSettingsFormGSTTaxes = () => {
               value={formState.clearTaxEInvoiceAuthToken}
               data={formState}
               label={t("clear_tax_token")}
-              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data)}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceAuthToken", data.clearTaxEInvoiceAuthToken)}
             />
 
             <ERPInput
@@ -683,7 +702,7 @@ const ERPSettingsFormGSTTaxes = () => {
               value={formState.clearTaxEInvoiceOwnerID}
               data={formState}
               label={t("clear_tax_id")}
-              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data)}
+              onChangeData={(data: any) => handleFieldChange("clearTaxEInvoiceOwnerID", data.clearTaxEInvoiceOwnerID)}
             />
           </div>
         </div>

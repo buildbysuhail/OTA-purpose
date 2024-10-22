@@ -14,6 +14,7 @@ interface ERPDateInputProps {
   placeholder?: string;
   disabled?: boolean;
   required?: boolean;
+  readonly?: boolean;
   minDate?: string;
   maxDate?: string;
   minDateKey?: string;
@@ -36,6 +37,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   placeholder,
   disabled,
   required,
+  readonly,
   minDate,
   maxDate,
   minDateKey,
@@ -82,6 +84,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
         type={type}
         onChange={handleChange}
         required={required}
+        readOnly={readonly}
         min={minDate ? dateTrimmer(minDate) : minDateKey ? formatDate(data?.[minDateKey]) : undefined}
         max={maxDate ? dateTrimmer(maxDate) : maxDateKey ? formatDate(data?.[maxDateKey]) : undefined}
         value={displayValue}

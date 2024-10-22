@@ -373,30 +373,27 @@ const AccTransactionMobile = () => {
           )}
 
           {/* Billed Items Section */}
-          <div className="bg-custom-blue mb-1 p-1 rounded-lg text-white">
+          <div className="bg-custom-blue mb-1 p-1 rounded-sm text-white">
             <h2 className="font-light text-sm">Billed Items</h2>
           </div>
           <div className="pt-1">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="bg-[#f3f3f3] shadow-md mb-3 p-2 rounded-lg"
+                className="bg-[#f3f3f3] shadow-md mb-3 p-1 rounded-sm"
               >
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center mb-0 mt-1 h-[10px]">
                   {/* <span className="text-gray-500 text-sm">#{item.id}</span> */}
-                  {/* <span className="font-bold text-sm">
+                  <h6 className="mb-1 font-bold text-[16px]">{item.name}</h6>
+                  <span className="font-bold text-sm">
                     ₹ {item.price * item.quantity}
-                  </span> */}
+                  </span>
                 </div>
-                <h6 className="mb-1 font-bold text-[20px]">{item.name}</h6>
-                <p className="mb-1 text-gray text-sm">
-                  Item Subtotal: {item.quantity} x ₹{item.price} = ₹
-                  {item.price * item.quantity}
-                </p>
+                <div className="flex justify-between items-center mb-1"></div>
                 <p className="mb-1 text-yellow info">
                   Discount (%): {item.discount}
                 </p>
-                <p className="text-gray-600 text-sm">Tax: {item.tax}%</p>
+                {/* <p className="text-gray-600 text-sm">Tax: {item.tax}%</p> */}
               </div>
             ))}
 
@@ -445,28 +442,26 @@ const AccTransactionMobile = () => {
           </div>
 
           {/* Footer Buttons */}
-          <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
+          {/* <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
             <ERPButton
               title="Save & New"
               onClick={() => {
-                // deleteWorkspacePopup({isOpen: false});
+           
               }}
               variant="primary"
               className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
             ></ERPButton>
 
-            {/* <button className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white">
-              Save
-            </button> */}
             <ERPButton
               title="Save"
               onClick={() => {
-                // deleteWorkspacePopup({isOpen: false});
+               
               }}
               variant="primary"
               className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
             ></ERPButton>
-          </div>
+          </div> */}
+
           {/* ======= */}
           <div>
             {/* The ERPModal component */}
@@ -479,14 +474,15 @@ const AccTransactionMobile = () => {
               title="Add Ledger"
               width="w-full"
               isFullHeight={true}
+              isRemoveSomething={true}
               closeModal={() => setIsOpen(false)}
               content={
                 <div
-                  className="flex flex-col gap-0 px-0 py-0 pb-[130px] h-screen overflow-y-auto   "
+                  className="flex flex-col gap-0 px-0  py-0 pb-[130px] h-screen overflow-y-auto   "
                   style={{}} // Inline styles for full screen
                 >
-                  <div className=" max-w-md flex-grow h-full">
-                    <div className="flex justify-between items-center mb-2">
+                  <div className=" max-w-none flex-grow h-full px-5">
+                    <div className="flex justify-between items-center mb-1">
                       <div className="text-gray-600"></div>
 
                       <div className="text-gray-600"></div>
@@ -494,20 +490,6 @@ const AccTransactionMobile = () => {
 
                     <form onSubmit={handleSubmit}>
                       <div className="mb-4">
-                        {/* <div className="mb-1">
-                          <label
-                            className="block font-medium text-gray-700 text-sm"
-                            htmlFor=""
-                          >
-                            Ledger Code
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Ledger Code"
-                            // className="bg-white p-2 border rounded w-full"
-                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-                          />
-                        </div> */}
                         <div className="mb-4">
                           <ERPInput
                             id="autoUpdateReleaseUpTo"
@@ -542,20 +524,6 @@ const AccTransactionMobile = () => {
                             label="Ledger"
                           />
                         </div>
-                        {/* <div className="mb-1">
-                          <label
-                            className="block font-medium text-gray-700 text-sm"
-                            htmlFor=""
-                          >
-                            Amount
-                          </label>
-                          <input
-                            type="number"
-                            placeholder="Amount"
-                            // className="bg-white p-2 border rounded w-full"
-                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-                          />
-                        </div> */}
                         <div className="mb-4">
                           <ERPInput
                             id="autoUpdateReleaseUpTo"
@@ -571,20 +539,6 @@ const AccTransactionMobile = () => {
                             }
                           />
                         </div>
-                        {/* <div className="mb-1">
-                          <label
-                            className="block font-medium text-gray-700 text-sm"
-                            htmlFor=""
-                          >
-                            Narration
-                          </label>
-                          <input
-                            type="text"
-                            placeholder="Narration"
-                            // className="bg-white p-2 border rounded w-full"
-                            className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-                          />
-                        </div> */}
                         <div className="mb-4">
                           <ERPInput
                             id="autoUpdateReleaseUpTo"
@@ -622,9 +576,49 @@ const AccTransactionMobile = () => {
                         </div>
                       </div>
                     </form>
+                    <div className="max-w-none mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                      <div className=" pt-1">
+                        {/* Discount Section */}
+                        <div className="flex justify-between items-center mb-4">
+                          <span className="text-gray-600">Discount</span>
+                          <div className="flex items-center">
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
+                            />
+                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
+                              %
+                            </button>
+                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
+                              ₹
+                            </button>
+                            <input
+                              type="number"
+                              defaultValue="0"
+                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
+                          <div>
+                            <span className="text-sm font-semibold">
+                              Total Amount:
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-sm  font-semibold">₹</span>
+                            <span className="text-sm font-semibold">
+                              200.00
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   {/* <div className=" flex space-x-4 fixed bottom-0 w-full z-10 p-2 pr-[52px]"> */}
-                  <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
+                  {/* <div className="flex bg-white mt-auto p-2 fixed bottom-0 w-full z-10 pr-[29px]">
                     <ERPButton
                       title="Save &amp; New"
                       onClick={() => {
@@ -633,12 +627,6 @@ const AccTransactionMobile = () => {
                       variant="primary"
                       className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
                     ></ERPButton>
-                    {/* <button
-                          type="submit"
-                          className="flex-1 bg-red-500 hover:bg-red-600 focus:ring-opacity-50 px-4 py-2 rounded-md focus:ring-2 focus:ring-red-500 text-white focus:outline-none"
-                        >
-                          Save
-                        </button> */}
                     <ERPButton
                       title="Save"
                       onClick={() => {
@@ -647,21 +635,27 @@ const AccTransactionMobile = () => {
                       variant="primary"
                       className="flex-1 bg-blue-500 px-4 py-3 rounded font-semibold text-sm text-white"
                     ></ERPButton>
-                  </div>
-
-                  {/* Close button */}
-                  {/* <button
-                    onClick={() => setIsOpen(false)}
-                    className="bg-red-500 mt-auto p-2 rounded text-white"
-                  >
-                    Close
-                  </button> */}
+                  </div> */}
+                  {/* <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
+                    <ERPButton
+                      title="Save & New"
+                      onClick={() => {}}
+                      variant="secondary"
+                      className="flex-1 !m-0 !rounded-none"
+                    />
+                    <ERPButton
+                      title="Save"
+                      onClick={() => {}}
+                      variant="primary"
+                      className="flex-1 !m-0 !rounded-none"
+                    />
+                  </div> */}
                   <div>
                     {/* Totals & Taxes Popup */}
                     {/* {showTotalsPopup && ( */}
-                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    {/* <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
                       <div className=" pt-1">
-                        {/* Discount Section */}
+                      
                         <div className="flex justify-between items-center mb-4">
                           <span className="text-gray-600">Discount</span>
                           <div className="flex items-center">
@@ -698,134 +692,42 @@ const AccTransactionMobile = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
-                      <div className=" pt-1">
-                        {/* Discount Section */}
-                        <div className="flex justify-between items-center mb-4">
-                          <span className="text-gray-600">Discount</span>
-                          <div className="flex items-center">
-                            <input
-                              type="number"
-                              defaultValue="0"
-                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
-                            />
-                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
-                              %
-                            </button>
-                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
-                              ₹
-                            </button>
-                            <input
-                              type="number"
-                              defaultValue="0"
-                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
-                          <div>
-                            <span className="text-sm font-semibold">
-                              Total Amount:
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-sm  font-semibold">₹</span>
-                            <span className="text-sm font-semibold">
-                              200.00
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
-                      <div className=" pt-1">
-                        {/* Discount Section */}
-                        <div className="flex justify-between items-center mb-4">
-                          <span className="text-gray-600">Discount</span>
-                          <div className="flex items-center">
-                            <input
-                              type="number"
-                              defaultValue="0"
-                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
-                            />
-                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
-                              %
-                            </button>
-                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
-                              ₹
-                            </button>
-                            <input
-                              type="number"
-                              defaultValue="0"
-                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
-                          <div>
-                            <span className="text-sm font-semibold">
-                              Total Amount:
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-sm  font-semibold">₹</span>
-                            <span className="text-sm font-semibold">
-                              200.00
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="max-w-md mx-auto mt-1 p-3 bg-white border border-gray-200 rounded-lg shadow-sm">
-                      <div className=" pt-1">
-                        {/* Discount Section */}
-                        <div className="flex justify-between items-center mb-4">
-                          <span className="text-gray-600">Discount</span>
-                          <div className="flex items-center">
-                            <input
-                              type="number"
-                              defaultValue="0"
-                              className=" px-4 py-2 pr-5 border border-orange rounded-l-md text-orange-400 focus:outline-none w-16"
-                            />
-                            <button className="bg-orange mr-2 px-4 py-2 pt-[11px] pb-[10px] border border-b border-orange rounded-r-md text-orange-400 focus:outline-none">
-                              %
-                            </button>
-                            <button className="bg-gray-400 px-4 py-2 pt-[11px] pb-[10px] border border-b border-gray-400 rounded-l-md text-orange-400 focus:outline-none">
-                              ₹
-                            </button>
-                            <input
-                              type="number"
-                              defaultValue="0"
-                              className=" px-4 py-2 pr-5 border border-gray-400 rounded-r-md text-orange-400 focus:outline-none w-16"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="flex justify-between items-center mt-1 pt-1 border-t border-gray-200">
-                          <div>
-                            <span className="text-sm font-semibold">
-                              Total Amount:
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-sm  font-semibold">₹</span>
-                            <span className="text-sm font-semibold">
-                              200.00
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                    </div> */}
                     {/* )} */}
+                  </div>
+                  <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
+                    <ERPButton
+                      title="Save & New"
+                      onClick={() => {}}
+                      variant="secondary"
+                      className="flex-1 !m-0 !rounded-none"
+                    />
+                    <ERPButton
+                      title="Save"
+                      onClick={() => {}}
+                      variant="primary"
+                      className="flex-1 !m-0 !rounded-none"
+                    />
                   </div>
                 </div>
               }
             />
           </div>
         </div>
+        <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
+                    <ERPButton
+                      title="Save & New"
+                      onClick={() => {}}
+                      variant="secondary"
+                      className="flex-1 !m-0 !rounded-none"
+                    />
+                    <ERPButton
+                      title="Save"
+                      onClick={() => {}}
+                      variant="primary"
+                      className="flex-1 !m-0 !rounded-none"
+                    />
+                  </div>  
       </div>
     </div>
   );

@@ -44,7 +44,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
             debugger;
             dispatch(setTemplateHeaderState({ ...headerState, [key]: value }));
         } else {
-            dispatch(setTemplateFooterState({ ...footerState, [key]: value } ));
+            dispatch(setTemplateFooterState({ ...footerState, [key]: value }));
         }
     }
 

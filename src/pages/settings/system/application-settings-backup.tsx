@@ -83,16 +83,16 @@ const BackupSettingsForm: React.FC = () => {
         updateList: modifiedSettings,
       })) as any;
       handleResponse(response);
-      
+
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
       setIsSaving(false);
     }
   };
-//   if (loading) {
-//     return <div>Loading settings...</div>;
-//   }
+  //   if (loading) {
+  //     return <div>Loading settings...</div>;
+  //   }
 
   if (error) {
     return (
@@ -104,9 +104,9 @@ const BackupSettingsForm: React.FC = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 min-h-full">
-      <div className="min-h-full">
-        <div className="form-row grid grid-cols-1 gap-3 my-3">
+    <form onSubmit={handleSubmit}>
+      <div className="border p-4 rounded-lg">
+        <div className="form-row grid grid-cols-3 gap-3 my-3">
           <ERPDataCombobox
             id="backupMethods"
             value={formState.backupMethods}
@@ -126,8 +126,6 @@ const BackupSettingsForm: React.FC = () => {
               { value: 2, label: "Scheduled BackUp" },
             ]}
           />
-        </div>
-        <div className="form-row grid grid-cols-1 gap-3 my-3">
           <ERPInput
             id="backUpPath"
             value={formState.backUpPath}
@@ -138,9 +136,6 @@ const BackupSettingsForm: React.FC = () => {
               handleFieldChange("backUpPath", parseFloat(data.backUpPath))
             }
           />
-        </div>
-
-        <div className="form-row grid grid-cols-2 gap-3 my-3">
           <ERPInput
             id="backupDuration"
             value={formState.backupDuration}
@@ -165,18 +160,16 @@ const BackupSettingsForm: React.FC = () => {
             }
           />
         </div>
-
-        
       </div>
-          <div className="flex justify-end">
-          <ERPButton
-            title="Save Settings"
-            variant="primary"
-            type="submit"
-            loading={isSaving}
-            disabled={isSaving}
-          />
-        </div>
+      <div className="flex justify-end mt-2">
+        <ERPButton
+          title="Save Settings"
+          variant="primary"
+          type="submit"
+          loading={isSaving}
+          disabled={isSaving}
+        />
+      </div>
     </form>
   );
 };

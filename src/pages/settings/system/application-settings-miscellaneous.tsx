@@ -173,10 +173,10 @@ const MiscellaneousSettingsForm: React.FC = () => {
 
   return (
     <Fragment>
-      <form onSubmit={handleSubmit} className="">
-        <div className="flex justify-start items-start space-x-10">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="flex flex-col border p-4 w-full rounded-lg shadow-sm justify-center items-center gap-5 lg:flex-row lg:justify-start lg:p-8 lg:items-start lg:gap-10 xxl:justify-around xxl:p-10">
           <div className="grid grid-cols-1">
-            <div className="grid grid-cols-2 justify-start gap-4">
+            <div className="grid grid-cols-2 xxl:grid-cols-4 gap-4 ">
               <ERPCheckbox
                 id="maintainAllBranchWithCommonInventory"
                 checked={formState.maintainAllBranchWithCommonInventory}
@@ -281,18 +281,6 @@ const MiscellaneousSettingsForm: React.FC = () => {
                   )
                 }
               />
-            </div>
-            <div className="flex justify-end my-4">
-              {/* <ERPButton
-                title={t("set_master_branch_grid_design")}
-                variant="secondary"
-                onClick={() => {
-                  dispatch(toggleMiscellaneousMasterBranchPopup({ isOpen: true }));
-                }}
-                type="submit"
-              /> */}
-            </div>
-            <div className="flex justify-around items-start">
               <ERPCheckbox
                 id="sendSMS"
                 checked={formState.sendSMS}
@@ -312,6 +300,19 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 }
               />
             </div>
+            {/* <div className="flex justify-end my-4">
+              <ERPButton
+                title={t("set_master_branch_grid_design")}
+                variant="secondary"
+                onClick={() => {
+                  dispatch(toggleMiscellaneousMasterBranchPopup({ isOpen: true }));
+                }}
+                type="submit"
+              />
+            </div>
+            <div className="flex justify-around items-start">
+              
+            </div> */}
           </div>
 
           <div className="w-[250px] max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm">

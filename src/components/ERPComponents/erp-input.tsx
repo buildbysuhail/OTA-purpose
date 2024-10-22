@@ -1,6 +1,7 @@
 import * as React from "react"
 import { forwardRef } from "react";
 import ERPElementValidationMessage from "./erp-element-validation-message";
+import { setNestedValue } from "../../utilities/Utils";
 interface ERPInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
   data?: any;
@@ -77,11 +78,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
     sizeClasses = "!p-1 !h-6 !text-[12px]";
   } else if (customSize === "md") {
     sizeClasses = "p-1 h-5 text-[11px]";
-   } else if (customSize === 'lg') {
+  } else if (customSize === 'lg') {
     sizeClasses = "p-1 h-5 text-[11px]";
-    } else {
-      sizeClasses = "";
-    }
+  } else {
+    sizeClasses = "";
+  }
+
+
   return (
     <div className={className}>
       {!noLabel && (
@@ -94,9 +97,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         {prefix ? (
           <div
             onClick={onClickPrefix}
-            className={`${
-              onClickPrefix && "cursor-pointer"
-            } flex items-center justify-center text-slate-400 text-xs px-2 rounded-l font-medium border-r-0 border-gray-300 border bg-slate-100`}
+            className={`${onClickPrefix && "cursor-pointer"
+              } flex items-center justify-center text-slate-400 text-xs px-2 rounded-l font-medium border-r-0 border-gray-300 border bg-slate-100`}
           >
             {prefix}
           </div>
@@ -104,8 +106,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         <div className=" flex-1">
           <input
             onChange={(e) => {
-              
-              onChangeData && data && onChangeData({ ...data, [id]: e.target?.value });
+
+              onChangeData && data && onChangeData(setNestedValue(data, id, e.target?.value));
               onChange && onChange(e);
             }}
             onFocus={onFocus}
@@ -122,11 +124,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
             autoComplete={autocomplete}
             disabled={disabled}
             placeholder={placeholder || label}
-            className={`block w-full ${sizeClasses}  ${prefix ? "" : "rounded-l"} ${
-              suffix ? "" : " rounded-r"
-            } ${inputClassName} border placeholder:capitalize h-9 border-gray-300 ${
-              disabled ? "text-gray-400" : "bg-white text-gray-900"
-            }  px-3 py-2  placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 text-xs`}
+            className={`block w-full ${sizeClasses}  ${prefix ? "" : "rounded-l"} ${suffix ? "" : " rounded-r"
+              } ${inputClassName} border placeholder:capitalize h-9 border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"
+              }  px-3 py-2  placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 text-xs`}
             required={required}
             maxLength={maxLength}
             min={min}
@@ -141,15 +141,14 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         {suffix ? (
           <div
             onClick={onClickSuffix}
-            className={` ${
-              onClickSuffix && "cursor-pointer"
-            } flex items-center justify-center text-slate-400 text-xs p-2 rounded-r-md border-l-0 border bg-slate-100`}
+            className={` ${onClickSuffix && "cursor-pointer"
+              } flex items-center justify-center text-slate-400 text-xs p-2 rounded-r-md border-l-0 border bg-slate-100`}
           >
             {suffix}
           </div>
         ) : null}
       </div>
-     <ERPElementValidationMessage validation={validation}></ERPElementValidationMessage>
+      <ERPElementValidationMessage validation={validation}></ERPElementValidationMessage>
     </div>
   );
 });

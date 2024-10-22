@@ -120,7 +120,7 @@ const EInvoiceTaxPro = () => {
                             label="ASP User ID"
                             placeholder="Enter ASP User ID"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspUserId', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspUserId', data.eInvApiSetting.aspUserId)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.aspPassword')}
@@ -128,7 +128,7 @@ const EInvoiceTaxPro = () => {
                             required
                             placeholder="Enter ASP Password"
                             type="password"
-                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspPassword', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.aspPassword', data.eInvApiSetting.aspPassword)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.authUrl')}
@@ -167,7 +167,7 @@ const EInvoiceTaxPro = () => {
                             label="Username"
                             placeholder="Enter Username"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.userName', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.userName', data.eInvApiLoginDetails.userName)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.password')}
@@ -175,14 +175,14 @@ const EInvoiceTaxPro = () => {
                             placeholder="Enter Password"
                             type="password"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.password', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.password', data.eInvApiLoginDetails.password)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.gstin')}
                             label="GSTIN"
                             placeholder="Enter GSTIN"
                             required
-                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.gstin', data)}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.gstin', data.eInvApiLoginDetails.gstin)}
                         />
                         <ERPInput
                             {...getFieldProps('eInvApiLoginDetails.appKey')}

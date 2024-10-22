@@ -7,7 +7,7 @@ export interface popupDataProps {
 }
 interface popupData {
   userType: popupDataProps
-  userTypePrivilege:popupDataProps
+  userTypePrivilege: popupDataProps
   user: popupDataProps
   counter: popupDataProps
   voucher: popupDataProps
@@ -40,15 +40,15 @@ interface popupData {
   bankCard: popupDataProps
   chartOfAccounts: popupDataProps
   parties: popupDataProps
-  headAndFooter:popupDataProps
-  miscellaneousSettings:popupDataProps
-  eWayBillTaxPro:popupDataProps
-  eInvoiceGST:popupDataProps
+  headAndFooter: popupDataProps
+  miscellaneousSettings: popupDataProps
+  eWayBillTaxPro: popupDataProps
+  eInvoiceGST: popupDataProps
 }
 const initialState: popupData = {
-  miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true},
-  headAndFooter: { isOpen: false, key: null, mode: "edit", reload: true},
-  userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true},
+  miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true },
+  headAndFooter: { isOpen: false, key: null, mode: "edit", reload: true },
+  userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true },
   userType: { isOpen: false, key: null, mode: "edit", reload: true },
   user: { isOpen: false, key: null, mode: "edit", reload: true },
   counter: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -221,7 +221,7 @@ const popupDataSlice = createSlice({
     toggleEInvoiceGST: (state, action: PayloadAction<popupDataProps>) => {
       state.eInvoiceGST = action.payload;
     },
-  
+
   },
 });
 

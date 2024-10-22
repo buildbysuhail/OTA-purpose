@@ -399,7 +399,7 @@ const ERPSettingsFormMain = () => {
       </div>
 
       <div className="border p-4 flex flex-col gap-6 rounded-lg">
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-4 gap-6">
           <div className="flex items-center">
             <ERPCheckbox
               id="allowPrivilegeCard"

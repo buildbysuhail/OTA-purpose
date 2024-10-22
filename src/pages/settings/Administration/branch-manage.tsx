@@ -95,11 +95,11 @@ export const initialDataBranch = {
 };
 
 const initconformPassWord = {
-  data:{
-  confirmPassword:""
+  data: {
+    confirmPassword: ""
   },
-  validations:{
-     confirmPassword:""
+  validations: {
+    confirmPassword: ""
   }
 }
 
@@ -131,14 +131,14 @@ export const BranchGridManage: React.FC = React.memo(() => {
           {...getFieldProps("branchCode")}
           label="Branch Code"
           required
-          onChangeData={(data) => handleFieldChange("branchCode", data)}
+          onChangeData={(data) => handleFieldChange("branchCode", data.branchCode)}
         />
 
         <ERPInput
           {...getFieldProps("branchName")}
           label=" Name"
           required
-          onChangeData={(data) => handleFieldChange("branchName", data)}
+          onChangeData={(data) => handleFieldChange("branchName", data.branchName)}
         />
         {/* <ERPDataCombobox
           {...getFieldProps("companyID")}
@@ -157,27 +157,27 @@ export const BranchGridManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("address1")}
           label="Address 1"
-          onChangeData={(data) => handleFieldChange("address1", data)}
+          onChangeData={(data) => handleFieldChange("address1", data.address1)}
         />
         <ERPInput
           {...getFieldProps("address2")}
           label="Address 2"
-          onChangeData={(data) => handleFieldChange("address2", data)}
+          onChangeData={(data) => handleFieldChange("address2", data.address2)}
         />
         <ERPInput
           {...getFieldProps("city")}
           label="City"
-          onChangeData={(data) => handleFieldChange("city", data)}
+          onChangeData={(data) => handleFieldChange("city", data.city)}
         />
         <ERPInput
           {...getFieldProps("district")}
           label="District"
-          onChangeData={(data) => handleFieldChange("district", data)}
+          onChangeData={(data) => handleFieldChange("district", data.district)}
         />
         <ERPInput
           {...getFieldProps("bState")}
           label="State"
-          onChangeData={(data) => handleFieldChange("bState", data)}
+          onChangeData={(data) => handleFieldChange("bState", data.bState)}
         />
         <ERPDataCombobox
           {...getFieldProps("country")}
@@ -189,61 +189,61 @@ export const BranchGridManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("country", data);
+            handleFieldChange("country", data.country);
           }}
           label={t("country")}
         />
         <ERPInput
           {...getFieldProps("pinCode")}
           label="pinCode"
-          onChangeData={(data) => handleFieldChange("pinCode", data)}
+          onChangeData={(data) => handleFieldChange("pinCode", data.pinCode)}
         />
         <ERPInput
           {...getFieldProps("branchManager")}
           label="Branch Manager"
-          onChangeData={(data) => handleFieldChange("branchManager", data)}
+          onChangeData={(data) => handleFieldChange("branchManager", data.branchManager)}
         />
         <ERPInput
           {...getFieldProps("phone")}
           label="Land Phone"
-          onChangeData={(data) => handleFieldChange("phone", data)}
+          onChangeData={(data) => handleFieldChange("phone", data.phone)}
         />
         <ERPInput
           {...getFieldProps("mobile")}
           label="Mobile Phone"
-          onChangeData={(data) => handleFieldChange("mobile", data)}
+          onChangeData={(data) => handleFieldChange("mobile", data.mobile)}
         />
         <ERPInput
           {...getFieldProps("fax")}
           label="FAX"
-          onChangeData={(data) => handleFieldChange("fax", data)}
+          onChangeData={(data) => handleFieldChange("fax", data.fax)}
         />
         <ERPInput
           {...getFieldProps("tin")}
           label={t("tin")}
           required
-          onChangeData={(data) => handleFieldChange("tin", data)}
+          onChangeData={(data) => handleFieldChange("tin", data.tin)}
         />
         <ERPInput
           {...getFieldProps("registrationNumber")}
           label="Register No"
-          onChangeData={(data) => handleFieldChange("registrationNumber", data)}
+          onChangeData={(data) => handleFieldChange("registrationNumber", data.registrationNumber)}
         />
         <ERPInput
           {...getFieldProps("email")}
           label="Email"
-          onChangeData={(data) => handleFieldChange("email", data)}
+          onChangeData={(data) => handleFieldChange("email", data.email)}
         />
         <ERPInput
           {...getFieldProps("remarks")}
           label="Remarks"
-          onChangeData={(data) => handleFieldChange("remarks", data)}
+          onChangeData={(data) => handleFieldChange("remarks", data.remarks)}
         />
         <ERPCheckbox
           {...getFieldProps("useMainBranchInventory")}
           label="Use Main Branch Inventory"
           onChangeData={(data) =>
-            handleFieldChange("useMainBranchInventory", data)
+            handleFieldChange("useMainBranchInventory", data.useMainBranchInventory)
           }
         />
       </div>
@@ -254,7 +254,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             label="Financial Year From"
             disabled={isEdit}
             required
-            onChangeData={(data) => handleFieldChange("dateFrom", data)}
+            onChangeData={(data) => handleFieldChange("dateFrom", data.dateFrom)}
           />
 
           <ERPDateInput
@@ -262,7 +262,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             label="Financial Year To"
             disabled={isEdit}
             required
-            onChangeData={(data) => handleFieldChange("dateTo", data)}
+            onChangeData={(data) => handleFieldChange("dateTo", data.dateTo)}
           />
         </div>
         <div className="flex  gap-5">
@@ -270,7 +270,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             {...getFieldProps("username")}
             label="Username"
             disabled={isEdit}
-            onChangeData={(data) => handleFieldChange("username", data)}
+            onChangeData={(data) => handleFieldChange("username", data.username)}
           />
           <ERPInput
             {...getFieldProps("password")}
@@ -278,9 +278,9 @@ export const BranchGridManage: React.FC = React.memo(() => {
             type="password"
             disabled={isEdit}
             required
-            onChangeData={(data) => handleFieldChange("password", data)}
+            onChangeData={(data) => handleFieldChange("password", data.password)}
           />
-         
+
           <ERPInput
             id="confirmPassword"
             label="Confirm Password"
@@ -300,9 +300,9 @@ export const BranchGridManage: React.FC = React.memo(() => {
           />
 
 
-    {/* Show error message if passwords don't match */}
-    {/* {errorMessage && <p className="text-red-500">{errorMessage}</p>} */}
-           {/* <ERPInput
+          {/* Show error message if passwords don't match */}
+          {/* {errorMessage && <p className="text-red-500">{errorMessage}</p>} */}
+          {/* <ERPInput
             {...getFieldProps("confirmPassword")}
             label="Confirm Password"
             disabled={isEdit}

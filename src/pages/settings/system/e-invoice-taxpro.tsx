@@ -88,7 +88,7 @@ const EInvoiceTaxPro = () => {
             <div className='flex items-stretch gap-3'>
                 <div className="w-2/4">
                     <h3 className="font-semibold text-sm mb-3 ml-2">E-Invoice API Setting</h3>
-                    <div className=' p-4 rounded-lg flex flex-col gap-5 flex-grow'>
+                    <div className='border p-4 rounded-lg flex flex-col gap-5 flex-grow'>
                         <ERPInput
                             {...getFieldProps('eInvApiSetting.client_id')}
                             label="Client ID"
@@ -157,6 +157,14 @@ const EInvoiceTaxPro = () => {
                             required
                             onChangeData={(data: any) => handleFieldChange('eInvApiSetting.ewbByIRN', data)}
                         />
+                        <ERPInput
+                            {...getFieldProps('eInvApiSetting.cancelEwbUrl')}
+                            label="Cancel EWB URL"
+                            placeholder="Enter Cancel EWB URL"
+                            readOnly
+                            style={{ color: 'black' }}
+                            onChangeData={(data: any) => handleFieldChange('eInvApiSetting.cancelEwbUrl', data)}
+                        />
                     </div>
                 </div>
                 <div className='w-2/4'>
@@ -220,14 +228,6 @@ const EInvoiceTaxPro = () => {
                             onChangeData={(data: any) => handleFieldChange('eInvApiLoginDetails.e_InvoiceTokenExp', data)}
                         />
                     </div>
-                    <ERPInput
-                        {...getFieldProps('eInvApiSetting.cancelEwbUrl')}
-                        label="Cancel EWB URL"
-                        placeholder="Enter Cancel EWB URL"
-                        readOnly
-                        style={{ color: 'black' }}
-                        onChangeData={(data: any) => handleFieldChange('eInvApiSetting.cancelEwbUrl', data)}
-                    />
                 </div>
             </div>
             <div className='text-right mt-3'>

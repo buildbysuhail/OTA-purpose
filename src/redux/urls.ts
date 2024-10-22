@@ -149,6 +149,7 @@ const Urls = {
   CompanyProfiles: "/Core/CompanyProfile/",
   Branch: "/Core/Branch/",
   BranchInfo: "/Core/Branch/BranchInfo",
+  branch_code:"/Branch/GetNextBranchCode/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 

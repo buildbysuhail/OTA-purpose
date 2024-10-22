@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -6,16 +6,14 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
-import {toggleBranchPopup } from "../../../redux/slices/popup-reducer";
+import { toggleBranchPopup } from "../../../redux/slices/popup-reducer";
 import { ActionType } from "../../../redux/types";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 
 export interface BranchDataInfo {
-  id: number;
+  branchID?: number;
   companyID: number;
-  dateFrom: string;
-  dateTo: string;
   branchCode: string;
   branchName: string;
   address1: string;
@@ -23,7 +21,7 @@ export interface BranchDataInfo {
   city: string;
   district: string;
   bState: string;
-  country: number;
+  country: string | number;
   pinCode: string;
   phone: string;
   mobile: string;
@@ -33,33 +31,68 @@ export interface BranchDataInfo {
   registrationNumber: string;
   branchManager: string;
   remarks: string;
-  userName: string;
-  password: string;
+  createdUserID?: number;
+  createdDate?: string;
+  modifiedUserID?: number;
+  modifiedDate?: string;
+  settingsDone?: boolean;
   useMainBranchInventory: boolean;
 }
 
+const initialBranchData: BranchDataInfo = {
+  branchID: 0,
+  companyID: 0,
+  branchCode: "",
+  branchName: "",
+  address1: "",
+  address2: "",
+  city: "",
+  district: "",
+  bState: "",
+  country: "",
+  pinCode: "",
+  phone: "",
+  mobile: "",
+  fax: "",
+  email: "",
+  tin: "",
+  registrationNumber: "",
+  branchManager: "",
+  remarks: "",
+  createdUserID: 0,
+  createdDate: "",
+  modifiedUserID: 0,
+  modifiedDate: "",
+  settingsDone: true,
+  useMainBranchInventory: true,
+};
+
 const BranchManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-  const { isEdit, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<BranchDataInfo>({
-      url: Urls.BranchInfo,
-      onSuccess: useCallback(
-        () => dispatch(toggleBranchPopup({ isOpen: false })),
-        [dispatch]
-      ),
-      method: ActionType.POST,
-      useApiClient: true,
-      loadDataRequired:true
-    });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleBranchPopup({ isOpen: false }));
-  }, [dispatch]);
-
   const { t } = useTranslation();
+  const [formData, setFormData] = useState<BranchDataInfo>(initialBranchData);
+
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+    handleClear
+  } = useFormManager<BranchDataInfo>({
+    url: Urls.BranchInfo,
+    onSuccess: useCallback(() => {
+      dispatch(toggleBranchPopup({ isOpen: false }));
+    }, [dispatch]),
+    method: ActionType.POST,
+    useApiClient: true,
+    loadDataRequired: true,
+    initialData: initialBranchData
+  });
+
 
   return (
-    <div className="w-full pt-4">
+    <form className="w-full p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <ERPInput
           {...getFieldProps("id")}
@@ -222,7 +255,7 @@ const BranchManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data)}
         />
-      
+
         <ERPCheckbox
           {...getFieldProps("useMainBranchInventory")}
           label={t("use_main_branch_inventory")}
@@ -237,7 +270,7 @@ const BranchManage: React.FC = React.memo(() => {
         onCancel={onClose}
        
       /> */}
-    </div>
+    </form>
   );
 });
 

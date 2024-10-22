@@ -257,23 +257,21 @@ const BranchManage: React.FC = React.memo(() => {
           onChangeData={(value) => handleFieldChange("remarks", value.remarks)}
         />
 
-        <div className="col-span-full">
-          <ERPCheckbox
-            {...getFieldProps("useMainBranchInventory")}
-            label={t("use_main_branch_inventory")}
-            onChangeData={(value) => handleFieldChange("useMainBranchInventory", value.useMainBranchInventory)}
-          />
-        </div>
+        <ERPCheckbox
+          {...getFieldProps("useMainBranchInventory")}
+          label={t("use_main_branch_inventory")}
+          onChangeData={(value) => handleFieldChange("useMainBranchInventory", value.useMainBranchInventory)}
+        />
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <ERPFormButtons
           onClear={handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
           onCancel={onClose}
         />
-      </div>
+      </div> */}
     </form>
   );
 });

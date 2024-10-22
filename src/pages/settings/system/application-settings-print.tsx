@@ -24,8 +24,8 @@ const initialState: FormState = {
 };
 
 const PrintSettingForm: React.FC = () => {
-    const [formState, setFormState] = useState<FormState>(initialState);
-    const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -105,45 +105,45 @@ const PrintSettingForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-    <div className="border p-4 rounded-lg">
-      <div className="form-row grid grid-cols-1 gap-3 my-3">
-        <ERPInput
-          id="defaultPrinter"
-          value={formState.defaultPrinter}
-          data={formState}
-          label="Keep User Actions (in Days)"
-          placeholder="Enter number of days"
-          type="text"
-          onChangeData={(data: any) =>
-            handleFieldChange("defaultPrinter", data.defaultPrinter)
-          }
-        />
-      </div>
+      <div className="border p-4 rounded-lg">
+        <div className="form-row grid grid-cols-1 gap-3 my-3">
+          <ERPInput
+            id="defaultPrinter"
+            value={formState.defaultPrinter}
+            data={formState}
+            label="Default Printer"
+            placeholder="Enter number of days"
+            type="text"
+            onChangeData={(data: any) =>
+              handleFieldChange("defaultPrinter", data.defaultPrinter)
+            }
+          />
+        </div>
 
-      <div className="form-row grid grid-cols-3 gap-3 my-3">
-        <ERPCheckbox
-          id="printGatePass"
-          checked={formState.printGatePass}
-          data={formState}
-          label="Print GatePass"
-          onChangeData={(data: any) =>
-            handleFieldChange("printGatePass", data.printGatePass)
-          }
-        />
-        <ERPCheckbox
-          id="showReprintAuthorisation"
-          checked={formState.showReprintAuthorisation}
-          data={formState}
-          label="Show Reprint Authorisation"
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "showReprintAuthorisation",
-              data.showReprintAuthorisation
-            )
-          }
-        />
+        <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
+          <ERPCheckbox
+            id="printGatePass"
+            checked={formState.printGatePass}
+            data={formState}
+            label="Print GatePass"
+            onChangeData={(data: any) =>
+              handleFieldChange("printGatePass", data.printGatePass)
+            }
+          />
+          <ERPCheckbox
+            id="showReprintAuthorisation"
+            checked={formState.showReprintAuthorisation}
+            data={formState}
+            label="Show Reprint Authorisation"
+            onChangeData={(data: any) =>
+              handleFieldChange(
+                "showReprintAuthorisation",
+                data.showReprintAuthorisation
+              )
+            }
+          />
+        </div>
       </div>
-
       <div className="flex justify-end mt-2">
         <ERPButton
           title="Save Settings"
@@ -153,7 +153,6 @@ const PrintSettingForm: React.FC = () => {
           type="submit"
         />
       </div>
-    </div>
     </form>
   );
 };

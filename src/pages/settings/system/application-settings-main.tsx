@@ -122,7 +122,7 @@ const ERPSettingsFormMain = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border p-4 flex flex-col gap-6 rounded-lg">
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             field={{
               id: "maintainBusinessType",
@@ -234,7 +234,7 @@ const ERPSettingsFormMain = () => {
           />
         </div>
 
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             field={{
               id: "roundingMethod",
@@ -333,7 +333,7 @@ const ERPSettingsFormMain = () => {
           />
         </div>
 
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPCheckbox
             id="autoChangeTransactionDateByMidnight"
             label="Auto Change Transaction Date By 12:00 AM"
@@ -399,7 +399,7 @@ const ERPSettingsFormMain = () => {
       </div>
 
       <div className="border p-4 flex flex-col gap-6 rounded-lg">
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-6">
           <div className="flex items-center">
             <ERPCheckbox
               id="allowPrivilegeCard"
@@ -477,7 +477,7 @@ const ERPSettingsFormMain = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-6">
           <ERPCheckbox
             id="maintainSeperatePrefixforCashSales"
             label="Maintain Separate Prefix for Cash Sales"

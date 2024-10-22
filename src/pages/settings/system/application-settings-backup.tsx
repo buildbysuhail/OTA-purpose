@@ -106,7 +106,7 @@ const BackupSettingsForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div className="border p-4 rounded-lg">
-        <div className="form-row grid grid-cols-3 gap-3 my-3">
+        <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
           <ERPDataCombobox
             id="backupMethods"
             value={formState.backupMethods}

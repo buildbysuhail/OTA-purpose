@@ -187,7 +187,7 @@ const ApplicationSettingsProduct = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border p-4 rounded-lg">
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             id="batchCriteria"
             field={{
@@ -374,7 +374,7 @@ const ApplicationSettingsProduct = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-6 mt-4">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6 mt-4">
           <div className="flex items-center justify-between">
             <ERPCheckbox
               id="useProductImages"
@@ -476,7 +476,7 @@ const ApplicationSettingsProduct = () => {
       </div>
 
       <div className="border p-4 rounded-lg">
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
           <ERPCheckbox
             data={formState}
             id="allowOnlyScanProductMarkedAsWeighingScaleItems"

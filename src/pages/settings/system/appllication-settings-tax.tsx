@@ -248,15 +248,15 @@ const TaxSettingsForm: React.FC = () => {
             label={t("income_tax_account")}
           />
         </div>
-        <div className="my-4 flex items-center justify-end">
-          <ERPButton
-            title="Save Settings"
-            variant="primary"
-            disabled={isSaving}
-            loading={isSaving}
-            type="submit"
-          />
-        </div>
+      </div>
+      <div className="my-4 flex items-center justify-end">
+        <ERPButton
+          title="Save Settings"
+          variant="primary"
+          disabled={isSaving}
+          loading={isSaving}
+          type="submit"
+        />
       </div>
     </form>
   );

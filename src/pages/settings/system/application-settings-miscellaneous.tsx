@@ -177,55 +177,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
         <div className="flex flex-col border p-4 w-full rounded-lg shadow-sm justify-center items-center gap-5 
         lg:flex-row lg:justify-start lg:p-8 lg:items-start lg:gap-10 xxl:justify-around xxl:p-10">
           <div className="grid grid-cols-1">
-            <div className="grid grid-cols-2 xxl:grid-cols-4 gap-4 ">
-              <ERPCheckbox
-                id="maintainAllBranchWithCommonInventory"
-                checked={formState.maintainAllBranchWithCommonInventory}
-                data={formState}
-                label={t("minimum_shift_duration")}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "maintainAllBranchWithCommonInventory",
-                    data.maintainAllBranchWithCommonInventory
-                  )
-                }
-              />
-              <ERPCheckbox
-                id="autoSyncSIandPI_BT"
-                checked={formState.autoSyncSIandPI_BT}
-                data={formState}
-                label={t("auto_sync")}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "autoSyncSIandPI_BT",
-                    data.autoSyncSIandPI_BT
-                  )
-                }
-              />
-              <ERPCheckbox
-                id="maintainUntalliedBills"
-                checked={formState.maintainUntalliedBills}
-                data={formState}
-                label={t("maintain_untallied_bills")}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "maintainUntalliedBills",
-                    data.maintainUntalliedBills
-                  )
-                }
-              />
-              <ERPCheckbox
-                id="allowSalesDetailedEdit"
-                checked={formState.allowSalesDetailedEdit}
-                data={formState}
-                label={t("allow_sales_detailed_edit")}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "allowSalesDetailedEdit",
-                    data.allowSalesDetailedEdit
-                  )
-                }
-              />
+            <div className="grid grid-cols-2 xl:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 ">
               <ERPInput
                 id="salesmanIncentive"
                 value={formState.salesmanIncentive}
@@ -283,23 +235,71 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 }
               />
               <ERPCheckbox
-                id="sendSMS"
-                checked={formState.sendSMS}
+                id="maintainAllBranchWithCommonInventory"
+                checked={formState.maintainAllBranchWithCommonInventory}
                 data={formState}
-                label={t("send_sms")}
+                label={t("minimum_shift_duration")}
                 onChangeData={(data) =>
-                  handleFieldChange("sendSMS", data.sendSMS)
+                  handleFieldChange(
+                    "maintainAllBranchWithCommonInventory",
+                    data.maintainAllBranchWithCommonInventory
+                  )
                 }
               />
-              <ERPInput
-                id="sMSURL"
-                value={formState.sMSURL}
+              <ERPCheckbox
+                id="autoSyncSIandPI_BT"
+                checked={formState.autoSyncSIandPI_BT}
                 data={formState}
-                label={t("url")}
+                label={t("auto_sync")}
                 onChangeData={(data) =>
-                  handleFieldChange("sMSURL", data.sMSURL)
+                  handleFieldChange(
+                    "autoSyncSIandPI_BT",
+                    data.autoSyncSIandPI_BT
+                  )
                 }
               />
+              <ERPCheckbox
+                id="maintainUntalliedBills"
+                checked={formState.maintainUntalliedBills}
+                data={formState}
+                label={t("maintain_untallied_bills")}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "maintainUntalliedBills",
+                    data.maintainUntalliedBills
+                  )
+                }
+              />
+              <ERPCheckbox
+                id="allowSalesDetailedEdit"
+                checked={formState.allowSalesDetailedEdit}
+                data={formState}
+                label={t("allow_sales_detailed_edit")}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "allowSalesDetailedEdit",
+                    data.allowSalesDetailedEdit
+                  )
+                }
+              />
+
+              <div className="flex items-center  justify-between">
+                <ERPCheckbox
+                  id="sendSMS"
+                  checked={formState.sendSMS}
+                  data={formState}
+                  label={t("send_sms")}
+                  onChangeData={(data) => handleFieldChange("sendSMS", data.sendSMS)}
+                />
+                <ERPInput
+                  id="sMSURL"
+                  value={formState.sMSURL}
+                  data={formState}
+                  label=" "
+                  disabled={!formState.sendSMS} 
+                  onChangeData={(data) => handleFieldChange("sMSURL", data.sMSURL)}
+                />
+              </div>
             </div>
             {/* <div className="flex justify-end my-4">
               <ERPButton
@@ -317,47 +317,47 @@ const MiscellaneousSettingsForm: React.FC = () => {
           </div>
 
           <div className="w-[250px] max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm">
-          
-              <h6 className="text-center font-medium mb-5">
-                {" "}
-                {t("sync_systemCode")}
-              </h6>
-            
-         
+
+            <h6 className="text-center font-medium mb-5">
+              {" "}
+              {t("sync_systemCode")}
+            </h6>
+
+
             <div className="h-40 overflow-y-scroll snap-x  mb-2  rounded-sm shadow-sm  ">
-              
-              {!dataLoaded ?(
+
+              {!dataLoaded ? (
                 // Show default content before data is loaded
                 <div className="my-10 ">
-                <ul className="list-none text-center text-gray-500 snap-center">
-                <li className="py-10 px-3">
-                  {"Click load to fetch system code"}
-                  {/* Default message */}
-                </li>
-               </ul>
-               </div>
-              ) :(
+                  <ul className="list-none text-center text-gray-500 snap-center">
+                    <li className="py-10 px-3">
+                      {"Click load to fetch system code"}
+                      {/* Default message */}
+                    </li>
+                  </ul>
+                </div>
+              ) : (
                 <ul className="list-none text-center snap-center">
-                { systemCode && systemCode.length > 0 ? (
-                   systemCode.map((code: systemCode, index: number) => (
-                     <li className="p-1 text-xs " key={index}>
-                       {code.systemCode}{" "}
-                     </li>
-                   ))
-                 ) : (
-                   <li className="">{"No data available"}</li>
-                 )}
-                 
-             
-               </ul>
+                  {systemCode && systemCode.length > 0 ? (
+                    systemCode.map((code: systemCode, index: number) => (
+                      <li className="p-1 text-xs " key={index}>
+                        {code.systemCode}{" "}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="">{"No data available"}</li>
+                  )}
+
+
+                </ul>
               )}
-             
-             
-             
+
+
+
             </div>
             <li className="flex justify-end mb-2">
-            <ERPButton
-                
+              <ERPButton
+
                 className=" w-0 h-0 p-0 bg-white "
                 type="button"
                 onClick={() => setAddSystemCode(!addSystemCode)}
@@ -365,22 +365,22 @@ const MiscellaneousSettingsForm: React.FC = () => {
               />
             </li>
             {addSystemCode && (
-              
-                  <ERPInput
-                    id="newSystemCode"
-                    noLabel={true}
-                    data={SystemCodeAddData}
-                    value={SystemCodeAddData.systemCode}
-                    onChange={(e) => {
-                      setSystemCodeAddData({
-                        ...SystemCodeAddData,
-                        systemCode: e.target.value,
-                      });
-                    }}
-                    placeholder={"enter_new_system_code"}
-                  />
-              
-              )}
+
+              <ERPInput
+                id="newSystemCode"
+                noLabel={true}
+                data={SystemCodeAddData}
+                value={SystemCodeAddData.systemCode}
+                onChange={(e) => {
+                  setSystemCodeAddData({
+                    ...SystemCodeAddData,
+                    systemCode: e.target.value,
+                  });
+                }}
+                placeholder={"enter_new_system_code"}
+              />
+
+            )}
             <div className="flex  justify-end ">
               <ERPButton
                 // title={t("load")}

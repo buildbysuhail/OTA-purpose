@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { getAction, postAction } from "../../../redux/slices/app-thunks";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -8,7 +7,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
-import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { t } from "i18next";
 
 interface FormState {
   backupMethods: number;
@@ -31,7 +30,6 @@ const BackupSettingsForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const api = new APIClient();
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     loadSettings();
@@ -98,7 +96,7 @@ const BackupSettingsForm: React.FC = () => {
     return (
       <div className="error-message">
         {error}
-        <button onClick={loadSettings}>Retry</button>
+        <button onClick={loadSettings}>{t("retry")}</button>
       </div>
     );
   }
@@ -119,7 +117,7 @@ const BackupSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("backupMethods", data.backupMethods)
             }
-            label="Backup Methods"
+            label={t("backup_methods")}
             options={[
               { value: 0, label: "No BackUp" },
               { value: 1, label: "BackUp On Close" },
@@ -130,8 +128,8 @@ const BackupSettingsForm: React.FC = () => {
             id="backUpPath"
             value={formState.backUpPath}
             data={formState}
-            label="Backup Path"
-            placeholder="Enter discount threshold"
+            label={t("backup_path")}
+            placeholder={t("enter_discount_threshold")}
             onChangeData={(data: any) =>
               handleFieldChange("backUpPath", parseFloat(data.backUpPath))
             }
@@ -140,8 +138,8 @@ const BackupSettingsForm: React.FC = () => {
             id="backupDuration"
             value={formState.backupDuration}
             data={formState}
-            label="Duration"
-            placeholder="Enter discount threshold"
+            label={t("duration")}
+            placeholder={t("enter_discount_threshold")}
             type="number"
             onChangeData={(data: any) =>
               handleFieldChange(
@@ -154,7 +152,7 @@ const BackupSettingsForm: React.FC = () => {
             id="compressBackupFile"
             checked={formState.compressBackupFile}
             data={formState}
-            label="Compress Backup File"
+            label={t("compress_backup_file")}
             onChangeData={(data) =>
               handleFieldChange("compressBackupFile", data.compressBackupFile)
             }
@@ -163,7 +161,7 @@ const BackupSettingsForm: React.FC = () => {
       </div>
       <div className="flex justify-end mt-2">
         <ERPButton
-          title="Save Settings"
+          title={t("save_settings")}
           variant="primary"
           type="submit"
           loading={isSaving}

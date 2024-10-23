@@ -734,5 +734,11 @@
   "default_printer": "الطابعة الافتراضية",
   "enter_number_of_days": "أدخل عدد الأيام",
   "print_gatePass": "طباعة بوابة المرور",
-  "show_reprint_authorisation": "إظهار إذن إعادة الطباعة"
+  "show_reprint_authorisation": "إظهار إذن إعادة الطباعة",
+
+  "backup_methods": "طرق النسخ الاحتياطي",
+  "backup_path": "مسار النسخ الاحتياطي",
+  "enter_discount_threshold": "أدخل حد الخصم",
+  "compress_backup_file": "ضغط ملف النسخ الاحتياطي",
+  "duration":"مدة"
 }

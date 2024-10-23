@@ -197,6 +197,17 @@ const Urls = {
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
   acc_reports_day_book_detailed: "/Accounts/RptDayBook/DayBookDetailed",
+  acc_reports_day_book_summary: "/Accounts/RptDayBook/DayBookSummary", 
+  acc_reports_payment: "/Accounts/RptPaymentReport/PaymentReport",
+  acc_reports_collection: "/Accounts/RptCollectionReport/CollectionReport",
+  acc_reports_cash_summary: "/Accounts/RptCashSummaryReport/CashSummary",
+ acc_reports_transaction: "/Accounts/RptReports/TransactionReport",
+acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory",
+acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts",
+acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport",
+
+
+
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
   acc_reports_aging_payable_direct: "/Accounts/RptAging/AgingPayableskiptake/",

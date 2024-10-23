@@ -25,67 +25,62 @@ const AccountsHistoryReport = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
-      caption: t('date'),
+      caption: t('transaction_date'),
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 100,
     },
     {
-      dataField: "form",
-      caption: t("form"),
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 120,
     },
+    // {
+    //   dataField: "timeStamp",
+    //   caption: t("time"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 120,
+    // },
     {
       dataField: "vchNo",
       caption:  t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 120,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
-      dataField: "particulars",
+      dataField: "form",
+      caption:  t("voucher_type"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+
+    {
+      dataField: "accountName",
       caption: t("account"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 200,
     },
     {
-      dataField: "refNo",
-      caption: t("ref_no"),
+      dataField: "particulars",
+      caption: t("particulars"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 200,
     },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+
     {
       dataField: "debit",
       caption: t('debit'),
@@ -103,53 +98,29 @@ const AccountsHistoryReport = () => {
       width: 150,
     },
     {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
+      dataField: "narration",
+      caption: t("narration"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
+    {
+      dataField: "actionStatus",
+      caption: t("action"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      dataField: "userName",
+      caption: t('user_name'),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 140,
+    },
   ];
   return (
     <Fragment>
@@ -160,8 +131,8 @@ const AccountsHistoryReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("accounts_transaction_history")}
+                  dataUrl= {Urls.acc_reports_accounts_history}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

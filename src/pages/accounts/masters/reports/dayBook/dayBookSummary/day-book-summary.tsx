@@ -28,17 +28,10 @@ const DayBookSummary = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 200,
     },
     {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "vchNo",
+      dataField: "voucherType",
       caption:  t("voucher_no"),
       dataType: "string",
       allowSearch: true,
@@ -59,39 +52,39 @@ const DayBookSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 350,
     },
-    {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+    // {
+    //   dataField: "refNo",
+    //   caption: t("ref_no"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "refDate",
+    //   caption: t("ref_date"),
+    //   dataType: "date",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "narration",
+    //   caption: t("narration"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
     {
       dataField: "debit",
       caption: t('debit'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
     {
       dataField: "credit",
@@ -99,7 +92,7 @@ const DayBookSummary = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
     {
       dataField: "balance",
@@ -107,7 +100,7 @@ const DayBookSummary = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
   
    
@@ -159,8 +152,8 @@ const DayBookSummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("day_book_summary")}
+                  dataUrl= {Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

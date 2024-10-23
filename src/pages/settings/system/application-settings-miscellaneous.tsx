@@ -222,7 +222,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 }
               />
 
-              <ERPInput
+              {/* <ERPInput
                 id="secondDisplayImagesPath"
                 value={formState.secondDisplayImagesPath}
                 data={formState}
@@ -233,12 +233,28 @@ const MiscellaneousSettingsForm: React.FC = () => {
                     data.secondDisplayImagesPath
                   )
                 }
-              />
+              /> */}
+
+              <div className="mb-2">
+                <label
+                  htmlFor="secondDisplayImagesPath"
+                  className="block text-[12px] font-medium text-gray-700">
+                  {t("second_display_images_path")}
+                </label>
+                <input
+                  type="file"
+                  id="secondDisplayImagesPath"
+                  className="mt-1 w-full border border-gray-300 p-2 rounded-md"
+                  onChange={(data: any) =>
+                    handleFieldChange("secondDisplayImagesPath", data.secondDisplayImagesPath)
+                  }
+                />
+              </div>
               <ERPCheckbox
                 id="maintainAllBranchWithCommonInventory"
                 checked={formState.maintainAllBranchWithCommonInventory}
                 data={formState}
-                label={t("minimum_shift_duration")}
+                label={t("maintain_all_branch")}
                 onChangeData={(data) =>
                   handleFieldChange(
                     "maintainAllBranchWithCommonInventory",
@@ -296,7 +312,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                   value={formState.sMSURL}
                   data={formState}
                   label=" "
-                  disabled={!formState.sendSMS} 
+                  disabled={!formState.sendSMS}
                   onChangeData={(data) => handleFieldChange("sMSURL", data.sMSURL)}
                 />
               </div>

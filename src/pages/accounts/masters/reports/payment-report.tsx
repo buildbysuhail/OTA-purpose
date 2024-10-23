@@ -32,28 +32,30 @@ const PaymentReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 180,
     },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
+  
     {
       dataField: "vchNo",
       caption:  t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 180,
+    },
+    {
+      dataField: "form",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 180,
     },
     // {
     //   dataField: "ledger",
     //   caption: t("account"),
     //   dataType: "string",
-    //   allowSearch: true,
+    //   allowSearch: true, 
     //   allowFiltering: true,
     //   width: 150,
     // },
@@ -63,7 +65,7 @@ const PaymentReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
       dataField: "refNo",
@@ -71,15 +73,7 @@ const PaymentReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
+      width: 180,
     },
     {
       dataField: "narration",
@@ -87,32 +81,32 @@ const PaymentReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
-      dataField: "debit",
-      caption: t('debit'),
+      dataField: "amount",
+      caption: t('amount'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+    // {
+    //   dataField: "credit",
+    //   caption: t("credit"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "balance",
+    //   caption: t("balance"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
   
    
     // {
@@ -163,8 +157,8 @@ const PaymentReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("payment_report")}
+                  dataUrl= {Urls.acc_reports_payment}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

@@ -26,29 +26,29 @@ const CashSummary = () => {
   const [filter, setFilter] =useState<CashSummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 50,
-    },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "vchNo",
-      caption:  t("voucher_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+    // {
+    //   dataField: "date",
+    //   caption: t('date'),
+    //   dataType: "date",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 50,
+    // },
+    // {
+    //   dataField: "form",
+    //   caption: t("form"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    // },
+    // {
+    //   dataField: "vchNo",
+    //   caption:  t("voucher_no"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
     // {
     //   dataField: "ledger",
     //   caption: t("account"),
@@ -59,43 +59,42 @@ const CashSummary = () => {
     // },
     {
       dataField: "particulars",
-      caption: t("account"),
+      caption: t("particulars"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
     },
-    {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+    // {
+    //   dataField: "refNo",
+    //   caption: t("ref_no"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "refDate",
+    //   caption: t("ref_date"),
+    //   dataType: "date",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "narration",
+    //   caption: t("narration"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
     {
       dataField: "debit",
       caption: t('debit'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
       dataField: "credit",
@@ -103,7 +102,7 @@ const CashSummary = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
       dataField: "balance",
@@ -111,7 +110,7 @@ const CashSummary = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
   
    
@@ -163,8 +162,8 @@ const CashSummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("cash_summary")}
+                  dataUrl= {Urls.acc_reports_cash_summary}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

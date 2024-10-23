@@ -687,5 +687,21 @@
    "ledger_report":"Ledger Report",
    "cash_book":"Cash Book",
   "day_book_detailed":"Day Book Detailed Report",
-  "rpos":"Rpos"
+  "rpos":"Rpos",
+  "day_book_summary":"Day Book Summary",
+  "amount":"Amount",
+  "payment_report":"Payment Report",
+  "collection_report":"Collection Report",
+  "cash_summary":"Cash Summary",
+   "particulars":"Particulars",
+   "transaction_report":"Transaction Report",
+  "transaction_date":"Transaction Date",
+  "grand_total":"Grand Total",
+ "cash_received":"Cash Received",
+ "inventory_transaction_history":"Inventory Transaction History",
+ "time":"Time",
+ "accounts_transaction_history":"Accounts Transaction History",
+"c_type":"CType",
+ "description":"Description",
+ "daily_summary_report":"Daily Summary Report"
 }

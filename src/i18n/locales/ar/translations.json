@@ -686,5 +686,21 @@
    "ledger_report": "تقرير الأستاذ",
    "cash_book": "دفتر النقدية",
    "day_book_detailed": "تقرير دفتر اليومية التفصيلي",
-   "rpos":"نظام نقاط البيع"
+   "rpos":"نظام نقاط البيع",
+   "day_book_summary": "ملخص دفتر اليوم",
+   "amount": "المبلغ",
+   "payment_report": "تقرير الدفع",
+   "collection_report": "تقرير التحصيل",
+   "cash_summary": "ملخص النقد",
+   "particulars": "التفاصيل",
+   "transaction_report": "تقرير المعاملات",
+  "transaction_date": "تاريخ المعاملة",
+"grand_total": "المجموع الكلي",
+"cash_received": "النقد المستلم",
+"inventory_transaction_history": "سجل معاملات المخزون",
+"time": "الوقت",
+ "accounts_transaction_history": "سجل معاملات الحسابات",
+ "c_type": "النوع",
+"description": "الوصف",
+ "daily_summary_report":"تقرير الملخص اليومي"
 }

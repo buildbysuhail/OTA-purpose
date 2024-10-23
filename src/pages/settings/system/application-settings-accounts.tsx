@@ -63,6 +63,7 @@ interface AccountSettingsState {
   showPartyBalanceInSales: boolean;
   enable24Hours: boolean;
   allowMultiPayments: boolean;
+  enableCPEandCRE: boolean;
 }
 const api = new APIClient();
 const ApplicationSettingsAccounts = () => {
@@ -112,6 +113,7 @@ const ApplicationSettingsAccounts = () => {
     showPartyBalanceInSales: false,
     enable24Hours: false,
     allowMultiPayments: false,
+    enableCPEandCRE: false,
   };
   const dispatch = useDispatch();
   const [formState, setFormState] = useState<AccountSettingsState>(initialState);
@@ -716,6 +718,14 @@ const ApplicationSettingsAccounts = () => {
             data={formState}
             label={t("enable_24_hours_business")}
             onChangeData={(data) => handleFieldChange('enable24Hours', data.enable24Hours)}
+          />
+
+          <ERPCheckbox
+            id="enableCPEandCRE"
+            checked={formState.enableCPEandCRE}
+            data={formState}
+            label={t("enable_estimate_for_payments_and_receipts")}
+            onChangeData={(data) => handleFieldChange('enableCPEandCRE', data.enableCPEandCRE)}
           />
         </div>
       </div>

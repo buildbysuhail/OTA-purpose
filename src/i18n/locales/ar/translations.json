@@ -867,5 +867,6 @@
 
   "auto_update_release_up_to": "تحديث تلقائي حتى الإصدار",
   "auto_change_transaction": "تغيير تلقائي لتاريخ المعاملة إلى 12:00 صباحًا",
-  "currency_main": "العملة"
+  "currency_main": "العملة",
+  "enable_estimate_for_payments_and_receipts": "تمكين التقدير للمدفوعات والإيصالات"
 }

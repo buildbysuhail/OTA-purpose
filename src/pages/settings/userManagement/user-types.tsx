@@ -13,7 +13,7 @@ import React from "react";
 
 const UserTypes = () => {
 
-  // const MemoizedUserTypeManage = useMemo(() => React.memo(UserTypeManage), []);
+  const MemoizedUserTypeManage = useMemo(() => React.memo(UserTypeManage), []);
   const dispatch = useAppDispatch();
   const {t}=useTranslation();
   const rootState = useRootState();
@@ -85,7 +85,7 @@ const UserTypes = () => {
                   popupAction={toggleUserTypePopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.userType?.reload}
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>
               </div>
             </div>
@@ -100,7 +100,7 @@ const UserTypes = () => {
         closeModal={() => {
           dispatch(toggleUserTypePopup({ isOpen: false }));
         }}
-        content={<UserTypeManage />}
+        content={<MemoizedUserTypeManage />}
       />
     </Fragment>
   );

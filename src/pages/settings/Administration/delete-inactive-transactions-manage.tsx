@@ -25,7 +25,7 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
       onSuccess: useCallback(
         () =>
           dispatch(
-            toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null })
+            toggleDeleteInactiveTransactionPopup({ isOpen: false})
           ),
         [dispatch]
       ),
@@ -33,10 +33,10 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
       useApiClient: true,
       loadDataRequired: false
     });
-
+  
   const onClose = useCallback(() => {
     dispatch(
-      toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null })
+      toggleDeleteInactiveTransactionPopup({ isOpen: false,})
     );
   }, []);
 
@@ -49,14 +49,17 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
           {...getFieldProps("date")}
           type="date"
           id="date"
+          required
           label={t("till_date")}
-          onChangeData={(data: any) => handleFieldChange("date", data)}
+          onChangeData={(data: any) => handleFieldChange("date", data.date)}
         />
+ 
         <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("i_agree_to_delete_all_inactive_transactions_till_the_selected_date")}
-          onChangeData={(data: any) => handleFieldChange("isAgree", data)}
+          onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
+          
       </div>
       <ERPFormButtons
         isEdit={isEdit}

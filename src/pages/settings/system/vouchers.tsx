@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import { VoucherManage } from "./voucher-manage";
 
 const SystemVoucher = () => {
+  const MemoizedVoucherManage = useMemo(() => React.memo(VoucherManage), []);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -192,12 +193,13 @@ const SystemVoucher = () => {
         isForm={true}
         width="w-full max-w-[600px]"
         closeModal={() => {
-          dispatch(toggleVoucherPopup({ isOpen: false }));
+          dispatch(toggleVoucherPopup({ isOpen: false, key: null }));
         }}
-        content={<VoucherManage/>}
+        content={<MemoizedVoucherManage/>}
       />
     </Fragment>
   );
 };
 
-export default SystemVoucher;
+export default React.memo(SystemVoucher);
+

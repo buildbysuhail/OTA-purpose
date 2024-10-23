@@ -103,7 +103,7 @@ const UserActionReport: React.FC = React.memo(() => {
                   reload={true}
                   initialFilters={[
                     { field: 'dateTimeOfAction', value: new Date("4/12/2024"), operation: '=' }
-                  ]}
+                  ]}  
                 ></ErpDevGrid>
               </div>
             </div>

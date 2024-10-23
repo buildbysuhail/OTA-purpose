@@ -8,6 +8,7 @@ import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import { ActionType } from "../../../redux/types";
 
 export interface BranchResetData {
   date: string;
@@ -29,17 +30,14 @@ export const BranchDataReset: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const {
-    handleSubmit,
-    handleFieldChange,
-    getFieldProps,
-    isLoading,
-  } = useFormManager<BranchResetData>({
-    url: Urls.branchDataReset,
-    onSuccess: useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false })), [dispatch]),
-    initialData: initialBranchResetData,
-    useApiClient: true,
-  });
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+    useFormManager<BranchResetData>({
+      url: Urls.branchDataReset,
+      onSuccess: useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false })), [dispatch]),
+      method: ActionType.POST,
+      useApiClient: true,
+      loadDataRequired: false
+    });
 
   const onClose = useCallback(() => {
     dispatch(toggleResetBranchDataForSync({ isOpen: false }));
@@ -52,7 +50,7 @@ export const BranchDataReset: React.FC = React.memo(() => {
           {...getFieldProps("date")}
           label={t("reset_date_from")}
           required={true}
-          onChangeData={(data: string) => handleFieldChange("date", data)}
+          onChangeData={(data:any) => handleFieldChange("date",data.date)}
         />
       </div>
 
@@ -60,7 +58,7 @@ export const BranchDataReset: React.FC = React.memo(() => {
         <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("recover_until_sync")}
-          onChangeData={(data: any) => handleFieldChange("isAgree", data)}
+          onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
         
         

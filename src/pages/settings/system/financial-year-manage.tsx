@@ -11,29 +11,6 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 
-// Updated StatusSelector component
-const StatusSelector: React.FC<{
-  value: string;
-  onChange: (value: string) => void;
-}> = ({ value, onChange }) => {
-  const { t } = useTranslation();
-
-  const statusOptions = [
-    { value: 'Active', label: t('active') },
-    { value: 'Inactive', label: t('inactive') },
-    { value: 'Progress', label: t('progress') },
-  ];
-
-  return (
-    <ERPDataCombobox
-      label={t('status')}
-      value={value}
-      onChange={(newValue) => onChange(newValue as string)}
-      options={statusOptions}
-      required id={"fStatus"}    />
-  );
-};
-
 export interface FinancialYearData {
   dateFrom: string;
   dateTo: string;
@@ -108,20 +85,20 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           {...getFieldProps("dateFrom")}
           label={t("from")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("dateFrom", data)}
+          onChangeData={(data: any) => handleFieldChange("dateFrom", data.dateFrom)}
         />
         <ERPDateInput
           {...getFieldProps("dateTo")}
           label={t("to")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("dateTo", data)}
+          onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("enter_remarks")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("remarks", data)}
+          onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
         <ERPInput
           {...getFieldProps("openingStockValue")}
@@ -129,16 +106,29 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           placeholder="0.00"
           type="number"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("openingStockValue", data)}
+          onChangeData={(data: any) => handleFieldChange("openingStockValue", data.openingStockValue)}
         />
-        <StatusSelector
-          value={getFieldProps("fStatus").value}
-          onChange={(data) => handleFieldChange("fStatus", data)}
-        />
+   
+          <ERPDataCombobox
+           {...getFieldProps("fStatus")}
+            field={{
+              id: "fStatus",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onChangeData={(data: any) => handleFieldChange("fStatus", data.fStatus)}
+            label={t('status')}
+            options={[
+            { value: 'Active', label: t('active') },
+            { value: 'Inactive', label: t('inactive') },
+            { value: 'Progress', label: t('progress') },
+            ]}
+          />
+         
         <ERPCheckbox
           {...getFieldProps('visibleOnStartUp')}
           label={t("visible_on_startUp")}
-          onChangeData={(data: any) => handleFieldChange('visibleOnStartUp', data)}
+          onChangeData={(data: any) => handleFieldChange('visibleOnStartUp', data.visibleOnStartUp)}
         />
       </div>
       <ERPFormButtons

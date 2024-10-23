@@ -165,7 +165,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("purchaseTaxAccount", data.purchaseTaxAccount)
             }
-            label={t("purchase_tax_account")}
+            label={t("purchase_tax_ledger")}
           />
           <ERPDataCombobox
             id="salesTaxAccount"
@@ -181,7 +181,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("salesTaxAccount", data.salesTaxAccount)
             }
-            label={t("sales_tax_account")}
+            label={t("sales_tax_ledger")}
           />
           <ERPDataCombobox
             id="purchaseCSTAccount"

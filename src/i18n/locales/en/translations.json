@@ -735,5 +735,11 @@
   "default_printer":"Default Printer",
   "enter_number_of_days":"Enter number of days",
   "print_gatePass":"Print GatePass",
-  "show_reprint_authorisation":"Show Reprint Authorisation"
+  "show_reprint_authorisation":"Show Reprint Authorisation",
+
+  "backup_methods":"Backup Methods",
+  "backup_path":"Backup Path",
+  "enter_discount_threshold":"Enter Discount Threshold",
+  "compress_backup_file":"Compress Backup File",
+  "duration":"Duration"
 }

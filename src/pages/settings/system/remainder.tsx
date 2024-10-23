@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -121,4 +121,4 @@ const Remainders = () => {
   );
 };
 
-export default Remainders;
+export default React.memo(Remainders);

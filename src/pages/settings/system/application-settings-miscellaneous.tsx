@@ -332,7 +332,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </div> */}
           </div>
 
-          <div className="w-[250px] max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm">
+          <div className="max-h-[300px] w-[300px] xxl:w-[250px] xxl:max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm">
 
             <h6 className="text-center font-medium mb-5">
               {" "}
@@ -340,13 +340,13 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </h6>
 
 
-            <div className="h-40 overflow-y-scroll snap-x  mb-2  rounded-sm shadow-sm  ">
+            <div className="h-32 xxl:h-40 overflow-y-scroll snap-x  mb-2  rounded-sm shadow-sm  ">
 
               {!dataLoaded ? (
                 // Show default content before data is loaded
-                <div className="my-10 ">
+                <div className="my-5 xxl:my-10 ">
                   <ul className="list-none text-center text-gray-500 snap-center">
-                    <li className="py-10 px-3">
+                    <li className="py-5 xxl:py-10 px-3">
                       {"Click load to fetch system code"}
                       {/* Default message */}
                     </li>

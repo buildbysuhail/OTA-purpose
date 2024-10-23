@@ -24,7 +24,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 200,
     },
     {
       dataField: "branchName",
@@ -33,7 +33,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 200,
     },
     {
       dataField: "companyID",
@@ -43,7 +43,7 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 200,
     },
     {
       dataField: "country",
@@ -209,11 +209,11 @@ const BranchGrid = () => {
           <ERPGridActions
             view={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID }) }}
             edit={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID }) }}
-            delete={{
-              confirmationRequired: true,
-              confirmationMessage: t("delete_this_item"),
-              url: Urls?.Branch, key: cellElement?.data?.branchID
-            }}
+            // delete={{
+            //   confirmationRequired: true,
+            //   confirmationMessage: t("delete_this_item"),
+            //   url: Urls?.Branch, key: cellElement?.data?.branchID
+            // }}
           />
         )
       },
@@ -228,7 +228,7 @@ const BranchGrid = () => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="box custom-box">
             <div className="box-body">
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 gap-3 p-0">
                 <ERPDevGrid
                   columns={columns}
                   gridHeader={t("branch")}

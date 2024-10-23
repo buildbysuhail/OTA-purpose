@@ -47,7 +47,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
           label="User Type Name"
           placeholder="User Type Name"
           required={true}
-          onChangeData={(data: any) => {handleFieldChange('userTypeName', data)}}
+          onChangeData={(data: any) => {handleFieldChange('userTypeName', data.userTypeName)}}
         />
         <ERPInput
           {...getFieldProps('userTypeCode')}
@@ -55,24 +55,24 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
           placeholder="User Type Code"
           required={true}
           disabled={isEdit}
-          onChangeData={(data: any) => handleFieldChange('userTypeCode', data)}
+          onChangeData={(data: any) => handleFieldChange('userTypeCode', data.userTypeCode)}
         />
         <ERPInput
           {...getFieldProps('remarks')}
           label="Remark"
           placeholder="Remark"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('remarks', data)}
+          onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
         />
         <ERPCheckbox
           {...getFieldProps('isEditable')}
           label="Is Editable"
-          onChangeData={(data: any) => handleFieldChange('isEditable', data)}
+          onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
         />
         <ERPCheckbox
           {...getFieldProps('isDeletable')}
           label="Is Deletable"
-          onChangeData={(data: any) => handleFieldChange('isDeletable', data)}
+          onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
         />
       </div>
       <ERPFormButtons

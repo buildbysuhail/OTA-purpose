@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next";
 import { CostCentreManage } from "./cost-centre-manage";
 
 const CostCentre = () => {
+  const MemoizedCostCentreManage = useMemo(() => React.memo(CostCentreManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -99,10 +101,10 @@ const CostCentre = () => {
         closeModal={() => {
           dispatch(toggleCostCentrePopup({ isOpen: false, key: null }));
         }}
-        content={<CostCentreManage />}
+        content={<MemoizedCostCentreManage />}
       />
     </Fragment>
   );
 };
 
-export default CostCentre;
+export default React.memo(CostCentre);

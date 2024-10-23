@@ -46,21 +46,21 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           label={t("name")}
           placeholder={t("name")}
           required={true}
-          onChangeData={(data: any) => {  handleFieldChange('accGroupName', data) }}
+          onChangeData={(data: any) => {  handleFieldChange('accGroupName', data.accGroupName) }}
         />
         <ERPInput
           {...getFieldProps('arabicName')}
           label={t("name_in_arabic")}
           placeholder={t("name_in_arabic")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('arabicName', data)}
+          onChangeData={(data: any) => handleFieldChange('arabicName', data.arabicName)}
         />
         <ERPInput
           {...getFieldProps('shortName')}
           label={t("short_name")}
           placeholder={t("short_name")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('shortName', data)}
+          onChangeData={(data: any) => handleFieldChange('shortName', data.shortName)}
         />
         <ERPDataCombobox
           {...getFieldProps("parentGroupID")}
@@ -72,7 +72,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("parentGroupID", data)
+            handleFieldChange("parentGroupID", data.parentGroupID)
           }}
           label={t("group_under")}
         />
@@ -81,24 +81,24 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('remarks', data)}
+          onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
         />
         <ERPInput
           {...getFieldProps('reasonForModification')}
           label={t("reason_for_edit")}
           placeholder={t("reason_for_edit")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('reasonForModification', data)}
+          onChangeData={(data: any) => handleFieldChange('reasonForModification', data.reasonForModification)}
         />
         <ERPCheckbox
           {...getFieldProps("isEditable")}
           label={t("editable")}
-          onChangeData={(data: any) => handleFieldChange("isEditable", data)}
+          onChangeData={(data: any) => handleFieldChange("isEditable", data.isEditable)}
         />
         <ERPCheckbox
           {...getFieldProps("isDeletable")}
           label={t("deletable")}
-          onChangeData={(data: any) => handleFieldChange("isDeletable", data)}
+          onChangeData={(data: any) => handleFieldChange("isDeletable", data.isDeletable)}
         />
       </div>
       <ERPFormButtons

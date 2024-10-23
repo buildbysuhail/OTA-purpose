@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,6 +11,9 @@ import { useTranslation } from "react-i18next";
 import { PartyCategoryManage } from "./party-category-manage";
 
 const PartyCategory = () => {
+
+  const MemoizedPartyCategoryManage = useMemo(() => React.memo(PartyCategoryManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -150,10 +153,11 @@ const PartyCategory = () => {
         closeModal={() => {
           dispatch(togglePartyCategoryPopup({ isOpen: false, key: null }));
         }}
-        content={<PartyCategoryManage />}
+        content={<MemoizedPartyCategoryManage />}
       />
     </Fragment>
   );
 };
 
-export default PartyCategory;
+export default React.memo(PartyCategory);
+

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,6 +11,9 @@ import { useTranslation } from "react-i18next";
 import { BranchLedgerManage } from "./branch-ledger-manage";
 
 const BranchLedger = () => {
+
+  const MemoizedBranchLedgerManage = useMemo(() => React.memo(BranchLedgerManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -124,7 +127,7 @@ const BranchLedger = () => {
                   popupAction={toggleBranchLedgerPopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.branchLedger?.reload}
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
             </div>
@@ -139,10 +142,11 @@ const BranchLedger = () => {
         closeModal={() => {
           dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null }));
         }}
-        content={<BranchLedgerManage />}
+        content={<MemoizedBranchLedgerManage />}
       />
     </Fragment>
   );
 };
 
-export default BranchLedger;
+export default React.memo(BranchLedger);
+

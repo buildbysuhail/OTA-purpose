@@ -12,6 +12,7 @@ import { RemainderManage } from "./remainder-manage";
 import { useTranslation } from "react-i18next";
 
 const Remainders = () => {
+  const MemoizedRemainderManage = useMemo(() => React.memo(RemainderManage), []);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -115,7 +116,7 @@ const Remainders = () => {
         closeModal={() => {
           dispatch(toggleRemainderPopup({ isOpen: false }));
         }}
-        content={<RemainderManage/>}
+        content={<MemoizedRemainderManage/>}
       />
     </Fragment>
   );

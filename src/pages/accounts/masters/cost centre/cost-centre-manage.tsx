@@ -49,20 +49,20 @@ export const CostCentreManage = () => {
           placeholder={t("enter_cost_centre_name")}
           required={true}
           onChangeData={(data: any) =>
-            handleFieldChange("costCentreName", data)
+            handleFieldChange("costCentreName", data.costCentreName)
           }
         />
         <ERPInput
           {...getFieldProps("shortName")}
           label={t("short_name")}
           placeholder={t("enter_short_name")}
-          onChangeData={(data: any) => handleFieldChange("shortName", data)}
+          onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
         />
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("enter_remarks")}
-          onChangeData={(data: any) => handleFieldChange("remarks", data)}
+          onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
       </div>
 

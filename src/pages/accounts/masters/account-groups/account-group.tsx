@@ -179,6 +179,7 @@ const AccountGroupType = () => {
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
+              url:Urls?.account_group,key:cellElement?.data?.id
             }}
           />
         )
@@ -200,7 +201,7 @@ const AccountGroupType = () => {
                   popupAction={toggleAccountGroupPopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.accountGroup?.reload}
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
             </div>
@@ -215,7 +216,7 @@ const AccountGroupType = () => {
         closeModal={() => {
           dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
         }}
-        content={<AccountGroupManage />}
+        content={<MemoizedAccountGroupManage />}
       />
     </Fragment>
   );

@@ -33,24 +33,29 @@ const initialBankPosData = {
     geldeaWsPort: "",
     gediaService: "",
   },
-}
+};
 
 const BankPosSettingsManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
-    useFormManager<BankPoseData>({
-      url: Urls.BankPosSettings,
-      onSuccess: useCallback(
-        () => dispatch(toggleBankPosPopup({ isOpen: false })),
-        [dispatch]
-      ),
-      // method: ActionType.POST,
-      // useApiClient: true
-    });
-
-  const [bankPosData, setBankPosData] = useState<any>(initialBankPosData);
+  const {
+    isEdit,
+    handleClear,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+  } = useFormManager<BankPoseData>({
+    url: Urls.BankPosSettings,
+    onSuccess: useCallback(
+      () => dispatch(toggleBankPosPopup({ isOpen: false })),
+      [dispatch]
+    ),
+    method: ActionType.POST,
+    useApiClient: true,
+    loadDataRequired: false,
+  });
 
   const onClose = useCallback(() => {
     dispatch(toggleBankPosPopup({ isOpen: false }));
@@ -59,7 +64,6 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-
         <ERPDataCombobox
           {...getFieldProps("machineBrand")}
           id="machineBrand"
@@ -71,7 +75,9 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("machine_brand")}
-          onChangeData={(data: any) => handleFieldChange("machineBrand", data)}
+          onChangeData={(data: any) =>
+            handleFieldChange("machineBrand", data.machineBrand)
+          }
         />
 
         <ERPDataCombobox
@@ -85,7 +91,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("model")}
-          onChangeData={(data: any) => handleFieldChange("model", data)}
+          onChangeData={(data: any) => handleFieldChange("model", data.model)}
         />
 
         <ERPDataCombobox
@@ -99,35 +105,26 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           label={t("com_port")}
-          onChangeData={(data: any) => handleFieldChange("comPort", data)}
+          onChangeData={(data: any) =>
+            handleFieldChange("comPort", data.comPort)
+          }
         />
+
         <ERPInput
-          id="geldeaWsPort"
+          {...getFieldProps("geldeaWsPort")}
           label={t("geldea_ws_port")}
           placeholder={t("geldea_ws_port")}
-          value={bankPosData.data.geldeaWsPort}
-          data={bankPosData.data}
-          validation={bankPosData?.validations?.geldeaWsPort}
-          onChangeData={(data: any) => {
-            setBankPosData((prev: any) => ({
-              ...prev,
-              data: data,
-            }));
-          }}
+          onChangeData={(data: any) =>
+            handleFieldChange("geldeaWsPort", data.geldeaWsPort)
+          }
         />
         <ERPInput
-          id="gediaService"
+          {...getFieldProps("gediaService")}
           label={t("gedia_service")}
           placeholder={t("gedia_service")}
-          value={bankPosData.data.gediaService}
-          data={bankPosData.data}
-          validation={bankPosData?.validations?.gediaService}
-          onChangeData={(data: any) => {
-            setBankPosData((prev: any) => ({
-              ...prev,
-              data: data,
-            }));
-          }}
+          onChangeData={(data: any) =>
+            handleFieldChange("gediaService", data.gediaService)
+          }
         />
       </div>
       <ERPFormButtons

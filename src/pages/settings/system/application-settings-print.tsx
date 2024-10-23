@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { getAction, postAction } from "../../../redux/slices/app-thunks";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { APIClient } from "../../../helpers/api-client";
+import { t } from "i18next";
 
 interface FormState {
   defaultPrinter: string;
@@ -24,8 +23,8 @@ const initialState: FormState = {
 };
 
 const PrintSettingForm: React.FC = () => {
-    const [formState, setFormState] = useState<FormState>(initialState);
-    const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [formState, setFormState] = useState<FormState>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -91,69 +90,68 @@ const PrintSettingForm: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading settings...</div>;
+    return <div>{t("loading_settings...")}</div>;
   }
 
   if (error) {
     return (
       <div className="error-message">
         {error}
-        <button onClick={loadSettings}>Retry</button>
+        <button onClick={loadSettings}>{t("retry")}</button>
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-    <div className="erp-settings-form">
-      <div className="form-row grid grid-cols-1 gap-3 my-3">
-        <ERPInput
-          id="defaultPrinter"
-          value={formState.defaultPrinter}
-          data={formState}
-          label="Keep User Actions (in Days)"
-          placeholder="Enter number of days"
-          type="text"
-          onChangeData={(data: any) =>
-            handleFieldChange("defaultPrinter", data.defaultPrinter)
-          }
-        />
-      </div>
+      <div className="border p-4 rounded-lg">
+        <div className="form-row grid grid-cols-1 gap-3 my-3">
+          <ERPInput
+            id="defaultPrinter"
+            value={formState.defaultPrinter}
+            data={formState}
+            label={t("default_printer")}
+            placeholder={t("enter_number_of_days")}
+            type="text"
+            onChangeData={(data: any) =>
+              handleFieldChange("defaultPrinter", data.defaultPrinter)
+            }
+          />
+        </div>
 
-      <div className="form-row grid grid-cols-2 gap-3 my-3">
-        <ERPCheckbox
-          id="printGatePass"
-          checked={formState.printGatePass}
-          data={formState}
-          label="Print GatePass"
-          onChangeData={(data: any) =>
-            handleFieldChange("printGatePass", data.printGatePass)
-          }
-        />
-        <ERPCheckbox
-          id="showReprintAuthorisation"
-          checked={formState.showReprintAuthorisation}
-          data={formState}
-          label="Show Reprint Authorisation"
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "showReprintAuthorisation",
-              data.showReprintAuthorisation
-            )
-          }
-        />
+        <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
+          <ERPCheckbox
+            id="printGatePass"
+            checked={formState.printGatePass}
+            data={formState}
+            label={t("print_gatePass")}
+            onChangeData={(data: any) =>
+              handleFieldChange("printGatePass", data.printGatePass)
+            }
+          />
+          <ERPCheckbox
+            id="showReprintAuthorisation"
+            checked={formState.showReprintAuthorisation}
+            data={formState}
+            label={t("show_reprint_authorisation")}
+            onChangeData={(data: any) =>
+              handleFieldChange(
+                "showReprintAuthorisation",
+                data.showReprintAuthorisation
+              )
+            }
+          />
+        </div>
       </div>
-
-      <div className="my-4 flex items-center justify-center">
+      <div className="flex justify-end mt-2">
         <ERPButton
-          title="Save Changes"
+          title={t("save_settings")}
           variant="primary"
           disabled={isSaving}
           loading={isSaving}
           type="submit"
         />
       </div>
-    </div>
     </form>
   );
 };

@@ -8,6 +8,8 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { APIClient } from "../../../helpers/api-client";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "./application-settings-types";
+import { t } from "i18next";
+import { tabClasses } from "@mui/material";
 
 
 
@@ -122,7 +124,7 @@ const ERPSettingsFormMain = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border p-4 flex flex-col gap-6 rounded-lg">
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             field={{
               id: "maintainBusinessType",
@@ -130,7 +132,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="maintainBusinessType"
-            label="Business Type"
+            label={t("business_type")}
             value={settings?.maintainBusinessType}
             data={settings}
             onChangeData={(data) =>
@@ -158,7 +160,7 @@ const ERPSettingsFormMain = () => {
             data={settings}
             value={settings?.currency}
             onChangeData={(data) => handleFieldChange("currency", data.currency)}
-            label="Currency"
+            label={t("currency_main")}
           />
           <ERPDataCombobox
             field={{
@@ -167,7 +169,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="cashSalesVoucherPrefix"
-            label="Currency Format"
+            label={t("currency_format")}
             data={settings}
             value={settings?.cashSalesVoucherPrefix}
             onChangeData={(data) =>
@@ -188,7 +190,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="decimalPoints"
-            label="Decimal Points"
+            label={t("decimal_points")}
             data={settings}
             value={settings?.decimalPoints}
             defaultData={settings?.decimalPoints}
@@ -211,7 +213,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="roundingMethodGLOBAL"
-            label="Rounding Method Global"
+            label={t("rounding_method_global")}
             value={settings?.roundingMethodGLOBAL}
             data={settings}
             onChangeData={(data) =>
@@ -234,7 +236,7 @@ const ERPSettingsFormMain = () => {
           />
         </div>
 
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             field={{
               id: "roundingMethod",
@@ -242,7 +244,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="roundingMethod"
-            label="Rounding Method"
+            label={t("rounding_method")}
             data={settings}
             value={settings?.roundingMethod}
             onChangeData={(data) =>
@@ -262,7 +264,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="pOSRoundingMethod"
-            label="Sales Rounding Method"
+            label={t("sales_rounding_method")}
             value={settings?.pOSRoundingMethod}
             data={settings}
             onChangeData={(data) =>
@@ -290,7 +292,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="tax_DecimalPoint"
-            label="Tax Decimal Points"
+            label={t("tax_decimal_points")}
             value={settings?.tax_DecimalPoint}
             data={settings}
             onChangeData={(data) =>
@@ -312,7 +314,7 @@ const ERPSettingsFormMain = () => {
               labelKey: "label",
             }}
             id="unitPrice_decimalPoint"
-            label="Unit Price Decimal Points"
+            label={t("unit_price_decimal_points")}
             value={settings?.unitPrice_decimalPoint}
             data={settings}
             defaultData={settings?.unitPrice_decimalPoint}
@@ -333,10 +335,10 @@ const ERPSettingsFormMain = () => {
           />
         </div>
 
-        <div className="grid grid-cols-5 gap-6">
+        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPCheckbox
             id="autoChangeTransactionDateByMidnight"
-            label="Auto Change Transaction Date By 12:00 AM"
+            label={t("auto_change_transaction")}
             data={settings}
             checked={settings.autoChangeTransactionDateByMidnight}
             onChangeData={(data) =>
@@ -348,7 +350,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPInput
             id="autoUpdateReleaseUpTo"
-            label="Auto Update Release Up To"
+            label={t("auto_update_release_up_to")}
             type="number"
             data={settings}
             value={settings.autoUpdateReleaseUpTo}
@@ -366,7 +368,7 @@ const ERPSettingsFormMain = () => {
       <div className="flex items-center space-x-4 border rounded-lg p-4">
         <ERPInput
           id="oTPEmail"
-          label="OTP Email"
+          label={t("otp_email")}
           className="w-1/3"
           value={settings?.oTPEmail}
           data={settings}
@@ -374,16 +376,17 @@ const ERPSettingsFormMain = () => {
         />
         <div className="mt-4">
           <ERPButton
-            title="Send OTP"
+            title={t("send_otp")}
             variant="secondary"
             onClick={() => sendOtp()}
           />
         </div>
         <ERPInput
           id="oTPVerification"
+          label=" "
           placeholder="Enter OTP"
           data={settings}
-          className="w-32"
+          className="w-32 mt-4"
           value={settings?.oTPVerification}
           onChangeData={(data) =>
             handleFieldChange("oTPVerification", data.oTPVerification)
@@ -391,7 +394,7 @@ const ERPSettingsFormMain = () => {
         />
         <div className="mt-4">
           <ERPButton
-            title="Verify"
+            title={t("verify")}
             variant="primary"
             onClick={() => verifyOtp()}
           />
@@ -399,11 +402,11 @@ const ERPSettingsFormMain = () => {
       </div>
 
       <div className="border p-4 flex flex-col gap-6 rounded-lg">
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-6">
           <div className="flex items-center">
             <ERPCheckbox
               id="allowPrivilegeCard"
-              label="Allow Privilege Card"
+              label={t("allow_privilege_card")}
               data={settings}
               checked={settings?.allowPrivilegeCard}
               onChangeData={(data) =>
@@ -426,7 +429,7 @@ const ERPSettingsFormMain = () => {
           <div className="flex items-center">
             <ERPCheckbox
               id="allowPostdatedTrans"
-              label="Allow Postdated Transaction"
+              label={t("allow_postdated_transaction")}
               data={settings}
               checked={settings?.allowPostdatedTrans}
               onChangeData={(data) =>
@@ -452,7 +455,7 @@ const ERPSettingsFormMain = () => {
           <div className="flex items-center">
             <ERPCheckbox
               id="allowPredatedTrans"
-              label="Allow Predated Transaction"
+              label={t("allow_predated_transaction")}
               data={settings}
               checked={settings?.allowPredatedTrans}
               onChangeData={(data) =>
@@ -477,10 +480,10 @@ const ERPSettingsFormMain = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-6">
           <ERPCheckbox
             id="maintainSeperatePrefixforCashSales"
-            label="Maintain Separate Prefix for Cash Sales"
+            label={t("maintain_separate_prefix_for_cash_sales")}
             data={settings}
             checked={settings?.maintainSeperatePrefixforCashSales}
             onChangeData={(data) =>
@@ -493,7 +496,7 @@ const ERPSettingsFormMain = () => {
 
           <ERPCheckbox
             id="saveModTransSum"
-            label="Save Modified Transaction Summary"
+            label={t("save_modified_transaction_summary")}
             data={settings}
             checked={settings?.saveModTransSum}
             onChangeData={(data) =>
@@ -502,7 +505,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="maintainProduction"
-            label="Maintain Production"
+            label={t("maintain_production")}
             data={settings}
             checked={settings?.maintainProduction}
             onChangeData={(data) =>
@@ -511,7 +514,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="showReminders"
-            label="Show Reminders"
+            label={t("show_reminders")}
             data={settings}
             checked={settings?.showReminders}
             onChangeData={(data) =>
@@ -520,7 +523,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="enableSecondDisplay"
-            label="Enable Second Display"
+            label={t("enable_second_display")}
             data={settings}
             checked={settings?.enableSecondDisplay}
             onChangeData={(data) =>
@@ -529,7 +532,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="allowSalesRouteArea"
-            label="Allow Sales Route/Area"
+            label={t("allow_sales_route/area")}
             data={settings}
             checked={settings.allowSalesRouteArea}
             onChangeData={(data) =>
@@ -538,7 +541,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="enableDayEnd"
-            label="Enable Day End"
+            label={t("enable_day_end")}
             data={settings}
             checked={settings?.enableDayEnd}
             onChangeData={(data) =>
@@ -547,7 +550,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="maintainSalesRouteCreditLimit"
-            label="Maintain Sales Route Credit Limit"
+            label={t("maintain_sales")}
             data={settings}
             checked={settings.maintainSalesRouteCreditLimit}
             onChangeData={(data) =>
@@ -559,7 +562,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="maintainMultilanguage__"
-            label="Maintain Multilanguage"
+            label={t("maintain_multilanguage")}
             data={settings}
             checked={settings?.maintainMultilanguage__}
             onChangeData={(data) =>
@@ -571,7 +574,7 @@ const ERPSettingsFormMain = () => {
           />
           <ERPCheckbox
             id="showUserMessages"
-            label="Show User Messages"
+            label={t("show_user_messages")}
             data={settings}
             checked={settings?.showUserMessages}
             onChangeData={(data) =>
@@ -582,7 +585,7 @@ const ERPSettingsFormMain = () => {
       </div>
 
       <div className="flex justify-end">
-        <ERPButton title="Save Settings" variant="primary" type="submit" />
+        <ERPButton title={t("save_settings")} variant="primary" type="submit" />
       </div>
     </form>
   );

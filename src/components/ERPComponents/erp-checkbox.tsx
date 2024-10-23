@@ -62,7 +62,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
       {!noLabel && (
         <label
           htmlFor={id}
-          className={`ml-2 block form-check-label ${
+          className={`ml-2 mr-2 block form-check-label ${
             disabled ? 'text-gray-400' : 'text-gray-700'
           } ${labelClassName}`}
         >

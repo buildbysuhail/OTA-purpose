@@ -49,7 +49,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => {
 
-            handleFieldChange("partyCategoryName", data);
+            handleFieldChange("partyCategoryName", data.partyCategoryName);
           }}
         />
         <ERPInput
@@ -58,18 +58,18 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           required={true}
           onChangeData={(data: any) =>
-            handleFieldChange("remarks", data)
+            handleFieldChange("remarks", data.remarks)
           }
         />
         <ERPCheckbox
           {...getFieldProps("isEdit")}
           label={t("is_editable")}
-          onChangeData={(data: any) => handleFieldChange("isEdit", data)}
+          onChangeData={(data: any) => handleFieldChange("isEdit", data.isEdit)}
         />
         <ERPCheckbox
           {...getFieldProps("isDelete")}
           label={t("is_deletable")}
-          onChangeData={(data: any) => handleFieldChange("isDelete", data)}
+          onChangeData={(data: any) => handleFieldChange("isDelete", data.isDelete)}
         />
       </div>
       <ERPFormButtons

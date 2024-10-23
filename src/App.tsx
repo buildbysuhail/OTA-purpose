@@ -44,6 +44,7 @@ import { setDeviceInfo } from "./redux/slices/device/reducer";
 import { RootState } from "./redux/store";
 import MobileFooter from "./pages/dashboards/crm/mobile-footer";
 import { getApplicationSettings } from "./redux/slices/app/thunk";
+import RPosLayout from "./components/common/layout/rpos-layout";
 
 export const LoadingAnimation = () => {
   return (
@@ -162,6 +163,10 @@ function App() {
               <Route
                 path="account-settings/*"
                 element={<AccountSettingsLayout setMyClass={setMyClass} />}
+              />
+              <Route
+                path="rpos/*"
+                element={<RPosLayout setMyClass={setMyClass} />}
               />
 
               <Route

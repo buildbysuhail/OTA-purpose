@@ -116,8 +116,8 @@ const TaxSettingsForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="erp-settings-form">
-        <div className="form-row grid grid-cols-1  sm:grid-cols-2 gap-3 my-3">
+      <div className="border rounded-lg p-4">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
           <ERPDataCombobox
             id="purchaseFormType"
             value={formState?.purchaseFormType}
@@ -165,7 +165,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("purchaseTaxAccount", data.purchaseTaxAccount)
             }
-            label={t("purchase_tax_account")}
+            label={t("purchase_tax_ledger")}
           />
           <ERPDataCombobox
             id="salesTaxAccount"
@@ -181,7 +181,7 @@ const TaxSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("salesTaxAccount", data.salesTaxAccount)
             }
-            label={t("sales_tax_account")}
+            label={t("sales_tax_ledger")}
           />
           <ERPDataCombobox
             id="purchaseCSTAccount"
@@ -248,15 +248,15 @@ const TaxSettingsForm: React.FC = () => {
             label={t("income_tax_account")}
           />
         </div>
-        <div className="my-4 flex items-center justify-end">
-          <ERPButton
-            title={t("save_changes")}
-            variant="primary"
-            disabled={isSaving}
-            loading={isSaving}
-            type="submit"
-          />
-        </div>
+      </div>
+      <div className="my-4 flex items-center justify-end">
+        <ERPButton
+          title="Save Settings"
+          variant="primary"
+          disabled={isSaving}
+          loading={isSaving}
+          type="submit"
+        />
       </div>
     </form>
   );

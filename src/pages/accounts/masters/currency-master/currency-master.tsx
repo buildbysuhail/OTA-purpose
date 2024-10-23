@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -12,6 +12,8 @@ import { PartyCategoryManage } from "./currency-master-manage";
 
 
 const CurrencyMaster = () => {
+  const MemoizedCurrencyMasterManage = useMemo(() => React.memo(PartyCategoryManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -32,7 +34,7 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "currencyName",
@@ -41,6 +43,7 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
     },
     {
       dataField: "currencySymbol",
@@ -49,7 +52,7 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "subUnit",
@@ -67,7 +70,7 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "countryName",
@@ -76,6 +79,7 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
     },
     {
       dataField: "countryId",
@@ -138,10 +142,11 @@ const CurrencyMaster = () => {
         closeModal={() => {
           dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
         }}
-        content={<PartyCategoryManage />}
+        content={<MemoizedCurrencyMasterManage />}
       />
     </Fragment>
   );
 };
 
-export default CurrencyMaster
+export default React.memo(CurrencyMaster);
+

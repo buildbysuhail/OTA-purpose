@@ -1,240 +1,499 @@
 import React, { useState } from "react";
+import RPosHeader from "../../components/common/header/rpos-header";
+// import 'remixicon/fonts/remixicon.css';
 
-interface OrderItem {
-  id: string;
+interface MenuItem {
   name: string;
-  quantity: number;
   price: number;
 }
 
-interface POSProps {
-  initialItems?: OrderItem[];
+interface OrderItem extends MenuItem {
+  quantity: number;
 }
 
-const POS: React.FC<POSProps> = ({ initialItems = [] }) => {
-  const [items, setItems] = useState<OrderItem[]>(initialItems);
-  const [selectedPayment, setSelectedPayment] = useState<
-    "cash" | "card" | "due" | "other" | "part" | "upi"
-  >("cash");
-  const [isPaid, setIsPaid] = useState(false);
+const menuCategories = ["Chinese", "Main Courses", "Sample", "Beverages"];
 
-  const total = items.reduce(
+const menuItems: Record<string, MenuItem[]> = {
+  Chinese: [{ name: "Test Item", price: 100 }],
+  "Main Courses": [
+    { name: "Khoya Kaju (Full)", price: 80 },
+    { name: "Paneer Labadar", price: 100 },
+  ],
+  Sample: [],
+  Beverages: [],
+};
+
+export default function Component() {
+  const [selectedCategory, setSelectedCategory] = useState("Chinese");
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([
+    { name: "Test Item", price: 100, quantity: 1 },
+    { name: "Khoya Kaju (Full)", price: 80, quantity: 1 },
+    { name: "Paneer Labadar", price: 100, quantity: 1 },
+  ]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [orderType, setOrderType] = useState("Dine in");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+
+  const updateQuantity = (itemName: string, delta: number) => {
+    setOrderItems((prev) =>
+      prev
+        .map((item) =>
+          item.name === itemName
+            ? { ...item, quantity: Math.max(0, item.quantity + delta) }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
+
+  const total = orderItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
+  const [showInputBox, setShowInputBox] = useState(false);
 
-  const handlePaymentChange = (
-    method: "cash" | "card" | "due" | "other" | "part" | "upi"
-  ) => {
-    setSelectedPayment(method);
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option);
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Left Sidebar */}
-      <div className="w-52 bg-gray-800 text-white">
-        {/* Logo Section */}
-        <div className="p-3 bg-gray-900 flex items-center space-x-2">
-          <i className="ri-menu-line text-xl"></i>
-          {/* <span className="text-xl font-bold text-red-500">polosys</span> */}
-        </div>
-
-        {/* Menu Items */}
-        <div className="py-2">
-          <div className="px-3 py-2 bg-white text-gray-800">Sample</div>
-          <div className="px-3 py-2">Beverages</div>
-        </div>
-      </div>
+    <div className="flex h-[95vh] bg-gray-200 text-gray-800 font-sans">
+      {/* Sidebar */}
+      {/* <div className="w-48 bg-gray-800 text-white flex flex-col">
+        <nav className="flex-1 overflow-y-auto">
+          {menuCategories.map((category) => (
+            <button
+              key={category}
+              className={`w-full text-left p-3 hover:bg-gray-700 ${
+                selectedCategory === category ? "bg-gray-700" : ""
+              }`}
+              onClick={() => setSelectedCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </nav>
+      </div> */}
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Bar */}
-        <div className="bg-white h-14 px-4 flex justify-between items-center border-b">
-          <div className="flex items-center space-x-2">
-            <button className="px-4 py-1.5 bg-red-600 text-white text-sm rounded">
-              New Order
-            </button>
-            <div className="flex">
-              <input
-                type="text"
-                placeholder="Bill No"
-                className="px-3 py-1 border rounded-l text-sm w-32"
-              />
-              <input
-                type="text"
-                placeholder="KOT No"
-                className="px-3 py-1 border-t border-b border-r rounded-r text-sm w-32"
-              />
-            </div>
-          </div>
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Navigation */}
 
-          <div className="flex items-center">
-            {/* Right side icons */}
-            <div className="flex space-x-1">
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-printer-line text-lg text-gray-600"></i>
+        {/* Order Type and Search Bar */}
+        <div className="bg-gray-300 p-2 flex justify-between items-center">
+          <div className="w-[59%]">
+            <input
+              type="text"
+              placeholder="Search item..."
+              className="w-full p-2 rounded rounded-md"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="w-[40%] flex space-x-2">
+            {["Dine in", "Delivery", "Pick Up"].map((type) => (
+              <button
+                key={type}
+                className={`px-4 py-2 rounded rounded-md ${
+                  orderType === type ? "bg-primary text-white" : "bg-white"
+                } flex-1`}
+                onClick={() => setOrderType(type)}
+              >
+                {type}
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-bank-card-line text-lg text-gray-600"></i>
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-apps-line text-lg text-gray-600"></i>
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-cloud-line text-lg text-gray-600"></i>
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-file-list-line text-lg text-gray-600"></i>
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-time-line text-lg text-gray-600"></i>
-              </button>
-            </div>
-            <div className="h-8 w-px bg-gray-300 mx-2"></div>
-            <div className="flex items-center space-x-1">
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-notification-line text-lg text-gray-600"></i>
-              </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-question-line text-lg text-gray-600"></i>
-              </button>
-              <div className="flex items-center bg-red-50 rounded-full px-3 py-1 text-sm text-red-600">
-                <i className="ri-customer-service-line mr-1"></i>
-                <span>07969 223344</span>
-              </div>
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <i className="ri-logout-box-line text-lg text-gray-600"></i>
-              </button>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Order Section */}
-        <div className="flex-1 p-4">
-          <div className="bg-white rounded h-full flex flex-col">
-            {/* Order Header */}
-            <div className="px-4 py-2 border-b flex justify-between items-center">
-              <div className="flex space-x-6">
-                <div className="flex items-center space-x-1">
-                  <div className="bg-gray-100 p-2 rounded">
-                    <i className="ri-restaurant-line text-lg text-gray-600"></i>
-                  </div>
-                  <span className="font-semibold">AC1</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <button className="hover:bg-gray-100 p-2 rounded">
-                    <i className="ri-user-line text-lg text-gray-600"></i>
-                  </button>
-                  <button className="hover:bg-gray-100 p-2 rounded">
-                    <i className="ri-group-line text-lg text-gray-600"></i>
-                  </button>
-                  <button className="hover:bg-gray-100 p-2 rounded">
-                    <i className="ri-edit-line text-lg text-gray-600"></i>
-                  </button>
-                </div>
-              </div>
-              <div className="bg-yellow-500 px-3 py-1 rounded text-white font-medium">
-                AC
-              </div>
+        {/* Menu and Order Summary */}
+        <div className="flex-1 flex overflow-hidden">
+          {/* Menu Items */}
+          <div className="w-48 bg-gray-800 text-white flex flex-col">
+            <nav className="flex-1 overflow-y-auto">
+              {menuCategories.map((category) => (
+                <button
+                  key={category}
+                  className={`w-full text-left p-3 hover:bg-gray-700 ${
+                    selectedCategory === category ? "bg-gray-700" : ""
+                  }`}
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  {category}
+                </button>
+              ))}
+            </nav>
+          </div>
+          <div className="flex-1 p-4 overflow-y-auto">
+            <div className="grid grid-cols-4 gap-4">
+              {menuItems[selectedCategory].map((item) => (
+                <button
+                  key={item.name}
+                  className="p-4 bg-white shadow rounded rounded-md text-center"
+                  onClick={() => updateQuantity(item.name, 1)}
+                >
+                  {item.name}
+                  <br />₹{item.price.toFixed(2)}
+                </button>
+              ))}
             </div>
+          </div>
 
-            {/* Order Content */}
-            <div className="flex-1 flex flex-col">
-              {/* Table Header */}
-              <div className="grid grid-cols-12 px-4 py-2 bg-gray-50 text-sm font-medium text-gray-600 border-b">
-                <div className="col-span-6">ITEMS</div>
-                <div className="col-span-3 text-center">CHECK ITEMS</div>
-                <div className="col-span-1 text-center">QTY.</div>
-                <div className="col-span-2 text-right">PRICE</div>
+          {/* Order Summary */}
+          <div className="w-[40%] bg-white shadow-md overflow-y-auto flex flex-col">
+            {/* <div className="p-2 bg-gray-200 flex justify-between items-center">
+              <div className="flex space-x-2">
+                <button className="px-3 py-1 bg-gray-300 rounded rounded-md">
+                  A C 1
+                </button>
+                <button className="px-3 py-1 bg-white rounded rounded-md">
+                  <i className="ri-user-line"></i>
+                </button>
+                <button className="px-3 py-1 bg-white rounded rounded-md">
+                  <i className="ri-group-line"></i>
+                </button>
               </div>
+              <button className="px-3 py-1 bg-white rounded rounded-md">
+                <i className="ri-edit-box-line"></i>
+              </button>
+            </div> */}
+            <div className="flex border border-gray-300">
+              <button
+                className={`flex-1 p-3 flex justify-center items-center border-r ${
+                  selectedOption === "table"
+                    ? "border-t-2 border-[#f90303]"
+                    : ""
+                }`}
+                onClick={() => handleOptionClick("table")}
+              >
+                <i className="ri-restaurant-line text-xl"></i>
+              </button>
 
-              {/* Empty State */}
-              {items.length === 0 && (
-                <div className="flex-1 flex flex-col items-center justify-center text-gray-400">
-                  <div className="w-16 h-16 mb-4">
-                    <i className="ri-restaurant-line text-5xl"></i>
+              <button
+                className={`flex-1 p-3 flex justify-center items-center border-r ${
+                  selectedOption === "user" ? "border-t-2 border-[#f90303]" : ""
+                }`}
+                onClick={() => handleOptionClick("user")}
+              >
+                <i className="ri-user-line text-xl"></i>
+              </button>
+
+              <button
+                className={`flex-1 p-3 flex justify-center items-center border-r ${
+                  selectedOption === "group"
+                    ? "border-t-2 border-[#f90303]"
+                    : ""
+                }`}
+                onClick={() => handleOptionClick("group")}
+              >
+                <i className="ri-group-line text-xl"></i>
+              </button>
+
+              <button
+                className={`flex-1 p-3 flex justify-center items-center border-r ${
+                  selectedOption === "edit" ? "border-t-2 border-[#f90303]" : ""
+                }`}
+                onClick={() => handleOptionClick("edit")}
+              >
+                <i className="ri-edit-line text-xl"></i>
+              </button>
+
+              <button
+                className={`flex-1 p-3 flex justify-center items-center ${
+                  selectedOption === "dineIn" ? "bg-[#ff7800] text-white" : ""
+                }`}
+                onClick={() => handleOptionClick("dineIn")}
+              >
+                Dine In
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left">
+                    <th>ITEMS</th>
+                    <th className="text-center">QTY.</th>
+                    <th className="text-right">PRICE</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {orderItems.map((item) => (
+                    <tr key={item.name} className="border-b">
+                      <td className="py-2 flex items-center">
+                        <i className="ri-close-circle-line text-[#f90303] mr-2"></i>
+                        {item.name}
+                      </td>
+                      <td className="py-2 text-center">
+                        <button
+                          onClick={() => updateQuantity(item.name, -1)}
+                          className="px-2 text-gray-500"
+                        >
+                          -
+                        </button>
+                        <span>{item.quantity}</span>
+                        <button
+                          onClick={() => updateQuantity(item.name, 1)}
+                          className="px-2 text-gray-500"
+                        >
+                          +
+                        </button>
+                      </td>
+                      <td className="py-2 text-right">
+                        ₹{(item.price * item.quantity).toFixed(2)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {/* <div className="flex justify-center mb-2">
+              <button
+                className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
+                onClick={() => setShowInputBox(!showInputBox)}
+              >
+                {showInputBox ? "View Less" : "View More"}
+              </button>
+            </div>
+            {showInputBox && (
+              <div>
+                <h1>mj</h1>
+              </div>
+            )} */}
+            {/* <div className="flex justify-center mb-2 relative"> */}
+            {/* <button
+                className="w-full border border-gray-300 px-4 py-2 text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 focus:border-b-0"
+                onClick={() => setShowInputBox(!showInputBox)}
+              >
+                {showInputBox ? "View Less" : "View More"}
+              </button> */}
+
+            {/* {showInputBox && (
+                <div className="absolute bottom-full mb-2 bg-white p-4 border border-gray-300 rounded-md shadow-lg">
+                  <h1>mj</h1>
+                </div>
+              )} */}
+            {/* </div> */}
+
+            <div className="relative">
+              <button
+                // onClick={togglePopup}
+                onClick={() => setShowInputBox(!showInputBox)}
+                className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-3 py-1 rounded rounded-full"
+              >
+                <i className="ri-arrow-up-s-line"></i> {/* Up Icon */}
+              </button>
+              {showInputBox && (
+                <div className="w-[100%] absolute bottom-full mb-0 bg-gray-600 p-4 border border-gray-300 rounded-none shadow-lg">
+                  {/* <h1>mj</h1> */}
+                  {/* <p>test</p> */}
+                  <div className="bg-gray-700 p-4 text-white rounded-md">
+                    <div className="flex justify-between mb-4">
+                      <span>Sub Total</span>
+                      <span>3</span>
+                      <span>181.00</span>
+                    </div>
+
+                    <div className="flex justify-between mb-4">
+                      <span>Discount</span>
+                      <button
+                        onClick={() => setPopupVisible(!popupVisible)}
+                        className="flex items-center space-x-1"
+                      >
+                        <span>More</span>{" "}
+                        <i className="ri-arrow-down-s-line"></i>
+                      </button>
+                      <span>(0.00)</span>
+                    </div>
+
+                    {popupVisible && (
+                      <div className="bg-gray-600 p-3 rounded mb-4">
+                        {/* Popup content */}
+                        <button
+                          onClick={() => setPopupVisible(false)}
+                          className="flex items-center space-x-1"
+                        >
+                          <i className="ri-close-line"></i>
+                          <span>Close</span>
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block mb-2">Delivery Charge</label>
+                        <input
+                          type="number"
+                          defaultValue={0}
+                          className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block mb-2">Container Charge</label>
+                        <input
+                          type="number"
+                          defaultValue={0}
+                          className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between mb-4">
+                      <span>Tax</span>
+                      <button className="flex items-center space-x-1">
+                        <span>More</span>{" "}
+                        <i className="ri-arrow-down-s-line"></i>
+                      </button>
+                      <span>0.00</span>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block mb-2">Round Off</label>
+                        <input
+                          type="number"
+                          defaultValue={0}
+                          className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block mb-2">Customer Paid</label>
+                        <input
+                          type="number"
+                          defaultValue={0}
+                          className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block mb-2">Return to Customer</label>
+                        <input
+                          type="number"
+                          defaultValue={0}
+                          className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block mb-2">Tip</label>
+                        <input
+                          type="number"
+                          defaultValue={0}
+                          className="w-full px-2 py-1 bg-gray-800 rounded border-none text-white"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-lg font-medium">No Item Selected</p>
-                  <p className="text-sm">
-                    Please Select Item from Left Menu Item
-                  </p>
                 </div>
               )}
             </div>
 
-            {/* Order Footer */}
-            <div className="border-t bg-slate-400">
-              {/* Split and Total */}
-              <div className="px-4 py-2 flex justify-between items-center bg-gray-50">
-                <button className="px-4 py-1.5 bg-red-600 text-white text-sm rounded">
-                  Split
-                </button>
-                <div className="flex items-center space-x-2">
-                  <span className="font-medium">Total</span>
-                  <span className="text-xl font-bold">{total.toFixed(2)}</span>
+            <div className="p-4 bg-gray-800 flex justify-between items-center font-bold">
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+                Split
+              </button>
+              <span className="text-white">Total:₹{total.toFixed(2)}</span>
+            </div>
+            <div className="bg-gray-600 p-2 flex justify-center items-center">
+              <div className="flex space-x-2">
+                <div className="flex items-center space-x-4">
+                  {["Cash", "Card", "Due", "Other"].map((method) => (
+                    <label key={method} className="flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        name="paymentMethod"
+                        value={method.toLowerCase()}
+                        checked={paymentMethod === method.toLowerCase()}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="form-radio text-[#f90303]"
+                      />
+                      <span className="text-white">{method}</span>
+                    </label>
+                  ))}
                 </div>
               </div>
-
-              {/* Payment Options */}
-              <div className="px-4 py-3 border-t bg-gray-50">
-                <div className="flex space-x-6">
-                  {["Cash", "Card", "Due", "Other", "Part", "UPI"].map(
-                    (method) => (
-                      <label
-                        key={method}
-                        className="flex items-center space-x-2 cursor-pointer"
-                      >
-                        <input
-                          type="radio"
-                          className="form-radio text-red-600"
-                          checked={selectedPayment === method.toLowerCase()}
-                          onChange={() =>
-                            handlePaymentChange(method.toLowerCase() as any)
-                          }
-                        />
-                        <span className="text-sm font-medium">{method}</span>
-                      </label>
-                    )
-                  )}
-                  <label className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      className="form-checkbox text-red-600"
-                      checked={isPaid}
-                      onChange={(e) => setIsPaid(e.target.checked)}
-                    />
-                    <span className="text-sm font-medium">It's Paid</span>
-                  </label>
-                </div>
+            </div>
+            <div className="bg-gray-800 p-2 flex justify-center items-center">
+              <div className="flex space-x-2">
+                <label className="flex items-center text-white">
+                  <input type="checkbox" className="mr-2" /> It's Paid
+                </label>
               </div>
-
-              {/* Action Buttons */}
-              <div className="grid grid-cols-6 gap-2 p-4 bg-gray-100">
-                <button className="px-4 py-2 bg-[#f93005] text-white rounded text-sm font-medium hover:bg-red-700">
-                  Save
-                </button>
-                <button className="px-4 py-2 bg-[#f93005] text-white rounded text-sm font-medium hover:bg-red-700">
-                  Save & Print
-                </button>
-                <button className="px-4 py-2 bg-[#f93005] text-white rounded text-sm font-medium hover:bg-red-700">
-                  Save & eBill
-                </button>
-                <button className="px-4 py-2 bg-gray-600 text-white rounded text-sm font-medium hover:bg-gray-700">
-                  KOT
-                </button>
-                <button className="px-4 py-2 bg-gray-600 text-white rounded text-sm font-medium hover:bg-gray-700">
-                  KOT & Print
-                </button>
-                <button className="px-4 py-2 bg-gray-600 text-white rounded text-sm font-medium hover:bg-gray-700">
-                  Hold
-                </button>
-              </div>
+            </div>
+            <div className="flex space-x-2 p-4 ml-1">
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+                Save
+              </button>
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+                Save & Print
+              </button>
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+                Save & eBill
+              </button>
+              <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+                KOT
+              </button>
+              <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+                KOT & Print
+              </button>
+              <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+                Hold
+              </button>
             </div>
           </div>
         </div>
+
+        {/* Bottom Action Bar */}
+        {/* <div className="bg-gray-800 p-2 flex justify-between items-center">
+          <div className="flex space-x-2">
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+              Split
+            </button>
+            <div className="flex items-center space-x-4">
+              {["Cash", "Card", "Due", "Other"].map((method) => (
+                <label key={method} className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value={method.toLowerCase()}
+                    checked={paymentMethod === method.toLowerCase()}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                    className="form-radio text-[#f90303]"
+                  />
+                  <span className="text-white">{method}</span>
+                </label>
+              ))}
+            </div>
+            <label className="flex items-center text-white">
+              <input type="checkbox" className="mr-2" /> It's Paid
+            </label>
+          </div>
+          <div className="flex space-x-2">
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+              Save
+            </button>
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+              Save & Print
+            </button>
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
+              Save & eBill
+            </button>
+            <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+              KOT
+            </button>
+            <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+              KOT & Print
+            </button>
+            <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
+              Hold
+            </button>
+          </div>
+        </div> */}
       </div>
     </div>
   );
-};
-
-export default POS;
+}

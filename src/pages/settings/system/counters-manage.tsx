@@ -25,7 +25,7 @@ export const CounterManage: React.FC = React.memo(() => {
   } = useFormManager<CounterData>({
     url: Urls.Counter,
     onSuccess: useCallback(
-      () => dispatch(toggleCounterPopup({ isOpen: false, key: null })),
+      () => dispatch(toggleCounterPopup({ isOpen: false, key: null ,reload:true })),
       [dispatch]
     ),
     key: rootState.PopupData.counter.key,
@@ -48,7 +48,7 @@ export const CounterManage: React.FC = React.memo(() => {
           placeholder={t("counter_name")}
           required={true}
           onChangeData={(data: any) => {
-            handleFieldChange("counterName", data);
+            handleFieldChange("counterName", data.counterName);
           }}
         />
         <ERPInput
@@ -56,7 +56,7 @@ export const CounterManage: React.FC = React.memo(() => {
           label={t("descriptions")}
           placeholder={t("descriptions")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("descriptions", data)}
+          onChangeData={(data: any) => handleFieldChange("descriptions", data.descriptions)}
         />
         <ERPDataCombobox
           {...getFieldProps("warehouseID")}
@@ -70,7 +70,7 @@ export const CounterManage: React.FC = React.memo(() => {
           }}
           label={t("warehouse_id")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("warehouseID", data)}
+          onChangeData={(data: any) => handleFieldChange("warehouseID", data.warehouseID)}
         />
         <ERPDataCombobox
           {...getFieldProps("cashLedgerID")}
@@ -84,12 +84,12 @@ export const CounterManage: React.FC = React.memo(() => {
           }}
           label={t("cashLedger_id")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("cashLedgerID", data)}
+          onChangeData={(data: any) => handleFieldChange("cashLedgerID", data.cashLedgerID)}
         />
            <ERPCheckbox
           {...getFieldProps('maintainShift')}
           label={t("maintain_shift")}
-          onChangeData={(data: any) => handleFieldChange('maintainShift', data)}
+          onChangeData={(data: any) => handleFieldChange('maintainShift', data.maintainShift)}
         />
 
       </div>

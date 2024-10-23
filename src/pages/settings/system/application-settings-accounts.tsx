@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { APIClient } from '../../../helpers/api-client';
 import ERPToast from '../../../components/ERPComponents/erp-toast';
 import { handleResponse } from '../../../utilities/HandleResponse';
+import { t } from 'i18next';
 
 
 interface AccountSettingsState {
@@ -29,16 +30,16 @@ interface AccountSettingsState {
   defaultIncentiveAcc2: number;
   defaultIndirectExpenseAccount: string;
   defaultPurchaseAssetsAccount: string;
-//not updating to db
-defaultPDCReceivableAccount: number;
-defaultPDCPayableAccount: number;
-defaultBankChargeAccount: number;
+  //not updating to db
+  defaultPDCReceivableAccount: number;
+  defaultPDCPayableAccount: number;
+  defaultBankChargeAccount: number;
 
   // defaultExcessAccount: number;
   // defaultShortageAccount: number;
   // maxShortageAmount: string;
   minimumShiftDuration: number;
-  
+
 
   // Checkbox fields
   allowMinimumShiftDuration: boolean;
@@ -62,6 +63,7 @@ defaultBankChargeAccount: number;
   showPartyBalanceInSales: boolean;
   enable24Hours: boolean;
   allowMultiPayments: boolean;
+  enableCPEandCRE: boolean;
 }
 const api = new APIClient();
 const ApplicationSettingsAccounts = () => {
@@ -80,10 +82,10 @@ const ApplicationSettingsAccounts = () => {
     defaultIncentiveAcc2: 0,
     defaultIndirectExpenseAccount: "All",
     defaultPurchaseAssetsAccount: "All",
-  //not updating to db
-  defaultPDCReceivableAccount: 1,
-  defaultPDCPayableAccount: 0,
-  defaultBankChargeAccount: 0,
+    //not updating to db
+    defaultPDCReceivableAccount: 1,
+    defaultPDCPayableAccount: 0,
+    defaultBankChargeAccount: 0,
     // defaultExcessAccount: 1,
     // defaultShortageAccount: 1,
     // maxShortageAmount: '',
@@ -111,6 +113,7 @@ const ApplicationSettingsAccounts = () => {
     showPartyBalanceInSales: false,
     enable24Hours: false,
     allowMultiPayments: false,
+    enableCPEandCRE: false,
   };
   const dispatch = useDispatch();
   const [formState, setFormState] = useState<AccountSettingsState>(initialState);
@@ -126,9 +129,9 @@ const ApplicationSettingsAccounts = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}accounts`)
-    debugger;
-    console.log(formState);
-    setFormStatePrev(response);
+      debugger;
+      console.log(formState);
+      setFormStatePrev(response);
       setFormState(response);
     } catch (error) {
       console.error('Error loading settings:', error);
@@ -150,7 +153,7 @@ const ApplicationSettingsAccounts = () => {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
         const currentValue = formState?.[key as keyof AccountSettingsState];
         const prevValue = formStatePrev[key as keyof AccountSettingsState];
-       
+
         if (currentValue !== prevValue) {
           debugger;
           acc.push({
@@ -161,8 +164,8 @@ const ApplicationSettingsAccounts = () => {
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
-      
-      const response = await api.put(Urls.application_settings,{type: 'accounts', updateList:  modifiedSettings}) as  any
+
+      const response = await api.put(Urls.application_settings, { type: 'accounts', updateList: modifiedSettings }) as any
       handleResponse(response);
     } catch (error) {
       console.error('Error saving settings:', error);
@@ -171,332 +174,343 @@ const ApplicationSettingsAccounts = () => {
     }
   };
 
- 
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-    
-    <div className='grid grid-cols-4 gap-6'>
-        <ERPDataCombobox
-          id="defaultCashAcc"
-          value={formState?.defaultCashAcc}
-          data={formState}
-          label="Default Cash Account"
-          field={{
-            id: "defaultCashAcc",
-            //required: true,
-            getListUrl: Urls.data_CashLedgers,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultCashAcc', data.defaultCashAcc)}
-        />
-        <ERPDataCombobox
-          id="defaultSuspenseAcc"
-          value={formState.defaultSuspenseAcc}
-          data={formState}
-          label="Default Suspense Account"
-          field={{
-            id: "defaultSuspenseAcc",
-            //required: true,
-            getListUrl: Urls.data_SuspenseAccount,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data.defaultSuspenseAcc)}
-        />
-        <ERPDataCombobox
-          id="defaultServiceAccount"
-          value={formState.defaultServiceAccount}
-          data={formState}
-          label="Default Service Account"
-          field={{
-            id: "defaultServiceAccount",
-            //required: true,
-            getListUrl: Urls.data_SalesAccount,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultServiceAccount', data.defaultServiceAccount)}
-        />
-        <ERPDataCombobox
-          id="defaultBankAcc"
-          value={formState.defaultBankAcc}
-          data={formState}
-          label="Default Bank Account"
-          field={{
-            id: "defaultBankAcc",
-            //required: true,            
-            hasCloseButton:true,
-            getListUrl: Urls.data_BankAccounts,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultBankAcc', data.defaultBankAcc)}
-        />
-        <ERPDataCombobox
-          id="defaultCreditCardAcc"
-          value={formState.defaultCreditCardAcc}
-          data={formState}
-          label="Default Credit Card Account"
-          field={{
-            id: "defaultCreditCardAcc",
-            //required: true,
-            getListUrl: Urls.data_BankAccounts,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data.defaultCreditCardAcc)}
-        />
-        <ERPDataCombobox
-          id="defaultCostCenterID"
-          value={formState.defaultCostCenterID}
-          data={formState}
-          label="Default Cost Center"
-          field={{
-            id: "defaultCostCenterID",
-            //required: true,
-            getListUrl: Urls.data_costcentres,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultCostCenterID', data.defaultCostCenterID)}
-        />
-        <ERPDataCombobox
-          id="defaultCustomerLedgerID"
-          value={formState.defaultCustomerLedgerID}
-          data={formState}
-          label="Default Customer Ledger"
-          field={{
-            id: "defaultCustomerLedgerID",
-            //required: true,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
-        />
-        <ERPDataCombobox
-          id="defaultOpeningStockValueAcc"
-          value={formState.defaultOpeningStockValueAcc}
-          data={formState}
-          label="Default Opening StockLedger"
-          field={{
-            id: "defaultOpeningStockValueAcc",
-            //required: true,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.Current_Assets}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
-        />
-      </div>
 
-      {/* Second Column of Select Inputs */}
-      <div className='grid grid-cols-4 gap-5'>
-        <ERPInput
-          id="supervisorPassword"
-          value={formState.supervisorPassword}
-          data={formState}
-          label="Supervisor Password"
-          onChangeData={(data) => handleFieldChange('supervisorPassword', data.supervisorPassword)}
-        />
-        <ERPDataCombobox
-          id="defaultLoanAcc"
-          value={formState.defaultLoanAcc}
-          data={formState}
-          label="Default Loan Account"
-          field={{
-            id: "defaultLoanAcc",
-            //required: true,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultLoanAcc', data.defaultLoanAcc)}
-        />
-        <ERPDataCombobox
-          id="defaultIncentiveAcc1"
-          value={formState.defaultIncentiveAcc1}
-          data={formState}
-          label="Default Incentive Account 1"
-          field={{
-            id: "defaultIncentiveAcc1",
-            hasCloseButton:true,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data.defaultIncentiveAcc1)}
-        />
-        <ERPDataCombobox
-          id="defaultIncentiveAcc2"
-          value={formState.defaultIncentiveAcc2}
-          data={formState}
-          label="Default Incentive Account 2"
-          field={{
-            id: "defaultIncentiveAcc2",
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
-        /> 
-        <ERPDataCombobox
-          id="defaultPDCReceivableAccount"
-          value={formState.defaultPDCReceivableAccount}
-          data={formState}
-          label="Default PDC Receivable Account"
-          field={{
-            id: "defaultPDCReceivableAccount",
-            //required: true,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
-        />
+      <div className='border rounded-lg  p-4'>
+        <div className='grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
-          id="defaultPDCPayableAccount"
-          value={formState.defaultPDCPayableAccount}
-          data={formState}
-          label="Default PDC Payable Account"
-          field={{
-            id: "defaultPDCPayableAccount",
-            //required: true,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
-        />
+            id="defaultCashAcc"
+            value={formState?.defaultCashAcc}
+            data={formState}
+            label={t("default_cash_account")}
+            field={{
+              id: "defaultCashAcc",
+              //required: true,
+              getListUrl: Urls.data_CashLedgers,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultCashAcc', data.defaultCashAcc)}
+          />
           <ERPDataCombobox
-          id="defaultBankChargeAccount"
-          value={formState.defaultBankChargeAccount}
-          data={formState}
-          label="Default Bank Charge Account"
-          field={{
-            id: "defaultBankChargeAccount",
-            //required: true,
-            getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data.defaultBankChargeAccount)}
-        />
+            id="defaultSuspenseAcc"
+            value={formState.defaultSuspenseAcc}
+            data={formState}
+            label={t("default_suspense_account")}
+            field={{
+              id: "defaultSuspenseAcc",
+              //required: true,
+              getListUrl: Urls.data_SuspenseAccount,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultSuspenseAcc', data.defaultSuspenseAcc)}
+          />
           <ERPDataCombobox
-          id="defaultIndirectExpenseAccount"
-          value={formState.defaultIndirectExpenseAccount}
-          field={{
-            id: "defaultIndirectExpenseAccount",
-            valueKey: "value",
-            labelKey: "label",
-          }}
-          data={formState}
-          label="Default Indirect Expense Account"
-          onChangeData={(data) => 
-            handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
-          }
-          options={[
-            { value: 'All', label: 'All' },
-            { value: 'Customer', label: 'Customer' },
-            { value: 'Supplier', label: 'Supplier' },
-            { value: 'ReferalAgent', label: 'Referal Agent' },
-            { value: 'CashInHand', label: 'Cash In Hand' },
-            { value: 'BankAccount', label: 'Bank Account' },
-            { value: 'SuspenseAccount', label: 'Suspense Account' },
-            { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
-            { value: 'Cash_Bank', label: 'Cash & Bank' },
-            { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
-            { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
-            { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
-            { value: 'Sales_Account', label: 'Sales Account' },
-            { value: 'Purchase_Account', label: 'Purchase Account' },
-            { value: 'Salaries', label: 'Salaries' },
-            { value: 'Discount_Received', label: 'Discount Received' },
-            { value: 'Discount_Given', label: 'Discount Given' },
-            { value: 'Incentive_Given', label: 'Incentive Given' },
-            { value: 'Salary_Account', label: 'Salary Account' },
-            { value: 'Job_Works', label: 'Job Works' },
-            { value: 'Branch_Receivable', label: 'Branch Receivable' },
-            { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
-            { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
-            { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
-            { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
-            { value: 'Branch_Payable', label: 'Branch Payable' },
-            { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
-            { value: 'Expenses', label: 'Expenses' },
-            { value: 'Incomes', label: 'Incomes' },
-            { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
-            { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
-            { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
-            { value: 'Current_Assets', label: 'Current Assets' },
-            { value: 'Fixed_Assets', label: 'Fixed Assets' },
-            { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
-            { value: 'Indirect_Income', label: 'Indirect Income' },
-          ]}
-          
-        />
-           <ERPDataCombobox
-          id="defaultPurchaseAssetsAccount"
-          value={formState.defaultPurchaseAssetsAccount}
-          field={{
-            id: "defaultPurchaseAssetsAccount",
-            valueKey: "value",
-            labelKey: "label",
-          }}
-          data={formState}
-          label="Default Purchase Assets Account"
-          options={[
-            { value: 'All', label: 'All' },
-            { value: 'Customer', label: 'Customer' },
-            { value: 'Supplier', label: 'Supplier' },
-            { value: 'ReferalAgent', label: 'Referal Agent' },
-            { value: 'CashInHand', label: 'Cash In Hand' },
-            { value: 'BankAccount', label: 'Bank Account' },
-            { value: 'SuspenseAccount', label: 'Suspense Account' },
-            { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
-            { value: 'Cash_Bank', label: 'Cash & Bank' },
-            { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
-            { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
-            { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
-            { value: 'Sales_Account', label: 'Sales Account' },
-            { value: 'Purchase_Account', label: 'Purchase Account' },
-            { value: 'Salaries', label: 'Salaries' },
-            { value: 'Discount_Received', label: 'Discount Received' },
-            { value: 'Discount_Given', label: 'Discount Given' },
-            { value: 'Incentive_Given', label: 'Incentive Given' },
-            { value: 'Salary_Account', label: 'Salary Account' },
-            { value: 'Job_Works', label: 'Job Works' },
-            { value: 'Branch_Receivable', label: 'Branch Receivable' },
-            { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
-            { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
-            { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
-            { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
-            { value: 'Branch_Payable', label: 'Branch Payable' },
-            { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
-            { value: 'Expenses', label: 'Expenses' },
-            { value: 'Incomes', label: 'Incomes' },
-            { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
-            { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
-            { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
-            { value: 'Current_Assets', label: 'Current Assets' },
-            { value: 'Fixed_Assets', label: 'Fixed Assets' },
-            { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
-            { value: 'Indirect_Income', label: 'Indirect Income' },
-          ]}
-          onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data.defaultPurchaseAssetsAccount)}
-        />
+            id="blockOnCreditLimit"
+            value={formState.blockOnCreditLimit}
+            data={formState}
+            label={t("credit_limit")}
+            field={{
+              id: "blockOnCreditLimit",
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            options={[
+              { value: 'Block', label: 'Block' },
+              { value: 'Warn', label: 'Warn' },
+              { value: 'Ignore', label: 'Ignore' },
+              { value: 'Allow Cash Sales', label: 'Allow Cash Sales' },
+            ]}
+            onChangeData={(data) =>
+              handleFieldChange("blockOnCreditLimit", data.blockOnCreditLimit)
+            }
+          />
+          <ERPDataCombobox
+            id="defaultServiceAccount"
+            value={formState.defaultServiceAccount}
+            data={formState}
+            label={t("default_service_account")}
+            field={{
+              id: "defaultServiceAccount",
+              //required: true,
+              getListUrl: Urls.data_SalesAccount,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultServiceAccount', data.defaultServiceAccount)}
+          />
+          <ERPDataCombobox
+            id="defaultBankAcc"
+            value={formState.defaultBankAcc}
+            data={formState}
+            label={t("default_bank_account")}
+            field={{
+              id: "defaultBankAcc",
+              //required: true,            
+              hasCloseButton: true,
+              getListUrl: Urls.data_BankAccounts,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultBankAcc', data.defaultBankAcc)}
+          />
+          <ERPDataCombobox
+            id="defaultCreditCardAcc"
+            value={formState.defaultCreditCardAcc}
+            data={formState}
+            label={t("default_credit_card_account")}
+            field={{
+              id: "defaultCreditCardAcc",
+              //required: true,
+              getListUrl: Urls.data_BankAccounts,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultCreditCardAcc', data.defaultCreditCardAcc)}
+          />
+          <ERPDataCombobox
+            id="defaultCostCenterID"
+            value={formState.defaultCostCenterID}
+            data={formState}
+            label={t("default_cost_center")}
+            field={{
+              id: "defaultCostCenterID",
+              //required: true,
+              getListUrl: Urls.data_costcentres,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultCostCenterID', data.defaultCostCenterID)}
+          />
+          <ERPDataCombobox
+            id="defaultCustomerLedgerID"
+            value={formState.defaultCustomerLedgerID}
+            data={formState}
+            label={t("default_customer")}
+            field={{
+              id: "defaultCustomerLedgerID",
+              //required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+          />
+          <ERPDataCombobox
+            id="defaultOpeningStockValueAcc"
+            value={formState.defaultOpeningStockValueAcc}
+            data={formState}
+            label={t("default_opening_stock_ledger")}
+            field={{
+              id: "defaultOpeningStockValueAcc",
+              //required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.Current_Assets}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
+          />
+          {/* Second Column of Select Inputs */}
+          <ERPDataCombobox
+            id="defaultLoanAcc"
+            value={formState.defaultLoanAcc}
+            data={formState}
+            label={t("default_loan_account")}
+            field={{
+              id: "defaultLoanAcc",
+              //required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultLoanAcc', data.defaultLoanAcc)}
+          />
+          <ERPDataCombobox
+            id="defaultIncentiveAcc1"
+            value={formState.defaultIncentiveAcc1}
+            data={formState}
+            label={t("default_incentive_account_1")}
+            field={{
+              id: "defaultIncentiveAcc1",
+              hasCloseButton: true,
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultIncentiveAcc1', data.defaultIncentiveAcc1)}
+          />
+          <ERPDataCombobox
+            id="defaultIncentiveAcc2"
+            value={formState.defaultIncentiveAcc2}
+            data={formState}
+            label={t("default_incentive_account_2")}
+            field={{
+              id: "defaultIncentiveAcc2",
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
+          />
+          <ERPDataCombobox
+            id="defaultPDCReceivableAccount"
+            value={formState.defaultPDCReceivableAccount}
+            data={formState}
+            label={t("default_PDC_receivable_account")}
+            field={{
+              id: "defaultPDCReceivableAccount",
+              //required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
+          />
+          <ERPDataCombobox
+            id="defaultPDCPayableAccount"
+            value={formState.defaultPDCPayableAccount}
+            data={formState}
+            label={t("default_PDC_payable_account")}
+            field={{
+              id: "defaultPDCPayableAccount",
+              //required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
+          />
+          <ERPDataCombobox
+            id="defaultBankChargeAccount"
+            value={formState.defaultBankChargeAccount}
+            data={formState}
+            label={t("default_bank_charge_account")}
+            field={{
+              id: "defaultBankChargeAccount",
+              //required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data.defaultBankChargeAccount)}
+          />
+          <ERPDataCombobox
+            id="defaultIndirectExpenseAccount"
+            value={formState.defaultIndirectExpenseAccount}
+            field={{
+              id: "defaultIndirectExpenseAccount",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label={t("default_indirect_expense_account")}
+            onChangeData={(data) =>
+              handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
+            }
+            options={[
+              { value: 'All', label: 'All' },
+              { value: 'Customer', label: 'Customer' },
+              { value: 'Supplier', label: 'Supplier' },
+              { value: 'ReferalAgent', label: 'Referal Agent' },
+              { value: 'CashInHand', label: 'Cash In Hand' },
+              { value: 'BankAccount', label: 'Bank Account' },
+              { value: 'SuspenseAccount', label: 'Suspense Account' },
+              { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
+              { value: 'Cash_Bank', label: 'Cash & Bank' },
+              { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
+              { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
+              { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
+              { value: 'Sales_Account', label: 'Sales Account' },
+              { value: 'Purchase_Account', label: 'Purchase Account' },
+              { value: 'Salaries', label: 'Salaries' },
+              { value: 'Discount_Received', label: 'Discount Received' },
+              { value: 'Discount_Given', label: 'Discount Given' },
+              { value: 'Incentive_Given', label: 'Incentive Given' },
+              { value: 'Salary_Account', label: 'Salary Account' },
+              { value: 'Job_Works', label: 'Job Works' },
+              { value: 'Branch_Receivable', label: 'Branch Receivable' },
+              { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
+              { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
+              { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
+              { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
+              { value: 'Branch_Payable', label: 'Branch Payable' },
+              { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
+              { value: 'Expenses', label: 'Expenses' },
+              { value: 'Incomes', label: 'Incomes' },
+              { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
+              { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
+              { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
+              { value: 'Current_Assets', label: 'Current Assets' },
+              { value: 'Fixed_Assets', label: 'Fixed Assets' },
+              { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
+              { value: 'Indirect_Income', label: 'Indirect Income' },
+            ]}
+
+          />
+          <ERPDataCombobox
+            id="defaultPurchaseAssetsAccount"
+            value={formState.defaultPurchaseAssetsAccount}
+            field={{
+              id: "defaultPurchaseAssetsAccount",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label={t("default_purchase_assets_account")}
+            options={[
+              { value: 'All', label: 'All' },
+              { value: 'Customer', label: 'Customer' },
+              { value: 'Supplier', label: 'Supplier' },
+              { value: 'ReferalAgent', label: 'Referal Agent' },
+              { value: 'CashInHand', label: 'Cash In Hand' },
+              { value: 'BankAccount', label: 'Bank Account' },
+              { value: 'SuspenseAccount', label: 'Suspense Account' },
+              { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
+              { value: 'Cash_Bank', label: 'Cash & Bank' },
+              { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
+              { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
+              { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
+              { value: 'Sales_Account', label: 'Sales Account' },
+              { value: 'Purchase_Account', label: 'Purchase Account' },
+              { value: 'Salaries', label: 'Salaries' },
+              { value: 'Discount_Received', label: 'Discount Received' },
+              { value: 'Discount_Given', label: 'Discount Given' },
+              { value: 'Incentive_Given', label: 'Incentive Given' },
+              { value: 'Salary_Account', label: 'Salary Account' },
+              { value: 'Job_Works', label: 'Job Works' },
+              { value: 'Branch_Receivable', label: 'Branch Receivable' },
+              { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
+              { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
+              { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
+              { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
+              { value: 'Branch_Payable', label: 'Branch Payable' },
+              { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
+              { value: 'Expenses', label: 'Expenses' },
+              { value: 'Incomes', label: 'Incomes' },
+              { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
+              { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
+              { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
+              { value: 'Current_Assets', label: 'Current Assets' },
+              { value: 'Fixed_Assets', label: 'Fixed Assets' },
+              { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
+              { value: 'Indirect_Income', label: 'Indirect Income' },
+            ]}
+            onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data.defaultPurchaseAssetsAccount)}
+          />
 
 
-        {/* <ERPDataCombobox
+          {/* <ERPDataCombobox
           id="defaultExcessAccount"
           value={formState.defaultExcessAccount}
           data={formState}
@@ -520,198 +534,211 @@ const ApplicationSettingsAccounts = () => {
       
 
       {/* Minimum Shift Duration */}
-       </div>
-      <div className='flex justify-start gap-5'>
-      <ERPCheckbox
-          id="allowMinimumShiftDuration"
-          checked={formState.allowMinimumShiftDuration}
-          data={formState}
-          label="Minimum Shift Duration"
-          onChangeData={(data) => handleFieldChange('allowMinimumShiftDuration', data.allowMinimumShiftDuration)}
-        />
+          <div className='flex items-center justify-between'>
+            <ERPCheckbox
+              id="allowMinimumShiftDuration"
+              checked={formState.allowMinimumShiftDuration}
+              data={formState}
+              label={t("minimum_shift_duration")}
+              onChangeData={(data) => handleFieldChange('allowMinimumShiftDuration', data.allowMinimumShiftDuration)}
+            />
+            <ERPInput
+              id="minimumShiftDuration"
+              value={formState.minimumShiftDuration}
+              label=' '
+              data={formState}
+              type="number"
+              disabled={!formState.allowMinimumShiftDuration}
+              onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className='grid grid-cols-4 gap-6 border rounded-lg p-4'>
         <ERPInput
-          id="minimumShiftDuration"
-          value={formState.minimumShiftDuration}
+          id="supervisorPassword"
+          value={formState.supervisorPassword}
           data={formState}
-        
-          type="number"
-          onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
+          label={t("supervisor_password")}
+          onChangeData={(data) => handleFieldChange('supervisorPassword', data.supervisorPassword)}
         />
       </div>
 
       {/* Checkboxes */}
-      <div className='grid grid-cols-3 justify-start gap-5'>
-      <ERPCheckbox
-  id="blockOnCreditLimit"
-  checked={formState.blockOnCreditLimit === 'Block'}
-  data={formState}
-  label="Block On Credit Limit"
-  onChangeData={(data) => handleFieldChange('blockOnCreditLimit', data.blockOnCreditLimit === 'Block' ? 'Block' : 'Ignore')}
-/>
+      <div className='border  rounded-lg p-4'>
+        <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-start gap-5'>
+          <ERPCheckbox
+            id="allowSalesCounter"
+            checked={formState.allowSalesCounter}
+            data={formState}
+            label={t("allow_sales_counter")}
+            onChangeData={(data) => handleFieldChange('allowSalesCounter', data.allowSalesCounter)}
+          />
 
-<ERPCheckbox
-  id="maintainCostCenter"
-  checked={formState.maintainCostCenter}
-  data={formState}
-  label="Maintain Cost Center"
-  onChangeData={(data) => handleFieldChange('maintainCostCenter', data.maintainCostCenter)}
-/>
+          <ERPCheckbox
+            id="maintainBillwiseAccount"
+            checked={formState.maintainBillwiseAccount}
+            data={formState}
+            label={t("maintain_billwise_account")}
+            onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data.maintainBillwiseAccount)}
+          />
 
-<ERPCheckbox
-  id="allowSalesCounter"
-  checked={formState.allowSalesCounter}
-  data={formState}
-  label="Allow Sales Counter"
-  onChangeData={(data) => handleFieldChange('allowSalesCounter', data.allowSalesCounter)}
-/>
+          <ERPCheckbox
+            id="printAccAftersave"
+            checked={formState.printAccAftersave}
+            data={formState}
+            label={t("print_after_save")}
+            onChangeData={(data) => handleFieldChange('printAccAftersave', data.printAccAftersave)}
+          />
 
-<ERPCheckbox
-  id="maintainProjectSite"
-  checked={formState.maintainProjectSite}
-  data={formState}
-  label="Maintain Project Site"
-  onChangeData={(data) => handleFieldChange('maintainProjectSite', data.maintainProjectSite)}
-/>
+          <ERPCheckbox
+            id="showTenderDialogInSales"
+            checked={formState.showTenderDialogInSales}
+            data={formState}
+            label={t("show_tender_window_in_sales")}
+            onChangeData={(data) => handleFieldChange('showTenderDialogInSales', data.showTenderDialogInSales)}
+          />
 
-<ERPCheckbox
-  id="maintainBillwiseAccount"
-  checked={formState.maintainBillwiseAccount}
-  data={formState}
-  label="Maintain Billwise Account"
-  onChangeData={(data) => handleFieldChange('maintainBillwiseAccount', data.maintainBillwiseAccount)}
-/>
+          <ERPCheckbox
+            id="allowMultiPayments"
+            checked={formState.allowMultiPayments}
+            data={formState}
+            label={t("allow_multipayment_mode")}
+            onChangeData={(data) => handleFieldChange('allowMultiPayments', data.allowMultiPayments)}
+          />
 
-<ERPCheckbox
-  id="printAccAftersave"
-  checked={formState.printAccAftersave}
-  data={formState}
-  label="Print Acc After Save"
-  onChangeData={(data) => handleFieldChange('printAccAftersave', data.printAccAftersave)}
-/>
+          <ERPCheckbox
+            id="unPostSPDeductionstoAccount"
+            checked={formState.unPostSPDeductionstoAccount}
+            data={formState}
+            label={t("unpost_SP_deductions_to_account")}
+            onChangeData={(data) => handleFieldChange('unPostSPDeductionstoAccount', data.unPostSPDeductionstoAccount)}
+          />
 
-<ERPCheckbox
-  id="allowUserwiseCounter"
-  checked={formState.allowUserwiseCounter}
-  data={formState}
-  label="Allow User-wise Counter"
-  onChangeData={(data) => handleFieldChange('allowUserwiseCounter', data.allowUserwiseCounter)}
-/>
+          <ERPCheckbox
+            id="doNotPostAccountsForEachCashSales"
+            checked={formState.doNotPostAccountsForEachCashSales}
+            data={formState}
+            label={t("do_not_post_accounts_for_each_cash_sales")}
+            onChangeData={(data) => handleFieldChange('doNotPostAccountsForEachCashSales', data.doNotPostAccountsForEachCashSales)}
+          />
 
-<ERPCheckbox
-  id="showTenderDialogInSales"
-  checked={formState.showTenderDialogInSales}
-  data={formState}
-  label="Show Tender Dialog In Sales"
-  onChangeData={(data) => handleFieldChange('showTenderDialogInSales', data.showTenderDialogInSales)}
-/>
+          <ERPCheckbox
+            id="loadCostcentrewiseEmployeesForSalaryProcess"
+            checked={formState.loadCostcentrewiseEmployeesForSalaryProcess}
+            data={formState}
+            label={t("load_costcentre_wise_employees_for_salary_process")}
+            onChangeData={(data) => handleFieldChange('loadCostcentrewiseEmployeesForSalaryProcess', data.loadCostcentrewiseEmployeesForSalaryProcess)}
+          />
 
-<ERPCheckbox
-  id="maintainMultiCurrencyTransactions"
-  checked={formState.maintainMultiCurrencyTransactions}
-  data={formState}
-  label="Maintain Multi Currency Transactions"
-  onChangeData={(data) => handleFieldChange('maintainMultiCurrencyTransactions', data.maintainMultiCurrencyTransactions)}
-/>
+          <ERPCheckbox
+            id="enableAuthorizationforShiftClose"
+            checked={formState.enableAuthorizationforShiftClose}
+            data={formState}
+            label={t("enable_authorization_for_shift_close")}
+            onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data.enableAuthorizationforShiftClose)}
+          />
 
-<ERPCheckbox
-  id="doNotPostAccountsForEachCashSales"
-  checked={formState.doNotPostAccountsForEachCashSales}
-  data={formState}
-  label="Do Not Post Accounts For Each Cash Sales"
-  onChangeData={(data) => handleFieldChange('doNotPostAccountsForEachCashSales', data.doNotPostAccountsForEachCashSales)}
-/>
+          <ERPCheckbox
+            id="billwiseMandatory"
+            checked={formState.billwiseMandatory}
+            data={formState}
+            label={t("billwise_mandatory")}
+            onChangeData={(data) => handleFieldChange('billwiseMandatory', data.billwiseMandatory)}
+          />
 
-<ERPCheckbox
-  id="unPostSPDeductionstoAccount"
-  checked={formState.unPostSPDeductionstoAccount}
-  data={formState}
-  label="Unpost SP Deductions To Account"
-  onChangeData={(data) => handleFieldChange('unPostSPDeductionstoAccount', data.unPostSPDeductionstoAccount)}
-/>
+          <ERPCheckbox
+            id="maintainProjectSite"
+            checked={formState.maintainProjectSite}
+            data={formState}
+            label={t("maintain_projects/job")}
+            onChangeData={(data) => handleFieldChange('maintainProjectSite', data.maintainProjectSite)}
+          />
 
-<ERPCheckbox
-  id="loadCostcentrewiseEmployeesForSalaryProcess"
-  checked={formState.loadCostcentrewiseEmployeesForSalaryProcess}
-  data={formState}
-  label="Load Cost-centre Wise Employees For Salary Process"
-  onChangeData={(data) => handleFieldChange('loadCostcentrewiseEmployeesForSalaryProcess', data.loadCostcentrewiseEmployeesForSalaryProcess)}
-/>
+          <ERPCheckbox
+            id="maintainCostCenter"
+            checked={formState.maintainCostCenter}
+            data={formState}
+            label={t("maintain_cost_center")}
+            onChangeData={(data) => handleFieldChange('maintainCostCenter', data.maintainCostCenter)}
+          />
 
-<ERPCheckbox
-  id="enableAuthorizationforShiftClose"
-  checked={formState.enableAuthorizationforShiftClose}
-  data={formState}
-  label="Enable Authorization For Shift Close"
-  onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data.enableAuthorizationforShiftClose)}
-/>
+          <ERPCheckbox
+            id="maintainMultiCurrencyTransactions"
+            checked={formState.maintainMultiCurrencyTransactions}
+            data={formState}
+            label={t("maintain_multi_currency_transactions")}
+            onChangeData={(data) => handleFieldChange('maintainMultiCurrencyTransactions', data.maintainMultiCurrencyTransactions)}
+          />
 
-<ERPCheckbox
-  id="billwiseMandatory"
-  checked={formState.billwiseMandatory}
-  data={formState}
-  label="Billwise Mandatory"
-  onChangeData={(data) => handleFieldChange('billwiseMandatory', data.billwiseMandatory)}
-/>
+          <ERPCheckbox
+            id="showPartyBalanceInSales"
+            checked={formState.showPartyBalanceInSales}
+            data={formState}
+            label={t("show_party_balance_in_sales")}
+            onChangeData={(data) => handleFieldChange('showPartyBalanceInSales', data.showPartyBalanceInSales)}
+          />
 
-<ERPCheckbox
-  id="setDefaultCustomerInSales"
-  checked={formState.setDefaultCustomerInSales}
-  data={formState}
-  label="Set Default Customer In Sales"
-  onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data.setDefaultCustomerInSales)}
-/>
+          <ERPCheckbox
+            id="allowUserwiseCounter"
+            checked={formState.allowUserwiseCounter}
+            data={formState}
+            label={t("allow_user_wise_counter")}
+            onChangeData={(data) => handleFieldChange('allowUserwiseCounter', data.allowUserwiseCounter)}
+          />
 
-<ERPCheckbox
-  id="allowPostPDC"
-  checked={formState.allowPostPDC}
-  data={formState}
-  label="Allow Post PDC"
-  onChangeData={(data) => handleFieldChange('allowPostPDC', data.allowPostPDC)}
-/>
+          <ERPCheckbox
+            id="setDefaultCustomerInSales"
+            checked={formState.setDefaultCustomerInSales}
+            data={formState}
+            label={t("set_default_customer_in_sales")}
+            onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data.setDefaultCustomerInSales)}
+          />
 
-<ERPCheckbox
-  id="showEmployeesInSales"
-  checked={formState.showEmployeesInSales}
-  data={formState}
-  label="Show Employees In Sales"
-  onChangeData={(data) => handleFieldChange('showEmployeesInSales', data.showEmployeesInSales)}
-/>
+          <ERPCheckbox
+            id="allowPostPDC"
+            checked={formState.allowPostPDC}
+            data={formState}
+            label={t("allow_PDC_to_post")}
+            onChangeData={(data) => handleFieldChange('allowPostPDC', data.allowPostPDC)}
+          />
 
-<ERPCheckbox
-  id="showPartyBalanceInSales"
-  checked={formState.showPartyBalanceInSales}
-  data={formState}
-  label="Show Party Balance In Sales"
-  onChangeData={(data) => handleFieldChange('showPartyBalanceInSales', data.showPartyBalanceInSales)}
-/>
+          <ERPCheckbox
+            id="showEmployeesInSales"
+            checked={formState.showEmployeesInSales}
+            data={formState}
+            label={t("show_employees_in_sales")}
+            onChangeData={(data) => handleFieldChange('showEmployeesInSales', data.showEmployeesInSales)}
+          />
 
-<ERPCheckbox
-  id="enable24Hours"
-  checked={formState.enable24Hours}
-  data={formState}
-  label="Enable 24 Hours"
-  onChangeData={(data) => handleFieldChange('enable24Hours', data.enable24Hours)}
-/>
+          <ERPCheckbox
+            id="enable24Hours"
+            checked={formState.enable24Hours}
+            data={formState}
+            label={t("enable_24_hours_business")}
+            onChangeData={(data) => handleFieldChange('enable24Hours', data.enable24Hours)}
+          />
 
-<ERPCheckbox
-  id="allowMultiPayments"
-  checked={formState.allowMultiPayments}
-  data={formState}
-  label="Allow Multi Payments"
-  onChangeData={(data) => handleFieldChange('allowMultiPayments', data.allowMultiPayments)}
-/>
-
-      </div>
-      
-
-        <div className="flex justify-end">
-          <ERPButton
-            title="Save Settings"
-            variant="primary"
-            type="submit"
+          <ERPCheckbox
+            id="enableCPEandCRE"
+            checked={formState.enableCPEandCRE}
+            data={formState}
+            label={t("enable_estimate_for_payments_and_receipts")}
+            onChangeData={(data) => handleFieldChange('enableCPEandCRE', data.enableCPEandCRE)}
           />
         </div>
-      </form>
+      </div>
+
+
+      <div className="flex justify-end">
+        <ERPButton
+          title={t("save_settings")}
+          variant="primary"
+          type="submit"
+        />
+      </div>
+    </form>
   );
 };
 

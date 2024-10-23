@@ -224,7 +224,7 @@ const ERPSettingsFormGSTTaxes = () => {
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className='grid grid-cols-7'>
+        <div className='grid lg:grid-cols-7 md:grid-cols-4 sm:grid-cols-2'>
           <label>{t("default_purchase")}</label>
           <ERPCheckbox
             id="normalPurchaseForm"
@@ -250,7 +250,7 @@ const ERPSettingsFormGSTTaxes = () => {
         </div>
 
 
-        <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
+        <div className='border p-4 rounded-lg grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="defaultSalesFormType"
             value={formState.defaultSalesFormType}
@@ -387,7 +387,7 @@ const ERPSettingsFormGSTTaxes = () => {
         </div>
 
 
-        <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
+        <div className='border p-4 rounded-lg grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="defaultSIFormTypeForPOS"
             value={formState.defaultSIFormTypeForPOS}
@@ -451,7 +451,7 @@ const ERPSettingsFormGSTTaxes = () => {
 
 
 
-        <div className='border p-4 rounded-lg grid grid-cols-4 gap-6'>
+        <div className='border p-4 rounded-lg grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="inputSGSTAccount"
             value={formState.inputSGSTAccount}
@@ -628,7 +628,7 @@ const ERPSettingsFormGSTTaxes = () => {
         </div>
 
         <div className='border p-4 rounded-lg'>
-          <div className='grid grid-cols-4 gap-6'>
+          <div className='grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
             <div className='flex justify-between align-center'>
               <ERPCheckbox
                 id="enableEWB"
@@ -668,7 +668,7 @@ const ERPSettingsFormGSTTaxes = () => {
             <EWBTaxPro />
           </PopupComponent>
 
-          <div className='grid grid-cols-3 gap-6 mt-5'>
+          <div className='grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-6 mt-5'>
             <ERPDataCombobox
               field={{
                 id: "eInvoiceProviderType",

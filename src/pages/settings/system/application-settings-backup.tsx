@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { getAction, postAction } from "../../../redux/slices/app-thunks";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -8,7 +7,7 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
-import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { t } from "i18next";
 
 interface FormState {
   backupMethods: number;
@@ -31,7 +30,6 @@ const BackupSettingsForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const api = new APIClient();
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     loadSettings();
@@ -83,30 +81,30 @@ const BackupSettingsForm: React.FC = () => {
         updateList: modifiedSettings,
       })) as any;
       handleResponse(response);
-      
+
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
       setIsSaving(false);
     }
   };
-//   if (loading) {
-//     return <div>Loading settings...</div>;
-//   }
+  //   if (loading) {
+  //     return <div>Loading settings...</div>;
+  //   }
 
   if (error) {
     return (
       <div className="error-message">
         {error}
-        <button onClick={loadSettings}>Retry</button>
+        <button onClick={loadSettings}>{t("retry")}</button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 min-h-full">
-      <div className="min-h-full">
-        <div className="form-row grid grid-cols-1 gap-3 my-3">
+    <form onSubmit={handleSubmit}>
+      <div className="border p-4 rounded-lg">
+        <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
           <ERPDataCombobox
             id="backupMethods"
             value={formState.backupMethods}
@@ -119,34 +117,29 @@ const BackupSettingsForm: React.FC = () => {
             onChangeData={(data: any) =>
               handleFieldChange("backupMethods", data.backupMethods)
             }
-            label="Backup Methods"
+            label={t("backup_methods")}
             options={[
               { value: 0, label: "No BackUp" },
               { value: 1, label: "BackUp On Close" },
               { value: 2, label: "Scheduled BackUp" },
             ]}
           />
-        </div>
-        <div className="form-row grid grid-cols-1 gap-3 my-3">
           <ERPInput
             id="backUpPath"
             value={formState.backUpPath}
             data={formState}
-            label="Backup Path"
-            placeholder="Enter discount threshold"
+            label={t("backup_path")}
+            placeholder={t("enter_discount_threshold")}
             onChangeData={(data: any) =>
               handleFieldChange("backUpPath", parseFloat(data.backUpPath))
             }
           />
-        </div>
-
-        <div className="form-row grid grid-cols-2 gap-3 my-3">
           <ERPInput
             id="backupDuration"
             value={formState.backupDuration}
             data={formState}
-            label="Duration"
-            placeholder="Enter discount threshold"
+            label={t("duration")}
+            placeholder={t("enter_discount_threshold")}
             type="number"
             onChangeData={(data: any) =>
               handleFieldChange(
@@ -159,24 +152,22 @@ const BackupSettingsForm: React.FC = () => {
             id="compressBackupFile"
             checked={formState.compressBackupFile}
             data={formState}
-            label="Compress Backup File"
+            label={t("compress_backup_file")}
             onChangeData={(data) =>
               handleFieldChange("compressBackupFile", data.compressBackupFile)
             }
           />
         </div>
-
-        
       </div>
-          <div className="flex justify-end">
-          <ERPButton
-            title="Save Settings"
-            variant="primary"
-            type="submit"
-            loading={isSaving}
-            disabled={isSaving}
-          />
-        </div>
+      <div className="flex justify-end mt-2">
+        <ERPButton
+          title={t("save_settings")}
+          variant="primary"
+          type="submit"
+          loading={isSaving}
+          disabled={isSaving}
+        />
+      </div>
     </form>
   );
 };

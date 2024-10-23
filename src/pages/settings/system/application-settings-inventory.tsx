@@ -196,10 +196,8 @@ const InventorySettingsForm = () => {
       <div className="erp-settings-form">
         <div className="flex flex-col justify-start items-stretch p-5 ">
           <div className="flex flex-col gap-3 border rounded-lg p-4 mb-3 xxl:mb-6">
-            <div
-              className="grid grid-cols-1 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 justify-items-stretch gap-3"
-            >
+            <div className="grid grid-cols-1 
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 justify-items-stretch gap-6" >
               <ERPDataCombobox
                 id="defaultSalesAcc"
                 value={formState?.defaultSalesAcc}
@@ -435,7 +433,7 @@ const InventorySettingsForm = () => {
                 label={t("default_sales_return_payable_acc")}
               />
             </div>
-            <div className="flex justify-start gap-3 ">
+            <div className="flex justify-start gap-6 ">
               <div className="flex gap-1">
                 <ERPCheckbox
                   id="serviceWarrantyInvAccounts"
@@ -511,10 +509,8 @@ const InventorySettingsForm = () => {
             </div>
           </div>
 
-          <div
-            className="grid grid-cols-1 border rounded-lg
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-3 mb-3 xxl:mb-6 p-4"
-          >
+          <div className="grid grid-cols-1 border rounded-lg
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6 mb-3 xxl:mb-6 p-4" >
             <ERPDataCombobox
               id="defaultBrand"
               value={formState.defaultBrand}
@@ -714,10 +710,8 @@ const InventorySettingsForm = () => {
             />
           </div>
 
-          <div
-            className="grid grid-cols-1 border rounded-lg 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-3 gap-3 mb-3 xxl:mb-6 p-4  "
-          >
+          <div className="grid grid-cols-1 border rounded-lg 
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-3 gap-6 mb-3 xxl:mb-6 p-4">
             <ERPCheckbox
               id="setAuthorizationinSales"
               checked={formState.setAuthorizationinSales}

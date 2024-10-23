@@ -730,5 +730,10 @@
   "enable_supplier_wise_item_code":"Enable Supplier Wise Item Code",
   "enable_multi_warehouse_billing":"Enable Multi Warehouse Billing",
   "use_popup_window_for_item_search":"Use Popup Window For Item Search",
-  "list_barcode_items_in_item_lookup":"List Barcode Items In Item Lookup"
+  "list_barcode_items_in_item_lookup":"List Barcode Items In Item Lookup",
+
+  "default_printer":"Default Printer",
+  "enter_number_of_days":"Enter number of days",
+  "print_gatePass":"Print GatePass",
+  "show_reprint_authorisation":"Show Reprint Authorisation"
 }

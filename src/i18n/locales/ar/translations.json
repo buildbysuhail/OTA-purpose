@@ -480,7 +480,7 @@
   "predated_transaction_days": "أيام المعاملة السابقة للتاريخ",
 
   "auto_sync": "المزامنة التلقائية لنقل الفروع SI و PI",
-  "minimum_shift_duration": "مدة المناوبة الدنيا",
+  "maintain_all_branch": "الحفاظ على جميع الفروع مع المخزون المشترك",
   "maintain_untallied_bills": "الحفاظ على الفواتير غير المطابقة",
   "allow_sales_detailed_edit": "السماح بتعديل تفصيلي للمبيعات",
   "salesman_incentive": "حافز البائع",
@@ -729,5 +729,10 @@
   "enable_supplier_wise_item_code": "تمكين كود العنصر حسب المورد",
   "enable_multi_warehouse_billing": "تمكين الفوترة متعددة المستودعات",
   "use_popup_window_for_item_search": "استخدام نافذة منبثقة للبحث عن العنصر",
-  "list_barcode_items_in_item_lookup": "سرد عناصر الرمز الشريطي في البحث عن العناصر"
+  "list_barcode_items_in_item_lookup": "سرد عناصر الرمز الشريطي في البحث عن العناصر",
+
+  "default_printer": "الطابعة الافتراضية",
+  "enter_number_of_days": "أدخل عدد الأيام",
+  "print_gatePass": "طباعة بوابة المرور",
+  "show_reprint_authorisation": "إظهار إذن إعادة الطباعة"
 }

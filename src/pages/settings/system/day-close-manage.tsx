@@ -43,17 +43,17 @@ const DayCloseManage = () => {
     isLoading
   } = useFormManager<DayCloseManageData>({
     url: Urls.DayClose,
-    onSuccess: useCallback(
-      () => dispatch(toggleDayClosePopup({ isOpen: false, key: null })),
+    onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false,})),
       [dispatch]
     ),
-    key: rootState.PopupData.dayClose?.key,
+    method: ActionType.POST,
     useApiClient: true,
-    initialData: initialDayCloseData
+    loadDataRequired: false,
+    initialData:initialDayCloseData
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleDayClosePopup({ isOpen: false, key: null }));
+    dispatch(toggleDayClosePopup({ isOpen: false,}));
   }, []);
 
   const { t } = useTranslation();
@@ -66,36 +66,36 @@ const DayCloseManage = () => {
           label={t("password")}
           placeholder={t("enter_password")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("passWord", data)}
+          onChangeData={(data: any) => handleFieldChange("passWord", data.passWord)}
         />
         <ERPDateInput
           {...getFieldProps("closedDate")}
           type="date"
           id="closedDate"
           label={t("closed_date")}
-          onChangeData={(data: any) => handleFieldChange("closedDate", data)}
+          onChangeData={(data: any) => handleFieldChange("closedDate", data.closedDate)}
         />
         <div className="flex justify-around items-center">
           <ERPCheckbox
             {...getFieldProps("isSales")}                                               
             label={t("Sales")}
-            onChangeData={(data: any) => handleFieldChange("isSales", data)}
+            onChangeData={(data: any) => handleFieldChange("isSales", data.isSales)}
           />
           <ERPCheckbox
             {...getFieldProps("isPurchase")}
             label={t("purchase")}
-            onChangeData={(data: any) => handleFieldChange("isPurchase", data)}
+            onChangeData={(data: any) => handleFieldChange("isPurchase", data.isPurchase)}
           />
           <ERPCheckbox
             {...getFieldProps("isAccounts")}
             label={t("accounts")}
-            onChangeData={(data: any) => handleFieldChange("isAccounts", data)}
+            onChangeData={(data: any) => handleFieldChange("isAccounts", data.isAccounts)}
           />
         </div>
         <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("day_close_agreement")}
-          onChangeData={(data: any) => handleFieldChange("isAgree", data)}
+          onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
       </div>
       <ERPFormButtons

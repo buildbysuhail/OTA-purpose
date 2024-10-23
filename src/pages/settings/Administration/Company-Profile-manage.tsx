@@ -58,14 +58,14 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           label={t("registered_name")}
           placeholder={t("registered_name")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("registeredName", data)}
+          onChangeData={(data: any) => handleFieldChange("registeredName", data.registeredName)}
         />
 
         <ERPInput
           {...getFieldProps("registeredNameArabic")}
           label={t("registered_name")}
           placeholder={t("registered_name")}
-          onChangeData={(data: any) => handleFieldChange("registeredNameArabic", data)}
+          onChangeData={(data: any) => handleFieldChange("registeredNameArabic", data.registeredNameArabic)}
         />
 
         <ERPInput
@@ -73,7 +73,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           label={t("tax_registration_number")}
           placeholder={t("tax_registration_number")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("taxRegNo", data)}
+          onChangeData={(data: any) => handleFieldChange("taxRegNo", data.taxRegNo)}
         />
 
         <ERPInput
@@ -81,28 +81,28 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           label={t("cr_number")}
           placeholder={t("cr_number")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("crNumber", data)}
+          onChangeData={(data: any) => handleFieldChange("crNumber", data.crNumber)}
         />
 
         <ERPInput
           {...getFieldProps("buildingNo")}
           label={t("building_number")}
           placeholder={t("building_number")}
-          onChangeData={(data: any) => handleFieldChange("buildingNo", data)}
+          onChangeData={(data: any) => handleFieldChange("buildingNo", data.buildingNo)}
         />
 
         <ERPInput
           {...getFieldProps("streetName")}
           label={t("street")}
           placeholder={t("street")}
-          onChangeData={(data: any) => handleFieldChange("streetName", data)}
+          onChangeData={(data: any) => handleFieldChange("streetName", data.streetName)}
         />
 
         <ERPInput
           {...getFieldProps("district")}
           label={t("district")}
           placeholder={t("district")}
-          onChangeData={(data: any) => handleFieldChange("district", data)}
+          onChangeData={(data: any) => handleFieldChange("district", data.district)}
         />
 
         <ERPInput
@@ -110,7 +110,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           label={t("city")}
           placeholder={t("city")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("city", data)}
+          onChangeData={(data: any) => handleFieldChange("city", data.city)}
         />
         <ERPDataCombobox
           {...getFieldProps("country")}
@@ -122,7 +122,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => { 
-            handleFieldChange("country", data) 
+            handleFieldChange("country", data.country) 
           }}
           label={t("country")}
         />
@@ -132,42 +132,42 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           label={t("postal_code")}
           placeholder={t("postal_code")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("postalCode", data)}
+          onChangeData={(data: any) => handleFieldChange("postalCode", data.postalCode)}
         />
 
         <ERPInput
           {...getFieldProps("additionalNo")}
           label={t("additional_number")}
           placeholder={t("additional_number")}
-          onChangeData={(data: any) => handleFieldChange("additionalNo", data)}
+          onChangeData={(data: any) => handleFieldChange("additionalNo", data.additionalNo)}
         />
 
         <ERPInput
           {...getFieldProps("countrySubEntity")}
           label={t("region_country_sub_entity")}
           placeholder={t("region")}
-          onChangeData={(data: any) => handleFieldChange("countrySubEntity", data)}
+          onChangeData={(data: any) => handleFieldChange("countrySubEntity", data.countrySubEntity)}
         />
 
         <ERPInput
           {...getFieldProps("emailAddress")}
           label={t("email")}
           placeholder={t("email")}
-          onChangeData={(data: any) => handleFieldChange("emailAddress", data)}
+          onChangeData={(data: any) => handleFieldChange("emailAddress", data.emailAddress)}
         />
 
         <ERPInput
           {...getFieldProps("telephone")}
           label={t("telephone")}
           placeholder={t("telephone")}
-          onChangeData={(data: any) => handleFieldChange("telephone", data)}
+          onChangeData={(data: any) => handleFieldChange("telephone", data.telephone)}
         />
 
         <ERPInput
           {...getFieldProps("mobile")}
           label={t("mobile")}
           placeholder={t("mobile")}
-          onChangeData={(data: any) => handleFieldChange("mobile", data)}
+          onChangeData={(data: any) => handleFieldChange("mobile", data.mobile)}
         />
       </div>
       <ERPFormButtons

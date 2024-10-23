@@ -44,7 +44,7 @@ export const UserManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => {
             
-            handleFieldChange("userName", data);
+            handleFieldChange("userName", data.userName);
           }}
         />
         <ERPInput
@@ -52,35 +52,35 @@ export const UserManage: React.FC = React.memo(() => {
           label={t("password")}
           placeholder={t("password")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("Passwd", data)}
+          onChangeData={(data: any) => handleFieldChange("Passwd", data.Passwd)}
         />
         <ERPInput
           {...getFieldProps("confrimPassword")}
           label={t("confirm_password")}
           placeholder={t("confirm_password")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("confrimPassword", data)}
+          onChangeData={(data: any) => handleFieldChange("confrimPassword", data.confrimPassword)}
         />
         <ERPInput
           {...getFieldProps("email")}
           label={t("email")}
           placeholder={t("email")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("email", data)}
+          onChangeData={(data: any) => handleFieldChange("email", data.email)}
         />
         <ERPInput
           {...getFieldProps("phoneNumber")}
           label={t("mobile")}
           placeholder={t("mobile")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("phoneNumber", data)}
+          onChangeData={(data: any) => handleFieldChange("phoneNumber", data.phoneNumber)}
         />
         <ERPInput
           {...getFieldProps("displayName")}
           label={t("name")}
           placeholder={t("name")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("displayName", data)}
+          onChangeData={(data: any) => handleFieldChange("displayName", data.displayName)}
         />
         <ERPDataCombobox
           {...getFieldProps("userTypeCode")}
@@ -92,9 +92,10 @@ export const UserManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
+          
           label={t("usertype")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("userTypeCode", data)}
+          onChangeData={(data: any) => handleFieldChange("userTypeCode", data.userTypeCode)}
         />
         <ERPDataCombobox
           {...getFieldProps("counterID")}
@@ -108,7 +109,7 @@ export const UserManage: React.FC = React.memo(() => {
           }}
           label={t("counter")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("counterID", data)}
+          onChangeData={(data: any) => handleFieldChange("counterID", data.counterID)}
         />
         <ERPDataCombobox
           {...getFieldProps("employeeID")}
@@ -122,21 +123,21 @@ export const UserManage: React.FC = React.memo(() => {
           }}
           label={t("employee")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("employeeID", data)}
+          onChangeData={(data: any) => handleFieldChange("employeeID", data.employeeID)}
         />
         <ERPInput
           {...getFieldProps("maxDiscPercAllowed")}
           label={t("max_dis%")}
           placeholder={t("max_dis%")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("maxDiscPercAllowed", data)}
+          onChangeData={(data: any) => handleFieldChange("maxDiscPercAllowed", data.maxDiscPercAllowed)}
         />
         <ERPInput
           {...getFieldProps("passkey")}
           label={t("passkey")}
           placeholder={t("passkey")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("passkey", data)}
+          onChangeData={(data: any) => handleFieldChange("passkey", data.passkey)}
         />
       </div>
       <ERPFormButtons

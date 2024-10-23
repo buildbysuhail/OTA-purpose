@@ -147,7 +147,7 @@ const Urls = {
 
   //setting/Administrations
   CompanyProfiles: "/Core/CompanyProfile/",
-  Branch: "/Subscription/Branch/",
+  Branch: "/Core/Branch/",
   BranchInfo: "/Core/Branch/BranchInfo",
   branch_code:"/Branch/GetNextBranchCode/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",

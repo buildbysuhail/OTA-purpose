@@ -227,10 +227,10 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 value={formState.secondDisplayImagesPath}
                 data={formState}
                 label={t("second_display_images_path")}
-                onChangeData={(data) =>
+                onChangeData={(data: any) =>
                   handleFieldChange(
                     "secondDisplayImagesPath",
-                    data.secondDisplayImagesPath
+                    parseFloat(data.secondDisplayImagesPath)
                   )
                 }
               /> */}

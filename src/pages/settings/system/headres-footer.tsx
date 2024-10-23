@@ -69,63 +69,64 @@ const HeadersAndFooters : React.FC = React.memo(() => {
           label="Header 1"
           placeholder="heading1"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading1", data)}
+          onChangeData={(data: any) => handleFieldChange("heading1", data.heading1)}
+          
         />
           <ERPInput
           {...getFieldProps("heading2")}
           label="Header 2"
           placeholder="heading2"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading2", data)}
+          onChangeData={(data: any) => handleFieldChange("heading2", data.heading2)}
         />
           <ERPInput
           {...getFieldProps("heading3")}
           label="Header 3"
           placeholder="heading3"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading3", data)}
+          onChangeData={(data: any) => handleFieldChange("heading3", data.heading3)}
         />
           <ERPInput
           {...getFieldProps("heading4")}
           label="Header 4"
           placeholder="heading4"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading4", data)}
+          onChangeData={(data: any) => handleFieldChange("heading4", data.heading4)}
         />
           <ERPInput
           {...getFieldProps("heading5")}
           label="Header 5"
           placeholder="heading5"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading5", data)}
+          onChangeData={(data: any) => handleFieldChange("heading5", data.heading5)}
         />
           <ERPInput
           {...getFieldProps("heading6")}
           label="Header 6"
           placeholder="heading6"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading6", data)}
+          onChangeData={(data: any) => handleFieldChange("heading6", data.heading6)}
         />
           <ERPInput
           {...getFieldProps("heading7")}
           label="Header 7/Report1"
           placeholder="heading7"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading7", data)}
+          onChangeData={(data: any) => handleFieldChange("heading7", data.heading7)}
         />
           <ERPInput
           {...getFieldProps("heading8")}
           label="Header 8/Report2"
           placeholder="header 8 "
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading8", data)}
+          onChangeData={(data: any) => handleFieldChange("heading8", data.heading8)}
         />
           <ERPInput
           {...getFieldProps("heading9")}
           label="Header  9/Report3"
           placeholder="heading9"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading9", data)}
+          onChangeData={(data: any) => handleFieldChange("heading9", data.heading9)}
         />
           <ERPInput
           {...getFieldProps("heading10")}

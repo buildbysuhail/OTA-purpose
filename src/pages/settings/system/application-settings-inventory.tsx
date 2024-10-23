@@ -10,6 +10,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../enums/ledger-types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
+import { t } from "i18next";
 
 interface Inventory {
   defaultSalesAcc: number;
@@ -214,7 +215,7 @@ const InventorySettingsForm = () => {
                 onChangeData={(data: any) =>
                   handleFieldChange("defaultSalesAcc", data.defaultSalesAcc)
                 }
-                label="Default Sales Account"
+                label={t("default_sales_account")}
               />
 
               <ERPDataCombobox
@@ -235,7 +236,7 @@ const InventorySettingsForm = () => {
                     data.defaultSalesReturnAcc
                   )
                 }
-                label="Default Sales Return Account"
+                label={t("default_sales_return_account")}
               />
               <ERPDataCombobox
                 id="defaultPurchaseAcc"
@@ -255,7 +256,7 @@ const InventorySettingsForm = () => {
                     data.defaultPurchaseAcc
                   )
                 }
-                label="Default Purchase Account"
+                label={t("default_purchase_account")}
               />
               <ERPDataCombobox
                 id="defaultPurchaseReturnAcc"
@@ -275,7 +276,7 @@ const InventorySettingsForm = () => {
                     data.defaultPurchaseReturnAcc
                   )
                 }
-                label="Default Purchase Return Account"
+                label={t("default_purchase_return_account")}
               />
               <ERPDataCombobox
                 id="defaultBillDiscGivenLdg"
@@ -295,7 +296,7 @@ const InventorySettingsForm = () => {
                     data.defaultBillDiscGivenLdg
                   )
                 }
-                label="Bill Discount Given Ledger"
+                label={t("bill_discount_given_ledger")}
               />
               <ERPDataCombobox
                 id="defaultBillDiscRecvdLdg"
@@ -315,7 +316,7 @@ const InventorySettingsForm = () => {
                     data.defaultBillDiscRecvdLdg
                   )
                 }
-                label="Bill Discount Received Ledger"
+                label={t("bill_discount_received_ledger")}
               />
 
               <ERPDataCombobox
@@ -336,7 +337,7 @@ const InventorySettingsForm = () => {
                     data.defaultCouponSalesAccount
                   )
                 }
-                label="Coupon Card Account"
+                label={t("coupon_card_account")}
               />
 
               <ERPDataCombobox
@@ -357,7 +358,7 @@ const InventorySettingsForm = () => {
                     data.defaultRoundOffAccount
                   )
                 }
-                label="Default Round off Account"
+                label={t("default_round_off_account")}
               />
               <ERPDataCombobox
                 id="defaultAdditionalAmountAccount"
@@ -377,7 +378,7 @@ const InventorySettingsForm = () => {
                     data.defaultAdditionalAmountAccount
                   )
                 }
-                label="Default Additional Amount Account"
+                label={t("default_additional_amount_account")}
               />
               <ERPDataCombobox
                 id="defaultBTOAccount"
@@ -394,7 +395,7 @@ const InventorySettingsForm = () => {
                 onChangeData={(data: any) =>
                   handleFieldChange("defaultBTOAccount", data.defaultBTOAccount)
                 }
-                label="Default BTO Account"
+                label={t("default_BTO_account")}
               />
               <ERPDataCombobox
                 id="defaultBTIAccount"
@@ -411,7 +412,7 @@ const InventorySettingsForm = () => {
                 onChangeData={(data: any) =>
                   handleFieldChange("defaultBTIAccount", data.defaultBTIAccount)
                 }
-                label="Default BTI Account"
+                label={t("default_BTI_account")}
               />
               <ERPDataCombobox
                 id="defaultSalesReturnPayableAcc"
@@ -431,7 +432,7 @@ const InventorySettingsForm = () => {
                     data.defaultSalesReturnPayableAcc
                   )
                 }
-                label="Default Sales Return Payable Acc:"
+                label={t("default_sales_return_payable_acc")}
               />
             </div>
             <div className="flex justify-start gap-3 ">
@@ -440,7 +441,7 @@ const InventorySettingsForm = () => {
                   id="serviceWarrantyInvAccounts"
                   checked={formState.serviceWarrantyInvAccounts}
                   data={formState}
-                  label="Service Warranty Inv Accounts"
+                  label={t("service_warranty_inv_accounts")}
                   onChangeData={(data: any) =>
                     handleFieldChange(
                       "serviceWarrantyInvAccounts",
@@ -467,7 +468,7 @@ const InventorySettingsForm = () => {
                       data.serviceWarrantyInvLedgerID
                     )
                   }
-                  label="Service Warranty Inv Accounts Info"
+                  label={t("service_warranty_inv_accounts_info")}
                   noLabel={true}
                 />
               </div>
@@ -477,7 +478,7 @@ const InventorySettingsForm = () => {
                   checked={formState.serviceNonWarrantyInvAccounts}
                   data={formState}
                   // noLabel={true}
-                  label="Service Non Warranty Inv Accounts"
+                  label={t("service_non_warranty_inv_accounts")}
                   onChangeData={(data: any) =>
                     handleFieldChange(
                       "serviceNonWarrantyInvAccounts",
@@ -503,7 +504,7 @@ const InventorySettingsForm = () => {
                       data.serviceWarrantyInvLedgerID
                     )
                   }
-                  label="Service Non Warranty Inv Accounts Info"
+                  label={t("service_non_warranty_inv_accounts_info")}
                   noLabel={true}
                 />
               </div>
@@ -528,7 +529,7 @@ const InventorySettingsForm = () => {
               onChangeData={(data: any) =>
                 handleFieldChange("defaultBrand", data.defaultBrand)
               }
-              label="Default Brand"
+              label={t("default_brand")}
             />
 
             <ERPDataCombobox
@@ -551,13 +552,13 @@ const InventorySettingsForm = () => {
                   data.showNegStockWarning
                 )
               }
-              label="Negative Stock"
+              label={t("negative_stock")}
             />
             <ERPCheckbox
               id="maintainWarehouse"
               checked={formState.maintainWarehouse}
               data={formState}
-              label="Maintain Warehouse"
+              label={t("maintain_warehouse")}
               onChangeData={(data: any) =>
                 handleFieldChange("maintainWarehouse", data.maintainWarehouse)
               }
@@ -576,14 +577,14 @@ const InventorySettingsForm = () => {
               onChangeData={(data: any) =>
                 handleFieldChange("defaultWareHouse", data.defaultWareHouse)
               }
-              label="Ware House"
+              label={t("ware_house")}
             />
             <ERPInput
               id="priceCode"
               value={formState.priceCode}
               data={formState}
-              label="Price Code"
-              placeholder="Enter the Price Code"
+              label={t("price_code")}
+              placeholder={t("enter_the_price_code")}
               type="Password"
               onChangeData={(data: any) =>
                 handleFieldChange("priceCode", parseFloat(data.priceCode))
@@ -606,7 +607,7 @@ const InventorySettingsForm = () => {
                   data.defaultBarcodeLabel
                 )
               }
-              label="Barcode Label"
+              label={t("barcode_label")}
             />
 
             <ERPDataCombobox
@@ -623,7 +624,7 @@ const InventorySettingsForm = () => {
               onChangeData={(data: any) =>
                 handleFieldChange("ifLessSalesRate", data.ifLessSalesRate)
               }
-              label="If Less Sales Rate"
+              label={t("if_less_sales_rate")}
             />
 
             <ERPDataCombobox
@@ -643,14 +644,14 @@ const InventorySettingsForm = () => {
                   data.defaultServiceSpareWareHouse
                 )
               }
-              label="Default Service Spare Warehouse"
+              label={t("default_service_spare_warehouse")}
             />
             <ERPInput
               id="redeeemValuesSeperatedByComma"
               value={formState.redeeemValuesSeperatedByComma}
               data={formState}
-              label="Redeem Points (Separated by comma)"
-              placeholder="Enter redeem points"
+              label={t("redeem_points_(separated_by_comma)")}
+              placeholder={t("enter_redeem_points")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "redeeemValuesSeperatedByComma",
@@ -662,8 +663,8 @@ const InventorySettingsForm = () => {
               id="keepUserActionInDays"
               value={formState.keepUserActionInDays}
               data={formState}
-              label="Keep User Actions (in Days)"
-              placeholder="Enter number of days"
+              label={t("keep_user_actions_(in_days)")}
+              placeholder={t("enter_number_of_days")}
               type="number"
               onChangeData={(data: any) =>
                 handleFieldChange(
@@ -694,15 +695,15 @@ const InventorySettingsForm = () => {
               onChangeData={(data: any) =>
                 handleFieldChange("blockBillDiscount", data.blockBillDiscount)
               }
-              label="Block Bill Discount"
+              label={t("block_bill_discount")}
             />
 
             <ERPInput
               id="discontAuthorizationIfDiscountAbove"
               value={formState.discontAuthorizationIfDiscountAbove}
               data={formState}
-              label="Discount Authorization"
-              placeholder="Enter discount threshold"
+              label={t("discount_authorization_if_discount_above")}
+              placeholder={t("enter_discount_threshold")}
               type="number"
               onChangeData={(data: any) =>
                 handleFieldChange(
@@ -715,13 +716,13 @@ const InventorySettingsForm = () => {
 
           <div
             className="grid grid-cols-1 border rounded-lg 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-3 mb-3 xxl:mb-6 p-4  "
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-3 gap-3 mb-3 xxl:mb-6 p-4  "
           >
             <ERPCheckbox
               id="setAuthorizationinSales"
               checked={formState.setAuthorizationinSales}
               data={formState}
-              label="Set Authorization in Sales"
+              label={t("set_authorization_in_sales")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "setAuthorizationinSales",
@@ -733,7 +734,7 @@ const InventorySettingsForm = () => {
               id="carryForwardPurchaseOrderQtyToPurchase"
               checked={formState.carryForwardPurchaseOrderQtyToPurchase}
               data={formState}
-              label="Carry Forward Purchase Order Qty To Purchase"
+              label={t("carry_forward_purchase")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "carryForwardPurchaseOrderQtyToPurchase",
@@ -746,7 +747,7 @@ const InventorySettingsForm = () => {
               id="enableSalesInvoiceDraftOption"
               checked={formState.enableSalesInvoiceDraftOption}
               data={formState}
-              label="Enable Sales Invoice Draft Option"
+              label={t("enable_sales_invoice_draft_option")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "enableSalesInvoiceDraftOption",
@@ -758,7 +759,7 @@ const InventorySettingsForm = () => {
               id="useCostForStockTransferToBranch"
               checked={formState.useCostForStockTransferToBranch}
               data={formState}
-              label="Use Cost For Stock Transfer To Branch"
+              label={t("use_cost_for_stock_transfer_to_branch")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "useCostForStockTransferToBranch",
@@ -770,7 +771,7 @@ const InventorySettingsForm = () => {
               id="setProductCostasPurchasePrice"
               checked={formState.setProductCostasPurchasePrice}
               data={formState}
-              label="Set Product Cost as Declaration Price"
+              label={t("set_product_cost_as_declaration_price")}
               onChangeData={(data: any) => {
                 handleFieldChange(
                   "setProductCostasPurchasePrice",
@@ -783,7 +784,7 @@ const InventorySettingsForm = () => {
               id="showAccountReceivableInPurchase"
               checked={formState.showAccountReceivableInPurchase}
               data={formState}
-              label="Show Account Receivable In Purchase"
+              label={t("show_account_receivable_in_purchase")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "showAccountReceivableInPurchase",
@@ -796,7 +797,7 @@ const InventorySettingsForm = () => {
               id="setProductCostWithVATAmount"
               checked={formState.setProductCostWithVATAmount}
               data={formState}
-              label="Set Product Cost With TAX Amount"
+              label={t("set_product_cost_with_TAX_amount")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "setProductCostWithVATAmount",
@@ -808,7 +809,7 @@ const InventorySettingsForm = () => {
               id="showPrinterSelection"
               checked={formState.showPrinterSelection}
               data={formState}
-              label="Show Printer Selection"
+              label={t("show_printer_selection")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "showPrinterSelection",
@@ -821,7 +822,7 @@ const InventorySettingsForm = () => {
               id="setLastSalesRateAsProctSaleRate"
               checked={formState.setLastSalesRateAsProctSaleRate}
               data={formState}
-              label="Set Last Sales Rate As Product Sales Rate"
+              label={t("set_last_sales_rate_as_product_sales_rate")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "setLastSalesRateAsProctSaleRate",
@@ -833,7 +834,7 @@ const InventorySettingsForm = () => {
               id="blockNonStockSerialSelling"
               checked={formState.blockNonStockSerialSelling}
               data={formState}
-              label="Block Non Stock Serial Selling"
+              label={t("block_non_stock_serial_selling")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "blockNonStockSerialSelling",
@@ -845,7 +846,7 @@ const InventorySettingsForm = () => {
               id="bTOUsingMSP"
               checked={formState.bTOUsingMSP}
               data={formState}
-              label="BTO Using MSP"
+              label={t("BTO_using_MSP")}
               onChangeData={(data: any) =>
                 handleFieldChange("bTOUsingMSP", data.bTOUsingMSP)
               }
@@ -855,7 +856,7 @@ const InventorySettingsForm = () => {
               id="setLastPurchaseRateAsProctRate"
               checked={formState.setLastPurchaseRateAsProctRate}
               data={formState}
-              label="Set Last Purchase Rate As Product Purchase Rate"
+              label={t("set_last_purchase")}
               onChangeData={(data: any) => {
                 // Update the first checkbox
                 const newValue = data.setLastPurchaseRateAsProctRate;
@@ -872,7 +873,7 @@ const InventorySettingsForm = () => {
               id="showProductDuplicationMessage"
               checked={formState.showProductDuplicationMessage}
               data={formState}
-              label="Show Product Duplication Message"
+              label={t("show_product_duplication_message")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "showProductDuplicationMessage",
@@ -884,7 +885,7 @@ const InventorySettingsForm = () => {
               id="isReferenceNumberMandatoryInPurchase"
               checked={formState.isReferenceNumberMandatoryInPurchase}
               data={formState}
-              label="Is Reference Number Mandatory In Purchase"
+              label={t("is_reference_number")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "isReferenceNumberMandatoryInPurchase",
@@ -897,7 +898,7 @@ const InventorySettingsForm = () => {
               id="setAvgPurchaseCostWithStdPurRate"
               checked={formState.setAvgPurchaseCostWithStdPurRate}
               data={formState}
-              label="Set Avg. Purchase Cost with Last Purchase Rate"
+              label={t("set_avg_purchase")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "setAvgPurchaseCostWithStdPurRate",
@@ -909,7 +910,7 @@ const InventorySettingsForm = () => {
               id="blockHoldItems"
               checked={formState.blockHoldItems}
               data={formState}
-              label="Block Hold Items"
+              label={t("block_hold_items")}
               onChangeData={(data: any) =>
                 handleFieldChange("blockHoldItems", data.blockHoldItems)
               }
@@ -918,7 +919,7 @@ const InventorySettingsForm = () => {
               id="showTransitModeStockTransferAlert"
               checked={formState.showTransitModeStockTransferAlert}
               data={formState}
-              label="Show Transit Mode Stock Transfer Alert"
+              label={t("show_transit_mode")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "showTransitModeStockTransferAlert",
@@ -931,7 +932,7 @@ const InventorySettingsForm = () => {
               id="updatePurchasePriceOnPurchaseTransfer"
               checked={formState.updatePurchasePriceOnPurchaseTransfer}
               data={formState}
-              label="Update Purchase Price On Purchase Transfer"
+              label={t("update_purchase_price")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "updatePurchasePriceOnPurchaseTransfer",
@@ -943,7 +944,7 @@ const InventorySettingsForm = () => {
               id="printInvAfterSave"
               checked={formState.printInvAfterSave}
               data={formState}
-              label="Print After Save"
+              label={t("print_after_save")}
               onChangeData={(data: any) =>
                 handleFieldChange("printInvAfterSave", data.printInvAfterSave)
               }
@@ -952,7 +953,7 @@ const InventorySettingsForm = () => {
               id="showAccountPayableInSales"
               checked={formState.showAccountPayableInSales}
               data={formState}
-              label="Show Account Payable In Sales"
+              label={t("show_account_payable_in_sales")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "showAccountPayableInSales",
@@ -965,7 +966,7 @@ const InventorySettingsForm = () => {
               id="showCashSalesSeperateMenu"
               checked={formState.showCashSalesSeperateMenu}
               data={formState}
-              label="Show Cash Sales Separate Menu"
+              label={t("show_cash_sales_separate_menu")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "showCashSalesSeperateMenu",
@@ -977,7 +978,7 @@ const InventorySettingsForm = () => {
               id="needPOApprovalForPrintout"
               checked={formState.needPOApprovalForPrintout}
               data={formState}
-              label="Need PO Approval For Printout"
+              label={t("need_PO_approval_for_printout")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "needPOApprovalForPrintout",
@@ -989,7 +990,7 @@ const InventorySettingsForm = () => {
               id="holdSalesMan"
               checked={formState.holdSalesMan}
               data={formState}
-              label="Hold Sales Man"
+              label={t("hold_sales_man")}
               onChangeData={(data: any) =>
                 handleFieldChange("holdSalesMan", data.holdSalesMan)
               }
@@ -999,7 +1000,7 @@ const InventorySettingsForm = () => {
               id="showNonStockItemsinSales"
               checked={formState.showNonStockItemsinSales}
               data={formState}
-              label="Show Non Stock Items in Sales"
+              label={t("show_non_stock_items_in_sales")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "showNonStockItemsinSales",
@@ -1011,7 +1012,7 @@ const InventorySettingsForm = () => {
               id="enableAddStockAdjustment"
               checked={formState.enableAddStockAdjustment}
               data={formState}
-              label="Enable Add Stock Adjustment"
+              label={t("enable_add_stock_adjustment")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "enableAddStockAdjustment",
@@ -1023,7 +1024,7 @@ const InventorySettingsForm = () => {
               id="mobileNumberMandotryInSales"
               checked={formState.mobileNumberMandotryInSales}
               data={formState}
-              label="Mobile Number Mandatory in Sales"
+              label={t("mobile_number_mandatory_in_sales")}
               onChangeData={(data: any) =>
                 handleFieldChange(
                   "mobileNumberMandotryInSales",
@@ -1035,7 +1036,7 @@ const InventorySettingsForm = () => {
         </div>
         <div className="flex justify-end">
           <ERPButton
-            title="Save Settings"
+            title={t("save_settings")}
             variant="primary"
             type="submit"
             disabled={isSaving}

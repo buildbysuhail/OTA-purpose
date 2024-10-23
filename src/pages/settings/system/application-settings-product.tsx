@@ -187,7 +187,7 @@ const ApplicationSettingsProduct = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border p-4 rounded-lg">
-        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6">
+        <div className="grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             id="batchCriteria"
             field={{
@@ -374,8 +374,8 @@ const ApplicationSettingsProduct = () => {
             />
           </div>
         </div>
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6 mt-4">
-          <div className="flex items-center justify-between">
+        <div className="grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 mt-4">
+          <div className="flex items-center justify-between sm:justify-start  ">
             <ERPCheckbox
               id="useProductImages"
               label={t("use_product_images")}
@@ -412,7 +412,7 @@ const ApplicationSettingsProduct = () => {
               />
             </div>
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between sm:justify-start">
             <ERPCheckbox
               id="giftOnBilling"
               data={formState}
@@ -443,7 +443,7 @@ const ApplicationSettingsProduct = () => {
               label=" "
             />
           </div>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between sm:justify-start">
             <ERPCheckbox
               id="lastSystemGeneratedBarcodetrue"
               data={formState}
@@ -476,7 +476,7 @@ const ApplicationSettingsProduct = () => {
       </div>
 
       <div className="border p-4 rounded-lg">
-        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
+        <div className="grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6">
           <ERPCheckbox
             data={formState}
             id="allowOnlyScanProductMarkedAsWeighingScaleItems"

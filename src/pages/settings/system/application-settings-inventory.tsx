@@ -194,10 +194,10 @@ const InventorySettingsForm = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="erp-settings-form">
         <div className="flex flex-col justify-start items-stretch p-5 ">
-          <div className="flex flex-col gap-4 border rounded-md shadow-sm p-3  xxl:p-10 mb-3 xxl:mb-6">
+          <div className="flex flex-col gap-3 border rounded-md shadow-sm p-4 mb-3 xxl:mb-6">
             <div
               className="grid grid-cols-1 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 justify-items-stretch gap-3 "
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 justify-items-stretch gap-3"
             >
               <ERPDataCombobox
                 id="defaultSalesAcc"
@@ -434,7 +434,7 @@ const InventorySettingsForm = () => {
                 label="Default Sales Return Payable Acc:"
               />
             </div>
-            <div className="flex justify-start gap-3">
+            <div className="flex justify-start gap-3 ">
               <div className="flex gap-1">
                 <ERPCheckbox
                   id="serviceWarrantyInvAccounts"
@@ -471,7 +471,7 @@ const InventorySettingsForm = () => {
                   noLabel={true}
                 />
               </div>
-              <div className="flex gap-1">
+              <div className="flex gap-1 ">
                 <ERPCheckbox
                   id="serviceNonWarrantyInvAccounts"
                   checked={formState.serviceNonWarrantyInvAccounts}
@@ -512,7 +512,7 @@ const InventorySettingsForm = () => {
 
           <div
             className="grid grid-cols-1 border rounded-md shadow-sm 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-4 mb-3 xxl:mb-6 p-3  xxl:p-10"
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-3 mb-3 xxl:mb-6 p-4"
           >
             <ERPDataCombobox
               id="defaultBrand"
@@ -701,7 +701,7 @@ const InventorySettingsForm = () => {
               id="discontAuthorizationIfDiscountAbove"
               value={formState.discontAuthorizationIfDiscountAbove}
               data={formState}
-              label="Discount Authorization if Discount above"
+              label="Discount Authorization"
               placeholder="Enter discount threshold"
               type="number"
               onChangeData={(data: any) =>
@@ -715,7 +715,7 @@ const InventorySettingsForm = () => {
 
           <div
             className="grid grid-cols-1 border rounded-md shadow-sm 
-            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-4 mb-3 xxl:mb-6 p-3  xxl:p-10"
+            sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-3 mb-3 xxl:mb-6 p-4  "
           >
             <ERPCheckbox
               id="setAuthorizationinSales"

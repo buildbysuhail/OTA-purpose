@@ -194,7 +194,7 @@ const InventorySettingsForm = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="erp-settings-form">
         <div className="flex flex-col justify-start items-stretch p-5 ">
-          <div className="flex flex-col gap-3 border rounded-md shadow-sm p-4 mb-3 xxl:mb-6">
+          <div className="flex flex-col gap-3 border rounded-lg p-4 mb-3 xxl:mb-6">
             <div
               className="grid grid-cols-1 
             sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 justify-items-stretch gap-3"
@@ -511,7 +511,7 @@ const InventorySettingsForm = () => {
           </div>
 
           <div
-            className="grid grid-cols-1 border rounded-md shadow-sm 
+            className="grid grid-cols-1 border rounded-lg
             sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-3 mb-3 xxl:mb-6 p-4"
           >
             <ERPDataCombobox
@@ -714,7 +714,7 @@ const InventorySettingsForm = () => {
           </div>
 
           <div
-            className="grid grid-cols-1 border rounded-md shadow-sm 
+            className="grid grid-cols-1 border rounded-lg 
             sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-3 mb-3 xxl:mb-6 p-4  "
           >
             <ERPCheckbox

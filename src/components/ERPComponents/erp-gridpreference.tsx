@@ -154,6 +154,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
       </button>
       <ERPModal
         isForm
+        isFullHeight={true}
         isOpen={isOpen}
         hasSubmit={false}
         closeTitle="Close"

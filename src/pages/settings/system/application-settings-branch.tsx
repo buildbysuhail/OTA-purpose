@@ -13,6 +13,7 @@ import {
 } from "./application-settings-types";
 import ERPDisableInable from "../../../components/ERPComponents/erp-disable-inable";
 import ERPDisableEnable from "../../../components/ERPComponents/erp-disable-inable";
+import { t } from "i18next";
 
 const BranchSettingsForm: React.FC = () => {
   const [formState, setFormState] = useState<ApplicationBranchSettings>(
@@ -106,8 +107,8 @@ const BranchSettingsForm: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="border p-5 flex flex-col gap-6 ">
-        <div className="grid grid-cols-1 border rounded-md shadow-sm sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-5 gap-4 mb-3 xxl:mb-6 p-3 lg:p-6 xxl:p-10">
+      <div className="border rounded-lg p-4">
+        <div className="grid  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <ERPDisableEnable targetCount={15} onSuccess={handleSuccess}>
             {(hasPermitted) => (
               <ERPDataCombobox
@@ -121,7 +122,7 @@ const BranchSettingsForm: React.FC = () => {
                   labelKey: "name",
                 }}
                 data={formState}
-                label="Selected Country"
+                label={t("select_country")}
                 onChangeData={(data) =>
                   handleFieldChange("countryName", data.countryName)
                 }
@@ -134,14 +135,12 @@ const BranchSettingsForm: React.FC = () => {
             value={formState.invoicePrintingStyle}
             field={{
               id: "invoicePrintingStyle",
-              // required: true,
               getListUrl: Urls.data_languages,
-
               valueKey: "id",
               labelKey: "name",
             }}
             data={formState}
-            label="Regional Language"
+            label={t("regional_language")}
             onChangeData={(data) =>
               handleFieldChange(
                 "invoicePrintingStyle",
@@ -154,7 +153,7 @@ const BranchSettingsForm: React.FC = () => {
             value={formState.maximum_Allowed_LineItem_Amount}
             data={formState}
             type="number"
-            label="Maximum Allowed LineItem Amount"
+            label={t("maximum_allowed_line_item_amount")}
             onChangeData={(data) =>
               handleFieldChange(
                 "maximum_Allowed_LineItem_Amount",
@@ -164,7 +163,7 @@ const BranchSettingsForm: React.FC = () => {
           />
           <ERPCheckbox
             id="maintainTax"
-            label="Maintain Tax"
+            label={t("maintain_tax")}
             data={formState}
             checked={formState?.maintainTax}
             onChangeData={(data) =>
@@ -175,7 +174,7 @@ const BranchSettingsForm: React.FC = () => {
           <ERPCheckbox
             data={formState}
             id="showFinancialYearSelector"
-            label="Show FinancialYear Selector"
+            label={t("show_financial_year_selector_on_startup")}
             checked={formState?.showFinancialYearSelector}
             onChangeData={(data) =>
               handleFieldChange(
@@ -186,7 +185,7 @@ const BranchSettingsForm: React.FC = () => {
           />
           <ERPCheckbox
             id="autoPostingTransaction"
-            label="Maintain Auto Posting Transaction"
+            label={t("maintain_auto_posting_transaction")}
             data={formState}
             checked={formState?.autoPostingTransaction}
             onChangeData={(data) =>
@@ -198,7 +197,7 @@ const BranchSettingsForm: React.FC = () => {
           />
           <ERPCheckbox
             id="allowEditPostedTransactions"
-            label="AllowEdit Posted Transactions"
+            label={t("allow_edit_posted_transactions")}
             data={formState}
             checked={formState?.allowEditPostedTransactions}
             onChangeData={(data) =>
@@ -213,7 +212,7 @@ const BranchSettingsForm: React.FC = () => {
             {(hasPermitted) => (
               <ERPCheckbox
                 id="maintainMasterEntry"
-                label="Maintain Inventory Master Entry"
+                label={t("maintain_inventory_master_entry")}
                 disabled={hasPermitted}
                 data={formState}
                 checked={formState?.maintainMasterEntry}
@@ -229,7 +228,7 @@ const BranchSettingsForm: React.FC = () => {
 
           <ERPCheckbox
             id="maintainInventoryTransactionsEntry"
-            label="Maintain Inventory Transactions Entry"
+            label={t("maintain_inventory_transactions_entry")}
             data={formState}
             checked={formState?.maintainInventoryTransactionsEntry}
             onChangeData={(data) =>
@@ -245,7 +244,7 @@ const BranchSettingsForm: React.FC = () => {
               <ERPCheckbox
                 id="useBranchWiseSalesPrice"
                 disabled={hasPermitted}
-                label="Use Branch Wise Sales Price"
+                label={t("use_branch_wise_sales_price")}
                 data={formState}
                 checked={formState?.useBranchWiseSalesPrice}
                 onChangeData={(data) =>
@@ -261,7 +260,7 @@ const BranchSettingsForm: React.FC = () => {
           <ERPCheckbox
             id="useTemplateSelectionForPrinting"
             data={formState}
-            label="Use Template Selection For Printing"
+            label={t("use_template_selection_for_printing")}
             checked={formState?.useTemplateSelectionForPrinting}
             onChangeData={(data) =>
               handleFieldChange(
@@ -272,7 +271,7 @@ const BranchSettingsForm: React.FC = () => {
           />
           <ERPCheckbox
             id="applyVATOnPurchaseToBTO"
-            label="Apply VAT On Purchase To BTO"
+            label={t("apply_TAX_on_purchase_converted_to_BTO")}
             data={formState}
             checked={formState?.applyVATOnPurchaseToBTO}
             onChangeData={(data) =>
@@ -284,7 +283,7 @@ const BranchSettingsForm: React.FC = () => {
           />
           <ERPCheckbox
             id="maintainCounterWisePrefixForTransaction"
-            label="Maintain Counter Wise Prefix For Transaction"
+            label={t("maintain_counter_wise_prefix_for_transaction")}
             data={formState}
             checked={formState?.maintainCounterWisePrefixForTransaction}
             onChangeData={(data) =>
@@ -295,12 +294,14 @@ const BranchSettingsForm: React.FC = () => {
             }
           />
         </div>
+      </div>
 
-        {Number(formState?.countryName) === 1 && (
-          <div className="grid grid-cols-1 border rounded-md shadow-sm sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-5 gap-4 mb-3 xxl:mb-6 p-3 lg:p-6 xxl:p-10">
+      {Number(formState?.countryName) === 1 && (
+        <div className="rounded-lg border p-4">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             <ERPCheckbox
               id="maintainKSA_EInvoice"
-              label="Maintain KSA EInvoice"
+              label={t("maintain_KSA_eInvoice")}
               disabled={formState?.maintainTax === false}
               data={formState}
               checked={formState?.maintainKSA_EInvoice}
@@ -314,7 +315,7 @@ const BranchSettingsForm: React.FC = () => {
 
             <ERPCheckbox
               id="enableTaxOnBillDiscount"
-              label="Enable Tax On Bill Discount"
+              label={t("enable_tax_on_bill_discount")}
               data={formState}
               checked={formState?.enableTaxOnBillDiscount}
               onChangeData={(data) =>
@@ -327,7 +328,7 @@ const BranchSettingsForm: React.FC = () => {
 
             <ERPCheckbox
               id="apply_KSA_EInvoice_Validation_Rules"
-              label=" Apply KSA EInvoice Validation Rules"
+              label={t("apply_KSA_eInvoice_validation_rules")}
               checked={formState?.apply_KSA_EInvoice_Validation_Rules}
               data={formState}
               onChangeData={(data) =>
@@ -339,7 +340,7 @@ const BranchSettingsForm: React.FC = () => {
             />
             <ERPCheckbox
               id="createCreditNoteAutomaticallyOnSalesEdit"
-              label="Create Credit Note Automatically On Sales Edit"
+              label={t("create_credit_note_automatically_on_sales_edit")}
               data={formState}
               checked={formState?.createCreditNoteAutomaticallyOnSalesEdit}
               onChangeData={(data) =>
@@ -356,7 +357,7 @@ const BranchSettingsForm: React.FC = () => {
                   disabled={hasPermitted}
                   value={formState.kSA_EInvoice_Sync_SystemCode}
                   data={formState}
-                  label="E-Invoice Sync SystemCode"
+                  label={t("e-Invoice_sync_systemCode")}
                   onChangeData={(data) =>
                     handleFieldChange(
                       "kSA_EInvoice_Sync_SystemCode",
@@ -367,14 +368,16 @@ const BranchSettingsForm: React.FC = () => {
               )}
             </ERPDisableEnable>
           </div>
-        )}
-        <div className="rounded-md shadow-sm border p-3 lg:p-6 xxl:p-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-5 gap-4  p-3 ">
+        </div>
+      )}
+      <div className="rounded-lg border p-4">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div>
             <ERPCheckbox
               id="maintainSynchronization"
               checked={formState?.maintainSynchronization}
               data={formState}
-              label="Maintain Synchronization"
+              label={t("maintain_synchronization")}
               onChangeData={(data) =>
                 handleFieldChange(
                   "maintainSynchronization",
@@ -386,7 +389,7 @@ const BranchSettingsForm: React.FC = () => {
             <ERPDataCombobox
               id="maintainSynchronizationdata"
               disabled={formState?.maintainSynchronization === false}
-              label="Maintain Synchronization Data"
+              label=" "
               value={formState.maintainSynchronizationdata}
               field={{
                 id: "maintainSynchronizationdata",
@@ -394,7 +397,6 @@ const BranchSettingsForm: React.FC = () => {
                 valueKey: "value",
                 labelKey: "label",
               }}
-        
               data={formState}
               onChangeData={(data) =>
                 handleFieldChange(
@@ -410,142 +412,141 @@ const BranchSettingsForm: React.FC = () => {
                 { value: 4, label: "Upload And Download" },
               ]}
             />
-
-            <ERPInput
-              id="syncIntervals"
-              value={formState.syncIntervals}
-              data={formState}
-              label="Intervals"
-              disabled={
-                Number(formState?.maintainSynchronizationdata) !== 1 &&
-                Number(formState?.maintainSynchronizationdata) !== 2
-              }
-              className="w-36"
-              type="number"
-              onChangeData={(data) =>
-                handleFieldChange("syncIntervals", data.syncIntervals)
-              }
-            />
-
-            <ERPCheckbox
-              id="refreshStockAfterSync"
-              checked={formState.refreshStockAfterSync}
-              data={formState}
-              label="Refresh Stock After Sync"
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "refreshStockAfterSync",
-                  data.refreshStockAfterSync
-                )
-              }
-            />
-            <ERPCheckbox
-              id="refreshServerStockAfterSync"
-              checked={formState.refreshServerStockAfterSync}
-              data={formState}
-              label="Refresh Server Stock After Sync"
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "refreshServerStockAfterSync",
-                  data.refreshServerStockAfterSync
-                )
-              }
-            />
           </div>
 
-          <div className="grid grid-cols-1  sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-5 gap-4 mb-3  p-3">
-            <ERPCheckbox
-              id="showBTINotification"
-              checked={formState.showBTINotification}
-              data={formState}
-              label="Show BTI Notification"
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "showBTINotification",
-                  data.showBTINotification
-                )
-              }
-            />
+          <ERPInput
+            id="syncIntervals"
+            value={formState.syncIntervals}
+            data={formState}
+            label={t("intervals_(minutes)")}
+            disabled={
+              Number(formState?.maintainSynchronizationdata) !== 1 &&
+              Number(formState?.maintainSynchronizationdata) !== 2
+            }
+            type="number"
+            onChangeData={(data) =>
+              handleFieldChange("syncIntervals", data.syncIntervals)
+            }
+          />
+          <ERPCheckbox
+            id="refreshStockAfterSync"
+            checked={formState.refreshStockAfterSync}
+            data={formState}
+            label={t("refresh_stock_after_sync")}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "refreshStockAfterSync",
+                data.refreshStockAfterSync
+              )
+            }
+          />
+          <ERPCheckbox
+            id="refreshServerStockAfterSync"
+            checked={formState.refreshServerStockAfterSync}
+            data={formState}
+            label={t("refresh_server_stock_after_sync")}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "refreshServerStockAfterSync",
+                data.refreshServerStockAfterSync
+              )
+            }
+          />
+        </div>
 
-            <ERPDataCombobox
-              id="reportMode"
-              value={formState.reportMode}
-              field={{
-                id: "reportMode",
-                valueKey: "value",
-                labelKey: "label",
-              }}
-              data={formState}
-              label="Report Mode"
-              onChangeData={(data) =>
-                handleFieldChange("reportMode", data.reportMode)
-              }
-              options={[
-                { value: "classic", label: "classic" },
-                { value: "Standard", label: "Standard" },
-              ]}
-            />
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-3">
+          <ERPCheckbox
+            id="showBTINotification"
+            checked={formState.showBTINotification}
+            data={formState}
+            label={t("show_BTI_notification")}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "showBTINotification",
+                data.showBTINotification
+              )
+            }
+          />
 
-            <ERPDataCombobox
-              id="invoicePrintingStyle"
-              value={formState.invoicePrintingStyle}
-              field={{
-                id: "invoicePrintingStyle",
-                // required: true,
-                valueKey: "value",
-                labelKey: "label",
-              }}
-              data={formState}
-              label="Invoice Printing Style"
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "invoicePrintingStyle",
-                  data.invoicePrintingStyle
-                )
-              }
-              options={[
-                { value: 0, label: "Default" },
-                { value: 1, label: "Standard" },
-              ]}
-            />
-            <ERPDataCombobox
-              id="fileAttachmentMethod"
-              value={formState.fileAttachmentMethod}
-              field={{
-                id: "fileAttachmentMethod",
-                // required: true,
+          <ERPDataCombobox
+            id="reportMode"
+            value={formState.reportMode}
+            field={{
+              id: "reportMode",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label={t("report_mode")}
+            onChangeData={(data) =>
+              handleFieldChange("reportMode", data.reportMode)
+            }
+            options={[
+              { value: "classic", label: "classic" },
+              { value: "Standard", label: "Standard" },
+            ]}
+          />
 
-                valueKey: "value",
-                labelKey: "label",
-              }}
-              data={formState}
-              label="File Attachment Method"
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "fileAttachmentMethod",
-                  data.fileAttachmentMethod
-                )
-              }
-              options={[
-                { value: 0, label: "No" },
-                { value: 1, label: "File System" },
-                { value: 2, label: "Cloud" },
-              ]}
-            />
-            <ERPInput
-              id="fileAttachmentFolder"
-              value={formState.fileAttachmentFolder}
-              data={formState}
-              label="Shared Folder"
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "fileAttachmentFolder",
-                  data.fileAttachmentFolder
-                )
-              }
-            />
+          <ERPDataCombobox
+            id="invoicePrintingStyle"
+            value={formState.invoicePrintingStyle}
+            field={{
+              id: "invoicePrintingStyle",
+              // required: true,
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label={t("printing_style")}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "invoicePrintingStyle",
+                data.invoicePrintingStyle
+              )
+            }
+            options={[
+              { value: 0, label: "Default" },
+              { value: 1, label: "Standard" },
+            ]}
+          />
+          <ERPDataCombobox
+            id="fileAttachmentMethod"
+            value={formState.fileAttachmentMethod}
+            field={{
+              id: "fileAttachmentMethod",
+              // required: true,
 
-            {/* <div className="flex flex-col space-y-4">
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            data={formState}
+            label={t("file_attachment_method")}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "fileAttachmentMethod",
+                data.fileAttachmentMethod
+              )
+            }
+            options={[
+              { value: 0, label: "No" },
+              { value: 1, label: "File System" },
+              { value: 2, label: "Cloud" },
+            ]}
+          />
+          <ERPInput
+            id="fileAttachmentFolder"
+            value={formState.fileAttachmentFolder}
+            data={formState}
+            label={t("shared_folder")}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "fileAttachmentFolder",
+                data.fileAttachmentFolder
+              )
+            }
+          />
+
+          {/* <div className="flex flex-col space-y-4">
             <ERPCheckbox
               id="enableVanSale"
               checked={formState?.enableVanSale}
@@ -598,17 +599,16 @@ const BranchSettingsForm: React.FC = () => {
               </>
             )}
           </div> */}
-          </div>
         </div>
-        <div className="flex justify-end">
-          <ERPButton
-            title="Save Settings"
-            variant="primary"
-            type="submit"
-            loading={isSaving}
-            disabled={isSaving}
-          />
-        </div>
+      </div>
+      <div className="flex justify-end">
+        <ERPButton
+          title={t("save_settings")}
+          variant="primary"
+          type="submit"
+          loading={isSaving}
+          disabled={isSaving}
+        />
       </div>
     </form>
   );

@@ -37,7 +37,7 @@ export const BranchLedgerManage = () => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPDataCombobox
           {...getFieldProps("refBranchID")}
           field={{
@@ -48,7 +48,7 @@ export const BranchLedgerManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("refBranchID", data)
+            handleFieldChange("refBranchID", data.refBranchID)
           }}
           label={t("reference_branch")}
         />
@@ -62,7 +62,7 @@ export const BranchLedgerManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("purchaseLedgerID", data)
+            handleFieldChange("purchaseLedgerID", data.purchaseLedgerID)
           }}
           label={t("purchase_ledger")}
         />
@@ -76,7 +76,7 @@ export const BranchLedgerManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("receivableLedgerID", data)
+            handleFieldChange("receivableLedgerID", data.receivableLedgerID)
           }}
           label={t("receivable_ledger")}
         />
@@ -90,7 +90,7 @@ export const BranchLedgerManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("branchPayableLedgerID", data)
+            handleFieldChange("branchPayableLedgerID", data.branchPayableLedgerID)
           }}
           label={t("branch_payable_ledger")}
         />

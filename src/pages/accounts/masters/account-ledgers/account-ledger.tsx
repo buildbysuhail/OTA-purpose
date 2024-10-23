@@ -185,6 +185,8 @@ const AccountLedgerType = () => {
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
+            url:Urls?.account_ledger,key:cellElement?.data?.id
+
           }}
         />
       ),
@@ -206,7 +208,7 @@ const AccountLedgerType = () => {
                   popupAction={toggleAccountLedgerPopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.accountLedger?.reload}
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 />
               </div>
             </div>

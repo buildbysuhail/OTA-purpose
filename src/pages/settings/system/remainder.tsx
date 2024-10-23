@@ -1,4 +1,4 @@
-import { Fragment, useMemo } from "react";
+import React, { Fragment, useMemo } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -12,6 +12,7 @@ import { RemainderManage } from "./remainder-manage";
 import { useTranslation } from "react-i18next";
 
 const Remainders = () => {
+  const MemoizedRemainderManage = useMemo(() => React.memo(RemainderManage), []);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -115,10 +116,10 @@ const Remainders = () => {
         closeModal={() => {
           dispatch(toggleRemainderPopup({ isOpen: false }));
         }}
-        content={<RemainderManage/>}
+        content={<MemoizedRemainderManage/>}
       />
     </Fragment>
   );
 };
 
-export default Remainders;
+export default React.memo(Remainders);

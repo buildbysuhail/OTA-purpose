@@ -19,7 +19,7 @@ export const VoucherManage: React.FC = React.memo(() => {
     useFormManager<VoucherData>({
       url: Urls.Voucher,
       onSuccess: useCallback(
-        () => dispatch(toggleVoucherPopup({ isOpen: false, key: null })),
+        () => dispatch(toggleVoucherPopup({ isOpen: false, key: null ,reload:true})),
         [dispatch]
       ),
       key: rootState.PopupData.voucher.key,
@@ -48,7 +48,7 @@ export const VoucherManage: React.FC = React.memo(() => {
           }}
           label={t("form_type")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("formType", data)}
+          onChangeData={(data: any) => handleFieldChange("formType", data.formType)}
         />
         <ERPDataCombobox
           {...getFieldProps("voucherType")}
@@ -62,21 +62,21 @@ export const VoucherManage: React.FC = React.memo(() => {
           }}
           label={t("voucher_type")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("voucherType", data)}
+          onChangeData={(data: any) => handleFieldChange("voucherType", data.voucherType)}
         />
         <ERPInput
           {...getFieldProps("descriptions")}
           label={t("descriptions")}
           placeholder={t("descriptions")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("descriptions", data)}
+          onChangeData={(data: any) => handleFieldChange("descriptions", data.descriptions)}
         />
         <ERPInput
           {...getFieldProps("lastVoucherPrefix")}
           label={t("lastVoucher_prefix")}
           placeholder={t("lastVoucher_prefix")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("lastVoucherPrefix", data)}
+          onChangeData={(data: any) => handleFieldChange("lastVoucherPrefix", data.lastVoucherPrefix)}
         />
         <ERPInput
           {...getFieldProps("lastVoucherNumber")}
@@ -84,13 +84,13 @@ export const VoucherManage: React.FC = React.memo(() => {
           type="number"
           placeholder={t("lastVoucher_number")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data)}
+          onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data.lastVoucherNumber)}
         />
 
         <ERPCheckbox
           {...getFieldProps('isDefault')}
           label={t("is_default")}
-          onChangeData={(data: any) => handleFieldChange('isDefault', data)}
+          onChangeData={(data: any) => handleFieldChange('isDefault', data.isDefault)}
         />
       </div>
       <ERPFormButtons

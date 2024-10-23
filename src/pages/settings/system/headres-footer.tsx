@@ -133,7 +133,7 @@ const HeadersAndFooters : React.FC = React.memo(() => {
           label="Header 10/Barcode Title"
           placeholder="heading10"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("heading10", data)}
+          onChangeData={(data: any) => handleFieldChange("heading10", data.heading10)}
         />
         </div>
     </div>
@@ -145,70 +145,70 @@ const HeadersAndFooters : React.FC = React.memo(() => {
           label="Footer 1"
           placeholder="footer1"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer1", data)}
+          onChangeData={(data: any) => handleFieldChange("footer1", data.footer1)}
         />
          <ERPInput
           {...getFieldProps("footer2")}
           label="Footer 2"
           placeholder="footer2"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer2", data)}
+          onChangeData={(data: any) => handleFieldChange("footer2", data.footer2)}
         />
          <ERPInput
           {...getFieldProps("footer3")}
           label="Footer 3"
           placeholder="footer3"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer3", data)}
+          onChangeData={(data: any) => handleFieldChange("footer3", data.footer3)}
         />
          <ERPInput
           {...getFieldProps("footer4")}
           label="Footer 4"
           placeholder="footer4"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer4", data)}
+          onChangeData={(data: any) => handleFieldChange("footer4", data.footer4)}
         />
          <ERPInput
           {...getFieldProps("footer5")}
           label="Footer 5"
           placeholder="footer5"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer5", data)}
+          onChangeData={(data: any) => handleFieldChange("footer5", data.footer5)}
         />
          <ERPInput
           {...getFieldProps("footer6")}
           label="Footer 6"
           placeholder="footer6"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer6", data)}
+          onChangeData={(data: any) => handleFieldChange("footer6", data.footer6)}
         />
          <ERPInput
           {...getFieldProps("footer7")}
           label="Footer 7"
           placeholder="footer7"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer7", data)}
+          onChangeData={(data: any) => handleFieldChange("footer7", data.footer7)}
         />
          <ERPInput
           {...getFieldProps("footer8")}
           label="Footer 8"
           placeholder="footer8"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer8", data)}
+          onChangeData={(data: any) => handleFieldChange("footer8", data.footer8)}
         />
          <ERPInput
           {...getFieldProps("footer9")}
           label="Footer 9"
           placeholder="footer9"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer9", data)}
+          onChangeData={(data: any) => handleFieldChange("footer9", data.footer9)}
         />
          <ERPInput
           {...getFieldProps("footer10")}
           label="Footer 10"
           placeholder="footer10"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("footer10", data)}
+          onChangeData={(data: any) => handleFieldChange("footer10", data.footer10)}
         />
         </div>
       </div>

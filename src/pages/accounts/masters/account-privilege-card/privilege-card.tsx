@@ -17,13 +17,13 @@ const PrivilegeCard = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "privilegeCardID",
+      dataField: "privilegeCardsID",
       caption: t("privilege_card_ID"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "branchID",
@@ -31,7 +31,7 @@ const PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "cardNumber",
@@ -39,7 +39,7 @@ const PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "cardHolderName",
@@ -47,6 +47,8 @@ const PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
+      
     },
     {
       dataField: "address1",
@@ -54,6 +56,8 @@ const PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
+
     },
     {
       dataField: "address2",
@@ -61,6 +65,8 @@ const PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
+
     },
     {
       dataField: "phone",
@@ -92,7 +98,7 @@ const PrivilegeCard = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "changeID",
@@ -100,7 +106,7 @@ const PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "cardType",
@@ -108,7 +114,7 @@ const PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 130,
     },
     {
       dataField: "priceCategoryID",
@@ -116,7 +122,7 @@ const PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 170,
     },
     {
       dataField: "expiryDate",
@@ -124,7 +130,7 @@ const PrivilegeCard = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 120,
     },
     {
       dataField: "activateDate",
@@ -132,7 +138,7 @@ const PrivilegeCard = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 120,
     },
     {
       dataField: "createdUserID",
@@ -140,15 +146,15 @@ const PrivilegeCard = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
-      dataField: "opBalance",
+      dataField: "oBalance",
       caption: t("opening_balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 150,
     },
     {
       dataField: "actions",
@@ -160,13 +166,13 @@ const PrivilegeCard = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: false, key: cellInfo?.data?.id }) }}
+          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: false, key: cellInfo?.data?.privilegeCardsID }) }}
+          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: false, key: cellInfo?.data?.privilegeCardsID }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.account_privilege_card, 
-            key: cellElement?.data?.id
+            key: cellElement?.data?.privilegeCardsID
           }}
         />
       ),

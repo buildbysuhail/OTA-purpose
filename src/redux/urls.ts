@@ -147,7 +147,7 @@ const Urls = {
 
   //setting/Administrations
   CompanyProfiles: "/Core/CompanyProfile/",
-  Branch: "/Core/Branch/",
+  Branch: "/Subscription/Branch/",
   BranchInfo: "/Core/Branch/BranchInfo",
   branch_code:"/Branch/GetNextBranchCode/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
@@ -186,7 +186,7 @@ const Urls = {
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",
-  account_privilege_card: "/Accounts/PrivilegeCards",
+  account_privilege_card: "/Accounts/PrivilegeCards/",
   branch_ledger: "/Accounts/BranchLedgers/",
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",

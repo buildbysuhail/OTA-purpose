@@ -6,6 +6,7 @@ import Urls from "../../../redux/urls";
 import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useTranslation } from "react-i18next";
 import { toggleRefreshAllBranches } from "../../../redux/slices/popup-reducer";
+import { ActionType } from "../../../redux/types";
 
 export interface RefreshAllBranches {
   resetDateFrom: string;
@@ -39,7 +40,9 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
     url: Urls.refreshAllBranches,
     onSuccess: useCallback(() => dispatch(toggleRefreshAllBranches({ isOpen: false })), [dispatch]),
     initialData: initialRefreshAllBranches,
+    method: ActionType.POST,
     useApiClient: true,
+    loadDataRequired: false
   });
 
   const onClose = useCallback(() => {
@@ -65,7 +68,7 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
         <ERPCheckbox
           {...getFieldProps("agreementChecked")}
           label={t("recover_until_sync")}
-          onChangeData={(checked: boolean) => handleFieldChange("agreementChecked", checked)}
+          onChangeData={(checked: any) => handleFieldChange("agreementChecked", checked.agreementChecked)}
         />
         <div>
           <ERPFormButtons

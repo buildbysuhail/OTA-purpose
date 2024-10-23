@@ -39,7 +39,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-3 gap-3">
         <ERPDataCombobox
           {...getFieldProps("countryID")}
           field={{
@@ -50,7 +50,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("countryID", data);
+            handleFieldChange("countryID", data.countryID);
           }}
           label={t("country")}
         />
@@ -60,7 +60,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("currency_code")}
           required={false}
           onChangeData={(data: any) =>
-            handleFieldChange("currencyCode", data)
+            handleFieldChange("currencyCode", data.currencyCode)
           }
         />
         <ERPInput
@@ -69,7 +69,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("currency_name")}
           required={true}
           onChangeData={(data: any) =>
-            handleFieldChange("currencyName", data)
+            handleFieldChange("currencyName", data.currencyName)
           }
         />
         <ERPInput
@@ -78,7 +78,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("currency_symbol")}
           required={false}
           onChangeData={(data: any) =>
-            handleFieldChange("currencySymbol", data)
+            handleFieldChange("currencySymbol", data.currencySymbol)
           }
         />
         <ERPInput
@@ -87,7 +87,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("sub_unit")}
           required={false}
           onChangeData={(data: any) =>
-            handleFieldChange("subUnit", data)
+            handleFieldChange("subUnit", data.subUnit)
           }
         />
         <ERPInput
@@ -96,7 +96,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           placeholder={t("sub_unit_symbol")}
           required={false}
           onChangeData={(data: any) =>
-            handleFieldChange("subUnitSymbol", data)
+            handleFieldChange("subUnitSymbol", data.subUnitSymbol)
           }
         />
         {/* <ERPCheckbox

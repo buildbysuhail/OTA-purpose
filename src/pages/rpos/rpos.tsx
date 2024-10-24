@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import RPosHeader from "../../components/common/header/rpos-header";
+import RPosDropdownPanel from "./rpos-DropdownPanel";
 // import 'remixicon/fonts/remixicon.css';
 
 interface MenuItem {
@@ -55,30 +56,78 @@ export default function Component() {
   const [popupVisible, setPopupVisible] = useState(false);
 
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = React.useState(false);
+
+  const handleOptionChange = (option: any) => {
+    if (selectedOptions.includes(option)) {
+      setSelectedOptions(selectedOptions.filter((item) => item !== option));
+    } else {
+      setSelectedOptions([...selectedOptions, option]);
+    }
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+  };
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(["Dine In"]);
+
+  const getButtonText = () => {
+    // Even if no options are selected, show "Dine In"
+    if (selectedOptions.length === 0) {
+      return "Dine In";
+    }
+    return selectedOptions.join(", ");
+  };
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTable, setSelectedTable] = useState("");
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleTableSelect = (tableNumber: string) => {
+    setSelectedTable(tableNumber);
+  };
+
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+
+  const [ispersonDropdownOpen, setIspersonDropdownOpen] = useState(false);
+  const [isCommentsDropdownOpen, setIsCommentsDropdownOpen] = useState(false);
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
+    setIsOpen(option === "table" ? !isOpen : isOpen);
+    setIsUserDropdownOpen(
+      option === "user" ? !isUserDropdownOpen : isUserDropdownOpen
+    );
+    setIspersonDropdownOpen(
+      option === "user" ? !ispersonDropdownOpen : ispersonDropdownOpen
+    );
+    setIsCommentsDropdownOpen(
+      option === "user" ? !isCommentsDropdownOpen : isCommentsDropdownOpen
+    );
+  };
+
+  const toggleTableDropdown = () => {
+    setIsOpen((prev) => !prev);
+    setIsUserDropdownOpen(false); // Ensure user dropdown is closed when table dropdown is opened
+  };
+
+  const toggleUserDropdown = () => {
+    setIsUserDropdownOpen((prev) => !prev);
+    setIsOpen(false); // Ensure table dropdown is closed when user dropdown is opened
+  };
+  const togglepersonDropdown = () => {
+    setIspersonDropdownOpen((prev) => !prev);
+    setIsOpen(false); // Ensure table dropdown is closed when user dropdown is opened
+  };
+  const toggleCommentsDropdown = () => {
+    setIsCommentsDropdownOpen((prev) => !prev);
+    setIsOpen(false); // Ensure table dropdown is closed when user dropdown is opened
   };
 
   return (
-    <div className="flex h-[95vh] bg-gray-200 text-gray-800 font-sans">
-      {/* Sidebar */}
-      {/* <div className="w-48 bg-gray-800 text-white flex flex-col">
-        <nav className="flex-1 overflow-y-auto">
-          {menuCategories.map((category) => (
-            <button
-              key={category}
-              className={`w-full text-left p-3 hover:bg-gray-700 ${
-                selectedCategory === category ? "bg-gray-700" : ""
-              }`}
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </button>
-          ))}
-        </nav>
-      </div> */}
-
+    <div className="flex h-[94vh] bg-gray-200 text-gray-800 font-sans">
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navigation */}
@@ -109,9 +158,72 @@ export default function Component() {
           </div>
         </div>
 
+        {/* Popup */}
+        {isPopupOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg w-96 relative">
+              <div className="flex justify-between items-center border-b p-4">
+                <h2 className="text-lg font-semibold">Popup Selection</h2>
+                <button
+                  className="text-gray-500 hover:text-gray-700"
+                  onClick={closePopup}
+                >
+                  <i className="fas fa-times text-[20px]"></i>
+                </button>
+              </div>
+              <div className="p-4">
+                <div className="flex items-center justify-between py-2 border-b">
+                  <span>Dine In</span>
+                  <input
+                    type="radio"
+                    name="diningOption"
+                    checked={selectedOption === "Dine In"}
+                    onChange={() => handleOptionChange("Dine In")}
+                    className="form-radio text-red-600"
+                  />
+                </div>
+                <div className="flex items-center justify-between py-2 border-b">
+                  <span>AC</span>
+                  <input
+                    type="radio"
+                    name="diningOption"
+                    checked={selectedOption === "AC"}
+                    onChange={() => handleOptionChange("AC")}
+                    className="form-radio text-red-600"
+                  />
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span>Dining</span>
+                  <input
+                    type="radio"
+                    name="diningOption"
+                    checked={selectedOption === "Dining"}
+                    onChange={() => handleOptionChange("Dining")}
+                    className="form-radio text-red-600"
+                  />
+                </div>
+              </div>
+              <div className="flex justify-end p-4 border-t">
+                <button
+                  className="px-4 py-2 bg-white border rounded-md text-gray-700 mr-2"
+                  onClick={closePopup}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="px-4 py-2 bg-[#f90303] text-white rounded-md"
+                  onClick={closePopup}
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Menu and Order Summary */}
         <div className="flex-1 flex overflow-hidden">
-          {/* Menu Items */}
+          {/* Sidebar */}
           <div className="w-48 bg-gray-800 text-white flex flex-col">
             <nav className="flex-1 overflow-y-auto">
               {menuCategories.map((category) => (
@@ -127,6 +239,7 @@ export default function Component() {
               ))}
             </nav>
           </div>
+          {/* Menu Items */}
           <div className="flex-1 p-4 overflow-y-auto">
             <div className="grid grid-cols-4 gap-4">
               {menuItems[selectedCategory].map((item) => (
@@ -144,72 +257,237 @@ export default function Component() {
 
           {/* Order Summary */}
           <div className="w-[40%] bg-white shadow-md overflow-y-auto flex flex-col">
-            {/* <div className="p-2 bg-gray-200 flex justify-between items-center">
-              <div className="flex space-x-2">
-                <button className="px-3 py-1 bg-gray-300 rounded rounded-md">
-                  A C 1
+            <div className="flex border border-gray-300 flex-wrap">
+              <div className="relative flex-1 min-w-[100px]">
+                <button
+                  className={`w-full p-3 flex justify-center items-center border-r ${
+                    selectedOption === "table"
+                      ? "border-t-2 border-[#f90303]"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedOption("table");
+                    toggleTableDropdown();
+                  }}
+                >
+                  <i className="ri-restaurant-line text-xl"></i>
                 </button>
-                <button className="px-3 py-1 bg-white rounded rounded-md">
-                  <i className="ri-user-line"></i>
-                </button>
-                <button className="px-3 py-1 bg-white rounded rounded-md">
-                  <i className="ri-group-line"></i>
-                </button>
+
+                {/* Table Dropdown Panel */}
+                <RPosDropdownPanel
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                  title="Table No"
+                  content={
+                    <div className="p-4">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="text"
+                          value={selectedTable}
+                          onChange={(e) => setSelectedTable(e.target.value)}
+                          placeholder="1"
+                          className="w-20 p-2 border rounded-md text-center"
+                        />
+                        <button
+                          className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          View KOT
+                        </button>
+                      </div>
+
+                      {/* Quick Select Buttons */}
+                      <div className="grid grid-cols-4 gap-2 mt-4">
+                        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                          <button
+                            key={num}
+                            onClick={() => handleTableSelect(num.toString())}
+                            className="p-2 border rounded-md hover:bg-gray-100 text-center"
+                          >
+                            {num}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Table Status Section */}
+                      <div className="p-4 bg-gray-50 rounded-b-md mt-[10px]">
+                        <div className="flex justify-between text-sm">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 bg-[#32d62e] rounded-full"></div>
+                            <span className="text-gray-600 !mr-[6px]">
+                              Available
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 bg-[#f01717] rounded-full"></div>
+                            <span className="text-gray-600 !mr-[6px]">
+                              Occupied
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-3 h-3 bg-[#f8e618] rounded-full"></div>
+                            <span className="text-gray-600 !mr-[6px]">
+                              Reserved
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                />
               </div>
-              <button className="px-3 py-1 bg-white rounded rounded-md">
-                <i className="ri-edit-box-line"></i>
-              </button>
-            </div> */}
-            <div className="flex border border-gray-300">
-              <button
-                className={`flex-1 p-3 flex justify-center items-center border-r ${
-                  selectedOption === "table"
-                    ? "border-t-2 border-[#f90303]"
-                    : ""
-                }`}
-                onClick={() => handleOptionClick("table")}
-              >
-                <i className="ri-restaurant-line text-xl"></i>
-              </button>
 
-              <button
-                className={`flex-1 p-3 flex justify-center items-center border-r ${
-                  selectedOption === "user" ? "border-t-2 border-[#f90303]" : ""
-                }`}
-                onClick={() => handleOptionClick("user")}
-              >
-                <i className="ri-user-line text-xl"></i>
-              </button>
+              {/* User Button */}
+              <div className="relative flex-1 min-w-[100px]">
+                <button
+                  className={`w-full p-3 flex justify-center items-center border-r ${
+                    selectedOption === "user"
+                      ? "border-t-2 border-[#f90303]"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedOption("user");
+                    toggleUserDropdown();
+                  }}
+                >
+                  <i className="ri-user-line text-xl"></i>
+                </button>
 
-              <button
-                className={`flex-1 p-3 flex justify-center items-center border-r ${
-                  selectedOption === "group"
-                    ? "border-t-2 border-[#f90303]"
-                    : ""
-                }`}
-                onClick={() => handleOptionClick("group")}
-              >
-                <i className="ri-group-line text-xl"></i>
-              </button>
+                {/* User Dropdown Panel */}
+                <RPosDropdownPanel
+                  isOpen={isUserDropdownOpen}
+                  setIsOpen={setIsUserDropdownOpen}
+                  title="customer details"
+                  content={
+                    <div>
+                      <form className="space-y-6">
+                        <div className="flex items-center">
+                          <label className="w-24 text-right mr-4 font-bold">
+                            Mobile:
+                          </label>
+                          <input
+                            type="text"
+                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="flex items-center">
+                          <label className="w-24 text-right mr-4 font-bold">
+                            Name:
+                          </label>
+                          <input
+                            type="text"
+                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="flex items-center">
+                          <label className="w-24 text-right mr-4 font-bold">
+                            Add:
+                          </label>
+                          <input
+                            type="text"
+                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="flex items-center">
+                          <label className="w-24 text-right mr-4 font-bold">
+                            Locality:
+                          </label>
+                          <input
+                            type="text"
+                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  }
+                />
+              </div>
 
-              <button
-                className={`flex-1 p-3 flex justify-center items-center border-r ${
-                  selectedOption === "edit" ? "border-t-2 border-[#f90303]" : ""
-                }`}
-                onClick={() => handleOptionClick("edit")}
-              >
-                <i className="ri-edit-line text-xl"></i>
-              </button>
+              {/* Group Button */}
+              <div className="relative flex-1 min-w-[100px]">
+                <button
+                  className={`w-full p-3 flex justify-center items-center border-r ${
+                    selectedOption === "group"
+                      ? "border-t-2 border-[#f90303]"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedOption("group");
+                    togglepersonDropdown();
+                  }}
+                >
+                  <i className="ri-group-line text-xl"></i>
+                </button>
 
+                <RPosDropdownPanel
+                  isOpen={ispersonDropdownOpen}
+                  setIsOpen={setIspersonDropdownOpen}
+                  title="No Of persons"
+                  content={
+                    <div>
+                      <form className="space-y-6">
+                        <div className="flex items-center">
+                          <label className="w-24 text-right mr-4 font-bold">
+                            No Of persons:
+                          </label>
+                          <input
+                            type="text"
+                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  }
+                />
+              </div>
+
+              {/* Edit Button */}
+              <div className="relative flex-1 min-w-[100px]">
+                <button
+                  className={`w-full p-3 flex justify-center items-center border-r ${
+                    selectedOption === "edit"
+                      ? "border-t-2 border-[#f90303]"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedOption("edit");
+                    toggleCommentsDropdown();
+                  }}
+                >
+                  <i className="ri-edit-line text-xl"></i>
+                </button>
+
+                <RPosDropdownPanel
+                  isOpen={isCommentsDropdownOpen}
+                  setIsOpen={setIsCommentsDropdownOpen}
+                  title="Comments"
+                  content={
+                    <div>
+                      <form className="space-y-6">
+                        <div className="flex items-center">
+                          <label className="w-24 text-right mr-4 font-bold">
+                            Comments:
+                          </label>
+                          <input
+                            type="text"
+                            className="flex-1 border rounded-lg p-2 shadow-sm focus:ring-2 focus:ring-blue-500 w-[158px]"
+                          />
+                        </div>
+                      </form>
+                    </div>
+                  }
+                />
+              </div>
+
+              {/* Final Button */}
               <button
-                className={`flex-1 p-3 flex justify-center items-center ${
-                  selectedOption === "dineIn" ? "bg-[#ff7800] text-white" : ""
-                }`}
-                onClick={() => handleOptionClick("dineIn")}
+                className="flex-1 w-full p-3 flex justify-center items-center bg-[#ff7800] text-white"
+                onClick={() => setIsPopupOpen(true)}
               >
-                Dine In
+                {getButtonText()}
               </button>
             </div>
+
             <div className="flex-1 overflow-y-auto p-4">
               <table className="w-full">
                 <thead>
@@ -249,33 +527,6 @@ export default function Component() {
                 </tbody>
               </table>
             </div>
-            {/* <div className="flex justify-center mb-2">
-              <button
-                className="w-full border border-gray-300 px-4 py-2  text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200  focus:border-b-0 "
-                onClick={() => setShowInputBox(!showInputBox)}
-              >
-                {showInputBox ? "View Less" : "View More"}
-              </button>
-            </div>
-            {showInputBox && (
-              <div>
-                <h1>mj</h1>
-              </div>
-            )} */}
-            {/* <div className="flex justify-center mb-2 relative"> */}
-            {/* <button
-                className="w-full border border-gray-300 px-4 py-2 text-gray-600 focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 focus:border-b-0"
-                onClick={() => setShowInputBox(!showInputBox)}
-              >
-                {showInputBox ? "View Less" : "View More"}
-              </button> */}
-
-            {/* {showInputBox && (
-                <div className="absolute bottom-full mb-2 bg-white p-4 border border-gray-300 rounded-md shadow-lg">
-                  <h1>mj</h1>
-                </div>
-              )} */}
-            {/* </div> */}
 
             <div className="relative">
               <button
@@ -286,7 +537,7 @@ export default function Component() {
                 <i className="ri-arrow-up-s-line"></i> {/* Up Icon */}
               </button>
               {showInputBox && (
-                <div className="w-[100%] absolute bottom-full mb-0 bg-gray-600 p-4 border border-gray-300 rounded-none shadow-lg">
+                <div className="w-[100%] absolute bottom-full mb-0 bg-gray-700 p-4 border border-gray-700 rounded-none shadow-lg">
                   {/* <h1>mj</h1> */}
                   {/* <p>test</p> */}
                   <div className="bg-gray-700 p-4 text-white rounded-md">
@@ -446,53 +697,6 @@ export default function Component() {
             </div>
           </div>
         </div>
-
-        {/* Bottom Action Bar */}
-        {/* <div className="bg-gray-800 p-2 flex justify-between items-center">
-          <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              Split
-            </button>
-            <div className="flex items-center space-x-4">
-              {["Cash", "Card", "Due", "Other"].map((method) => (
-                <label key={method} className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value={method.toLowerCase()}
-                    checked={paymentMethod === method.toLowerCase()}
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="form-radio text-[#f90303]"
-                  />
-                  <span className="text-white">{method}</span>
-                </label>
-              ))}
-            </div>
-            <label className="flex items-center text-white">
-              <input type="checkbox" className="mr-2" /> It's Paid
-            </label>
-          </div>
-          <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              Save
-            </button>
-            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              Save & Print
-            </button>
-            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              Save & eBill
-            </button>
-            <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-              KOT
-            </button>
-            <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-              KOT & Print
-            </button>
-            <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-              Hold
-            </button>
-          </div>
-        </div> */}
       </div>
     </div>
   );

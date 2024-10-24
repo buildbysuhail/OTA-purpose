@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // Define interfaces for our data structures
 interface TableItem {
@@ -85,23 +86,6 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
     );
   };
 
-  // Function to render a section with empty state
-  // const renderSection = (section: SectionData) => {
-  //   return (
-  //     <div key={section.id} className="mb-6">
-  //       {section.tables.length > 0 ? (
-  //         <div className="grid grid-cols-6 gap-4">
-  //           {section.tables.map(renderTable)}
-  //         </div>
-  //       ) : (
-  //         <div className="text-gray-500 text-center py-8 bg-gray-50 rounded-md">
-  //           No tables available in this section
-  //         </div>
-  //       )}
-  //     </div>
-  //   );
-  // };
-
   const Section: React.FC<SectionProps> = ({ title, items }) => (
     <div className="mb-4">
       <h2 className="text-[#d62e2e] font-medium text-sm mb-4">{title}</h2>
@@ -117,10 +101,9 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
       </div>
     </div>
   );
-  const acItems = ["A C 1"]; // Dynamic AC data
-  const diningItems = ["1", "2", "3", "4", "5", "6"]; // Dynamic Dining data
-
-  
+  // Dynamic
+  const acItems = ["A C 1"];
+  const diningItems = ["1", "2", "3", "4", "5", "6"];
 
   return (
     <div className="p-4">
@@ -180,31 +163,13 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
         </div>
       </div>
 
-      {/* AC Section - Always shown */}
-      {/* <div className="mb-8">
-        <h2 className="text-[#d62e2e] font-medium text-lg mb-4">AC</h2>
-        {data.acSection.map(renderSection)}
-        {data.acSection.length === 0 && (
-          <div className="text-gray-500 text-center py-8 bg-gray-50 rounded-md">
-            No AC sections available
-          </div>
-        )}
-      </div> */}
-
-      {/* Dining Section - Always shown */}
-      {/* <div>
-        <h2 className="text-[#d62e2e] font-medium text-lg mb-4">Dining</h2>
-        {data.diningSection.map(renderSection)}
-        {data.diningSection.length === 0 && (
-          <div className="text-gray-500 text-center py-8 bg-gray-50 rounded-md">
-            No dining sections available
-          </div>
-        )}
-      </div> */}
-      
       <div className="p-0">
-        <Section title="AC" items={acItems} />
-        <Section title="Dining" items={diningItems} />
+        <Link to="/rpos">
+          <Section title="AC" items={acItems} />
+        </Link>
+        <Link to="/rpos">
+          <Section title="Dining" items={diningItems} />
+        </Link>
       </div>
     </div>
   );

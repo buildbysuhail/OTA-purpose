@@ -220,8 +220,8 @@ acc_reports_billwise_profit_global: "/Accounts/RptBillWsieProfitReport/BillwiseP
 acc_reports_party_summary_basic_info: "/Accounts/RptPartyWiseSummary/BasicInfo",
 acc_reports_payable: "/Accounts/RptOutstandingReport/Payable",
 acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable",
-acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingPayable",
-acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingReceivable",
+acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable",
+acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable",
   // Accounts End
 
 

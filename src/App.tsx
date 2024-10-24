@@ -45,6 +45,8 @@ import { RootState } from "./redux/store";
 import MobileFooter from "./pages/dashboards/crm/mobile-footer";
 import { getApplicationSettings } from "./redux/slices/app/thunk";
 import RPosLayout from "./components/common/layout/rpos-layout";
+import LabelDesigner from "./pages/InvoiceDesigner/Designer/LabelDesigner";
+import PDFBarcodeDesigner from "./pages/LabelDesigner/label_designer";
 
 export const LoadingAnimation = () => {
   return (
@@ -185,6 +187,8 @@ function App() {
                 path="workspace-settings/*"
                 element={<WorkspaceSettingsLayout setMyClass={setMyClass} />}
               />
+              <Route path="label-design" element={<PDFBarcodeDesigner  />} />
+              <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>

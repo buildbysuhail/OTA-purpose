@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next";
 import { BankCardsManage } from "./bank-cards-manage";
 
 const BankCards = () => {
+  const MemoizedBankCardsManage = useMemo(() => React.memo(BankCardsManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -154,10 +156,10 @@ const BankCards = () => {
         closeModal={() => {
           dispatch(toggleBankCardsPopup({ isOpen: false, key: null }));
         }}
-        content={<BankCardsManage />}
+        content={<MemoizedBankCardsManage />}
       />
     </Fragment>
   );
 };
 
-export default BankCards;
+export default React.memo(BankCards);

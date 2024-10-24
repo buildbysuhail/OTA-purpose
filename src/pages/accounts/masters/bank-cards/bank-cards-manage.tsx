@@ -49,7 +49,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("paymentType", data)
+            handleFieldChange("paymentType", data.paymentType)
           }}
           label={t("debit_cards")}
         />
@@ -58,7 +58,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
           label={t("card_name")}
           placeholder={t("card_name")}
           required={true}
-          onChangeData={(data: any) => { handleFieldChange('paymentName', data) }}
+          onChangeData={(data: any) => { handleFieldChange('paymentName', data.paymentName) }}
         />
         <ERPDataCombobox
           {...getFieldProps("ledgerID")}
@@ -70,7 +70,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("ledgerID", data)
+            handleFieldChange("ledgerID", data.ledgerID)
           }}
           label={t("ledger")}
         />
@@ -79,7 +79,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
           label={t("remarks")}
           placeholder={t("remarks")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('remarks', data)}
+          onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
         />
 
       </div>

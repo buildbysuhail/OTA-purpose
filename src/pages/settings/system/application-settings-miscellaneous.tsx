@@ -340,14 +340,14 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </h6>
 
 
-            <div className="h-32 xxl:h-40 overflow-y-scroll snap-x  mb-2  rounded-sm shadow-sm  ">
+            <div className="h-32 xxl:h-40 overflow-y-scroll snap-x  mb-2 rounded-sm shadow-sm">
 
               {!dataLoaded ? (
                 // Show default content before data is loaded
                 <div className="my-5 xxl:my-10 ">
                   <ul className="list-none text-center text-gray-500 snap-center">
                     <li className="py-5 xxl:py-10 px-3">
-                      {"Click load to fetch system code"}
+                    {t("click_load_to_fetch_system_code")}
                       {/* Default message */}
                     </li>
                   </ul>

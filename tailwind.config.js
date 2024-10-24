@@ -238,6 +238,7 @@ plugins: [
   require("tailwindcss"),
   require("@tailwindcss/forms"),
   // require("tailwind-clip-path"),
+  require('tailwind-scrollbar'),
   require("preline/plugin"),
   plugin(function ({ addComponents ,addBase}) {
     addComponents({

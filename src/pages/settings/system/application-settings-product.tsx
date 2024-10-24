@@ -801,8 +801,8 @@ const ApplicationSettingsProduct = () => {
         <ERPButton
           title={t("save_settings")}
           variant="primary"
-          disabled={isSaving}
-          loading={isSaving}
+          // disabled={isSaving}
+          // loading={isSaving}
           type="submit"
         />
       </div>

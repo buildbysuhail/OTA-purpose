@@ -22,10 +22,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<CurrencyData>({
       url: Urls.account_currency_master,
-      // onSuccess: useCallback(
-      //   () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null })),
-      //   [dispatch]
-      // ),
+     
       onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
       key: rootState.PopupData.currencyMaster.key,
       useApiClient: true,

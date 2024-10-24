@@ -56,6 +56,8 @@ const Urls = {
   data_SalesAccount: "/Accounts/Data/SalesAccount",
   data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
+  data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
+
 
 
   // Dropdown - inventory
@@ -149,7 +151,7 @@ const Urls = {
   CompanyProfiles: "/Core/CompanyProfile/",
   Branch: "/Subscription/Branch/",
   BranchInfo: "/Core/Branch/BranchInfo",
-  branch_code:"/Branch/GetNextBranchCode/",
+  branch_code: "/Branch/GetNextBranchCode/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
@@ -193,18 +195,20 @@ const Urls = {
   chart_of_accounts: "/Accounts/ChartofAccounts/",
   parties: "/Accounts/Parties/",
   cust_supp_ledger: "/Accounts/CustSuppLedger",
+  upi: "/Accounts/Upi/",
+
   //Reports
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
   acc_reports_day_book_detailed: "/Accounts/RptDayBook/DayBookDetailed",
-  acc_reports_day_book_summary: "/Accounts/RptDayBook/DayBookSummary", 
+  acc_reports_day_book_summary: "/Accounts/RptDayBook/DayBookSummary",
   acc_reports_payment: "/Accounts/RptPaymentReport/PaymentReport",
   acc_reports_collection: "/Accounts/RptCollectionReport/CollectionReport",
   acc_reports_cash_summary: "/Accounts/RptCashSummaryReport/CashSummary",
- acc_reports_transaction: "/Accounts/RptReports/TransactionReport",
-acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory",
-acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts",
-acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport",
+  acc_reports_transaction: "/Accounts/RptReports/TransactionReport",
+  acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory",
+  acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts",
+  acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport",
 
 
 

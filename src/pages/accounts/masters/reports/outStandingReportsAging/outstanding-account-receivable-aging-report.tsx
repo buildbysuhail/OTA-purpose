@@ -42,7 +42,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowFiltering: true,
     },
     {
-      dataField: "Debit",
+      dataField: "debit",
       caption: t('debit'),
       dataType: "string",
       allowSearch: true,
@@ -50,7 +50,7 @@ const OutstandingAccountReceivableAgingReport = () => {
       width: 150,
     },
     {
-      dataField: "Credit",
+      dataField: "credit",
       caption: t("credit"),
       dataType: "number",
       allowSearch: true,
@@ -89,6 +89,38 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowFiltering: true,
       width: 150,
     },
+    {
+      dataField: "period4",
+      caption: 60 + t("days"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+  },
+  {
+      dataField: "period5",
+      caption: 90 + t("days"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+  },
+  {
+      dataField: "period6",
+      caption: 120 + t("days"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+  },
+  {
+      dataField: "period7",
+      caption: 150 + t("days"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+  }
     
     // {
     //   dataField: "actions",
@@ -118,11 +150,10 @@ const OutstandingAccountReceivableAgingReport = () => {
           <div className="box custom-box">
             <div className="box-body">
               <div className="grid grid-cols-1 gap-3">
-                dsfdsdfdf
                 <ErpDevGrid 
                   columns={columns}
-                  gridHeader={"skiptake"+t("account_receivable_aging_report")}
-                  dataUrl= {Urls.acc_reports_aging_receivable_direct}
+                  gridHeader={t("account_receivable_aging_report")}
+                  dataUrl= {Urls.acc_reports_outstanding_aging_receivable}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

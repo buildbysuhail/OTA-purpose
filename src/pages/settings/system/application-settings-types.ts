@@ -97,6 +97,7 @@ export interface ApplicationBranchSettings {
 }
 export  const ApplicationBranchSettingsInitialState: ApplicationBranchSettings = {
   maintainTax: true,
+  maintainMultilanguage__ :false,
   showFinancialYearSelector: false,
   countryName: "1",
   maintainSynchronization: false,

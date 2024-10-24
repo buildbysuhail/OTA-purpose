@@ -35,6 +35,7 @@ const Urls = {
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
+  data_acc_Branches: "/Data/Branches",
   data_Bank_Cards: "/Accounts/BankCards/",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
   data_costcentres: "/Accounts/Data/CostCentres/",
@@ -214,8 +215,13 @@ const Urls = {
 
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
-  acc_reports_aging_payable_direct: "/Accounts/RptAging/AgingPayableskiptake/",
-  acc_reports_aging_receivable_direct: "/Accounts/RptAging/AgingReceivableSkiptake/",
+  acc_reports_billwise_profit: "/Accounts/RptBillWsieProfitReport/BillwiseProfit",
+acc_reports_billwise_profit_global: "/Accounts/RptBillWsieProfitReport/BillwiseProfitGlobal",
+acc_reports_party_summary_basic_info: "/Accounts/RptPartyWiseSummary/BasicInfo",
+acc_reports_payable: "/Accounts/RptOutstandingReport/Payable",
+acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable",
+acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable",
+acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable",
   // Accounts End
 
 

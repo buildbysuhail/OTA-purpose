@@ -913,6 +913,11 @@
 "party_type": "نوع الطرف",
 "billwise_bill_applicable": "تطبيق الفاتورة حسب الفاتورة",
 "basic_info": "المعلومات الأساسية",
-"last_transaction_date":"LTDate"
+"last_transaction_date":"LTDate",
+"click_load_to_fetch_system_code": "انقر على تحميل لجلب رمز النظام",
+
+"bank_card": "بطاقة مصرفية",
+ "upi":"واجهة المدفوعات الموحدة (UPI)",
+"upi_name":"اسم UPI"
 
 }

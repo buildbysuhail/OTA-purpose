@@ -210,18 +210,18 @@ const Urls = {
   acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory",
   acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts",
   acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport",
-  acc_reports_billwise_profit: "/Accounts/RptBillWsieProfitReport/BillwiseProfit",
-  acc_reports_billwise_profit_global: "/Accounts/RptBillWsieProfitReport/BillwiseProfitGlobal",
-  acc_reports_party_summary_basic_info: "/Accounts/RptPartyWiseSummary/BasicInfo",
-  acc_reports_payable: "/Accounts/RptOutstandingReport/Payable",
-  acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable",
-  acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingPayable",
-  acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingReceivable",
 
 
 
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
+  acc_reports_billwise_profit: "/Accounts/RptBillWsieProfitReport/BillwiseProfit",
+acc_reports_billwise_profit_global: "/Accounts/RptBillWsieProfitReport/BillwiseProfitGlobal",
+acc_reports_party_summary_basic_info: "/Accounts/RptPartyWiseSummary/BasicInfo",
+acc_reports_payable: "/Accounts/RptOutstandingReport/Payable",
+acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable",
+acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingPayable",
+acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingReceivable",
   // Accounts End
 
 

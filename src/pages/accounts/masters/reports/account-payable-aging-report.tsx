@@ -42,7 +42,7 @@ const AccountPayableAgingReport = () => {
       allowFiltering: true,
     },
     {
-      dataField: "Debit",
+      dataField: "debit",
       caption: t('debit'),
       dataType: "string",
       allowSearch: true,
@@ -50,7 +50,7 @@ const AccountPayableAgingReport = () => {
       width: 150,
     },
     {
-      dataField: "Credit",
+      dataField: "credit",
       caption: t("credit"),
       dataType: "number",
       allowSearch: true,

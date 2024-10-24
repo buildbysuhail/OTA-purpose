@@ -30,7 +30,9 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/transaction_report`, type: 'link', active: false, selected: false, title: 'Transaction Report' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/transaction_history_accounts`, type: 'link', active: false, selected: false, title: 'Transaction History Accounts' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/transaction_history_inventory`, type: 'link', active: false, selected: false, title: 'Transaction History Inventory' },
+      { path: `${import.meta.env.BASE_URL}reports/_/accounts/daily_summary_report`, type: 'link', active: false, selected: false, title: 'Daily Summary Report' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/billwise_profit`, type: 'link', active: false, selected: false, title: 'Billwise Profit Report' },
+      { path: `${import.meta.env.BASE_URL}reports/_/accounts/partywise_summary`, type: 'link', active: false, selected: false, title: 'Partywise Summary Report' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/outstanding_payable`, type: 'link', active: false, selected: false, title: 'Account Payable' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/outstanding_receivable`, type: 'link', active: false, selected: false, title: 'Account Receivable' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/outstanding_aging_payable`, type: 'link', active: false, selected: false, title: 'Account Payable Aging Report' },
@@ -41,8 +43,6 @@ export const ReportsMenuItems = [
 
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/payable_aging`, type: 'link', active: false, selected: false, title: 'Account Payable Aging Report' },
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging`, type: 'link', active: false, selected: false, title: 'Account Receivable Aging Report', },
-      { path: `${import.meta.env.BASE_URL}reports/_/accounts/payable_aging_skiptake`, type: 'link', active: false, selected: false, title: 'Account Payable Aging Report Skiptake' },
-      { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging_skiptake`, type: 'link', active: false, selected: false, title: 'Account Receivable Aging Report Skiptake', },
     ]
   },
 ];

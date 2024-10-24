@@ -23,132 +23,169 @@ const BillwiseProfitGlobal = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 50,
-    },
-    {
-      dataField: "form",
-      caption: t("form"),
+      dataField: "description",
+      caption: t('description'),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 180,
     },
     {
-      dataField: "vchNo",
-      caption:  t("voucher_no"),
+      dataField: "productName",
+      caption: t("product"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
-    },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
+      width: 180,
     },
     {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "debit",
-      caption: t('debit'),
+      dataField: "qty",
+      caption:  t("qty"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 80,
     },
     {
-      dataField: "credit",
-      caption: t("credit"),
+      dataField: "free",
+      visible: false,
+      caption: t("free"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 60,
     },
     {
-      dataField: "balance",
-      caption: t("balance"),
+      dataField: "unit",
+      caption: t("unit"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 60,
+      visible: false,
+    },
+    {
+      dataField: "rate",
+      caption: t("rate"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
+    },
+    {
+      dataField: "grossAmount",
+      caption: t("gross_amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
+    {
+      dataField: "discAmt",
+      caption: t("disc_amt"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "salesPrice",
+      caption: t('sales_price'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
+    {
+      dataField: "totCost",
+      caption: t("tot_cost"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
+    {
+      dataField: "netAmount",
+      caption: t("net_amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
     },
   
    
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      dataField: "profit",
+      caption: t("profit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 110,
+    },
+    {
+      dataField: "markupPerc",
+      caption: t("markup_perc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+ {
+      dataField: "marginPerc",
+      caption: t("margin_perc"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
+    {
+      dataField: "sgst",
+      caption: t("sgst"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "cgst",
+      caption: t("cgst"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    }, 
+    {
+      dataField: "igst",
+      caption: t("igst"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    }, 
+    {
+      dataField: "cess",
+      caption: t("cess"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    }, 
+    {
+      dataField: "addCess",
+      caption: t("add_cess"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    }, 
+    {
+      dataField: "calmityCess",
+      caption: t("calamity_cess"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
   ];
   return (
     <Fragment>
@@ -159,8 +196,8 @@ const BillwiseProfitGlobal = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("billwise_profit_report_sales")}
+                  dataUrl= {Urls.acc_reports_billwise_profit_global}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

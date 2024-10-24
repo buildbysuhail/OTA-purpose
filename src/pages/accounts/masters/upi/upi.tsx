@@ -154,7 +154,7 @@ const Upi = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.upi.isOpen || false}
-        title="UPI(Unified Payment Interface)"
+        title={t("upi")}                                                                                    
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

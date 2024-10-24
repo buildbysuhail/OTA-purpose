@@ -25,7 +25,7 @@ export const DATA_ENDPOINTS: ApiEndpoint[] = [
   { url: Urls.data_FormTypeBySR, method: ActionType.GET as const },
   { url: Urls.data_FormTypeByPI, method: ActionType.GET as const },
   { url: Urls.data_FormTypeByPR, method: ActionType.GET as const },
-
+  { url: Urls.data_BankAccounts, method: ActionType.GET as const },
   // settings
   { url: Urls.data_base_currency, method: ActionType.GET as const },
   { url: Urls.data_company_id, method: ActionType.GET as const },

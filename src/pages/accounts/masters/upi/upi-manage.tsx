@@ -36,38 +36,64 @@ export const UpiManage: React.FC = React.memo(() => {
   }, []);
 
   const { t } = useTranslation();
-
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
     
         <ERPDataCombobox
-          {...getFieldProps("ledgerID")}
+          {...getFieldProps("paymentType")}
           field={{
-            id: "ledgerID",
-            required: true,
-            getListUrl: Urls.data_Bank_Cards,
-            valueKey: "id",
-            labelKey: "name",
+            id: "paymentType",
+            
+            valueKey: "value",
+            labelKey: "label"
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("ledgerID", data.ledgerID)
+            handleFieldChange("paymentType", data.paymentType)
           }}
           label={t("upi")}
+          options={[
+            { value: 'AMAZON_PAY', label: 'AMAZON PAY' },
+            { value: 'GOOGLE_PAY', label: 'GOOGLE PAY' },
+            { value: 'PHONEPE', label: 'PHONE PAY' },
+            { value: 'WHATSAPP', label: 'WHATSAPP' },
+            { value: 'BAJAJ_FINSERV', label: 'BAJAJ FINSERV' },
+            { value: 'BAJAJ_MARKETS', label: 'BAJAJ MARKETS' },
+            { value: 'CRED', label: 'CRED' },
+            { value: 'FAVE_PINELABS', label: 'FAVE (PINELABS)' },
+            { value: 'GOIBIBO', label: 'GOIBIBO' },
+            { value: 'GROWW', label: 'GROWW' },
+            { value: 'JUPITER_MONEY', label: 'JUPITER MONEY' },
+            { value: 'KIWI', label: 'KIWI' },
+            { value: 'MAKE_MY_TRIP', label: 'MAKE MY TRIP' },
+            { value: 'MOBIKWIK', label: 'MOBIKWIK' },
+            { value: 'NAVI', label: 'NAVI' },
+            { value: 'NIYO_GLOBAL', label: 'NIYO GLOBAL' },
+            { value: 'SAMSUNG_PAY', label: 'SAMSUNG PAY' },
+            { value: 'SHRIRAM_ONE', label: 'SHRIRAM ONE' },
+            { value: 'SLICE', label: 'SLICE' },
+            { value: 'TATANEU', label: 'TATANEU' },
+            { value: 'TIMEPAY', label: 'TIMEPAY' },
+            { value: 'TVAM_ATYATI', label: 'TVAM (ATYATI)' },
+            { value: 'YUVAPAY', label: 'YUVAPAY' },
+            { value: 'ZOMATO', label: 'ZOMATO' }
+          ]}
+          
         />
+        
          <ERPInput
-          {...getFieldProps('remarks')}
+          {...getFieldProps('paymentName')}
           label={t("upi_name")}
           placeholder={t("upi_name")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
+          
+          onChangeData={(data: any) => handleFieldChange('paymentName', data.paymentName)}
         />
           <ERPDataCombobox
           {...getFieldProps("ledgerID")}
           field={{
             id: "ledgerID",
             required: true,
-            getListUrl: Urls.data_Bank_Cards,
+            getListUrl: Urls.data_BankAccounts,
             valueKey: "id",
             labelKey: "name",
           }}

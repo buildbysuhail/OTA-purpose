@@ -920,5 +920,9 @@
   "basic_info":"Basic Info",
   "last_transaction_date":"LTDate",
   "account_receivable":"Account Receivable",
-  "account_payable":"Account Payable"
+  "account_payable":"Account Payable",
+"is_group":"Is Group",
+  "ledger_id":"Ledger Id",
+ "trial_balance":"Trial Balance"
+  
 }

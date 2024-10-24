@@ -885,5 +885,6 @@
   "accounts_transaction_history": "سجل معاملات الحسابات",
   "c_type": "النوع",
   "description": "الوصف",
-  "daily_summary_report":"تقرير الملخص اليومي"
+  "daily_summary_report":"تقرير الملخص اليومي",
+  "click_load_to_fetch_system_code": "انقر على تحميل لجلب رمز النظام"
 }

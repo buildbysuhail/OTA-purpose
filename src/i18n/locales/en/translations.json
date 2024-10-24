@@ -885,5 +885,6 @@
   "accounts_transaction_history":"Accounts Transaction History",
   "c_type":"CType",
   "description":"Description",
-  "daily_summary_report":"Daily Summary Report"
+  "daily_summary_report":"Daily Summary Report",
+  "click_load_to_fetch_system_code":"Click load to fetch system code"
 }

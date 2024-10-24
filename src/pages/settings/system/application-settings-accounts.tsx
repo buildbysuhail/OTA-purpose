@@ -179,7 +179,7 @@ const ApplicationSettingsAccounts = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
 
       <div className='border rounded-lg  p-4'>
-        <div className='grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
+        <div className='grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="defaultCashAcc"
             value={formState?.defaultCashAcc}
@@ -567,7 +567,7 @@ const ApplicationSettingsAccounts = () => {
 
       {/* Checkboxes */}
       <div className='border  rounded-lg p-4'>
-        <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-start gap-5'>
+        <div className='grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 justify-start gap-6'>
           <ERPCheckbox
             id="allowSalesCounter"
             checked={formState.allowSalesCounter}

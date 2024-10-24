@@ -50,7 +50,7 @@ const TaxSettingsForm: React.FC = () => {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await api.getAsync(`${Urls.application_settings}tax`);
+      const response = await api.getAsync(`${Urls.application_settings}taxes`);
       debugger;
       console.log(formState);
       setFormStatePrev(response);
@@ -90,7 +90,7 @@ const TaxSettingsForm: React.FC = () => {
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
-        type: "tax",
+        type: "taxes",
         updateList: modifiedSettings,
       })) as any;
       handleResponse(response);

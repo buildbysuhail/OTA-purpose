@@ -393,7 +393,6 @@ const BranchSettingsForm: React.FC = () => {
               value={formState.maintainSynchronizationdata}
               field={{
                 id: "maintainSynchronizationdata",
-                // required: true,
                 valueKey: "value",
                 labelKey: "label",
               }}

@@ -340,7 +340,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </h6>
 
 
-            <div className="h-32 xxl:h-40 overflow-y-scroll snap-x  mb-2  rounded-sm shadow-sm  ">
+            <div className="h-32 xxl:h-40 overflow-y-scroll snap-x  mb-2 rounded-sm shadow-sm">
 
               {!dataLoaded ? (
                 // Show default content before data is loaded

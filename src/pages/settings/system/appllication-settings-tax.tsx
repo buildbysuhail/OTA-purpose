@@ -50,7 +50,7 @@ const TaxSettingsForm: React.FC = () => {
   const loadSettings = async () => {
     setLoading(true);
     try {
-      const response = await api.getAsync(`${Urls.application_settings}taxes`);
+      const response = await api.getAsync(`${Urls.application_settings}tax`);
       debugger;
       console.log(formState);
       setFormStatePrev(response);
@@ -90,7 +90,7 @@ const TaxSettingsForm: React.FC = () => {
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
-        type: "taxes",
+        type: "tax",
         updateList: modifiedSettings,
       })) as any;
       handleResponse(response);
@@ -117,7 +117,7 @@ const TaxSettingsForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border rounded-lg p-4">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
+        <div className="grid xxl:grid-cols-4 lg:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
           <ERPDataCombobox
             id="purchaseFormType"
             value={formState?.purchaseFormType}

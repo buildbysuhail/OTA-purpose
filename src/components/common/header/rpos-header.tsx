@@ -46,13 +46,19 @@ const RPosHeader: FC<RPosHeaderProps> = () => {
           <i className="ri-time-line text-[33px]"></i>
           <i className="ri-notification-3-line text-[33px]"></i>
           <i className="ri-question-line text-[33px]"></i>
-          <Link to="/"
-          className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
+          <Link
+            to="/settings"
+            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
           >
-          <i className="ri-shut-down-line text-[33px]"></i>
+            <i className="bx bx-cog header-link-icon text-[33px] "></i>
           </Link>
-          <i className="bx bx-cog header-link-icon text-[33px] "></i>
-          
+
+          <Link
+            to="/"
+            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
+          >
+            <i className="ri-shut-down-line text-[33px]"></i>
+          </Link>
         </div>
       </header>
     </Fragment>

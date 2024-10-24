@@ -120,7 +120,7 @@ export default function ERPDataCombobox({
     if (!disabledApiCall) {
       loadData();
     }
-  }, []);
+  }, [field.getListUrl]);
 
   const loadData = async () => {
     setLoading(true);

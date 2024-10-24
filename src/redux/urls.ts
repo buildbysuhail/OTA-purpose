@@ -56,7 +56,7 @@ const Urls = {
   data_SalesAccount: "/Accounts/Data/SalesAccount",
   data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
-
+  data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
 
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",

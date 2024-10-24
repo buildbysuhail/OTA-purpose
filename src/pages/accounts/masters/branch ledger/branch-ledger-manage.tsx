@@ -20,6 +20,7 @@ export const BranchLedgerManage = () => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
+    formState,
     isLoading
   } = useFormManager<BranchLedgerData>({
     url: Urls.branch_ledger,
@@ -57,7 +58,7 @@ export const BranchLedgerManage = () => {
           field={{
             id: "purchaseLedgerID",
             required: true,
-            getListUrl: Urls.data_acc_ledgers,
+            getListUrl: formState?.data.refBranchID ? `${Urls.data_PurchaseAccount}${formState?.data.refBranchID}` : `${Urls.data_PurchaseAccount}`,
             valueKey: "id",
             labelKey: "name",
           }}

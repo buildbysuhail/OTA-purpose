@@ -258,7 +258,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
           onClick={handleApplyPreferences}>
             Save
           </ERPSubmitButton>
-          <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28" variant="secondary">
+          <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28 bg-[#e5e7eb] text-[#404040]" >
             Cancel
           </ERPSubmitButton>
         </div>

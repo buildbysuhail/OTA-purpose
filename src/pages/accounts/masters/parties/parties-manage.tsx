@@ -41,7 +41,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("code")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("partyCode", data)
+              handleFieldChange("partyCode", data.partyCode)
             }
           />
           <ERPInput
@@ -50,7 +50,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("name")}
             required={true}
             onChangeData={(data: any) =>
-              handleFieldChange("partyName", data)
+              handleFieldChange("partyName", data.partyName)
             }
           />
           <ERPInput
@@ -59,7 +59,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("display_name")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("displayName", data)
+              handleFieldChange("displayName", data.displayName)
             }
           />
           <ERPInput
@@ -68,7 +68,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("arabic_name")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("arabicName", data)
+              handleFieldChange("arabicName", data.arabicName)
             }
           />
           <ERPDataCombobox
@@ -81,7 +81,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
               labelKey: "name",
             }}
             onChangeData={(data: any) => {
-              handleFieldChange("ledgerID", data);
+              handleFieldChange("ledgerID", data.ledgerID);
             }}
             label={t("ledger_name")}
           />
@@ -95,7 +95,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
               labelKey: "name",
             }}
             onChangeData={(data: any) => {
-              handleFieldChange("partyCategoryID", data);
+              handleFieldChange("partyCategoryID", data.partyCategoryID);
             }}
             label={t("party_category")}
           />
@@ -109,7 +109,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
               labelKey: "name",
             }}
             onChangeData={(data: any) => {
-              handleFieldChange("accGroupID", data);
+              handleFieldChange("accGroupID", data.accGroupID);
             }}
             label={t("referred_by")}
           />
@@ -119,7 +119,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("address")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("address1", data)
+              handleFieldChange("address1", data.address1)
             }
           />
           <ERPInput
@@ -128,7 +128,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("mobile_phone")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("mobilePhone", data)
+              handleFieldChange("mobilePhone", data.mobilePhone)
             }
           />
           <ERPDataCombobox
@@ -141,7 +141,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
               labelKey: "name",
             }}
             onChangeData={(data: any) => {
-              handleFieldChange("salesRouteID", data);
+              handleFieldChange("salesRouteID", data.salesRouteID);
             }}
             label={t("sales_route")}
           />
@@ -151,7 +151,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("tax_number")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("taxNumber", data)
+              handleFieldChange("taxNumber", data.taxNumber)
             }
           />
           <ERPInput
@@ -160,7 +160,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("cr_no")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("cstNumber", data)
+              handleFieldChange("cstNumber", data.cstNumber)
             }
           />
           <ERPInput
@@ -169,7 +169,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("credit_days")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("creditDays", data)
+              handleFieldChange("creditDays", data.creditDays)
             }
           />
           <ERPInput
@@ -178,7 +178,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("credit_amount")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("creditAmount", data)
+              handleFieldChange("creditAmount", data.creditAmount)
             }
           />
           <ERPInput
@@ -187,7 +187,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("op_balance")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("opBalance", data)
+              handleFieldChange("opBalance", data.opBalance)
             }
           />
           <ERPInput
@@ -196,7 +196,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("ifsc")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("address4", data)
+              handleFieldChange("address4", data.address4)
             }
           />
           <ERPInput
@@ -205,7 +205,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("pan_no")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("panNo", data)
+              handleFieldChange("panNo", data.panNo)
             }
           />
           <ERPInput
@@ -214,7 +214,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
             placeholder={t("aadhar_no")}
             required={false}
             onChangeData={(data: any) =>
-              handleFieldChange("aadharNo", data)
+              handleFieldChange("aadharNo", data.aadharNo)
             }
           />
           <ERPDataCombobox
@@ -227,25 +227,25 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
               labelKey: "name",
             }}
             onChangeData={(data: any) => {
-              handleFieldChange("registrationType", data !== null && data !== undefined ? data.toString() : data);
+              handleFieldChange("registrationType", data !== null && data !== undefined ? data.registrationType.toString() : data.registrationType);
             }}
             label={t("registration_type")}
           />
           <ERPCheckbox
             {...getFieldProps("billwiseBillApplicable")}
             label={t("bill_wise_applicable")}
-            onChangeData={(data: any) => handleFieldChange("billwiseBillApplicable", data)}
+            onChangeData={(data: any) => handleFieldChange("billwiseBillApplicable", data.billwiseBillApplicable)}
           />
           <ERPCheckbox
             {...getFieldProps("isActive")}
             label={t("is_Active")}
-            onChangeData={(data: any) => handleFieldChange("isActive", data)}
+            onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
           />
           <div className="mt-3">
             <ERPCheckbox
               {...getFieldProps("isCommon")}
               label={t("is_common")}
-              onChangeData={(data: any) => handleFieldChange("isCommon", data)}
+              onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
             />
           </div>
         </div>
@@ -276,21 +276,21 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
                   label={t("account_number")}
                   placeholder={t("account_number")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcNumber1", data)}
+                  onChangeData={(data: any) => handleFieldChange("bankAcNumber1", data.bankAcNumber1)}
                 />
                 <ERPInput
                   {...getFieldProps("bankAcName1")}
                   label={t("account_name")}
                   placeholder={t("account_name")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcName1", data)}
+                  onChangeData={(data: any) => handleFieldChange("bankAcName1", data.bankAcName1)}
                 />
                 <ERPInput
                   {...getFieldProps("bankDetails1")}
                   label={t("remarks")}
                   placeholder={t("remarks")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankDetails1", data)}
+                  onChangeData={(data: any) => handleFieldChange("bankDetails1", data.bankDetails1)}
                 />
               </div>
             </div>
@@ -303,21 +303,21 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
                   label={t("account_number")}
                   placeholder={t("account_number")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcNumber2", data)}
+                  onChangeData={(data: any) => handleFieldChange("bankAcNumber2", data.bankAcNumber2)}
                 />
                 <ERPInput
                   {...getFieldProps("bankAcName2")}
                   label={t("account_name")}
                   placeholder={t("account_name")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcName2", data)}
+                  onChangeData={(data: any) => handleFieldChange("bankAcName2", data.bankAcName2)}
                 />
                 <ERPInput
                   {...getFieldProps("bankDetails2")}
                   label={t("remarks")}
                   placeholder={t("remarks")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankDetails2", data)}
+                  onChangeData={(data: any) => handleFieldChange("bankDetails2", data.bankDetails2)}
                 />
               </div>
             </div>
@@ -342,7 +342,7 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
                 placeholder={t("postal_code")}
                 required={false}
                 onChangeData={(data: any) =>
-                  handleFieldChange("postalCode", data)
+                  handleFieldChange("postalCode", data.postalCode)
                 }
               />
             </div>
@@ -368,35 +368,35 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           label={t("address_2_city_district")}
           placeholder={t("address_2_city_district")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("address2", data)}
+          onChangeData={(data: any) => handleFieldChange("address2", data.address2)}
         />
         <ERPInput
           {...getFieldProps("address4")}
           label={t("address_4_building_no")}
           placeholder={t("address_4_building_no")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("address4", data)}
+          onChangeData={(data: any) => handleFieldChange("address4", data.address4)}
         />
         <ERPInput
           {...getFieldProps("officePhone")}
           label={t("office_phone")}
           placeholder={t("office_phone")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("officePhone", data)}
+          onChangeData={(data: any) => handleFieldChange("officePhone", data.officePhone)}
         />
         <ERPInput
           {...getFieldProps("workPhone")}
           label={t("work_phone")}
           placeholder={t("work_phone")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("workPhone", data)}
+          onChangeData={(data: any) => handleFieldChange("workPhone", data.workPhone)}
         />
         <ERPInput
           {...getFieldProps("contactPhone")}
           label={t("contact_phone")}
           placeholder={t("contact_phone")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("contactPhone", data)}
+          onChangeData={(data: any) => handleFieldChange("contactPhone", data.contactPhone)}
         />
         <ERPInput
           {...getFieldProps("email")}
@@ -404,14 +404,14 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           placeholder={t("email")}
           type="email"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("email", data)}
+          onChangeData={(data: any) => handleFieldChange("email", data.email)}
         />
         <ERPInput
           {...getFieldProps("webURL")}
           label={t("website")}
           placeholder={t("website")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("webURL", data)}
+          onChangeData={(data: any) => handleFieldChange("webURL", data.webURL)}
         />
       </div>
     </div>
@@ -421,13 +421,13 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           {...getFieldProps("startDate")}
           label={t("start_date")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("startDate", data)}
+          onChangeData={(data: any) => handleFieldChange("startDate", data.startDate)}
         />
         <ERPDateInput
           {...getFieldProps("expiryDate")}
           label={t("exp_date")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("expiryDate", data)}
+          onChangeData={(data: any) => handleFieldChange("expiryDate", data.expiryDate)}
         />
         <div className="flex flex-col gap-2">
           <label htmlFor="fileInput" className="text-sm text-gray-700">
@@ -468,7 +468,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
         <ERPCheckbox
           {...getFieldProps("isTCSApplicable")}
           label={t("is_tcs_applicable")}
-          onChangeData={(data: any) => handleFieldChange("isTCSApplicable", data)}
+          onChangeData={(data: any) => handleFieldChange("isTCSApplicable", data.isTCSApplicable)}
         />
         <ERPDataCombobox
           {...getFieldProps("tcsCategoryID")}
@@ -479,7 +479,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => handleFieldChange("tcsCategoryID", data)}
+          onChangeData={(data: any) => handleFieldChange("tcsCategoryID", data.tcsCategoryID)}
           label={t("tcs_category")}
         />
         <ERPDataCombobox
@@ -492,7 +492,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("stateName", data !== null && data !== undefined ? data.toString() : "");
+            handleFieldChange("stateName", data !== null && data !== undefined ? data.stateName.toString() : "");
           }}
           label={t("state_name")}
         />
@@ -501,12 +501,12 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           label={t("state_code")}
           placeholder={t("state_code")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("stateCode", data)}
+          onChangeData={(data: any) => handleFieldChange("stateCode", data.stateCode)}
         />
         <ERPCheckbox
           {...getFieldProps("stopCredit")}
           label={t("stop_credit")}
-          onChangeData={(data: any) => handleFieldChange("stopCredit", data)}
+          onChangeData={(data: any) => handleFieldChange("stopCredit", data.stopCredit)}
         />
       </div>
     </div>
@@ -516,37 +516,37 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
         <ERPCheckbox
           {...getFieldProps("sunday")}
           label={t("sunday")}
-          onChangeData={(data: any) => handleFieldChange("sunday", data)}
+          onChangeData={(data: any) => handleFieldChange("sunday", data.sunday)}
         />
         <ERPCheckbox
           {...getFieldProps("monday")}
           label={t("monday")}
-          onChangeData={(data: any) => handleFieldChange("monday", data)}
+          onChangeData={(data: any) => handleFieldChange("monday", data.monday)}
         />
         <ERPCheckbox
           {...getFieldProps("tuesday")}
           label={t("tuesday")}
-          onChangeData={(data: any) => handleFieldChange("tuesday", data)}
+          onChangeData={(data: any) => handleFieldChange("tuesday", data.tuesday)}
         />
         <ERPCheckbox
           {...getFieldProps("wednesday")}
           label={t("wednesday")}
-          onChangeData={(data: any) => handleFieldChange("wednesday", data)}
+          onChangeData={(data: any) => handleFieldChange("wednesday", data.wednesday)}
         />
         <ERPCheckbox
           {...getFieldProps("thursday")}
           label={t("thursday")}
-          onChangeData={(data: any) => handleFieldChange("thursday", data)}
+          onChangeData={(data: any) => handleFieldChange("thursday", data.thursday)}
         />
         <ERPCheckbox
           {...getFieldProps("friday")}
           label={t("friday")}
-          onChangeData={(data: any) => handleFieldChange("friday", data)}
+          onChangeData={(data: any) => handleFieldChange("friday", data.friday)}
         />
         <ERPCheckbox
           {...getFieldProps("saturday")}
           label={t("saturday")}
-          onChangeData={(data: any) => handleFieldChange("saturday", data)}
+          onChangeData={(data: any) => handleFieldChange("saturday", data.saturday)}
         />
       </div>
     </div>
@@ -561,7 +561,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => handleFieldChange("priceCategoryID", data)}
+          onChangeData={(data: any) => handleFieldChange("priceCategoryID", data.priceCategoryID)}
           label={t("price_category")}
         />
         <ERPDataCombobox
@@ -573,7 +573,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data: any) => handleFieldChange("formTypeID", data)}
+          onChangeData={(data: any) => handleFieldChange("formTypeID", data.formTypeID)}
           label={t("form_type")}
         />
         <ERPInput
@@ -582,21 +582,21 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           placeholder={t("visit_seq_no")}
           type="number"
           required={false}
-          onChangeData={(data: any) => handleFieldChange("visitSequenceNo", data)}
+          onChangeData={(data: any) => handleFieldChange("visitSequenceNo", data.visitSequenceNo)}
         />
         <ERPInput
           {...getFieldProps("legalName")}
           label={t("legal_name")}
           placeholder={t("legal_name")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("legalName", data)}
+          onChangeData={(data: any) => handleFieldChange("legalName", data.legalName)}
         />
         <ERPInput
           {...getFieldProps("tradeName")}
           label={t("trade_name")}
           placeholder={t("trade_name")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("tradeName", data)}
+          onChangeData={(data: any) => handleFieldChange("tradeName", data.tradeName)}
         />
         <div className="flex flex-col gap-2">
           <label htmlFor="fileInput" className="text-[12px] text-gray-700">
@@ -635,7 +635,7 @@ const Tab3Content: React.FC<Tab3ContentProps> = ({ getFieldProps, handleFieldCha
         placeholder={t("project_name")}
         required={false}
         onChangeData={(data: any) =>
-          handleFieldChange("projectName", data)
+          handleFieldChange("projectName", data.projectName)
         }
       />
       <ERPInput
@@ -644,7 +644,7 @@ const Tab3Content: React.FC<Tab3ContentProps> = ({ getFieldProps, handleFieldCha
         placeholder={t("address1")}
         required={false}
         onChangeData={(data: any) =>
-          handleFieldChange("address1", data)
+          handleFieldChange("address1", data.address1)
         }
       />
       <ERPInput
@@ -653,7 +653,7 @@ const Tab3Content: React.FC<Tab3ContentProps> = ({ getFieldProps, handleFieldCha
         placeholder={t("address2")}
         required={false}
         onChangeData={(data: any) =>
-          handleFieldChange("address2", data)
+          handleFieldChange("address2", data.address2)
         }
       />
       <ERPInput
@@ -662,7 +662,7 @@ const Tab3Content: React.FC<Tab3ContentProps> = ({ getFieldProps, handleFieldCha
         placeholder={t("address3")}
         required={false}
         onChangeData={(data: any) =>
-          handleFieldChange("address3", data)
+          handleFieldChange("address3", data.address3)
         }
       />
     </div>

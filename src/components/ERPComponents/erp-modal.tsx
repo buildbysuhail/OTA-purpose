@@ -119,7 +119,7 @@ const ERPModal = ({
                   <DialogTitle
                     as="h3"
                     // className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900"
-                     className="sticky top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 "
+                     className="sticky top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
                   >
                     {closeButton !== undefined &&
                       closeButton === "LeftArrow" && (

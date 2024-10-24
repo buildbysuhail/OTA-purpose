@@ -347,7 +347,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                 <div className="my-5 xxl:my-10 ">
                   <ul className="list-none text-center text-gray-500 snap-center">
                     <li className="py-5 xxl:py-10 px-3">
-                      {"Click load to fetch system code"}
+                    {t("click_load_to_fetch_system_code")}
                       {/* Default message */}
                     </li>
                   </ul>

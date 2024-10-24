@@ -224,7 +224,7 @@ const ERPSettingsFormGSTTaxes = () => {
   return (
     <>
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className='grid lg:grid-cols-7 md:grid-cols-4 sm:grid-cols-2'>
+        <div className='grid xxl:grid-cols-7 lg:grid-cols-4 sm:grid-cols-2'>
           <label>{t("default_purchase")}</label>
           <ERPCheckbox
             id="normalPurchaseForm"
@@ -250,7 +250,7 @@ const ERPSettingsFormGSTTaxes = () => {
         </div>
 
 
-        <div className='border p-4 rounded-lg grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
+        <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="defaultSalesFormType"
             value={formState.defaultSalesFormType}
@@ -262,7 +262,7 @@ const ERPSettingsFormGSTTaxes = () => {
               { value: 'Normal', label: 'Normal' },
               { value: 'VAT', label: 'VAT' },
             ]}
-            onChangeData={(data: any) => handleFieldChange("defaultSalesFormType", data)}
+            onChangeData={(data: any) => handleFieldChange("defaultSalesFormType", data.defaultSalesFormType)}
           />
 
           <ERPDataCombobox
@@ -277,7 +277,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("inputCSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("inputCSTAccount", data.inputCSTAccount)}
           />
 
           <ERPDataCombobox
@@ -292,7 +292,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("outputCSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("outputCSTAccount", data.outputCSTAccount)}
           />
 
           <ERPDataCombobox
@@ -307,7 +307,7 @@ const ERPSettingsFormGSTTaxes = () => {
             }}
             data={formState}
             label={t("input_cess_account")}
-            onChangeData={(data: any) => handleFieldChange("inputCessAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("inputCessAccount", data.inputCessAccount)}
           />
 
           <ERPDataCombobox
@@ -322,7 +322,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("outputCessAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("outputCessAccount", data.outputCessAccount)}
           />
 
           <ERPDataCombobox
@@ -337,7 +337,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("inputAddCessAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("inputAddCessAccount", data.inputAddCessAccount)}
           />
 
           <ERPDataCombobox
@@ -352,7 +352,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("outputAddCessAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("outputAddCessAccount", data.outputAddCessAccount)}
           />
 
           <ERPDataCombobox
@@ -367,7 +367,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("expensesTaxAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("expensesTaxAccount", data.expensesTaxAccount)}
           />
 
           <ERPDataCombobox
@@ -382,12 +382,12 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("incomeTaxAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("incomeTaxAccount", data.incomeTaxAccount)}
           />
         </div>
 
 
-        <div className='border p-4 rounded-lg grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
+        <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="defaultSIFormTypeForPOS"
             value={formState.defaultSIFormTypeForPOS}
@@ -400,7 +400,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("defaultSIFormTypeForPOS", data)}
+            onChangeData={(data: any) => handleFieldChange("defaultSIFormTypeForPOS", data.defaultSIFormTypeForPOS)}
           />
 
           <ERPDataCombobox
@@ -415,7 +415,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("defaultSIPrefixForPOS", data)}
+            onChangeData={(data: any) => handleFieldChange("defaultSIPrefixForPOS", data.defaultSIPrefixForPOS)}
           />
 
           <ERPDataCombobox
@@ -430,7 +430,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("defaultSRFormTypeForPOS", data)}
+            onChangeData={(data: any) => handleFieldChange("defaultSRFormTypeForPOS", data.defaultSRFormTypeForPOS)}
           />
 
           <ERPDataCombobox
@@ -445,13 +445,13 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "VoucherID",
               labelKey: "FormType",
             }}
-            onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data)}
+            onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data.defaultSRPrefixForPOS)}
           />
         </div>
 
 
 
-        <div className='border p-4 rounded-lg grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
+        <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="inputSGSTAccount"
             value={formState.inputSGSTAccount}
@@ -464,7 +464,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("inputSGSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("inputSGSTAccount", data.inputSGSTAccount)}
           />
 
           <ERPDataCombobox
@@ -479,7 +479,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("outputSGSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("outputSGSTAccount", data.outputSGSTAccount)}
           />
 
           <ERPDataCombobox
@@ -494,7 +494,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("inputCGSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("inputCGSTAccount", data.inputCGSTAccount)}
           />
 
           <ERPDataCombobox
@@ -509,7 +509,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("outputCGSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("outputCGSTAccount", data.outputCGSTAccount)}
           />
 
           <ERPDataCombobox
@@ -524,7 +524,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("inputIGSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("inputIGSTAccount", data.inputIGSTAccount)}
           />
 
           <ERPDataCombobox
@@ -539,7 +539,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("outputIGSTAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("outputIGSTAccount", data.outputIGSTAccount)}
           />
 
           <ERPDataCombobox
@@ -554,7 +554,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("TCSPaidAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("TCSPaidAccount", data.TCSPaidAccount)}
           />
 
           <ERPDataCombobox
@@ -569,7 +569,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("TCSPayableAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("TCSPayableAccount", data.TCSPayableAccount)}
           />
 
           <ERPDataCombobox
@@ -584,7 +584,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("inputCalamityCessAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("inputCalamityCessAccount", data.inputCalamityCessAccount)}
           />
 
           <ERPDataCombobox
@@ -599,7 +599,7 @@ const ERPSettingsFormGSTTaxes = () => {
               valueKey: "id",
               labelKey: "name",
             }}
-            onChangeData={(data: any) => handleFieldChange("outputCalamityCessAccount", data)}
+            onChangeData={(data: any) => handleFieldChange("outputCalamityCessAccount", data.outputCalamityCessAccount)}
           />
 
           <ERPCheckbox
@@ -628,7 +628,7 @@ const ERPSettingsFormGSTTaxes = () => {
         </div>
 
         <div className='border p-4 rounded-lg'>
-          <div className='grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
+          <div className='grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
             <div className='flex justify-between align-center'>
               <ERPCheckbox
                 id="enableEWB"

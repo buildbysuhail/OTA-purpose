@@ -869,5 +869,6 @@
   "auto_update_release_up_to":"Auto Update Release Up To",
   "auto_change_transaction":"Auto Change Transaction Date By 12:00 AM",
   "currency_main":"Currency",
-  "enable_estimate_for_payments_and_receipts":"Enable Estimate for Payments and Receipts"
+  "enable_estimate_for_payments_and_receipts":"Enable Estimate for Payments and Receipts",
+  "click_load_to_fetch_system_code":"Click load to fetch system code"
 }

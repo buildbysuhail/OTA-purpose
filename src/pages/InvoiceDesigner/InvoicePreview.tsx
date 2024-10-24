@@ -42,6 +42,7 @@ import { RootState } from "../../redux/store";
 import { APIClient } from "../../helpers/api-client";
 import { getTemplates } from "../../redux/slices/templates/thunk";
 import useApplicationSetting from "../../utilities/hooks/use-application-settings";
+import BarcodePreviewWrapper from "./DesignPreview/BarcodePreview";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -398,7 +399,19 @@ const InvoicePreview = ({
             style={generalBackGroundStyle}
             className={`flex  flex-col gap-4 relative ${paperWidth} shadow-md print:m-0 print:w-full print:shadow-none`}
           >
-            {paperSize === "3Inch" || paperSize === "4Inch" ? (
+            {templateGroupId}
+            {
+            templateGroupId === "barcode" ?(
+              <BarcodePreviewWrapper
+                data={data}
+                docIDKey={docIDKey}
+                docTitle={docTitle}
+                template={templateData}
+                currency={currencySymbol || undefined}
+                templateGroupId={templateGroupId}
+              />
+            ):
+            paperSize === "3Inch" || paperSize === "4Inch" ? (
               <RetailPreviewWrapper
                 data={data}
                 docIDKey={docIDKey}

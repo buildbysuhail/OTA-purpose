@@ -16,11 +16,6 @@ interface TransactionReport {
   from: Date
 }
 const TransactionReport = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [filter, setFilter] =useState<TransactionReport>({from: new Date()});
@@ -32,33 +27,27 @@ const TransactionReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 120,
     },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
+   
     {
       dataField: "vchNo",
       caption:  t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 140,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
-      dataField: "particulars",
+      dataField: "form",
+      caption: t("voucher_type"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 120,
+    },
+    {
+      dataField: "accountName",
       caption: t("account"),
       dataType: "string",
       allowSearch: true,
@@ -66,7 +55,16 @@ const TransactionReport = () => {
       width: 150,
     },
     {
-      dataField: "refNo",
+      dataField: "particulars",
+      caption: t("particulars"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      // width: 150,
+    },
+    
+    {
+      dataField: "referenceNumber",
       caption: t("ref_no"),
       dataType: "string",
       allowSearch: true,
@@ -105,54 +103,6 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 150,
     },
-    {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
   ];
   return (
     <Fragment>
@@ -163,8 +113,8 @@ const TransactionReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("transaction_report")}
+                  dataUrl= {Urls.acc_reports_transaction}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

@@ -24,27 +24,28 @@ const DailySummary = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
+      dataField: "cType",
+      caption: t('c_type'),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      visible:false,
+      width: 180,
     },
     {
-      dataField: "form",
-      caption: t("form"),
+      dataField: "description",
+      caption: t("description"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
-      dataField: "vchNo",
-      caption:  t("voucher_no"),
-      dataType: "string",
+      dataField: "amount",
+      caption:  t("amount"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     // {
     //   dataField: "ledger",
@@ -160,8 +161,8 @@ const DailySummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("daily_summary_report")}
+                  dataUrl= {Urls.acc_reports_daily_summary}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

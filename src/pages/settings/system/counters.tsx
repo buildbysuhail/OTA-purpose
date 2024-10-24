@@ -13,6 +13,8 @@ import { CounterManage } from "./counters-manage";
 
 
 const Counters = () => {
+  
+const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -175,7 +177,7 @@ const Counters = () => {
         closeModal={() => {
           dispatch(toggleCounterPopup({ isOpen: false }));
         }}
-        content={<CounterManage/>}
+        content={<MemoizedCounterManage/>}
        
       />
       
@@ -183,4 +185,4 @@ const Counters = () => {
   );
 };
 
-export default Counters;
+export default React.memo(Counters);

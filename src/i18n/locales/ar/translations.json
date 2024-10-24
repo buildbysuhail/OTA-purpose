@@ -869,5 +869,21 @@
   "auto_change_transaction": "تغيير تلقائي لتاريخ المعاملة إلى 12:00 صباحًا",
   "currency_main": "العملة",
   "enable_estimate_for_payments_and_receipts": "تمكين التقدير للمدفوعات والإيصالات",
-  "click_load_to_fetch_system_code": "انقر على تحميل لجلب رمز النظام"
+
+  "day_book_summary": "ملخص دفتر اليوم",
+  "amount": "المبلغ",
+  "payment_report": "تقرير الدفع",
+  "collection_report": "تقرير التحصيل",
+  "cash_summary": "ملخص النقد",
+  "particulars": "التفاصيل",
+  "transaction_report": "تقرير المعاملات",
+  "transaction_date": "تاريخ المعاملة",
+  "grand_total": "المجموع الكلي",
+  "cash_received": "النقد المستلم",
+  "inventory_transaction_history": "سجل معاملات المخزون",
+  "time": "الوقت",
+  "accounts_transaction_history": "سجل معاملات الحسابات",
+  "c_type": "النوع",
+  "description": "الوصف",
+  "daily_summary_report":"تقرير الملخص اليومي"
 }

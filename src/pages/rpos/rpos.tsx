@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import RPosHeader from "../../components/common/header/rpos-header";
 // import 'remixicon/fonts/remixicon.css';
 
 interface MenuItem {
@@ -60,7 +61,7 @@ export default function Component() {
   };
 
   return (
-    <div className="flex h-[92vh] bg-gray-200 text-gray-800 font-sans">
+    <div className="flex h-[95vh] bg-gray-200 text-gray-800 font-sans">
       {/* Sidebar */}
       {/* <div className="w-48 bg-gray-800 text-white flex flex-col">
         <nav className="flex-1 overflow-y-auto">
@@ -81,35 +82,6 @@ export default function Component() {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navigation */}
-        <header className="bg-white shadow-md p-2 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <i className="ri-menu-line text-2xl mr-2"></i>
-            <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md ">
-              New Order
-            </button>
-            <input
-              type="text"
-              placeholder="Bill No"
-              className="border p-1 rounded w-24 rounded-md"
-            />
-            <input
-              type="text"
-              placeholder="KOT No."
-              className="border p-1 rounded w-24 rounded-md"
-            />
-          </div>
-          <div className="flex items-center space-x-2 text-gray-600">
-            <i className="ri-file-list-line text-xl"></i>
-            <i className="ri-printer-line text-xl"></i>
-            <i className="ri-layout-grid-line text-xl"></i>
-            <i className="ri-image-line text-xl"></i>
-            <i className="ri-file-list-3-line text-xl"></i>
-            <i className="ri-time-line text-xl"></i>
-            <i className="ri-notification-3-line text-xl"></i>
-            <i className="ri-question-line text-xl"></i>
-            <i className="ri-shut-down-line text-xl"></i>
-          </div>
-        </header>
 
         {/* Order Type and Search Bar */}
         <div className="bg-gray-300 p-2 flex justify-between items-center">
@@ -127,7 +99,7 @@ export default function Component() {
               <button
                 key={type}
                 className={`px-4 py-2 rounded rounded-md ${
-                  orderType === type ? "bg-[#f90303] text-white" : "bg-white"
+                  orderType === type ? "bg-primary text-white" : "bg-white"
                 } flex-1`}
                 onClick={() => setOrderType(type)}
               >
@@ -191,7 +163,9 @@ export default function Component() {
             <div className="flex border border-gray-300">
               <button
                 className={`flex-1 p-3 flex justify-center items-center border-r ${
-                  selectedOption === "table" ? "border-t-2 border-[#f90303]" : ""
+                  selectedOption === "table"
+                    ? "border-t-2 border-[#f90303]"
+                    : ""
                 }`}
                 onClick={() => handleOptionClick("table")}
               >
@@ -209,7 +183,9 @@ export default function Component() {
 
               <button
                 className={`flex-1 p-3 flex justify-center items-center border-r ${
-                  selectedOption === "group" ? "border-t-2 border-[#f90303]" : ""
+                  selectedOption === "group"
+                    ? "border-t-2 border-[#f90303]"
+                    : ""
                 }`}
                 onClick={() => handleOptionClick("group")}
               >
@@ -417,7 +393,7 @@ export default function Component() {
             </div>
 
             <div className="p-4 bg-gray-800 flex justify-between items-center font-bold">
-              <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
                 Split
               </button>
               <span className="text-white">Total:₹{total.toFixed(2)}</span>
@@ -449,13 +425,13 @@ export default function Component() {
               </div>
             </div>
             <div className="flex space-x-2 p-4 ml-1">
-              <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
                 Save
               </button>
-              <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
                 Save & Print
               </button>
-              <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
                 Save & eBill
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
@@ -474,7 +450,7 @@ export default function Component() {
         {/* Bottom Action Bar */}
         {/* <div className="bg-gray-800 p-2 flex justify-between items-center">
           <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
               Split
             </button>
             <div className="flex items-center space-x-4">
@@ -497,13 +473,13 @@ export default function Component() {
             </label>
           </div>
           <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
               Save
             </button>
-            <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
               Save & Print
             </button>
-            <button className="px-4 py-2 bg-[#f90303] text-white rounded rounded-md">
+            <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
               Save & eBill
             </button>
             <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">

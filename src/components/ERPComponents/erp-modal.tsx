@@ -42,7 +42,7 @@ const ERPModal = ({
   closeButton = "LeftArrow",
   closeTitle = "Cancel",
   className,
-  isFullHeight = false,
+  isFullHeight = true,
   isRemoveSomething = false,
   width = "w-full",
   closeOnSubmit = true,
@@ -64,7 +64,7 @@ const ERPModal = ({
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
-          className={`relative z-50`}
+          className={`relative z-50 `}
           onClose={disableOutsideClickClose ? () => {} : handleClose}
         >
           {/* ... (Transition.Child for background remains unchanged) */}
@@ -83,9 +83,10 @@ const ERPModal = ({
           </Transition>
 
           <div
-            className={`fixed inset-0 ${
-              isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"
-            }`}
+            className={`fixed inset-0 `}
+          //   ${
+          //     isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"  this need to className if you want
+          //  }
           >
             <div
               className={`flex min-h-full items-center justify-center text-center${
@@ -102,15 +103,20 @@ const ERPModal = ({
                 leaveTo="opacity-0 scale-95"
               >
                 <DialogPanel
-                  className={`transform bg-white  py-3 text-left align-middle shadow-xl transition-all ${width} ${
-                    isFullHeight ? "min-h-full h-screen" : "rounded-md"
-                  } ${
-                    isRemoveSomething ? "px-0" : "px-5"
-                  }`}
+                  // className={`transform bg-white  py-3 text-left align-middle shadow-xl transition-all ${width} ${
+                  //   isFullHeight ? "min-h-full max-h-screen overflow-y-scroll" : "rounded-md"
+                  // } ${
+                  //   isRemoveSomething ? "px-0" : "px-5"
+                  // }`}
+
+                  className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all ${width} ${
+                    isFullHeight ? "min-h-full max-h-screen" : "rounded-md"
+                  } ${isRemoveSomething ? "px-0" : "px-5"}`}
                 >
                   <DialogTitle
                     as="h3"
-                    className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900"
+                    // className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900"
+                     className="sticky top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 "
                   >
                     {closeButton !== undefined &&
                       closeButton === "LeftArrow" && (
@@ -133,7 +139,9 @@ const ERPModal = ({
                       </div>
                     )}
                   </DialogTitle>
-                  {content}
+                  <div className="max-h-[calc(100vh-8rem)] overflow-y-auto">
+                    {content}
+                  </div>
                   {/* Footer */}
                   {!isForm && (
                     <div className="border-t py-2 flex gap-2 justify-end">

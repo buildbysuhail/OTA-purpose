@@ -170,7 +170,7 @@ const FinancialYear = () => {
                   popupAction={toggleFinancialYearPopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.financialYear?.reload}
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
             </div>

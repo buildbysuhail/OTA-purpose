@@ -865,10 +865,25 @@
   "allow_PDC_to_post":"Allow PDC To Post",
   "show_employees_in_sales":"Show Employees In Sales",
   "enable_24_hours_business":"Enable 24 Hours Business",
-
   "auto_update_release_up_to":"Auto Update Release Up To",
   "auto_change_transaction":"Auto Change Transaction Date By 12:00 AM",
   "currency_main":"Currency",
   "enable_estimate_for_payments_and_receipts":"Enable Estimate for Payments and Receipts",
-  "click_load_to_fetch_system_code":"Click load to fetch system code"
+
+  "day_book_summary":"Day Book Summary",
+  "amount":"Amount",
+  "payment_report":"Payment Report",
+  "collection_report":"Collection Report",
+  "cash_summary":"Cash Summary",
+  "particulars":"Particulars",
+  "transaction_report":"Transaction Report",
+  "transaction_date":"Transaction Date",
+  "grand_total":"Grand Total",
+  "cash_received":"Cash Received",
+  "inventory_transaction_history":"Inventory Transaction History",
+  "time":"Time",
+  "accounts_transaction_history":"Accounts Transaction History",
+  "c_type":"CType",
+  "description":"Description",
+  "daily_summary_report":"Daily Summary Report"
 }

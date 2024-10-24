@@ -81,7 +81,6 @@ const AccTransactionMobile = lazy(() => import('../../../pages/accounts/transact
 const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
 const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
-const POS = lazy(() => import('../../../pages/rpos/rpos'));
 
 interface ContentProps { }
 const loading = (
@@ -191,7 +190,6 @@ const Content: FC<ContentProps> = () => {
 
         {/* side menu */}
         <Route path="cash-payments" element={<AccTransactionMobile />} />
-        <Route path="rpos" element={<POS />} />
       </Routes>
     </Suspense>
   );

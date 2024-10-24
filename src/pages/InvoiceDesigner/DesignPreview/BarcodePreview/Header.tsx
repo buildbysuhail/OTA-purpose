@@ -115,7 +115,8 @@ const Content = ({ template, data, docTitle, docIDKey, templateGroupId, currency
           fontSize: barcodeProps?.fontSize,
           textMargin: barcodeProps?.textMargin,
           textAlign: barcodeProps?.textAlign
-        });
+        });  
+        
       }
     });
   }, [data?.barcodeValues, designeritems]);

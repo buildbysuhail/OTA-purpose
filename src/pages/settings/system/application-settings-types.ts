@@ -61,6 +61,7 @@ export const ApplicationMainSettingsInitialState: ApplicationMainSettings = {
   maintainBusinessType: "General",
 };
 export interface ApplicationBranchSettings {
+  maintainMultilanguage__: any;
   maintainTax: boolean;
   showFinancialYearSelector: boolean;
   countryName: string;

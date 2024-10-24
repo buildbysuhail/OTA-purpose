@@ -252,6 +252,11 @@ const ERPSettingsFormGSTTaxes = () => {
 
         <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
+            field={{
+              id: "defaultSalesFormType",
+              valueKey: "value",
+              labelKey: "label",
+            }}
             id="defaultSalesFormType"
             value={formState.defaultSalesFormType}
             data={formState}
@@ -390,17 +395,16 @@ const ERPSettingsFormGSTTaxes = () => {
         <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="defaultSIFormTypeForPOS"
-            value={formState.defaultSIFormTypeForPOS}
-            data={formState}
-            label={t("default_SI_form_type_for_POS")}
             field={{
               id: "defaultSIFormTypeForPOS",
-              // required: true,
               getListUrl: Urls.data_FormTypeBySI,
               valueKey: "id",
               labelKey: "name",
             }}
+            data={formState}
+            value={formState.defaultSIFormTypeForPOS}
             onChangeData={(data: any) => handleFieldChange("defaultSIFormTypeForPOS", data.defaultSIFormTypeForPOS)}
+            label={t("default_SI_form_type_for_POS")}
           />
 
           <ERPDataCombobox

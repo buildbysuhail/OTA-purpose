@@ -16,8 +16,8 @@ interface TaxSettingsFormState {
     purchaseInterstateType: boolean;
     purchaseForm62: boolean;
   };
-  defaultSalesFormType: string;
-  defaultSIFormTypeForPOS: string;
+  outputFormType: string;
+  defaultFormTypeForPOS: string;
   inputCSTAccount: string;
   defaultSIPrefixForPOS: string;
   outputCSTAccount: string;
@@ -59,8 +59,8 @@ const initialStateTaxsettings: TaxSettingsFormState = {
     purchaseInterstateType: false,
     purchaseForm62: false,
   },
-  defaultSalesFormType: '',
-  defaultSIFormTypeForPOS: '',
+  outputFormType: '',
+  defaultFormTypeForPOS: '',
   inputCSTAccount: '',
   defaultSIPrefixForPOS: '',
   outputCSTAccount: '',
@@ -210,25 +210,25 @@ const ERPSettingsFormGSTTaxes = () => {
         <div className='grid xxl:grid-cols-7 lg:grid-cols-4 sm:grid-cols-2'>
           <label>{t("default_purchase")}</label>
           <ERPCheckbox
-            id="purchaseNormalTypePurchaseForm"
+            id="purchaseNormalType"
             checked={formState?.defaultPurchaseFormType?.purchaseNormalType}
             data={formState}
             label={t("normal")}
-            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseNormalType: data.purchaseNormalTypePurchaseForm })}
+            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseNormalType: data.purchaseNormalType })}
           />
           <ERPCheckbox
-            id="purchaseInterstateTypePurchaseForm"
+            id="purchaseInterstateType"
             checked={formState?.defaultPurchaseFormType?.purchaseInterstateType}
             data={formState}
             label={t("inter_state")}
-            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseInterstateType: data.purchaseInterstateTypePurchaseForm })}
+            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseInterstateType: data.purchaseInterstateType })}
           />
           <ERPCheckbox
-            id="purchaseForm62PurchaseForm"
+            id="purchaseForm62"
             checked={formState?.defaultPurchaseFormType?.purchaseForm62}
             data={formState}
             label={t("form_6(2)")}
-            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseForm62: data.purchaseForm62PurchaseForm })}
+            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseForm62: data.purchaseForm62 })}
           />
         </div>
 
@@ -236,12 +236,12 @@ const ERPSettingsFormGSTTaxes = () => {
         <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             field={{
-              id: "defaultSalesFormType",
+              id: "outputFormType",
               valueKey: "value",
               labelKey: "label",
             }}
-            id="defaultSalesFormType"
-            value={formState?.defaultSalesFormType}
+            id="outputFormType"
+            value={formState?.outputFormType}
             data={formState}
             label={t("default_sales_form_type")}
             options={[
@@ -250,7 +250,7 @@ const ERPSettingsFormGSTTaxes = () => {
               { value: 'purchaseNormalType', label: 'purchaseNormalType' },
               { value: 'VAT', label: 'VAT' },
             ]}
-            onChangeData={(data: any) => handleFieldChange("defaultSalesFormType", data.defaultSalesFormType)}
+            onChangeData={(data: any) => handleFieldChange("outputFormType", data.outputFormType)}
           />
 
           <ERPDataCombobox
@@ -376,16 +376,16 @@ const ERPSettingsFormGSTTaxes = () => {
 
         <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
-            id="defaultSIFormTypeForPOS"
+            id="defaultFormTypeForPOS"
             field={{
-              id: "defaultSIFormTypeForPOS",
+              id: "defaultFormTypeForPOS",
               getListUrl: Urls.data_FormTypeBySI,
               valueKey: "VoucherID",
               labelKey: "FormType",
             }}
             data={formState}
-            value={formState?.defaultSIFormTypeForPOS}
-            onChangeData={(data: any) => handleFieldChange("defaultSIFormTypeForPOS", data.defaultSIFormTypeForPOS)}
+            value={formState?.defaultFormTypeForPOS}
+            onChangeData={(data: any) => handleFieldChange("defaultFormTypeForPOS", data.defaultFormTypeForPOS)}
             label={t("default_SI_form_type_for_POS")}
           />
 
@@ -671,7 +671,7 @@ const ERPSettingsFormGSTTaxes = () => {
               }}
               options={[
                 { value: 'Clear Tax', label: 'Clear Tax' },
-                { value: '1Tax Pro', label: 'Tax Pro' },
+                { value: 'Tax Pro', label: 'Tax Pro' },
               ]}
             />
 

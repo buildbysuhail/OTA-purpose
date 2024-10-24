@@ -35,22 +35,38 @@ const OutstandingAccountPayableReport = () => {
       width: 50,
     },
     {
-      dataField: "ledgername",
+      dataField: "party",
       caption: t("ledger_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
-      dataField: "Debit",
-      caption: t('debit'),
+      dataField: "address1",
+      caption: t("address1"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "Credit",
+      dataField: "mobilePhone",
+      caption: t("mobile_phone"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "debit",
+      caption: t('debit'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "credit",
       caption: t("credit"),
       dataType: "number",
       allowSearch: true,
@@ -66,50 +82,13 @@ const OutstandingAccountPayableReport = () => {
       width: 150,
     },
     {
-      dataField: "period1",
-      caption: 10+ t("days"),
-      dataType: "number",
+      dataField: "ltDate",
+      caption: t("last_transaction_date"),
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-    {
-      dataField: "period2",
-      caption: 20+t("days"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "period3",
-      caption: 30+t("days"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
   ];
   return (
     <Fragment>
@@ -120,8 +99,8 @@ const OutstandingAccountPayableReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={"skiptake"+t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_aging_payable_direct}
+                  gridHeader={t("account_payable")}
+                  dataUrl= {Urls.acc_reports_payable}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

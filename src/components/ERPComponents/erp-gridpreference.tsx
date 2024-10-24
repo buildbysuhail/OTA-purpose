@@ -247,15 +247,20 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
               })
             }
 
-            <div className="flex gap-10 justify-between py-3 border-t mt-5">
-              <ERPSubmitButton type="button" onClick={handleApplyPreferences}>
-                Save
-              </ERPSubmitButton>
-              <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28" variant="outline">
-                Cancel
-              </ERPSubmitButton>
-            </div>
+         
           </div>
+        </div>
+        )}
+        footer={(
+          <div className="flex gap-10 justify-between py-3 border-t mt-5">
+          <ERPSubmitButton type="button" 
+          variant="primary"
+          onClick={handleApplyPreferences}>
+            Save
+          </ERPSubmitButton>
+          <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28 bg-[#e5e7eb] text-[#404040]" >
+            Cancel
+          </ERPSubmitButton>
         </div>
         )}
       />

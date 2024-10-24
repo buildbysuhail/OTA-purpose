@@ -54,6 +54,7 @@ type FilterOperation = "=" | "<>" | ">" | ">=" | "<" | "<=" | "startswith" | "en
 
 interface ERPDevGridProps {
   columns: DevGridColumn[];
+  showSerialNo?: boolean;
   gridId: string;
   dataUrl: string;
   method?: ActionType;
@@ -205,6 +206,7 @@ const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   columns,
+  showSerialNo,
   gridId,
   dataUrl,
   method = ActionType.GET,

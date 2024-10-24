@@ -124,7 +124,7 @@ const ERPSettingsFormMain = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border p-4 flex flex-col gap-6 rounded-lg">
-        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
+        <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             field={{
               id: "maintainBusinessType",
@@ -236,7 +236,7 @@ const ERPSettingsFormMain = () => {
           />
         </div>
 
-        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
+        <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPDataCombobox
             field={{
               id: "roundingMethod",
@@ -335,7 +335,7 @@ const ERPSettingsFormMain = () => {
           />
         </div>
 
-        <div className="grid lg:grid-cols-5 md:grid-cols-3 sm:grid-cols-2 gap-6">
+        <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
           <ERPCheckbox
             id="autoChangeTransactionDateByMidnight"
             label={t("auto_change_transaction")}
@@ -402,7 +402,7 @@ const ERPSettingsFormMain = () => {
       </div>
 
       <div className="border p-4 flex flex-col gap-6 rounded-lg">
-        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-6">
+        <div className="grid xxl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-6">
           <div className="flex items-center">
             <ERPCheckbox
               id="allowPrivilegeCard"
@@ -480,7 +480,7 @@ const ERPSettingsFormMain = () => {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-1 gap-6">
+        <div className="grid xxl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-6">
           <ERPCheckbox
             id="maintainSeperatePrefixforCashSales"
             label={t("maintain_separate_prefix_for_cash_sales")}

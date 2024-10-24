@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -12,6 +12,8 @@ import { PrivilegeCardManage } from "./privilege-card-manage";
 
 
 const PrivilegeCard = () => {
+  const MemoizedPrivilegeCardrManage = useMemo(() => React.memo(PrivilegeCardManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -166,8 +168,8 @@ const PrivilegeCard = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: false, key: cellInfo?.data?.privilegeCardsID }) }}
-          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: false, key: cellInfo?.data?.privilegeCardsID }) }}
+          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID }) }}
+          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -193,7 +195,7 @@ const PrivilegeCard = () => {
                   popupAction={togglePrivilegeCardPopup}
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.privilegeCard?.reload}
-                  gridAddButtonIcon=""
+                  gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
             </div>
@@ -208,10 +210,11 @@ const PrivilegeCard = () => {
         closeModal={() => {
           dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null }));
         }}
-        content={<PrivilegeCardManage />}
+        content={<MemoizedPrivilegeCardrManage />}
       />
     </Fragment>
   );
 };
 
-export default PrivilegeCard
+export default React.memo(PrivilegeCard);
+

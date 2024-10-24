@@ -65,6 +65,7 @@
     "simplebar-react": "^3.2.4",
     "tailwind": "^4.0.0",
     "tailwind-clip-path": "^1.0.0",
+    "tailwind-scrollbar": "^3.1.0",
     "to-words": "^4.1.0"
   },
   "devDependencies": {

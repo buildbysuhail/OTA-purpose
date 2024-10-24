@@ -117,7 +117,7 @@ const TaxSettingsForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border rounded-lg p-4">
-        <div className="grid lg:grid-cols-4 md:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
+        <div className="grid xxl:grid-cols-4 lg:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
           <ERPDataCombobox
             id="purchaseFormType"
             value={formState?.purchaseFormType}

@@ -33,8 +33,7 @@ import ProfitAndLoss from '../../../pages/accounts/masters/reports/profit-and-lo
 import TrialBalance from '../../../pages/accounts/masters/reports/trial-balance';
 import BalanceSheet from '../../../pages/accounts/masters/reports/balace-sheet';
 import InventoryHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/InventoryHistory/inventory-history-report';
-
-
+import BillwiseProfitGlobal from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit-global';
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
@@ -62,6 +61,7 @@ const InvTransactionMobile = lazy(() => import("../../../pages/inventory/inv-tra
 // Acc Starts
 const AccountsMasters = lazy(() => import('../../../pages/accounts/masters/account-groups/account-group'));
 const BankCards = lazy(() => import('../../../pages/accounts/masters/bank-cards/bank-cards'));
+const Upi = lazy(() => import('../../../pages/accounts/masters/upi/upi'));
 const AccountsLedger = lazy(() => import('../../../pages/accounts/masters/account-ledgers/account-ledger'));
 const CostCenter = lazy(() => import('../../../pages/accounts/masters/cost centre/cost-centre'));
 const BranchLedger = lazy(() => import('../../../pages/accounts/masters/branch ledger/branch-ledger'));
@@ -137,6 +137,7 @@ const Content: FC<ContentProps> = () => {
         {/* Masters */}
         <Route path="account-masters/account-group" element={<AccountsMasters />} />
         <Route path="account-masters/Bank-Cards" element={<BankCards />} />
+        <Route path="account-masters/upi" element={<Upi />} />
         <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
         <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
         <Route path="account-masters/party-category" element={<PartyCategory />} />
@@ -175,7 +176,9 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/transaction_report" element={<TransactionReport/>} />
         <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport/>} />
         <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport/>} />
-        <Route path="/accounts/billwise_profit" element={<BillwiseProfit/>} />
+        <Route path="/accounts/daily_summary_report" element={<DailySummary/>} />
+        <Route path="/accounts/billwise_profit" element={0!=0?<BillwiseProfit/>:<BillwiseProfitGlobal/>} />
+        <Route path="/accounts/partywise_summary" element={<PartySummaryBasicInfo/>} />
         <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport/>} />
         <Route path="/accounts/outstanding_receivable" element={<OutstandingAccountReceivableReport/>} />
         <Route path="/accounts/outstanding_aging_payable" element={<OutstandingAccountPayableAgingReport/>} />
@@ -184,6 +187,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/profit_and_loss" element={<ProfitAndLoss/>} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet/>} />
 
+
+
+        <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />
+        <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport/>} />
         {/* Reports - Accounts */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}

@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next";
 import { BankCardsManage } from "./bank-cards-manage";
 
 const BankCards = () => {
+  const MemoizedBankCardsManage = useMemo(() => React.memo(BankCardsManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -22,7 +24,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 100,
     },
     {
       dataField: "branchID",
@@ -31,7 +33,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 100,
     },
     {
       dataField: "ledgerID",
@@ -40,6 +42,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      minWidth: 150,
     },
     {
       dataField: "paymentType",
@@ -48,6 +51,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      minWidth: 150,
     },
     {
       dataField: "paymentName",
@@ -56,7 +60,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "createdUserID",
@@ -65,7 +69,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "createdDate",
@@ -74,7 +78,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "modifiedUserID",
@@ -83,7 +87,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "modifiedDate",
@@ -92,7 +96,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "remark",
@@ -101,6 +105,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      minWidth: 100,
     },
     {
       dataField: "actions",
@@ -154,10 +159,10 @@ const BankCards = () => {
         closeModal={() => {
           dispatch(toggleBankCardsPopup({ isOpen: false, key: null }));
         }}
-        content={<BankCardsManage />}
+        content={<MemoizedBankCardsManage />}
       />
     </Fragment>
   );
 };
 
-export default BankCards;
+export default React.memo(BankCards);

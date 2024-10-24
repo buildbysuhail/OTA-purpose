@@ -913,7 +913,9 @@
 "party_type": "نوع الطرف",
 "billwise_bill_applicable": "تطبيق الفاتورة حسب الفاتورة",
 "basic_info": "المعلومات الأساسية",
-"last_transaction_date":"LTDate",
+"last_transaction_date": "تاريخ آخر معاملة",
+"account_receivable": "الحسابات المدينة",
+"account_payable": "الحسابات الدائنة",
 "click_load_to_fetch_system_code": "انقر على تحميل لجلب رمز النظام",
 
 "bank_card": "بطاقة مصرفية",

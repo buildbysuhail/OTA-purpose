@@ -1,6 +1,6 @@
 export const initialBankCards = {
   data: {
-    branchID: 0,
+   
     paymentName: "",
     paymentType: "",
     createdUserID: 0,
@@ -9,7 +9,7 @@ export const initialBankCards = {
     paymentTypeID: 0
   },
   validations: {
-    branchID: "",
+   
     paymentName: "",
     paymentType: "",
     createdUserID: "",
@@ -20,7 +20,6 @@ export const initialBankCards = {
 };
 
 export interface BankCardsData {
-  branchID: number,
   paymentName: string,
   paymentType: string,
   createdUserID: number,

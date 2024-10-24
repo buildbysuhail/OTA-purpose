@@ -24,7 +24,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 100,
     },
     {
       dataField: "branchID",
@@ -33,7 +33,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 100,
     },
     {
       dataField: "ledgerID",
@@ -42,6 +42,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      minWidth: 150,
     },
     {
       dataField: "paymentType",
@@ -50,6 +51,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      minWidth: 150,
     },
     {
       dataField: "paymentName",
@@ -58,7 +60,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "createdUserID",
@@ -67,7 +69,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "createdDate",
@@ -76,7 +78,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "modifiedUserID",
@@ -85,7 +87,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "modifiedDate",
@@ -94,7 +96,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      minWidth: 150,
     },
     {
       dataField: "remark",
@@ -103,6 +105,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      minWidth: 100,
     },
     {
       dataField: "actions",

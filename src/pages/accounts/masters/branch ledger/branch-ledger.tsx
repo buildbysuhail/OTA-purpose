@@ -100,12 +100,13 @@ const BranchLedger = () => {
       width: 180,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellInfo?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID }) }}
+          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            // action: () => handleDelete(cellInfo?.data?.id),
+              url:Urls?.branch_ledger,key:cellElement?.data?.branchLedgerID
+              // action: () => handleDelete(cellInfo?.data?.id),
           }}
         />
       ),

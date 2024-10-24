@@ -38,20 +38,49 @@ export const BankCardsManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <ERPDataCombobox
           {...getFieldProps("paymentType")}
           field={{
             id: "paymentType",
-            required: true,
-            getListUrl: Urls.data_Bank_Cards,
-            valueKey: "id",
-            labelKey: "name",
+            
+            valueKey: "value",
+            labelKey: "label",
           }}
           onChangeData={(data: any) => {
             handleFieldChange("paymentType", data.paymentType)
           }}
           label={t("debit_cards")}
+          options={[
+            { value: 'VISA', label: 'VISA' },
+            { value: 'MASTER_CARD', label: 'MASTER CARD' },
+            { value: 'MAESTRO', label: 'MAESTRO' },
+            { value: 'AMERICAN_EXPRESS', label: 'AMERICAN EXPRESS' },
+            { value: 'DISCOVER', label: 'DISCOVER' },
+            { value: 'HDFC_CARD', label: 'HDFC CARD' },
+            { value: 'RUPAY_CARDS', label: 'RUPAY CARDS' },
+            { value: 'AXIS_CARD', label: 'AXIS CARD' },
+            { value: 'PLATINUM_CARD', label: 'PLATINUM CARD' },
+            { value: 'HDFC_BANK_REWARDS_CARD', label: 'HDFC BANK REWARDS CARD' },
+            { value: 'TIMES_POINTS_CARD', label: 'TIMES POINTS CARD' },
+            { value: 'CLASSIC_ONE_CARD', label: 'CLASSIC ONE CARD' },
+            { value: 'EASYSHOP_NRO_CARD', label: 'EASYSHOP NRO CARD' },
+            { value: 'HDFC_CARD', label: 'HDFC CARD' },
+            { value: 'ICICI_CARD', label: 'ICICI CARD' },
+            { value: 'SBI_CARD', label: 'SBI CARD' },
+            { value: 'YES_BANK_CARD', label: 'YES BANK CARD' },
+            { value: 'PRIORITY_CARD', label: 'PRIORITY CARD' },
+            { value: 'HSBC_CARD', label: 'HSBC CARD' },
+            { value: 'SBI_CARD', label: 'SBI CARD' },
+            { value: 'DELIGHT_CARD', label: 'DELIGHT CARD' },
+            { value: 'HPCL_CARD', label: 'HPCL CARD' },
+            { value: 'INDUSIND_BANK', label: 'INDUSIND BANK' },
+            { value: 'AXIS_BANK_BURGUNDY_CARD', label: 'AXIS BANK BURGUNDY CARD' },
+            { value: 'IDBI_MASTERCARD_CLASSIC_CARD', label: 'IDBI MASTERCARD CLASSIC CARD' },
+            { value: 'EASYSHOP_CARD', label: 'EASYSHOP CARD' },
+            { value: 'PRESTIGE_CARD', label: 'PRESTIGE CARD' }
+          ]}
+          
         />
         <ERPInput
           {...getFieldProps('paymentName')}
@@ -65,7 +94,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
           field={{
             id: "ledgerID",
             required: true,
-            getListUrl: Urls.data_Bank_Cards,
+            getListUrl: Urls.data_BankAccounts,
             valueKey: "id",
             labelKey: "name",
           }}

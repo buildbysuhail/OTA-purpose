@@ -44,7 +44,7 @@ export const BranchLedgerManage = () => {
           field={{
             id: "refBranchID",
             required: true,
-            getListUrl: Urls.data_acc_ledgers,
+            getListUrl: Urls.data_acc_Branches,
             valueKey: "id",
             labelKey: "name",
           }}

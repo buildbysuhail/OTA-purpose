@@ -35,6 +35,7 @@ const Urls = {
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
+  data_acc_Branches: "/Data/Branches",
   data_Bank_Cards: "/Accounts/BankCards/",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
   data_costcentres: "/Accounts/Data/CostCentres/",

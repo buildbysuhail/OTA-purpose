@@ -58,6 +58,8 @@ const Urls = {
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
   data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
 
+
+
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
   data_products: "/Inventory/Data/Products",

@@ -17,7 +17,7 @@
   "inventory_adjustments": "Inventory Adjustments",
 
   "banking": "Banking",
-
+  
   "Sales": "Sales",
   "customers": "Customers",
   "estimates": "Estimates",
@@ -886,5 +886,12 @@
   "c_type":"CType",
   "description":"Description",
   "daily_summary_report":"Daily Summary Report",
-  "click_load_to_fetch_system_code":"Click load to fetch system code"
+  "click_load_to_fetch_system_code":"Click load to fetch system code",
+
+  "bank_card":"Bank Card",
+  "upi":"UPI (Unified Payments Interface)",
+  "ledger":"Ledger",
+  "upi_name":"UPI Name"
+
+
 }

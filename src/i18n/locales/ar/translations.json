@@ -886,5 +886,12 @@
   "c_type": "النوع",
   "description": "الوصف",
   "daily_summary_report":"تقرير الملخص اليومي",
-  "click_load_to_fetch_system_code": "انقر على تحميل لجلب رمز النظام"
+  "click_load_to_fetch_system_code": "انقر على تحميل لجلب رمز النظام",
+
+  "bank_card": "بطاقة مصرفية",
+   "upi":"واجهة المدفوعات الموحدة (UPI)",
+  "ledger":"دفتر الأستاذ",
+  "upi_name":"اسم UPI"
+
+ 
 }

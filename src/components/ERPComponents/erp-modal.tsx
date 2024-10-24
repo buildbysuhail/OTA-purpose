@@ -14,6 +14,7 @@ type ERPModalProps = {
   isOpen: boolean;
   closeModal: (reload: boolean) => void;
   content?: any;
+  footer?: any;
   submitTitle?: string;
   onSubmit?: any;
   onSubmitModel?: () => void;
@@ -33,6 +34,7 @@ const ERPModal = ({
   isOpen,
   closeModal,
   content,
+  footer,
   title,
   submitTitle,
   onSubmit,
@@ -42,7 +44,7 @@ const ERPModal = ({
   closeButton = "LeftArrow",
   closeTitle = "Cancel",
   className,
-  isFullHeight = true,
+  isFullHeight = false,
   isRemoveSomething = false,
   width = "w-full",
   closeOnSubmit = true,
@@ -83,10 +85,11 @@ const ERPModal = ({
           </Transition>
 
           <div
-            className={`fixed inset-0 `}
-          //   ${
-          //     isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"  this need to className if you want
-          //  }
+            className={`fixed inset-0 
+               ${
+              isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"  
+           }`}
+           
           >
             <div
               className={`flex min-h-full items-center justify-center text-center${
@@ -116,7 +119,7 @@ const ERPModal = ({
                   <DialogTitle
                     as="h3"
                     // className="flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900"
-                     className="sticky top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 "
+                     className="sticky min-w-full top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
                   >
                     {closeButton !== undefined &&
                       closeButton === "LeftArrow" && (
@@ -139,10 +142,18 @@ const ERPModal = ({
                       </div>
                     )}
                   </DialogTitle>
-                  <div className="max-h-[calc(100vh-8rem)] overflow-y-auto">
+                  <div className={`  ${isFullHeight ? "max-h-[calc(100vh-8rem)]" : "h-auto"} `}>
+                    <div className={`${isFullHeight ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100" : " "} `}>
                     {content}
+                    </div>
+                    
+                  <div className="">
+                  {footer}
                   </div>
-                  {/* Footer */}
+
+                  </div>
+                  
+                
                   {!isForm && (
                     <div className="border-t py-2 flex gap-2 justify-end">
                       <div className="max-w-[200px]">

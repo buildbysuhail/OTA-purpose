@@ -108,7 +108,7 @@ const BranchSettingsForm: React.FC = () => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="border rounded-lg p-4">
-        <div className="grid  sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid  sm:grid-cols-2 lg:grid-cols-2 xxl:grid-cols-4 gap-6">
           <ERPDisableEnable targetCount={15} onSuccess={handleSuccess}>
             {(hasPermitted) => (
               <ERPDataCombobox
@@ -131,10 +131,10 @@ const BranchSettingsForm: React.FC = () => {
           </ERPDisableEnable>
 
           <ERPDataCombobox
-            id="invoicePrintingStyle"
-            value={formState.invoicePrintingStyle}
+            id="maintainMultilanguage__"
+            value={formState.maintainMultilanguage__}
             field={{
-              id: "invoicePrintingStyle",
+              id: "maintainMultilanguage__",
               getListUrl: Urls.data_languages,
               valueKey: "id",
               labelKey: "name",
@@ -143,8 +143,8 @@ const BranchSettingsForm: React.FC = () => {
             label={t("regional_language")}
             onChangeData={(data) =>
               handleFieldChange(
-                "invoicePrintingStyle",
-                data.invoicePrintingStyle
+                "maintainMultilanguage__",
+                data.maintainMultilanguage__
               )
             }
           />
@@ -298,7 +298,7 @@ const BranchSettingsForm: React.FC = () => {
 
       {Number(formState?.countryName) === 1 && (
         <div className="rounded-lg border p-4">
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
             <ERPCheckbox
               id="maintainKSA_EInvoice"
               label={t("maintain_KSA_eInvoice")}
@@ -371,7 +371,7 @@ const BranchSettingsForm: React.FC = () => {
         </div>
       )}
       <div className="rounded-lg border p-4">
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
           <div>
             <ERPCheckbox
               id="maintainSynchronization"
@@ -393,7 +393,6 @@ const BranchSettingsForm: React.FC = () => {
               value={formState.maintainSynchronizationdata}
               field={{
                 id: "maintainSynchronizationdata",
-                // required: true,
                 valueKey: "value",
                 labelKey: "label",
               }}
@@ -454,7 +453,7 @@ const BranchSettingsForm: React.FC = () => {
           />
         </div>
 
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-3">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6 mt-3">
           <ERPCheckbox
             id="showBTINotification"
             checked={formState.showBTINotification}

@@ -17,7 +17,7 @@
   "inventory_adjustments": "Inventory Adjustments",
 
   "banking": "Banking",
-
+  
   "Sales": "Sales",
   "customers": "Customers",
   "estimates": "Estimates",
@@ -869,13 +869,14 @@
 "auto_change_transaction":"Auto Change Transaction Date By 12:00 AM",
   "currency_main":"Currency",
   "enable_estimate_for_payments_and_receipts":"Enable Estimate for Payments and Receipts",
+
   "day_book_summary":"Day Book Summary",
   "amount":"Amount",
   "payment_report":"Payment Report",
   "collection_report":"Collection Report",
   "cash_summary":"Cash Summary",
-   "particulars":"Particulars",
-   "transaction_report":"Transaction Report",
+  "particulars":"Particulars",
+  "transaction_report":"Transaction Report",
   "transaction_date":"Transaction Date",
   "grand_total":"Grand Total",
  "cash_received":"Cash Received",
@@ -884,41 +885,5 @@
  "accounts_transaction_history":"Accounts Transaction History",
 "c_type":"CType",
  "description":"Description",
- "daily_summary_report":"Daily Summary Report",
- "billwise_profit_report_sales":"Billwise Profit Report(Sales)",
-"qty":"qty",
-"free":"free",
-"unit":"unit",
-"gross_amount":"Gross Amount",
-"disc_amt":"DiscAmt",
-"sales_price":"Sales Price",
- "tot_cost":"Tot.Cost",
-"net_amount":"NetAmt",
- "profit":"profit",
- "markup_perc":"Markup %",
-"margin_perc":"Margin %",
-"vat":"VAT",
-"sgst":"SGST",
- "cgst":"CGST",
-"igst":"IGST",
-"cess":"Cess",
-"add_cess":"Add Cess",
-"calamity_cess":"Calamity Cess",
- "party_code":"Party Code",
- "party_name":"Party Name",
-"address4":"Address4",
-"fax_number":"Fax Number",
-"webURL":"webURL",
-"party_category_name":"Party Category Name",
-"party_type":"Party Type",
-"billwise_bill_applicable":"BillwiseBillApplicable",
-"basic_info":"Basic Info",
-"last_transaction_date":"LTDate",
-"account_receivable":"Account Receivable",
-"account_payable":"Account Payable"
-
-
-
-
-
+ "daily_summary_report":"Daily Summary Report"
 }

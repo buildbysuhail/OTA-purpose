@@ -35,6 +35,7 @@ const Urls = {
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
+  data_acc_Branches: "/Data/Branches",
   data_Bank_Cards: "/Accounts/BankCards/",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
   data_costcentres: "/Accounts/Data/CostCentres/",
@@ -56,6 +57,8 @@ const Urls = {
   data_SalesAccount: "/Accounts/Data/SalesAccount",
   data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
+  data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
+
 
 
   // Dropdown - inventory
@@ -149,7 +152,7 @@ const Urls = {
   CompanyProfiles: "/Core/CompanyProfile/",
   Branch: "/Subscription/Branch/",
   BranchInfo: "/Core/Branch/BranchInfo",
-  branch_code:"/Branch/GetNextBranchCode/",
+  branch_code: "/Branch/GetNextBranchCode/",
   BankPosSettings: "/Core/BankPOS/AddCounter/",
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
@@ -193,25 +196,30 @@ const Urls = {
   chart_of_accounts: "/Accounts/ChartofAccounts/",
   parties: "/Accounts/Parties/",
   cust_supp_ledger: "/Accounts/CustSuppLedger",
+  upi: "/Accounts/Upi/",
+
   //Reports
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
   acc_reports_day_book_detailed: "/Accounts/RptDayBook/DayBookDetailed",
-  acc_reports_day_book_summary: "/Accounts/RptDayBook/DayBookSummary", 
+  acc_reports_day_book_summary: "/Accounts/RptDayBook/DayBookSummary",
   acc_reports_payment: "/Accounts/RptPaymentReport/PaymentReport",
   acc_reports_collection: "/Accounts/RptCollectionReport/CollectionReport",
   acc_reports_cash_summary: "/Accounts/RptCashSummaryReport/CashSummary",
- acc_reports_transaction: "/Accounts/RptReports/TransactionReport",
-acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory",
-acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts",
-acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport",
-acc_reports_billwise_profit: "/Accounts/RptBillWsieProfitReport/BillwiseProfit",
-acc_reports_billwise_profit_global: "/Accounts/RptBillWsieProfitReport/BillwiseProfitGlobal",
-acc_reports_party_summary_basic_info: "/Accounts/RptPartyWiseSummary/BasicInfo",
-acc_reports_payable: "/Accounts/RptOutstandingReport/Payable",
-acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable",
-acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingPayable",
-acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingReceivable",
+  acc_reports_transaction: "/Accounts/RptReports/TransactionReport",
+  acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory",
+  acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts",
+  acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport",
+  acc_reports_billwise_profit: "/Accounts/RptBillWsieProfitReport/BillwiseProfit",
+  acc_reports_billwise_profit_global: "/Accounts/RptBillWsieProfitReport/BillwiseProfitGlobal",
+  acc_reports_party_summary_basic_info: "/Accounts/RptPartyWiseSummary/BasicInfo",
+  acc_reports_payable: "/Accounts/RptOutstandingReport/Payable",
+  acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable",
+  acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingPayable",
+  acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingReceivable",
+
+
+
   acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
   acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
   // Accounts End

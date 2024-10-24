@@ -44,8 +44,10 @@ interface popupData {
   miscellaneousSettings: popupDataProps
   eWayBillTaxPro: popupDataProps
   eInvoiceGST: popupDataProps
+  upi:popupDataProps
 }
 const initialState: popupData = {
+  upi: { isOpen: false, key: null, mode: "edit", reload: true },
   miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true },
   headAndFooter: { isOpen: false, key: null, mode: "edit", reload: true },
   userTypePrivilege: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -221,12 +223,16 @@ const popupDataSlice = createSlice({
     toggleEInvoiceGST: (state, action: PayloadAction<popupDataProps>) => {
       state.eInvoiceGST = action.payload;
     },
+    toggleUpi: (state, action: PayloadAction<popupDataProps>) => {
+      state.upi = action.payload;
+    },
 
   },
 });
 
 // Extract the actions
 export const {
+  toggleUpi,
   toggleMiscellaneousSettingsPopup,
   toggleHeaderFooterPopup,
   toggleUserTypePrivilegePopup,

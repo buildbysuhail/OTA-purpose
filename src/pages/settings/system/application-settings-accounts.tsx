@@ -179,10 +179,10 @@ const ApplicationSettingsAccounts = () => {
     <form onSubmit={handleSubmit} className="space-y-6">
 
       <div className='border rounded-lg  p-4'>
-        <div className='grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-6'>
+        <div className='grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             id="defaultCashAcc"
-            value={formState?.defaultCashAcc}
+            value={formState.defaultCashAcc}
             data={formState}
             label={t("default_cash_account")}
             field={{
@@ -215,8 +215,8 @@ const ApplicationSettingsAccounts = () => {
             label={t("credit_limit")}
             field={{
               id: "blockOnCreditLimit",
-              valueKey: "id",
-              labelKey: "name",
+              valueKey: "value",
+              labelKey: "label",
             }}
             options={[
               { value: 'Block', label: 'Block' },
@@ -235,7 +235,6 @@ const ApplicationSettingsAccounts = () => {
             label={t("default_service_account")}
             field={{
               id: "defaultServiceAccount",
-              //required: true,
               getListUrl: Urls.data_SalesAccount,
               valueKey: "id",
               labelKey: "name",
@@ -249,8 +248,6 @@ const ApplicationSettingsAccounts = () => {
             label={t("default_bank_account")}
             field={{
               id: "defaultBankAcc",
-              //required: true,            
-              hasCloseButton: true,
               getListUrl: Urls.data_BankAccounts,
               valueKey: "id",
               labelKey: "name",
@@ -567,7 +564,7 @@ const ApplicationSettingsAccounts = () => {
 
       {/* Checkboxes */}
       <div className='border  rounded-lg p-4'>
-        <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 justify-start gap-5'>
+        <div className='grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 justify-start gap-6'>
           <ERPCheckbox
             id="allowSalesCounter"
             checked={formState.allowSalesCounter}

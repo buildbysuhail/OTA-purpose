@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -12,6 +12,8 @@ import { PartiesManage } from "./parties-manage";
 
 
 const Parties = () => {
+  const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -403,8 +405,8 @@ const Parties = () => {
         }}
         content={
           <div className="h-[700px] overflow-y-auto">
-            <PartiesManage />
-          </div>
+            <MemoizedPartiesManage />
+           </div> 
         }
       />
     </Fragment>

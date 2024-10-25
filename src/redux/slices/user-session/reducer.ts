@@ -11,6 +11,10 @@ export interface BranchSelectDto {
   logo?: string;
   isActive: boolean;
 }
+export enum Countries {
+  India = 48,
+  Saudi = 1,
+}
 export const initialUserSessionData: UserModel = {
   userId: 0,
   displayName: '',
@@ -20,7 +24,7 @@ export const initialUserSessionData: UserModel = {
   email: '',
   currentClientId: 0,
   currentClientName: '',
-  currentBranchAddress:[],
+  currentBranchAddress: [],
   currentBranchId: 0,
   currentBranchName: '',
   currency: null,
@@ -48,6 +52,7 @@ export interface UserModel {
   taxDecimalPoint: number;
   unitPriceDecimalPoint: number;
   language: string;
+  countryId?: Countries;
   companies: IdTextLogoDto[];
   branches: BranchSelectDto[];
 }
@@ -76,20 +81,20 @@ const userSessionSlice = createSlice({
   name: "userSession",
   initialState,
   reducers: {
-    setUserSession: (state, action: PayloadAction<UserModel>) => {   
-         
+    setUserSession: (state, action: PayloadAction<UserModel>) => {
+
       return action.payload;
     }
   },
   extraReducers: (builder) => {
     builder.addCase(userSession?.fulfilled, (state, action) => {
-      if(action.payload.isOk) {        
-      Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 }); 
-        return  action.payload.item;        
+      if (action.payload.isOk) {
+        Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 });
+        return action.payload.item;
       }
     });
     builder.addCase(setBranch.fulfilled, (state, action) => {
-      if(action.payload.isOk) {
+      if (action.payload.isOk) {
         // Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 }); 
         // return  action.payload.item;        
       }
@@ -99,7 +104,7 @@ const userSessionSlice = createSlice({
 
 export const {
   setUserSession,
-  
+
 } = userSessionSlice.actions
 
 export default userSessionSlice.reducer;

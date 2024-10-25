@@ -14,8 +14,11 @@ import BranchSettingsForm from "./application-settings-branch";
 import PrintSettingForm from "./application-settings-print";
 import BackupSettingsForm from "./application-settings-backup";
 import TaxSettingsForm from "./appllication-settings-tax";
+import { Countries } from "../../../redux/slices/user-session/reducer";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
 
-const ApplicationSettings = ({}) => {
+const ApplicationSettings = ({ }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [loading, setLoading] = useState(false);
@@ -25,20 +28,23 @@ const ApplicationSettings = ({}) => {
     (searchParams?.get("settings_group_id") as ApplicationSettingsIds) ?? "main"
   );
 
+  const userSession = useSelector((state: RootState) => state.UserSession);
+
   console.log(settingsGroup);
 
   useEffect(() => {
     setTempData([]);
   }, [settingsGroup]);
 
+
   return (
     <>
       <div className="flex h-screen overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark ">
         {/* Sidebar */}
         <div className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed">
-          <h1 className="font-medium text-xl p-5 mb-5">Application Settings</h1>
+          <h1 className="font-medium text-xl p-5 mb-5">Application Settings   {userSession.countryId}</h1>
           <div className="flex flex-col overflow-y-auto pb-24 h-full">
-            {ApplicationSettingsTypes.map((settings, index) => (
+            {ApplicationSettingsTypes.filter(x => userSession.countryId == Countries.India ? x.settings_group_id != "tax" : userSession.countryId == Countries.Saudi ? x.settings_group_id != "gst" : x.settings_group_id == x.settings_group_id).map((settings, index) => (
               <div
                 key={`tt_${index}`}
                 tabIndex={0}
@@ -46,9 +52,8 @@ const ApplicationSettings = ({}) => {
                   setSearchParams({ settings_group_id: settings?.settings_group_id });
                   setSettingsGroup(settings?.settings_group_id);
                 }}
-                className={`cursor-pointer flex px-5 p-2 first:border-t gap-2 items-center ${
-                  settingsGroup === settings?.settings_group_id ? "bg-primary" : "hover:bg-gray-50"
-                }`}
+                className={`cursor-pointer flex px-5 p-2 first:border-t gap-2 items-center ${settingsGroup === settings?.settings_group_id ? "bg-primary" : "hover:bg-gray-50"
+                  }`}
               >
                 <div>
                   {/* Removed redundant empty Link tag */}

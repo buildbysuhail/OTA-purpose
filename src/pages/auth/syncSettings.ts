@@ -10,17 +10,17 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   dispatch(setLocale(locale));
 
   localStorage.setItem("ynexltr", locale.rtl ? "rtl" : "ltr");
-  localStorage.removeItem(locale.rtl ? "ynexltr" :"ynexrtl");
+  localStorage.removeItem(locale.rtl ? "ynexltr" : "ynexrtl");
 
 }
 export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSession: UserModel, locale: Locale) => {
-  
+
   // setReloading(true);
   // let res = await api.get(Urls.getUserThemes);
   dispatch(setUserSession(userSession));
-  
-  setLanguage(dispatch,locale);
-  
+
+  setLanguage(dispatch, locale);
+
   dispatch(setMode(res.mode ?? "light"));
   if (res.mode == "light") {
     dispatch(setMode(res.mode ?? "light"));
@@ -35,13 +35,13 @@ export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSessi
     localStorage.removeItem("ynexlighttheme");
     localStorage.removeItem("darkBgRGB");
   }
-  
+
   dispatch(setColorPrimaryRgb(res.colorPrimaryRgb));
   dispatch(setColorPrimary(res.colorPrimaryRgb));
   localStorage.setItem("primaryRGB", res.colorPrimaryRgb);
   localStorage.setItem("primaryRGB1", res.colorPrimaryRgb);
 
-  
+
   switch (res.menuStyle) {
     case "dark":
       dispatch(setDataMenuStyles("dark"));

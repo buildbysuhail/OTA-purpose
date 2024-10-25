@@ -222,7 +222,6 @@ const InvoiceDesigner = () => {
           const canvas = await html2canvas(node);
           const dataUrl = canvas.toDataURL("image/png");
           if (templateData?.activeTemplate && id === "new") await handleSave(dataUrl);
-          if (templateData?.activeTemplate && id && id !== "new") handleUpdate(dataUrl, id);
         } catch (error) {
           console.error("Error capturing canvas:", error);
         }

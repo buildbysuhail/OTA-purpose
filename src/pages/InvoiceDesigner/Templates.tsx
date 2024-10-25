@@ -94,11 +94,10 @@ const Templates = ({ }) => {
       const confirmDelete = window.confirm("Are you sure about deleting the template?");
       if (confirmDelete) {
         console.log("Deleting template with ID:", temp?.id);
-        var res = await appDispatch(deleteAction({ apiUrl: Urls.templates, id: temp?.id }) as any).unwrap();
+        var res = await api.delete(`${Urls.templates}${temp?.id}`);
         console.log("Delete action response:", res);
         handleResponse(res, () => {
           getTemplates();
-          ERPToast.show("Template deleted successfully", "success");
         });
       } else {
         console.log("Deletion canceled");
@@ -107,7 +106,6 @@ const Templates = ({ }) => {
   };
 
   const getTemplates = async () => {
-    debugger;
     setLoading(true);
     var res = await api.getAsync(Urls.templates, `template_group=${templateGroup}`);
     handlePlainResponse(res, () => {

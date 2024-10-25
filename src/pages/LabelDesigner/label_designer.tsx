@@ -895,7 +895,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         label: field,
                       }))}
                       onChange={(e) =>
-                        handlePropertyChange("content", e.target.value)
+                        handlePropertyChange("content", e.value)
                       }
                     />
                   ) : (
@@ -983,10 +983,13 @@ export default function ExtendedPDFBarcodeDesigner() {
                             label: format,
                           }))}
                           onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "format",
-                              e.target.value
-                            )
+                            {
+                                debugger;
+                                handleBarcodePropertyChange(
+                                    "format",
+                                    e.value
+                                  )
+                              }
                           }
                         />
                       </Box>
@@ -1147,7 +1150,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             { value: "Sans-serif", label: "Sans-serif" },
                           ]}
                           onChange={(e) =>
-                            handleBarcodePropertyChange("font", e.target.value)
+                            handleBarcodePropertyChange("font", e.value)
                           }
                         />
                       </Box>
@@ -1336,7 +1339,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     label: printer,
                   }))}
                   onChange={(e) =>
-                    handlePagePropsChange("printer", e.target.value)
+                    handlePagePropsChange("printer", e.value)
                   }
                 />
               </Box>

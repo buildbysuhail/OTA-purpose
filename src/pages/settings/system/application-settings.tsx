@@ -42,9 +42,9 @@ const ApplicationSettings = ({ }) => {
       <div className="flex h-screen overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark ">
         {/* Sidebar */}
         <div className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed">
-          <h1 className="font-medium text-xl p-5 mb-5">Application Settings   {userSession.countryId}</h1>
+          <h1 className="font-medium text-xl p-5 mb-5">Application Settings</h1>
           <div className="flex flex-col overflow-y-auto pb-24 h-full">
-            {ApplicationSettingsTypes.filter(x => userSession.countryId == Countries.India ? x.settings_group_id != "tax" : userSession.countryId == Countries.Saudi ? x.settings_group_id != "gst" : x.settings_group_id == x.settings_group_id).map((settings, index) => (
+            {ApplicationSettingsTypes.filter(x => userSession.countryId == Countries.India ? x.settings_group_id != "tax" : x.settings_group_id != "gst").map((settings, index) => (
               <div
                 key={`tt_${index}`}
                 tabIndex={0}
@@ -56,7 +56,6 @@ const ApplicationSettings = ({ }) => {
                   }`}
               >
                 <div>
-                  {/* Removed redundant empty Link tag */}
                   <h1 className="text-sm">{settings.name}</h1>
                 </div>
               </div>

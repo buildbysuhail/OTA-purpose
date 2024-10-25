@@ -881,7 +881,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         <Box className="max-h-[calc(100vh-5rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1">
           <Box hidden={value !== "element"}>
             {selectedComponent && (
-              <Box sx={{ spaceY: 2 }}>
+              <Box sx={{ spacey: 2, pb: 2 }}>
                 <Box>
                   {/* <InputLabel htmlFor="content"  className="text-[8px] font-bold text-blue-500">Content</InputLabel> */}
                   {selectedComponent.type === DesignerElementType.field ? (
@@ -1105,12 +1105,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                             }
                           >
                             Left
-                          </button> 
+                          </button>
                           <button
                             className={
                               selectedComponent.barcodeProps.textAlign ===
                               "center"
-                              ? "ti-btn ti-btn-primary"
+                                ? "ti-btn ti-btn-primary"
                                 : "ti-btn bg-slate-100 hover:bg-slate-200 text-black"
                             }
                             onClick={() =>
@@ -1118,12 +1118,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                             }
                           >
                             Center
-                          </button> 
+                          </button>
                           <button
                             className={
                               selectedComponent.barcodeProps.textAlign ===
                               "right"
-                               ? "ti-btn ti-btn-primary-full"
+                                ? "ti-btn ti-btn-primary-full"
                                 : "ti-btn bg-slate-100 hover:bg-slate-200 text-black"
                             }
                             onClick={() =>
@@ -1131,32 +1131,40 @@ export default function ExtendedPDFBarcodeDesigner() {
                             }
                           >
                             Right
-                          </button> 
-                        
+                          </button>
                         </div>
                       </Box>
 
                       <Box>
-                        <InputLabel>Font</InputLabel>
-                        <Select
+                        <ERPDataCombobox
+                          id="font"
                           value={selectedComponent.barcodeProps.font}
+                          data={selectedComponent}
+                          label="Font"
+                          field={{
+                            id: "font",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={[
+                            { value: "Monospace", label: "Monospace" },
+                            { value: "Arial", label: "Arial" },
+                            { value: "Helvetica", label: "Helvetica" },
+                            { value: "Sans-serif", label: "Sans-serif" },
+                          ]}
                           onChange={(e) =>
                             handleBarcodePropertyChange("font", e.target.value)
                           }
-                          fullWidth
-                        >
-                          <MenuItem value="monospace">Monospace</MenuItem>
-                          <MenuItem value="arial">Arial</MenuItem>
-                          <MenuItem value="helvetica">Helvetica</MenuItem>
-                          <MenuItem value="sans-serif">Sans-serif</MenuItem>
-                        </Select>
+                        />
                       </Box>
 
                       <Box>
                         <InputLabel>Font Style</InputLabel>
                         <div className="flex space-x-2">
                           <Button
-                            bg-slate-100 hover:bg-slate-200 text-black={
+                            bg-slate-100
+                            hover:bg-slate-200
+                            text-black={
                               selectedComponent.barcodeProps.fontStyle ===
                               "bold"
                                 ? "contained"
@@ -1169,7 +1177,9 @@ export default function ExtendedPDFBarcodeDesigner() {
                             Bold
                           </Button>
                           <Button
-                            bg-slate-100 hover:bg-slate-200 text-black={
+                            bg-slate-100
+                            hover:bg-slate-200
+                            text-black={
                               selectedComponent.barcodeProps.fontStyle ===
                               "italic"
                                 ? "contained"
@@ -1185,8 +1195,8 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
 
                       <Box>
-                        <InputLabel>Font Size</InputLabel>
                         <ERPSlider
+                          label="Font Size"
                           value={selectedComponent.barcodeProps.fontSize}
                           onChange={(e) =>
                             handleBarcodePropertyChange(
@@ -1194,14 +1204,14 @@ export default function ExtendedPDFBarcodeDesigner() {
                               e.target.valueAsNumber
                             )
                           }
-                          min={8}
-                          max={48}
+                          min={0}
+                          max={50}
                         />
                       </Box>
 
                       <Box>
-                        <InputLabel>Text Margin</InputLabel>
                         <ERPSlider
+                          label="Text Margin"
                           value={selectedComponent.barcodeProps.textMargin}
                           onChange={(e) =>
                             handleBarcodePropertyChange(
@@ -1223,25 +1233,28 @@ export default function ExtendedPDFBarcodeDesigner() {
               <Box>
                 <InputLabel htmlFor="padding">Padding (px)</InputLabel>
                 <Box
-                  display="grid"
+                  display="grid gap-2"
                   gridTemplateColumns="repeat(2, 1fr)"
                   gap={2}
                 >
                   {(
                     ["top", "right", "bottom", "left"] as PaddingMarginSides[]
                   ).map((side) => (
-                    <TextField
+                   
+                    <ERPInput
+                      id={side}
+                      label={side.charAt(0).toUpperCase() + side.slice(1)}
                       key={side}
                       type="number"
+                      placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
                       value={pageProps.padding[side]}
+                      data={pageProps}
                       onChange={(e) =>
                         handlePagePropsChange("padding", {
                           ...pageProps.padding,
                           [side]: parseInt(e.target.value),
                         })
                       }
-                      placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
-                      fullWidth
                     />
                   ))}
                 </Box>
@@ -1256,33 +1269,40 @@ export default function ExtendedPDFBarcodeDesigner() {
                   {(
                     ["top", "right", "bottom", "left"] as PaddingMarginSides[]
                   ).map((side) => (
-                    <TextField
+                    
+                    <ERPInput
+                      id={side}
+                      label={side.charAt(0).toUpperCase() + side.slice(1)}
                       key={side}
                       type="number"
+                      placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
                       value={pageProps.margin[side]}
+                      data={pageProps}
                       onChange={(e) =>
                         handlePagePropsChange("margin", {
                           ...pageProps.margin,
                           [side]: parseInt(e.target.value),
                         })
                       }
-                      placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
-                      fullWidth
                     />
                   ))}
                 </Box>
               </Box>
               <Box>
-                <InputLabel htmlFor="borderColor">Border Color</InputLabel>
-                <TextField
+                <ERPInput
                   id="borderColor"
+                  label='Border Color'
+                 
                   type="color"
+                 
                   value={pageProps.borderColor}
+                  
+                  data={pageProps}
                   onChange={(e) =>
                     handlePagePropsChange("borderColor", e.target.value)
                   }
-                  fullWidth
                 />
+               
               </Box>
               <Box>
                 <InputLabel htmlFor="printer">Printer</InputLabel>

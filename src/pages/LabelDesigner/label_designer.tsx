@@ -1305,20 +1305,25 @@ export default function ExtendedPDFBarcodeDesigner() {
                
               </Box>
               <Box>
-                <InputLabel htmlFor="printer">Printer</InputLabel>
-                <Select
-                  value={pageProps.printer}
-                  onChange={(e) =>
+              <ERPDataCombobox
+                id="printer"
+                value={pageProps.printer}
+                data={selectedComponent}
+                label="Printer"
+                field={{
+                id: "printer",
+                valueKey: "value",
+                labelKey: "value",
+                }}
+                options={printers.map((printer) => ({
+                value: printer,
+                label: printer,
+                }))}
+                onChange={(e) =>
                     handlePagePropsChange("printer", e.target.value)
                   }
-                  fullWidth
-                >
-                  {printers.map((printer) => (
-                    <MenuItem key={printer} value={printer}>
-                      {printer}
-                    </MenuItem>
-                  ))}
-                </Select>
+            />
+               
               </Box>
             </Box>
           </Box>

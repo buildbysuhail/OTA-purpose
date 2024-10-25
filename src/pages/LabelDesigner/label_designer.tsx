@@ -640,9 +640,13 @@ export default function ExtendedPDFBarcodeDesigner() {
             });
 
             // Clear any previous error for this component
-            setBarcodeErrors((prevErrors: any[]) => {
-              return prevErrors.filter((x: any) => x.id !== component.id);
-            });
+            const pst = barcodeErrors?.find((x: any) => x.id == component.id);
+            if(pst != undefined && pst?.error != undefined && pst?.error != '')
+            {
+                setBarcodeErrors((prevErrors: any[]) => {
+                return prevErrors.filter((x: any) => x.id !== component.id);
+                });
+            }
           } catch (error) {
             console.error(
               `Error generating barcode for component ${component.id}:`,
@@ -661,7 +665,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         }
       }
     },
-    [barcodeErrors]
+    []
   );
   const handlePropertyChange = (
     property: keyof PlacedComponent,
@@ -681,7 +685,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   useEffect(() => {
     debugger;
     placedComponents.forEach(generateBarcode);
-  }, [placedComponents, barcodeErrors]);
+  }, [placedComponents,barcodeErrors]);
 
   const renderComponent = (component: PlacedComponent) => {
     const style: React.CSSProperties = {
@@ -809,17 +813,14 @@ export default function ExtendedPDFBarcodeDesigner() {
             {/* <button onClick={() => setIsPreviewOpen(true)} className='bg-primary'>
                             Preview
                         </button> */}
-            <button
+            <ERPButton
               title="Save"
               onClick={manageSaveTemplate}
-              className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
+              variant="primary"
+              loading={loading}
             >
-              <img src={save_svg} className="w-5 h-5 text-red-500" />{" "}
-              <span className="text-sm">Save</span>
-              {loading && (
-                <div className=" bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>
-              )}
-            </button>
+              
+            </ERPButton>
             {/* <button onClick={handleDownloadPDF} className='bg-primary'>
                             <Download className="w-4 h-4 mr-2" />
                             Download PDF

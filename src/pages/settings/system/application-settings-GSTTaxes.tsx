@@ -554,6 +554,7 @@ const ERPSettingsFormGSTTaxes = () => {
             id="inputCalamityCessAccount"
             value={formState?.inputCalamityCessAccount}
             data={formState}
+            disabled={true}
             label={t("input_calamity_cess_account")}
             field={{
               id: "inputCalamityCessAccount",

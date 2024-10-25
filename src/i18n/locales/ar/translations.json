@@ -72,7 +72,7 @@
   "vouchers": "قسائم",
   "barcode_print": "طباعة الباركود",
   "headers_footers": "الرؤوس والتذييلات",
-  "invoice_designer": "مصمم الفواتير",
+  "invoice_designer":"مصمم القوالب",
   "commands": "الأوامر",
   "user_action_report": "تقرير نشاط المستخدم",
   "reminders": "التذكيرات",

@@ -1,25 +1,14 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
-import {
-  toggleAccountGroupPopup,
-  toggleSMSIntegrationPopup,
-} from "../../../redux/slices/popup-reducer";
-import {
-  initialSMSIntegration,
-  SMSIntegrationData,
-} from "./sms-integration-type";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useDispatch } from "react-redux";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../redux/types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import SmsDemo from "./sms-demo";
+import { SMSIntegrationData } from "./sms-integration-type";
+import { NotificationsProvider, NotificationsChannel } from "../../../enums/notification-chanal";
 
 const api = new APIClient();
 interface information {
@@ -49,11 +38,11 @@ const SMSIntegration: React.FC = () => {
       }
     }, [isOpen]);
 
-    const loadSettings =  useCallback( async() => { 
+    const loadSettings = useCallback(async () => {
       setLoading(true);
       try {
         const response: SMSIntegrationData[] = await api.getAsync(
-          `${Urls.notification_provider}GetByChannel?channel=1`
+          `${Urls.notification_provider}GetByChannel?channel=2`
         );
 
         setFormState(response);
@@ -75,7 +64,7 @@ const SMSIntegration: React.FC = () => {
       } finally {
         setLoading(false);
       }
-    },[]);
+    }, []);
 
     const handleFieldChange = (settingName: any, value: any) => {
       setInformation((prevSettings = {} as information) => ({
@@ -85,15 +74,17 @@ const SMSIntegration: React.FC = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
+      debugger;
       e.preventDefault();
       const configJson = JSON.stringify(information);
-      const updatedFormState = formState.map((item) => ({
-        ...item,
-        configJson,
-      }));
+      const requestBody = {
+        provider: NotificationsProvider.TwillioWhatsapp,
+        channel: NotificationsChannel.Whatsapp,
+        configJson: configJson,
+        isEnable: true,
+      };
 
       try {
-        const requestBody = updatedFormState[0];
         const response = await api.post(
           `${Urls.notification_provider}`,
           requestBody
@@ -137,7 +128,7 @@ const SMSIntegration: React.FC = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="mb-4">
-               
+
                 <ERPInput
                   id="AccountSid"
                   value={information.AccountSid}
@@ -257,7 +248,7 @@ const SMSIntegration: React.FC = () => {
             </a>
           </li>
         </ul>
-        <SmsDemo/>
+        <SmsDemo />
       </div>
 
       <ERPModal

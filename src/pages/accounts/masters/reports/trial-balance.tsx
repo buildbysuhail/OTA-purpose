@@ -26,28 +26,22 @@ const TrialBalance = () => {
   const [filter, setFilter] =useState<TrialBalance>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
+     {
+      dataField: "ledgerID",
+      caption: t("ledger_id"),
+      dataType: "number",
       allowSearch: true,
-      allowFiltering: true,
-      width: 50,
-    },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
+      visible:false,
       allowFiltering: true,
       width: 150,
+    },
+
+    {
+      dataField: "particulars",
+      caption: t("particulars"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
     },
     {
       dataField: "debit",
@@ -55,13 +49,22 @@ const TrialBalance = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
     {
       dataField: "credit",
       caption: t("credit"),
       dataType: "number",
       allowSearch: true,
+      allowFiltering: true,
+      width: 250,
+    },
+    {
+      dataField: "isGroup",
+      caption: t("is_group"),
+      dataType: "boolean",
+      allowSearch: true,
+      visible:false,
       allowFiltering: true,
       width: 150,
     },
@@ -75,8 +78,9 @@ const TrialBalance = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  remoteOperations={{filtering:false,paging:false,sorting:false}}
+                  gridHeader={t("trial_balance")}
+                  dataUrl= {Urls.acc_reports_trial_balance}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

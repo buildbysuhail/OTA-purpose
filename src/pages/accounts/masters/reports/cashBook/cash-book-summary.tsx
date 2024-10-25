@@ -20,6 +20,7 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import CashBookMonthWise from "./cash-book-monthwise";
 
 interface CashBookSummary {
 
@@ -184,6 +185,15 @@ const CashBookSummary = () => {
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
+                  // CashBookMonthWise
+                  childPopupProps={{
+                    content: <CashBookMonthWise />,
+                    title: "sds",
+                    isForm: false,
+                    width: "mw-100",
+                    buttonField: "SiNo",
+                    bodyProps: "ledgerID"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

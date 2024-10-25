@@ -32,7 +32,7 @@ interface Inventory {
   setLastSalesRateAsProctSaleRate: boolean;
   setLastPurchaseRateAsProctRate: boolean;
   setAvgPurchaseCostWithStdPurRate: boolean;
-  updatePurchasePriceOnPurchaseTransfer: boolean;
+  updatePurhasePriceUpdateOnPurchaseBT: boolean;
   showCashSalesSeperateMenu: boolean;
   showNonStockItemsinSales: boolean;
   defaultBTOAccount: number;
@@ -90,7 +90,7 @@ const InventorySettingsForm = () => {
     setLastSalesRateAsProctSaleRate: false,
     setLastPurchaseRateAsProctRate: false,
     setAvgPurchaseCostWithStdPurRate: false,
-    updatePurchasePriceOnPurchaseTransfer: false,
+    updatePurhasePriceUpdateOnPurchaseBT: false,
     showCashSalesSeperateMenu: false,
     showNonStockItemsinSales: false,
     defaultBTOAccount: 0,
@@ -923,14 +923,14 @@ const InventorySettingsForm = () => {
             />
 
             <ERPCheckbox
-              id="updatePurchasePriceOnPurchaseTransfer"
-              checked={formState.updatePurchasePriceOnPurchaseTransfer}
+              id="updatePurhasePriceUpdateOnPurchaseBT"
+              checked={formState.updatePurhasePriceUpdateOnPurchaseBT}
               data={formState}
               label={t("update_purchase_price")}
               onChangeData={(data: any) =>
                 handleFieldChange(
-                  "updatePurchasePriceOnPurchaseTransfer",
-                  data.updatePurchasePriceOnPurchaseTransfer
+                  "updatePurhasePriceUpdateOnPurchaseBT",
+                  data.updatePurhasePriceUpdateOnPurchaseBT
                 )
               }
             />

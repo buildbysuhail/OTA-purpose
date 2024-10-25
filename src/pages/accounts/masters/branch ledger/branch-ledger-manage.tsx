@@ -58,7 +58,16 @@ export const BranchLedgerManage = () => {
           field={{
             id: "purchaseLedgerID",
             required: true,
-            getListUrl: formState?.data.refBranchID ? `${Urls.data_PurchaseAccount}${formState?.data.refBranchID}` : `${Urls.data_PurchaseAccount}`,
+            // getListUrl: (() => {
+            //   if (formState?.data?.refBranchID) {
+            //     return `${Urls.data_PurchaseAccount}${formState.data.refBranchID}`;
+            //   }
+           
+            // }),
+            freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null ? true : false,
+            getListUrl: formState?.data?.refBranchID
+            ? `${Urls.data_PurchaseAccount}${formState.data.refBranchID}`
+            : `${Urls.data_PurchaseAccount}`,
             valueKey: "id",
             labelKey: "name",
           }}

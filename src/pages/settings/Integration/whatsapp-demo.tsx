@@ -120,9 +120,9 @@ export default function Component() {
             <span className="font-semibold">Customer</span>
           </div>
           <div className="flex items-center">
-          <i className="ti ti-phone mr-4 text-[15px]"></i>
-          <i className="ti ti-video mr-4 text-[15px]"></i>
-          <i className="ti ti-dots-vertical text-[15px]"></i>
+            <i className="ti ti-phone mr-4 text-[15px]"></i>
+            <i className="ti ti-video mr-4 text-[15px]"></i>
+            <i className="ti ti-dots-vertical text-[15px]"></i>
           </div>
         </div>
 
@@ -188,12 +188,14 @@ export default function Component() {
             <a
               key={item.name}
               href="#"
-              className={`flex items-center px-6 py-2 mt-4 duration-200 border-r-4 ${
-                selectedMenu === item.name
-                  ? "bg-gray border-green text-green"
-                  : "border-transparent hover:bg-gray hover:border-gray"
-              }`}
-              onClick={() => setSelectedMenu(item.name)}
+              className={`flex items-center px-6 py-2 mt-4 duration-200 border-r-4 ${selectedMenu === item.name
+                ? "bg-gray border-green text-green"
+                : "border-transparent hover:bg-gray hover:border-gray"
+                }`}
+              onClick={(e) => {
+                e.preventDefault();
+                setSelectedMenu(item.name);
+              }}
             >
               {/* {item.icon} */}
               <span className="mx-4">{item.name}</span>

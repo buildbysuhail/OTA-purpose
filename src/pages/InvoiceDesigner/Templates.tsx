@@ -77,12 +77,12 @@ const Templates = ({ }) => {
 
   const setDefaultTemplate = async (id: any) => {
     const res = await appDispatch(
-      patchAction({apiUrl: Urls.templates, params:{ is_default: true }, id}) as any
+      patchAction({ apiUrl: Urls.templates, params: { is_default: true }, id }) as any
     ).unwrap();
-      handleResponse(res, async() => {
-        await getTemplates();
-        ERPToast.show("Selected template has been set as default.", "success");
-      });
+    handleResponse(res, async () => {
+      await getTemplates();
+      ERPToast.show("Selected template has been set as default.", "success");
+    });
   };
 
   const handleDeleteTemplate = async (temp: any) => {
@@ -91,41 +91,34 @@ const Templates = ({ }) => {
     } else if (temp?.is_primary) {
       ERPToast.show("Primary template cannot be deleted.", "warning");
     } else {
-      showAlert(
-        "Delete",
-        "Are you sure about deleting the template ?",
-        [{ text: "Delete", type: "danger" }, "Cancel"],
-        async(index: any) => {
-          if (index == 0) {
-            var res = await appDispatch(deleteAction({apiUrl:Urls.templates, id:temp?.id}) as any).unwrap();
-              handleResponse(res, () => {
-                getTemplates();
-                ERPToast.show("Template deleted successfully", "success");
-              });
-          }
-        },
-        null,
-        null,
-        <div className="bg-[#FEE2E2] rounded-full w-10 h-10 flex justify-center items-center mr-2">
-          <TrashIcon className="text-red-500 w-5" />
-        </div>
-      );
+      const confirmDelete = window.confirm("Are you sure about deleting the template?");
+      if (confirmDelete) {
+        console.log("Deleting template with ID:", temp?.id);
+        var res = await appDispatch(deleteAction({ apiUrl: Urls.templates, id: temp?.id }) as any).unwrap();
+        console.log("Delete action response:", res);
+        handleResponse(res, () => {
+          getTemplates();
+          ERPToast.show("Template deleted successfully", "success");
+        });
+      } else {
+        console.log("Deletion canceled");
+      }
     }
   };
 
   const getTemplates = async () => {
     debugger;
     setLoading(true);
-    var res = await api.getAsync(Urls.templates,`template_group=${templateGroup}`);
-    handlePlainResponse(res,() => {
+    var res = await api.getAsync(Urls.templates, `template_group=${templateGroup}`);
+    handlePlainResponse(res, () => {
       setTempData(res);
-    },undefined, false, false)
-      setLoading(false);
-      
-      var resCrm = await api.getAsync(Urls.crm_templates,`template_group=${templateGroup}`);
-      handlePlainResponse(resCrm,() => {
-        setTempCRMData(resCrm);
-      },undefined, false, false)
+    }, undefined, false, false)
+    setLoading(false);
+
+    var resCrm = await api.getAsync(Urls.crm_templates, `template_group=${templateGroup}`);
+    handlePlainResponse(resCrm, () => {
+      setTempCRMData(resCrm);
+    }, undefined, false, false)
   };
 
   useEffect(() => {
@@ -230,7 +223,7 @@ const Templates = ({ }) => {
                           {temp?.is_default ? (
                             <div className="bg-green-500 text-white text-[10px] px-2 py-1 rounded">Default</div>
                           ) : (
-                            <div className="bg-accent text-white text-[10px] px-2 py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
+                            <div className="bg-accent text-black text-[10px] px-2 py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
                               Set as Default
                             </div>
                           )}
@@ -240,13 +233,13 @@ const Templates = ({ }) => {
                                 <PencilIcon
                                   title="Edit"
                                   className="w-3 text-accent cursor-pointer"
-                                  onClick={() =>  templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) :navigate(`/invoice_designer/${temp?.id}`)}
+                                  onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
                                 />
                               </div>
                             )}
                             {!temp?.is_primary && (
                               <div>
-                                <TrashIcon title="Delete" className="w-4 text-red-500 cursor-pointer" onClick={() => handleDeleteTemplate(temp)} />
+                                <TrashIcon title="Delete" className="w-4 text-red cursor-pointer" onClick={() => handleDeleteTemplate(temp)} />
                               </div>
                             )}
                           </div>
@@ -329,7 +322,7 @@ interface ChooseTemplateProps {
 const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: ChooseTemplateProps) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   const handleChooseTemplate = async (template: TemplateState) => {
     const length = tempData?.length || 0;
 
@@ -343,20 +336,20 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
     debugger;
     const propertiesState = {
-       ...res.propertiesState, 
-       templateName: "Untitled Template " + (length + 1) 
-      };
-    const _template  = {
+      ...res.propertiesState,
+      templateName: "Untitled Template " + (length + 1)
+    };
+    const _template = {
       ...res,
-      id:null,
-      templateName:"",
+      id: null,
+      templateName: "",
       propertiesState: propertiesState
     }
     dispatch(
       setTemplate(
         _template
-    ));
-    templateGroup == "barcode" ? navigate(`/label-designer/new`) :navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+      ));
+    templateGroup == "barcode" ? navigate(`/label-designer/new`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };
 
   return (

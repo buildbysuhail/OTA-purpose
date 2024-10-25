@@ -12,7 +12,7 @@ export const handleResponse = (
   if (res != undefined && res != null) {
     if (res?.isOk != undefined && res?.isOk != null) {
       if (res.isOk) {
-        if(showSuccess) ERPToast.showWith(res?.message, "success");
+        if (showSuccess) ERPToast.showWith(res?.message, "success");
         action && action();
       } else {
         if (warn) ERPToast.showWith(res?.message, "warning");
@@ -37,7 +37,7 @@ export const handlePlainResponse = (
   showSuccess: boolean = true
 ) => {
   if (res != undefined && res != null) {
-    if(showSuccess) ERPToast.showWith(res?.message, "success");
+    if (showSuccess) ERPToast.showWith(res?.message, "success");
     action && action();
   } else {
     failAction && failAction();

@@ -32,9 +32,37 @@ export interface TemplateState {
   itemTableState?: ItemTableState;
   totalState?: TotalState;
   footerState?: FooterState;
-  barcodeState?: BarcodeState;
+  barcodeState?: PlacedComponent[];
+}
+export enum DesignerElementType {
+  text = 1,
+  barcode = 2,
+  field = 3,
 }
 
+export interface PlacedComponent {
+  id: number;
+  type: DesignerElementType;
+  content: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  barcodeProps?: {
+    format: string;
+    barWidth: number;
+    height: number;
+    margin: number;
+    background: string;
+    lineColor: string;
+    showText: boolean;
+    textAlign: "left" | "center" | "right";
+    font: string;
+    fontSize: number;
+    textMargin: number;
+    fontStyle: "normal" | "bold" | "italic";
+  };
+}
 export interface PropertiesState {
   template_type?: TemplateTypes;
   template_kind?: TemplateKindType;
@@ -437,35 +465,6 @@ export interface FooterState {
   show_page_number?: boolean;
 
   bg_image_footer_position?: string;
-}
-export interface BarcodeState {
-  barcodeType?: string;
-  top?: number;
-  left?: number;
-  width?: number;
-  height?: number;
-  hGaps?: number;
-  vGaps?: number;
-  rows?: number;
-  cols?: number;
-  image?: string;
-  printer?: boolean;
-  length?: number;
-  angle?: number;
-  field?: string;
-  value?: string;
-  format?: string;
-  align?: 'Left' | 'Center' | 'Right';
-  font?: string;
-  fontSize?: number;
-  bold?: boolean;
-  italic?: boolean;
-  underline?: boolean;
-  thermalPrintHeight?: number;
-  thermalPrintWidth?: number;
-  deleted?: boolean;
-  cleared?: boolean;
-  autoSave?:boolean;
 }
 export const initialTemplateState: ActionState<TemplateState> = {
   loading: false,

@@ -53,36 +53,10 @@ import { handleResponse } from "../../utilities/HandleResponse";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../components/ERPComponents/erp-button";
+import { DesignerElementType, PlacedComponent } from "../InvoiceDesigner/Designer/interfaces";
 
-enum DesignerElementType {
-  text = 1,
-  barcode = 2,
-  field = 3,
-}
 
-interface PlacedComponent {
-  id: number;
-  type: DesignerElementType;
-  content: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  barcodeProps?: {
-    format: string;
-    barWidth: number;
-    height: number;
-    margin: number;
-    background: string;
-    lineColor: string;
-    showText: boolean;
-    textAlign: "left" | "center" | "right";
-    font: string;
-    fontSize: number;
-    textMargin: number;
-    fontStyle: "normal" | "bold" | "italic";
-  };
-}
+
 
 interface PageProps {
   padding: {
@@ -201,6 +175,7 @@ const SaveDialog: React.FC<SaveDialogProps> = ({
                 <div className="text-gray-600">Content:</div>
                 <div className="font-mono">{comp.content}</div>
                 <div className="text-gray-600">Position:</div>
+                <div className="font-mono">{comp.type}</div>
                 <div className="font-mono">
                   ({Math.round(comp.x)}, {Math.round(comp.y)})
                 </div>
@@ -554,6 +529,15 @@ export default function ExtendedPDFBarcodeDesigner() {
     const activeTemplate = {
       ...templateData.activeTemplate,
       thumbImage: dataUrl,
+      barcodeState: placedComponents,
+      background_image: null,
+        background_image_header: null,
+        background_image_footer: null,
+        signature_image: null,
+        headerState: null,
+        itemTableState: null,
+        totalState: null,
+        footerState: null,
       propertiesState: {
         ...templateData.activeTemplate.propertiesState,
         template_group: "barcode",
@@ -575,7 +559,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     if (!templateData?.activeTemplate?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
     } else {
-      const node = document.getElementById("invoicePreview");
+      const node = document.getElementById("teplate-container");
       if (node) {
         try {
           const canvas = await html2canvas(node);
@@ -848,6 +832,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         >
           <div
             ref={canvasRef}
+            id="teplate-container"
             className="bg-white shadow-sm mx-auto max-h-[calc(100vh-8rem)] overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100  relative"
             style={{
               width: "8.5in",

@@ -4,6 +4,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { Settings, Plus, Minus, Menu, Edit, Scan, Save, Printer, Download } from 'lucide-react';
 import JsBarcode from "jsbarcode";
 import { ReactBarcode, Renderer } from 'react-jsbarcode';
+import html2canvas from "html2canvas";
+import save_svg from "../../assets/svg/save.svg";
 import ERPModal from '../../components/ERPComponents/erp-modal';
 import ERPDataCombobox from '../../components/ERPComponents/erp-data-combobox';
 import {
@@ -22,6 +24,15 @@ import {
 } from '@mui/material';
 import jsPDF from 'jspdf';
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from '@react-pdf/renderer';
+import ERPSlider from '../../components/ERPComponents/erp-slider';
+import ERPToast from '../../components/ERPComponents/erp-toast';
+import { TemplateReducerState } from '../../redux/reducers/TemplateReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { setTemplate } from '../../redux/slices/templates/reducer';
+import Urls from '../../redux/urls';
+import { APIClient } from '../../helpers/api-client';
+import { handleResponse } from '../../utilities/HandleResponse';
 
 enum DesignerElementType {
     text = 1,
@@ -45,10 +56,11 @@ interface PlacedComponent {
         background: string;
         lineColor: string;
         showText: boolean;
-        textAlign: string;
+        textAlign: 'left' | 'center' | 'right';
         font: string;
         fontSize: number;
         textMargin: number;
+        fontStyle: 'normal' | 'bold' | 'italic';
     };
 }
 
@@ -209,6 +221,7 @@ interface PDFDownloadButtonProps {
     components: PlacedComponent[];
     pageProps: PageProps;
 }
+const api = new APIClient();
 export default function ExtendedPDFBarcodeDesigner() {
     const [zoom, setZoom] = useState(100);
     const [placedComponents, setPlacedComponents] = useState<PlacedComponent[]>([]);
@@ -227,6 +240,11 @@ export default function ExtendedPDFBarcodeDesigner() {
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
+
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
     const components = [
         { id: DesignerElementType.text, label: 'Text', icon: <Edit className="w-4 h-4" />, defaultContent: 'Text Field' },
         { id: DesignerElementType.barcode, label: 'Barcode', icon: <Scan className="w-4 h-4" />, defaultContent: '123456789012' },
@@ -268,7 +286,8 @@ export default function ExtendedPDFBarcodeDesigner() {
                             textAlign: "center",
                             font: "monospace",
                             fontSize: 21,
-                            textMargin: 5
+                            textMargin: 5,
+                            fontStyle: "normal"
                         }
                     })
                 };
@@ -283,18 +302,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         setSelectedComponent(component);
     };
 
-    const handlePropertyChange = (property: keyof PlacedComponent, value: string | number) => {
-        debugger;
-        if (selectedComponent) {
-            const updatedComponent = { ...selectedComponent, [property]: value };
-            const updatedComponents = placedComponents.map(comp =>
-              comp.id === selectedComponent.id ? updatedComponent : comp
-            );
-            setPlacedComponents(updatedComponents);
-            setSelectedComponent(updatedComponent);
-            generateBarcode(updatedComponent);
-          }
-        };
+
 
     const handleBarcodePropertyChange = (property: any, value: string | number | boolean) => {
         debugger;
@@ -346,7 +354,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         setDraggingComponent(null);
     };
 
-    const handleSave = () => {
+    const [loading, setLoading] = useState(false);
+    const handleSave = async (dataUrl: string) => {
         setIsSaveDialogOpen(true);
         const designData = {
             components: placedComponents,
@@ -354,8 +363,44 @@ export default function ExtendedPDFBarcodeDesigner() {
             timestamp: new Date().toISOString()
         };
         localStorage.setItem('pdfDesignState', JSON.stringify(designData));
-    };
+        const activeTemplate = {
+            ...templateData.activeTemplate,
+            thumbImage: dataUrl,
+            propertiesState: {
+                ...templateData.activeTemplate.propertiesState,
+                template_group: "barcode"
+            }
 
+        }
+        await dispatch(setTemplate(activeTemplate));
+        setLoading(true);
+        var res = await api.postAsync(Urls.templates, activeTemplate);
+        debugger;
+        setLoading(false);
+        handleResponse(res, () => {
+            ERPToast.show("Template saved successfully", "success");
+            navigate(`/templates?template_group=barcode`);
+        });
+        setLoading(false);
+    };
+    const manageSaveTemplate = async () => {
+        debugger;
+        if (!templateData?.activeTemplate?.propertiesState?.templateName) {
+            ERPToast.show("Template name is required", "error");
+        } else {
+            const node = document.getElementById("invoicePreview");
+            if (node) {
+                try {
+                    const canvas = await html2canvas(node);
+                    const dataUrl = canvas.toDataURL("image/png");
+                    if (templateData?.activeTemplate && id === "new") await handleSave(dataUrl);
+                } catch (error) {
+                    console.error("Error capturing canvas:", error);
+                }
+            }
+        }
+
+    };
     const handlePagePropsChange = (property: keyof PageProps, value: any) => {
         setPageProps(prevProps => ({
             ...prevProps,
@@ -382,60 +427,71 @@ export default function ExtendedPDFBarcodeDesigner() {
     };
 
     type PaddingMarginSides = 'top' | 'right' | 'bottom' | 'left';
-    
+
     const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
-  
+
     const generateBarcode = useCallback((component: PlacedComponent) => {
         debugger
-      if (component.type === DesignerElementType.barcode && component.barcodeProps) {
-        const canvasElement = barcodeRefs.current[component.id];
-        if (canvasElement) {
-            try {
-                JsBarcode(canvasElement, component.content, {
-                  ...component.barcodeProps,
-                  width: component.barcodeProps.barWidth,
-                  height: component.barcodeProps.height,
-                  displayValue: component.barcodeProps.showText,
-                  valid: (valid: boolean) => {
-                    if (!valid) {
-                      throw new Error("Invalid barcode");
-                    }
-                  },
-                });
-                
-                // Clear any previous error for this component
-                setBarcodeErrors((prevErrors: any[]) => {
-                  return prevErrors.filter((x: any) => x.id !== component.id);
-                });
-              
-              } catch (error) {
-                console.error(`Error generating barcode for component ${component.id}:`, error);
-      
-                // Add error to barcodeErrors
-                setBarcodeErrors((prevErrors: any[]) => [
-                  ...prevErrors,
-                  { id: component.id, error: 'Error generating barcode for component' }
-                ]);
-              }
-              
-        }
-      }
-    }, [barcodeErrors]);
+        if (component.type === DesignerElementType.barcode && component.barcodeProps) {
+            const canvasElement = barcodeRefs.current[component.id];
+            if (canvasElement) {
+                try {
+                    JsBarcode(canvasElement, component.content, {
+                        ...component.barcodeProps,
+                        width: component.barcodeProps.barWidth,
+                        height: component.barcodeProps.height,
+                        displayValue: component.barcodeProps.showText,
+                        valid: (valid: boolean) => {
+                            if (!valid) {
+                                throw new Error("Invalid barcode");
+                            }
+                        },
+                    });
 
+                    // Clear any previous error for this component
+                    setBarcodeErrors((prevErrors: any[]) => {
+                        return prevErrors.filter((x: any) => x.id !== component.id);
+                    });
+
+                } catch (error) {
+                    console.error(`Error generating barcode for component ${component.id}:`, error);
+
+                    // Add error to barcodeErrors
+                    setBarcodeErrors((prevErrors: any[]) => [
+                        ...prevErrors,
+                        { id: component.id, error: 'Error generating barcode for component' }
+                    ]);
+                }
+
+            }
+        }
+    }, [barcodeErrors]);
+    const handlePropertyChange = (property: keyof PlacedComponent, value: string | number) => {
+        debugger;
+        if (selectedComponent) {
+            const updatedComponent = { ...selectedComponent, [property]: value };
+            const updatedComponents = placedComponents.map(comp =>
+                comp.id === selectedComponent.id ? updatedComponent : comp
+            );
+            setPlacedComponents(updatedComponents);
+            setSelectedComponent(updatedComponent);
+            generateBarcode(updatedComponent);
+        }
+    };
     useEffect(() => {
         debugger;
         placedComponents.forEach(generateBarcode);
-      }, [placedComponents,barcodeErrors]);
+    }, [placedComponents, barcodeErrors]);
 
     const renderComponent = (component: PlacedComponent) => {
         const style: React.CSSProperties = {
             position: 'absolute',
             left: `${component.x}px`,
             top: `${component.y}px`,
-            width: `${component.width}px`,
-            height: `${component.height}px`,
-            border: selectedComponent?.id === component.id ? '2px solid #2196f3' : '1px dashed #ccc',
-            padding: '4px',
+            width: component.type == DesignerElementType.barcode ? 'auto' : `${component.width}px`,
+            height: component.type == DesignerElementType.barcode ? 'auto' : `${component.height}px`,
+            border: selectedComponent?.id === component.id ? '2px solid #2196f3' : component.type == DesignerElementType.barcode ? '' : '1px dashed #ccc',
+            padding: component.type == DesignerElementType.barcode ? '0px' : '4px',
             cursor: 'move',
             backgroundColor: 'white',
             userSelect: 'none'
@@ -445,29 +501,29 @@ export default function ExtendedPDFBarcodeDesigner() {
             case DesignerElementType.barcode:
                 return (
                     <div
-                      key={component.id}
-                      style={style}
-                      onClick={() => handleComponentClick(component)}
-                      onMouseDown={(e) => handleMouseDown(e, component)}
+                        key={component.id}
+                        style={style}
+                        onClick={() => handleComponentClick(component)}
+                        onMouseDown={(e) => handleMouseDown(e, component)}
                     >
-                      {barcodeErrors && barcodeErrors?.find((x: any) => x.id == component.id) ? (
-                       <>
-                        <div className="text-red-500 text-sm">{barcodeErrors?.find((x: any) => x.id == component.id).error}</div>
-                        <canvas
-                          ref={el => (barcodeRefs.current[component.id] = el)}
-                          width={component.width}
-                          height={component.height}
-                        />
-                       </>
-                      ) : (
-                        <canvas
-                          ref={el => (barcodeRefs.current[component.id] = el)}
-                          width={component.width}
-                          height={component.height}
-                        />
-                      )}
+                        {barcodeErrors && barcodeErrors?.find((x: any) => x.id == component.id) ? (
+                            <>
+                                <div className="text-red-500 text-sm">{barcodeErrors?.find((x: any) => x.id == component.id).error}</div>
+                                <canvas
+                                    ref={el => (barcodeRefs.current[component.id] = el)}
+                                    width={component.width}
+                                    height={component.height}
+                                />
+                            </>
+                        ) : (
+                            <canvas
+                                ref={el => (barcodeRefs.current[component.id] = el)}
+                                width={component.width}
+                                height={component.height}
+                            />
+                        )}
                     </div>
-                  );
+                );
             case DesignerElementType.text:
             case DesignerElementType.field:
                 return (
@@ -526,29 +582,33 @@ export default function ExtendedPDFBarcodeDesigner() {
                         </div>
                     </div>
                     <div className="flex space-x-2">
-                        <button onClick={() => setIsPreviewOpen(true)} className='bg-primary'>
+                        {/* <button onClick={() => setIsPreviewOpen(true)} className='bg-primary'>
                             Preview
+                        </button> */}
+                        <button
+                            title="Save"
+                            onClick={manageSaveTemplate}
+                            className="flex gap-1 bg-primary text-white relative hover:bg-blue-600 bg-accent py-2 px-3 rounded disabled:bg-accent/60 overflow-hidden "
+                        >
+                            <img src={save_svg} className="w-5 h-5 text-red-500" /> <span className="text-sm">Save</span>
+                            {loading && <div className=" bg-white top-2 left-2 h-5 w-5 rounded-full animate-ping absolute"></div>}
                         </button>
-                        <button onClick={handleSave} className='bg-primary'>
-                            <Save className="w-4 h-4 mr-2" />
-                            Save
-                        </button>
-                        <button onClick={handleDownloadPDF} className='bg-primary'>
+                        {/* <button onClick={handleDownloadPDF} className='bg-primary'>
                             <Download className="w-4 h-4 mr-2" />
                             Download PDF
-                        </button>
-                        <PDFDownloadLink
+                        </button> */}
+                        {/* <PDFDownloadLink
                             document={<PDFDocument components={placedComponents} pageProps={pageProps} />}
                             fileName="barcode-design.pdf"
                             className="flex items-center px-3 py-2 bg-primary text-white rounded hover:bg-primary/90"
-                        >
-                            {/* {({ loading }) => (
+                        > */}
+                        {/* {({ loading }) => (
         <>
           <Download className="w-4 h-4 mr-2" />
           {loading ? 'Generating PDF...' : 'Download PDF'}
         </>
       )} */}
-                        </PDFDownloadLink>
+                        {/* </PDFDownloadLink> */}
                     </div>
                 </div>
 
@@ -654,7 +714,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                                     />
                                 </Box>
                                 {selectedComponent.type === DesignerElementType.barcode && selectedComponent.barcodeProps && (
-                                    <>
+                                    <div className="space-y-4">
                                         <Box>
                                             <InputLabel htmlFor="format">Barcode Format</InputLabel>
                                             <Select
@@ -667,26 +727,145 @@ export default function ExtendedPDFBarcodeDesigner() {
                                                 ))}
                                             </Select>
                                         </Box>
+
                                         <Box>
-                                            <InputLabel htmlFor="barWidth">Bar Width</InputLabel>
-                                            <TextField
-                                                id="barWidth"
-                                                type="number"
+                                            <InputLabel>Bar Width</InputLabel>
+                                            <ERPSlider
                                                 value={selectedComponent.barcodeProps.barWidth}
-                                                onChange={(e) => handleBarcodePropertyChange('barWidth', parseInt(e.target.value, 10))}
+                                                onChange={(e) => handleBarcodePropertyChange('barWidth', e.target.valueAsNumber)}
+                                                min={1}
+                                                max={10}
+                                            />
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Height</InputLabel>
+                                            <ERPSlider
+                                                value={selectedComponent.barcodeProps.height}
+                                                onChange={(e) => handleBarcodePropertyChange('height', e.target.valueAsNumber)}
+                                                min={10}
+                                                max={200}
+                                            />
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Margin</InputLabel>
+                                            <ERPSlider
+                                                value={selectedComponent.barcodeProps.margin}
+                                                onChange={(e) => handleBarcodePropertyChange('margin', e.target.valueAsNumber)}
+                                                min={0}
+                                                max={50}
+                                            />
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Background Color</InputLabel>
+                                            <TextField
+                                                type="color"
+                                                value={selectedComponent.barcodeProps.background}
+                                                onChange={(e) => handleBarcodePropertyChange('background', e.target.value)}
                                                 fullWidth
                                             />
                                         </Box>
-                                        <FormControlLabel
-                                            control={
-                                                <Checkbox
-                                                    checked={selectedComponent.barcodeProps.showText}
-                                                    onChange={(e) => handleBarcodePropertyChange('showText', e.target.checked)}
-                                                />
-                                            }
-                                            label="Show Text"
-                                        />
-                                    </>
+
+                                        <Box>
+                                            <InputLabel>Line Color</InputLabel>
+                                            <TextField
+                                                type="color"
+                                                value={selectedComponent.barcodeProps.lineColor}
+                                                onChange={(e) => handleBarcodePropertyChange('lineColor', e.target.value)}
+                                                fullWidth
+                                            />
+                                        </Box>
+
+                                        <Box className="flex space-x-4">
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={selectedComponent.barcodeProps.showText}
+                                                        onChange={(e) => handleBarcodePropertyChange('showText', e.target.checked)}
+                                                    />
+                                                }
+                                                label="Show Text"
+                                            />
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Text Align</InputLabel>
+                                            <div className="flex space-x-2">
+                                                <Button
+                                                    variant={selectedComponent.barcodeProps.textAlign === 'left' ? 'contained' : 'outlined'}
+                                                    onClick={() => handleBarcodePropertyChange('textAlign', 'left')}
+                                                >
+                                                    Left
+                                                </Button>
+                                                <Button
+                                                    variant={selectedComponent.barcodeProps.textAlign === 'center' ? 'contained' : 'outlined'}
+                                                    onClick={() => handleBarcodePropertyChange('textAlign', 'center')}
+                                                >
+                                                    Center
+                                                </Button>
+                                                <Button
+                                                    variant={selectedComponent.barcodeProps.textAlign === 'right' ? 'contained' : 'outlined'}
+                                                    onClick={() => handleBarcodePropertyChange('textAlign', 'right')}
+                                                >
+                                                    Right
+                                                </Button>
+                                            </div>
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Font</InputLabel>
+                                            <Select
+                                                value={selectedComponent.barcodeProps.font}
+                                                onChange={(e) => handleBarcodePropertyChange('font', e.target.value)}
+                                                fullWidth
+                                            >
+                                                <MenuItem value="monospace">Monospace</MenuItem>
+                                                <MenuItem value="arial">Arial</MenuItem>
+                                                <MenuItem value="helvetica">Helvetica</MenuItem>
+                                                <MenuItem value="sans-serif">Sans-serif</MenuItem>
+                                            </Select>
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Font Style</InputLabel>
+                                            <div className="flex space-x-2">
+                                                <Button
+                                                    variant={selectedComponent.barcodeProps.fontStyle === 'bold' ? 'contained' : 'outlined'}
+                                                    onClick={() => handleBarcodePropertyChange('fontStyle', 'bold')}
+                                                >
+                                                    Bold
+                                                </Button>
+                                                <Button
+                                                    variant={selectedComponent.barcodeProps.fontStyle === 'italic' ? 'contained' : 'outlined'}
+                                                    onClick={() => handleBarcodePropertyChange('fontStyle', 'italic')}
+                                                >
+                                                    Italic
+                                                </Button>
+                                            </div>
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Font Size</InputLabel>
+                                            <ERPSlider
+                                                value={selectedComponent.barcodeProps.fontSize}
+                                                onChange={(e) => handleBarcodePropertyChange('fontSize', e.target.valueAsNumber)}
+                                                min={8}
+                                                max={48}
+                                            />
+                                        </Box>
+
+                                        <Box>
+                                            <InputLabel>Text Margin</InputLabel>
+                                            <ERPSlider
+                                                value={selectedComponent.barcodeProps.textMargin}
+                                                onChange={(e) => handleBarcodePropertyChange('textMargin', e.target.valueAsNumber)}
+                                                min={-10}
+                                                max={40}
+                                            />
+                                        </Box>
+                                    </div>
                                 )}
                             </Box>
                         )}

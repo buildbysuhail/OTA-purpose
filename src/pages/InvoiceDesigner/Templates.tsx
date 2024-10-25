@@ -240,7 +240,7 @@ const Templates = ({ }) => {
                                 <PencilIcon
                                   title="Edit"
                                   className="w-3 text-accent cursor-pointer"
-                                  onClick={() => navigate(`/invoice_designer/${temp?.id}?template_group=${templateGroup}`)}
+                                  onClick={() =>  templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) :navigate(`/invoice_designer/${temp?.id}`)}
                                 />
                               </div>
                             )}
@@ -356,7 +356,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
     ));
-    navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    templateGroup == "barcode" ? navigate(`/label-designer/new`) :navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };
 
   return (

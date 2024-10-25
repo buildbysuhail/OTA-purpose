@@ -45,20 +45,32 @@ const ApplicationSettings = ({ }) => {
           <h1 className="font-medium text-xl p-5 mb-5">Application Settings</h1>
           <div className="flex flex-col overflow-y-auto pb-24 h-full">
             {ApplicationSettingsTypes.filter(x => userSession.countryId == Countries.India ? x.settings_group_id != "tax" : x.settings_group_id != "gst").map((settings, index) => (
-              <div
-                key={`tt_${index}`}
-                tabIndex={0}
+              <button
+              key={`tt_${index}`}
+              className={`
+                flex items-center 
+                w-full 
+                px-3 md:px-4 
+                py-1.5 
+                mt-1 md:mt-2 
+                duration-200 
+                border-r-4 
+                text-left
+                ${
+                  settingsGroup === settings?.settings_group_id
+                    ? "bg-gray border-primary text-primary"
+                    : "border-transparent hover:bg-gray hover:border-gray"
+                }
+              `}
+              tabIndex={0}
                 onClick={() => {
                   setSearchParams({ settings_group_id: settings?.settings_group_id });
                   setSettingsGroup(settings?.settings_group_id);
                 }}
-                className={`cursor-pointer flex px-5 p-2 first:border-t gap-2 items-center ${settingsGroup === settings?.settings_group_id ? "bg-primary" : "hover:bg-gray-50"
-                  }`}
-              >
-                <div>
-                  <h1 className="text-sm">{settings.name}</h1>
-                </div>
-              </div>
+            >
+              <span className="mx-4 md:mx-2 text-sm">{settings.name}</span>
+            </button>
+              
             ))}
           </div>
         </div>

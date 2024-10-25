@@ -549,7 +549,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     debugger;
     setLoading(false);
     handleResponse(res, () => {
-      ERPToast.show("Template saved successfully", "success");
       navigate(`/templates?template_group=barcode`);
     });
     setLoading(false);

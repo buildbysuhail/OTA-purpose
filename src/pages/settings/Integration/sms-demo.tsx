@@ -4,9 +4,10 @@ import Urls from "../../../redux/urls";
 import { NotificationsChannel } from "../../../enums/notification-chanal";
 
 interface MenuItem {
-  Id: number;
-  TransactionCode: string;
-  Content: string;
+  id: number;
+  transactionCode: string;
+  transactionName: string;
+  content: string;
 }
 
 const api = new APIClient();
@@ -27,7 +28,7 @@ export default function Component() {
       if (res) {
         setMenuItems(res);
         if (res.length > 0) {
-          setSelectedMenu(res[0].TransactionCode);
+          setSelectedMenu(res[0].transactionName);
         }
       } else {
         console.warn("Data format is unexpected:", res);
@@ -87,20 +88,20 @@ export default function Component() {
   );
 
   const MainContent = () => {
-    const selectedItem = menuItems.find((item) => item.TransactionCode === selectedMenu) || {
-      Content: "No content available",
-      TransactionCode: selectedMenu,
+    const selectedItem = menuItems.find((item) => item.transactionName === selectedMenu) || {
+      content: "No content available",
+      transactionName: selectedMenu,
     };
 
     return (
       <div className="flex flex-row min-h-screen p-6">
         <div className="w-1/2">
           <h2 className="text-2xl font-bold mb-4">{selectedMenu}</h2>
-          <p className="mb-4">{selectedItem.TransactionCode}</p>
+          <p className="mb-4">{selectedItem.transactionName}</p>
         </div>
         <div className="w-1/2">
           <SmsDemo
-            message={selectedItem.Content || "No message available"}
+            message={selectedItem.content || "No message available"}
             sender="Your Company"
           />
         </div>
@@ -115,15 +116,15 @@ export default function Component() {
           {menuItems.length > 0 ? (
             menuItems.map((item) => (
               <a
-                key={item.Id}
+                key={item.id}
                 href="#"
-                className={`flex items-center px-6 py-2 mt-4 duration-200 border-r-4 ${selectedMenu === item.TransactionCode
+                className={`flex items-center px-6 py-2 mt-4 duration-200 border-r-4 ${selectedMenu === item.transactionName
                   ? "bg-gray border-green text-green"
                   : "border-transparent hover:bg-gray hover:border-gray"
                   }`}
-                onClick={() => setSelectedMenu(item.TransactionCode)}
+                onClick={() => setSelectedMenu(item.transactionName)}
               >
-                <span className="mx-4">{item.TransactionCode}</span>
+                <span className="mx-4">{item.transactionName}</span>
               </a>
             ))
           ) : (

@@ -45,6 +45,7 @@ import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
+import ERPModal from "./erp-modal";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -78,8 +79,8 @@ interface ERPDevGridProps {
   allowSorting?: boolean;
   allowSearching?: boolean;
   remoteOperations?:
-    | boolean
-    | { filtering?: boolean; sorting?: boolean; paging?: boolean };
+  | boolean
+  | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   onRowClick?: (e: any) => void;
   onSelectionChanged?: () => void;
   onExporting?: (e: any) => void;
@@ -129,6 +130,14 @@ interface ERPDevGridProps {
   initialPreferences?: GridPreference;
   paramNames?: string[];
   reload?: boolean;
+  childPopupProps?: {
+    title: string,
+    width: string,
+    isForm: boolean,
+    content: any,
+    buttonField: string,
+    bodyProps: string
+  }
 }
 const api = new APIClient();
 const createStore = (
@@ -139,6 +148,7 @@ const createStore = (
   postData?: any,
   initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
   paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
+  bodyProps?: string
 ) => {
   return new CustomStore({
     key: keyExpr,
@@ -153,32 +163,41 @@ const createStore = (
         });
       }
 
+      debugger;
       const params = Object.fromEntries(
         paramNames
-            .filter((paramName) => isNotEmpty(loadOptions[paramName]))
-            .map((paramName) => [
-                paramName, 
-                JSON.stringify(loadOptions[paramName])
-            ])
-    );
-    debugger;
-    const queryString = new URLSearchParams(params).toString();
-        
-debugger;
+          .filter((paramName) => isNotEmpty(loadOptions[paramName]))
+          .map((paramName) => [
+            paramName,
+            JSON.stringify(loadOptions[paramName])
+          ])
+      );
+
+      // Append bodyProps to params
+      if (bodyProps != undefined) {
+        Object.entries(bodyProps).forEach(([key, value]) => {
+          params[key] = JSON.stringify(value);
+        });
+      }
+
+
+      const queryString = new URLSearchParams(params).toString();
+
+      debugger;
       try {
         const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, postData, queryString) : null;
         debugger;
         return result
           ? {
-              data: result.data,
-              totalCount: result.totalCount,
-            }
+            data: result.data,
+            totalCount: result.totalCount,
+          }
           : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         return {
           data: [],
@@ -270,6 +289,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   initialPreferences,
   reload,
   paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
+  childPopupProps
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -278,7 +298,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     windows: number;
   }>({ mobile: 500, windows: 500 });
 
- 
+
   const [addButtonText, setAddButtonText] = useState<string>(
     gridAddButtonText == "Add" ? t("add") : gridAddButtonText
   );
@@ -296,6 +316,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [gridCols, setGridCols] = useState<DevGridColumn[]>();
   const [currentStore, setCurrentStore] = useState<any>(null);
   const [preferences, setPreferences] = useState<GridPreference>();
+  const [isChildOpen, setIsChildOpen] = useState<boolean>(false);
+  const [bodyProps, setBodyProps] = useState({});
   useEffect(() => {
     console.log("preferer useeff");
 
@@ -321,13 +343,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     () => {
       debugger;
       if (reload) {
-        const newStore = createStore(keyExpr, dataUrl, allowEditing, method, postData, initialFilters);
+        const newStore = createStore(keyExpr, dataUrl, allowEditing, method, postData, initialFilters,undefined, childPopupProps?.bodyProps);
         setCurrentStore(newStore);  // Update current store whenever reload is true
         return newStore;
       }
       return currentStore;
     },
-    [keyExpr, dataUrl, allowEditing,reload]
+    [keyExpr, dataUrl, allowEditing, reload, childPopupProps?.bodyProps]
   );
 
   const onExportingHandler = (e: any) => {
@@ -370,8 +392,26 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       }
     }
   };
+  const handleCellClick = useCallback((event: any) => {
+    debugger;
+    // Check if the clicked cell's field matches childPopupProps.buttonField
+    if (event.column?.dataField === childPopupProps?.buttonField) {
+      const updatedBodyProps: { [key: string]: any } = {};
+
+      // Ensure childPopupProps.bodyProps is a string before splitting and iterating over it
+      childPopupProps?.bodyProps?.split(',').forEach((prop: string) => {
+        const trimmedProp = prop.trim();
+        updatedBodyProps[trimmedProp] = event.data[trimmedProp];
+      });
+
+      // Update bodyProps state
+      setBodyProps(updatedBodyProps);
+      setIsChildOpen(true);
+    }
+  }, []);
   return (
     <Fragment>
+      
       <div className={className}>
         <DataGrid
           dataSource={store}
@@ -390,13 +430,14 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           showColumnLines={showColumnLines}
           showRowLines={showRowLines}
           rowAlternationEnabled={true}
+          onCellClick={handleCellClick}
           // columnRenderingMode={columnRenderingMode}
           // rowRenderingMode={rowRenderingMode}
           keyExpr={keyExpr}
           dateSerializationFormat={dateSerializationFormat}
           // loadPanelEnabled={true}
           hoverStateEnabled={hoverStateEnabled}
-          
+
         >
           <ColumnFixing enabled={true} />
           <Scrolling mode={scrollingMode} />
@@ -526,6 +567,19 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           ))}
         </DataGrid>
       </div>
+      {childPopupProps &&
+        <ERPModal
+          isOpen={isChildOpen}
+          title={childPopupProps.title}
+          width={childPopupProps.width}
+          isForm={childPopupProps.isForm}
+          closeModal={() => {
+            setIsChildOpen(false);
+          }}
+          content={childPopupProps.content}
+          contentProps={bodyProps}
+        />
+      }
     </Fragment>
   );
 };

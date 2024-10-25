@@ -9,7 +9,7 @@ export default function Component() {
   const [menuItems, setMenuItems] = useState([]);
 
   useEffect(() => {
-   
+    loadData();
   });
 const loadData = async() => {
   const res = await api.getAsync(`${Urls.notification_template}${NotificationsChannel.Sms}`);

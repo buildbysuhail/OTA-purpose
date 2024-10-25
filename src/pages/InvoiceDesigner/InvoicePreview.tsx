@@ -399,7 +399,6 @@ const InvoicePreview = ({
             style={generalBackGroundStyle}
             className={`flex  flex-col gap-4 relative ${paperWidth} shadow-md print:m-0 print:w-full print:shadow-none`}
           >
-            {templateGroupId}
             {
             templateGroupId === "barcode" ?(
               <BarcodePreviewWrapper

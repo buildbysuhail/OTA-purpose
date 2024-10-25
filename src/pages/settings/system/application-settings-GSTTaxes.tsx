@@ -11,15 +11,13 @@ import EInvoiceTaxPro from './e-invoice-taxpro';
 import EWBTaxPro from './ewb-taxpro';
 
 interface TaxSettingsFormState {
-  defaultPurchaseFormType: {
-    purchaseNormalType: boolean;
-    purchaseInterstateType: boolean;
-    purchaseForm62: boolean;
-  };
+  purchaseNormalType: boolean;
+  purchaseInterstateType: boolean;
+  purchaseForm62: boolean;
   outputFormType: string;
   defaultFormTypeForPOS: string;
   inputCSTAccount: string;
-  defaultSIPrefixForPOS: string;
+  defaultPrefixForPOS: string;
   outputCSTAccount: string;
   defaultSRFormTypeForPOS: string;
   inputCessAccount: string;
@@ -36,15 +34,15 @@ interface TaxSettingsFormState {
   inputIGSTAccount: string;
   enableEWB: boolean;
   outputIGSTAccount: string;
-  enableEInvoice: boolean;
+  enableEInvoiceIndia: boolean;
   outputTCSPaidAccount: string;
-  eInvoiceProvider: string;
+  einvoiceProvider: string;
   outputTCSPayableAccount: string;
   eInvoiceAuthToken: string;
   inputCalamityCessAccount: string;
   eInvoiceOwnerID: string;
   outputSalesCalamityCessAccount: string;
-  considerSalesPriceAsCalamityIncluded: boolean;
+  considerSalesPriceasCalamityIncluded: boolean;
   enableKarnatakaTaxReportFormat: boolean;
   showPrevForms: boolean;
 }
@@ -52,17 +50,13 @@ const api = new APIClient();
 
 
 const initialStateTaxsettings: TaxSettingsFormState = {
-  // const ERPSettingsFormGSTTaxes = () => {
-  //   const [formState, setFormState] = useState<TaxSettingsFormState>({
-  defaultPurchaseFormType: {
-    purchaseNormalType: false,
-    purchaseInterstateType: false,
-    purchaseForm62: false,
-  },
+  purchaseNormalType: false,
+  purchaseInterstateType: false,
+  purchaseForm62: false,
   outputFormType: '',
   defaultFormTypeForPOS: '',
   inputCSTAccount: '',
-  defaultSIPrefixForPOS: '',
+  defaultPrefixForPOS: '',
   outputCSTAccount: '',
   defaultSRFormTypeForPOS: '',
   inputCessAccount: '',
@@ -79,15 +73,15 @@ const initialStateTaxsettings: TaxSettingsFormState = {
   inputIGSTAccount: '',
   enableEWB: false,
   outputIGSTAccount: '',
-  enableEInvoice: false,
+  enableEInvoiceIndia: false,
   outputTCSPaidAccount: '',
-  eInvoiceProvider: '',
+  einvoiceProvider: '',
   outputTCSPayableAccount: '',
   eInvoiceAuthToken: '',
   inputCalamityCessAccount: '',
   eInvoiceOwnerID: '',
   outputSalesCalamityCessAccount: '',
-  considerSalesPriceAsCalamityIncluded: false,
+  considerSalesPriceasCalamityIncluded: false,
   enableKarnatakaTaxReportFormat: false,
   showPrevForms: false,
 };
@@ -180,9 +174,9 @@ const ERPSettingsFormGSTTaxes = () => {
       console.log(modifiedSettings);
 
       const response = (await api.put(Urls.application_settings, {
-         type: 'GSTTaxes',
-          updateList: modifiedSettings
-         })) as any
+        type: 'GSTTaxes',
+        updateList: modifiedSettings
+      })) as any
       handleResponse(response);
 
     } catch (error) {
@@ -211,28 +205,26 @@ const ERPSettingsFormGSTTaxes = () => {
           <label>{t("default_purchase")}</label>
           <ERPCheckbox
             id="purchaseNormalType"
-            checked={formState?.defaultPurchaseFormType?.purchaseNormalType}
+            checked={formState?.purchaseNormalType}
             data={formState}
             label={t("normal")}
-            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseNormalType: data.purchaseNormalType })}
+            onChangeData={(data: any) => handleFieldChange("purchaseNormalType", data.purchaseNormalType)}
           />
           <ERPCheckbox
             id="purchaseInterstateType"
-            checked={formState?.defaultPurchaseFormType?.purchaseInterstateType}
+            checked={formState?.purchaseInterstateType}
             data={formState}
             label={t("inter_state")}
-            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseInterstateType: data.purchaseInterstateType })}
+            onChangeData={(data: any) => handleFieldChange("purchaseInterstateType", data.purchaseInterstateType)}
           />
           <ERPCheckbox
             id="purchaseForm62"
-            checked={formState?.defaultPurchaseFormType?.purchaseForm62}
+            checked={formState?.purchaseForm62}
             data={formState}
             label={t("form_6(2)")}
-            onChangeData={(data: any) => handleFieldChange("defaultPurchaseFormType", { ...formState?.defaultPurchaseFormType, purchaseForm62: data.purchaseForm62 })}
+            onChangeData={(data: any) => handleFieldChange("purchaseForm62", data.purchaseForm62)}
           />
         </div>
-
-
         <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
           <ERPDataCombobox
             field={{
@@ -390,17 +382,17 @@ const ERPSettingsFormGSTTaxes = () => {
           />
 
           <ERPDataCombobox
-            id="defaultSIPrefixForPOS"
+            id="defaultPrefixForPOS"
             field={{
-              id: "defaultSIPrefixForPOS",
+              id: "defaultPrefixForPOS",
               // required: true,
               getListUrl: Urls.data_VPrefixForSI,
-              valueKey: "id",
-              labelKey: "name",
+              valueKey: "LastVoucherPrefix",
+              labelKey: "LastVoucherPrefix",
             }}
             data={formState}
-            value={formState?.defaultSIPrefixForPOS}
-            onChangeData={(data: any) => handleFieldChange("defaultSIPrefixForPOS", data.defaultSIPrefixForPOS)}
+            value={formState?.defaultPrefixForPOS}
+            onChangeData={(data: any) => handleFieldChange("defaultPrefixForPOS", data.defaultPrefixForPOS)}
             label={t("default_SI_prefix_for_POS")}
           />
 
@@ -428,8 +420,8 @@ const ERPSettingsFormGSTTaxes = () => {
               id: "defaultSRPrefixForPOS",
               // required: true,
               getListUrl: Urls.data_VPrefixForSR,
-              valueKey: "VoucherID",
-              labelKey: "FormType",
+              valueKey: "LastVoucherPrefix",
+              labelKey: "LastVoucherPrefix",
             }}
             onChangeData={(data: any) => handleFieldChange("defaultSRPrefixForPOS", data.defaultSRPrefixForPOS)}
           />
@@ -562,6 +554,7 @@ const ERPSettingsFormGSTTaxes = () => {
             id="inputCalamityCessAccount"
             value={formState?.inputCalamityCessAccount}
             data={formState}
+            disabled={true}
             label={t("input_calamity_cess_account")}
             field={{
               id: "inputCalamityCessAccount",
@@ -589,11 +582,11 @@ const ERPSettingsFormGSTTaxes = () => {
           />
 
           <ERPCheckbox
-            id="considerSalesPriceAsCalamityIncluded"
-            checked={formState?.considerSalesPriceAsCalamityIncluded}
+            id="considerSalesPriceasCalamityIncluded"
+            checked={formState?.considerSalesPriceasCalamityIncluded}
             data={formState}
             label={t("consider_sales_price_as_calamity_included")}
-            onChangeData={(data: any) => handleFieldChange("considerSalesPriceAsCalamityIncluded", data.considerSalesPriceAsCalamityIncluded)}
+            onChangeData={(data: any) => handleFieldChange("considerSalesPriceasCalamityIncluded", data.considerSalesPriceasCalamityIncluded)}
           />
 
           <ERPCheckbox
@@ -632,16 +625,16 @@ const ERPSettingsFormGSTTaxes = () => {
 
             <div className='flex justify-between align-center'>
               <ERPCheckbox
-                id="enableEInvoice"
-                checked={formState?.enableEInvoice}
+                id="enableEInvoiceIndia"
+                checked={formState?.enableEInvoiceIndia}
                 data={formState}
                 label={t("enable_e-invoice")}
-                onChangeData={(data: any) => handleFieldChange("enableEInvoice", data.enableEInvoice)}
+                onChangeData={(data: any) => handleFieldChange("enableEInvoiceIndia", data.enableEInvoiceIndia)}
               />
               <ERPButton
                 title={t("EInvoiceTaxPro")}
                 onClick={() => handleShowComponent('eInvoice')}
-                disabled={!formState?.enableEInvoice}
+                disabled={!formState?.enableEInvoiceIndia}
               />
             </div>
           </div>
@@ -657,21 +650,21 @@ const ERPSettingsFormGSTTaxes = () => {
           <div className='grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-6 mt-5'>
             <ERPDataCombobox
               field={{
-                id: "eInvoiceProvider",
+                id: "einvoiceProvider",
                 valueKey: "value",
                 labelKey: "label",
               }}
-              id="eInvoiceProvider"
+              id="einvoiceProvider"
               label={t("e-invoice_provider_type")}
-              value={formState?.eInvoiceProvider}
+              value={formState?.einvoiceProvider}
               data={formState}
               onChangeData={(data) => {
 
-                handleFieldChange("eInvoiceProvider", data.eInvoiceProvider)
+                handleFieldChange("einvoiceProvider", data.einvoiceProvider)
               }}
               options={[
-                { value: 'Clear Tax', label: 'Clear Tax' },
-                { value: 'Tax Pro', label: 'Tax Pro' },
+                { value: "Clear Tax", label: "Clear Tax" },
+                { value: "Tax Pro", label: "Tax Pro" },
               ]}
             />
 

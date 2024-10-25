@@ -86,14 +86,14 @@ function App() {
     if (upt != undefined && upt != null && upt != "") {
       userProfileDetails = customJsonParse(atob(upt));
     }
-  } catch (error) {}
+  } catch (error) { }
 
   let userThemes: Theme = initialThemeData;
   try {
     if (utt != undefined && utt != null && utt != "") {
       userThemes = customJsonParse(atob(utt));
     }
-  } catch (error) {}
+  } catch (error) { }
   const { i18n } = useTranslation();
 
   let locale = languagesData.find(
@@ -101,7 +101,7 @@ function App() {
   ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
   syncAppStates(dispatch, userThemes, userProfileDetails, locale);
   const language = userProfileDetails?.language;
-  
+
   useEffect(() => {
     dispatch(getApplicationSettings());
   }, [dispatch]);
@@ -187,21 +187,21 @@ function App() {
                 path="workspace-settings/*"
                 element={<WorkspaceSettingsLayout setMyClass={setMyClass} />}
               />
-              <Route path="label-designer/new" element={<PDFBarcodeDesigner  />} />
+              <Route path="label-designer/new" element={<PDFBarcodeDesigner />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
           </Suspense>
-          
+
         </div>
       </HelmetProvider>
       <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
-          {deviceInfo?.isMobile && (
-            <div className="w-full h-16 bg-white fixed bottom-0 left-0">
-              <MobileFooter />
-            </div>
-          )}
+      {deviceInfo?.isMobile && (
+        <div className="w-full h-16 bg-white fixed bottom-0 left-0">
+          <MobileFooter />
+        </div>
+      )}
     </Fragment>
   );
 }

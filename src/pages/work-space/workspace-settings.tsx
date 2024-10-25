@@ -29,7 +29,7 @@ import { userSession } from "../../redux/slices/user-session/thunk";
 interface WorkSpaceSettingsProps {}
 
 const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
-  let _userSession = useAppSelector((state: RootState) => state) as any;
+  let _userSession = useAppSelector((state: RootState) => state.UserSession) as any;
   let api = new APIClient();
   const [image, setImage] = useState<string>("#");
   const [phone, setPhone] = useState<string>("");
@@ -76,14 +76,14 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   
   useEffect(() => {
     
+    debugger;
     if (
       _userSession &&
       _userSession?.companies &&
       Array.isArray(_userSession?.companies)
     ) {
-      
       const company = _userSession?.companies.find(
-        (x: any) => x?.name === _userSession?.currentClientName
+        (x: any) => x?.id === _userSession?.currentClientId
       );
       if (company && company.logo) {
         setImage(company.logo);

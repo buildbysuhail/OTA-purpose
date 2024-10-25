@@ -175,7 +175,7 @@ const InvoiceDesigner = () => {
       debugger;      
       setLoading(false);
       handleResponse(res, () => {
-        ERPToast.show("Template saved successfully", "success");
+        // ERPToast.show("Template saved successfully", "success");
         navigate(`/templates?template_group=${templateGroup}`);
       });
       setLoading(false);

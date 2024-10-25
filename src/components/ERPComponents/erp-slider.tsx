@@ -20,7 +20,7 @@ const ERPSlider = ({ id, label, placeholder, required, noLabel, min, max, value,
   return (
     <div>
       {!noLabel && (
-        <label className=" capitalize mb-1 block text-sm font-medium text-black">
+        <label className=" capitalize text-[12px] font-medium text-gray-700 mb-1">
           {iLabel}
           {required && "*"}
         </label>

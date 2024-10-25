@@ -58,12 +58,6 @@ export const BranchLedgerManage = () => {
           field={{
             id: "purchaseLedgerID",
             required: true,
-            // getListUrl: (() => {
-            //   if (formState?.data?.refBranchID) {
-            //     return `${Urls.data_PurchaseAccount}${formState.data.refBranchID}`;
-            //   }
-           
-            // }),
             freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null ? true : false,
             getListUrl: formState?.data?.refBranchID
             ? `${Urls.data_PurchaseAccount}${formState.data.refBranchID}`
@@ -81,7 +75,7 @@ export const BranchLedgerManage = () => {
           field={{
             id: "receivableLedgerID",
             required: true,
-            getListUrl: Urls.data_acc_ledgers,
+            getListUrl:`${Urls.data_BranchRecPayAccount}${0}`,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -95,7 +89,10 @@ export const BranchLedgerManage = () => {
           field={{
             id: "branchPayableLedgerID",
             required: true,
-            getListUrl: Urls.data_acc_ledgers,
+            freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null ? true : false,
+            getListUrl: formState?.data?.refBranchID
+            ? `${Urls.data_BranchRecPayAccount}${formState.data.refBranchID}`
+            : `${Urls.data_BranchRecPayAccount}`,
             valueKey: "id",
             labelKey: "name",
           }}

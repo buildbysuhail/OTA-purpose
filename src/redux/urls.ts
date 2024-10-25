@@ -35,7 +35,7 @@ const Urls = {
 
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
-  data_acc_Branches: "/Data/Branches",
+  data_acc_Branches: "/Data/BranchWithoutDefault",
   data_Bank_Cards: "/Accounts/BankCards/",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
   data_costcentres: "/Accounts/Data/CostCentres/",
@@ -58,6 +58,8 @@ const Urls = {
   data_FormTypeByPI: "/Accounts/Data/FormTypeByPI",
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
   data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
+  data_BranchRecPayAccount: "/Accounts/Data/BranchRecPayAccount/",
+
 
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",

@@ -24,6 +24,13 @@ const InventoryHistoryPopup = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
+      dataField: "slNo",
+      caption: t("si_no"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
       dataField: "date",
       caption: t('date'),
       dataType: "date",
@@ -46,110 +53,48 @@ const InventoryHistoryPopup = () => {
       allowFiltering: true,
       width: 150,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "debit",
-      caption: t('debit'),
+      dataField: "grandTotal",
+      caption: t("grand_total"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "credit",
-      caption: t("credit"),
+      dataField: "cashReceived",
+      caption: t("cash_received"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
+      dataField: "remarks",
+      caption: t("remarks"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      dataField: "oldInvTransactionID",
+      caption: t("old_invTransaction_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      visible:false
+    },
+    {
+      dataField: "invTransactionMasterID",
+      caption: t('invTransaction_master_id'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+      visible:false
+    },
   ];
   return (
     <Fragment>
@@ -160,8 +105,8 @@ const InventoryHistoryPopup = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("inventory_transaction_history_popup")}
+                  dataUrl= {Urls.acc_reports_inventory_history_popup}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

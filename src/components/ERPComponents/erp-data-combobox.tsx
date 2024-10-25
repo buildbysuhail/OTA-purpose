@@ -118,10 +118,10 @@ export default function ERPDataCombobox({
 
   useEffect(() => {
     debugger;
-    if (!disabledApiCall && field.freezeDataLoad != true) {
+    if (!disabledApiCall && field?.freezeDataLoad != true) {
       loadData();
     }
-  }, [field.getListUrl, field.freezeDataLoad]);
+  }, [field?.getListUrl, field?.freezeDataLoad]);
 
   const loadData = async () => {
     setLoading(true);

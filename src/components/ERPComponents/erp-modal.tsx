@@ -53,7 +53,6 @@ const ERPModal = React.memo(
     closeOnSubmit = true,
     disableOutsideClickClose = true,
   }: ERPModalProps) => {
-    debugger;
     const handleClose = () => closeModal(false);
     const handleSubmit = () => {
       if (onSubmitModel) {

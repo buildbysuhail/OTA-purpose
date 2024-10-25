@@ -110,7 +110,7 @@ const InvoiceDesigner = () => {
   });
 
 
-  const [designTabs, setDesignTabs] = useState(designSections);
+  const [designTabs, setDesignTabs] = useState( designSections?.filter((tab) => tab?.id != 7 ));
   const [currentSection, setSection] = useState(designSections[0]);
   const templateData = useSelector((state: any) => state?.Template) as TemplateReducerState;
 
@@ -136,16 +136,16 @@ const InvoiceDesigner = () => {
   //  Handling View Design Tab Category
   useEffect(() => {
     if (templateGroup && (["payment_receipts", "retainer_payment_receipts", "payment_made"]?.includes(templateGroup)))
-      setDesignTabs(designSections?.filter((tab) => tab.id !== 4 && tab.id !== 5));
+      setDesignTabs(designSections?.filter((tab) => tab.id !== 4 && tab.id !== 5  && tab?.id !== 7));
 
     if (templateGroup && (["journal_entry"]?.includes(templateGroup)))
-      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 6));
+      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 6 && tab?.id !== 7));
 
     if (templateGroup && (["customer", "vendor"]?.includes(templateGroup)))
-      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 6));
+      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 6 && tab?.id !== 7));
 
     if (templateGroup && (["qty_adjustment", "value_adjustment"]?.includes(templateGroup)))
-      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5));
+      setDesignTabs(designSections?.filter((tab) => tab?.id !== 5 && tab?.id !== 7));
 
     if (templateGroup && (["barcode"]?.includes(templateGroup)))
       setDesignTabs(designSections?.filter((tab) => tab?.id == 7 ));
@@ -182,33 +182,6 @@ const InvoiceDesigner = () => {
   };
 
   /* ########################################################################################### */
-
-  const handleUpdate = (dataUrl: string, id: string) => {
-    const postData = {
-      content: JSON.stringify(templateData?.activeTemplate),
-      voucher_type: templateGroup, preview: dataUrl,
-    };
-    const postFormData = DataToForm(postData);
-
-    if (templateImages?.background_image && isFile(templateImages?.background_image))
-      postFormData?.append("background_image", templateImages?.background_image);
-    if (templateImages?.background_image_header && isFile(templateImages?.background_image_header))
-      postFormData?.append("background_image_header", templateImages?.background_image_header);
-    if (templateImages?.background_image_footer && isFile(templateImages?.background_image_footer))
-      postFormData?.append("background_image_footer", templateImages?.background_image_footer);
-    if (templateImages?.signature_image && isFile(templateImages?.signature_image))
-      postFormData?.append("signature_image", templateImages?.signature_image);
-
-    setLoading(true);
-    (appDispatch(patchAction({ apiUrl: Urls.templates, params: postFormData, id })) as any).then((res: any) => {
-      handleResponse(res, () => {
-        ERPToast.show("Template updated successfully", "success");
-        navigate(`/templates?template_group=${templateGroup}`);
-      })
-      setLoading(false);
-    });
-  };
-
   /* ########################################################################################### */
 
   const manageSaveTemplate = async () => {

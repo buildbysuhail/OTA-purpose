@@ -187,7 +187,7 @@ function App() {
                 path="workspace-settings/*"
                 element={<WorkspaceSettingsLayout setMyClass={setMyClass} />}
               />
-              <Route path="label-design" element={<PDFBarcodeDesigner  />} />
+              <Route path="label-designer/new" element={<PDFBarcodeDesigner  />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}

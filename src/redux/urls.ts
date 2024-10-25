@@ -171,7 +171,7 @@ const Urls = {
   sql_commands: "/Core/SQLCommand",
   notification_provider: "/Core/NotificationProvider/",
   notification_transaction: "/Core/TransactionNotification",
-  notification_template: "/Core/NotificationTemplate",
+  notification_template: "/Core/NotificationTemplate/",
   headers_footers: "/Core/HeaderFooter/",
   eWayBill: "/Core/EWayBillGST/",
   eInvoiceGST: "/Core/EInvoiceGST/",

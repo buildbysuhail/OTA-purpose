@@ -201,6 +201,8 @@ const Urls = {
   //Reports
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
+acc_reports_cash_book_monthwise: "/Accounts/RptCashBook/CashBookMonthwiseSummary",
+  
   acc_reports_day_book_detailed: "/Accounts/RptDayBook/DayBookDetailed",
   acc_reports_day_book_summary: "/Accounts/RptDayBook/DayBookSummary",
   acc_reports_payment: "/Accounts/RptPaymentReport/PaymentReport",

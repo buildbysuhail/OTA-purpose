@@ -42,11 +42,16 @@ const TrialBalance = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green-500 text-lg' : ''}`}>
+  {cellElement.data.particulars}
+</span>
+      ),
     },
     {
       dataField: "debit",
       caption: t('debit'),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 250,
@@ -54,7 +59,7 @@ const TrialBalance = () => {
     {
       dataField: "credit",
       caption: t("credit"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 250,

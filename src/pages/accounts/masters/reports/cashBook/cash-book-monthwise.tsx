@@ -8,11 +8,14 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 
-interface CashBookMonthWise {
-
+interface CashBookMonthWiseProps {
+  contentProps?: any
+}
+interface CashBookMonthWiseFilters {
   from: Date
 }
-const CashBookMonthWise = () => {
+const CashBookMonthWise = ({contentProps}:CashBookMonthWiseProps) => {
+  debugger;
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -20,7 +23,7 @@ const CashBookMonthWise = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<CashBookMonthWise>({from: new Date()});
+  const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -160,10 +163,10 @@ const CashBookMonthWise = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={"monthwise gdfgdfg"}
+                  dataUrl= {Urls.acc_reports_cash_book_monthwise}
+                  postData = {contentProps}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

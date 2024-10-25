@@ -166,7 +166,7 @@ const Urls = {
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
-  sql_commands: "/Core/SQLCommand",
+  sql_commands: "/Core/SQLCommand/",
   notification_provider: "/Core/NotificationProvider/",
   notification_transaction: "/Core/TransactionNotification",
   notification_template: "/Core/NotificationTemplate",
@@ -175,8 +175,8 @@ const Urls = {
   eInvoiceGST: "/Core/EInvoiceGST/",
   //setings/AdvanceOptions
   // advanceOptions:"/Core/AdvancedOptions",
-  revertBillModifications: "/Core/AdvancedOptions",
-  branchDataReset: "/Core/AdvancedOptions/BranchDataReset",
+  revertBillModifications: "/Core/AdvancedOptions/",
+  branchDataReset: "/Core/AdvancedOptions/BranchDataReset/",
   // refresh all branches
   refreshAllBranches: "/Core/RefreshAllBranch/RefreshAllBranch/",
   //barcode

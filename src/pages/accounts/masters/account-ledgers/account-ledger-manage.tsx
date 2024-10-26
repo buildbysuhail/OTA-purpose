@@ -72,7 +72,7 @@ export const AccountLedgerManage = () => {
           field={{
             id: "accGroupID",
             required: true,
-            getListUrl: Urls.data_acc_ledgers,
+            getListUrl: Urls.data_acc_groups,
             valueKey: "id",
             labelKey: "name",
           }}

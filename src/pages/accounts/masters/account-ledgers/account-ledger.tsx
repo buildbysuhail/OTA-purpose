@@ -18,7 +18,7 @@ const AccountLedgerType = () => {
 
   const columns: DevGridColumn[] = useMemo(() => [
     {
-      dataField: "s.No",
+      dataField: "siNo",
       caption: t("SiNo"),
       dataType: "string",
       allowSorting: true,
@@ -51,7 +51,7 @@ const AccountLedgerType = () => {
       allowFiltering: true,
     },
     {
-      dataField: "accGroupName",
+      dataField: "accountGroup",
       caption: t("acc_group"),
       dataType: "string",
       allowSearch: true,

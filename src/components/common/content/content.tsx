@@ -29,9 +29,9 @@ import OutstandingAccountPayableReport from '../../../pages/accounts/masters/rep
 import OutstandingAccountReceivableReport from '../../../pages/accounts/masters/reports/outStandingReports/outstanding-account-receivable-report';
 import OutstandingAccountPayableAgingReport from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
 import OutstandingAccountReceivableAgingReport from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
-import ProfitAndLoss from '../../../pages/accounts/masters/reports/profit-and-loss';
+import ProfitAndLoss from '../../../pages/accounts/masters/reports/profitAndLoss/profit-and-loss';
 import TrialBalance from '../../../pages/accounts/masters/reports/trial-balance';
-import BalanceSheet from '../../../pages/accounts/masters/reports/balace-sheet';
+import BalanceSheet from '../../../pages/accounts/masters/reports/balanceSheet/balace-sheet';
 import InventoryHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/InventoryHistory/inventory-history-report';
 import BillwiseProfitGlobal from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit-global';
 

@@ -23,6 +23,14 @@ const DailySummaryReceiptDetails = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
+      dataField: "invTransactionMasterID",
+      caption: t("invTransaction_master_id"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
       dataField: "date",
       caption: t('date'),
       dataType: "date",
@@ -31,71 +39,58 @@ const DailySummaryReceiptDetails = () => {
       width: 50,
     },
     {
-      dataField: "form",
+      dataField: "voucherPrefix",
+      caption: t("voucher_prefix"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "formType",
       caption: t("form"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
-      dataField: "vchNo",
+      dataField: "voucherNumber",
       caption:  t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
-      dataField: "particulars",
-      caption: t("account"),
+      dataField: "ledgerCode",
+      caption: t("ledger_code"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "refNo",
-      caption: t("ref_no"),
+      dataField: "ledgerName",
+      caption: t("ledger_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "debit",
-      caption: t('debit'),
+      dataField: "amount",
+      caption: t("amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
+    
+   
+   
     {
-      dataField: "credit",
-      caption: t("credit"),
+      dataField: "balanceAmount",
+      caption: t('balance_amount'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -109,46 +104,39 @@ const DailySummaryReceiptDetails = () => {
       allowFiltering: true,
       width: 150,
     },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
     
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      dataField: "ledger_Balance",
+      caption: t("ledger_balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "creditLimit",
+      caption: t("credit_limit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "userName",
+      caption: t("user_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+     {
+      dataField: "signature",
+      caption: t("signature"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
   ];
   return (
     <Fragment>
@@ -159,8 +147,8 @@ const DailySummaryReceiptDetails = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("daily_summary_receipt_details")}
+                  dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

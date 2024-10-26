@@ -12,16 +12,19 @@ interface DailySummaryCreditDetails {
   from: Date
 }
 const DailySummaryCreditDetails = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [filter, setFilter] =useState<DailySummaryCreditDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
+    {
+      dataField: "invTransactionMasterID",
+      caption: t("invTransaction_master_id"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
     {
       dataField: "date",
       caption: t('date'),
@@ -31,71 +34,58 @@ const DailySummaryCreditDetails = () => {
       width: 50,
     },
     {
-      dataField: "form",
+      dataField: "voucherPrefix",
+      caption: t("voucher_prefix"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "voucherForm",
       caption: t("form"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
     },
     {
-      dataField: "vchNo",
+      dataField: "voucherNumber",
       caption:  t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
-      dataField: "particulars",
-      caption: t("account"),
+      dataField: "partyCode",
+      caption: t("party_code"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "refNo",
-      caption: t("ref_no"),
+      dataField: "partyName",
+      caption: t("party_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "debit",
-      caption: t('debit'),
+      dataField: "total",
+      caption: t("total"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
+    
+   
+   
     {
-      dataField: "credit",
-      caption: t("credit"),
+      dataField: "receivedAmount",
+      caption: t('received_amount'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -109,46 +99,55 @@ const DailySummaryCreditDetails = () => {
       allowFiltering: true,
       width: 150,
     },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      dataField: "ledgerBalance",
+      caption: t("ledger_balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "ledger_Balance",
+      caption: t("ledger_balance"),
+      dataType: "number",
+      visible:false,
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "creditLimit",
+      caption: t("credit_limit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "userName",
+      caption: t("user_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+     {
+      dataField: "signature",
+      caption: t("signature"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+{
+      dataField: "cashDiscount",
+      caption: t("cash_discount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
   ];
   return (
     <Fragment>
@@ -159,8 +158,8 @@ const DailySummaryCreditDetails = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("daily_summary_sales_credit_details")}
+                  dataUrl= {Urls.acc_reports_daily_summary_credit_details}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

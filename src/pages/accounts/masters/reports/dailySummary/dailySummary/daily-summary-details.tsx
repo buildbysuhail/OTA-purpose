@@ -108,7 +108,7 @@ const DailySummaryDetails = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("daily_summary_detailed")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  dataUrl= {Urls.acc_reports_daily_summary_detailed}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

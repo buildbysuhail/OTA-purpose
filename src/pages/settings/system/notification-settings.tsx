@@ -215,7 +215,7 @@ const NotificationSettings = () => {
                                     size="sm"
                                     defaultValue={item.sms === "1"}
                                     value={item.sms === "1"}
-                                    onChange={(e) => handleSwitchChange(item.transactionCode,"sms",e.target.check)}
+                                    onChange={(e) => handleSwitchChange(item.transactionCode,"sms",e.target.checked)}
                                   />
                                   {item.sms === "1" && (
                                     <span

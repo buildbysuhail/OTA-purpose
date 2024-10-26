@@ -769,9 +769,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         {/* Toolbar */}
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <button className="p-1 hover:bg-gray-100 rounded">
+            {/* <button className="p-1 hover:bg-gray-100 rounded">
               <Menu className="w-4 h-4" />
-            </button>
+            </button> */}
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => setZoom(zoom - 10)}
@@ -788,10 +788,21 @@ export default function ExtendedPDFBarcodeDesigner() {
               </button>
             </div>
           </div>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-2">
             {/* <button onClick={() => setIsPreviewOpen(true)} className='bg-primary'>
                             Preview
                         </button> */}
+               <ERPButton
+              startIcon="ri-arrow-go-back-line"
+              title="Clear"
+              onClick={() => {
+                setPlacedComponents([]);
+                setSelectedComponent(null);
+              }}
+              variant="secondary"
+              loading={loading}
+            ></ERPButton>
+
             <ERPButton
               title="Save"
               onClick={manageSaveTemplate}
@@ -919,21 +930,25 @@ export default function ExtendedPDFBarcodeDesigner() {
                   />
                 </Box>
                 <Box>
-                  <ERPInput
-                    id="width"
-                    type="number"
-                    label="Width"
-                    value={selectedComponent.width}
-                    data={selectedComponent}
-                    onChange={(e) =>
-                      handlePropertyChange(
-                        "width",
-                        parseInt(e.target.value, 10)
-                      )
-                    }
-                  />
+                  {selectedComponent.type !== DesignerElementType.barcode &&(
+                      <ERPInput
+                      id="width"
+                      type="number"
+                      label="Width"
+                      value={selectedComponent.width}
+                      data={selectedComponent}
+                      onChange={(e) =>
+                        handlePropertyChange(
+                          "width",
+                          parseInt(e.target.value, 10)
+                        )
+                      }
+                    />
+                  )}
+                
                 </Box>
                 <Box>
+                {selectedComponent.type !== DesignerElementType.barcode &&(
                   <ERPInput
                     id="height"
                     type="number"
@@ -947,6 +962,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                       )
                     }
                   />
+                )}
                 </Box>
                 {selectedComponent.type === DesignerElementType.barcode &&
                   selectedComponent.barcodeProps && (
@@ -1071,7 +1087,17 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
 
                       <Box>
-                        <InputLabel>Text Align</InputLabel>
+                        <InputLabel
+                          sx={{
+                            textTransform: 'capitalize',
+                            marginBottom: '0.25rem', 
+                            display: 'block',
+                            fontSize: '0.75rem', 
+                            color: 'rgb(17, 24, 39)', 
+                            textAlign: 'left',
+                            direction: 'rtl', 
+                          }}
+                        >Text Align</InputLabel>
                       
                         <div className="flex justify-between space-x-2">
                           <button
@@ -1140,7 +1166,17 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
 
                       <Box>
-                        <InputLabel>Font Style</InputLabel>
+                        <InputLabel
+                        sx={{
+                          textTransform: 'capitalize',
+                          marginBottom: '0.25rem', 
+                          display: 'block',
+                          fontSize: '0.75rem', 
+                          color: 'rgb(17, 24, 39)', 
+                          textAlign: 'left',
+                          direction: 'rtl', 
+                        }}
+                        >Font Style</InputLabel>
                         <div className="flex justify-between space-x-2">
                           <button
                             className={`ti-btn ${

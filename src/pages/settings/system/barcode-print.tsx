@@ -237,13 +237,7 @@ const BarcodePrint: React.FC = () => {
     }, 1000);
   }, [barcodeDesc?.data]);
 
-  const handleStandardBarcodeSubmit = () => {
-    setStandardBarcodeLoading(true);
-    setTimeout(() => {
-      console.log('Standard Barcode Form submitted:', standardBarcode.data);
-      setStandardBarcodeLoading(false);
-    }, 1000);
-  };
+ 
 
   // Define columns for the Counters grid
   const columns: DevGridColumn[] = useMemo(

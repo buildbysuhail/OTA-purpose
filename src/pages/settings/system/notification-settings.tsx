@@ -9,7 +9,7 @@ import {
   NotificationsProvider,
 } from "../../../enums/notification-chanal";
 import { SearchResultBar } from "../AllSettings/Components/Header";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import SmsWhatsappTemplate from "./notification-settings-template-SmsWhatsapp";
@@ -25,7 +25,8 @@ interface NotificationSettings {
   email: string;
   inAppNotification: string;
 }
-
+const location = useLocation();
+const path = location.pathname.split("/").pop();
 const NotificationSettings = () => {
   const T_Head = [ "Transaction","Email","whatsApp","Sms","App Notification",];
   const [TableBody, setTableBody] = useState<NotificationSettings[]>([]);
@@ -108,9 +109,30 @@ const NotificationSettings = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 justify-center">
-        <div className="xxl:col-span-8 col-span-12">
-          <div className="container-lg">
+
+        {/*
+         
+            <div className="box custom-box">
+              <div className="box-header justify-between">
+                <div className="box-title">
+                  Sessions{" "}
+                  <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                  View and manage devices where you're currently logged in
+                  </p>
+                  
+                </div>
+                <div></div>
+              </div>
+              <div className="box-body">
+                <div className="grid grid-cols-1 gap-3"></div> */}
+
+      <div className="grid grid-cols-12 gap-x-6">
+       <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+       <div id="phone-number"
+            className={`xxl:col-span-12 xl:col-span-12 ${
+              path === "Password" ? "blink" : ""
+            } col-span-12`}
+          >
             <div className="flex justify-start mx-6">
               <div className="">
                 <h5 className="font-semibold text-center text-[1.25rem] text-defaulttextcolor">
@@ -215,7 +237,7 @@ const NotificationSettings = () => {
                                     size="sm"
                                     defaultValue={item.sms === "1"}
                                     value={item.sms === "1"}
-                                    onChange={(e) => handleSwitchChange(item.transactionCode,"sms",e.target.check)}
+                                    onChange={(e) => handleSwitchChange(item.transactionCode,"sms",e.target.checked)}
                                   />
                                   {item.sms === "1" && (
                                     <span

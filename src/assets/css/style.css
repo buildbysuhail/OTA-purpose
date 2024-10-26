@@ -10616,9 +10616,9 @@ code {
   @apply py-5;
 }
 
-.main-content {
+/* .main-content {
   @apply px-6;
-}
+} */
 
 .content {
   @apply lg:ms-60 mt-[60px] transition-all ms-0;

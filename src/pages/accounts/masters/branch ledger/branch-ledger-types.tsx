@@ -4,7 +4,7 @@ export const initialBranchLedger = {
     branchID: 0,
     refBranchID: 0,
     purchaseLedgerID: 0,
-    receivableLedgerID: 0,
+    receivableLedgerID: 4070,
     branchPayableLedgerID: 0
   },
   validations: {

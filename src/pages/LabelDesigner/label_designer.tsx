@@ -53,10 +53,12 @@ import { handleResponse } from "../../utilities/HandleResponse";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../components/ERPComponents/erp-button";
-import { DesignerElementType, PlacedComponent } from "../InvoiceDesigner/Designer/interfaces";
-
-
-
+import {
+  DesignerElementType,
+  PlacedComponent,
+} from "../InvoiceDesigner/Designer/interfaces";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { getDetailAction } from "../../redux/slices/app-thunks";
 
 interface PageProps {
   padding: {
@@ -71,6 +73,10 @@ interface PageProps {
     bottom: number;
     left: number;
   };
+  templateName?: string;
+  pageSize?: string;
+  width?:number;
+  height?:number;
   borderColor: string;
   printer: string;
 }
@@ -121,9 +127,23 @@ const initialPageProps: PageProps = {
   padding: { top: 10, right: 10, bottom: 10, left: 10 },
   margin: { top: 10, right: 10, bottom: 10, left: 10 },
   borderColor: "#000000",
+  templateName: "",
+  pageSize:'',
   printer: "Default Printer",
-};
+  width:0,
+  height:0,
 
+};
+const pageSizeOptions = [
+  { label: "A5", value: "A5" },
+  { label: "A4", value: "A4" },
+  { label: "Custom", value: "Custom" },
+];
+
+const retailPageSizes = [
+  { label: `3 "`, value: "3Inch" },
+  { label: `4 "`, value: "4Inch" },
+];
 const samplePurchaseList: PurchaseItem[] = [
   {
     id: 1,
@@ -531,13 +551,13 @@ export default function ExtendedPDFBarcodeDesigner() {
       thumbImage: dataUrl,
       barcodeState: placedComponents,
       background_image: null,
-        background_image_header: null,
-        background_image_footer: null,
-        signature_image: null,
-        headerState: null,
-        itemTableState: null,
-        totalState: null,
-        footerState: null,
+      background_image_header: null,
+      background_image_footer: null,
+      signature_image: null,
+      headerState: null,
+      itemTableState: null,
+      totalState: null,
+      footerState: null,
       propertiesState: {
         ...templateData.activeTemplate.propertiesState,
         template_group: "barcode",
@@ -646,6 +666,19 @@ export default function ExtendedPDFBarcodeDesigner() {
       }
     }
   }, []);
+  const appDispatch = useAppDispatch();
+  const getPDFTemplateData = () => {
+    (
+      appDispatch(
+        getDetailAction({ apiUrl: Urls.templates, id: id || "" })
+      ) as any
+    ).then((res: any) => {
+      // res?.payload?.data?.content && dispatch(setActiveTemplate(res?.payload?.data?.content, res?.payload?.data));
+    });
+  };
+  useEffect(() => {
+    if (id !== "new") getPDFTemplateData();
+  }, []);
   const handlePropertyChange = (
     property: keyof PlacedComponent,
     value: string | number
@@ -737,7 +770,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         );
     }
   };
-
+  const isRetailTemplate = () => {
+    return ["3Inch", "4Inch"]?.includes(pageProps?.pageSize!);
+  };
   return (
     <div
       className="flex max-h-screen bg-gray-100"
@@ -769,9 +804,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         {/* Toolbar */}
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <button className="p-1 hover:bg-gray-100 rounded">
+            {/* <button className="p-1 hover:bg-gray-100 rounded">
               <Menu className="w-4 h-4" />
-            </button>
+            </button> */}
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => setZoom(zoom - 10)}
@@ -788,10 +823,21 @@ export default function ExtendedPDFBarcodeDesigner() {
               </button>
             </div>
           </div>
-          <div className="flex space-x-2">
+          <div className="flex items-center space-x-2">
             {/* <button onClick={() => setIsPreviewOpen(true)} className='bg-primary'>
                             Preview
                         </button> */}
+            <ERPButton
+              startIcon="ri-arrow-go-back-line"
+              title="Clear"
+              onClick={() => {
+                setPlacedComponents([]);
+                setSelectedComponent(null);
+              }}
+              variant="secondary"
+              loading={loading}
+            ></ERPButton>
+
             <ERPButton
               title="Save"
               onClick={manageSaveTemplate}
@@ -878,9 +924,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         value: field,
                         label: field,
                       }))}
-                      onChange={(e) =>
-                        handlePropertyChange("content", e.value)
-                      }
+                      onChange={(e) => handlePropertyChange("content", e.value)}
                     />
                   ) : (
                     <ERPInput
@@ -919,34 +963,38 @@ export default function ExtendedPDFBarcodeDesigner() {
                   />
                 </Box>
                 <Box>
-                  <ERPInput
-                    id="width"
-                    type="number"
-                    label="Width"
-                    value={selectedComponent.width}
-                    data={selectedComponent}
-                    onChange={(e) =>
-                      handlePropertyChange(
-                        "width",
-                        parseInt(e.target.value, 10)
-                      )
-                    }
-                  />
+                  {selectedComponent.type !== DesignerElementType.barcode && (
+                    <ERPInput
+                      id="width"
+                      type="number"
+                      label="Width"
+                      value={selectedComponent.width}
+                      data={selectedComponent}
+                      onChange={(e) =>
+                        handlePropertyChange(
+                          "width",
+                          parseInt(e.target.value, 10)
+                        )
+                      }
+                    />
+                  )}
                 </Box>
                 <Box>
-                  <ERPInput
-                    id="height"
-                    type="number"
-                    label="Height"
-                    value={selectedComponent.height}
-                    data={selectedComponent}
-                    onChange={(e) =>
-                      handlePropertyChange(
-                        "height",
-                        parseInt(e.target.value, 10)
-                      )
-                    }
-                  />
+                  {selectedComponent.type !== DesignerElementType.barcode && (
+                    <ERPInput
+                      id="height"
+                      type="number"
+                      label="Height"
+                      value={selectedComponent.height}
+                      data={selectedComponent}
+                      onChange={(e) =>
+                        handlePropertyChange(
+                          "height",
+                          parseInt(e.target.value, 10)
+                        )
+                      }
+                    />
+                  )}
                 </Box>
                 {selectedComponent.type === DesignerElementType.barcode &&
                   selectedComponent.barcodeProps && (
@@ -966,15 +1014,10 @@ export default function ExtendedPDFBarcodeDesigner() {
                             value: format,
                             label: format,
                           }))}
-                          onChange={(e) =>
-                            {
-                                debugger;
-                                handleBarcodePropertyChange(
-                                    "format",
-                                    e.value
-                                  )
-                              }
-                          }
+                          onChange={(e) => {
+                            debugger;
+                            handleBarcodePropertyChange("format", e.value);
+                          }}
                         />
                       </Box>
 
@@ -1071,8 +1114,20 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
 
                       <Box>
-                        <InputLabel>Text Align</InputLabel>
-                      
+                        <InputLabel
+                          sx={{
+                            textTransform: "capitalize",
+                            marginBottom: "0.25rem",
+                            display: "block",
+                            fontSize: "0.75rem",
+                            color: "rgb(17, 24, 39)",
+                            textAlign: "left",
+                            direction: "rtl",
+                          }}
+                        >
+                          Text Align
+                        </InputLabel>
+
                         <div className="flex justify-between space-x-2">
                           <button
                             className={`ti-btn ${
@@ -1140,17 +1195,29 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
 
                       <Box>
-                        <InputLabel>Font Style</InputLabel>
+                        <InputLabel
+                          sx={{
+                            textTransform: "capitalize",
+                            marginBottom: "0.25rem",
+                            display: "block",
+                            fontSize: "0.75rem",
+                            color: "rgb(17, 24, 39)",
+                            textAlign: "left",
+                            direction: "rtl",
+                          }}
+                        >
+                          Font Style
+                        </InputLabel>
                         <div className="flex justify-between space-x-2">
                           <button
                             className={`ti-btn ${
-                             selectedComponent.barcodeProps.fontStyle ===
+                              selectedComponent.barcodeProps.fontStyle ===
                               "bold"
                                 ? "ti-btn-primary-full"
                                 : "bg-slate-100 hover:bg-slate-200 text-black"
                             } px-4 py-2 w-full`}
                             onClick={() =>
-                                handleBarcodePropertyChange("fontStyle", "bold")
+                              handleBarcodePropertyChange("fontStyle", "bold")
                             }
                           >
                             Bold
@@ -1163,12 +1230,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                                 : "bg-slate-100 hover:bg-slate-200 text-black"
                             } px-4 py-2 w-full`}
                             onClick={() =>
-                                handleBarcodePropertyChange("fontStyle", "italic")
-                              }
+                              handleBarcodePropertyChange("fontStyle", "italic")
+                            }
                           >
                             Italic
                           </button>
-                          </div>
+                        </div>
                         {/* <div className="flex space-x-2">
                           <Button
                             bg-slate-100
@@ -1239,7 +1306,67 @@ export default function ExtendedPDFBarcodeDesigner() {
           </Box>
           <Box hidden={value !== "page"}>
             <Box sx={{ spaceY: 2 }}>
-              <Box>
+              <Box sx={{ mb: 1 }}>
+                <ERPInput
+                  id="templateName"
+                  label="Template Name"
+                  value={pageProps.templateName}
+                  data={pageProps}
+                  onChange={(e) =>
+                    handlePagePropsChange("templateName", e.target.value)
+                  }
+                />
+              </Box>
+              <Box sx={{ mb: 1 }}>
+                {/* <label htmlFor="page_size" className="font-light text-sm">
+            Page Size
+          </label> */}
+                <ERPDataCombobox
+                  defaultValue={pageProps?.pageSize ?? "A4"}
+                  // value={pageProps?.pageSize ?? "A4"}
+                  field={{
+                    id: "pageSize",
+                    required: true,
+                    valueKey: "value",
+                    labelKey: "label",
+                  }}
+                  data={pageProps}
+                  onChange={(e) => handlePagePropsChange("pageSize", e.value)}
+                  id="pageSize"
+                  options={
+                    isRetailTemplate() ? retailPageSizes : pageSizeOptions
+                  }
+                  label="Page Size"
+                />
+              </Box>
+              {pageProps?.pageSize === "Custom" &&(
+                 <Box sx={{ mb: 1 }}>
+                 <div className="flex justify-start items-center space-x-1">
+                 <ERPInput
+                   id="width"
+                   label="Page Width"
+                   value={pageProps.width}
+                   type="number"
+                   data={pageProps}
+                   onChange={(e) =>
+                     handlePagePropsChange("width", e.target.value)
+                   }
+                 />
+                 <ERPInput
+                   id="height"
+                   label="Page  Height"
+                   type="number"
+                   value={pageProps.height}
+                   data={pageProps}
+                   onChange={(e) =>
+                     handlePagePropsChange("height", e.target.value)
+                   }
+                 />
+                 </div>
+               </Box>
+              )}
+             
+              {/* <Box>
                 <InputLabel htmlFor="padding">Padding (px)</InputLabel>
                 <Box
                   display="grid gap-2"
@@ -1266,9 +1393,22 @@ export default function ExtendedPDFBarcodeDesigner() {
                     />
                   ))}
                 </Box>
-              </Box>
-              <Box>
-                <InputLabel htmlFor="margin">Margin (px)</InputLabel>
+              </Box> */}
+              <Box sx={{ mb: 1 }}>
+                <InputLabel
+                  sx={{
+                    textTransform: "capitalize",
+                    marginBottom: "0.25rem",
+                    display: "block",
+                    fontSize: "0.75rem",
+                    color: "rgb(17, 24, 39)",
+                    textAlign: "left",
+                    direction: "rtl",
+                  }}
+                  htmlFor="margin"
+                >
+                  Margin (px)
+                </InputLabel>
                 <Box
                   display="grid"
                   gridTemplateColumns="repeat(2, 1fr)"
@@ -1295,7 +1435,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   ))}
                 </Box>
               </Box>
-              <Box>
+              <Box sx={{ mb: 1 }}>
                 <ERPInput
                   id="borderColor"
                   label="Border Color"
@@ -1307,7 +1447,8 @@ export default function ExtendedPDFBarcodeDesigner() {
                   }
                 />
               </Box>
-              <Box>
+
+              <Box sx={{ mb: 1 }}>
                 <ERPDataCombobox
                   id="printer"
                   value={pageProps.printer}
@@ -1322,9 +1463,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     value: printer,
                     label: printer,
                   }))}
-                  onChange={(e) =>
-                    handlePagePropsChange("printer", e.value)
-                  }
+                  onChange={(e) => handlePagePropsChange("printer", e.value)}
                 />
               </Box>
             </Box>

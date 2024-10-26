@@ -232,11 +232,14 @@ acc_reports_party_summary_purchase_return: "/Accounts/RptPartyWiseSummary/Purcha
 acc_reports_party_summary_purchase_order: "/Accounts/RptPartyWiseSummary/PurchaseOrder/",
 acc_reports_party_summary_sales_return: "/Accounts/RptPartyWiseSummary/SalesReturn/",
 acc_reports_party_summary_sales_order: "/Accounts/RptPartyWiseSummary/SalesOrder/",
+
 acc_reports_payable: "/Accounts/RptOutstandingReport/Payable/",
 acc_reports_receivable: "/Accounts/RptOutstandingReport/Receivable/",
+
 acc_reports_aging_payable: "/Accounts/RptAging/AgingPayable/",
 acc_reports_aging_receivable: "/Accounts/RptAging/AgingReceivable/",
 acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
+
 acc_reports_trial_balance: "/Accounts/RptReports/TrialBalance/",
 acc_reports_balance_sheet: "/Accounts/RptReports/BalanceSheet/",
 acc_reports_account_ledger_balance_view: "/Accounts/RptReports/AccountLedgerBalanceView/",

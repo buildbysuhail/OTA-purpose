@@ -123,7 +123,7 @@ export const SettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'integration',
+    title: 'Integration',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',

@@ -206,8 +206,7 @@ const AccountSettingsSessions: FC<AccountSettingsProps> = (props) => {
       
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div
-            id="phone-number"
+          <div id="phone-number"
             className={`xxl:col-span-12 xl:col-span-12 ${
               path === "Password" ? "blink" : ""
             } col-span-12`}

@@ -8,15 +8,9 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 interface PartySummaryCollection {
-
   from: Date
 }
 const PartySummaryCollection = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [filter, setFilter] =useState<PartySummaryCollection>({from: new Date()});
@@ -28,14 +22,15 @@ const PartySummaryCollection = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 180,
     },
     {
       dataField: "form",
-      caption: t("form"),
+      caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 180,
     },
     {
       dataField: "vchNo",
@@ -43,39 +38,39 @@ const PartySummaryCollection = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 180,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
+    {
+      dataField: "accountGroup",
+      caption: t("account_group"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 300,
+    },
     {
       dataField: "particulars",
-      caption: t("account"),
+      caption: t("particulars"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
+      dataField: "amount",
+      caption: t('amount'),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
     {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
+      dataField: "discount",
+      caption: t('discount'),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
     {
       dataField: "narration",
@@ -83,72 +78,80 @@ const PartySummaryCollection = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
+    },
+     {
+      dataField: "routeName",
+      caption: t("route_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 300,
     },
     {
-      dataField: "debit",
-      caption: t('debit'),
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
-      dataField: "credit",
-      caption: t("credit"),
+      dataField: "chequeNumber",
+      caption: t("cheque_number"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
     {
-      dataField: "balance",
-      caption: t("balance"),
+      dataField: "chequeDate",
+      caption: t("cheque_date"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 300,
     },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      dataField: "partyCode",
+      caption: t("party_code"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 300,
+    },
+    {
+      dataField: "mobilePhone",
+      caption: t("mobile_phone"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 300,
+    },
+    {
+      dataField: "contactPhone",
+      caption: t("contact_phone"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 300,
+    },
+    {
+      dataField: "faxNumber",
+      caption: t("fax_number"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 300,
+    },
+    {
+      dataField: "refNo",
+      caption: t("ref_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 180,
+    },
   ];
   return (
     <Fragment>
@@ -159,15 +162,13 @@ const PartySummaryCollection = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("party_summary_collection_report")}
+                  dataUrl= {Urls.acc_reports_party_summary_collections }
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
                 ></ErpDevGrid>
               </div>
@@ -175,7 +176,6 @@ const PartySummaryCollection = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

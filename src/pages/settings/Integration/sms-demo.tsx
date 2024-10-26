@@ -16,9 +16,16 @@ export default function Component() {
   const [selectedMenu, setSelectedMenu] = useState<string>("Customers");
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [currentTime, setCurrentTime] = useState<string>("");
 
   useEffect(() => {
     loadData();
+    const interValid = setInterval(() => {
+      setCurrentTime(formatCurrentTime());
+    }, 6000);
+
+    setCurrentTime(formatCurrentTime());
+    return () => clearInterval(interValid);
   }, []);
 
   const loadData = async () => {
@@ -58,7 +65,7 @@ export default function Component() {
         <div className="bg-[#42414141] p-2 sm:p-4 overflow-y-auto flex flex-col justify-end min-h-[150px] sm:min-h-[200px]">
           <div className="bg-white rounded-lg p-2 max-w-[85%] sm:max-w-[80%] ml-auto mb-2 shadow">
             <p className="text-xs sm:text-sm">{message || "No message available"}</p>
-            <p className="text-right text-[10px] sm:text-xs text-gray mt-1">12:00 PM</p>
+            <p className="text-right text-[10px] sm:text-xs text-gray mt-1">{currentTime}</p>
           </div>
         </div>
 
@@ -100,7 +107,7 @@ export default function Component() {
       <div className="flex flex-col justify-between md:flex-row h-full p-3 md:p-6">
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">{selectedMenu}</h2>
-          <p className="mb-2 md:mb-4">{selectedItem.transactionName}</p>
+          <p className="mb-2 md:mb-4">{selectedItem.content || "No Message Available"}</p>
         </div>
         <div>
           <SmsDemo
@@ -111,6 +118,11 @@ export default function Component() {
       </div>
     );
   };
+
+  const formatCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })
+  }
 
   return (
     <div className="border p-4 rounded-lg">

@@ -1,21 +1,21 @@
 import { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../redux/urls";
-import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../../../utilities/hooks/useRootState";
+import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
+import ERPGridActions from "../../../../../components/ERPComponents/erp-grid-actions";
+import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../../redux/urls";
+import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../../redux/types";
+import { ActionType } from "../../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 
-interface PaymentReport {
+interface ProfitAndLossSubledgerwiseView {
 
   from: Date
 }
-const PaymentReport = () => {
+const ProfitAndLossSubledgerwiseView = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -23,64 +23,71 @@ const PaymentReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<PaymentReport>({from: new Date()});
+  const [filter, setFilter] =useState<ProfitAndLossSubledgerwiseView>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 180,
-    },
-    {
-      dataField: "vchNo",
-      caption:  t("voucher_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 180,
-    },
-    {
-      dataField: "form",
-      caption: t("voucher_type"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 180,
-    },
-    {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 300,
-    },
-    {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 180,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 300,
-    },
-    {
-      dataField: "amount",
-      caption: t('amount'),
+      dataField: "branchID",
+      caption: t('branch_id'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 250,
+      width: 50,
+    },
+    {
+      dataField: "branch",
+      caption: t("branch"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "accGroupName",
+      caption:  t("acc_group_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "ledgerID",
+      caption: t("ledger_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "ledgerName",
+      caption: t("ledger_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "debit",
+      caption: t('debit'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "credit",
+      caption: t("credit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "balance",
+      caption: t("balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
     },
   ];
   return (
@@ -92,8 +99,8 @@ const PaymentReport = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("payment_report")}
-                  dataUrl= {Urls.acc_reports_payment}
+                  gridHeader={t("account_ledger_report")}
+                  dataUrl= {Urls.acc_reports_account_ledger_balance_view_sub_group_inc}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"
@@ -113,4 +120,4 @@ const PaymentReport = () => {
   );
 };
 
-export default PaymentReport;
+export default ProfitAndLossSubledgerwiseView;

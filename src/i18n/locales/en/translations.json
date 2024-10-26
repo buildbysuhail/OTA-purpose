@@ -922,5 +922,6 @@
   "mrp": "MRP",
   "batch_id": "Batch ID",
   "specification": "Specification",
-  "unit_id": "Unit ID"
+  "unit_id": "Unit ID",
+  "cost_centre": "Cost Centre"
 }

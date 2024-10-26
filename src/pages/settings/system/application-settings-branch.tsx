@@ -106,7 +106,9 @@ const BranchSettingsForm: React.FC = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <div className='relative max-h-[calc(100vh)]'>
+    <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+
       <div className="border rounded-lg p-4">
         <div className="grid  sm:grid-cols-2 lg:grid-cols-2 xxl:grid-cols-4 gap-6">
           <ERPDisableEnable targetCount={15} onSuccess={handleSuccess}>
@@ -609,7 +611,16 @@ const BranchSettingsForm: React.FC = () => {
           disabled={isSaving}
         />
       </div>
-    </form>
+      </form>
+      <div className="flex justify-end p-4">
+      <ERPButton
+        title={t("save_settings")}
+        variant="primary"
+        type="button"
+        onClick={()=>handleSubmit}
+      />
+    </div>
+    </div>
   );
 };
 

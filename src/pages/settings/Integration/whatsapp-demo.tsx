@@ -78,13 +78,13 @@ export default function Component() {
             className="bg-white rounded-full px-2 sm:px-4 py-1 sm:py-2 flex-grow mr-2 text-xs sm:text-sm"
             readOnly
           />
-          <button className="bg-green text-white w-[33px] h-[33px] leading-[3px] text-center rounded-full">
+          <button className="bg-green text-white w-[33px] h-[33px] flex justify-center items-center rounded-full">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              className="w-4 h-4 text-center"
+              className="w-4 h-4 text-center !display-revert"
             >
               <path
                 strokeLinecap="round"

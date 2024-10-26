@@ -32,7 +32,7 @@ const Urls = {
   data_pricectegory: "/Data/PriceCategories/",
   data_languages: "/Data/Languages/",
   data_counters: "/Data/Counters/",
-
+  data_templates: "/Data/Templates/",
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
   data_acc_Branches: "/Data/BranchWithoutDefault",

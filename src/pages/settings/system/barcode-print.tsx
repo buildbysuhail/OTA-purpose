@@ -136,6 +136,7 @@ const BarcodePrint: React.FC = () => {
   const [voucherForm, setVoucherForm] = useState<any>(initialVoucherFormData);
   const [barcodeDesc, setBarcodeDesc] = useState<any>(initialBarcodeDescData);
   const [standardBarcode, setStandardBarcode] = useState<any>(initialStandardBarcodeData);
+  const [data, setData] = useState<any>();
 
   const handleBarcodeStateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -207,16 +208,9 @@ const BarcodePrint: React.FC = () => {
     const response: ResponseModelWithValidation<any, any> =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
     setBarcodeFormLoading(false);
-    handleResponse(
-      response,
-      () => {
-        setBarcodeForm((prevData: any) => ({
-          ...prevData,
-          validations: response.validations,
-        }));
-      }
-    );
-  }, [barcodeForm?.data]);
+    debugger;
+    setData(response);
+  }, []);
 
 
   const voucherFormSubmit = useCallback(async () => {
@@ -224,16 +218,9 @@ const BarcodePrint: React.FC = () => {
     const response: ResponseModelWithValidation<any, any> =
       await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
     setVoucherFormLoading(false);
-    handleResponse(
-      response,
-      () => {
-        setVoucherForm((prevData: any) => ({
-          ...prevData,
-          validations: response.validations,
-        }));
-      }
-    );
-  }, [voucherForm?.data]);
+    debugger;
+    setData(response);
+  }, []);
 
 
   const barcodeDescSubmit = useCallback(() => {
@@ -271,71 +258,8 @@ const BarcodePrint: React.FC = () => {
         minWidth: 100,
       },
       {
-        dataField: "counter",
-        caption: t("counter"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "descriptions",
-        caption: t("descriptions"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "maintainShift",
-        caption: t("maintain_shift"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 60,
-      },
-      {
-        dataField: "createdUser",
-        caption: t("created_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "modifiedUser",
-        caption: t("modified_user"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "modifiedDate",
-        caption: t("modified_date"),
-        dataType: "date",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "cashLedgerID",
-        caption: "Cash Ledger ID",
+        dataField: "autoBarcode",
+        caption: t("barcode"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
@@ -343,8 +267,8 @@ const BarcodePrint: React.FC = () => {
         minWidth: 100,
       },
       {
-        dataField: "ledgerName",
-        caption: t("ledger_name"),
+        dataField: "brandName",
+        caption: t("brand_name"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -352,8 +276,35 @@ const BarcodePrint: React.FC = () => {
         minWidth: 100,
       },
       {
-        dataField: "vrPrefix",
-        caption: t("voucher_prefix"),
+        dataField: "cost",
+        caption: t("cost"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: "mrp",
+        caption: t("mrp"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: "productBatchID",
+        caption: t("batch_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: "productCode",
+        caption: t("product_code"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -361,46 +312,50 @@ const BarcodePrint: React.FC = () => {
         minWidth: 100,
       },
       {
-        dataField: "actions",
-        caption: t("actions"),
-        allowSearch: false,
-        allowFiltering: false,
-        fixed: true,
-        fixedPosition: "right",
-        width: 100,
-        cellRender: (cellElement: any) => {
-          return (
-            <ERPGridActions
-              view={{
-                type: "popup",
-                action: () =>
-                  dispatch(
-                    toggleCounterPopup({
-                      isOpen: true,
-                      key: cellElement?.data?.id,
-                    })
-                  ),
-              }}
-              edit={{
-                type: "popup",
-                action: () =>
-                  dispatch(
-                    toggleCounterPopup({
-                      isOpen: true,
-                      key: cellElement?.data?.id,
-                    })
-                  ),
-              }}
-              delete={{
-                confirmationRequired: true,
-                confirmationMessage:
-                  "Are you sure you want to delete this item?",
-                url: `${Urls.Counter}/${cellElement?.data?.id}`,
-              }}
-            />
-          );
-        },
+        dataField: "productName",
+        caption: t("product_name"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
       },
+      {
+        dataField: "salesPrice",
+        caption: t("sales_price"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: "specification",
+        caption: t("specification"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: "unitID",
+        caption: t("unit_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      },
+      {
+        dataField: "unitName",
+        caption: t("unit_name"),
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth: 100,
+      }
     ],
     [t, dispatch]
   );
@@ -774,72 +729,7 @@ const BarcodePrint: React.FC = () => {
                 </div>
 
                 {/* Right side */}
-                <div className="border p-4 rounded-lg">
-                  <div className="w-full">
-                    <div className="flex gap-6 justify-between">
-                      <div className="flex flex-col space-y-2 ml-4 flex-grow">
-                        <ERPDataCombobox
-                          id="standardLabelDesign"
-                          field={{
-                            id: "standardLabelDesign",
-                            required: true,
-                            getListUrl: Urls.data_form_type, 
-                            valueKey: "id",
-                            labelKey: "name",
-                          }}
-                          label="Label Design"
-                          required={true}
-                          data={standardBarcode.data}
-                          defaultData={standardBarcode?.data}
-                          value={standardBarcode.data.standardLabelDesign}
-                          validation={standardBarcode?.validations?.standardLabelDesign}
-                          onChangeData={(data: any) => handleComboboxChange("standardLabelDesign", data)}
-                        />
-                        <ERPDataCombobox
-                          id="printer"
-                          field={{
-                            id: "printer",
-                            required: true,
-                            getListUrl: Urls.data_form_type,
-                            valueKey: "id",
-                            labelKey: "name",
-                          }}
-                          label="Printer"
-                          required={true}
-                          data={standardBarcode.data}
-                          defaultData={standardBarcode?.data}
-                          value={standardBarcode.data.printer}
-                          validation={standardBarcode?.validations?.printer}
-                          onChangeData={(data: any) => handleComboboxChange("printer", data)}
-                        />
-                      </div>
-                      <div className="flex flex-col justify-between gap-9 h-full">
-                        <div className="flex flex-start mt-5">
-                          <ERPCheckbox
-                            id="standardPreview"
-                            label="Preview"
-                            data={standardBarcode.data}
-                            validation={standardBarcode?.validations?.standardPreview}
-                            onChangeData={(data: any) => {
-                              setStandardBarcode((prev: any) => ({
-                                ...prev,
-                                data: data,
-                              }));
-                            }}
-                          />
-                        </div>
-                        <ERPButton
-                          title={t("print")}
-                          className="px-3 py-1 w-24"
-                          variant="secondary"
-                          disabled={standardBarcodeLoading}
-                          loading={standardBarcodeLoading}
-                          onClick={handleStandardBarcodeSubmit}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                
 
               </div>
             </div>
@@ -855,7 +745,7 @@ const BarcodePrint: React.FC = () => {
                   hideGridAddButton={true}
                   hideDefaultSearchPanel={true}
                   hideDefaultExportButton={true}
-                  dataUrl={Urls.Counter}
+                  data={data}
                   
                   gridId="grd_barcode_print"
                   popupAction={toggleCounterPopup}
@@ -868,14 +758,7 @@ const BarcodePrint: React.FC = () => {
           </div>
         </div>
 
-        <ERPModal
-          isOpen={rootState.PopupData.counter.isOpen || false}
-          title={t("barcode_print")}
-          width="w-full max-w-[600px]"
-          isForm={true}
-          closeModal={() => dispatch(toggleCounterPopup({ isOpen: false }))}
-          content={<CounterManage />}
-        />
+      
       </div>
     </Fragment>
   );

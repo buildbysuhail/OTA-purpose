@@ -917,5 +917,13 @@
   "acc_group_name": "اسم مجموعة الحساب",
   "period": "الفترة",
   "bill_total": "إجمالي الفاتورة",
-  "account_aging_analysis": "تحليل أعمار الحسابات"
+  "account_aging_analysis": "تحليل أعمار الحسابات",
+  "siNo": "رقم مسلسل",
+  "barcode": "الرمز الشريطي",
+  "brand_name": "اسم العلامة التجارية",
+  "cost": "التكلفة",
+  "mrp": "السعر الأقصى للبيع",
+  "batch_id": "رقم الدفعة",
+  "specification": "المواصفات",
+  "unit_id": "معرف الوحدة"
 }

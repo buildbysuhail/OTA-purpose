@@ -28,7 +28,7 @@ const PartySummaryLedger = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 120,
     },
     {
       dataField: "form",
@@ -36,26 +36,11 @@ const PartySummaryLedger = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 90,
     },
     {
       dataField: "vchNo",
       caption:  t("voucher_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    {
-      dataField: "particulars",
-      caption: t("account"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -86,12 +71,21 @@ const PartySummaryLedger = () => {
       width: 150,
     },
     {
+      dataField: "particulars",
+      caption: t("account"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    
+   
+    {
       dataField: "debit",
       caption: t('debit'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 170,
     },
     {
       dataField: "credit",
@@ -99,7 +93,7 @@ const PartySummaryLedger = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 170,
     },
     {
       dataField: "balance",
@@ -107,48 +101,81 @@ const PartySummaryLedger = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 170,
     },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+    {
+      dataField: "ledger",
+      caption: t("ledger"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "invTransactionID",
+      caption: t("invTransaction_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "financialYearID",
+      caption: t("financial_year_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "branch",
+      caption: t("branch"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "chequeNumber",
+      caption: t("cheque_number"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "checkStatus",
+      caption: t("check_status"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "chequeDate",
+      caption: t("cheque_date"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "costCenter",
+      caption: t("cost_center"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "accTransactionDetailID",
+      caption: t("accTransaction_detail_id"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+
   ];
   return (
     <Fragment>
@@ -159,8 +186,8 @@ const PartySummaryLedger = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  gridHeader={t("party_summary_ledger_report")}
+                  dataUrl= {Urls.acc_reports_party_summary_ledger}
                   method={ActionType.POST}
                   postData={filter}
                   gridId="grd_cost_centre"

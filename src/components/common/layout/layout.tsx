@@ -23,9 +23,9 @@ const Layout: FC<LayoutProps> = ({setMyClass}) => {
   return (
     <>
     <Header />
-            <Sidebar type='erp'/>
-            <div className='content main-index'>
-              <div className='main-content'
+            <Sidebar type='erp' />
+            <div className='content main-index max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-50 '  >
+              <div className='main-content ' 
                 onClick={Bodyclickk}
               >
                 <Content />

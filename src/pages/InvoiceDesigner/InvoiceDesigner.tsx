@@ -24,8 +24,7 @@ import save_svg from "../../assets/svg/save.svg";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getDetailAction, postAction, patchAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
-import { setTemplate, setTemplateBarcodeState, setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
-import LabelDesigner from "./Designer/LabelDesigner";
+import { setTemplate,  setTemplateFooterState, setTemplateHeaderState, setTemplateItemTableState, setTemplatePropertiesState, setTemplateThumbImage, setTemplateTotalState } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 
 interface DesignSectionType {
@@ -304,13 +303,7 @@ const InvoiceDesigner = () => {
             onChange={(footerState) => dispatch(setTemplateFooterState(footerState))}
           />
         )}
-        {currentSection.type == "barcode" && (
-          <LabelDesigner
-            // tempImages={{ templateImages, setTemplateImages }}
-            barcodeState={templateData?.activeTemplate?.barcodeState}
-            onChange={(barcodeState) => dispatch(setTemplateBarcodeState(barcodeState))}
-          />
-        )}
+        
       </div>
 
       {/* Preview  */}

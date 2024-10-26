@@ -40,7 +40,6 @@ import GridPreferenceChooser from "../../components/ERPComponents/erp-gridprefer
 import { APIClient } from "../../helpers/api-client";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import ERPButton from "./erp-button";
-import { AppDispatch } from "../../redux/store";
 import { popupDataProps } from "../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "devextreme/localization";
@@ -57,7 +56,8 @@ interface ERPDevGridProps {
   columns: DevGridColumn[];
   showSerialNo?: boolean;
   gridId: string;
-  dataUrl: string;
+  dataUrl?: string;
+  data?: any;
   method?: ActionType;
   postData?: any;
   height?: number | string;
@@ -228,6 +228,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   showSerialNo,
   gridId,
   dataUrl,
+  data,
   method = ActionType.GET,
   postData,
   height,
@@ -313,8 +314,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 
-  const [gridCols, setGridCols] = useState<DevGridColumn[]>();
-  const [currentStore, setCurrentStore] = useState<any>(null);
+  const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
   const [preferences, setPreferences] = useState<GridPreference>();
   const [isChildOpen, setIsChildOpen] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
@@ -338,21 +338,40 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
   const isNotEmpty = (value: any) =>
     value !== undefined && value !== null && value !== "";
-  console.log("store:");
-  const store = useMemo(
-    () => {
-      debugger;
-      if (reload) {
-        const newStore = createStore(keyExpr, dataUrl, allowEditing, method, postData, initialFilters,undefined, childPopupProps?.bodyProps);
-        setCurrentStore(newStore);  // Update current store whenever reload is true
-        return newStore;
-      }
-      return currentStore;
-    },
-    [keyExpr, dataUrl, allowEditing, reload, childPopupProps?.bodyProps]
-  );
+  const store = useMemo(() => {
+    if (data) {
+      return data;
+    }
+    if(!dataUrl)
+    {
+      return null;
+    }
+    return createStore(
+      keyExpr,
+      dataUrl ?? "",
+      allowEditing,
+      method,
+      postData,
+      initialFilters,
+      paramNames,
+      childPopupProps?.bodyProps
+    );
+  }, [data, keyExpr, dataUrl, allowEditing, method, postData, initialFilters, reload, childPopupProps?.bodyProps]);
 
-  const onExportingHandler = (e: any) => {
+  // const store = data != undefined && data != null ? data : useMemo(
+  //   () => {
+  //     debugger;
+  //     if (reload) {
+  //       const newStore = createStore(keyExpr, dataUrl??"", allowEditing, method, postData, initialFilters,undefined, childPopupProps?.bodyProps);
+  //       setCurrentStore(newStore);  // Update current store whenever reload is true
+  //       return newStore;
+  //     }
+  //     return currentStore;
+  //   },
+  //   [keyExpr, dataUrl, allowEditing, reload, childPopupProps?.bodyProps]
+  // );
+
+  const onExportingHandler = useCallback((e: any) => {
     if (onExporting) {
       onExporting(e);
     } else {
@@ -391,7 +410,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         });
       }
     }
-  };
+  }, [onExporting, gridId]);
   const handleCellClick = useCallback((event: any) => {
     debugger;
     // Check if the clicked cell's field matches childPopupProps.buttonField

@@ -18,7 +18,7 @@ const AccountGroupType = () => {
 
   const columns: DevGridColumn[] = useMemo(() => [
     {
-      dataField: "s.No",
+      dataField: "siNo",
       caption: t("SiNo"),
       dataType: "string",
       allowSorting: true,
@@ -36,7 +36,7 @@ const AccountGroupType = () => {
       width: 100,
     },
     {
-      dataField: "accGroupName",
+      dataField: "accountGroup",
       caption: t("acc_group"),
       dataType: "string",
       allowSearch: true,

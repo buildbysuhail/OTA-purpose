@@ -915,5 +915,12 @@
   "acc_group_name": "Account Group Name",
   "period": "Period",
   "bill_total": "Bill Total",
-  "account_aging_analysis": "Account Aging Analysis"
+  "account_aging_analysis": "Account Aging Analysis",
+  "barcode": "Barcode",
+  "brand_name": "Brand Name",
+  "cost": "Cost",
+  "mrp": "MRP",
+  "batch_id": "Batch ID",
+  "specification": "Specification",
+  "unit_id": "Unit ID"
 }

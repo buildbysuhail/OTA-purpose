@@ -178,89 +178,91 @@ const SMSIntegration: React.FC = () => {
   };
 
   return (
-    <div className="p-6 max-w-8xl min-h-screen mx-auto bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-4 text-gray-800">
-        SMS Integrations
-      </h1>
+    <div className="p-6 max-w-8xl  mx-auto bg-white">
+      <div className="min-h-screen">
+        <h1 className="text-2xl font-bold mb-4 text-gray-800">
+          SMS Integrations
+        </h1>
 
-      <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg">
-        <div className="flex items-center">
-          {/* <img src="/api/placeholder/40/40" alt="Twilio logo" className="mr-4 rounded" /> */}
-          <div>
-            <h2 className="text-xl font-semibold text-gray-700">twilio</h2>
-            <p className="text-sm text-gray-600">
-              Set up Twilio and send automated SMS notifications to your
-              customers about transactions, payments and reminders.
-            </p>
+        <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center">
+            {/* <img src="/api/placeholder/40/40" alt="Twilio logo" className="mr-4 rounded" /> */}
+            <div>
+              <h2 className="text-xl font-semibold text-gray-700">twilio</h2>
+              <p className="text-sm text-gray-600">
+                Set up Twilio and send automated SMS notifications to your
+                customers about transactions, payments and reminders.
+              </p>
+            </div>
           </div>
+          <button
+            onClick={() => setIsOpen(true)}
+            className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors"
+          >
+            Connect
+          </button>
         </div>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors"
-        >
-          Connect
-        </button>
-      </div>
 
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-2 text-gray-700">Benefits</h3>
-        <ul className="list-disc pl-5 text-gray-600">
-          <li className="pb-3">
-            Notify customers instantly about transactions, payments and
-            reminders via SMS.
-          </li>
-          <li className="pb-3">
-            Configure SMS notifications at customer and contact person level.
-          </li>
-        </ul>
-      </div>
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold mb-2 text-gray-700">Benefits</h3>
+          <ul className="list-disc pl-5 text-gray-600">
+            <li className="pb-3">
+              Notify customers instantly about transactions, payments and
+              reminders via SMS.
+            </li>
+            <li className="pb-3">
+              Configure SMS notifications at customer and contact person level.
+            </li>
+          </ul>
+        </div>
 
-      <div>
-        <h3 className="text-lg font-semibold mb-2 text-gray-700">
-          Before you can connect Twilio with Polosys Books, you must
-        </h3>
-        <ul className="list-disc pl-5 text-gray-600">
-          <li className="pb-3">
-            Create a Twilio account.{" "}
-            <a
-              href="https://www.twilio.com/try-twilio"
-              className="text-[#2589BD] hover:underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Sign up Now
-            </a>
-          </li>
-          <li className="pb-3">
-            Go to Console in Twilio and get your Account SID and Auth Token.
-          </li>
-          <li className="pb-3">
-            Have an active phone number that works with Twilio.{" "}
-            <a
-              href="https://support.twilio.com/hc/en-us/articles/223135367-Phone-Number-types-Twilio-offers-and-how-they-work"
-              className="text-[#2589BD] hover:underline flex items-center"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Read more
-              {/* <ExternalLink size={14} className="ml-1" /> */}
-              <i className="ri-external-link-line"></i>
-            </a>
-          </li>
-        </ul>
-        <SmsDemo />
-      </div>
+        <div>
+          <h3 className="text-lg font-semibold mb-2 text-gray-700">
+            Before you can connect Twilio with Polosys Books, you must
+          </h3>
+          <ul className="list-disc pl-5 text-gray-600">
+            <li className="pb-3">
+              Create a Twilio account.{" "}
+              <a
+                href="https://www.twilio.com/try-twilio"
+                className="text-[#2589BD] hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Sign up Now
+              </a>
+            </li>
+            <li className="pb-3">
+              Go to Console in Twilio and get your Account SID and Auth Token.
+            </li>
+            <li className="pb-3">
+              Have an active phone number that works with Twilio.{" "}
+              <a
+                href="https://support.twilio.com/hc/en-us/articles/223135367-Phone-Number-types-Twilio-offers-and-how-they-work"
+                className="text-[#2589BD] hover:underline flex items-center"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Read more
+                {/* <ExternalLink size={14} className="ml-1" /> */}
+                <i className="ri-external-link-line"></i>
+              </a>
+            </li>
+          </ul>
+          <SmsDemo />
+        </div>
 
-      <ERPModal
-        isOpen={isOpen}
-        title={t("twilio")}
-        width="w-full max-w-[600px]"
-        isForm={true}
-        closeModal={() => {
-          setIsOpen(false);
-        }}
-        content={<SMSTwilioConnectPopup />}
-      />
+        <ERPModal
+          isOpen={isOpen}
+          title={t("twilio")}
+          width="w-full max-w-[600px]"
+          isForm={true}
+          closeModal={() => {
+            setIsOpen(false);
+          }}
+          content={<SMSTwilioConnectPopup />}
+        />
+      </div>
     </div>
   );
 };

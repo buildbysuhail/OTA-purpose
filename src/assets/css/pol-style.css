@@ -8,9 +8,9 @@
 .box-title {
   @apply text-[.800rem];
 }
-.main-content {
+/* .main-content {
   @apply pt-4;
-}
+} */
 
 .bg-custom-blue {
   background-color: rgb(58 88 146);
@@ -21,10 +21,10 @@
 /* .dx-datagrid-rowsview .dx-datagrid-content .dx-row-lines > td {
   border-bottom: 0px solid #ddd !important;
 } */
-.main-content {
+/* .main-content {
   padding-left: .5rem !important;
   padding-right: .5rem !important;
-}
+} */
 
 .grid-preference-form input {
   max-height: 27px !important;

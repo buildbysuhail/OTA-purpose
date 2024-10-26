@@ -42,7 +42,7 @@ export default function Component() {
   };
 
   const SmsDemo = ({ message, sender }: { message: string; sender: string }) => (
-    <div className="bg-gray p-2 sm:p-4 rounded-lg mt-4 w-full max-w-full sm:max-w-sm">
+    <div className="bg-gray p-2 sm:p-4 rounded-lg w-full max-w-full sm:max-w-sm">
       <div className="bg-white rounded-lg shadow-lg border overflow-hidden max-w-full sm:max-w-xs mx-auto">
         <div className="bg-white text-black px-2 sm:px-4 py-2 sm:py-3 flex items-center justify-between">
           <div className="flex items-center">
@@ -97,12 +97,12 @@ export default function Component() {
     };
 
     return (
-      <div className="flex flex-col md:flex-row h-full p-3 md:p-6">
+      <div className="flex flex-col justify-between md:flex-row h-full p-3 md:p-6">
         <div className="w-full md:w-1/2 mb-4 md:mb-0">
           <h2 className="text-xl md:text-2xl font-bold mb-2 md:mb-4">{selectedMenu}</h2>
           <p className="mb-2 md:mb-4">{selectedItem.transactionName}</p>
         </div>
-        <div className="w-full md:w-1/2">
+        <div>
           <SmsDemo
             message={selectedItem.content || "No message available"}
             sender="Polosys L.L.P"
@@ -113,37 +113,38 @@ export default function Component() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-[389px] bg-gray relative">
-      {/* Mobile Menu Button */}
-      <button
-        className="md:hidden absolute top-2 right-2 p-1 rounded-lg bg-white shadow"
-        onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-      >
-        <i className="ti ti-menu-2 text-base"></i>
-      </button>
+    <div className="border p-4 rounded-lg">
+      <div className="flex gap-3 md:flex-row h-[389px] bg-gray relative">
+        {/* Mobile Menu Button */}
+        <button
+          className="md:hidden absolute top-2 right-2 p-1 rounded-lg bg-white shadow"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <i className="ti ti-menu-2 text-base"></i>
+        </button>
 
-      {/* Sidebar */}
-      <aside 
-        className={`
+        {/* Sidebar */}
+        <aside
+          className={`
           ${isSidebarOpen ? 'block' : 'hidden'} 
           md:block 
           w-full md:w-56 
           h-full md:h-[389px]
           bg-white 
-          shadow-md
+          border
           rounded-lg
           absolute md:relative
           top-0 left-0
           z-10 md:z-0
         `}
-      >
-        <div className="h-full overflow-y-auto">
-          <nav className="py-4">
-            {menuItems.length > 0 ? (
-              menuItems.map((item) => (
-                <button
-                  key={item.id}
-                  className={`
+        >
+          <div className="h-full overflow-y-auto">
+            <nav className="py-4">
+              {menuItems.length > 0 ? (
+                menuItems.map((item) => (
+                  <button
+                    key={item.id}
+                    className={`
                     flex items-center 
                     w-full 
                     px-3 md:px-4 
@@ -152,36 +153,36 @@ export default function Component() {
                     duration-200 
                     border-r-4 
                     text-left
-                    ${
-                      selectedMenu === item.transactionName
+                    ${selectedMenu === item.transactionName
                         ? "bg-gray border-green text-green"
                         : "border-transparent hover:bg-gray hover:border-gray"
-                    }
+                      }
                   `}
-                  onClick={(e) => handleMenuClick(e, item.transactionName)}
-                >
-                  <span className="mx-4 md:mx-2 text-sm">{item.transactionName}</span>
-                </button>
-              ))
-            ) : (
-              <p className="px-4 py-1.5 text-xs">No items available</p>
-            )}
-          </nav>
-        </div>
-      </aside>
+                    onClick={(e) => handleMenuClick(e, item.transactionName)}
+                  >
+                    <span className="mx-4 md:mx-2 text-sm">{item.transactionName}</span>
+                  </button>
+                ))
+              ) : (
+                <p className="px-4 py-1.5 text-xs">No items available</p>
+              )}
+            </nav>
+          </div>
+        </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto shadow rounded-lg bg-white">
-        <MainContent />
-      </main>
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto border rounded-lg bg-white">
+          <MainContent />
+        </main>
 
-      {/* Overlay for mobile when sidebar is open */}
-      {isSidebarOpen && (
-        <div 
-          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-0"
-          onClick={() => setIsSidebarOpen(false)}
-        ></div>
-      )}
+        {/* Overlay for mobile when sidebar is open */}
+        {isSidebarOpen && (
+          <div
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-0"
+            onClick={() => setIsSidebarOpen(false)}
+          ></div>
+        )}
+      </div>
     </div>
   );
 }

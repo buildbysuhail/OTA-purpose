@@ -186,7 +186,6 @@ const WhatsappIntegration = () => {
 
       <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg">
         <div className="flex items-center">
-          {/* <img src="/api/placeholder/40/40" alt="Twilio logo" className="mr-4 rounded" /> */}
           <div>
             <h2 className="text-xl font-semibold text-gray-700">twilio</h2>
             <p className="text-sm text-gray-600">

@@ -54,6 +54,8 @@ import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import { DesignerElementType, PlacedComponent } from "../InvoiceDesigner/Designer/interfaces";
+import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
+import { getDetailAction } from "../../redux/slices/app-thunks";
 
 
 
@@ -645,6 +647,16 @@ export default function ExtendedPDFBarcodeDesigner() {
         }
       }
     }
+  }, []);
+  const appDispatch = useAppDispatch();
+  const getPDFTemplateData = () => {
+    (appDispatch(getDetailAction({ apiUrl: Urls.templates, id: id || "" })) as any).then((res: any) => {
+
+      // res?.payload?.data?.content && dispatch(setActiveTemplate(res?.payload?.data?.content, res?.payload?.data));
+    });
+  };
+  useEffect(() => {
+    if (id !== "new") getPDFTemplateData();
   }, []);
   const handlePropertyChange = (
     property: keyof PlacedComponent,

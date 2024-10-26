@@ -118,6 +118,7 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
                 className="mt-1 p-2 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
             </div>
+            
             <ERPCheckbox
               id="isAttachFile"
               checked={formState.isAttachFile}

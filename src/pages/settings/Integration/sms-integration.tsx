@@ -179,16 +179,15 @@ const SMSIntegration: React.FC = () => {
 
   return (
     <div className="p-6 max-w-8xl  mx-auto bg-white">
-      <div className="min-h-screen">
+      <div className="xxl:h-[61.8rem]">
         <h1 className="text-2xl font-bold mb-4 text-gray-800">
           SMS Integrations
         </h1>
 
         <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg">
           <div className="flex items-center">
-            {/* <img src="/api/placeholder/40/40" alt="Twilio logo" className="mr-4 rounded" /> */}
             <div>
-              <h2 className="text-xl font-semibold text-gray-700">twilio</h2>
+              <h2 className="text-xl font-semibold text-gray-700">Twilio</h2>
               <p className="text-sm text-gray-600">
                 Set up Twilio and send automated SMS notifications to your
                 customers about transactions, payments and reminders.

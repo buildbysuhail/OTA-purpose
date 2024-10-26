@@ -25,9 +25,15 @@ interface NotificationSettings {
   email: string;
   inAppNotification: string;
 }
-const location = useLocation();
-const path = location.pathname.split("/").pop();
+// const location = useLocation();
+// const path = location.pathname.split("/").pop();
 const NotificationSettings = () => {
+  const [gridHeight, setGridHeight] = useState<number>(500);
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeight = wh - 180;
+    setGridHeight(gridHeight);
+  }, []);
   const T_Head = [ "Transaction","Email","whatsApp","Sms","App Notification",];
   const [TableBody, setTableBody] = useState<NotificationSettings[]>([]);
   const [loading, setLoading] = useState(false);
@@ -109,35 +115,15 @@ const NotificationSettings = () => {
 
   return (
     <>
-
-        {/*
-         
-            <div className="box custom-box">
-              <div className="box-header justify-between">
-                <div className="box-title">
-                  Sessions{" "}
-                  <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                  View and manage devices where you're currently logged in
-                  </p>
-                  
-                </div>
-                <div></div>
-              </div>
-              <div className="box-body">
-                <div className="grid grid-cols-1 gap-3"></div> */}
-
       <div className="grid grid-cols-12 gap-x-6">
        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-       <div id="phone-number"
-            className={`xxl:col-span-12 xl:col-span-12 ${
-              path === "Password" ? "blink" : ""
-            } col-span-12`}
-          >
-            <div className="flex justify-start mx-6">
-              <div className="">
+         <div className="box custom-box">
+            {/* <div className="flex justify-start m-3"> */}
+            <div className="box-header justify-between">
+              <div className="box-title">
                 <h5 className="font-semibold text-center text-[1.25rem] text-defaulttextcolor">
                   {" "}
-                  Notification Settings{" "}
+                  Notification Settings
                 </h5>
 
                 <p className="text-[#8c9097] dark:text-white/50 text-center mb-6 text-[0.813rem]">
@@ -145,25 +131,26 @@ const NotificationSettings = () => {
                 </p>
               </div>
             </div>
-            <div>
-              {/* <SearchResultBar
+            {/* <div>
+              <SearchResultBar
                 isOpen={open}
                 searchResults={searchResults}
                 selectedIndex={selectedIndex}
                 onItemClick={handleItemClick}
-              /> */}
-            </div>
+              />
+            </div> */}
 
-            <div className="box">
-              <div className="box-body">
+            <div className="box-body">
+            <div className="grid grid-cols-1 gap-3">
                 {loading ? (
                   <>
                     <p>....Loading</p>
                   </>
                 ) : (
-                  <div className="table-responsive">
-                    <table className="table table-bordered dark:border-defaultborder/10 whitespace-nowrap min-w-full">
-                      <thead>
+                  <div className="table-responsive max-h-[58vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
+                    <table className="min-w-full relative table table-bordered rounded-t-lg dark:border-defaultborder/10 ">
+                
+                      <thead className="bg-[#f3f4f6] sticky top-0 z-40">
                         <tr>
                           {T_Head.map((item, index) => (
                             <th key={index} scope="col" className="text-start">
@@ -175,19 +162,19 @@ const NotificationSettings = () => {
                         </tr>
                       </thead>
 
-                      <tbody>
+                      <tbody className=" bg-[#fafafa] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100" >
                         {TableBody.length > 0 ? (
                           TableBody.map((item, index) => (
-                            <tr key={index} className="border">
+                            <tr key={index} className="hover:bg-gray-100">
                               <td>
-                                <span className="font-bold text-[.875rem]">
+                                <span className="font-light text-[.875rem]">
                                   {item.transactionName}
                                 </span>
                               </td>
 
                               {/* Email Switch */}
-                              <td >
-                                <div className="flex items-center justify-center">
+                              <td className="py-2 px-4">
+                                <div className="flex justify-start items-center space-x-4">
                                   <ERPSwitch
                                     size="sm"
                                     defaultValue={item.email === "1"}
@@ -209,8 +196,8 @@ const NotificationSettings = () => {
                               </td>
 
                               {/* WhatsApp Switch */}
-                              <td>
-                                <div className="flex items-center justify-center ">
+                              <td className="py-2 px-4">
+                                <div className="flex justify-start items-center space-x-4 ">
                                   <ERPSwitch
                                     size="sm"
                                     defaultValue={item.whatsapp === "1"}
@@ -231,8 +218,8 @@ const NotificationSettings = () => {
                               </td>
 
                               {/* SMS Switch */}
-                              <td>
-                                <div className="flex items-center justify-center ">
+                              <td className="py-2 px-4">
+                                <div className="flex justify-start items-center space-x-4 ">
                                   <ERPSwitch
                                     size="sm"
                                     defaultValue={item.sms === "1"}
@@ -252,8 +239,9 @@ const NotificationSettings = () => {
                               </td>
 
                               {/* In-App Notification Switch */}
-                              <td>
-                                <div className="flex items-center justify-center ">
+                              <td  className="py-2 px-4">
+
+                                <div className="flex justify-start items-center space-x-4">
                                   <ERPSwitch
                                     size="sm"
                                     defaultValue={item.inAppNotification === "1" }
@@ -282,7 +270,7 @@ const NotificationSettings = () => {
                         )}
                       </tbody>
                     </table>
-                  </div>
+                   </div>
                 )}
               </div>
             </div>

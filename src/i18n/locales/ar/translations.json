@@ -951,5 +951,21 @@
   "privillege_cards": "بطاقات الامتياز",
   "project_sites": "مواقع المشروع",
   "account_privilages": "امتيازات الحساب",
-  "mr.": "السيد"
+  "mr.": "سيد",
+
+  "transaction_forms": "نماذج المعاملات",
+  "hr_master": "ماستر الموارد البشرية",
+  "designation": "التسمية الوظيفية",
+  "job_works": "أعمال الوظائف",
+  "inventory_master": "ماستر المخزون",
+  "product_group": "مجموعة المنتجات",
+  "product_category": "فئة المنتج",
+  "brands": "العلامات التجارية",
+  "unit_of_measures": "وحدات القياس",
+  "tax_category": "فئة الضريبة",
+  "warehouse": "المستودع",
+  "vehicles": "المركبات",
+  "product_prices": "أسعار المنتجات",
+  "salesman_route": "مسار المندوب",
+  "bill_of_material": "فاتورة المواد"
 }

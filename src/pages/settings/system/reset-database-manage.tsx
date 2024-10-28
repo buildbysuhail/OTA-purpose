@@ -210,7 +210,7 @@ const ResetDbManage: React.FC = React.memo(() => {
 
           <div className="relative">
             <label className="block text-sm font-medium text-gray-700 p-3 sticky top-0 bg-white z-10">
-              Transaction Forms
+             {t("transaction_forms")}
             </label>
             <div className="overflow-x-auto border border-gray-400 rounded w-auto max-w-[550px] h-auto max-h-[260px]">
               <div className="grid grid-flow-col auto-cols-max gap-4 p-4">
@@ -229,12 +229,12 @@ const ResetDbManage: React.FC = React.memo(() => {
               {/* Account Master */}
               <div className="border border-gray-200 rounded p-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Account Master
+                  {t("acc_masters")}
                 </label>
 
                 <ERPCheckbox
                   id="CURR"
-                  label="Currencies"
+                  label={t("currencies")}
                   data={master}
                   checked={master.CURR}
                   onChangeData={(data) => {
@@ -246,7 +246,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="ACCGP"
-                  label="Account Group"
+                  label={t("account_group")}
                   data={master}
                   checked={master.ACCGP}
                   onChangeData={(data) => {
@@ -258,7 +258,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="ACCLED"
-                  label="Account Ledgers"
+                  label={t("acc_ledger")}
                   data={master}
                   checked={master.ACCLED}
                   onChangeData={(data) => {
@@ -270,7 +270,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="PCAT"
-                  label="Party Category"
+                  label={t("party_category")}
                   data={master}
                   checked={master.PCAT}
                   onChangeData={(data) => {
@@ -282,7 +282,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="CUST"
-                  label="Customers"
+                  label={t("customers")}
                   data={master}
                   checked={master.CUST}
                   onChangeData={(data) => {
@@ -294,7 +294,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="SUPP"
-                  label="Suppliers"
+                  label={t("suppliers")}
                   data={master}
                   checked={master.SUPP}
                   onChangeData={(data) => {
@@ -309,11 +309,11 @@ const ResetDbManage: React.FC = React.memo(() => {
               {/* HR Master */}
               <div className="border border-gray-200 rounded p-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  HR Master
+                  {t("hr_master")}
                 </label>
                 <ERPCheckbox
                   id="DESIG"
-                  label="Designation"
+                  label={t("designation")}
                   data={master}
                   checked={master.DESIG}
                   onChangeData={(data) => {
@@ -325,7 +325,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="EMP"
-                  label="Employee"
+                  label={t("employee")}
                   data={master}
                   checked={master.EMP}
                   onChangeData={(data) => {
@@ -337,7 +337,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="JBWRK"
-                  label="Job Works"
+                  label={t("job_works")}
                   data={master}
                   checked={master.JBWRK}
                   onChangeData={(data) => {
@@ -349,7 +349,7 @@ const ResetDbManage: React.FC = React.memo(() => {
                 />
                 <ERPCheckbox
                   id="DOC"
-                  label="Documents"
+                  label={t("documents")}
                   data={master}
                   checked={master.DOC}
                   onChangeData={(data) => {
@@ -363,11 +363,11 @@ const ResetDbManage: React.FC = React.memo(() => {
             </div>
             <div className="border border-gray-200 rounded p-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Inventory Master
+                {t("inventory_master")}
               </label>
               <ERPCheckbox
                 id="PRD"
-                label="Products"
+                label={t("products")}
                 data={master}
                 checked={master.PRD}
                 onChangeData={(data) => {
@@ -379,7 +379,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="PDGP"
-                label="Product Group"
+                label={t("product_group")}
                 data={master}
                 checked={master.PDGP}
                 onChangeData={(data) => {
@@ -391,7 +391,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="PDCAT"
-                label="Product Category"
+                label={t("product_category")}
                 data={master}
                 checked={master.PDCAT}
                 onChangeData={(data) => {
@@ -403,7 +403,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="BRD"
-                label="Brands"
+                label={t("brands")}
                 data={master}
                 checked={master.BRD}
                 onChangeData={(data) => {
@@ -415,7 +415,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="PRCAT"
-                label="Price Category"
+                label={t("price_category")}
                 data={master}
                 checked={master.PRCAT}
                 onChangeData={(data) => {
@@ -427,7 +427,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="UNM"
-                label="Unit of Measures"
+                label={t("unit_of_measures")}
                 data={master}
                 checked={master.UNM}
                 onChangeData={(data) => {
@@ -439,7 +439,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="TXC"
-                label="Tax Category"
+                label={t("tax_category")}
                 data={master}
                 checked={master.TXC}
                 onChangeData={(data) => {
@@ -451,7 +451,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="VH"
-                label="Warehouse"
+                label={t("warehouse")}
                 data={master}
                 checked={master.VH}
                 onChangeData={(data) => {
@@ -463,7 +463,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="VEH"
-                label="Vehicles"
+                label={t("vehicles")}
                 data={master}
                 checked={master.VEH}
                 onChangeData={(data) => {
@@ -475,7 +475,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="PPR"
-                label="Product Prices"
+                label={t("product_prices")}
                 data={master}
                 checked={master.PPR}
                 onChangeData={(data) => {
@@ -487,7 +487,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="SRT"
-                label="Sales Route"
+                label={t("sales_route")}
                 data={master}
                 checked={master.SRT}
                 onChangeData={(data) => {
@@ -499,7 +499,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="SLRT"
-                label="Salesman Route"
+                label={t("salesman_route")}
                 data={master}
                 checked={master.SLRT}
                 onChangeData={(data) => {
@@ -511,7 +511,7 @@ const ResetDbManage: React.FC = React.memo(() => {
               />
               <ERPCheckbox
                 id="BLM"
-                label="Bill of Material"
+                label={t("bill_of_material")}
                 data={master}
                 checked={master.BLM}
                 onChangeData={(data) => {
@@ -580,14 +580,14 @@ const ResetDbManage: React.FC = React.memo(() => {
       </div>
       <div className="flex justify-end items-center gap-3 m-2">
         <ERPButton
-          title="Reset"
+          title={t("reset")}
           variant="primary"
           disabled={postDataLoading}
           loading={postDataLoading}
           onClick={handleSubmit}
         />
         <ERPButton
-          title="Close"
+          title={t("close")}
           variant="secondary"
           disabled={postDataLoading}
           onClick={onClose}

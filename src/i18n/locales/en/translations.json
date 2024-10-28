@@ -949,5 +949,22 @@
   "privillege_cards":"Privillege Cards",
   "project_sites":"Project Sites",
   "account_privilages":"Account Privilages",
-  "mr.":"Mr."
+  "mr.":"Mr.",
+
+  "transaction_forms":"Transaction Forms",
+  "hr_master":"HR Master",
+  "designation":"Designation",
+  "job_works":"Job Works",
+  "inventory_master":"Inventory Master",
+  "product_group":"Product Group",
+  "product_category":"Product Category",
+  "brands":"Brands",
+  "unit_of_measures":"Unit Of Measures",
+  "tax_category":"Tax Category",
+  "warehouse":"Warehouse",
+  "vehicles":"Vehicles",
+  "product_prices":"Product Prices",
+  "salesman_route":"Salesman Route",
+  "bill_of_material":"Bill Of Material"
+
 }

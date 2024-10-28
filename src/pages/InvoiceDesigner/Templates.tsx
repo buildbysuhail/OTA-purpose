@@ -16,11 +16,10 @@ import { TemplateGroupTypes, TemplateTypes } from "./constants/TemplateCategorie
 import { getCurrentCurrencySymbol } from "../../utilities/Utils";
 import ERPToast from "../../components/ERPComponents/erp-toast";
 import { handlePlainResponse, handleResponse } from "../../utilities/HandleResponse";
-import { showAlert } from "../../components/ERPComponents/erp-alert";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import PSModel from "../../components/common/polosys/ps-modal";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
-import { patchAction, deleteAction } from "../../redux/slices/app-thunks";
+import { patchAction } from "../../redux/slices/app-thunks";
 import Urls from "../../redux/urls";
 import { setTemplate } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
@@ -46,7 +45,7 @@ const Templates = ({ }) => {
   const [showPreview, setShowPreview] = useState<previewState>({ show: false });
   const [showTemplateListing, setShowTemplateListing] = useState<boolean>(true);
   const [templateGroup, setTemplateGroup] = useState<TemplateGroupTypes>(
-    (searchParams?.get("template_group")! as TemplateGroupTypes) ?? "sales_invoice"
+    (searchParams?.get("template_group")! as TemplateGroupTypes) ?? t("sales_invoice")
   );
 
   /* ########################################################################################### */
@@ -232,7 +231,7 @@ const Templates = ({ }) => {
                                 <PencilIcon
                                   title={t("edit")}
                                   className="w-3 text-accent cursor-pointer"
-                                  onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
+                                  onClick={() => templateGroup == t("barcode") ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
                                 />
                               </div>
                             )}
@@ -348,7 +347,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
       ));
-    templateGroup == "barcode" ? navigate(`/label-designer/new`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    templateGroup == t("barcode") ? navigate(`/label-designer/new`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };
 
   return (

@@ -974,5 +974,14 @@
   "choose_a_template":"Choose A Template",
   "all":"All",
   "standard":"Standard",
-  "use_this":"Use This"
+  "use_this":"Use This",
+  "sales_invoice":"Sales Invoice",
+
+  "sync_master_data":"Sync master data from main branch to all branches when adding a new branch to maintain consistent information network-wide.",
+  "customize_your_notifications":"Customize Your Notifications",
+  "....loading":"....Loading",
+  "no_data_available":"No Data Available",
+  "whatsApp":"Whatsapp",
+  "sms":"Sms",
+  "app_notification":"App Notification"
 }

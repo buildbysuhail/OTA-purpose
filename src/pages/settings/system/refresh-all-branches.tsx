@@ -33,7 +33,6 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
-    handleClear,
     isLoading,
     formState,
   } = useFormManager<RefreshAllBranches>({
@@ -60,7 +59,7 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-4">
         <p>
-          Sync master data from main branch to all branches when adding a new branch to maintain consistent information network-wide.
+          {t("sync_master_data")}
         </p>
       </div>
 
@@ -72,7 +71,6 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
         />
         <div>
           <ERPFormButtons
-            // onClear={handleClear}
             isEdit={isEdit}
             isLoading={isLoading}
             onCancel={onClose}

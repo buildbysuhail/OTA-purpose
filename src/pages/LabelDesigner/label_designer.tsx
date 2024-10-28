@@ -481,9 +481,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     }));
   };
 
-
-  
-  
   const handleLabelPropsChange = (property: keyof LabelState, value: any) => {
     setTemplateData((prev: any) => ({
       ...prev,
@@ -750,21 +747,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         </div>
 
         {/* Design Canvas */}
-        <ResizableBox
-        width={250} // Initial width
-        height={Infinity}
-        minConstraints={[150, Infinity]} // Minimum width
-        maxConstraints={[400, Infinity]} // Maximum width
-        resizeHandles={[appState.appState.dir === "rtl" ? "w" : "e"]}
-        handle={
-          <div
-            className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "rtl" : "ltr"
-            }`}
-          />
-        }
-        className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
-      >
+
         <div
           className="flex-1 bg-gray-50"
           onDrop={handleDrop}
@@ -775,24 +758,49 @@ export default function ExtendedPDFBarcodeDesigner() {
             border: "2px solid black",
           }}
         >
-          <div
-            ref={canvasRef}
-            id="teplate-container"
-            className="bg-white shadow-sm mx-auto max-h-[calc(100vh-8rem)] overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100  relative"
-            style={{
-              width: templateData.barcodeState?.LabelState?.labelWidth,
-              height:
-                templateData.barcodeState?.LabelState?.labelHeight ?? "11in",
-              transform: `scale(${zoom / 100})`,
-              transformOrigin: "top center",
-              border: "2px dashed #ccc",
-              margin: `${templateData?.propertiesState?.margins?.top}px 0px 0px ${templateData?.propertiesState?.margins?.left}px`,
-            }}
+          
+          <ResizableBox
+            width={templateData?.barcodeState?.LabelState?.labelWidth??300} // Initial width
+            height={templateData?.barcodeState?.LabelState?.labelHeight??200}
+            minConstraints={[150, Infinity]} // Minimum width
+            maxConstraints={[Infinity, Infinity]} // Maximum width
+            resizeHandles={[appState.appState.dir === "rtl" ? "sw" : "se"]}
+            // handle={
+            //   <div
+            //     className={`custom-handle horizontal bottom  corner se ${
+            //       appState.appState.dir === "rtl" ? "rtl" : "ltr"
+            //     }`}
+            //   />
+            // }
+            handle={
+              <div
+                className={`custom-handle ${
+                  appState.appState.dir === "rtl" ? "ltr" : "rtl"
+                }`}
+              />
+            }
+            className="text-card-foreground "
           >
-            {templateData?.barcodeState?.PlasedComponents?.map(renderComponent)}
-          </div>
+            <div
+              ref={canvasRef}
+              id="teplate-container"
+              className="bg-white shadow-sm mx-auto max-h-[calc(100vh-8rem)] overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100  relative"
+              style={{
+                width: '100%',
+                height:
+                  templateData.barcodeState?.LabelState?.labelHeight ?? "11in",
+                transform: `scale(${zoom / 100})`,
+                transformOrigin: "top center",
+                border: "2px dashed #ccc",
+                margin: `${templateData?.propertiesState?.margins?.top}px 0px 0px ${templateData?.propertiesState?.margins?.left}px`,
+              }}
+            >
+              {templateData?.barcodeState?.PlasedComponents?.map(
+                renderComponent
+              )}
+            </div>
+          </ResizableBox>
         </div>
-        </ResizableBox>
       </div>
 
       {/* Right Sidebar - Properties */}
@@ -825,7 +833,6 @@ export default function ExtendedPDFBarcodeDesigner() {
               <Tab label="Element" value="element" />
               <Tab label="Label" value="label" />
               <Tab label="Page" value="page" />
-             
             </Tabs>
           </div>
           <Box className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 ">

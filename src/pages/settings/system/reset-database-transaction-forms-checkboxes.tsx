@@ -17,7 +17,7 @@ const TransactionFormsCheckboxes: React.FC<TransactionFormsCheckboxesProps> = ({
   setAllTransactions,
 }) => {
   // Calculate the number of full columns (7 items each) and any remaining items
-  debugger;
+  
   const fullColumns = Math.floor(allTransactions?.length / 7);
   const remainingItems = allTransactions?.length % 7;
 

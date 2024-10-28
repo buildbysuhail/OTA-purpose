@@ -42,7 +42,6 @@ import { RootState } from "../../redux/store";
 import { APIClient } from "../../helpers/api-client";
 import { getTemplates } from "../../redux/slices/templates/thunk";
 import useApplicationSetting from "../../utilities/hooks/use-application-settings";
-import BarcodePreviewWrapper from "./DesignPreview/BarcodePreview";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -76,7 +75,7 @@ const InvoicePreview = ({
   showOptions = true,
   endpointUrl,
 }: InvoicePreviewProps) => {
-  debugger;
+  
   const appDispatch = useAppDispatch();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -152,12 +151,12 @@ const InvoicePreview = ({
   /* ########################################################################################### */
   const [templateData, setTemplateData] = useState<TemplateState | undefined>();
   useEffect(() => {
-    debugger;
+    
     setTemplateData(pathname?.includes("/invoice_designer/")
       ? templateWrap?.activeTemplate
       : getTemplateInfo().content);
   },[templateWrap?.activeTemplate]);
-  debugger;
+  
 
   /* ########################################################################################### */
 
@@ -365,7 +364,7 @@ const InvoicePreview = ({
     }, 2000);
   }, []);
   useEffect(() => {
-    debugger;
+    
     setGeneralBackGroundStyle((previous: any) => ({
       ...previous,
       backgroundImage: templateData?.background_image
@@ -400,16 +399,6 @@ const InvoicePreview = ({
             className={`flex  flex-col gap-4 relative ${paperWidth} shadow-md print:m-0 print:w-full print:shadow-none`}
           >
             {
-            templateGroupId === "barcode" ?(
-              <BarcodePreviewWrapper
-                data={data}
-                docIDKey={docIDKey}
-                docTitle={docTitle}
-                template={templateData}
-                currency={currencySymbol || undefined}
-                templateGroupId={templateGroupId}
-              />
-            ):
             paperSize === "3Inch" || paperSize === "4Inch" ? (
               <RetailPreviewWrapper
                 data={data}
@@ -428,7 +417,8 @@ const InvoicePreview = ({
                 currency={currencySymbol || undefined}
                 templateGroupId={templateGroupId}
               />
-            )}
+            )
+            }
           </div>
           {showOptions && (
             <div className="absolute flex flex-col top-3 right-3 ">

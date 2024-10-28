@@ -48,7 +48,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
   const [generalHeaderBGStyle, setGeneralHeaderBGStyle] = useState<any>({ height: paddingTop, backgroundColor, backgroundPosition: 'top left' });
 
   useEffect(() => {
-    debugger;
+    
     setGeneralHeaderBGStyle((previous: any) => ({
         ...previous,
         height: paddingTop,

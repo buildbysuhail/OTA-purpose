@@ -4,7 +4,7 @@ import { dateTrimmer } from "../../../../utilities/Utils";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
 
 const ItemTable = ({ template, data, templateGroupId, currency }: StandardPreviewProps) => {
-  debugger;
+  
   //   /// Font
   //   const fontSize = template?.itemTableState?.headerFontSize || 12;
   //   const fontColor = template?.itemTableState?.headerFontColor || "#000";

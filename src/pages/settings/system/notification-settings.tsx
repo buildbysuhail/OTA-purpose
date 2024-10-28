@@ -50,7 +50,7 @@ const NotificationSettings = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.notification_transaction}`);
-      debugger;
+      
       setTableBody(response);
     } catch (error) {
       console.error("Error loading settings:", error);

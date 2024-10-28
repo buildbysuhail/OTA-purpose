@@ -88,7 +88,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
   const loadUserType = async () => {
     const res: any[] = await api.getAsync( `${Urls.user_rights}${postData.data.userType}`);
-    debugger
+    
     setUserRightTypes(res);
   };
   const handleSubmit = useCallback(async () => {

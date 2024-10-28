@@ -60,7 +60,7 @@ export function useFormManager<T>({
     url,
     method ? method : isEdit ? ActionType.PUT : ActionType.POST
   );
-  debugger;
+  
   // if(localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data ==null )
   const [localFormState, setLocalFormState] = useState<ApiResponse<any>>();
 
@@ -70,9 +70,9 @@ export function useFormManager<T>({
   const formState = useApiClient ? localFormState : reduxFormState;
 
   useEffect(() => {
-    debugger;
+    
     if (localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data == null) {
-      debugger;
+      
       const df = {
         data: initialData?.data || {},
         validations: initialData?.validations || {},
@@ -151,7 +151,7 @@ export function useFormManager<T>({
   ]);
 
   const handleSubmit = useCallback(async () => {
-    debugger
+    
     setIsLoading(true);
     if (useApiClient) {
       try {
@@ -225,7 +225,7 @@ export function useFormManager<T>({
   // const handleFieldChange = useCallback(
 
   //   (fieldId: string, value: any) => {
-  //     debugger;
+  //     
   //     const newData = {
   //       ...formState?.data,
   //       [fieldId]: value[fieldId],
@@ -269,7 +269,7 @@ export function useFormManager<T>({
 
   const handleFieldChange = useCallback(
     (fieldId: string, value: any) => {
-      debugger;
+      
 
       // Update the nested field
       const newData = setNestedValue(formState?.data, fieldId, value);
@@ -333,7 +333,7 @@ export function useFormManager<T>({
 
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
-      debugger;
+      
       const value = getNestedValue(formState?.data, fieldId) || "";
       const validation = getNestedValue(formState?.validations, fieldId);
       const checked = getNestedValue(formState?.data, fieldId) || false;

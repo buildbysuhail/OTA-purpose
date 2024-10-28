@@ -39,7 +39,7 @@ const RevertBillModifications: React.FC = () => {
   const rootState = useRootState();
 
   const handleDelete = async (data: any) => {
-    debugger;
+    
     const res = await api.post(Urls.revertBillModifications, {
       invTransactionMasterID: data.data.invTransactionMasterID,
       remarks: data.data.remarks,

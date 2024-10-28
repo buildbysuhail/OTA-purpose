@@ -61,7 +61,7 @@ const ExchangeRates = () => {
     const result: any = await api.getAsync(
       `${Urls.currencyExchange}${baseCurrency ? baseCurrency : "0"}`
     );
-    debugger;
+    
     updateStore(result?.data);
   };
   const updateStore = (inputData: any) => {
@@ -83,12 +83,12 @@ const ExchangeRates = () => {
   };
   const handleSubmit = async () => {
     setPostDataLoading(true);
-    debugger;
+    
     const dataToSubmit = store.filter(
       (row: any) => row.toCurrency !== null && row.rate !== null
     );
 
-    debugger;
+    
     const result: any = await api.post(`${Urls.currencyExchange}`, {
       currencyId: postData.baseCurrency,
 
@@ -131,7 +131,7 @@ const ExchangeRates = () => {
     }
   };
   const ChartCell = (cellData: any) => {
-    debugger;
+    
     return (
       <div className="chart-cell">
         <i

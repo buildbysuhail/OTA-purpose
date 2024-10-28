@@ -148,7 +148,7 @@ const PDFDocument = memo(({ template, chunkedData, columnsPerRow }: PreviewDocum
           <View key={`row_${rowIndex}`} style={styles.row}>
             {row?.map((item) => (
               <View key={`item_${item.id}`} style={componentWrapperStyle}>
-                {template.barcodeState?.PlasedComponents?.map((component) => (
+                {template.barcodeState?.placedComponents?.map((component) => (
                   <ComponentRenderer 
                     key={`component_${component.id}`}
                     component={component} 
@@ -166,7 +166,7 @@ const PDFDocument = memo(({ template, chunkedData, columnsPerRow }: PreviewDocum
 
 const PreviewDocument: React.FC<PreviewDocumentProps> = ({ template, chunkedData, columnsPerRow: initialColumns }) => {
   const [columnsPerRow, setColumnsPerRow] = useState<number>(initialColumns);
-  debugger;
+  
   // Debounce column changes
   const debouncedColumnsPerRow = useDebounce(columnsPerRow, 300);
 

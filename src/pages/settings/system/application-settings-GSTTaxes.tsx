@@ -163,7 +163,7 @@ const ERPSettingsFormGSTTaxes = () => {
         const prevValue = formStatePrev[key as keyof TaxSettingsFormState];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString()

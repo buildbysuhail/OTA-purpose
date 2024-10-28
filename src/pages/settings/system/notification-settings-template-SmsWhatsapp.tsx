@@ -88,7 +88,7 @@ const SmsWhatsappTemplate: React.FC<TemplateProps> = React.memo(({ channel,templ
         setLoading(true);
         try {
           const response = await api.getAsync(`${Urls.notification_template}?templatekey=${templateKey}&Channel=${channelNo}`);
-          debugger;
+          
           setFormState(response);
         } catch (error) {
           console.error("Error loading settings:", error);

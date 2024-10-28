@@ -76,7 +76,7 @@ const WorkSpaceSettings: FC<WorkSpaceSettingsProps> = (props) => {
   
   useEffect(() => {
     
-    debugger;
+    
     if (
       _userSession &&
       _userSession?.companies &&

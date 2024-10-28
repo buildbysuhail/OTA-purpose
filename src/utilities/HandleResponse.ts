@@ -8,7 +8,7 @@ export const handleResponse = (
   warn: boolean = true,
   showSuccess: boolean = true
 ) => {
-  debugger;
+  
   if (res != undefined && res != null) {
     if (res?.isOk != undefined && res?.isOk != null) {
       if (res.isOk) {

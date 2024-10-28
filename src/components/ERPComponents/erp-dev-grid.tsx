@@ -264,7 +264,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   gridAddButtonIcon = "ri-add-line",
   gridAddButtonText = "Add",
   heightToAdjustOnMobile = 200,
-  heightToAdjustOnWindows = 90,
+  heightToAdjustOnWindows = 100,
   popupAction,
   defaultColumnWidth,
   columnAutoWidth = true,

@@ -37,7 +37,8 @@
 }
 
 .custom-handle {
-  position: absolute;
+  position: absolute;  
+  top: 0;
   width: 10px;
   height: 100%; /* Changed from top/bottom to height for clarity */
   cursor: ew-resize;
@@ -56,30 +57,6 @@
 .custom-handle:hover {
   background: rgba(0, 0, 0, 0.2);
 }
-
-/* Added styles for horizontal resizing */
-.custom-handle.horizontal {
-  width: 100%;
-  height: 10px;
-  cursor: ns-resize;
-  left: 0;
-}
-
-.custom-handle.horizontal.bottom {
-  bottom: -5px;
-}
-
-.custom-handle.horizontal.top {
-  top: -5px;
-}
-
-/* Styles for corner handles */
-.custom-handle.corner {
-  width: 15px;
-  height: 15px;
-  cursor: nwse-resize;
-}
-
 .custom-handle.corner.se {
   right: -5px;
   bottom: -5px;
@@ -91,18 +68,19 @@
   cursor: nesw-resize;
 }
 
-.custom-handle.corner.ne {
-  right: -5px;
-  top: -5px;
-  cursor: nesw-resize;
-}
-
-.custom-handle.corner.nw {
-  left: -5px;
-  top: -5px;
-  cursor: nwse-resize;
-}
-
 .react-resizable-handle {
-  display: none;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  box-sizing: border-box;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iNnB4Ij48ZyBvcGFjaXR5PSIwLjMwMiI+PHBhdGggZD0iTSA2IDYgTCAwIDYgTCAwIDQuMiBMIDQgNC4yIEwgNC4yIDQuMiBMIDQuMiAwIEwgNiAwIEwgNiA2IEwgNiA2IFoiIGZpbGw9IiMwMDAwMDAiLz48L2c+PC9zdmc+');
+  background-position: bottom right;
+  padding: 0 3px 3px 0;
+}
+.react-resizable-handle-se {
+  bottom: 0;
+  right: 0;
+  cursor: se-resize;
 }

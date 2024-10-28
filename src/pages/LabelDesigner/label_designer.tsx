@@ -234,6 +234,19 @@ export default function ExtendedPDFBarcodeDesigner() {
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
 
+    const handleContentLabelResize = (e: React.SyntheticEvent, { size }: { size: { width: number; height: number } }) => {
+      setTemplateData((prevData: any) => ({
+        ...prevData,
+        barcodeState: {
+          ...prevData.barcodeState,
+          labelState: {
+            labelWidth: size.width,
+            labelHeight: size.height
+          }
+        }
+      }))
+    }
+
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -720,7 +733,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           onDragOver={(e) => e.preventDefault()}
           style={{
             width: templateData.propertiesState?.width,
-            height: templateData.propertiesState?.height ?? "11in",
+            height: templateData.propertiesState?.height ?? "100%",
             border: "2px solid black",
           }}
         >
@@ -728,18 +741,11 @@ export default function ExtendedPDFBarcodeDesigner() {
           <ResizableBox
             width={templateData?.barcodeState?.labelState?.labelWidth??300} // Initial width
             height={templateData?.barcodeState?.labelState?.labelHeight??200}
-            minConstraints={[150, Infinity]} // Minimum width
-            maxConstraints={[Infinity, Infinity]} // Maximum width
-            resizeHandles={[appState.appState.dir === "rtl" ? "sw" : "se"]}
-            handle={
-              <div
-                className={`custom-handle horizontal bottom  corner se ${
-                  appState.appState.dir === "rtl" ? "rtl" : "ltr"
-                }`}
-              />
-            }
-         
-            className=" "
+            minConstraints={[150, 100]}
+maxConstraints={[700, 500]}
+           resizeHandles={['se']}
+        className="box"
+        onResize={handleContentLabelResize}
           >
             <div
               ref={canvasRef}
@@ -748,7 +754,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               style={{
                 width: '100%',
                 height:
-                  templateData.barcodeState?.labelState?.labelHeight ?? "11in",
+                  "100%",
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
@@ -760,6 +766,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               )}
             </div>
           </ResizableBox>
+          
         </div>
       </div>
 

@@ -1023,7 +1023,7 @@
   "don't_have_an_account?":"Don't have an Account?",
   "go_to_twilio":"Go To Twilio",
   "or":"Or",
-  "have_an_account_already?":"?Have An Account Already",
+  "have_an_account_already?":"?Have An Account Already?",
   "account_SID":"Account SID",
   "auth_token":"Auth Token",
   "from_phone":"From Phone",
@@ -1040,5 +1040,7 @@
   "benefits":"Benefits",
   "create_a_twilio_account":"Create a Twilio Account.",
   "sign_up_now":"Sign Up Now",
-  "read_more":"Read More"
+  "read_more":"Read More",
+  "whatsapp_integrations":"Whatsapp Integrations",
+  "email_integrations":"Email Integrations"
 }

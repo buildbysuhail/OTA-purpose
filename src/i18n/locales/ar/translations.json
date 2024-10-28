@@ -1042,5 +1042,7 @@
   "benefits": "الفوائد",
   "create_a_twilio_account": "أنشئ حساب Twilio.",
   "sign_up_now": "اشترك الآن",
-  "read_more": "اقرأ المزيد"
+  "read_more": "اقرأ المزيد",
+  "whatsapp_integrations": "التكامل واتس اب",
+  "email_integrations": "تكاملات البريد الإلكتروني"
 }

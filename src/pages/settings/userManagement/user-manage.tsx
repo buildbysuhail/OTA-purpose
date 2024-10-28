@@ -50,6 +50,7 @@ export const UserManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("Passwd")}
           label={t("password")}
+          type="password"
           placeholder={t("password")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("Passwd", data.Passwd)}
@@ -57,6 +58,7 @@ export const UserManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("confrimPassword")}
           label={t("confirm_password")}
+          type="password"
           placeholder={t("confirm_password")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("confrimPassword", data.confrimPassword)}

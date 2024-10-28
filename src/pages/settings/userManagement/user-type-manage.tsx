@@ -9,6 +9,7 @@ import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-butto
 import React from "react";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { initialDataUserType } from "./user-manage-types";
+import { t } from "i18next";
 
 interface UserTypeData {
   userTypeName: string;
@@ -44,34 +45,34 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
       <div className="grid grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps('userTypeName')}
-          label="User Type Name"
-          placeholder="User Type Name"
+          label={t("user_type_name")}
+          placeholder={t("user_type_name")}
           required={true}
           onChangeData={(data: any) => {handleFieldChange('userTypeName', data.userTypeName)}}
         />
         <ERPInput
           {...getFieldProps('userTypeCode')}
-          label="User Type Code"
-          placeholder="User Type Code"
+          label={t("user_type_code")}
+          placeholder={t("user_type_code")}
           required={true}
           disabled={isEdit}
           onChangeData={(data: any) => handleFieldChange('userTypeCode', data.userTypeCode)}
         />
         <ERPInput
           {...getFieldProps('remarks')}
-          label="Remark"
-          placeholder="Remark"
+          label={t("remarks")}
+          placeholder={t("remarks")}
           required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
         />
         <ERPCheckbox
           {...getFieldProps('isEditable')}
-          label="Is Editable"
+          label={t("is_editable")}
           onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
         />
         <ERPCheckbox
           {...getFieldProps('isDeletable')}
-          label="Is Deletable"
+          label={t("is_deletable")}
           onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
         />
       </div>

@@ -31,7 +31,7 @@ const WorkspaceSettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
                 <Content />
               </div>
             </div>
-            <Footer />
+            {/* <Footer /> */}
     </>
   );
 }

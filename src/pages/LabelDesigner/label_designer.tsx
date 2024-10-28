@@ -647,7 +647,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
   return (
     <div
-      className="flex max-h-screen bg-gray-100"
+      className="flex h-dvh max-h-dvh bg-gray-100 overflow-hidden"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
     >

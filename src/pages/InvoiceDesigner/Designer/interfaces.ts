@@ -70,6 +70,8 @@ export interface PropertiesState {
 
   templateName?: string;
   pageSize?: string;
+  width?: any;
+  height?: any;
   orientation?: "portrait" | "landscape";
   // Martgins
   margins?: {
@@ -81,6 +83,8 @@ export interface PropertiesState {
   /// background
   bg_color?: string;
   bg_image_position?: string;
+
+  printer?: string;
 
   /// Font
   font?: string;
@@ -744,5 +748,23 @@ export const initialTemplateState: ActionState<TemplateState> = {
       show_page_number: false,
       bg_image_footer_position: "center",
     },
+  },
+};
+export const initialBacodeTemplateState: ActionState<TemplateState> = {
+  loading: false,
+  error: null,
+  data: {
+    id: 0,
+    thumbImage: "",
+    propertiesState: {
+      template_type: "standard",
+      template_kind: "standard",
+      template_group: "barcode",
+      templateName: "Barcode 1",
+      pageSize: "A4",
+      margins: { top: 10, bottom: 10, left: 10, right: 10 },
+      bg_color: "#FFFFFF",
+    },
+    barcodeState: [],
   },
 };

@@ -32,3 +32,28 @@
 .grid-preference-form select {
   max-height: 27px !important;
 }
+
+.react-resizable {
+  position: relative;
+}
+.custom-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10px;
+  cursor: ew-resize;
+  background: rgba(0, 0, 0, 0.1);
+  transition: background 0.3s;
+}
+.custom-handle.ltr {
+  right: -5px;
+}
+.custom-handle.rtl {
+  left: -5px;
+}
+.custom-handle:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+.react-resizable-handle {
+  display: none;
+}

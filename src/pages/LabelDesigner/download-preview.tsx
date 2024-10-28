@@ -1,175 +1,154 @@
-import { Document, Page, View, Text, StyleSheet, Font, Image, PDFViewer } from "@react-pdf/renderer";
-import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
-import { TemplateState } from "../InvoiceDesigner/Designer/interfaces";
-import React, { useState, useEffect, useRef } from 'react'
-import JsBarcode from 'jsbarcode'
-
-
-
-enum DesignerElementType {
-  text = 1,
-  barcode = 2,
-  field = 3,
-}
-
-interface PlacedComponent {
-  id: number;
-  type: DesignerElementType;
-  content: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  barcodeProps?: {
-    format: string;
-    barWidth: number;
-    height: number;
-    margin: number;
-    background: string;
-    lineColor: string;
-    showText: boolean;
-    textAlign: "left" | "center" | "right";
-    font: string;
-    fontSize: number;
-    textMargin: number;
-    fontStyle: "normal" | "bold" | "italic";
-  };
-}
-
+import React, { useState, useEffect } from 'react';
+import { Document, Page, View, Text, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
+import JsBarcode from 'jsbarcode';
+import { DesignerElementType, PlacedComponent, TemplateState } from "../InvoiceDesigner/Designer/interfaces";
 
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'column',
     backgroundColor: '#ffffff',
-    padding: 10,
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
     flexWrap: 'wrap',
-    marginBottom: 10,
   },
-  componentWrapper: {
-    margin: 5,
-    padding: 5,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-  },
-  text: {
-    fontSize: 10,
-    marginBottom: 5,
-  },
-  barcode: {
-    marginBottom: 5,
-  },
-})
+});
 
-// Demo data
-const demoData = [
-  { id: 1, name: "Product A", price: 10.99, sku: "SKU001" },
-  { id: 2, name: "Product B", price: 15.99, sku: "SKU002" },
-  { id: 3, name: "Product C", price: 7.99, sku: "SKU003" },
-  { id: 4, name: "Product D", price: 12.99, sku: "SKU004" },
-  { id: 5, name: "Product E", price: 9.99, sku: "SKU005" },
-  { id: 6, name: "Product F", price: 14.99, sku: "SKU006" },
-]
+
 export interface DownloadPreviewProps {
-  data: any;
-  docTitle?: any;
-  docIDKey?: string;
-  currencySymbol?: string;
   template?: TemplateState;
-  templateGroupId?: TemplateGroupTypes;
-  templateImages?: any;
-  currentBranch?: any;
+  data?: any;
+  docTitle?: string;
 }
 
-type TemplatePageSizes = "A4" | "A5" | "LETTER" | { width: string | number; height?: string | number };
-
-// Font.register({ family: 'Roboto', src: source });
-
-export default function DownloadPreview({ data,
-  template,
-  docIDKey,
-  docTitle,
-  currencySymbol,
-  templateGroupId,
-  templateImages }: DownloadPreviewProps) {
-  const [columnsPerRow, setColumnsPerRow] = useState(3)
-  const [barcodeImages, setBarcodeImages] = useState<{ [key: number]: string }>({})
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-
+export default function Component({ template, docTitle = "Document Preview", data }: DownloadPreviewProps = {}) {
+  debugger;
+  const [columnsPerRow, setColumnsPerRow] = useState(2);
+  const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
+  const [chunkedData, setChunkedData] = useState<any>();
+  useEffect(() => {
+    const _chunkedData = data?.reduce((resultArray: any, item: any, index: number) => {
+      const chunkIndex = Math.floor(index / columnsPerRow)
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = []
+      }
+      resultArray[chunkIndex].push(item)
+      return resultArray
+    }, [])
+    setChunkedData(_chunkedData);
+  }, [data,columnsPerRow])
   useEffect(() => {
     const generateBarcodeImages = async () => {
-      const images: { [key: number]: string } = {}
-      demoData.forEach((item, index) => {
-        const barcodeComponent = template?.barcodeState ? template?.barcodeState[index % template?.barcodeState?.length]: null;
-        if (barcodeComponent && barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
-          const canvas = document.createElement('canvas')
-          JsBarcode(canvas, item.sku, {
-            ...barcodeComponent.barcodeProps,
-            width: barcodeComponent.barcodeProps.barWidth,
-            height: barcodeComponent.barcodeProps.height,
-            displayValue: barcodeComponent.barcodeProps.showText,
-          })
-          images[item.id] = canvas.toDataURL('image/png')
-        }
-      })
-      setBarcodeImages(images)
-    }
+      const images: { [key: string]: string } = {};
 
-    generateBarcodeImages()
-  }, [template?.barcodeState])
+      if (template?.barcodeState) {
+        data?.forEach((item: any) => {
+          template.barcodeState?.forEach((barcodeComponent) => {
+            if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
+              const canvas = document.createElement('canvas');
+              JsBarcode(canvas, item?.autoBarcode, {
+                ...barcodeComponent.barcodeProps,
+                format: barcodeComponent.barcodeProps?.format ?? "CODE128", // Barcode format
+                width: barcodeComponent.barcodeProps?.barWidth || 2, // Set bar width or default to 2
+                height: barcodeComponent.barcodeProps?.height || 75,    // Set height or default to 75
+                margin: barcodeComponent.barcodeProps?.margin || 16,    // Margin around the barcode
+                background: barcodeComponent.barcodeProps?.background || "#FFFFFF", // Background color
+                lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",   // Line color for bars
+                displayValue: barcodeComponent.barcodeProps?.showText,  // Display text below the barcode
+                textAlign: barcodeComponent.barcodeProps?.textAlign,    // Center-align text
+                font: "monospace",      // Font family for text
+                fontSize: barcodeComponent.barcodeProps?.fontSize || 21, // Font size
+                textMargin: barcodeComponent.barcodeProps?.textMargin || 5, // Margin between bars and text
+              });
+              images[`${item.id}-${barcodeComponent.id}`] = canvas.toDataURL('image/png');
+            }
+          });
+        });
+      }
 
-  const chunkedData = demoData.reduce((resultArray, item, index) => {
-    const chunkIndex = Math.floor(index / columnsPerRow)
-    if (!resultArray[chunkIndex]) {
-      resultArray[chunkIndex] = []
+      setBarcodeImages(images);
+    };
+
+    generateBarcodeImages();
+  }, [template?.barcodeState]);
+
+  const renderComponent = (component: PlacedComponent, data: any) => {
+    const baseStyle = {
+      position: 'absolute',
+      left: component.x,
+      top: component.y,
+    };
+
+    switch (component.type) {
+      case DesignerElementType.text:
+        return (
+          <Text
+            key={component.id}
+            style={{
+              ...baseStyle,
+              fontSize: component.barcodeProps?.fontSize || 12,
+              fontStyle: component.barcodeProps?.fontStyle || "normal",
+              textAlign: component.barcodeProps?.textAlign || "left",
+            }}
+          >
+            {component.content}
+          </Text>
+        );
+
+      case DesignerElementType.field:
+        return (
+          <Text
+            key={component.id}
+            style={{
+              ...baseStyle,
+              fontSize: 12,
+            }}
+          >
+            {data[component.content] || "N/A"}
+          </Text>
+        );
+
+      case DesignerElementType.barcode:
+        const barcodeKey = `${data.id}-${component.id}`;
+        return barcodeImages[barcodeKey] ? (
+          <Image
+            key={barcodeKey}
+            src={barcodeImages[barcodeKey]}
+            style={{
+              ...baseStyle,
+              width: component.width || 100,
+              height: component.height || 50,
+            }}
+          />
+        ) : null;
+
+      default:
+        return null;
     }
-    resultArray[chunkIndex].push(item)
-    return resultArray
-  }, [] as typeof demoData[])
+  };
 
   const PreviewDocument = () => (
-
-    // let paperSize = (template?.propertiesState?.pageSize as TemplatePageSizes) || "A4";
-    // if (template?.propertiesState?.pageSize === "3Inch") {
-    //   paperSize = {
-    //     width: 3 * 72, // 3 inches in points
-    //   };
-    // } else if (template?.propertiesState?.pageSize === "4Inch") {
-    //   paperSize = {
-    //     width: 4 * 72, // 4 inches in points
-    //   };
-    // }
-
-
     <Document>
-      <Page size="A4" style={styles.page}>
-        {chunkedData.map((row, rowIndex) => (
-          <View key={rowIndex} style={styles.row}>
-            {row?.map((item) => {
-              const barcodeComponent = template?.barcodeState ? template?.barcodeState[item.id % template?.barcodeState?.length]: null
-              return (
-                <View key={item.id} style={[styles.componentWrapper, { width: `${100 / columnsPerRow}%` }]}>
-                  <Text style={styles.text}>{item.name}</Text>
-                  <Text style={styles.text}>Price: ${item.price.toFixed(2)}</Text>
-                  <Text style={styles.text}>SKU: {item.sku}</Text>
-                  {barcodeImages[item.id] && (
-                    <View style={styles.barcode}>
-                      <img src={barcodeImages[item.id]} style={{ width: '100%', height: 'auto' }} />
-                    </View>
-                  )}
-                </View>
-              )
-            })
-            }
+      <Page size={{ width: (template?.propertiesState?.width || 200) * columnsPerRow, height: 'auto' }} style={styles.page}>
+        {chunkedData?.map((row: any, rowIndex: any) => (
+          <View style={styles.row}>
+            {row?.map((item: any) => (
+              <View
+                key={item.id}
+                style={{
+                  width: template?.propertiesState?.width || 200,
+                  height: template?.propertiesState?.height || 200,
+                  position: "relative",
+                }}
+              >
+                {template?.barcodeState?.map((component) => renderComponent(component, item))}
+              </View>
+            ))}
           </View>
         ))}
       </Page>
     </Document>
-  )
+  );
 
   return (
     <div className="flex flex-col space-y-4 p-4">
@@ -180,16 +159,15 @@ export default function DownloadPreview({ data,
           id="columnsPerRow"
           type="number"
           value={columnsPerRow}
-          onChange={(e) => setColumnsPerRow(parseInt(e.target.value, 10))}
+          onChange={(e) => setColumnsPerRow(Math.max(1, Math.min(6, parseInt(e.target.value, 10))))}
           min={1}
           max={6}
           className="w-20"
         />
       </div>
-      <button onClick={() => window.print()}>Print Preview</button>
       <PDFViewer width="100%" height={600}>
         <PreviewDocument />
       </PDFViewer>
     </div>
-  )
+  );
 }

@@ -53,39 +53,26 @@ import { handleResponse } from "../../utilities/HandleResponse";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../components/ERPComponents/erp-button";
+import { ResizableBox } from "react-resizable"
 import {
   DesignerElementType,
+  initialBacodeTemplateState,
+  initialTemplateState,
   PlacedComponent,
+  PropertiesState,
+  TemplateState,
 } from "../InvoiceDesigner/Designer/interfaces";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getDetailAction } from "../../redux/slices/app-thunks";
+import { RootState } from "../../redux/store";
+import { useAppState } from "../../utilities/hooks/useAppState";
 
-interface PageProps {
-  padding: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-  margin: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-  templateName?: string;
-  pageSize?: string;
-  width?:number;
-  height?:number;
-  borderColor: string;
-  printer: string;
-}
+
 
 interface SaveDialogProps {
   isOpen: boolean;
   onClose: () => void;
   components: PlacedComponent[];
-  pageProps: PageProps;
 }
 
 interface PurchaseItem {
@@ -123,17 +110,6 @@ const printers = [
   "Zebra ZD420",
 ];
 
-const initialPageProps: PageProps = {
-  padding: { top: 10, right: 10, bottom: 10, left: 10 },
-  margin: { top: 10, right: 10, bottom: 10, left: 10 },
-  borderColor: "#000000",
-  templateName: "",
-  pageSize:'',
-  printer: "Default Printer",
-  width:0,
-  height:0,
-
-};
 const pageSizeOptions = [
   { label: "A5", value: "A5" },
   { label: "A4", value: "A4" },
@@ -167,73 +143,6 @@ const samplePurchaseList: PurchaseItem[] = [
     barcode: "345678901234",
   },
 ];
-
-const SaveDialog: React.FC<SaveDialogProps> = ({
-  isOpen,
-  onClose,
-  components,
-  pageProps,
-}) => {
-  return (
-    <ERPModal
-      title="Design Saved"
-      isOpen={isOpen}
-      closeModal={onClose}
-      content={
-        <div className="space-y-4">
-          <div className="font-medium text-lg">
-            Total Components: {components.length}
-          </div>
-          {components.map((comp) => (
-            <div key={comp.id} className="bg-gray-100 p-4 rounded-lg border">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-blue-600">
-                  {DesignerElementType[comp.type].toUpperCase()} #{comp.id}
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div className="text-gray-600">Content:</div>
-                <div className="font-mono">{comp.content}</div>
-                <div className="text-gray-600">Position:</div>
-                <div className="font-mono">{comp.type}</div>
-                <div className="font-mono">
-                  ({Math.round(comp.x)}, {Math.round(comp.y)})
-                </div>
-                <div className="text-gray-600">Dimensions:</div>
-                <div className="font-mono">
-                  {comp.width}x{comp.height}
-                </div>
-                {comp.type === DesignerElementType.barcode && (
-                  <>
-                    <div className="text-gray-600">Barcode Format:</div>
-                    <div className="font-mono">{comp.barcodeProps?.format}</div>
-                  </>
-                )}
-              </div>
-            </div>
-          ))}
-          <div className="mt-4">
-            <h3 className="font-semibold text-lg mb-2">Page Properties</h3>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              {pageProps != undefined && (
-                <>
-                  <div className="text-gray-600">Padding:</div>
-                  <div className="font-mono">{`${pageProps.padding.top}px ${pageProps.padding.right}px ${pageProps.padding.bottom}px ${pageProps.padding.left}px`}</div>
-                  <div className="text-gray-600">Margin:</div>
-                  <div className="font-mono">{`${pageProps.margin.top}px ${pageProps.margin.right}px ${pageProps.margin.bottom}px ${pageProps.margin.left}px`}</div>
-                  <div className="text-gray-600">Border Color:</div>
-                  <div className="font-mono">{pageProps.borderColor}</div>
-                  <div className="text-gray-600">Printer:</div>
-                  <div className="font-mono">{pageProps.printer}</div>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      }
-    />
-  );
-};
 
 const fields = [
   "[Footer1]",
@@ -344,12 +253,12 @@ const styles = StyleSheet.create({
 
 const PDFDocument: React.FC<{
   components: PlacedComponent[];
-  pageProps: PageProps;
+  pageProps: PropertiesState;
 }> = ({ components, pageProps }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.section}>
-        {components.map((comp) => (
+        {components?.map((comp) => (
           <Text
             key={comp.id}
             style={{
@@ -370,14 +279,12 @@ const PDFDocument: React.FC<{
 
 interface PDFDownloadButtonProps {
   components: PlacedComponent[];
-  pageProps: PageProps;
+  pageProps: PropertiesState;
 }
 const api = new APIClient();
 export default function ExtendedPDFBarcodeDesigner() {
   const [zoom, setZoom] = useState(100);
-  const [placedComponents, setPlacedComponents] = useState<PlacedComponent[]>(
-    []
-  );
+
   const [selectedComponent, setSelectedComponent] =
     useState<PlacedComponent | null>(null);
   const [nextId, setNextId] = useState(1);
@@ -386,12 +293,11 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const [pageProps, setPageProps] = useState<PageProps>(initialPageProps);
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   const [value, setValue] = React.useState("element");
-  const [selectedPurchaseItem, setSelectedPurchaseItem] =
-    useState<PurchaseItem | null>(null);
+  const appState = useAppState()
+  useState<PurchaseItem | null>(null);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -400,9 +306,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const templateData = useSelector(
-    (state: any) => state?.Template
-  ) as TemplateReducerState;
+  const [templateData, setTemplateData] = useState<TemplateState>(initialBacodeTemplateState.data);
   const components = [
     {
       id: DesignerElementType.text,
@@ -470,7 +374,11 @@ export default function ExtendedPDFBarcodeDesigner() {
           }),
         };
 
-        setPlacedComponents([...placedComponents, newComponent]);
+        const placedComponents = [...(templateData?.barcodeState || []), newComponent];
+        setTemplateData((prev: TemplateState) => ({
+          ...prev,
+          barcodeState: placedComponents
+        }));
         setNextId(nextId + 1);
       }
     }
@@ -490,15 +398,18 @@ export default function ExtendedPDFBarcodeDesigner() {
       selectedComponent.type === DesignerElementType.barcode &&
       selectedComponent.barcodeProps
     ) {
-      const updatedComponents = placedComponents.map((comp) =>
+      const updatedComponents = templateData?.barcodeState?.map((comp) =>
         comp.id === selectedComponent.id && comp.barcodeProps
           ? {
-              ...comp,
-              barcodeProps: { ...comp.barcodeProps, [property]: value },
-            }
+            ...comp,
+            barcodeProps: { ...comp.barcodeProps, [property]: value },
+          }
           : comp
       );
-      setPlacedComponents(updatedComponents);
+      setTemplateData((prev: TemplateState) => ({
+        ...prev,
+        barcodeState: updatedComponents
+      }));
       setSelectedComponent({
         ...selectedComponent,
         barcodeProps: { ...selectedComponent.barcodeProps, [property]: value },
@@ -523,10 +434,13 @@ export default function ExtendedPDFBarcodeDesigner() {
       const newX = e.clientX - canvasRect.left - dragOffset.x;
       const newY = e.clientY - canvasRect.top - dragOffset.y;
 
-      const updatedComponents = placedComponents.map((comp) =>
+      const updatedComponents = templateData?.barcodeState?.map((comp) =>
         comp.id === draggingComponent.id ? { ...comp, x: newX, y: newY } : comp
       );
-      setPlacedComponents(updatedComponents);
+      setTemplateData((prev: TemplateState) => ({
+        ...prev,
+        barcodeState: updatedComponents
+      }));
       if (selectedComponent?.id === draggingComponent.id) {
         setSelectedComponent({ ...draggingComponent, x: newX, y: newY });
       }
@@ -540,32 +454,10 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [loading, setLoading] = useState(false);
   const handleSave = async (dataUrl: string) => {
     setIsSaveDialogOpen(true);
-    const designData = {
-      components: placedComponents,
-      pageProps: pageProps,
-      timestamp: new Date().toISOString(),
-    };
-    localStorage.setItem("pdfDesignState", JSON.stringify(designData));
-    const activeTemplate = {
-      ...templateData.activeTemplate,
-      thumbImage: dataUrl,
-      barcodeState: placedComponents,
-      background_image: null,
-      background_image_header: null,
-      background_image_footer: null,
-      signature_image: null,
-      headerState: null,
-      itemTableState: null,
-      totalState: null,
-      footerState: null,
-      propertiesState: {
-        ...templateData.activeTemplate.propertiesState,
-        template_group: "barcode",
-      },
-    };
-    await dispatch(setTemplate(activeTemplate));
+
     setLoading(true);
-    var res = await api.postAsync(Urls.templates, activeTemplate);
+    const outData = {...templateData, thumbImage : dataUrl}
+    var res = await api.postAsync(Urls.templates, outData);
     debugger;
     setLoading(false);
     handleResponse(res, () => {
@@ -575,7 +467,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
   const manageSaveTemplate = async () => {
     debugger;
-    if (!templateData?.activeTemplate?.propertiesState?.templateName) {
+    if (!templateData?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
     } else {
       const node = document.getElementById("teplate-container");
@@ -583,38 +475,22 @@ export default function ExtendedPDFBarcodeDesigner() {
         try {
           const canvas = await html2canvas(node);
           const dataUrl = canvas.toDataURL("image/png");
-          if (templateData?.activeTemplate && id === "new")
-            await handleSave(dataUrl);
+          await handleSave(dataUrl);
         } catch (error) {
           console.error("Error capturing canvas:", error);
         }
       }
     }
   };
-  const handlePagePropsChange = (property: keyof PageProps, value: any) => {
-    setPageProps((prevProps) => ({
-      ...prevProps,
-      [property]: value,
+  const handlePagePropsChange = (property: keyof PropertiesState, value: any) => {
+    debugger;
+    setTemplateData((prev: TemplateState) => ({
+      ...prev,
+      propertiesState: { ...prev.propertiesState, [property]: value }
     }));
   };
 
-  const handleDownloadPDF = async () => {
-    // Using jsPDF for custom PDF generation with barcode images
-    const pdf = new jsPDF();
 
-    for (const comp of placedComponents) {
-      if (comp.type === DesignerElementType.barcode) {
-        const canvas = document.createElement("canvas");
-        JsBarcode(canvas, comp.content, comp.barcodeProps);
-        const imgData = canvas.toDataURL("image/png");
-        pdf.addImage(imgData, "PNG", comp.x, comp.y, comp.width, comp.height);
-      } else {
-        pdf.text(comp.content, comp.x, comp.y);
-      }
-    }
-
-    pdf.save("barcode-design-custom.pdf");
-  };
 
   type PaddingMarginSides = "top" | "right" | "bottom" | "left";
 
@@ -667,16 +543,12 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   }, []);
   const appDispatch = useAppDispatch();
-  const getPDFTemplateData = () => {
-    (
-      appDispatch(
-        getDetailAction({ apiUrl: Urls.templates, id: id || "" })
-      ) as any
-    ).then((res: any) => {
-      // res?.payload?.data?.content && dispatch(setActiveTemplate(res?.payload?.data?.content, res?.payload?.data));
-    });
+  const getPDFTemplateData = async () => {
+    const res = await api.getAsync(`${Urls.templates}${id || ""}`)
+    setTemplateData(res)
   };
   useEffect(() => {
+    debugger;
     if (id !== "new") getPDFTemplateData();
   }, []);
   const handlePropertyChange = (
@@ -686,18 +558,21 @@ export default function ExtendedPDFBarcodeDesigner() {
     debugger;
     if (selectedComponent) {
       const updatedComponent = { ...selectedComponent, [property]: value };
-      const updatedComponents = placedComponents.map((comp) =>
+      const updatedComponents = templateData?.barcodeState?.map((comp) =>
         comp.id === selectedComponent.id ? updatedComponent : comp
       );
-      setPlacedComponents(updatedComponents);
+      setTemplateData((prev: TemplateState) => ({
+        ...prev,
+        barcodeState: updatedComponents
+      }));
       setSelectedComponent(updatedComponent);
       generateBarcode(updatedComponent);
     }
   };
   useEffect(() => {
     debugger;
-    placedComponents.forEach(generateBarcode);
-  }, [placedComponents, barcodeErrors]);
+    templateData?.barcodeState?.forEach(generateBarcode);
+  }, [templateData?.barcodeState, barcodeErrors]);
 
   const renderComponent = (component: PlacedComponent) => {
     const style: React.CSSProperties = {
@@ -716,8 +591,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         selectedComponent?.id === component.id
           ? "2px solid #2196f3"
           : component.type == DesignerElementType.barcode
-          ? ""
-          : "1px dashed #ccc",
+            ? ""
+            : "1px dashed #ccc",
       padding: component.type == DesignerElementType.barcode ? "0px" : "4px",
       cursor: "move",
       backgroundColor: "white",
@@ -734,7 +609,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             {barcodeErrors &&
-            barcodeErrors?.find((x: any) => x.id == component.id) ? (
+              barcodeErrors?.find((x: any) => x.id == component.id) ? (
               <>
                 <div className="text-red-500 text-sm">
                   {barcodeErrors?.find((x: any) => x.id == component.id).error}
@@ -770,9 +645,6 @@ export default function ExtendedPDFBarcodeDesigner() {
         );
     }
   };
-  const isRetailTemplate = () => {
-    return ["3Inch", "4Inch"]?.includes(pageProps?.pageSize!);
-  };
   return (
     <div
       className="flex max-h-screen bg-gray-100"
@@ -780,27 +652,36 @@ export default function ExtendedPDFBarcodeDesigner() {
       onMouseUp={handleMouseUp}
     >
       {/* Left Sidebar - Components */}
-      <div className="w-48 bg-white border-r border-gray-200 p-4">
-        <div className="mb-4">
-          <h2 className="text-sm font-semibold text-gray-700">Components</h2>
+      <ResizableBox
+        width={250} // Initial width
+        height={Infinity}
+        minConstraints={[150, Infinity]} // Minimum width
+        maxConstraints={[400, Infinity]} // Maximum width
+        resizeHandles={[appState.appState.dir === 'rtl' ? 'w' : 'e']}
+        handle={<div className={`custom-handle ${appState.appState.dir === 'rtl' ? 'rtl' : 'ltr'}`} />}
+        className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
+      >
+        <div className="bg-white border-r border-gray-200 p-4">
+          <div className="mb-4">
+            <h2 className="text-sm font-semibold text-gray-700">Components</h2>
+          </div>
+          <div className="space-y-2">
+            {components?.map((component) => (
+              <div
+                key={component.id}
+                draggable
+                onDragStart={(e) => handleDragStart(e, component.id)}
+                className="flex items-center p-2 rounded hover:bg-gray-100 cursor-move"
+              >
+                {component.icon}
+                <span className="text-sm ml-2">{component.label}</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="space-y-2">
-          {components.map((component) => (
-            <div
-              key={component.id}
-              draggable
-              onDragStart={(e) => handleDragStart(e, component.id)}
-              className="flex items-center p-2 rounded hover:bg-gray-100 cursor-move"
-            >
-              {component.icon}
-              <span className="text-sm ml-2">{component.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
+      </ResizableBox>
       {/* Main Design Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col" style={{height:'100%'}}>
         {/* Toolbar */}
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center space-x-2">
@@ -831,7 +712,10 @@ export default function ExtendedPDFBarcodeDesigner() {
               startIcon="ri-arrow-go-back-line"
               title="Clear"
               onClick={() => {
-                setPlacedComponents([]);
+                setTemplateData((prev: TemplateState) => ({
+                  ...prev,
+                  barcodeState: []
+                }));
                 setSelectedComponent(null);
               }}
               variant="secondary"
@@ -849,7 +733,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                             Download PDF
                         </button> */}
             {/* <PDFDownloadLink
-                            document={<PDFDocument components={placedComponents} pageProps={pageProps} />}
+                            document={<PDFDocument components={placedComponents} pageProps={templateData?.propertiesState} />}
                             fileName="barcode-design.pdf"
                             className="flex items-center px-3 py-2 bg-primary text-white rounded hover:bg-primary/90"
                         > */}
@@ -865,7 +749,7 @@ export default function ExtendedPDFBarcodeDesigner() {
 
         {/* Design Canvas */}
         <div
-          className="flex-1 p-8 bg-gray-50 "
+          className="flex-1 p-8 bg-gray-50"
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
         >
@@ -874,369 +758,372 @@ export default function ExtendedPDFBarcodeDesigner() {
             id="teplate-container"
             className="bg-white shadow-sm mx-auto max-h-[calc(100vh-8rem)] overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100  relative"
             style={{
-              width: "8.5in",
-              height: "11in",
+              width: templateData.propertiesState?.width,
+              height: templateData.propertiesState?.height ?? "11in",
               transform: `scale(${zoom / 100})`,
               transformOrigin: "top center",
-              padding: `${pageProps.padding.top}px ${pageProps.padding.right}px ${pageProps.padding.bottom}px ${pageProps.padding.left}px`,
-              margin: `${pageProps.margin.top}px ${pageProps.margin.right}px ${pageProps.margin.bottom}px ${pageProps.margin.left}px`,
-              border: `1px solid ${pageProps.borderColor}`,
+              border: "2px dashed #ccc",
+              margin: `${templateData?.propertiesState?.margins?.top}px 0px 0px ${templateData?.propertiesState?.margins?.left}px`,
             }}
           >
-            {placedComponents.map(renderComponent)}
+
+            {templateData?.barcodeState?.map(renderComponent)}
           </div>
         </div>
       </div>
 
       {/* Right Sidebar - Properties */}
-      <div className="w-64 bg-white border-l border-gray-200 p-4 max-h-[calc(100vh)]  relative">
-        <div className="flex flex-col mb-4 z-10">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-sm font-semibold text-gray-700">Properties</h2>
-            <button className="p-1 hover:bg-gray-100 rounded">
-              <Settings className="w-4 h-4" />
-            </button>
-          </div>
-          <Tabs value={value} onChange={handleTabChange}>
-            <Tab label="Element" value="element" />
-            <Tab label="Page" value="page" />
-          </Tabs>
-        </div>
+      <ResizableBox
+        width={300} // Initial width
+        height={Infinity}
+        minConstraints={[200, Infinity]} // Minimum width
+        maxConstraints={[400, Infinity]} // Maximum width
+        resizeHandles={[appState.appState.dir === 'rtl' ? 'e' : 'w']}
+        handle={<div className={`custom-handle ${appState.appState.dir === 'rtl' ? 'ltr' : 'rtl'}`} />}
+        className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
+      >
 
-        <Box className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 ">
-          <Box hidden={value !== "element"}>
-            {selectedComponent && (
-              <Box sx={{ spacey: 2, pb: 2 }}>
-                <Box>
-                  {/* <InputLabel htmlFor="content"  className="text-[8px] font-bold text-blue-500">Content</InputLabel> */}
-                  {selectedComponent.type === DesignerElementType.field ? (
-                    <ERPDataCombobox
-                      id="content"
-                      value={selectedComponent.content}
-                      data={selectedComponent}
-                      label="Content"
-                      field={{
-                        id: "blockOnCreditLimit",
-                        valueKey: "value",
-                        labelKey: "value",
-                      }}
-                      options={fields.map((field) => ({
-                        value: field,
-                        label: field,
-                      }))}
-                      onChange={(e) => handlePropertyChange("content", e.value)}
-                    />
-                  ) : (
+        <div className="p-4 h-full overflow-y-auto">
+          <div className="flex flex-col mb-4 z-10">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-sm font-semibold text-gray-700">Properties</h2>
+              <button className="p-1 hover:bg-gray-100 rounded">
+                <Settings className="w-4 h-4" />
+              </button>
+            </div>
+            <Tabs value={value} onChange={handleTabChange}>
+              <Tab label="Element" value="element" />
+              <Tab label="Page" value="page" />
+            </Tabs>
+          </div><Box className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 ">
+            <Box hidden={value !== "element"}>
+              {selectedComponent && (
+                <Box sx={{ spacey: 2, pb: 2 }}>
+                  <Box>
+                    {/* <InputLabel htmlFor="content"  className="text-[8px] font-bold text-blue-500">Content</InputLabel> */}
+                    {selectedComponent.type === DesignerElementType.field ? (
+                      <ERPDataCombobox
+                        id="content"
+                        value={selectedComponent.content}
+                        data={selectedComponent}
+                        label="Content"
+                        field={{
+                          id: "blockOnCreditLimit",
+                          valueKey: "value",
+                          labelKey: "value",
+                        }}
+                        options={fields?.map((field) => ({
+                          value: field,
+                          label: field,
+                        }))}
+                        onChange={(e) => handlePropertyChange("content", e.value)}
+                      />
+                    ) : (
+                      <ERPInput
+                        id="content"
+                        label="Content"
+                        value={selectedComponent.content}
+                        data={selectedComponent}
+                        onChange={(e) =>
+                          handlePropertyChange("content", e.target.value)
+                        }
+                      />
+                    )}
+                  </Box>
+                  <Box>
                     <ERPInput
-                      id="content"
-                      label="Content"
-                      value={selectedComponent.content}
-                      data={selectedComponent}
-                      onChange={(e) =>
-                        handlePropertyChange("content", e.target.value)
-                      }
-                    />
-                  )}
-                </Box>
-                <Box>
-                  <ERPInput
-                    id="x"
-                    type="number"
-                    label="Position X"
-                    value={Math.round(selectedComponent.x)}
-                    data={selectedComponent}
-                    onChange={(e) =>
-                      handlePropertyChange("x", parseInt(e.target.value, 10))
-                    }
-                  />
-                </Box>
-                <Box>
-                  <ERPInput
-                    id="y"
-                    type="number"
-                    label="Position Y"
-                    value={Math.round(selectedComponent.y)}
-                    data={selectedComponent}
-                    onChange={(e) =>
-                      handlePropertyChange("y", parseInt(e.target.value, 10))
-                    }
-                  />
-                </Box>
-                <Box>
-                  {selectedComponent.type !== DesignerElementType.barcode && (
-                    <ERPInput
-                      id="width"
+                      id="x"
                       type="number"
-                      label="Width"
-                      value={selectedComponent.width}
+                      label="Position X"
+                      value={Math.round(selectedComponent.x)}
                       data={selectedComponent}
                       onChange={(e) =>
-                        handlePropertyChange(
-                          "width",
-                          parseInt(e.target.value, 10)
-                        )
+                        handlePropertyChange("x", parseInt(e.target.value, 10))
                       }
                     />
-                  )}
-                </Box>
-                <Box>
-                  {selectedComponent.type !== DesignerElementType.barcode && (
+                  </Box>
+                  <Box>
                     <ERPInput
-                      id="height"
+                      id="y"
                       type="number"
-                      label="Height"
-                      value={selectedComponent.height}
+                      label="Position Y"
+                      value={Math.round(selectedComponent.y)}
                       data={selectedComponent}
                       onChange={(e) =>
-                        handlePropertyChange(
-                          "height",
-                          parseInt(e.target.value, 10)
-                        )
+                        handlePropertyChange("y", parseInt(e.target.value, 10))
                       }
                     />
-                  )}
-                </Box>
-                {selectedComponent.type === DesignerElementType.barcode &&
-                  selectedComponent.barcodeProps && (
-                    <div className="space-y-4">
-                      <Box>
-                        <ERPDataCombobox
-                          id="format"
-                          value={selectedComponent.barcodeProps.format}
-                          data={selectedComponent}
-                          label="Barcode Format"
-                          field={{
-                            id: "format",
-                            valueKey: "value",
-                            labelKey: "value",
-                          }}
-                          options={barcodeFormats.map((format) => ({
-                            value: format,
-                            label: format,
-                          }))}
-                          onChange={(e) => {
-                            debugger;
-                            handleBarcodePropertyChange("format", e.value);
-                          }}
-                        />
-                      </Box>
+                  </Box>
+                  <Box>
+                    {selectedComponent.type !== DesignerElementType.barcode && (
+                      <ERPInput
+                        id="width"
+                        type="number"
+                        label="Width"
+                        value={selectedComponent.width}
+                        data={selectedComponent}
+                        onChange={(e) =>
+                          handlePropertyChange(
+                            "width",
+                            parseInt(e.target.value, 10)
+                          )
+                        }
+                      />
+                    )}
+                  </Box>
+                  <Box>
+                    {selectedComponent.type !== DesignerElementType.barcode && (
+                      <ERPInput
+                        id="height"
+                        type="number"
+                        label="Height"
+                        value={selectedComponent.height}
+                        data={selectedComponent}
+                        onChange={(e) =>
+                          handlePropertyChange(
+                            "height",
+                            parseInt(e.target.value, 10)
+                          )
+                        }
+                      />
+                    )}
+                  </Box>
+                  {selectedComponent.type === DesignerElementType.barcode &&
+                    selectedComponent.barcodeProps && (
+                      <div className="space-y-4">
+                        <Box>
+                          <ERPDataCombobox
+                            id="format"
+                            value={selectedComponent.barcodeProps.format}
+                            data={selectedComponent}
+                            label="Barcode Format"
+                            field={{
+                              id: "format",
+                              valueKey: "value",
+                              labelKey: "value",
+                            }}
+                            options={barcodeFormats?.map((format) => ({
+                              value: format,
+                              label: format,
+                            }))}
+                            onChange={(e) => {
+                              debugger;
+                              handleBarcodePropertyChange("format", e.value);
+                            }}
+                          />
+                        </Box>
 
-                      <Box>
-                        <ERPSlider
-                          label="Bar Width"
-                          value={selectedComponent.barcodeProps.barWidth}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "barWidth",
-                              e.target.valueAsNumber
-                            )
-                          }
-                          min={1}
-                          max={10}
-                        />
-                      </Box>
+                        <Box>
+                          <ERPSlider
+                            label="Bar Width"
+                            value={selectedComponent.barcodeProps.barWidth}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "barWidth",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={1}
+                            max={10}
+                          />
+                        </Box>
 
-                      <Box>
-                        <ERPSlider
-                          label="Height"
-                          value={selectedComponent.barcodeProps.height}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "height",
-                              e.target.valueAsNumber
-                            )
-                          }
-                          min={10}
-                          max={200}
-                        />
-                      </Box>
+                        <Box>
+                          <ERPSlider
+                            label="Height"
+                            value={selectedComponent.barcodeProps.height}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "height",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={10}
+                            max={200}
+                          />
+                        </Box>
 
-                      <Box>
-                        <ERPSlider
-                          label="Margin"
-                          value={selectedComponent.barcodeProps.margin}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "margin",
-                              e.target.valueAsNumber
-                            )
-                          }
-                          min={0}
-                          max={50}
-                        />
-                      </Box>
+                        <Box>
+                          <ERPSlider
+                            label="Margin"
+                            value={selectedComponent.barcodeProps.margin}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "margin",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={0}
+                            max={50}
+                          />
+                        </Box>
 
-                      <Box>
-                        <ERPInput
-                          id="background"
-                          label="Background Color"
-                          type="color"
-                          value={selectedComponent.barcodeProps.background}
-                          data={selectedComponent}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "background",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </Box>
+                        <Box>
+                          <ERPInput
+                            id="background"
+                            label="Background Color"
+                            type="color"
+                            value={selectedComponent.barcodeProps.background}
+                            data={selectedComponent}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "background",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </Box>
 
-                      <Box>
-                        <ERPInput
-                          id="lineColor"
-                          label="Line Color"
-                          type="color"
-                          value={selectedComponent.barcodeProps.lineColor}
-                          data={selectedComponent}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "lineColor",
-                              e.target.value
-                            )
-                          }
-                        />
-                      </Box>
+                        <Box>
+                          <ERPInput
+                            id="lineColor"
+                            label="Line Color"
+                            type="color"
+                            value={selectedComponent.barcodeProps.lineColor}
+                            data={selectedComponent}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "lineColor",
+                                e.target.value
+                              )
+                            }
+                          />
+                        </Box>
 
-                      <Box className="flex space-x-4">
-                        <ERPCheckbox
-                          id="showText"
-                          label="Show Text"
-                          data={selectedComponent}
-                          checked={selectedComponent.barcodeProps.showText}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "showText",
-                              e.target.checked
-                            )
-                          }
-                        />
-                      </Box>
+                        <Box className="flex space-x-4">
+                          <ERPCheckbox
+                            id="showText"
+                            label="Show Text"
+                            data={selectedComponent}
+                            checked={selectedComponent.barcodeProps.showText}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "showText",
+                                e.target.checked
+                              )
+                            }
+                          />
+                        </Box>
 
-                      <Box>
-                        <InputLabel
-                          sx={{
-                            textTransform: "capitalize",
-                            marginBottom: "0.25rem",
-                            display: "block",
-                            fontSize: "0.75rem",
-                            color: "rgb(17, 24, 39)",
-                            textAlign: "left",
-                            direction: "rtl",
-                          }}
-                        >
-                          Text Align
-                        </InputLabel>
+                        <Box>
+                          <InputLabel
+                            sx={{
+                              textTransform: "capitalize",
+                              marginBottom: "0.25rem",
+                              display: "block",
+                              fontSize: "0.75rem",
+                              color: "rgb(17, 24, 39)",
+                              textAlign: "left",
+                              direction: "rtl",
+                            }}
+                          >
+                            Text Align
+                          </InputLabel>
 
-                        <div className="flex justify-between space-x-2">
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.barcodeProps.textAlign ===
-                              "left"
+                          <div className="flex justify-between space-x-2">
+                            <button
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                "left"
                                 ? "ti-btn-primary-full"
                                 : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handleBarcodePropertyChange("textAlign", "left")
-                            }
-                          >
-                            Left
-                          </button>
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.barcodeProps.textAlign ===
-                              "center"
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handleBarcodePropertyChange("textAlign", "left")
+                              }
+                            >
+                              Left
+                            </button>
+                            <button
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                "center"
                                 ? "ti-btn-primary-full"
                                 : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handleBarcodePropertyChange("textAlign", "center")
-                            }
-                          >
-                            Center
-                          </button>
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.barcodeProps.textAlign ===
-                              "right"
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handleBarcodePropertyChange("textAlign", "center")
+                              }
+                            >
+                              Center
+                            </button>
+                            <button
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                "right"
                                 ? "ti-btn-primary-full"
                                 : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handleBarcodePropertyChange("textAlign", "right")
-                            }
-                          >
-                            Right
-                          </button>
-                        </div>
-                      </Box>
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handleBarcodePropertyChange("textAlign", "right")
+                              }
+                            >
+                              Right
+                            </button>
+                          </div>
+                        </Box>
 
-                      <Box>
-                        <ERPDataCombobox
-                          id="font"
-                          value={selectedComponent.barcodeProps.font}
-                          data={selectedComponent}
-                          label="Font"
-                          field={{
-                            id: "font",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={[
-                            { value: "Monospace", label: "Monospace" },
-                            { value: "Arial", label: "Arial" },
-                            { value: "Helvetica", label: "Helvetica" },
-                            { value: "Sans-serif", label: "Sans-serif" },
-                          ]}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange("font", e.value)
-                          }
-                        />
-                      </Box>
+                        <Box>
+                          <ERPDataCombobox
+                            id="font"
+                            value={selectedComponent.barcodeProps.font}
+                            data={selectedComponent}
+                            label="Font"
+                            field={{
+                              id: "font",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={[
+                              { value: "Monospace", label: "Monospace" },
+                              { value: "Arial", label: "Arial" },
+                              { value: "Helvetica", label: "Helvetica" },
+                              { value: "Sans-serif", label: "Sans-serif" },
+                            ]}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange("font", e.value)
+                            }
+                          />
+                        </Box>
 
-                      <Box>
-                        <InputLabel
-                          sx={{
-                            textTransform: "capitalize",
-                            marginBottom: "0.25rem",
-                            display: "block",
-                            fontSize: "0.75rem",
-                            color: "rgb(17, 24, 39)",
-                            textAlign: "left",
-                            direction: "rtl",
-                          }}
-                        >
-                          Font Style
-                        </InputLabel>
-                        <div className="flex justify-between space-x-2">
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.barcodeProps.fontStyle ===
-                              "bold"
+                        <Box>
+                          <InputLabel
+                            sx={{
+                              textTransform: "capitalize",
+                              marginBottom: "0.25rem",
+                              display: "block",
+                              fontSize: "0.75rem",
+                              color: "rgb(17, 24, 39)",
+                              textAlign: "left",
+                              direction: "rtl",
+                            }}
+                          >
+                            Font Style
+                          </InputLabel>
+                          <div className="flex justify-between space-x-2">
+                            <button
+                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                "bold"
                                 ? "ti-btn-primary-full"
                                 : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handleBarcodePropertyChange("fontStyle", "bold")
-                            }
-                          >
-                            Bold
-                          </button>
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.barcodeProps.fontStyle ===
-                              "italic"
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handleBarcodePropertyChange("fontStyle", "bold")
+                              }
+                            >
+                              Bold
+                            </button>
+                            <button
+                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                "italic"
                                 ? "ti-btn-primary-full"
                                 : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handleBarcodePropertyChange("fontStyle", "italic")
-                            }
-                          >
-                            Italic
-                          </button>
-                        </div>
-                        {/* <div className="flex space-x-2">
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handleBarcodePropertyChange("fontStyle", "italic")
+                              }
+                            >
+                              Italic
+                            </button>
+                          </div>
+                          {/* <div className="flex space-x-2">
                           <Button
                             bg-slate-100
                             hover:bg-slate-200
@@ -1268,105 +1155,106 @@ export default function ExtendedPDFBarcodeDesigner() {
                             Italic
                           </Button>
                         </div> */}
-                      </Box>
+                        </Box>
 
-                      <Box>
-                        <ERPSlider
-                          label="Font Size"
-                          value={selectedComponent.barcodeProps.fontSize}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "fontSize",
-                              e.target.valueAsNumber
-                            )
-                          }
-                          min={0}
-                          max={50}
-                        />
-                      </Box>
+                        <Box>
+                          <ERPSlider
+                            label="Font Size"
+                            value={selectedComponent.barcodeProps.fontSize}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "fontSize",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={0}
+                            max={50}
+                          />
+                        </Box>
 
-                      <Box>
-                        <ERPSlider
-                          label="Text Margin"
-                          value={selectedComponent.barcodeProps.textMargin}
-                          onChange={(e) =>
-                            handleBarcodePropertyChange(
-                              "textMargin",
-                              e.target.valueAsNumber
-                            )
-                          }
-                          min={-10}
-                          max={40}
-                        />
-                      </Box>
-                    </div>
-                  )}
-              </Box>
-            )}
-          </Box>
-          <Box hidden={value !== "page"}>
-            <Box sx={{ spaceY: 2 }}>
-              <Box sx={{ mb: 1 }}>
-                <ERPInput
-                  id="templateName"
-                  label="Template Name"
-                  value={pageProps.templateName}
-                  data={pageProps}
-                  onChange={(e) =>
-                    handlePagePropsChange("templateName", e.target.value)
-                  }
-                />
-              </Box>
-              <Box sx={{ mb: 1 }}>
-                {/* <label htmlFor="page_size" className="font-light text-sm">
+                        <Box>
+                          <ERPSlider
+                            label="Text Margin"
+                            value={selectedComponent.barcodeProps.textMargin}
+                            onChange={(e) =>
+                              handleBarcodePropertyChange(
+                                "textMargin",
+                                e.target.valueAsNumber
+                              )
+                            }
+                            min={-10}
+                            max={40}
+                          />
+                        </Box>
+                      </div>
+                    )}
+                </Box>
+              )}
+            </Box>
+
+            <Box hidden={value !== "page"}>
+              <Box sx={{ spaceY: 2 }}>
+                <Box sx={{ mb: 1 }}>
+                  <ERPInput
+                    id="templateName"
+                    label="Template Name"
+                    value={templateData?.propertiesState?.templateName}
+                    data={templateData?.propertiesState}
+                    onChange={(e) =>
+                      handlePagePropsChange("templateName", e.target.value)
+                    }
+                  />
+                </Box>
+                <Box sx={{ mb: 1 }}>
+                  {/* <label htmlFor="page_size" className="font-light text-sm">
             Page Size
           </label> */}
-                <ERPDataCombobox
-                  defaultValue={pageProps?.pageSize ?? "A4"}
-                  // value={pageProps?.pageSize ?? "A4"}
-                  field={{
-                    id: "pageSize",
-                    required: true,
-                    valueKey: "value",
-                    labelKey: "label",
-                  }}
-                  data={pageProps}
-                  onChange={(e) => handlePagePropsChange("pageSize", e.value)}
-                  id="pageSize"
-                  options={
-                    isRetailTemplate() ? retailPageSizes : pageSizeOptions
-                  }
-                  label="Page Size"
-                />
-              </Box>
-              {pageProps?.pageSize === "Custom" &&(
-                 <Box sx={{ mb: 1 }}>
-                 <div className="flex justify-start items-center space-x-1">
-                 <ERPInput
-                   id="width"
-                   label="Page Width"
-                   value={pageProps.width}
-                   type="number"
-                   data={pageProps}
-                   onChange={(e) =>
-                     handlePagePropsChange("width", e.target.value)
-                   }
-                 />
-                 <ERPInput
-                   id="height"
-                   label="Page  Height"
-                   type="number"
-                   value={pageProps.height}
-                   data={pageProps}
-                   onChange={(e) =>
-                     handlePagePropsChange("height", e.target.value)
-                   }
-                 />
-                 </div>
-               </Box>
-              )}
-             
-              {/* <Box>
+                  <ERPDataCombobox
+                    defaultValue={templateData?.propertiesState?.pageSize ?? "A4"}
+                    // value={templateData?.propertiesState?.pageSize ?? "A4"}
+                    field={{
+                      id: "pageSize",
+                      required: true,
+                      valueKey: "value",
+                      labelKey: "label",
+                    }}
+                    data={templateData?.propertiesState}
+                    onChange={(e) => handlePagePropsChange("pageSize", e.value)}
+                    id="pageSize"
+                    options={
+                      pageSizeOptions
+                    }
+                    label="Page Size"
+                  />
+                </Box>
+                {templateData?.propertiesState?.pageSize === "Custom" && (
+                  <Box sx={{ mb: 1 }}>
+                    <div className="flex justify-start items-center space-x-1">
+                      <ERPInput
+                        id="width"
+                        label="Page Width"
+                        value={templateData?.propertiesState?.width}
+                        data={templateData?.propertiesState}
+                        onChange={(e) => {
+                          debugger;
+                          handlePagePropsChange("width", e.target.value)
+                        }
+                        }
+                      />
+                      <ERPInput
+                        id="height"
+                        label="Page  Height"
+                        value={templateData?.propertiesState?.height}
+                        data={templateData?.propertiesState}
+                        onChange={(e) =>
+                          handlePagePropsChange("height", e.target.value)
+                        }
+                      />
+                    </div>
+                  </Box>
+                )}
+
+                {/* <Box>
                 <InputLabel htmlFor="padding">Padding (px)</InputLabel>
                 <Box
                   display="grid gap-2"
@@ -1375,18 +1263,18 @@ export default function ExtendedPDFBarcodeDesigner() {
                 >
                   {(
                     ["top", "right", "bottom", "left"] as PaddingMarginSides[]
-                  ).map((side) => (
+                  )?.map((side) => (
                     <ERPInput
                       id={side}
                       label={side.charAt(0).toUpperCase() + side.slice(1)}
                       key={side}
                       type="number"
                       placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
-                      value={pageProps.padding[side]}
-                      data={pageProps}
+                      value={templateData?.propertiesState?.padding[side]}
+                      data={templateData?.propertiesState}
                       onChange={(e) =>
                         handlePagePropsChange("padding", {
-                          ...pageProps.padding,
+                          ...templateData?.propertiesState?.padding,
                           [side]: parseInt(e.target.value),
                         })
                       }
@@ -1394,90 +1282,88 @@ export default function ExtendedPDFBarcodeDesigner() {
                   ))}
                 </Box>
               </Box> */}
-              <Box sx={{ mb: 1 }}>
-                <InputLabel
-                  sx={{
-                    textTransform: "capitalize",
-                    marginBottom: "0.25rem",
-                    display: "block",
-                    fontSize: "0.75rem",
-                    color: "rgb(17, 24, 39)",
-                    textAlign: "left",
-                    direction: "rtl",
-                  }}
-                  htmlFor="margin"
-                >
-                  Margin (px)
-                </InputLabel>
-                <Box
-                  display="grid"
-                  gridTemplateColumns="repeat(2, 1fr)"
-                  gap={2}
-                >
-                  {(
-                    ["top", "right", "bottom", "left"] as PaddingMarginSides[]
-                  ).map((side) => (
-                    <ERPInput
-                      id={side}
-                      label={side.charAt(0).toUpperCase() + side.slice(1)}
-                      key={side}
-                      type="number"
-                      placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
-                      value={pageProps.margin[side]}
-                      data={pageProps}
-                      onChange={(e) =>
-                        handlePagePropsChange("margin", {
-                          ...pageProps.margin,
-                          [side]: parseInt(e.target.value),
-                        })
-                      }
-                    />
-                  ))}
+                <Box sx={{ mb: 1 }}>
+                  <InputLabel
+                    sx={{
+                      textTransform: "capitalize",
+                      marginBottom: "0.25rem",
+                      display: "block",
+                      fontSize: "0.75rem",
+                      color: "rgb(17, 24, 39)",
+                      textAlign: "left",
+                      direction: "rtl",
+                    }}
+                    htmlFor="margin"
+                  >
+                    Margin (px)
+                  </InputLabel>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="repeat(2, 1fr)"
+                    gap={2}
+                  >
+
+
+                    {
+                      (["top", "left"] as PaddingMarginSides[]).map((side) => (
+                        <ERPInput
+                          id={side}
+                          label={side.charAt(0).toUpperCase() + side.slice(1)}
+                          key={side}
+                          type="number"
+                          placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
+                          value={templateData?.propertiesState?.margins?.[side]}
+                          data={templateData?.propertiesState}
+                          onChange={(e) =>
+                            handlePagePropsChange("margins", {
+                              ...templateData?.propertiesState?.margins,
+                              [side]: parseInt(e.target.value),
+                            })
+                          }
+                        />
+                      ))
+                    }
+                  </Box>
                 </Box>
-              </Box>
-              <Box sx={{ mb: 1 }}>
+                {/* <Box sx={{ mb: 1 }}>
                 <ERPInput
                   id="borderColor"
                   label="Border Color"
                   type="color"
-                  value={pageProps.borderColor}
-                  data={pageProps}
+                  value={templateData?.propertiesState?.borderColor}
+                  data={templateData?.propertiesState}
                   onChange={(e) =>
                     handlePagePropsChange("borderColor", e.target.value)
                   }
                 />
-              </Box>
+              </Box> */}
 
-              <Box sx={{ mb: 1 }}>
-                <ERPDataCombobox
-                  id="printer"
-                  value={pageProps.printer}
-                  data={selectedComponent}
-                  label="Printer"
-                  field={{
-                    id: "printer",
-                    valueKey: "value",
-                    labelKey: "value",
-                  }}
-                  options={printers.map((printer) => ({
-                    value: printer,
-                    label: printer,
-                  }))}
-                  onChange={(e) => handlePagePropsChange("printer", e.value)}
-                />
+                <Box sx={{ mb: 1 }}>
+                  <ERPDataCombobox
+                    id="printer"
+                    value={templateData?.propertiesState?.printer}
+                    data={selectedComponent}
+                    label="Printer"
+                    field={{
+                      id: "printer",
+                      valueKey: "value",
+                      labelKey: "value",
+                    }}
+                    options={printers?.map((printer) => ({
+                      value: printer,
+                      label: printer,
+                    }))}
+                    onChange={(e) => handlePagePropsChange("printer", e.value)}
+                  />
+                </Box>
               </Box>
             </Box>
           </Box>
-        </Box>
-      </div>
+        </div>
+      </ResizableBox>
+
 
       {/* Save Dialog */}
-      <SaveDialog
-        isOpen={isSaveDialogOpen}
-        onClose={() => setIsSaveDialogOpen(false)}
-        components={placedComponents}
-        pageProps={pageProps}
-      />
 
       {/* Preview Dialog */}
       <ERPModal
@@ -1490,12 +1376,10 @@ export default function ExtendedPDFBarcodeDesigner() {
             style={{
               width: "8.5in",
               height: "11in",
-              padding: `${pageProps.padding.top}px ${pageProps.padding.right}px ${pageProps.padding.bottom}px ${pageProps.padding.left}px`,
-              margin: `${pageProps.margin.top}px ${pageProps.margin.right}px ${pageProps.margin.bottom}px ${pageProps.margin.left}px`,
-              border: `1px solid ${pageProps.borderColor}`,
+              margin: `${templateData?.propertiesState?.margins?.top}px ${templateData?.propertiesState?.margins?.right}px ${templateData?.propertiesState?.margins?.bottom}px ${templateData?.propertiesState?.margins?.left}px`,
             }}
           >
-            {placedComponents.map(renderComponent)}
+            {templateData?.barcodeState?.map(renderComponent)}
           </div>
         }
       />

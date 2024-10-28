@@ -18,6 +18,9 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { ResponseModelWithValidation } from "../../../base/response-model";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import SystemSettingsApi from "./system-apis";
+import DownloadPreview from "../../LabelDesigner/download-preview";
+import { APIClient } from "../../../helpers/api-client";
+import { TemplateState } from "../../InvoiceDesigner/Designer/interfaces";
 
 interface BarcodeFormData {
   formBcode: number;
@@ -122,6 +125,7 @@ const initialStandardBarcodeData = {
   },
 }
 
+const api = new APIClient();
 const BarcodePrint: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -129,14 +133,18 @@ const BarcodePrint: React.FC = () => {
 
   const [barcodeFormLoading, setBarcodeFormLoading] = useState<boolean>(false);
   const [voucherFormLoading, setVoucherFormLoading] = useState<boolean>(false);
-  const [barcodeDescLoading, setBarcodeDescLoading] = useState<boolean>(false);
   const [standardBarcodeLoading, setStandardBarcodeLoading] = useState<boolean>(false);
   const [isOther, setIsOther] = useState<boolean>(false);
   const [barcodeForm, setBarcodeForm] = useState<any>(initialBarcodeFormData);
   const [voucherForm, setVoucherForm] = useState<any>(initialVoucherFormData);
   const [barcodeDesc, setBarcodeDesc] = useState<any>(initialBarcodeDescData);
   const [standardBarcode, setStandardBarcode] = useState<any>(initialStandardBarcodeData);
+  const [showPrint, setShowPrint] = useState<boolean>(false);
+  const [loadingTemplate, setLoadingTemplate] = useState<boolean>(false);
+  const [template, setTemplate] = useState<TemplateState>();
+  const [printing, setPrinting] = useState<boolean>(false);
   const [data, setData] = useState<any>();
+  const [columnsPerRow, setColumnsPerRow] = useState<number>(1);
 
   const handleBarcodeStateChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -184,10 +192,16 @@ const BarcodePrint: React.FC = () => {
     }));
   };
 
-  const handleComboboxChange = (id: string, data: any) => {
+  const handleComboboxChange = async(id: string, data: any) => {
+    debugger;
     switch (id) {
       case 'labelDesign':
-        setBarcodeDesc((prev: any) => ({ ...prev, labelDesign: data }));
+        setLoadingTemplate(true);
+        setBarcodeDesc((prev: any) => ({ ...prev, labelDesign: data?.labelDesign }));
+        const res = await api.getAsync( `${Urls.templates}${data?.labelDesign}`);
+        debugger;
+        setTemplate(res);
+        setLoadingTemplate(false);
         break;
       case 'standardLabelDesign':
         setStandardBarcode((prev: any) => ({ ...prev, standardLabelDesign: data }));
@@ -205,7 +219,7 @@ const BarcodePrint: React.FC = () => {
 
   const barcodeFormSubmit = useCallback(async () => {
     setBarcodeFormLoading(true);
-    const response: ResponseModelWithValidation<any, any> =
+    const response =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
     setBarcodeFormLoading(false);
     debugger;
@@ -214,20 +228,23 @@ const BarcodePrint: React.FC = () => {
 
 
   const voucherFormSubmit = useCallback(async () => {
+    debugger;
     setVoucherFormLoading(true);
-    const response: ResponseModelWithValidation<any, any> =
+    const response =
       await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
     setVoucherFormLoading(false);
     debugger;
-    setData(response);
+    setData(response);    
   }, []);
 
 
   const barcodeDescSubmit = useCallback(() => {
-    setBarcodeDescLoading(true);
+    debugger;
+    setShowPrint(true);
+    setPrinting(true);
     setTimeout(() => {
-      console.log('Form submitted:', barcodeDesc.data);
-      setBarcodeDescLoading(false);
+      console.log('Form submitted:', barcodeDesc?.data);
+      setPrinting(false);
       setBarcodeDesc((prevData: any) => ({
         ...prevData,
         validations: {
@@ -374,7 +391,7 @@ const BarcodePrint: React.FC = () => {
                       type="text"
                       customSize="md"
                       className="w-full"
-                      value={barcodeForm.data.formBcode}
+                      value={barcodeForm.data?.formBcode}
                       data={barcodeForm.data}
                       validation={barcodeForm?.validations?.formBcode}
                       onChangeData={(data: any) => {
@@ -389,7 +406,7 @@ const BarcodePrint: React.FC = () => {
                       id="toBcode"
                       label={t("to")}
                       type="text"
-                      value={barcodeForm.data.toBcode}
+                      value={barcodeForm.data?.toBcode}
                       customSize="md"
                       className="w-full"
                       data={barcodeForm.data}
@@ -407,7 +424,7 @@ const BarcodePrint: React.FC = () => {
                     id="barCodes"
                     label={t("barcode_comma_seperated")}
                     type="text"
-                    value={barcodeForm.data.barCodes}
+                    value={barcodeForm.data?.barCodes}
                     customSize="md"
                     className="w-full"
                     data={barcodeForm.data}
@@ -425,7 +442,7 @@ const BarcodePrint: React.FC = () => {
                       label={t("preview")}
                       id="isFormTo"
                       data={barcodeForm.data}
-                      checked={barcodeForm.data.isFormTo}
+                      checked={barcodeForm.data?.isFormTo}
                       validation={barcodeForm?.validations?.isFormTo}
                       onChangeData={(data: any) => {
                         setBarcodeForm((prev: any) => ({
@@ -463,7 +480,7 @@ const BarcodePrint: React.FC = () => {
                             name="vType"
                             value={_item.key.toLowerCase()}
 
-                            checked={!isOther && voucherForm.data.vType === _item.key.toLowerCase()}
+                            checked={!isOther && voucherForm.data?.vType === _item.key.toLowerCase()}
                             onChange={handleVoucherStateChange}
 
                             label={_item.label}
@@ -487,7 +504,7 @@ const BarcodePrint: React.FC = () => {
                         id="vType_"
                         type="text"
                         inputClassName="w-[100px]"
-                        value={voucherForm.data.vType}
+                        value={voucherForm.data?.vType}
                         customSize="md"
                         className="w-full"
                         placeholder={t("voucher_type")}
@@ -503,7 +520,7 @@ const BarcodePrint: React.FC = () => {
                         id="vPrefix"
                         label={t("VPrefix")}
                         type="text"
-                        value={voucherForm.data.vPrefix}
+                        value={voucherForm.data?.vPrefix}
                         customSize="md"
                         className="w-full"
                         placeholder={t("VPrefix")}
@@ -529,7 +546,7 @@ const BarcodePrint: React.FC = () => {
                         required={true}
                         data={voucherForm.data}
                         defaultData={voucherForm?.data}
-                        value={voucherForm.data.formType}
+                        value={voucherForm.data?.formType}
                         validation={voucherForm?.validations?.formType}
                         onChangeData={(data: any) => {
                           setVoucherForm((prev: any) => ({
@@ -543,7 +560,7 @@ const BarcodePrint: React.FC = () => {
                           id="vchNo"
                           label={t("bill_no")}
                           type="text"
-                          value={voucherForm.data.vchNo}
+                          value={voucherForm.data?.vchNo}
                           customSize="md"
                           className="w-full"
                           data={voucherForm.data}
@@ -579,8 +596,8 @@ const BarcodePrint: React.FC = () => {
                     id="packDate"
                     type="date"
                     label="Packed Date"
-                    value={barcodeDesc.data.packDate}
-                    data={barcodeDesc.data}
+                    value={barcodeDesc?.data?.packDate}
+                    data={barcodeDesc?.data}
                     validation={barcodeDesc?.validations?.packDate}
                     onChangeData={(data: any) => {
                       setBarcodeDesc((prev: any) => ({
@@ -593,11 +610,11 @@ const BarcodePrint: React.FC = () => {
                     id="expDesc"
                     label="Expiry Description"
                     type="text"
-                    value={barcodeDesc.data.expDesc}
+                    value={barcodeDesc?.data?.expDesc}
                     customSize="md"
                     className="w-full"
                     name="expDesc"
-                    data={barcodeDesc.data}
+                    data={barcodeDesc?.data}
                     validation={barcodeDesc?.validations?.expDesc}
                     onChangeData={(data: any) => {
                       setBarcodeDesc((prev: any) => ({
@@ -607,18 +624,18 @@ const BarcodePrint: React.FC = () => {
                     }}
                     placeholder="Expiry Description"
                   />
-                  {[1, 2, 3, 4].map((num) => (
+                  {[1, 2, 3, 4].map((num: number) => (
                     <ERPInput
                       key={num}
                       id={`note${num}`}
                       label={`Note ${num}`}
                       type="text"
-                      value={barcodeDesc.data[`note${num}` as keyof typeof barcodeDesc.data]}
+                      value={barcodeDesc?.data ? barcodeDesc?.data[`note${num}` as any]: null}
                       customSize="md"
                       className="w-full"
                       name={`note${num}`}
-                      data={barcodeDesc.data}
-                      validation={barcodeDesc?.validations[`note${num}` as keyof typeof barcodeDesc.validations]}
+                      data={barcodeDesc?.data}
+                      validation={barcodeDesc?.validations ? barcodeDesc?.validations[`note${num}` as any]: null}
                       onChangeData={(data: any) => {
                         setBarcodeDesc((prev: any) => ({
                           ...prev,
@@ -651,9 +668,9 @@ const BarcodePrint: React.FC = () => {
                           }}
                           label="Label Design"
                           required={true}
-                          data={barcodeDesc.data}
+                          data={barcodeDesc?.data}
                           defaultData={barcodeDesc?.data}
-                          value={barcodeDesc.data.labelDesign}
+                          value={barcodeDesc?.data?.labelDesign}
                           validation={barcodeDesc?.validations?.labelDesign}
                           onChangeData={(data: any) => handleComboboxChange("labelDesign", data)}
                         />
@@ -663,11 +680,11 @@ const BarcodePrint: React.FC = () => {
                           id="startRow"
                           label="Start Row"
                           type="text"
-                          value={barcodeDesc.data.startRow}
+                          value={barcodeDesc?.data?.startRow}
                           customSize="md"
                           className="w-full"
                           name="startRow"
-                          data={barcodeDesc.data}
+                          data={barcodeDesc?.data}
                           validation={barcodeDesc?.validations?.startRow}
                           onChangeData={(data: any) => {
                             setBarcodeDesc((prev: any) => ({
@@ -682,11 +699,11 @@ const BarcodePrint: React.FC = () => {
                           id="endRow"
                           label="End Row"
                           type="text"
-                          value={barcodeDesc.data.endRow}
+                          value={barcodeDesc?.data?.endRow}
                           customSize="md"
                           className="w-full"
                           name="endRow"
-                          data={barcodeDesc.data}
+                          data={barcodeDesc?.data}
                           validation={barcodeDesc?.validations?.endRow}
                           onChangeData={(data: any) => {
                             setBarcodeDesc((prev: any) => ({
@@ -701,7 +718,7 @@ const BarcodePrint: React.FC = () => {
                       <ERPCheckbox
                         label="In Search"
                         id="inSearch"
-                        data={barcodeDesc.data}
+                        data={barcodeDesc?.data}
                         validation={barcodeDesc?.validations?.inSearch}
                         onChangeData={(data: any) => {
                           setBarcodeDesc((prev: any) => ({
@@ -714,8 +731,8 @@ const BarcodePrint: React.FC = () => {
                         title="Print"
                         className="px-3 py-1 w-24"
                         variant="secondary"
-                        disabled={barcodeDescLoading}
-                        loading={barcodeDescLoading}
+                        disabled={printing||loadingTemplate}
+                        loading={printing || loadingTemplate}
                         onClick={barcodeDescSubmit}
                       />
                     </div>
@@ -754,6 +771,20 @@ const BarcodePrint: React.FC = () => {
 
       
       </div>
+      {template && data &&
+      <ERPModal
+         isOpen={showPrint}
+         title={"Update Email"}
+         isForm={true}
+         closeModal={() => {
+           setShowPrint(false);
+           setBarcodeDesc({});
+         }}
+      content={<DownloadPreview template={template} data={data}/>}
+      >
+
+      </ERPModal>
+}
     </Fragment>
   );
 };

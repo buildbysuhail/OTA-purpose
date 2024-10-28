@@ -928,5 +928,26 @@
   "headers_&_footers":"Headers & Footers",
   "whatsapp_integration":"Whatsapp Integration",
   "email_integration":"Email Integration",
-  "integration":"Integration"
+  "integration":"Integration",
+
+  "user_type_name":"User Type Name",
+  "user_type":"User Type",
+  "show_all":"Show All",
+  "select_all_add":"Select All Add",
+  "select_all_print":"Select All Print",
+  "select_all_edit":"Select All Edit",
+  "select_all_export":"Select All Export",
+  "select_all_delete":"Select All Delete",
+  "inherit_rights_from_usertype":"Inherit Rights From UserType",
+  "load_rights":"Load Rights",
+  "user_privilege":"User Privilege",
+
+  "masters":"Masters",
+  "account_ledger":"Account Ledger",
+  "exchange_rate":"Exchange Rate",
+  "suppliers":"Suppliers",
+  "privillege_cards":"Privillege Cards",
+  "project_sites":"Project Sites",
+  "account_privilages":"Account Privilages",
+  "mr.":"Mr."
 }

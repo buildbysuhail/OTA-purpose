@@ -92,7 +92,7 @@ const Settings = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
-        title={"User Privilege"}
+        title={t("user_privilege")}
         width="w-full max-w-[1000px]"
         isForm={true}
         closeModal={() => {

@@ -211,7 +211,6 @@
   "si_no": "التسلسلي",
   "user": "المستخدم",
   "counter": "العداد",
-  "user_type": "نوع المستخدم",
   "created_user": "المستخدم المنشئ",
   "created_date": "تاريخ الإنشاء",
   "modified_user": "المستخدم المعدل",
@@ -931,5 +930,26 @@
   "headers_&_footers": "الرؤوس والتذييلات",
   "whatsapp_integration": "تكامل واتساب",
   "email_integration": "تكامل البريد الإلكتروني",
-  "integration": "التكامل"
+  "integration": "التكامل",
+
+  "user_type_name": "اسم نوع المستخدم",
+  "user_type": "نوع المستخدم",
+  "show_all": "عرض الكل",
+  "select_all_add": "تحديد الكل لإضافة",
+  "select_all_print": "تحديد الكل للطباعة",
+  "select_all_edit": "تحديد الكل للتعديل",
+  "select_all_export": "تحديد الكل للتصدير",
+  "select_all_delete": "تحديد الكل للحذف",
+  "inherit_rights_from_usertype": "وراثة الحقوق من نوع المستخدم",
+  "load_rights": "تحميل الحقوق",
+  "user_privilege": "امتياز المستخدم",
+
+  "masters": "الأساسيّات",
+  "account_ledger": "دفتر الحسابات",
+  "exchange_rate": "سعر الصرف",
+  "suppliers": "الموردون",
+  "privillege_cards": "بطاقات الامتياز",
+  "project_sites": "مواقع المشروع",
+  "account_privilages": "امتيازات الحساب",
+  "mr.": "السيد"
 }

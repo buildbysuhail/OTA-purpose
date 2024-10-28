@@ -131,7 +131,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          label="User Type"
+          label={t("user_type")}
           onChangeData={(data: any) => {
             setPostData((prev: any) => ({
               ...prev,
@@ -154,7 +154,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
         <div className="grid grid-cols-1 sm:grid-cols-2  gap-3 py-4 mb-5">
           <ERPCheckbox
             id="selectAll"
-            label="Select All"
+            label={t("select_all")}
             data={postData.data}
             checked={postData.data.selectAll}
             onChangeData={(data) => {
@@ -170,7 +170,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           />
           <ERPCheckbox
             id="showAll"
-            label="Show All"
+            label={t("show_all")}
             data={postData.data}
             checked={postData.data.showAll}
             onChangeData={(data) => {
@@ -187,7 +187,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
           <ERPCheckbox
             id="showAllAdd"
-            label="Select All Add"
+            label={t("select_all_add")}
             data={postData.data}
             checked={postData.data.showAllAdd}
             onChangeData={(data) => {
@@ -204,7 +204,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
           <ERPCheckbox
             id="showAllPrint"
-            label="Select All Print"
+            label={t("select_all_print")}
             data={postData.data}
             checked={postData.data.showAllPrint}
             onChangeData={(data) => {
@@ -221,7 +221,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
           <ERPCheckbox
             id="showAllEdit"
-            label="Select All Edit"
+            label={t("select_all_edit")}
             data={postData.data}
             checked={postData.data.showAllEdit}
             onChangeData={(data) => {
@@ -238,7 +238,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
           <ERPCheckbox
             id="showAllExport"
-            label="Select All Export"
+            label={t("select_all_export")}
             data={postData.data}
             checked={postData.data.showAllExport}
             onChangeData={(data) => {
@@ -255,7 +255,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
           <ERPCheckbox
             id="showAllDelete"
-            label="Select All Delete"
+            label={t("select_all_delete")}
             data={postData.data}
             checked={postData.data.showAllDelete}
             onChangeData={(data) => {
@@ -275,7 +275,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
         <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
           <ERPCheckbox
             id="showAllDelete"
-            label="Inherit Rights From UserType"
+            label={t("inherit_rights_from_usertype")}
             data={postData.data}
             checked={postData.data.userRightType}
             onChangeData={(data) => {
@@ -299,7 +299,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
               valueKey: "id",
               labelKey: "name",
             }}
-            label="User Type"
+            label={t("user_type")}
             onChangeData={(data: any) => {
               setPostData((prev: any) => ({
                 ...prev,
@@ -318,7 +318,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
             }
           />
           <ERPButton
-            title="Load Rights"
+            title={t("load_rights")}
             variant="primary"
             disabled={true}
             // disabled={postDataLoading}
@@ -330,14 +330,14 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
         {/* Form Buttons */}
         <div className="flex justify-center mt-6">
           <ERPButton
-            title="Save"
+            title={t("save")}
             variant="primary"
             disabled={postDataLoading}
             loading={postDataLoading}
             onClick={handleSubmit}
           />
           <ERPButton
-            title="Close"
+            title={t("close")}
             variant="secondary"
             disabled={postDataLoading}
             onClick={onClose}

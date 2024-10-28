@@ -251,36 +251,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const PDFDocument: React.FC<{
-  components: PlacedComponent[];
-  pageProps: PropertiesState;
-}> = ({ components, pageProps }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        {components?.map((comp) => (
-          <Text
-            key={comp.id}
-            style={{
-              position: "absolute",
-              left: comp.x,
-              top: comp.y,
-              width: comp.width,
-              height: comp.height,
-            }}
-          >
-            {comp.content}
-          </Text>
-        ))}
-      </View>
-    </Page>
-  </Document>
-);
-
-interface PDFDownloadButtonProps {
-  components: PlacedComponent[];
-  pageProps: PropertiesState;
-}
 const api = new APIClient();
 export default function ExtendedPDFBarcodeDesigner() {
   const [zoom, setZoom] = useState(100);
@@ -373,11 +343,14 @@ export default function ExtendedPDFBarcodeDesigner() {
             },
           }),
         };
-
-        const placedComponents = [...(templateData?.barcodeState || []), newComponent];
+        
+        const placedComponents = [...(templateData?.barcodeState?.PlasedComponents || []), newComponent];
         setTemplateData((prev: TemplateState) => ({
           ...prev,
-          barcodeState: placedComponents
+          barcodeState: {
+            ...prev.barcodeState,
+            PlasedComponents: placedComponents, // Ensure the name matches the interface
+          }
         }));
         setNextId(nextId + 1);
       }
@@ -398,7 +371,7 @@ export default function ExtendedPDFBarcodeDesigner() {
       selectedComponent.type === DesignerElementType.barcode &&
       selectedComponent.barcodeProps
     ) {
-      const updatedComponents = templateData?.barcodeState?.map((comp) =>
+      const updatedComponents = templateData?.barcodeState?.PlasedComponents?.map((comp) =>
         comp.id === selectedComponent.id && comp.barcodeProps
           ? {
             ...comp,
@@ -408,7 +381,10 @@ export default function ExtendedPDFBarcodeDesigner() {
       );
       setTemplateData((prev: TemplateState) => ({
         ...prev,
-        barcodeState: updatedComponents
+        barcodeState: {
+          ...prev.barcodeState,
+          PlasedComponents: updatedComponents || [], // Use an empty array if undefined
+        }
       }));
       setSelectedComponent({
         ...selectedComponent,
@@ -434,12 +410,15 @@ export default function ExtendedPDFBarcodeDesigner() {
       const newX = e.clientX - canvasRect.left - dragOffset.x;
       const newY = e.clientY - canvasRect.top - dragOffset.y;
 
-      const updatedComponents = templateData?.barcodeState?.map((comp) =>
+      const updatedComponents = templateData?.barcodeState?.PlasedComponents?.map((comp) =>
         comp.id === draggingComponent.id ? { ...comp, x: newX, y: newY } : comp
       );
       setTemplateData((prev: TemplateState) => ({
         ...prev,
-        barcodeState: updatedComponents
+        barcodeState: {
+          ...prev.barcodeState,
+          PlasedComponents: updatedComponents || [], // Use an empty array if undefined
+        }
       }));
       if (selectedComponent?.id === draggingComponent.id) {
         setSelectedComponent({ ...draggingComponent, x: newX, y: newY });
@@ -558,12 +537,15 @@ export default function ExtendedPDFBarcodeDesigner() {
     debugger;
     if (selectedComponent) {
       const updatedComponent = { ...selectedComponent, [property]: value };
-      const updatedComponents = templateData?.barcodeState?.map((comp) =>
+      const updatedComponents = templateData?.barcodeState?.PlasedComponents?.map((comp) =>
         comp.id === selectedComponent.id ? updatedComponent : comp
       );
       setTemplateData((prev: TemplateState) => ({
         ...prev,
-        barcodeState: updatedComponents
+        barcodeState: {
+          ...prev.barcodeState,
+          PlasedComponents: updatedComponents || [], // Use an empty array if undefined
+        }
       }));
       setSelectedComponent(updatedComponent);
       generateBarcode(updatedComponent);
@@ -571,8 +553,8 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
   useEffect(() => {
     debugger;
-    templateData?.barcodeState?.forEach(generateBarcode);
-  }, [templateData?.barcodeState, barcodeErrors]);
+    templateData?.barcodeState?.PlasedComponents?.forEach(generateBarcode);
+  }, [templateData?.barcodeState?.PlasedComponents, barcodeErrors]);
 
   const renderComponent = (component: PlacedComponent) => {
     const style: React.CSSProperties = {
@@ -714,7 +696,10 @@ export default function ExtendedPDFBarcodeDesigner() {
               onClick={() => {
                 setTemplateData((prev: TemplateState) => ({
                   ...prev,
-                  barcodeState: []
+                  barcodeState: {
+                    ...prev.barcodeState,
+                    PlasedComponents: [], // Use an empty array if undefined
+                  }
                 }));
                 setSelectedComponent(null);
               }}
@@ -728,38 +713,28 @@ export default function ExtendedPDFBarcodeDesigner() {
               variant="primary"
               loading={loading}
             ></ERPButton>
-            {/* <button onClick={handleDownloadPDF} className='bg-primary'>
-                            <Download className="w-4 h-4 mr-2" />
-                            Download PDF
-                        </button> */}
-            {/* <PDFDownloadLink
-                            document={<PDFDocument components={placedComponents} pageProps={templateData?.propertiesState} />}
-                            fileName="barcode-design.pdf"
-                            className="flex items-center px-3 py-2 bg-primary text-white rounded hover:bg-primary/90"
-                        > */}
-            {/* {({ loading }) => (
-        <>
-          <Download className="w-4 h-4 mr-2" />
-          {loading ? 'Generating PDF...' : 'Download PDF'}
-        </>
-      )} */}
-            {/* </PDFDownloadLink> */}
+           
           </div>
         </div>
 
         {/* Design Canvas */}
         <div
-          className="flex-1 p-8 bg-gray-50"
+          className="flex-1 bg-gray-50"
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
+          style={{
+            width: templateData.propertiesState?.width,
+            height: templateData.propertiesState?.height ?? "11in",
+            border: "2px solid black",
+          }}
         >
           <div
             ref={canvasRef}
             id="teplate-container"
             className="bg-white shadow-sm mx-auto max-h-[calc(100vh-8rem)] overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100  relative"
             style={{
-              width: templateData.propertiesState?.width,
-              height: templateData.propertiesState?.height ?? "11in",
+              width: templateData.barcodeState?.LabelState?.labelWidth,
+              height: templateData.barcodeState?.LabelState?.labelHeight ?? "11in",
               transform: `scale(${zoom / 100})`,
               transformOrigin: "top center",
               border: "2px dashed #ccc",
@@ -767,7 +742,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             }}
           >
 
-            {templateData?.barcodeState?.map(renderComponent)}
+            {templateData?.barcodeState?.PlasedComponents?.map(renderComponent)}
           </div>
         </div>
       </div>
@@ -1379,7 +1354,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               margin: `${templateData?.propertiesState?.margins?.top}px ${templateData?.propertiesState?.margins?.right}px ${templateData?.propertiesState?.margins?.bottom}px ${templateData?.propertiesState?.margins?.left}px`,
             }}
           >
-            {templateData?.barcodeState?.map(renderComponent)}
+            {templateData?.barcodeState?.PlasedComponents?.map(renderComponent)}
           </div>
         }
       />

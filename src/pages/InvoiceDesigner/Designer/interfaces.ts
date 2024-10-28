@@ -32,7 +32,16 @@ export interface TemplateState {
   itemTableState?: ItemTableState;
   totalState?: TotalState;
   footerState?: FooterState;
-  barcodeState?: PlacedComponent[];
+  barcodeState?: BarcodeState;
+}
+export interface LabelState {
+  ColumnsPerRow: number;
+  labelHeight: number;
+  labelWidth: number;
+}
+export interface BarcodeState {
+  PlasedComponents: PlacedComponent[];
+  LabelState?: LabelState;
 }
 export enum DesignerElementType {
   text = 1,
@@ -765,6 +774,9 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       margins: { top: 10, bottom: 10, left: 10, right: 10 },
       bg_color: "#FFFFFF",
     },
-    barcodeState: [],
+    barcodeState: {
+       PlasedComponents:[],
+       LabelState: {ColumnsPerRow:1, labelHeight:200,labelWidth:300}
+    },
   },
 };

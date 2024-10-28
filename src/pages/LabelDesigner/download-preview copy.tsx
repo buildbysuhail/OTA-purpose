@@ -148,7 +148,7 @@ const PDFDocument = memo(({ template, chunkedData, columnsPerRow }: PreviewDocum
           <View key={`row_${rowIndex}`} style={styles.row}>
             {row?.map((item) => (
               <View key={`item_${item.id}`} style={componentWrapperStyle}>
-                {template.barcodeState?.map((component) => (
+                {template.barcodeState?.PlasedComponents?.map((component) => (
                   <ComponentRenderer 
                     key={`component_${component.id}`}
                     component={component} 

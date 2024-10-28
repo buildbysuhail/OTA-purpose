@@ -43,7 +43,6 @@ export const UserManage: React.FC = React.memo(() => {
           placeholder={t("username")}
           required={true}
           onChangeData={(data: any) => {
-            
             handleFieldChange("userName", data.userName);
           }}
         />
@@ -66,6 +65,7 @@ export const UserManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("email")}
           label={t("email")}
+          type="mail"
           placeholder={t("email")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("email", data.email)}

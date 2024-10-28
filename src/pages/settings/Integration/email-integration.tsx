@@ -1,24 +1,15 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../redux/urls";
 import {
-  toggleAccountGroupPopup,
-  toggleSMSIntegrationPopup,
-} from "../../../redux/slices/popup-reducer";
-import {
-  initialSMSIntegration,
   SMSIntegrationData,
 } from "./sms-integration-type";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useDispatch } from "react-redux";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../redux/types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import { NotificationsChannel, NotificationsProvider } from "../../../enums/notification-chanal";
 
 const api = new APIClient();
 interface information {
@@ -48,7 +39,7 @@ const EmailIntegration = () => {
       }
     }, [isOpen]);
 
-    const loadSettings =  useCallback( async() => { 
+    const loadSettings = useCallback(async () => {
       setLoading(true);
       try {
         const response: SMSIntegrationData[] = await api.getAsync(
@@ -74,7 +65,7 @@ const EmailIntegration = () => {
       } finally {
         setLoading(false);
       }
-    },[]);
+    }, []);
 
     const handleFieldChange = (settingName: any, value: any) => {
       setInformation((prevSettings = {} as information) => ({
@@ -86,13 +77,14 @@ const EmailIntegration = () => {
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       const configJson = JSON.stringify(information);
-      const updatedFormState = formState.map((item) => ({
-        ...item,
-        configJson,
-      }));
+      const requestBody={
+        provider:NotificationsProvider.FireBase,
+        channel:NotificationsChannel.Email,
+        configJson:configJson,
+        isEnable:true,
+      };
 
       try {
-        const requestBody = updatedFormState[0];
         const response = await api.post(
           `${Urls.notification_provider}`,
           requestBody
@@ -102,28 +94,6 @@ const EmailIntegration = () => {
         console.error("Error saving settings:", error);
       }
     };
-
-    // const handleSubmit = async (e: React.FormEvent) => {
-    //   e.preventDefault();
-    
-    //   // Create the request body according to your model structure
-    //   const requestBody = {
-    //     id: 0,  // Set this to an appropriate value if needed
-    //     branchId: 0, // Set this if relevant, or adjust as necessary
-    //     provider: 3, // Assuming Twilio is provider 2
-    //     channel: 3, 
-    //     configJson: JSON.stringify(information),
-    //     isEnable: true, // Assuming you want this enabled by default
-    //   };
-    
-    //   try {
-    //     const response = await api.post(`${Urls.notification_provider}`, requestBody);
-    //     handleResponse(response);
-    //   } catch (error) {
-    //     console.error("Error saving settings:", error);
-    //   }
-    // };
-    
 
     return (
       <div className="w-full pt-4">
@@ -159,7 +129,7 @@ const EmailIntegration = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="mb-4">
-               
+
                 <ERPInput
                   id="AccountSid"
                   value={information.AccountSid}

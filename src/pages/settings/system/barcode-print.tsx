@@ -198,16 +198,16 @@ const BarcodePrint: React.FC = () => {
       case 'labelDesign':
         setLoadingTemplate(true);
         setBarcodeDesc((prev: any) => ({ ...prev, labelDesign: data?.labelDesign }));
-        const res = await api.getAsync( `${Urls.templates}${data?.labelDesign}`);
+        const res = data?.labelDesign != undefined ?await api.getAsync( `${Urls.templates}${data?.labelDesign}`): [];
         debugger;
         setTemplate(res);
         setLoadingTemplate(false);
         break;
       case 'standardLabelDesign':
-        setStandardBarcode((prev: any) => ({ ...prev, standardLabelDesign: data }));
+        setStandardBarcode((prev: any) => ({ ...prev, standardLabelDesign: data.standardLabelDesign }));
         break;
       case 'printer':
-        setStandardBarcode((prev: any) => ({ ...prev, printer: data }));
+        setStandardBarcode((prev: any) => ({ ...prev, printer: data.standardLabelDesign }));
         break;
     }
   };
@@ -778,7 +778,6 @@ const BarcodePrint: React.FC = () => {
          isForm={true}
          closeModal={() => {
            setShowPrint(false);
-           setBarcodeDesc({});
          }}
       content={<DownloadPreview template={template} data={data}/>}
       >

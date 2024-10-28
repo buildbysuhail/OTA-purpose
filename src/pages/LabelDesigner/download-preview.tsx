@@ -41,9 +41,9 @@ export default function Component({ template, docTitle = "Document Preview", dat
     const generateBarcodeImages = async () => {
       const images: { [key: string]: string } = {};
 
-      if (template?.barcodeState?.PlasedComponents) {
+      if (template?.barcodeState?.placedComponents) {
         data?.forEach((item: any) => {
-          template.barcodeState?.PlasedComponents?.forEach((barcodeComponent) => {
+          template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
             if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
               const canvas = document.createElement('canvas');
               JsBarcode(canvas, item?.autoBarcode, {
@@ -70,7 +70,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
     };
 
     generateBarcodeImages();
-  }, [template?.barcodeState?.PlasedComponents]);
+  }, [template?.barcodeState?.placedComponents]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
     const baseStyle = {
@@ -141,7 +141,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
                   position: "relative",
                 }}
               >
-                {template?.barcodeState?.PlasedComponents?.map((component) => renderComponent(component, item))}
+                {template?.barcodeState?.placedComponents?.map((component) => renderComponent(component, item))}
               </View>
             ))}
           </View>

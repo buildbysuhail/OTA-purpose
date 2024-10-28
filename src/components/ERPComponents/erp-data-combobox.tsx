@@ -205,7 +205,7 @@ export default function ImprovedERPDataCombobox({
     onChangeData?.(value && data && { ...data, [id]: value.value })
     handleChange?.(field?.id, value.value)
     handleChangeData?.(field?.id, value.value)
-    onSelectItem?.(items.find((val) => val[field?.valueKey] === value.value))
+    // onSelectItem?.(items.find((val) => val[field?.valueKey] === value.value))
   }, [onChange, onChangeData, handleChange, handleChangeData, onSelectItem, items, data, id, field])
 
   return (

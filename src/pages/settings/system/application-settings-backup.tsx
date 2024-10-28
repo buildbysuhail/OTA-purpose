@@ -102,7 +102,8 @@ const BackupSettingsForm: React.FC = () => {
   }
 
   return (
-    <div className='relative max-h-[calc(100vh)]'>
+    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
+
     <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
       <div className="border p-4 rounded-lg">
         <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
@@ -160,7 +161,7 @@ const BackupSettingsForm: React.FC = () => {
           />
         </div>
       </div>
-      <div className="flex justify-end mt-2">
+      {/* <div className="flex justify-end mt-2">
         <ERPButton
           title={t("save_settings")}
           variant="primary"
@@ -168,13 +169,15 @@ const BackupSettingsForm: React.FC = () => {
           loading={isSaving}
           disabled={isSaving}
         />
-      </div>
+      </div> */}
       </form>
-      <div className="flex justify-end p-4">
+      <div className="flex justify-end items-center p-4 ">
       <ERPButton
         title={t("save_settings")}
         variant="primary"
         type="button"
+        loading={isSaving}
+        disabled={isSaving}
         onClick={()=>handleSubmit}
       />
     </div>

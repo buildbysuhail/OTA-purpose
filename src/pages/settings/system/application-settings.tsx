@@ -76,8 +76,8 @@ const ApplicationSettings = ({ }) => {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 ml-[200px] lg:ml-[300px] h-screen overflow-y-auto">
-          <div className="p-6 bg-white shadow-md min-h-full">
+        <div className="flex-1 ml-[200px] lg:ml-[300px] relative ">
+          <div className="p-6 bg-[#fafafa] shadow-md h-full overflow-hidden">
             {settingsGroup == "main" ? (
               <ERPSettingsFormMain />
             ) : settingsGroup == "accounts" ? (

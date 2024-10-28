@@ -32,28 +32,77 @@
 .grid-preference-form select {
   max-height: 27px !important;
 }
-
 .react-resizable {
   position: relative;
 }
+
 .custom-handle {
   position: absolute;
-  top: 0;
-  bottom: 0;
   width: 10px;
+  height: 100%; /* Changed from top/bottom to height for clarity */
   cursor: ew-resize;
   background: rgba(0, 0, 0, 0.1);
   transition: background 0.3s;
 }
+
 .custom-handle.ltr {
   right: -5px;
 }
+
 .custom-handle.rtl {
   left: -5px;
 }
+
 .custom-handle:hover {
   background: rgba(0, 0, 0, 0.2);
 }
+
+/* Added styles for horizontal resizing */
+.custom-handle.horizontal {
+  width: 100%;
+  height: 10px;
+  cursor: ns-resize;
+  left: 0;
+}
+
+.custom-handle.horizontal.bottom {
+  bottom: -5px;
+}
+
+.custom-handle.horizontal.top {
+  top: -5px;
+}
+
+/* Styles for corner handles */
+.custom-handle.corner {
+  width: 15px;
+  height: 15px;
+  cursor: nwse-resize;
+}
+
+.custom-handle.corner.se {
+  right: -5px;
+  bottom: -5px;
+}
+
+.custom-handle.corner.sw {
+  left: -5px;
+  bottom: -5px;
+  cursor: nesw-resize;
+}
+
+.custom-handle.corner.ne {
+  right: -5px;
+  top: -5px;
+  cursor: nesw-resize;
+}
+
+.custom-handle.corner.nw {
+  left: -5px;
+  top: -5px;
+  cursor: nwse-resize;
+}
+
 .react-resizable-handle {
   display: none;
 }

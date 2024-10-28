@@ -99,10 +99,10 @@ const SMSIntegration: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-1 gap-3">
           <div className="p-4">
             <h2 className="text-lg font-semibold mb-3">
-              Don't have an account?
+              {t("don't_have_an_account?")}
             </h2>
             <p className="mb-2">
-              Create an account now to connect Polosys Books with Twilio.
+              {t("create_an_account")}
             </p>
             <a
               href="https://www.twilio.com/try-twilio"
@@ -110,20 +110,19 @@ const SMSIntegration: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
             >
-              Go to Twilio
+             {t("go_to_twilio")}
             </a>
             <div className="flex items-center my-4">
               <div className="flex-grow border-t border-gray-300"></div>
-              <span className="px-4 text-center">OR</span>
+              <span className="px-4 text-center">{t("or")}</span>
               <div className="flex-grow border-t border-gray-300"></div>
             </div>
 
             <h2 className="text-lg font-semibold mb-3">
-              Have an account already?
+              {t("have_an_account_already?")}
             </h2>
             <p className="mb-4">
-              Enter the following details to connect Polosys Books with your
-              Twilio account.
+              {t("enter_the_following_details")}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -133,8 +132,8 @@ const SMSIntegration: React.FC = () => {
                   id="AccountSid"
                   value={information.AccountSid}
                   data={information}
-                  label="Account SID"
-                  placeholder="Account SID"
+                  label={t("account_SID")}
+                  placeholder={t("account_SID")}
                   onChangeData={(data) =>
                     handleFieldChange("AccountSid", data.AccountSid)
                   }
@@ -145,8 +144,8 @@ const SMSIntegration: React.FC = () => {
                   id="AuthToken"
                   value={information.AuthToken}
                   data={information}
-                  label="Auth Token"
-                  placeholder="Auth Token"
+                  label={t("auth_token")}
+                  placeholder={t("auth_token")}
                   onChangeData={(data) =>
                     handleFieldChange("AuthToken", data.AuthToken)
                   }
@@ -157,8 +156,8 @@ const SMSIntegration: React.FC = () => {
                   id="FromPhone"
                   value={information.FromPhone}
                   data={information}
-                  label="From Phone"
-                  placeholder="From Phone"
+                  label={t("from_phone")}
+                  placeholder={t("from_phone")}
                   onChangeData={(data) =>
                     handleFieldChange("FromPhone", data.FromPhone)
                   }
@@ -166,7 +165,7 @@ const SMSIntegration: React.FC = () => {
               </div>
 
               <ERPButton
-                title="Connect with Twilio"
+                title={t("connect_with_twilio")}
                 variant="primary"
                 type="submit"
               />
@@ -181,16 +180,15 @@ const SMSIntegration: React.FC = () => {
     <div className="p-6 max-w-8xl  mx-auto bg-white">
       <div className="xxl:h-[61.8rem]">
         <h1 className="text-2xl font-bold mb-4 text-gray-800">
-          SMS Integrations
+          {t("SMS_integrations")}
         </h1>
 
         <div className="flex items-center justify-between mb-4 p-4 bg-gray-50 rounded-lg">
           <div className="flex items-center">
             <div>
-              <h2 className="text-xl font-semibold text-gray-700">Twilio</h2>
+              <h2 className="text-xl font-semibold text-gray-700">{t("twilio")}</h2>
               <p className="text-sm text-gray-600">
-                Set up Twilio and send automated SMS notifications to your
-                customers about transactions, payments and reminders.
+                {t("set_up_twilio")}
               </p>
             </div>
           </div>
@@ -198,51 +196,50 @@ const SMSIntegration: React.FC = () => {
             onClick={() => setIsOpen(true)}
             className="rounded-sm px-4 py-2 bg-blue text-white rounded hover:bg-blue-600 transition-colors"
           >
-            Connect
+            {t("connect")}
           </button>
         </div>
 
         <div className="mb-6">
-          <h3 className="text-lg font-semibold mb-2 text-gray-700">Benefits</h3>
+          <h3 className="text-lg font-semibold mb-2 text-gray-700">{t("benefits")}</h3>
           <ul className="list-disc pl-5 text-gray-600">
             <li className="pb-3">
-              Notify customers instantly about transactions, payments and
-              reminders via SMS.
+              {t("notify_customers")}
             </li>
             <li className="pb-3">
-              Configure SMS notifications at customer and contact person level.
+              {t("configure_SMS")}
             </li>
           </ul>
         </div>
 
         <div>
           <h3 className="text-lg font-semibold mb-2 text-gray-700">
-            Before you can connect Twilio with Polosys Books, you must
+           {t("before_you_can")}
           </h3>
           <ul className="list-disc pl-5 text-gray-600">
             <li className="pb-3">
-              Create a Twilio account.{" "}
+              {t("create_a_twilio_account")}{" "}
               <a
                 href="https://www.twilio.com/try-twilio"
                 className="text-[#2589BD] hover:underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Sign up Now
+                {t("sign_up_now")}
               </a>
             </li>
             <li className="pb-3">
-              Go to Console in Twilio and get your Account SID and Auth Token.
+             {t("go_to_console")}
             </li>
             <li className="pb-3">
-              Have an active phone number that works with Twilio.{" "}
+              {t("have_an_active_phone_number")}{" "}
               <a
                 href="https://support.twilio.com/hc/en-us/articles/223135367-Phone-Number-types-Twilio-offers-and-how-they-work"
                 className="text-[#2589BD] hover:underline flex items-center"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Read more
+                {t("read_more")}
                 {/* <ExternalLink size={14} className="ml-1" /> */}
                 <i className="ri-external-link-line"></i>
               </a>

@@ -42,7 +42,7 @@ const SMSIntegration: React.FC = () => {
       setLoading(true);
       try {
         const response: SMSIntegrationData[] = await api.getAsync(
-          `${Urls.notification_provider}GetByChannel?channel=2`
+          `${Urls.notification_provider}GetByChannel?channel=1`
         );
 
         setFormState(response);
@@ -78,8 +78,8 @@ const SMSIntegration: React.FC = () => {
       e.preventDefault();
       const configJson = JSON.stringify(information);
       const requestBody = {
-        provider: NotificationsProvider.TwillioWhatsapp,
-        channel: NotificationsChannel.Whatsapp,
+        provider: NotificationsProvider.TwillioSms,
+        channel: NotificationsChannel.Sms,
         configJson: configJson,
         isEnable: true,
       };

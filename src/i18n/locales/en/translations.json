@@ -372,7 +372,7 @@
   "cost_center_applicable": "Cost Center Applicable",
   "bill_wise_applicable": "Billwise Applicable",
   "clear": "Clear",
-  "cost_center": "Cost Center",
+  "cost_centre": "Cost Center",
   "cost_centre_id": "Cost Centre ID",
   "cost_centre_name": "Cost Centre Name",
   "enter_cost_centre_name": "Enter Cost Centre Name",
@@ -923,5 +923,10 @@
   "batch_id": "Batch ID",
   "specification": "Specification",
   "unit_id": "Unit ID",
-  "cost_centre": "Cost Centre"
+
+  "notification_settings":"Notification Settings",
+  "headers_&_footers":"Headers & Footers",
+  "whatsapp_integration":"Whatsapp Integration",
+  "email_integration":"Email Integration",
+  "integration":"Integration"
 }

@@ -142,7 +142,7 @@ const InventorySettingsForm = () => {
       const response = await api.getAsync(
         `${Urls.application_settings}inventory`
       );
-      debugger;
+      
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -153,7 +153,7 @@ const InventorySettingsForm = () => {
     }
   };
   const handleFieldChange = (settingName: any, value: any) => {
-    debugger;
+    
     setFormState((prevSettings: any) => ({
       ...prevSettings,
       [settingName]: value ?? "",
@@ -163,13 +163,13 @@ const InventorySettingsForm = () => {
     e.preventDefault();
     setIsSaving(true);
     try {
-      debugger;
+      
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
         const currentValue = formState[key as keyof Inventory];
         const prevValue = formStatePrev[key as keyof Inventory];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),

@@ -22,7 +22,7 @@ export interface DownloadPreviewProps {
 }
 
 export default function Component({ template, docTitle = "Document Preview", data }: DownloadPreviewProps = {}) {
-  debugger;
+  
   const [columnsPerRow, setColumnsPerRow] = useState(2);
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
   const [chunkedData, setChunkedData] = useState<any>();

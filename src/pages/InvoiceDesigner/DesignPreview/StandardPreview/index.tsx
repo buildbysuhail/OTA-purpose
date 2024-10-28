@@ -30,7 +30,7 @@ const StandardPreviewWrapper = ({
   currency,
 }: StandardPreviewProps) => {
 
-  debugger;
+  
   let fontStyle = "font-Poppins"
 
   switch (template?.propertiesState?.font) {

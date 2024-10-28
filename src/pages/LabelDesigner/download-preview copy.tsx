@@ -166,7 +166,7 @@ const PDFDocument = memo(({ template, chunkedData, columnsPerRow }: PreviewDocum
 
 const PreviewDocument: React.FC<PreviewDocumentProps> = ({ template, chunkedData, columnsPerRow: initialColumns }) => {
   const [columnsPerRow, setColumnsPerRow] = useState<number>(initialColumns);
-  debugger;
+  
   // Debounce column changes
   const debouncedColumnsPerRow = useDebounce(columnsPerRow, 300);
 

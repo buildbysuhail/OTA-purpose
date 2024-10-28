@@ -129,7 +129,7 @@ const ApplicationSettingsAccounts = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}accounts`)
-      debugger;
+      
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -155,7 +155,7 @@ const ApplicationSettingsAccounts = () => {
         const prevValue = formStatePrev[key as keyof AccountSettingsState];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString()

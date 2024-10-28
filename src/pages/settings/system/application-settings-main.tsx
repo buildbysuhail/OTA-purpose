@@ -29,7 +29,7 @@ const ERPSettingsFormMain = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}main`);
-      debugger;
+      
       console.log(settings);
       setSettingsPrev(response);
       setSettings(response);
@@ -95,8 +95,8 @@ const ERPSettingsFormMain = () => {
         const prevValue = settingsPrev[key as keyof ApplicationMainSettings];
 
         if (currentValue !== prevValue) {
-          debugger;
-          debugger;
+          
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),

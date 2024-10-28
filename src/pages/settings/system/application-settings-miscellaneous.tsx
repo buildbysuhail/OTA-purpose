@@ -136,7 +136,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
         const prevValue = formStatePrev[key as keyof FormState];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),

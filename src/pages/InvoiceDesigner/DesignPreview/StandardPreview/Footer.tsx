@@ -25,7 +25,7 @@ const Footer = ({ template, data, templateGroupId }: StandardPreviewProps) => {
   const [generalFooterBGStyle, setGeneralFooterBGStyle] = useState<any>({ height: paddingBottom, backgroundColor, color: footerFontColor});
 
   useEffect(() => {
-    debugger;
+    
     setGeneralFooterBGStyle((previous: any) => ({
         ...previous,
         height: paddingBottom,

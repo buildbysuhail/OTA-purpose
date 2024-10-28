@@ -105,13 +105,13 @@ const ResetDbManage: React.FC = React.memo(() => {
       ...tr, // Spread existing properties
       checked: false, // Add new `checked` property
     }));
-    debugger;
+    
     setAllTransactions(updatedVouchers);
   };
   const { t } = useTranslation();
 
   const handleSubmit = useCallback(async () => {
-    debugger;
+    
     const masters = Object.keys(master)
       .filter((key) => master[key]) // Filter only the true values
       .map((key) => ({ tableTypeCode: key }));
@@ -136,7 +136,7 @@ const ResetDbManage: React.FC = React.memo(() => {
         dispatch(toggleResetDataBasePopup({ isOpen: false }));
       },
       () => {
-        debugger;
+        
         setPostData((prevData: any) => ({
           ...prevData,
           validations: response.validations,

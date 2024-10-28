@@ -74,7 +74,7 @@ const WhatsappIntegration = () => {
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
-      debugger;
+      
       e.preventDefault();
       const configJson = JSON.stringify(information);
       const requestBody = {

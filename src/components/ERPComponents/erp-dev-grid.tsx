@@ -163,7 +163,7 @@ const createStore = (
         });
       }
 
-      debugger;
+      
       const params = Object.fromEntries(
         paramNames
           .filter((paramName) => isNotEmpty(loadOptions[paramName]))
@@ -183,10 +183,10 @@ const createStore = (
 
       const queryString = new URLSearchParams(params).toString();
 
-      debugger;
+      
       try {
         const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, postData, queryString) : null;
-        debugger;
+        
         return result
           ? {
             data: result.data,
@@ -360,7 +360,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
   // const store = data != undefined && data != null ? data : useMemo(
   //   () => {
-  //     debugger;
+  //     
   //     if (reload) {
   //       const newStore = createStore(keyExpr, dataUrl??"", allowEditing, method, postData, initialFilters,undefined, childPopupProps?.bodyProps);
   //       setCurrentStore(newStore);  // Update current store whenever reload is true
@@ -412,7 +412,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     }
   }, [onExporting, gridId]);
   const handleCellClick = useCallback((event: any) => {
-    debugger;
+    
     // Check if the clicked cell's field matches childPopupProps.buttonField
     if (event.column?.dataField === childPopupProps?.buttonField) {
       const updatedBodyProps: { [key: string]: any } = {};

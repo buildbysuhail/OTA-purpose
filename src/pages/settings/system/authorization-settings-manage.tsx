@@ -58,7 +58,7 @@ const AuthorizationSettings = () => {
     const result: any = await api.getAsync(
       `${Urls.authorization_settings}${baseCurrency ? baseCurrency : ""}`
     );
-    debugger;
+    
     setStore(result?.data);
   };
   const handleSubmit = async () => {
@@ -67,7 +67,7 @@ const AuthorizationSettings = () => {
       `${Urls.authorization_settings}`,
       postData
     );
-    debugger;
+    
     handleResponse(result, 
       () =>{ load();
       onClear();
@@ -83,7 +83,7 @@ const AuthorizationSettings = () => {
 }
   const onSelectionChanged = useCallback((e: any) => {
     console.log(e);
-debugger;
+
     const data = e.data;
     if (data != undefined && data != null) {
       setPostData((previous: any) => ({
@@ -182,7 +182,7 @@ debugger;
                   }}
                   validation ={postData.validations.employeeID}
                   onChangeData={(data: any) => {
-                    debugger;
+                    
                     setPostData((previous: any) => ({
                       ...previous, // Use the spread operator with three dots
                       employeeID: data.employeeID,

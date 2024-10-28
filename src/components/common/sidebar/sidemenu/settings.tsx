@@ -113,8 +113,8 @@ export const SettingsMenuItems = [
       { action: toggleResetBranchDataForSync, type: 'popup', active: false, selected: false, title: 'reset_branch_data_for_sync' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/revert-bill-modifications`, type: 'link', active: false, selected: false, title: 'revert_bill_modifications' },
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'Notification Settings' },
-      { action: toggleHeaderFooterPopup, type: 'popup', active: false, selected: false, title: 'Headers & Footers' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'notification_settings' },
+      { action: toggleHeaderFooterPopup, type: 'popup', active: false, selected: false, title: 'headers_&_footers' },
     ]
   },
   {
@@ -123,14 +123,14 @@ export const SettingsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'Integration',
+    title: 'integration',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'Sms Integration' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'WhatsApp Integration' },
-      { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'Email Integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'sms_integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'whatsapp_integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration' },
 
     ]
   },

@@ -925,5 +925,11 @@
   "mrp": "السعر الأقصى للبيع",
   "batch_id": "رقم الدفعة",
   "specification": "المواصفات",
-  "unit_id": "معرف الوحدة"
+  "unit_id": "معرف الوحدة",
+
+  "notification_settings": "إعدادات الإشعارات",
+  "headers_&_footers": "الرؤوس والتذييلات",
+  "whatsapp_integration": "تكامل واتساب",
+  "email_integration": "تكامل البريد الإلكتروني",
+  "integration": "التكامل"
 }

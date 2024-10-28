@@ -33,9 +33,11 @@ export interface TemplateState {
   totalState?: TotalState;
   footerState?: FooterState;
   barcodeState?: BarcodeState;
+  isCurrent?: boolean;
 }
 export interface LabelState {
-  columnsPerRow: number;
+  columnsPerRow?: number;
+  rowsPerPage?: number;
   labelHeight: number;
   labelWidth: number;
 }
@@ -771,12 +773,12 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       template_group: "barcode",
       templateName: "Barcode 1",
       pageSize: "A4",
-      margins: { top: 10, bottom: 10, left: 10, right: 10 },
+      margins: { top: 0, bottom: 0, left: 0, right: 0 },
       bg_color: "#FFFFFF",
     },
     barcodeState: {
        placedComponents:[],
-       labelState: {columnsPerRow:1, labelHeight:200,labelWidth:300}
+       labelState: {columnsPerRow:1, labelHeight:200,labelWidth:300, rowsPerPage: 5}
     },
   },
 };

@@ -77,7 +77,7 @@ const Templates = ({ }) => {
 
   const setDefaultTemplate = async (id: any) => {
     const res = await appDispatch(
-      patchAction({ apiUrl: Urls.templates, params: { is_default: true }, id }) as any
+      patchAction({ apiUrl: Urls.templates, params: { IsDefault: true }, id }) as any
     ).unwrap();
     handleResponse(res, async () => {
       await getTemplates();
@@ -176,8 +176,6 @@ const Templates = ({ }) => {
                 )}
 
                 {tempData?.map((temp: any) => {
-                  const paperSize = temp?.content?.propertiesState?.pageSize;
-                  const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
                   return (
                     <div
                       key={`ti_${temp?.id}`}
@@ -185,62 +183,49 @@ const Templates = ({ }) => {
                       onClick={() => { }}
                       className=" relative hover:ring-0 hover:shadow-xl cursor-pointer 100px md:w-[140px] lg:w-[200px] aspect-[2.3/3] border border-accent/30 rounded"
                     >
-                      <div className="relative">
+                      <div className="relative group">
                         <img
-                          src={temp?.templateImage ?? thumbImage}
+                          src={temp?.thumbImage}
+                          style={{ objectFit: 'scale-down' }} 
                           alt=""
                           className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
                         />
-                        <div className=" bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center">
+                        {/* <div className=" bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center">
                           <div
                             tabIndex={0}
                             onClick={(e) => {
                               e.stopPropagation();
-                              setShowPreview({ show: true, template: temp?.content });
+                              setShowPreview({ show: true, template: temp });
                             }}
                             className=" flex hover:shadow-md items-center aspect-square m-3 hover:bg-accent bg-accent/60 py-1 px-3 rounded-full text-sm text-white"
                           >
                             <a>{t("preview")}</a>
                           </div>
-
-                          {temp?.is_primary && (
-                            <div
-                              className="absolute top-0 left-0 w-0 h-0 text-xs
-                              border-t-[20px] border-t-accent border-r-[20px] border-r-transparent  
-                              border-l-[20px] border-l-accent border-b-[20px] border-b-transparent"
-                            >
-                              <SparklesIcon className="h-4 -mt-[16px] -ml-[16px] text-white" />
-                            </div>
-                          )}
-                        </div>
+                        </div> */}
                       </div>
                       <div className="px-2 py-3">
-                        <h1 className="font-medium text-xs capitalize break-words truncate" title={temp?.content?.propertiesState?.templateName}>
-                          {temp?.content?.propertiesState?.templateName}
+                        <h1 className="font-medium text-xs capitalize break-words truncate" title={temp?.templateName}>
+                          {temp?.templateName}
                         </h1>
                         <div className="flex text-xs justify-between mt-1">
-                          {temp?.is_default ? (
-                            <div className="bg-green-500 text-white text-[10px] px-2 py-1 rounded">{t("default")}</div>
+                          {temp?.isCurrent ? (
+                            <div className="bg-primary text-white text-[10px] px-2 py-1 rounded ">{t("default")}</div>
                           ) : (
-                            <div className="bg-accent text-black text-[10px] px-2 py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
+                            <div className="ti-btn hover:bg-primary bg-gray-400 hover:text-white  !text-[10px] !px-2 !py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
                               {t("set_as_default")}
                             </div>
                           )}
                           <div className="flex items-center gap-2">
-                            {!temp?.is_primary && (
-                              <div>
-                                <PencilIcon
-                                  title={t("edit")}
-                                  className="w-3 text-accent cursor-pointer"
-                                  onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
-                                />
-                              </div>
-                            )}
-                            {!temp?.is_primary && (
-                              <div>
-                                <TrashIcon title={t("delete")} className="w-4 text-red cursor-pointer" onClick={() => handleDeleteTemplate(temp)} />
-                              </div>
-                            )}
+                            <div>
+                              <PencilIcon
+                                title={t("edit")}
+                                className="w-3 text-accent cursor-pointer"
+                                onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
+                              />
+                            </div>
+                            <div>
+                              <TrashIcon title={t("delete")} className="w-4 text-red cursor-pointer" onClick={() => handleDeleteTemplate(temp)} />
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -331,9 +316,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       background_image_header: null,
       background_image_footer: null,
     }
-    
+
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
-    
+
     const propertiesState = {
       ...res.propertiesState,
       templateName: "Untitled Template " + (length + 1)
@@ -366,8 +351,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         <div className="py-2">{t("standard")}</div>
         <div className="flex gap-4 flex-wrap p-5">
           {tempData
-            ?.map((template: any, index: number) => {
-              const paperSize = template?.content?.propertiesState?.pageSize;
+            ?.map((template: TemplateState, index: number) => {
+              debugger;
+              const paperSize = template?.propertiesState?.pageSize;
               const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
               return (
                 <div
@@ -377,19 +363,20 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
                 >
                   <div className=" relative">
                     <img
-                      src={template?.templateImage ?? thumbImage}
+                      src={template?.thumbImage ?? thumbImage}
                       alt=""
-                      className=" antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2] "
+                      style={{ objectFit: 'scale-down' }} 
+                      className="antialiased border-0 bg-gray-50 object-top object-cover w-full aspect-[2/2]"
                     />
                     <div className="bg-gradient-to-b from-white/0 via-white/10 to-black/10 absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center"></div>
                   </div>
                   <div className="flex flex-col justify-center items-center text-center py-3">
-                    <h1 className="font-medium text-xs capitalize break-words">{template?.templateName}</h1>
+                    <h1 className="font-medium text-xs capitalize break-words">{template?.propertiesState?.templateName}</h1>
                     <div
                       className="bg-primary cursor-pointer rounded text-white mt-2 p-2 max-w-min whitespace-nowrap"
                       onClick={() => handleChooseTemplate(template)}
                     >
-                     {t("use_this")}
+                      {t("use_this")}
                     </div>
                   </div>
                 </div>

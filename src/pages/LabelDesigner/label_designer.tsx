@@ -234,18 +234,24 @@ export default function ExtendedPDFBarcodeDesigner() {
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
 
-    const handleContentLabelResize = (e: React.SyntheticEvent, { size }: { size: { width: number; height: number } }) => {
-      setTemplateData((prevData: any) => ({
+  const handleContentLabelResize = (e: React.SyntheticEvent, { size }: { size: { width: number; height: number } }) => {
+    setTemplateData((prevData: TemplateState) => {
+      debugger;
+      const updated = {
         ...prevData,
         barcodeState: {
           ...prevData.barcodeState,
           labelState: {
+            ...prevData?.barcodeState?.labelState, // No need for optional chaining here if prevData is always valid
             labelWidth: size.width,
-            labelHeight: size.height
-          }
-        }
-      }))
-    }
+            labelHeight: size.height,
+          },
+          placedComponents: prevData?.barcodeState?.placedComponents || [], // Ensure it's an array
+        },
+      };
+      return updated;
+    });
+  }
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -348,7 +354,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     property: any,
     value: string | number | boolean
   ) => {
-    
+
     if (
       selectedComponent &&
       selectedComponent.type === DesignerElementType.barcode &&
@@ -358,9 +364,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         templateData?.barcodeState?.placedComponents?.map((comp) =>
           comp.id === selectedComponent.id && comp.barcodeProps
             ? {
-                ...comp,
-                barcodeProps: { ...comp.barcodeProps, [property]: value },
-              }
+              ...comp,
+              barcodeProps: { ...comp.barcodeProps, [property]: value },
+            }
             : comp
         );
       setTemplateData((prev: TemplateState) => ({
@@ -424,7 +430,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     setLoading(true);
     const outData = { ...templateData, thumbImage: dataUrl };
     var res = await api.postAsync(Urls.templates, outData);
-    
+
     setLoading(false);
     handleResponse(res, () => {
       navigate(`/templates?template_group=barcode`);
@@ -432,11 +438,11 @@ export default function ExtendedPDFBarcodeDesigner() {
     setLoading(false);
   };
   const manageSaveTemplate = async () => {
-    
+
     if (!templateData?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
     } else {
-      const node = document.getElementById("teplate-container");
+      const node = document.getElementById("teplate-container-base");
       if (node) {
         try {
           const canvas = await html2canvas(node);
@@ -453,14 +459,15 @@ export default function ExtendedPDFBarcodeDesigner() {
     property: keyof PropertiesState,
     value: any
   ) => {
-    
+
     setTemplateData((prev: TemplateState) => ({
       ...prev,
       propertiesState: { ...prev.propertiesState, [property]: value },
     }));
   };
 
-  const handleLabelPropsChange = (property: keyof LabelState, value: any) => {
+  const handleLabelPropsChange = (property: any, value: any) => {
+    debugger;
     setTemplateData((prev: any) => ({
       ...prev,
       barcodeState: {
@@ -478,7 +485,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
 
   const generateBarcode = useCallback((component: PlacedComponent) => {
-    
+
     if (
       component.type === DesignerElementType.barcode &&
       component.barcodeProps
@@ -529,14 +536,14 @@ export default function ExtendedPDFBarcodeDesigner() {
     setTemplateData(res);
   };
   useEffect(() => {
-    
+
     if (id !== "new") getPDFTemplateData();
   }, []);
   const handlePropertyChange = (
     property: keyof PlacedComponent,
     value: string | number
   ) => {
-    
+
     if (selectedComponent) {
       const updatedComponent = { ...selectedComponent, [property]: value };
       const updatedComponents =
@@ -555,7 +562,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   };
   useEffect(() => {
-    
+
     templateData?.barcodeState?.placedComponents?.forEach(generateBarcode);
   }, [templateData?.barcodeState?.placedComponents, barcodeErrors]);
 
@@ -576,8 +583,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         selectedComponent?.id === component.id
           ? "2px solid #2196f3"
           : component.type == DesignerElementType.barcode
-          ? ""
-          : "1px dashed #ccc",
+            ? ""
+            : "1px dashed #ccc",
       padding: component.type == DesignerElementType.barcode ? "0px" : "4px",
       cursor: "move",
       backgroundColor: "white",
@@ -594,7 +601,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             {barcodeErrors &&
-            barcodeErrors?.find((x: any) => x.id == component.id) ? (
+              barcodeErrors?.find((x: any) => x.id == component.id) ? (
               <>
                 <div className="text-red-500 text-sm">
                   {barcodeErrors?.find((x: any) => x.id == component.id).error}
@@ -645,9 +652,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         resizeHandles={[appState.appState.dir === "rtl" ? "w" : "e"]}
         handle={
           <div
-            className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "rtl" : "ltr"
-            }`}
+            className={`custom-handle ${appState.appState.dir === "rtl" ? "rtl" : "ltr"
+              }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
@@ -679,7 +685,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             {/* <button className="p-1 hover:bg-gray-100 rounded">
               <Menu className="w-4 h-4" />
             </button> */}
-            <div className="flex items-center space-x-1">
+            {/* <div className="flex items-center space-x-1">
               <button
                 onClick={() => setZoom(zoom - 10)}
                 className="p-1 hover:bg-gray-100 rounded"
@@ -693,7 +699,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               >
                 <Plus className="w-4 h-4" />
               </button>
-            </div>
+            </div> */}
           </div>
           <div className="flex items-center space-x-2">
             {/* <button onClick={() => setIsPreviewOpen(true)} className='bg-primary'>
@@ -728,24 +734,28 @@ export default function ExtendedPDFBarcodeDesigner() {
         {/* Design Canvas */}
 
         <div
+          id="teplate-container-base"
           className="flex-1 bg-gray-50"
           onDrop={handleDrop}
           onDragOver={(e) => e.preventDefault()}
           style={{
-            width: templateData.propertiesState?.width,
-            height: templateData.propertiesState?.height ?? "100%",
+            width:
+              (templateData?.barcodeState?.labelState?.labelWidth ?? 300) * (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1),
+
+            maxHeight:
+              (templateData?.barcodeState?.labelState?.labelHeight ?? 300) * (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1),
             border: "2px solid black",
           }}
         >
-          
+
           <ResizableBox
-            width={templateData?.barcodeState?.labelState?.labelWidth??300} // Initial width
-            height={templateData?.barcodeState?.labelState?.labelHeight??200}
-            minConstraints={[150, 100]}
-maxConstraints={[700, 500]}
-           resizeHandles={['se']}
-        className="box"
-        onResize={handleContentLabelResize}
+            width={templateData?.barcodeState?.labelState?.labelWidth ?? 300} // Initial width
+            height={templateData?.barcodeState?.labelState?.labelHeight ?? 200}
+            minConstraints={[20, 20]}
+            maxConstraints={[700, 500]}
+            resizeHandles={['se']}
+            className="box"
+            onResize={handleContentLabelResize}
           >
             <div
               ref={canvasRef}
@@ -758,7 +768,7 @@ maxConstraints={[700, 500]}
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
-                margin: `${templateData?.propertiesState?.margins?.top}px 0px 0px ${templateData?.propertiesState?.margins?.left}px`,
+                padding: `${templateData?.propertiesState?.margins?.top}px 0px 0px ${templateData?.propertiesState?.margins?.left}px`,
               }}
             >
               {templateData?.barcodeState?.placedComponents?.map(
@@ -766,7 +776,7 @@ maxConstraints={[700, 500]}
               )}
             </div>
           </ResizableBox>
-          
+
         </div>
       </div>
 
@@ -779,9 +789,8 @@ maxConstraints={[700, 500]}
         resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
         handle={
           <div
-            className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "ltr" : "rtl"
-            }`}
+            className={`custom-handle ${appState.appState.dir === "rtl" ? "ltr" : "rtl"
+              }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
@@ -916,7 +925,7 @@ maxConstraints={[700, 500]}
                               label: format,
                             }))}
                             onChange={(e) => {
-                              
+
                               handleBarcodePropertyChange("format", e.value);
                             }}
                           />
@@ -1031,12 +1040,11 @@ maxConstraints={[700, 500]}
 
                           <div className="flex justify-between space-x-2">
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.textAlign ===
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
                                 "left"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("textAlign", "left")
                               }
@@ -1044,12 +1052,11 @@ maxConstraints={[700, 500]}
                               Left
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.textAlign ===
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
                                 "center"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "textAlign",
@@ -1060,12 +1067,11 @@ maxConstraints={[700, 500]}
                               Center
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.textAlign ===
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
                                 "right"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "textAlign",
@@ -1117,12 +1123,11 @@ maxConstraints={[700, 500]}
                           </InputLabel>
                           <div className="flex justify-between space-x-2">
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.fontStyle ===
+                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
                                 "bold"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("fontStyle", "bold")
                               }
@@ -1130,12 +1135,11 @@ maxConstraints={[700, 500]}
                               Bold
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.fontStyle ===
+                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
                                 "italic"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "fontStyle",
@@ -1232,12 +1236,29 @@ maxConstraints={[700, 500]}
                 </Box>
                 <Box sx={{ mb: 1 }}>
                   <ERPInput
+                    id="rowsPerPage"
+                    label="Row Per Page"
+                    type="number"
+                    value={
+                      templateData?.barcodeState?.labelState?.rowsPerPage
+                    }
+                    data={templateData}
+                    onChange={(e) =>
+                    {
+                      debugger;
+                      handleLabelPropsChange("rowsPerPage", e.target.value)
+                    }
+                    }
+                  />
+                </Box>
+                <Box sx={{ mb: 1 }}>
+                  <ERPInput
                     id="labelWidth"
                     label="Label Width"
                     value={templateData?.barcodeState?.labelState?.labelWidth}
                     data={templateData}
                     onChange={(e) => {
-                      
+
                       handleLabelPropsChange("labelWidth", e.target.value);
                     }}
                   />
@@ -1268,10 +1289,10 @@ maxConstraints={[700, 500]}
                     }
                   />
                 </Box>
-                <Box sx={{ mb: 1 }}>
-                  {/* <label htmlFor="page_size" className="font-light text-sm">
+                {/* <Box sx={{ mb: 1 }}>
+                  <label htmlFor="page_size" className="font-light text-sm">
             Page Size
-          </label> */}
+          </label>
                   <ERPDataCombobox
                     defaultValue={
                       templateData?.propertiesState?.pageSize ?? "A4"
@@ -1289,7 +1310,7 @@ maxConstraints={[700, 500]}
                     options={pageSizeOptions}
                     label="Page Size"
                   />
-                </Box>
+                </Box> */}
                 {templateData?.propertiesState?.pageSize === "Custom" && (
                   <Box sx={{ mb: 1 }}>
                     <div className="flex justify-start items-center space-x-1">
@@ -1299,7 +1320,7 @@ maxConstraints={[700, 500]}
                         value={templateData?.propertiesState?.width}
                         data={templateData?.propertiesState}
                         onChange={(e) => {
-                          
+
                           handlePagePropsChange("width", e.target.value);
                         }}
                       />

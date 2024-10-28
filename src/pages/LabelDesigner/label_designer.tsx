@@ -119,29 +119,6 @@ const retailPageSizes = [
   { label: `3 "`, value: "3Inch" },
   { label: `4 "`, value: "4Inch" },
 ];
-const samplePurchaseList: PurchaseItem[] = [
-  {
-    id: 1,
-    productName: "Product A",
-    quantity: 5,
-    salesPrice: 10.99,
-    barcode: "123456789012",
-  },
-  {
-    id: 2,
-    productName: "Product B",
-    quantity: 3,
-    salesPrice: 15.99,
-    barcode: "234567890123",
-  },
-  {
-    id: 3,
-    productName: "Product C",
-    quantity: 2,
-    salesPrice: 7.99,
-    barcode: "345678901234",
-  },
-];
 
 const fields = [
   "[Footer1]",
@@ -238,17 +215,6 @@ const fields = [
   "VocuherNo",
 ];
 
-const styles = StyleSheet.create({
-  page: {
-    flexDirection: "row",
-    backgroundColor: "#E4E4E4",
-  },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1,
-  },
-});
 
 const api = new APIClient();
 export default function ExtendedPDFBarcodeDesigner() {
@@ -332,14 +298,14 @@ export default function ExtendedPDFBarcodeDesigner() {
               format: "CODE128",
               barWidth: 2,
               height: 75,
-              margin: 16,
+              margin: 0,
               background: "#FFFFFF",
               lineColor: "#000000",
               showText: true,
               textAlign: "center",
               font: "monospace",
               fontSize: 21,
-              textMargin: 5,
+              textMargin: 3,
               fontStyle: "normal",
             },
           }),

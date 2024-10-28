@@ -965,6 +965,14 @@
   "vehicles":"Vehicles",
   "product_prices":"Product Prices",
   "salesman_route":"Salesman Route",
-  "bill_of_material":"Bill Of Material"
+  "bill_of_material":"Bill Of Material",
 
+  "click_to_add":"Click to add a template from our gallery. You can customize the template title, columns, and headers in line item table.",
+  "default":"Default",
+  "set_as_default":"Set As Default",
+  "new_template":"New Template",
+  "choose_a_template":"Choose A Template",
+  "all":"All",
+  "standard":"Standard",
+  "use_this":"Use This"
 }

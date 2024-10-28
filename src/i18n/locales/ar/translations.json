@@ -967,5 +967,14 @@
   "vehicles": "المركبات",
   "product_prices": "أسعار المنتجات",
   "salesman_route": "مسار المندوب",
-  "bill_of_material": "فاتورة المواد"
+  "bill_of_material": "فاتورة المواد",
+
+  "click_to_add": "انقر لإضافة قالب من معرضنا. يمكنك تخصيص عنوان القالب، والأعمدة، والرؤوس في جدول العناصر.",
+  "default": "افتراضي",
+  "set_as_default": "تعيين كافتراضي",
+  "new_template": "قالب جديد",
+  "choose_a_template": "اختر قالبًا",
+  "all": "الكل",
+  "standard": "قياسي",
+  "use_this": "استخدم هذا"
 }

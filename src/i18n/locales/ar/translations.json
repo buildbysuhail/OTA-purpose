@@ -1018,5 +1018,29 @@
   "footer_7": "التذييل ٧",
   "footer_8": "التذييل ٨",
   "footer_9": "التذييل ٩",
-  "footer_10": "التذييل ١٠"
+  "footer_10": "التذييل ١٠",
+
+  "create_an_account": "أنشئ حسابًا الآن لربط Polosys Books مع Twilio.",
+  "enter_the_following_details": "أدخل التفاصيل التالية لربط Polosys Books بحساب Twilio الخاص بك.",
+  "don't_have_an_account?": "ليس لديك حساب؟",
+  "go_to_twilio": "الذهاب إلى Twilio",
+  "or": "أو",
+  "have_an_account_already?": "هل لديك حساب بالفعل؟",
+  "account_SID": "معرف الحساب",
+  "auth_token": "رمز المصادقة",
+  "from_phone": "رقم الهاتف المرسل",
+  "connect_with_twilio": "الاتصال بـ Twilio",
+
+  "set_up_twilio": "قم بإعداد Twilio وإرسال إشعارات الرسائل النصية التلقائية إلى عملائك حول المعاملات والمدفوعات والتذكيرات.",
+  "notify_customers": "أخطر العملاء فوراً حول المعاملات والمدفوعات والتذكيرات عبر الرسائل النصية.",
+  "configure_SMS": "قم بتكوين إشعارات الرسائل النصية على مستوى العميل وجهة الاتصال.",
+  "before_you_can": "قبل أن تتمكن من ربط Twilio مع Polosys Books، يجب عليك",
+  "go_to_console": "اذهب إلى وحدة التحكم في Twilio واحصل على معرف الحساب ورمز المصادقة.",
+  "have_an_active_phone_number": "تأكد من وجود رقم هاتف نشط يعمل مع Twilio.",
+  "SMS_integrations": "تكاملات الرسائل النصية",
+  "connect": "اتصال",
+  "benefits": "الفوائد",
+  "create_a_twilio_account": "أنشئ حساب Twilio.",
+  "sign_up_now": "اشترك الآن",
+  "read_more": "اقرأ المزيد"
 }

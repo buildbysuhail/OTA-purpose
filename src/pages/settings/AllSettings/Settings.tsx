@@ -204,7 +204,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
-        title="Barcode Print"
+        title={t("barcode_print")}
         width="w-full max-w-full"
         isForm={true}
         closeModal={() => {

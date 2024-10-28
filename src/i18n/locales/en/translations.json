@@ -965,6 +965,23 @@
   "vehicles":"Vehicles",
   "product_prices":"Product Prices",
   "salesman_route":"Salesman Route",
-  "bill_of_material":"Bill Of Material"
+  "bill_of_material":"Bill Of Material",
 
+  "click_to_add":"Click to add a template from our gallery. You can customize the template title, columns, and headers in line item table.",
+  "default":"Default",
+  "set_as_default":"Set As Default",
+  "new_template":"New Template",
+  "choose_a_template":"Choose A Template",
+  "all":"All",
+  "standard":"Standard",
+  "use_this":"Use This",
+  "sales_invoice":"Sales Invoice",
+
+  "sync_master_data":"Sync master data from main branch to all branches when adding a new branch to maintain consistent information network-wide.",
+  "customize_your_notifications":"Customize Your Notifications",
+  "....loading":"....Loading",
+  "no_data_available":"No Data Available",
+  "whatsApp":"Whatsapp",
+  "sms":"Sms",
+  "app_notification":"App Notification"
 }

@@ -11,12 +11,12 @@ import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
 import { UserManage } from "./user-manage";
 
 const Users = () => {
-  
+
   const MemoizedUsersManage = useMemo(() => React.memo(UserManage), []);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-  
+
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
@@ -74,7 +74,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "createdDate",
@@ -83,7 +83,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "modifiedUser",
@@ -92,7 +92,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-      visible:false
+      visible: false
     },
     {
       dataField: "modifiedDate",
@@ -101,7 +101,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "employeeID",
@@ -149,14 +149,14 @@ const Users = () => {
           <ERPGridActions
             view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
             edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
-            // delete={{
-            //   confirmationRequired: true,
-            //   confirmationMessage: "Are you sure you want to delete this item?",
-            //   url:Urls?.Users,key:cellElement?.data?.user
+          // delete={{
+          //   confirmationRequired: true,
+          //   confirmationMessage: "Are you sure you want to delete this item?",
+          //   url:Urls?.Users,key:cellElement?.data?.user
 
-            // }}
+          // }}
 
-            //user can't delete
+          //user can't delete
           />
         )
       },
@@ -166,21 +166,19 @@ const Users = () => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("users")}
-                  dataUrl={Urls.Users}
-                  gridId="grd_users"
-                  popupAction={toggleUserPopup}
-                  gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.user?.reload}
-                  gridAddButtonIcon="ri-add-line"                  
-                  pageSize={40}
-                ></ErpDevGrid>
-              </div>
+          <div className="p-4">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                columns={columns}
+                gridHeader={t("users")}
+                dataUrl={Urls.Users}
+                gridId="grd_users"
+                popupAction={toggleUserPopup}
+                gridAddButtonType="popup"
+                reload={rootState?.PopupData?.user?.reload}
+                gridAddButtonIcon="ri-add-line"
+                pageSize={40}
+              ></ErpDevGrid>
             </div>
           </div>
         </div>

@@ -42,7 +42,7 @@ const templateSlice = createSlice({
         );
         
         // Push the new data into the state
-        debugger;
+        
         state.templates.push(action.payload as any);
       }
     });

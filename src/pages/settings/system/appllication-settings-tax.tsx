@@ -51,7 +51,7 @@ const TaxSettingsForm: React.FC = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}taxes`);
-      debugger;
+      
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -79,7 +79,7 @@ const TaxSettingsForm: React.FC = () => {
         const prevValue = formStatePrev[key as keyof FormState];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),

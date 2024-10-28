@@ -39,7 +39,7 @@ const PrintSettingForm: React.FC = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}printer`);
-      debugger;
+      
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -67,7 +67,7 @@ const PrintSettingForm: React.FC = () => {
         const prevValue = formStatePrev[key as keyof FormState];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),

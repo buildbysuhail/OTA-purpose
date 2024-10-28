@@ -41,7 +41,7 @@ const HeaderFooterDesigner = ({ footerState, headerState, tempImages }: FooterDe
     const dispatch = useDispatch();
     const handleChange = (type: "header" | "footer", key: keyof HeaderState | keyof FooterState, value: string | number | boolean) => {
         if (type === "header") {
-            debugger;
+            
             dispatch(setTemplateHeaderState({ ...headerState, [key]: value }));
         } else {
             dispatch(setTemplateFooterState({ ...footerState, [key]: value }));

@@ -120,6 +120,7 @@ const Templates = ({ }) => {
   };
 
   useEffect(() => {
+    debugger;
     setTempData([]);
     getTemplates();
   }, [templateGroup]);
@@ -231,7 +232,7 @@ const Templates = ({ }) => {
                                 <PencilIcon
                                   title={t("edit")}
                                   className="w-3 text-accent cursor-pointer"
-                                  onClick={() => templateGroup == t("barcode") ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
+                                  onClick={() => templateGroup == "barcode" ? navigate(`/label-designer/${temp?.id}`) : navigate(`/invoice_designer/${temp?.id}`)}
                                 />
                               </div>
                             )}
@@ -330,9 +331,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       background_image_header: null,
       background_image_footer: null,
     }
-    debugger;
+    
     let res = await api.getAsync(`${Urls.crm_templates}${template.id}`);
-    debugger;
+    
     const propertiesState = {
       ...res.propertiesState,
       templateName: "Untitled Template " + (length + 1)
@@ -347,7 +348,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
       ));
-    templateGroup == t("barcode") ? navigate(`/label-designer/new`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    templateGroup == "barcode" ? navigate(`/label-designer/new`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };
 
   return (

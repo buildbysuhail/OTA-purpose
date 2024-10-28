@@ -98,7 +98,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               labelKey: "label",
             }}
             data={propertiesState}
-            onChangeData={(data: any) => {debugger;
+            onChangeData={(data: any) => {
               onChange?.({ ...propertiesState, pageSize: data.pageSize })
             }}
             id="pageSize"
@@ -120,7 +120,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               labelKey: "label",
             }}
             data={propertiesState?.pageSize}
-            onChangeData={(data: any) => {debugger;
+            onChangeData={(data: any) => {
               onChange?.({ ...propertiesState, orientation: data.orientation} )
             }}
             defaultValue={propertiesState?.orientation ?? "portrait"}
@@ -314,7 +314,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               ref={inputFile}
               type="file"
               onChange={(e: any) => {
-                debugger;
+                
                 if (e.target.files[0].size > 2097152) {
                   ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
                 } else {
@@ -359,7 +359,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
               id="position"
               defaultValue={propertiesState?.bg_image_position ?? "top left"}
               handleChange={(id, value) => {
-                debugger;
+                
                 dispatch(setTemplatePropertiesState({
                   ...templateData,
                   bg_image_position: value
@@ -383,7 +383,7 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
           <ERPInput
             value={propertiesState?.bg_color}
-            onChange={(e) => {debugger;onChange?.({ ...propertiesState, bg_color: e.target.value })}}
+            onChange={(e) => {onChange?.({ ...propertiesState, bg_color: e.target.value })}}
             label="Color"
             id="bg_color"
             type="color"

@@ -335,7 +335,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     property: any,
     value: string | number | boolean
   ) => {
-    debugger;
+    
     if (
       selectedComponent &&
       selectedComponent.type === DesignerElementType.barcode &&
@@ -411,7 +411,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     setLoading(true);
     const outData = { ...templateData, thumbImage: dataUrl };
     var res = await api.postAsync(Urls.templates, outData);
-    debugger;
+    
     setLoading(false);
     handleResponse(res, () => {
       navigate(`/templates?template_group=barcode`);
@@ -419,7 +419,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     setLoading(false);
   };
   const manageSaveTemplate = async () => {
-    debugger;
+    
     if (!templateData?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
     } else {
@@ -440,7 +440,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     property: keyof PropertiesState,
     value: any
   ) => {
-    debugger;
+    
     setTemplateData((prev: TemplateState) => ({
       ...prev,
       propertiesState: { ...prev.propertiesState, [property]: value },
@@ -468,7 +468,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
 
   const generateBarcode = useCallback((component: PlacedComponent) => {
-    debugger;
+    
     if (
       component.type === DesignerElementType.barcode &&
       component.barcodeProps
@@ -519,14 +519,14 @@ export default function ExtendedPDFBarcodeDesigner() {
     setTemplateData(res);
   };
   useEffect(() => {
-    debugger;
+    
     if (id !== "new") getPDFTemplateData();
   }, []);
   const handlePropertyChange = (
     property: keyof PlacedComponent,
     value: string | number
   ) => {
-    debugger;
+    
     if (selectedComponent) {
       const updatedComponent = { ...selectedComponent, [property]: value };
       const updatedComponents =
@@ -545,7 +545,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   };
   useEffect(() => {
-    debugger;
+    
     templateData?.barcodeState?.PlasedComponents?.forEach(generateBarcode);
   }, [templateData?.barcodeState?.PlasedComponents, barcodeErrors]);
 
@@ -908,7 +908,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                               label: format,
                             }))}
                             onChange={(e) => {
-                              debugger;
+                              
                               handleBarcodePropertyChange("format", e.value);
                             }}
                           />
@@ -1229,7 +1229,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     value={templateData?.barcodeState?.LabelState?.labelWidth}
                     data={templateData}
                     onChange={(e) => {
-                      debugger;
+                      
                       handleLabelPropsChange("labelWidth", e.target.value);
                     }}
                   />
@@ -1291,7 +1291,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         value={templateData?.propertiesState?.width}
                         data={templateData?.propertiesState}
                         onChange={(e) => {
-                          debugger;
+                          
                           handlePagePropsChange("width", e.target.value);
                         }}
                       />

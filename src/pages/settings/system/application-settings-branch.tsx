@@ -36,7 +36,7 @@ const BranchSettingsForm: React.FC = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}branch`);
-      debugger;
+      
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -67,7 +67,7 @@ const BranchSettingsForm: React.FC = () => {
         const prevValue = formStatePrev[key as keyof ApplicationBranchSettings];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),

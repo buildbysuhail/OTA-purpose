@@ -62,7 +62,7 @@ const CustomerSupplierLedger = () => {
   const navigate = useNavigate();
   const handleLoad = async () => {
     setLoading(true);
-    debugger;
+    
     const partyType = gridType.customer ? "Cust" : "Supp";
     const result: any = await api.get(`${Urls.cust_supp_ledger}?PartyType=${partyType}`);
     setStore(result);

@@ -124,7 +124,7 @@ const ApplicationSettingsProduct = () => {
       const response = await api.getAsync(
         `${Urls.application_settings}products`
       );
-      debugger;
+      
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -151,7 +151,7 @@ const ApplicationSettingsProduct = () => {
         const prevValue = formStatePrev[key as keyof FormState];
 
         if (currentValue !== prevValue) {
-          debugger;
+          
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),

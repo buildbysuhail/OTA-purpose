@@ -171,7 +171,7 @@ const InvoiceDesigner = () => {
     await dispatch(setTemplate(activeTemplate));
     setLoading(true); 
     var res = await api.postAsync(Urls.templates, activeTemplate);
-      debugger;      
+            
       setLoading(false);
       handleResponse(res, () => {
         // ERPToast.show("Template saved successfully", "success");
@@ -184,7 +184,7 @@ const InvoiceDesigner = () => {
   /* ########################################################################################### */
 
   const manageSaveTemplate = async () => {
-    debugger;
+    
     if (!templateData?.activeTemplate?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
     } else {

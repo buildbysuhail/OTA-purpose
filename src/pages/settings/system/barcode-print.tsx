@@ -152,7 +152,7 @@ const BarcodePrint: React.FC = () => {
   };
 
   const handleVoucherStateChange = (e: any) => {
-    debugger;
+    
     const { name, value } = e.target ? e.target : e;
     if(["si","pi","bti","bto","os"].includes(value)) {
       setIsOther(false);
@@ -193,13 +193,13 @@ const BarcodePrint: React.FC = () => {
   };
 
   const handleComboboxChange = async(id: string, data: any) => {
-    debugger;
+    
     switch (id) {
       case 'labelDesign':
         setLoadingTemplate(true);
         setBarcodeDesc((prev: any) => ({ ...prev, labelDesign: data?.labelDesign }));
         const res = data?.labelDesign != undefined ?await api.getAsync( `${Urls.templates}${data?.labelDesign}`): [];
-        debugger;
+        
         setTemplate(res);
         setLoadingTemplate(false);
         break;
@@ -222,24 +222,24 @@ const BarcodePrint: React.FC = () => {
     const response =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
     setBarcodeFormLoading(false);
-    debugger;
+    
     setData(response);
   }, []);
 
 
   const voucherFormSubmit = useCallback(async () => {
-    debugger;
+    
     setVoucherFormLoading(true);
     const response =
       await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
     setVoucherFormLoading(false);
-    debugger;
+    
     setData(response);    
   }, []);
 
 
   const barcodeDescSubmit = useCallback(() => {
-    debugger;
+    
     setShowPrint(true);
     setPrinting(true);
     setTimeout(() => {

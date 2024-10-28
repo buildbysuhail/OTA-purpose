@@ -106,7 +106,8 @@ const BranchSettingsForm: React.FC = () => {
   };
 
   return (
-    <div className='relative max-h-[calc(100vh)]'>
+    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
+
     <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
 
       <div className="border rounded-lg p-4">
@@ -602,7 +603,7 @@ const BranchSettingsForm: React.FC = () => {
           </div> */}
         </div>
       </div>
-      <div className="flex justify-end">
+      {/* <div className="flex justify-end">
         <ERPButton
           title={t("save_settings")}
           variant="primary"
@@ -610,13 +611,15 @@ const BranchSettingsForm: React.FC = () => {
           loading={isSaving}
           disabled={isSaving}
         />
-      </div>
+      </div> */}
       </form>
       <div className="flex justify-end p-4">
       <ERPButton
         title={t("save_settings")}
         variant="primary"
         type="button"
+        loading={isSaving}
+        disabled={isSaving}
         onClick={()=>handleSubmit}
       />
     </div>

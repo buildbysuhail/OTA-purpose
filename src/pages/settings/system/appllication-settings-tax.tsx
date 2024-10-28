@@ -115,7 +115,8 @@ const TaxSettingsForm: React.FC = () => {
   }
 
   return (
-    <div className='relative max-h-[calc(100vh)]'>
+    <div className="h-dvh max-h-dvh flex flex-col  overflow-hidden">
+
     <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
       <div className="border rounded-lg p-4">
         <div className="grid xxl:grid-cols-4 lg:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
@@ -250,7 +251,7 @@ const TaxSettingsForm: React.FC = () => {
           />
         </div>
       </div>
-      <div className="my-4 flex items-center justify-end">
+      {/* <div className="my-4 flex items-center justify-end">
         <ERPButton
           title="Save Settings"
           variant="primary"
@@ -258,12 +259,14 @@ const TaxSettingsForm: React.FC = () => {
           loading={isSaving}
           type="submit"
         />
-      </div>
+      </div> */}
       </form>
-      <div className="flex justify-end p-4">
+      <div className="flex justify-end items-center p-4">
       <ERPButton
         title={t("save_settings")}
         variant="primary"
+        disabled={isSaving}
+        loading={isSaving}
         type="button"
         onClick={()=>handleSubmit}
       />

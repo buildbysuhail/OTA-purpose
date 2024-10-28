@@ -176,7 +176,7 @@ const ApplicationSettingsAccounts = () => {
 
 
   return (
-    <div className='relative max-h-[calc(100vh)]'>
+    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
     <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
 
       <div className='border rounded-lg  p-4'>
@@ -728,10 +728,12 @@ const ApplicationSettingsAccounts = () => {
         </div>
       </div>
     </form>
-      <div className="flex justify-end p-4">
+    <div className="flex justify-end items-center p-4">
       <ERPButton
         title={t("save_settings")}
         variant="primary"
+        loading={isSaving}
+        disabled={isSaving}
         type="button"
         onClick={()=>handleSubmit}
       />

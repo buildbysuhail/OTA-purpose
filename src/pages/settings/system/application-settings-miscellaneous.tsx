@@ -173,7 +173,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
 
   return (
     <Fragment>
-     <div className='relative max-h-[calc(100vh)]'>
+      <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
      <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
         <div className="flex flex-col border p-4 w-full rounded-lg shadow-sm justify-center items-center gap-5 
         lg:flex-row lg:justify-start lg:p-8 lg:items-start lg:gap-10 xxl:justify-around xxl:p-10">
@@ -482,7 +482,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
             </span>
           </div>
         </div> */}
-        <div className="flex justify-end mt-4">
+        {/* <div className="flex justify-end mt-4">
           <ERPButton
             title={t("save_settings")}
             variant="primary"
@@ -490,12 +490,14 @@ const MiscellaneousSettingsForm: React.FC = () => {
             disabled={isSaving}
             loading={isSaving}
           />
-        </div>
+        </div> */}
         </form>
       <div className="flex justify-end p-4">
       <ERPButton
         title={t("save_settings")}
         variant="primary"
+        disabled={isSaving}
+        loading={isSaving}
         type="button"
         onClick={()=>handleSubmit}
       />

@@ -198,16 +198,16 @@ const BarcodePrint: React.FC = () => {
       case 'labelDesign':
         setLoadingTemplate(true);
         setBarcodeDesc((prev: any) => ({ ...prev, labelDesign: data?.labelDesign }));
-        const res = await api.getAsync( `${Urls.templates}${data?.labelDesign}`);
+        const res = data?.labelDesign != undefined ?await api.getAsync( `${Urls.templates}${data?.labelDesign}`): [];
         debugger;
         setTemplate(res);
         setLoadingTemplate(false);
         break;
       case 'standardLabelDesign':
-        setStandardBarcode((prev: any) => ({ ...prev, standardLabelDesign: data }));
+        setStandardBarcode((prev: any) => ({ ...prev, standardLabelDesign: data.standardLabelDesign }));
         break;
       case 'printer':
-        setStandardBarcode((prev: any) => ({ ...prev, printer: data }));
+        setStandardBarcode((prev: any) => ({ ...prev, printer: data.standardLabelDesign }));
         break;
     }
   };
@@ -595,7 +595,7 @@ const BarcodePrint: React.FC = () => {
                   <ERPDateInput
                     id="packDate"
                     type="date"
-                    label="Packed Date"
+                    label={t("packed_date")}
                     value={barcodeDesc?.data?.packDate}
                     data={barcodeDesc?.data}
                     validation={barcodeDesc?.validations?.packDate}
@@ -608,7 +608,7 @@ const BarcodePrint: React.FC = () => {
                   />
                   <ERPInput
                     id="expDesc"
-                    label="Expiry Description"
+                    label={t("expiry_description")}
                     type="text"
                     value={barcodeDesc?.data?.expDesc}
                     customSize="md"
@@ -622,7 +622,7 @@ const BarcodePrint: React.FC = () => {
                         data: data,
                       }));
                     }}
-                    placeholder="Expiry Description"
+                    placeholder={t("expiry_description")}
                   />
                   {[1, 2, 3, 4].map((num: number) => (
                     <ERPInput
@@ -666,7 +666,7 @@ const BarcodePrint: React.FC = () => {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          label="Label Design"
+                          label={t("label_design")}
                           required={true}
                           data={barcodeDesc?.data}
                           defaultData={barcodeDesc?.data}
@@ -678,7 +678,7 @@ const BarcodePrint: React.FC = () => {
                       <div className="flex flex-col">
                         <ERPInput
                           id="startRow"
-                          label="Start Row"
+                          label={t("start_row")}
                           type="text"
                           value={barcodeDesc?.data?.startRow}
                           customSize="md"
@@ -697,7 +697,7 @@ const BarcodePrint: React.FC = () => {
                       <div className="flex flex-col">
                         <ERPInput
                           id="endRow"
-                          label="End Row"
+                          label={t("end_row")}
                           type="text"
                           value={barcodeDesc?.data?.endRow}
                           customSize="md"
@@ -716,7 +716,7 @@ const BarcodePrint: React.FC = () => {
                     </div>
                     <div className="flex justify-between mt-4">
                       <ERPCheckbox
-                        label="In Search"
+                        label={t("inSearch")}
                         id="inSearch"
                         data={barcodeDesc?.data}
                         validation={barcodeDesc?.validations?.inSearch}
@@ -728,7 +728,7 @@ const BarcodePrint: React.FC = () => {
                         }}
                       />
                       <ERPButton
-                        title="Print"
+                        title={t("print")}
                         className="px-3 py-1 w-24"
                         variant="secondary"
                         disabled={printing||loadingTemplate}
@@ -778,7 +778,6 @@ const BarcodePrint: React.FC = () => {
          isForm={true}
          closeModal={() => {
            setShowPrint(false);
-           setBarcodeDesc({});
          }}
       content={<DownloadPreview template={template} data={data}/>}
       >

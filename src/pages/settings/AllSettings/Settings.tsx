@@ -204,7 +204,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.barcodeprint.isOpen || false}
-        title="Barcode Print"
+        title={t("barcode_print")}
         width="w-full max-w-full"
         isForm={true}
         closeModal={() => {
@@ -244,7 +244,7 @@ const Settings = () => {
       />
       <ERPModal
         isOpen={rootState.PopupData.headAndFooter.isOpen || false}
-        title="Headers And Footers"
+        title={t("headers_footers")}
         width="w-full max-w-[700px]"
         isForm={true}
         closeModal={() => {

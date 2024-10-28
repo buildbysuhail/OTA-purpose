@@ -1,19 +1,15 @@
-import { key } from "localforage";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ERPSwitch from "../../../components/ERPComponents/erp-switch";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import {
   NotificationsChannel,
-  NotificationsProvider,
 } from "../../../enums/notification-chanal";
-import { SearchResultBar } from "../AllSettings/Components/Header";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import SmsWhatsappTemplate from "./notification-settings-template-SmsWhatsapp";
 import EmailTemplate from "./notification-settings-template-email";
+import { t } from "i18next";
 
 const api = new APIClient();
 
@@ -34,7 +30,7 @@ const NotificationSettings = () => {
     let gridHeight = wh - 180;
     setGridHeight(gridHeight);
   }, []);
-  const T_Head = [ "Transaction","Email","whatsApp","Sms","App Notification",];
+  const T_Head = [ t("transaction"),t("email"),t("whatsApp"),t("sms"),t("app_notification"),];
   const [TableBody, setTableBody] = useState<NotificationSettings[]>([]);
   const [loading, setLoading] = useState(false);
   const [tooltip, setTooltip] = useState({
@@ -123,11 +119,11 @@ const NotificationSettings = () => {
               <div className="box-title">
                 <h5 className="font-semibold text-center text-[1.25rem] text-defaulttextcolor">
                   {" "}
-                  Notification Settings
+                  {t("notification_settings")}
                 </h5>
 
                 <p className="text-[#8c9097] dark:text-white/50 text-center mb-6 text-[0.813rem]">
-                  customize your notifications
+                 {t("customize_your_notifications")}
                 </p>
               </div>
             </div>
@@ -144,7 +140,7 @@ const NotificationSettings = () => {
             <div className="grid grid-cols-1 gap-3">
                 {loading ? (
                   <>
-                    <p>....Loading</p>
+                    <p>{t("....loading")}</p>
                   </>
                 ) : (
                   <div className="table-responsive max-h-[58vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
@@ -264,7 +260,7 @@ const NotificationSettings = () => {
                         ) : (
                           <tr>
                             <td colSpan={4} className="text-center">
-                              No data available.
+                              {t("no_data_available")}
                             </td>
                           </tr>
                         )}

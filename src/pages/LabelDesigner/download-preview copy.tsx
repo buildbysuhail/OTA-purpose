@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start" as const,
     alignItems: "flex-start" as const,
     flexWrap: "wrap" as const,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   componentWrapper: {
-    margin: 5,
-    width: `${100 / 2}%`, // Default to 2 columns
+    // margin: 5,
+    // width: `${100 / 2}%`, // Default to 2 columns
   },
   text: {
     fontSize: 12,

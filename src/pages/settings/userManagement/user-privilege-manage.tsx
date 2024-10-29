@@ -118,7 +118,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full flex justify-start ">
-      <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 "><UserTypeTree/></div>
+      <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 "><UserTypeTree userTypeCode={postData.userType}/></div>
 
       <div className="w-full flex flex-col px-24 py-10 ">
         {/* User Type Combobox */}
@@ -272,7 +272,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
         </div>
 
         {/* Inherit Rights From UserType Section */}
-        <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
+        {/* <div className="flex flex-col gap-3 border border-gray-400 border-dotted rounded-md p-8">
           <ERPCheckbox
             id="showAllDelete"
             label={t("inherit_rights_from_usertype")}
@@ -325,7 +325,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
             // loading={postDataLoading}
             // onClick={handleSubmit}
           />
-        </div>
+        </div> */}
 
         {/* Form Buttons */}
         <div className="flex justify-center mt-6">

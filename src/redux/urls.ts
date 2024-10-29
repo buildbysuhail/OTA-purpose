@@ -145,7 +145,6 @@ const Urls = {
   // getUserSubscripeByName:'/Subscription/User/GetUser/:id?UserName=',
   patchUserSubscriped: "/Subscription/User/EditUser/",
   UserTypes: "/Core/UserType/",
-  usreRights: "/Core/UserRights",
   user_rights: "/Core/UserRights/",
 
   //setting/Administrations

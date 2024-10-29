@@ -142,8 +142,7 @@ const ApplicationSettingsProduct = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -816,7 +815,7 @@ const ApplicationSettingsProduct = () => {
         disabled={isSaving}
         loading={isSaving}
         type="button"
-        onClick={()=>handleSubmit}
+        onClick={handleSubmit}
       />
     </div>
     </div>

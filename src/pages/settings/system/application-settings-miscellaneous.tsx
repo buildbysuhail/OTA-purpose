@@ -127,8 +127,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
       [settingName]: value ?? "",
     }));
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -499,7 +498,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
         disabled={isSaving}
         loading={isSaving}
         type="button"
-        onClick={()=>handleSubmit}
+        onClick={handleSubmit}
       />
     </div>
     </div>

@@ -241,6 +241,7 @@
   "is_billwise_applicable": "Is Billwise Applicable",
   "is_Active": "Is Active",
   "is_cost_center_applicable": "Is Cost Center Applicable",
+  "cost_center": "Cost Center",
   "from_date": "From Date",
   "to_date": "To Date",
   "status": "Status",

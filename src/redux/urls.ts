@@ -196,7 +196,7 @@ const Urls = {
   chart_of_accounts: "/Accounts/ChartofAccounts/",
   parties: "/Accounts/Parties/",
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
-  upi: "/Accounts/Upi/",
+  upi: "/Accounts/UPI/",
 
 //Reports
 acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",

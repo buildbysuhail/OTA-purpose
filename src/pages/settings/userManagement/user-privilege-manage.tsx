@@ -81,6 +81,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   
   useEffect(() => {
+    debugger;
     if (postData.data.userType) {
       loadUserType();
     }
@@ -118,7 +119,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full flex justify-start ">
-      <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 "><UserTypeTree userTypeCode={postData.userType}/></div>
+      <div className="basis-[45%] bg-slate-50 border-r  border-slate-400 "><UserTypeTree data={userRightTypes}/></div>
 
       <div className="w-full flex flex-col px-24 py-10 ">
         {/* User Type Combobox */}

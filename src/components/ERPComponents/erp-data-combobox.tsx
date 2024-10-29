@@ -1,19 +1,21 @@
-'use client'
+"use client";
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { Combobox, Transition } from '@headlessui/react'
-import { CheckIcon, ChevronDownIcon, XMarkIcon } from '@heroicons/react/20/solid'
-import { FixedSizeList as List } from 'react-window'
-import { useTranslation } from 'react-i18next'
-import { APIClient } from '../../helpers/api-client'
-import ERPElementValidationMessage from './erp-element-validation-message'
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { Combobox, Transition } from "@headlessui/react";
+import {
+  CheckIcon,
+  ChevronDownIcon,
+  XMarkIcon,
+} from "@heroicons/react/20/solid";
+import { useTranslation } from "react-i18next";
+import { APIClient } from "../../helpers/api-client";
+import ERPElementValidationMessage from "./erp-element-validation-message";
 
 interface Option {
-  value: string
-  label: string
-  is_active?: boolean
+  value: string;
+  label: string;
+  is_active?: boolean;
 }
-
 
 interface ERPDataComboboxProps {
   id: string;
@@ -43,33 +45,25 @@ interface ERPDataComboboxProps {
   validation?: string;
 }
 
-export const getOptions = (data: any, keyLabel: string, keyValue: string) => {
-  let getter = keyLabel?.split(".");
-  if (data?.length > 0) {
-    let options;
-    if (getter?.length > 1) {
-      options = data?.map((item: any) => ({
-        label: item?.[getter[0]]?.[getter[1]],
-        value: item?.[keyValue],
-        is_active: item?.is_active,
-      }));
-    } else {
-      console.log("data:" + data);
+const ITEMS_PER_PAGE = 50;
+const api = new APIClient();
 
-      options = data?.map((item: any) => ({
-        label: item?.[keyLabel],
-        value: item?.[keyValue],
-        is_active: item?.is_active,
-      }));
-    }
-    return options || [];
-  }
+const getNestedValue = (item: any, path: string) => {
+  const keys = path.split(".");
+  return keys.reduce((obj, key) => obj?.[key], item);
 };
 
-const ITEM_HEIGHT = 35
-const LIST_HEIGHT = 240
-
-const api = new APIClient()
+const mapItemsToOptions = (
+  items: any[],
+  labelKey: string,
+  valueKey: string
+): Option[] => {
+  return items.map((item: any) => ({
+    label: getNestedValue(item, labelKey) || "",
+    value: getNestedValue(item, valueKey) || "",
+    is_active: item.is_active,
+  }));
+};
 
 export default function ImprovedERPDataCombobox({
   id,
@@ -95,124 +89,146 @@ export default function ImprovedERPDataCombobox({
   disabledApiCall = false,
   validation,
 }: ERPDataComboboxProps) {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const [query, setQuery] = useState('')
-  const [items, setItems] = useState<Option[]>([])
-  const [loading, setLoading] = useState(false)
-  const [initial, setInitial] = useState<Option | null>(initialValue)
-  const [filteredItems, setFilteredItems] = useState<Option[]>([])
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [query, setQuery] = useState("");
+  const [items, setItems] = useState<Option[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [initial, setInitial] = useState<Option | null>(initialValue);
+  const [filteredItems, setFilteredItems] = useState<Option[]>([]);
+  const [visibleItems, setVisibleItems] = useState<Option[]>([]);
+  const [page, setPage] = useState(1);
 
-  const comboboxRef = useRef<HTMLInputElement>(null)
-  const listRef = useRef<List>(null)
+  const comboboxRef = useRef<HTMLInputElement>(null);
+  const observerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
-      loadData()
+      loadData();
     }
-  }, [field?.getListUrl, field?.freezeDataLoad, disabledApiCall])
+  }, [field?.getListUrl, field?.freezeDataLoad, disabledApiCall]);
 
   const loadData = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      let _items = options || await api.getAsync(field?.getListUrl, field?.params || '')
-      let _options: Option[] = _items.map((item: any) => ({
-        label: item[field?.labelKey ?? 'label'],
-        value: item[field?.valueKey ?? 'value'],
-        is_active: item.is_active
-      }))
-      _options = _options.filter((option) => !excludeOptions?.includes(option.value))
-      _options = includeOptions ? [...includeOptions, ..._options] : _options
-      setItems(_options)
-      setFilteredItems(_options)
+      const _items =
+        options || (await api.getAsync(field?.getListUrl, field?.params || ""));
+      const labelKey = field?.labelKey ?? "label";
+      const valueKey = field?.valueKey ?? "value";
+
+      let _options = mapItemsToOptions(_items, labelKey, valueKey);
+
+      // Filter out excluded options
+      _options = _options.filter(
+        (option) => !excludeOptions?.includes(option.value)
+      );
+
+      // Add included options at the beginning if they exist
+      _options = includeOptions ? [...includeOptions, ..._options] : _options;
+
+      setItems(_options);
+      setFilteredItems(_options);
+      setVisibleItems(_options.slice(0, ITEMS_PER_PAGE));
     } catch (error) {
-      console.error('Error loading data:', error)
+      console.error("Error loading data:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    const fieldKey = field?.id?.replaceAll('_id', '')
-    const defaultValueKey = defaultData?.[fieldKey]?.[field?.valueKey]
-    const _default = items.find((option) => option.value === defaultValueKey)
-    const _selected = items.find((option) => option.value === data?.[field?.id])
-    const _exceptional = (defaultData && fieldKey === 'payment_terms' && items[0]) || fieldKey === 'currency'
-    setInitial(_selected || _default || _exceptional || initialValue || null)
-  }, [items, data, defaultData, field, initialValue])
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          filteredItems.length > visibleItems.length
+        ) {
+          const nextPage = page + 1;
+          const startIndex = (nextPage - 1) * ITEMS_PER_PAGE;
+          const endIndex = startIndex + ITEMS_PER_PAGE;
+          setVisibleItems((prev) => [
+            ...prev,
+            ...filteredItems.slice(startIndex, endIndex),
+          ]);
+          setPage(nextPage);
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-  const filterItems = useCallback((inputValue: string) => {
-    const words = inputValue.toLowerCase().split(/\s+/)
-    return items.filter((item) => {
-      const itemWords = item.label.toLowerCase().split(/\s+/)
-      return words.every((word, index) => 
-        index < itemWords.length && itemWords[index].startsWith(word)
-      )
-    })
-  }, [items])
+    if (observerRef.current) {
+      observer.observe(observerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [filteredItems, page, visibleItems.length]);
 
   useEffect(() => {
-    setFilteredItems(filterItems(query))
-  }, [query, filterItems])
+    const fieldKey = field?.id?.replaceAll("_id", "");
+    const defaultValueKey = getNestedValue(
+      defaultData?.[fieldKey],
+      field?.valueKey
+    );
+    const _default = items.find((option) => option.value === defaultValueKey);
+    const _selected = items.find(
+      (option) => option.value === data?.[field?.id]
+    );
+    const _exceptional =
+      (defaultData && fieldKey === "payment_terms" && items[0]) ||
+      fieldKey === "currency";
+    setInitial(_selected || _default || _exceptional || initialValue || null);
+  }, [items, data, defaultData, field, initialValue]);
+
+  const filterItems = useCallback(
+    (inputValue: string) => {
+      const words = inputValue.toLowerCase().split(/\s+/);
+      const filtered = items.filter((item) => {
+        const itemWords = item.label.toLowerCase().split(/\s+/);
+        return words.every(
+          (word, index) =>
+            index < itemWords.length && itemWords[index].startsWith(word)
+        );
+      });
+      setPage(1);
+      setVisibleItems(filtered.slice(0, ITEMS_PER_PAGE));
+      return filtered;
+    },
+    [items]
+  );
+
+  useEffect(() => {
+    setFilteredItems(filterItems(query));
+  }, [query, filterItems]);
 
   const clearSelection = (e?: React.MouseEvent) => {
-    e?.stopPropagation()
-    setQuery('')
-    setInitial(null)
-    if (comboboxRef.current) comboboxRef.current.value = ''
-    handleChange?.(field?.id, null)
-    onChange?.(null)
-    onChangeData?.({ ...data, [id]: null })
-    handleChangeData?.(field?.id, null)
-    onSelectItem?.(null)
-  }
+    e?.stopPropagation();
+    setQuery("");
+    setInitial(null);
+    if (comboboxRef.current) comboboxRef.current.value = "";
+    handleChange?.(field?.id, null);
+    onChange?.(null);
+    onChangeData?.({ ...data, [id]: null });
+    handleChangeData?.(field?.id, null);
+    onSelectItem?.(null);
+  };
 
-  const Row = useCallback(({ index, style }: { index: number; style: React.CSSProperties }) => {
-    const item = filteredItems[index]
-    return (
-      <Combobox.Option
-        key={`cb_${item.value}-${index}`}
-        className={({ active }) =>
-          `${item.is_active === false ? 'hidden' : 'relative'} cursor-pointer select-none py-2 pl-10 pr-4 ${
-            active ? 'bg-primary text-white' : 'text-gray-900'
-          }`
-        }
-        value={item}
-        style={style}
-        onMouseEnter={() => setHoveredIndex(index)}
-        onMouseLeave={() => setHoveredIndex(null)}
-      >
-        {({ selected, active }) => (
-          <>
-            <span className={`block truncate ${selected ? 'font-medium' : 'font-normal'}`}>
-              {item.label}
-            </span>
-            {selected && (
-              <span className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? 'text-white' : 'text-accent'}`}>
-                <CheckIcon className="h-5 w-5" aria-hidden="true" />
-              </span>
-            )}
-          </>
-        )}
-      </Combobox.Option>
-    )
-  }, [filteredItems])
-
-  const handleItemClick = useCallback((value: Option) => {
-    setInitial(value)
-    onChange?.(value)
-    onChangeData?.(value && data && { ...data, [id]: value.value })
-    handleChange?.(field?.id, value.value)
-    handleChangeData?.(field?.id, value.value)
-    // onSelectItem?.(items.find((val) => val[field?.valueKey] === value.value))
-  }, [onChange, onChangeData, handleChange, handleChangeData, onSelectItem, items, data, id, field])
+  const handleItemClick = (value: Option) => {
+    setInitial(value);
+    onChange?.(value);
+    onChangeData?.(value && data && { ...data, [id]: value.value });
+    handleChange?.(field?.id, value.value);
+    handleChangeData?.(field?.id, value.value);
+  };
 
   return (
     <div className="relative">
       {!noLabel && (
-        <label htmlFor={id} className="block text-[12px] font-medium text-gray-700 mb-1">
-          {label || id?.replaceAll('_', ' ')}
+        <label
+          htmlFor={id}
+          className="block text-[12px] font-medium text-gray-700 mb-1"
+        >
+          {label || id?.replaceAll("_", " ")}
           {required && <span className="text-red-500"> *</span>}
         </label>
       )}
@@ -226,19 +242,27 @@ export default function ImprovedERPDataCombobox({
         <div className={className}>
           <Combobox.Input
             className={`w-full appearance-none rounded border border-gray-300 h-9 ${
-              disabled ? 'text-gray-400' : 'bg-white text-gray-900'
+              disabled ? "text-gray-400" : "bg-white text-gray-900"
             } px-3 py-2 pr-20 placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
-            displayValue={(item: Option) => item?.label || ''}
+            displayValue={(item: Option) => item?.label || ""}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder={t('select') + ' ' + (label || id?.replaceAll('_', ' '))}
+            placeholder={
+              t("select") + " " + (label || id?.replaceAll("_", " "))
+            }
             ref={comboboxRef}
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-2">
             <button type="button" onClick={clearSelection} className="p-1">
-              <XMarkIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" aria-hidden="true" />
+              <XMarkIcon
+                className="h-5 w-5 text-gray-400 hover:text-gray-500"
+                aria-hidden="true"
+              />
             </button>
             <Combobox.Button className="p-1">
-              <ChevronDownIcon className="h-5 w-5 text-gray-400 hover:text-gray-500" aria-hidden="true" />
+              <ChevronDownIcon
+                className="h-5 w-5 text-gray-400 hover:text-gray-500"
+                aria-hidden="true"
+              />
             </Combobox.Button>
           </div>
         </div>
@@ -247,33 +271,63 @@ export default function ImprovedERPDataCombobox({
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={() => setQuery('')}
+          afterLeave={() => setQuery("")}
         >
-          <Combobox.Options className="absolute z-50 mt-2 w-full rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <Combobox.Options
+            className="absolute z-50 mt-2 w-full rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-auto"
+            ref={containerRef}
+          >
             {loading ? (
-              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Loading...</div>
-            ) : filteredItems.length === 0 ? (
-              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">No data found</div>
+              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                Loading...
+              </div>
+            ) : visibleItems.length === 0 ? (
+              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                No data found
+              </div>
             ) : (
-              <List
-                height={LIST_HEIGHT}
-                itemCount={filteredItems.length}
-                itemSize={ITEM_HEIGHT}
-                width="100%"
-                ref={listRef}
-                onItemsRendered={({ visibleStartIndex }) => {
-                  if (hoveredIndex !== null && (hoveredIndex < visibleStartIndex || hoveredIndex >= visibleStartIndex + Math.floor(LIST_HEIGHT / ITEM_HEIGHT))) {
-                    setHoveredIndex(null)
-                  }
-                }}
-              >
-                {Row}
-              </List>
+              <>
+                {visibleItems.map((item, index) => (
+                  <Combobox.Option
+                    key={`${item.value}-${index}`}
+                    className={({ active }) =>
+                      `${
+                        item.is_active === false ? "hidden" : "relative"
+                      } cursor-pointer select-none py-2 pl-10 pr-4 ${
+                        active ? "bg-primary text-white" : "text-gray-900"
+                      }`
+                    }
+                    value={item}
+                  >
+                    {({ selected, active }) => (
+                      <>
+                        <span
+                          className={`block truncate ${
+                            selected ? "font-medium" : "font-normal"
+                          }`}
+                        >
+                          {item.label}
+                        </span>
+                        {selected && (
+                          <span
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                              active ? "text-white" : "text-accent"
+                            }`}
+                          >
+                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </Combobox.Option>
+                ))}
+                <div ref={observerRef} className="h-4" />
+              </>
             )}
           </Combobox.Options>
         </Transition>
       </Combobox>
       <ERPElementValidationMessage validation={validation} />
     </div>
-  )
+  );
 }

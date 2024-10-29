@@ -24,6 +24,7 @@ import Urls from "../../redux/urls";
 import { setTemplate } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import { t } from "i18next";
+import { Url } from "devextreme-react/cjs/chart";
 
 interface previewState {
   show: boolean;
@@ -76,12 +77,9 @@ const Templates = ({ }) => {
   /* ########################################################################################### */
 
   const setDefaultTemplate = async (id: any) => {
-    const res = await appDispatch(
-      patchAction({ apiUrl: Urls.templates, params: { IsDefault: true }, id }) as any
-    ).unwrap();
+    const res = await api.patch(`${Urls.templates}${id}`,{});
     handleResponse(res, async () => {
       await getTemplates();
-      ERPToast.show("Selected template has been set as default.", "success");
     });
   };
 
@@ -209,7 +207,7 @@ const Templates = ({ }) => {
                         </h1>
                         <div className="flex text-xs justify-between mt-1">
                           {temp?.isCurrent ? (
-                            <div className="bg-primary text-white text-[10px] px-2 py-1 rounded ">{t("default")}</div>
+                            <div className="ti-btn bg-primary text-white !text-[10px] !px-2 !py-1 rounded ">{t("default")}</div>
                           ) : (
                             <div className="ti-btn hover:bg-primary bg-gray-400 hover:text-white  !text-[10px] !px-2 !py-1 rounded" onClick={() => setDefaultTemplate(temp?.id)}>
                               {t("set_as_default")}

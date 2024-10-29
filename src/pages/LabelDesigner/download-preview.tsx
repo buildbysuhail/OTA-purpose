@@ -22,7 +22,7 @@ export interface DownloadPreviewProps {
 }
 
 export default function Component({ template, docTitle = "Document Preview", data }: DownloadPreviewProps = {}) {
-  
+
   const [columnsPerRow, setColumnsPerRow] = useState(2);
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
   const [chunkedData, setChunkedData] = useState<any>();
@@ -36,7 +36,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
       return resultArray
     }, [])
     setChunkedData(_chunkedData);
-  }, [data,columnsPerRow])
+  }, [data, columnsPerRow])
   useEffect(() => {
     const generateBarcodeImages = async () => {
       const images: { [key: string]: string } = {};
@@ -45,13 +45,16 @@ export default function Component({ template, docTitle = "Document Preview", dat
         data?.forEach((item: any) => {
           template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
             if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
+              debugger; 
               const canvas = document.createElement('canvas');
+              // canvas.width = template?.barcodeState?.labelState?.labelWidth??200;
+              // canvas.
               JsBarcode(canvas, item?.autoBarcode, {
                 ...barcodeComponent.barcodeProps,
                 format: barcodeComponent.barcodeProps?.format ?? "CODE128", // Barcode format
                 width: barcodeComponent.barcodeProps?.barWidth || 2, // Set bar width or default to 2
                 height: barcodeComponent.barcodeProps?.height || 75,    // Set height or default to 75
-                margin: barcodeComponent.barcodeProps?.margin || 16,    // Margin around the barcode
+                margin: barcodeComponent.barcodeProps?.margin || 0,    // Margin around the barcode
                 background: barcodeComponent.barcodeProps?.background || "#FFFFFF", // Background color
                 lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",   // Line color for bars
                 displayValue: barcodeComponent.barcodeProps?.showText,  // Display text below the barcode
@@ -73,10 +76,10 @@ export default function Component({ template, docTitle = "Document Preview", dat
   }, [template?.barcodeState?.placedComponents]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
-    const baseStyle = {
-      position: 'absolute',
-      left: component.x,
-      top: component.y,
+    const baseStyle: { position: 'absolute' | 'relative', left: number, top: number } = {
+      position: 'absolute', // Ensure to use the correct string literal
+      left: component.x || 0, // Use the component's x position
+      top: component.y || 0,  // Use the component's y position
     };
 
     switch (component.type) {
@@ -97,15 +100,17 @@ export default function Component({ template, docTitle = "Document Preview", dat
 
       case DesignerElementType.field:
         return (
+          <View key={component.id} style={baseStyle}>
           <Text
-            key={component.id}
             style={{
-              ...baseStyle,
-              fontSize: 12,
+              fontSize: component.barcodeProps?.fontSize || 12,
+              fontStyle: component.barcodeProps?.fontStyle || "normal",
+              textAlign: component.barcodeProps?.textAlign || "left",
             }}
           >
-            {data[component.content] || "N/A"}
+            {component.content}
           </Text>
+        </View>
         );
 
       case DesignerElementType.barcode:
@@ -116,8 +121,11 @@ export default function Component({ template, docTitle = "Document Preview", dat
             src={barcodeImages[barcodeKey]}
             style={{
               ...baseStyle,
-              width: component.width || 100,
+              width: 200 ,
               height: component.height || 50,
+              position: 'absolute', // Ensure position and other properties match `react-pdf` expectations
+              left: component.x || 0,
+              top: component.y || 0,
             }}
           />
         ) : null;
@@ -129,15 +137,21 @@ export default function Component({ template, docTitle = "Document Preview", dat
 
   const PreviewDocument = () => (
     <Document>
-      <Page size={{ width: (template?.propertiesState?.width || 200) * columnsPerRow, height: 'auto' }} style={styles.page}>
+      <Page size={{
+         width:
+         (template?.barcodeState?.labelState?.labelWidth ?? 300) * (template?.barcodeState?.labelState?.columnsPerRow ?? 1),
+
+       height:
+         (template?.barcodeState?.labelState?.labelHeight ?? 300) * (template?.barcodeState?.labelState?.rowsPerPage ?? 1), 
+      }} style={styles.page}>
         {chunkedData?.map((row: any, rowIndex: any) => (
           <View style={styles.row}>
             {row?.map((item: any) => (
               <View
                 key={item.id}
                 style={{
-                  width: template?.propertiesState?.width || 200,
-                  height: template?.propertiesState?.height || 200,
+                  width: template?.barcodeState?.labelState?.labelWidth || 200,
+                  height: template?.barcodeState?.labelState?.labelHeight || 200,
                   position: "relative",
                 }}
               >
@@ -152,8 +166,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      <h1 className="text-2xl font-bold">{docTitle}</h1>
-      <div className="flex items-center space-x-2">
+      {/* <div className="flex items-center space-x-2">
         <label htmlFor="columnsPerRow">Columns per row:</label>
         <input
           id="columnsPerRow"
@@ -164,7 +177,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
           max={6}
           className="w-20"
         />
-      </div>
+      </div> */}
       <PDFViewer width="100%" height={600}>
         <PreviewDocument />
       </PDFViewer>

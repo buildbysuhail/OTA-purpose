@@ -774,7 +774,7 @@ const BarcodePrint: React.FC = () => {
       {template && data &&
       <ERPModal
          isOpen={showPrint}
-         title={"Update Email"}
+         title={t("barcode_print")}
          isForm={true}
          closeModal={() => {
            setShowPrint(false);

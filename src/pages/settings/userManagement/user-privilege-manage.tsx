@@ -253,7 +253,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
             validation={postData.validations.showAllExport}
           />
 
-          <ERPCheckbox
+          <ERPCheckbox 
             id="showAllDelete"
             label={t("select_all_delete")}
             data={postData.data}

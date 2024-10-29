@@ -159,8 +159,7 @@ const InventorySettingsForm = () => {
       [settingName]: value ?? "",
     }));
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       
@@ -1071,7 +1070,7 @@ const InventorySettingsForm = () => {
             title={t("save_settings")}
             variant="primary"
             type="button"
-            onClick={() => handleSubmit}
+            onClick={handleSubmit}
             loading={isSaving}
             disabled={isSaving}
           />

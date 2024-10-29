@@ -57,8 +57,7 @@ const BranchSettingsForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -620,7 +619,7 @@ const BranchSettingsForm: React.FC = () => {
         type="button"
         loading={isSaving}
         disabled={isSaving}
-        onClick={()=>handleSubmit}
+        onClick={handleSubmit}
       />
     </div>
     </div>

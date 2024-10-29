@@ -11,6 +11,7 @@ import {
   Save,
   Printer,
   Download,
+  X,
 } from "lucide-react";
 import JsBarcode from "jsbarcode";
 // import { ReactBarcode, Renderer } from 'react-jsbarcode';
@@ -67,6 +68,7 @@ import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
 import { getDetailAction } from "../../redux/slices/app-thunks";
 import { RootState } from "../../redux/store";
 import { useAppState } from "../../utilities/hooks/useAppState";
+import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -81,7 +83,35 @@ interface PurchaseItem {
   salesPrice: number;
   barcode: string;
 }
-
+interface DeleteButtonProps {
+  id: number;
+  isSelected: boolean;
+  handleDelete: (id: number) => void;
+}
+const DeleteButton: React.FC<DeleteButtonProps> = ({
+  id,
+  isSelected,
+  handleDelete,
+}) =>
+  isSelected ? (
+    <button
+      // className="absolute -top-3 -right-3 w-6 h-6 bg-[#ffffff]  rounded-full flex items-center justify-center hover:bg-[#e7c3c1] focus:outline-none text-[#f1180e] text-lg text-center"
+      className="absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full 
+                 flex items-center justify-center 
+                 hover:bg-[#ebb0ad] focus:outline-none focus:ring-2 focus:ring-[#e0655e] focus:ring-opacity-75
+                 transition-colors duration-200 ease-in-out
+                 text-[#da514a] hover:text-[#ec5149]"
+      onClick={(e) => {
+        e.stopPropagation();
+        handleDelete(id);
+      }}
+      onMouseDown={(e) => e.stopPropagation()}
+      aria-label="Delete"
+    >
+      {/* × */}
+      <X size={16} />
+    </button>
+  ) : null;
 const barcodeFormats = [
   "CODE128",
   "CODE39",
@@ -215,7 +245,6 @@ const fields = [
   "VocuherNo",
 ];
 
-
 const api = new APIClient();
 export default function ExtendedPDFBarcodeDesigner() {
   const [zoom, setZoom] = useState(100);
@@ -234,7 +263,10 @@ export default function ExtendedPDFBarcodeDesigner() {
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
 
-  const handleContentLabelResize = (e: React.SyntheticEvent, { size }: { size: { width: number; height: number } }) => {
+  const handleContentLabelResize = (
+    e: React.SyntheticEvent,
+    { size }: { size: { width: number; height: number } }
+  ) => {
     setTemplateData((prevData: TemplateState) => {
       debugger;
       const updated = {
@@ -251,7 +283,7 @@ export default function ExtendedPDFBarcodeDesigner() {
       };
       return updated;
     });
-  }
+  };
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -354,7 +386,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     property: any,
     value: string | number | boolean
   ) => {
-
     if (
       selectedComponent &&
       selectedComponent.type === DesignerElementType.barcode &&
@@ -364,9 +395,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         templateData?.barcodeState?.placedComponents?.map((comp) =>
           comp.id === selectedComponent.id && comp.barcodeProps
             ? {
-              ...comp,
-              barcodeProps: { ...comp.barcodeProps, [property]: value },
-            }
+                ...comp,
+                barcodeProps: { ...comp.barcodeProps, [property]: value },
+              }
             : comp
         );
       setTemplateData((prev: TemplateState) => ({
@@ -438,7 +469,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     setLoading(false);
   };
   const manageSaveTemplate = async () => {
-
     if (!templateData?.propertiesState?.templateName) {
       ERPToast.show("Template name is required", "error");
     } else {
@@ -459,7 +489,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     property: keyof PropertiesState,
     value: any
   ) => {
-
     setTemplateData((prev: TemplateState) => ({
       ...prev,
       propertiesState: { ...prev.propertiesState, [property]: value },
@@ -485,7 +514,6 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
 
   const generateBarcode = useCallback((component: PlacedComponent) => {
-
     if (
       component.type === DesignerElementType.barcode &&
       component.barcodeProps
@@ -536,14 +564,12 @@ export default function ExtendedPDFBarcodeDesigner() {
     setTemplateData(res);
   };
   useEffect(() => {
-
     if (id !== "new") getPDFTemplateData();
   }, []);
   const handlePropertyChange = (
     property: keyof PlacedComponent,
     value: string | number
   ) => {
-
     if (selectedComponent) {
       const updatedComponent = { ...selectedComponent, [property]: value };
       const updatedComponents =
@@ -562,11 +588,23 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   };
   useEffect(() => {
-
     templateData?.barcodeState?.placedComponents?.forEach(generateBarcode);
   }, [templateData?.barcodeState?.placedComponents, barcodeErrors]);
-
+  const handleDelete = (componentId: number) => {
+    setTemplateData((prev: TemplateState) => ({
+      ...prev,
+      barcodeState: {
+        ...prev.barcodeState,
+        placedComponents:
+          prev.barcodeState?.placedComponents.filter(
+            (comp: PlacedComponent) => comp.id !== componentId
+          ) || [],
+      },
+    }));
+    setSelectedComponent(null);
+  };
   const renderComponent = (component: PlacedComponent) => {
+    const isSelected = selectedComponent?.id === component.id;
     const style: React.CSSProperties = {
       position: "absolute",
       left: `${component.x}px`,
@@ -583,8 +621,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         selectedComponent?.id === component.id
           ? "2px solid #2196f3"
           : component.type == DesignerElementType.barcode
-            ? ""
-            : "1px dashed #ccc",
+          ? ""
+          : "1px dashed #ccc",
       padding: component.type == DesignerElementType.barcode ? "0px" : "4px",
       cursor: "move",
       backgroundColor: "white",
@@ -601,7 +639,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             {barcodeErrors &&
-              barcodeErrors?.find((x: any) => x.id == component.id) ? (
+            barcodeErrors?.find((x: any) => x.id == component.id) ? (
               <>
                 <div className="text-red-500 text-sm">
                   {barcodeErrors?.find((x: any) => x.id == component.id).error}
@@ -619,6 +657,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                 height={component.height}
               />
             )}
+            <DeleteButton
+              id={component.id}
+              isSelected={isSelected}
+              handleDelete={handleDelete}
+            ></DeleteButton>
           </div>
         );
       case DesignerElementType.text:
@@ -633,6 +676,11 @@ export default function ExtendedPDFBarcodeDesigner() {
             <div className="w-full h-full flex items-center justify-center overflow-hidden">
               {component.content}
             </div>
+            <DeleteButton
+              id={component.id}
+              isSelected={isSelected}
+              handleDelete={handleDelete}
+            ></DeleteButton>
           </div>
         );
     }
@@ -652,8 +700,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         resizeHandles={[appState.appState.dir === "rtl" ? "w" : "e"]}
         handle={
           <div
-            className={`custom-handle ${appState.appState.dir === "rtl" ? "rtl" : "ltr"
-              }`}
+            className={`custom-handle ${
+              appState.appState.dir === "rtl" ? "rtl" : "ltr"
+            }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
@@ -682,6 +731,11 @@ export default function ExtendedPDFBarcodeDesigner() {
         {/* Toolbar */}
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center space-x-2">
+            <div className=" ">
+              {/* <ERPPreviousUrlButton></ERPPreviousUrlButton> */}
+              <ERPPreviousUrlButton size="37px" />
+            </div>
+
             {/* <button className="p-1 hover:bg-gray-100 rounded">
               <Menu className="w-4 h-4" />
             </button> */}
@@ -740,20 +794,21 @@ export default function ExtendedPDFBarcodeDesigner() {
           onDragOver={(e) => e.preventDefault()}
           style={{
             width:
-              (templateData?.barcodeState?.labelState?.labelWidth ?? 300) * (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1),
+              (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
+              (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1),
 
             maxHeight:
-              (templateData?.barcodeState?.labelState?.labelHeight ?? 300) * (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1),
+              (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
+              (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1),
             border: "2px solid black",
           }}
         >
-
           <ResizableBox
             width={templateData?.barcodeState?.labelState?.labelWidth ?? 300} // Initial width
             height={templateData?.barcodeState?.labelState?.labelHeight ?? 200}
             minConstraints={[20, 20]}
             maxConstraints={[700, 500]}
-            resizeHandles={['se']}
+            resizeHandles={["se"]}
             className="box"
             onResize={handleContentLabelResize}
           >
@@ -762,9 +817,8 @@ export default function ExtendedPDFBarcodeDesigner() {
               id="teplate-container"
               className="bg-white shadow-sm mx-auto max-h-[calc(100vh-8rem)] overflow-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100  relative"
               style={{
-                width: '100%',
-                height:
-                  "100%",
+                width: "100%",
+                height: "100%",
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
@@ -776,7 +830,6 @@ export default function ExtendedPDFBarcodeDesigner() {
               )}
             </div>
           </ResizableBox>
-
         </div>
       </div>
 
@@ -789,8 +842,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
         handle={
           <div
-            className={`custom-handle ${appState.appState.dir === "rtl" ? "ltr" : "rtl"
-              }`}
+            className={`custom-handle ${
+              appState.appState.dir === "rtl" ? "ltr" : "rtl"
+            }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
@@ -925,7 +979,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                               label: format,
                             }))}
                             onChange={(e) => {
-
                               handleBarcodePropertyChange("format", e.value);
                             }}
                           />
@@ -1040,11 +1093,12 @@ export default function ExtendedPDFBarcodeDesigner() {
 
                           <div className="flex justify-between space-x-2">
                             <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                              className={`ti-btn ${
+                                selectedComponent.barcodeProps.textAlign ===
                                 "left"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                              } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("textAlign", "left")
                               }
@@ -1052,11 +1106,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Left
                             </button>
                             <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                              className={`ti-btn ${
+                                selectedComponent.barcodeProps.textAlign ===
                                 "center"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                              } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "textAlign",
@@ -1067,11 +1122,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Center
                             </button>
                             <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                              className={`ti-btn ${
+                                selectedComponent.barcodeProps.textAlign ===
                                 "right"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                              } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "textAlign",
@@ -1123,11 +1179,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                           </InputLabel>
                           <div className="flex justify-between space-x-2">
                             <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                              className={`ti-btn ${
+                                selectedComponent.barcodeProps.fontStyle ===
                                 "bold"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                              } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("fontStyle", "bold")
                               }
@@ -1135,11 +1192,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Bold
                             </button>
                             <button
-                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                              className={`ti-btn ${
+                                selectedComponent.barcodeProps.fontStyle ===
                                 "italic"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                                } px-4 py-2 w-full`}
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                              } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "fontStyle",
@@ -1239,16 +1297,12 @@ export default function ExtendedPDFBarcodeDesigner() {
                     id="rowsPerPage"
                     label="Row Per Page"
                     type="number"
-                    value={
-                      templateData?.barcodeState?.labelState?.rowsPerPage
-                    }
+                    value={templateData?.barcodeState?.labelState?.rowsPerPage}
                     data={templateData}
-                    onChange={(e) =>
-                    {
+                    onChange={(e) => {
                       debugger;
-                      handleLabelPropsChange("rowsPerPage", e.target.value)
-                    }
-                    }
+                      handleLabelPropsChange("rowsPerPage", e.target.value);
+                    }}
                   />
                 </Box>
                 <Box sx={{ mb: 1 }}>
@@ -1258,7 +1312,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                     value={templateData?.barcodeState?.labelState?.labelWidth}
                     data={templateData}
                     onChange={(e) => {
-
                       handleLabelPropsChange("labelWidth", e.target.value);
                     }}
                   />
@@ -1320,7 +1373,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                         value={templateData?.propertiesState?.width}
                         data={templateData?.propertiesState}
                         onChange={(e) => {
-
                           handlePagePropsChange("width", e.target.value);
                         }}
                       />

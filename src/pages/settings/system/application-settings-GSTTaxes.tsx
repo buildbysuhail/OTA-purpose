@@ -154,8 +154,7 @@ const ERPSettingsFormGSTTaxes = () => {
       [field]: value,
     }));
   };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -702,7 +701,7 @@ const ERPSettingsFormGSTTaxes = () => {
         loading={isSaving}
         disabled={isSaving}
         type="button"
-        onClick={()=>handleSubmit}
+        onClick={handleSubmit}
       />
     </div>
     </div>

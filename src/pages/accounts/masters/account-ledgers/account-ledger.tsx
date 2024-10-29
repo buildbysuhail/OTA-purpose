@@ -197,20 +197,19 @@ const AccountLedgerType = () => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("acc_ledger")}
-                  dataUrl={Urls.account_ledger}
-                  gridId="grd_user_type"
-                  popupAction={toggleAccountLedgerPopup}
-                  gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.accountLedger?.reload}
-                  gridAddButtonIcon="ri-add-line"
-                />
-              </div>
+          <div className="p-4">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                columns={columns}
+                gridHeader={t("acc_ledger")}
+                dataUrl={Urls.account_ledger}
+                gridId="grd_user_type"
+                popupAction={toggleAccountLedgerPopup}
+                gridAddButtonType="popup"
+                reload={rootState?.PopupData?.accountLedger?.reload}
+                gridAddButtonIcon="ri-add-line"
+                pageSize={40}
+              ></ErpDevGrid>
             </div>
           </div>
         </div>

@@ -118,8 +118,8 @@ const CustomerSupplierLedger = () => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body">
+          <div className="">
+            <div className="p-4">
               <div className="flex justify-around items-center mb-5">
                 <div className="flex space-x-5">
                   <ERPRadio

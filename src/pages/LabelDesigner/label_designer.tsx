@@ -11,6 +11,7 @@ import {
   Save,
   Printer,
   Download,
+  X,
 } from "lucide-react";
 import JsBarcode from "jsbarcode";
 // import { ReactBarcode, Renderer } from 'react-jsbarcode';
@@ -82,7 +83,35 @@ interface PurchaseItem {
   salesPrice: number;
   barcode: string;
 }
-
+interface DeleteButtonProps {
+  id: number;
+  isSelected: boolean;
+  handleDelete: (id: number) => void;
+}
+const DeleteButton: React.FC<DeleteButtonProps> = ({
+  id,
+  isSelected,
+  handleDelete,
+}) =>
+  isSelected ? (
+    <button
+      // className="absolute -top-3 -right-3 w-6 h-6 bg-[#ffffff]  rounded-full flex items-center justify-center hover:bg-[#e7c3c1] focus:outline-none text-[#f1180e] text-lg text-center"
+      className="absolute -top-2 -right-2 w-7 h-7 bg-white rounded-full 
+                 flex items-center justify-center 
+                 hover:bg-[#ebb0ad] focus:outline-none focus:ring-2 focus:ring-[#e0655e] focus:ring-opacity-75
+                 transition-colors duration-200 ease-in-out
+                 text-[#da514a] hover:text-[#ec5149]"
+      onClick={(e) => {
+        e.stopPropagation();
+        handleDelete(id);
+      }}
+      onMouseDown={(e) => e.stopPropagation()}
+      aria-label="Delete"
+    >
+      {/* × */}
+      <X size={16} />
+    </button>
+  ) : null;
 const barcodeFormats = [
   "CODE128",
   "CODE39",
@@ -561,8 +590,21 @@ export default function ExtendedPDFBarcodeDesigner() {
   useEffect(() => {
     templateData?.barcodeState?.placedComponents?.forEach(generateBarcode);
   }, [templateData?.barcodeState?.placedComponents, barcodeErrors]);
-
+  const handleDelete = (componentId: number) => {
+    setTemplateData((prev: TemplateState) => ({
+      ...prev,
+      barcodeState: {
+        ...prev.barcodeState,
+        placedComponents:
+          prev.barcodeState?.placedComponents.filter(
+            (comp: PlacedComponent) => comp.id !== componentId
+          ) || [],
+      },
+    }));
+    setSelectedComponent(null);
+  };
   const renderComponent = (component: PlacedComponent) => {
+    const isSelected = selectedComponent?.id === component.id;
     const style: React.CSSProperties = {
       position: "absolute",
       left: `${component.x}px`,
@@ -615,6 +657,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                 height={component.height}
               />
             )}
+            <DeleteButton
+              id={component.id}
+              isSelected={isSelected}
+              handleDelete={handleDelete}
+            ></DeleteButton>
           </div>
         );
       case DesignerElementType.text:
@@ -629,6 +676,11 @@ export default function ExtendedPDFBarcodeDesigner() {
             <div className="w-full h-full flex items-center justify-center overflow-hidden">
               {component.content}
             </div>
+            <DeleteButton
+              id={component.id}
+              isSelected={isSelected}
+              handleDelete={handleDelete}
+            ></DeleteButton>
           </div>
         );
     }
@@ -682,7 +734,6 @@ export default function ExtendedPDFBarcodeDesigner() {
             <div className=" ">
               {/* <ERPPreviousUrlButton></ERPPreviousUrlButton> */}
               <ERPPreviousUrlButton size="37px" />
-
             </div>
 
             {/* <button className="p-1 hover:bg-gray-100 rounded">

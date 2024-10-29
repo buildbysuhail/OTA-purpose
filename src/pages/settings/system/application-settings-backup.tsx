@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -57,8 +56,7 @@ const BackupSettingsForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -178,7 +176,7 @@ const BackupSettingsForm: React.FC = () => {
         type="button"
         loading={isSaving}
         disabled={isSaving}
-        onClick={()=>handleSubmit}
+        onClick={handleSubmit}
       />
     </div>
     </div>

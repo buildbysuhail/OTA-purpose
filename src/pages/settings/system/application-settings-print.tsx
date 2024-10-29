@@ -58,8 +58,7 @@ const PrintSettingForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -162,7 +161,7 @@ const PrintSettingForm: React.FC = () => {
         type="button"
         disabled={isSaving}
         loading={isSaving}
-        onClick={()=>handleSubmit}
+        onClick={handleSubmit}
       />
     </div>
     </div>

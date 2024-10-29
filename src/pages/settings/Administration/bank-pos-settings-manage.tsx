@@ -54,7 +54,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
     ),
     method: ActionType.POST,
     useApiClient: true,
-    loadDataRequired: true,
+    loadDataRequired: false,
     initialData: initialBankPosData
   });
 

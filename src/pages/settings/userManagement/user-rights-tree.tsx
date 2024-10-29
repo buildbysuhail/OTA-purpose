@@ -4,7 +4,7 @@ import {
 } from 'devextreme-react/tree-list';
 import { CheckBox, CheckBoxTypes } from 'devextreme-react/check-box';
 import { SelectBox, SelectBoxTypes } from 'devextreme-react/select-box';
-import { employees, selectionModeLabel } from './data.js';
+import { userRights } from './data';
 
 const expandedRowKeys = [1, 2, 10];
 const emptySelectedText = 'Nobody has been selected';
@@ -45,18 +45,18 @@ const UserTypeTree = () => {
     <div style={{ height: '620px', overflowY: 'scroll', overflowX: 'hidden' }}>
       <TreeList
         id="employees"
-        dataSource={employees}
+        dataSource={userRights}
         showRowLines={true}
         showBorders={true}
         columnAutoWidth={true}
         defaultExpandedRowKeys={expandedRowKeys}
         selectedRowKeys={selectedRowKeys}
-        keyExpr="ID"
-        parentIdExpr="Head_ID"
+        keyExpr="id"
+        parentIdExpr="headId"
         onSelectionChanged={onSelectionChanged}
       >
         <Selection recursive={true} mode="multiple" />
-        <Column dataField="Full_Name" />
+        <Column dataField="fullName" caption='' />
         {/* <Column dataField="Title" caption="Position" />
         <Column dataField="City" />
         <Column dataField="State" /> */}

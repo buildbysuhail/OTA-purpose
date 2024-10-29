@@ -127,20 +127,19 @@ const PartyCategory = () => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("party_category")}
-                  dataUrl={Urls.account_party_category}
-                  gridId="grd__party_category"
-                  popupAction={togglePartyCategoryPopup}
-                  gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.partyCategory?.reload}
-                  gridAddButtonIcon="ri-add-line"
-                ></ErpDevGrid>
-              </div>
+          <div className="p-4">
+            <div className="grid grid-cols-1 gap-3">
+              <ErpDevGrid
+                columns={columns}
+                gridHeader={t("party_category")}
+                dataUrl={Urls.account_party_category}
+                gridId="grd__party_category"
+                popupAction={togglePartyCategoryPopup}
+                gridAddButtonType="popup"
+                reload={rootState?.PopupData?.partyCategory?.reload}
+                gridAddButtonIcon="ri-add-line"
+                pageSize={40}
+              ></ErpDevGrid>
             </div>
           </div>
         </div>

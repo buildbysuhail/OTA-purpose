@@ -91,8 +91,8 @@ const UserActionReport: React.FC = React.memo(() => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body">
+          <div className="">
+            <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
@@ -101,9 +101,9 @@ const UserActionReport: React.FC = React.memo(() => {
                   gridId="user_action_report"
                   hideGridAddButton={true}
                   reload={true}
-                  initialFilters={[
-                    { field: 'dateTimeOfAction', value: new Date("4/12/2024"), operation: '=' }
-                  ]}  
+                  // initialFilters={[
+                  //   { field: 'dateTimeOfAction', value: new Date("4/08/2024"), operation: '=' }
+                  // ]}  
                 ></ErpDevGrid>
               </div>
             </div>

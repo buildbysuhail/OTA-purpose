@@ -154,8 +154,8 @@ const DayBookDetailed = () => {
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="box custom-box">
-            <div className="box-body">
+          <div className="">
+            <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}

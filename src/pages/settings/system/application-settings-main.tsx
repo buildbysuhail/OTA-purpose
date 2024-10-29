@@ -9,6 +9,7 @@ import { APIClient } from "../../../helpers/api-client";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "./application-settings-types";
 import { t } from "i18next";
+import { tabClasses } from "@mui/material";
 
 
 
@@ -85,7 +86,8 @@ const ERPSettingsFormMain = () => {
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
@@ -120,8 +122,8 @@ const ERPSettingsFormMain = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-0 h-auto relative">
-      <form className="space-y-6   overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden relative">
+      <form className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
         <div className="border p-4 flex flex-col gap-6 rounded-lg">
           <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
             <ERPDataCombobox
@@ -587,15 +589,15 @@ const ERPSettingsFormMain = () => {
         <ERPButton title={t("save_settings")} variant="primary" type="submit" />
       </div> */}
       </form>
-      <div className="sticky bottom-0  bg-[#fafafa] p-4 mt-4">
-        <div className="flex justify-end">
+      <div className="absolute bottom-20 left-0 right-0 bg-[#fafafa] p-4">
+        <div className="max-w-full flex align-center justify-end">
           <ERPButton
             title={t("save_settings")}
             variant="primary"
             type="button"
             loading={isSaving}
             disabled={isSaving}
-            onClick={handleSubmit}
+            onClick={() => handleSubmit}
           />
         </div>
       </div>

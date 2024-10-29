@@ -171,8 +171,8 @@ const ApplicationSettingsAccounts = () => {
 
 
   return (
-    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden relative">
-      <form className="space-y-6   overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+    <div className="h-screen max-h-dvh flex flex-col p-6 overflow-hidden">
+      <form className="space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
 
         <div className='border rounded-lg  p-4'>
           <div className='grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
@@ -559,8 +559,7 @@ const ApplicationSettingsAccounts = () => {
         </div>
 
         {/* Checkboxes */}
-        <div className='border  rounded-lg p-4 !mb-[8rem]
-'>
+        <div className='border  rounded-lg p-4 !mb-[8rem]'>
           <div className='grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 justify-start gap-6'>
             <ERPCheckbox
               id="allowSalesCounter"
@@ -724,17 +723,15 @@ const ApplicationSettingsAccounts = () => {
           </div>
         </div>
       </form>
-      <div className="absolute bottom-0 left-0 right-0 bg-[#fafafa] p-4">
-        <div className="max-w-full flex align-center justify-end">
-          <ERPButton
-            title={t("save_settings")}
-            variant="primary"
-            loading={isSaving}
-            disabled={isSaving}
-            type="button"
-            onClick={handleSubmit}
-          />
-        </div>
+      <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
+        <ERPButton
+          title={t("save_settings")}
+          variant="primary"
+          loading={isSaving}
+          disabled={isSaving}
+          type="button"
+          onClick={handleSubmit}
+        />
       </div>
     </div>
   );

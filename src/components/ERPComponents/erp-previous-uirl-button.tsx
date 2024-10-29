@@ -1,7 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ERPPreviousUrlButton: React.FC = () => {
+interface ERPPreviousUrlButtonProps {
+  size?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+const ERPPreviousUrlButton: React.FC<ERPPreviousUrlButtonProps> = ({ 
+  size = "23px", 
+  className = "", 
+  style = {} 
+}) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -9,7 +19,15 @@ const ERPPreviousUrlButton: React.FC = () => {
   };
 
   return (
-    <i onClick={handleClick} className="ri-arrow-left-line mr-2 cursor-pointer " style={{ fontSize: "23px" }}></i>
+    <i 
+      onClick={handleClick} 
+      className={`ri-arrow-left-line cursor-pointer ${className}`}
+      style={{ 
+        fontSize: size,
+        marginRight: "0.5rem",
+        ...style 
+      }}
+    />
   );
 };
 

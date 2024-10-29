@@ -122,7 +122,7 @@ const ERPSettingsFormMain = () => {
   }
 
   return (
-    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden relative">
+    <div className="h-screen max-h-dvh flex flex-col p-6 overflow-hidden relative">
       <form className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
         <div className="border p-4 flex flex-col gap-6 rounded-lg">
           <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
@@ -589,17 +589,15 @@ const ERPSettingsFormMain = () => {
         <ERPButton title={t("save_settings")} variant="primary" type="submit" />
       </div> */}
       </form>
-      <div className="absolute bottom-20 left-0 right-0 bg-[#fafafa] p-4">
-        <div className="max-w-full flex align-center justify-end">
-          <ERPButton
-            title={t("save_settings")}
-            variant="primary"
-            type="button"
-            loading={isSaving}
-            disabled={isSaving}
-            onClick={() => handleSubmit}
-          />
-        </div>
+      <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
+        <ERPButton
+          title={t("save_settings")}
+          variant="primary"
+          type="button"
+          loading={isSaving}
+          disabled={isSaving}
+          onClick={() => handleSubmit}
+        />
       </div>
     </div>
   );

@@ -39,7 +39,7 @@ const ApplicationSettings = ({ }) => {
 
   return (
     <>
-      <div className="flex h-screen overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark ">
+      <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark ">
         {/* Sidebar */}
         <div className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-10 bg-[#fafafa]">
           <h1 className="font-medium text-xl p-5 mb-5">Application Settings</h1>
@@ -76,8 +76,8 @@ const ApplicationSettings = ({ }) => {
         </div>
 
         {/* Main content */}
-        <div className="flex-1 ml-[200px] lg:ml-[300px] ">
-          <div className="bg-[#fafafa] shadow-md h-full overflow-hidden">
+        <div className="flex-1 ml-[200px] lg:ml-[300px]">
+          <div className="bg-[#fafafa] shadow-md overflow-hidden">
             {settingsGroup == "main" ? (
               <ERPSettingsFormMain />
             ) : settingsGroup == "accounts" ? (

@@ -33,6 +33,7 @@ const Urls = {
   data_languages: "/Data/Languages/",
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
+  data_cashLedger:"/Data/CashLedgers/",
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
   data_acc_Branches: "/Data/BranchWithoutDefault",
@@ -193,6 +194,7 @@ const Urls = {
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
   chart_of_accounts: "/Accounts/ChartofAccounts/",
+  chart_of_accounts_new: "/Accounts/ChartofAccounts/chartOfAccounts",
   parties: "/Accounts/Parties/",
   get_next_party_code: "/Accounts/Parties/GetNextPartyCode/",
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
@@ -268,6 +270,7 @@ const Urls = {
   priceCategory: "/Inventory/PriceCategory/",
   unitOfMeasure: "/Inventory/UnitofMeasures/",
   vehicles: "/Inventory/Vehicles/",
+  Warehouse: "/Inventory/Warehouse/",
 };
 
 export default Urls;

@@ -31,6 +31,7 @@ import TrialBalance from '../../../pages/accounts/masters/reports/trial-balance'
 import BalanceSheet from '../../../pages/accounts/masters/reports/balanceSheet/balace-sheet';
 import InventoryHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/InventoryHistory/inventory-history-report';
 import BillwiseProfitGlobal from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit-global';
+import { Warehouse } from 'lucide-react';
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
@@ -85,6 +86,7 @@ const Brands = lazy(() => import('../../../pages/inventory/masters/brands/brands
 const PriceCategory = lazy(() => import('../../../pages/inventory/masters/price-category/price-category'));
 const UnitOfMeasure = lazy(() => import('../../../pages/inventory/masters/unit-of-meassure/unit-of-measure'));
 const Vehicles = lazy(() => import('../../../pages/inventory/masters/vehicles/vehicles'));
+const WareHouse = lazy(() => import('../../../pages/inventory/masters/warehouse/warehouse'));
 
 interface ContentProps { }
 const loading = (
@@ -210,6 +212,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/price-category" element={<PriceCategory/>} />
         <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure/>} />
         <Route path="/inventory-masters/vehicles" element={<Vehicles/>} />
+        <Route path="/inventory-masters/warehouse" element={<WareHouse/>} />
       </Routes>
     </Suspense>
   );

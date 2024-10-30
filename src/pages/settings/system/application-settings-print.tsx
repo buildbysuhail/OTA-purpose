@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
@@ -104,10 +105,10 @@ const PrintSettingForm: React.FC = () => {
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
       <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
-        <div className="space-y-6 p-6">
+        <div className="space-y-6 p-6  !mb-[12rem]">
           <div className="border p-4 rounded-lg">
             <div className="form-row grid grid-cols-1 gap-3 my-3">
-              <ERPInput
+              {/* <ERPInput
                 id="defaultPrinter"
                 value={formState.defaultPrinter}
                 data={formState}
@@ -117,6 +118,28 @@ const PrintSettingForm: React.FC = () => {
                 onChangeData={(data: any) =>
                   handleFieldChange("defaultPrinter", data.defaultPrinter)
                 }
+              /> */}
+
+              <ERPDataCombobox
+                id="defaultPrinter"
+                value={formState.defaultPrinter}
+                data={formState}
+                field={{
+                  id: "defaultPrinter",
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("defaultPrinter", data.defaultPrinter)
+                }
+                label={t("default_printer")}
+                options={[
+                  { value: 0, label: "Canon" },
+                  { value: 1, label: "HP (Hewlett-Packard)" },
+                  { value: 2, label: "Epson " },
+                  { value: 3, label: "Brother  " },
+                  { value: 4, label: "Lexmark  " },
+                ]}
               />
             </div>
 

@@ -55,11 +55,13 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   const [recursive, setRecursive] = useState(false);
   const [selectionMode, setSelectionMode] = useState('all');
   const getImmediateParentsOfEndNodes = (rights: UserRight[]): UserRight[] => {
+    debugger
     // Step 1: Find all ids that do not act as a `headId`, indicating they are end-level nodes
+    let sdsd = rights.filter(right => !rights.some(child => child.headId === right.id))
+    let sds = sdsd.map(endNode => endNode.headId)
     const endNodeIds = new Set(
-      rights
-        .filter(right => !rights.some(child => child.headId === right.id))
-        .map(endNode => endNode.headId) // Get the `headId` of each end-level node (immediate parent id)
+      
+        sds // Get the `headId` of each end-level node (immediate parent id)
     );
 
     // Step 2: Filter rights to get only the nodes with ids in `endNodeIds`
@@ -166,6 +168,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
     const groupedDataMap = new Map<string, { userTypeCode: string; userRights: string; treeNodeIndex: number }>();
   
     immediateParentsOfEndNodes.forEach(parent => {
+      debugger;
       const childNodes = userRights.filter(child => child.headId === parent.id);
       let parentUserRights = '';
       let hasSelectedRights = false;

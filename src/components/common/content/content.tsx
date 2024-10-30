@@ -1,18 +1,15 @@
-import { FC, Fragment, lazy, Suspense, useEffect, useState } from 'react';
+import { FC, lazy, Suspense, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ApplicationSettings from '../../../pages/settings/system/application-settings';
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
-import Cash from '../../../pages/accounts/masters/reports/payment-report';
 import ReportList from '../../ERPComponents/reports/reports-list';
 import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
 import AccountReceivableAgingReport from '../../../pages/accounts/masters/reports/account-receivable-aging-report';
 import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 
-import AccountPayableAgingReportSkipTake from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
-import AccountReceivableAgingReportSkipTake from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
 import LedgerReport from '../../../pages/accounts/masters/reports/ledger-report';
 import CashBookSummary from '../../../pages/accounts/masters/reports/cashBook/cash-book-summary';
 import DayBookDetailed from '../../../pages/accounts/masters/reports/dayBook/day-book-detailed';
@@ -34,6 +31,7 @@ import TrialBalance from '../../../pages/accounts/masters/reports/trial-balance'
 import BalanceSheet from '../../../pages/accounts/masters/reports/balanceSheet/balace-sheet';
 import InventoryHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/InventoryHistory/inventory-history-report';
 import BillwiseProfitGlobal from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit-global';
+import { Warehouse } from 'lucide-react';
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
@@ -49,7 +47,6 @@ const SystemVoucher = lazy(() => import('../../../pages/settings/system/vouchers
 const FinancialYear = lazy(() => import('../../../pages/settings/system/financial-year'));
 const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
-const InvoiceDesigner = lazy(() => import("../../../pages/InvoiceDesigner/InvoiceDesigner"));
 const BranchGrid = lazy(() => import("../../../pages/settings/Administration/branch"));
 const NotificationSettings = lazy(() => import('../../../pages/settings/system/notification-settings'));
 
@@ -70,9 +67,9 @@ const PrivilegeCard = lazy(() => import('../../../pages/accounts/masters/account
 const CurrencyMaster = lazy(() => import('../../../pages/accounts/masters/currency-master/currency-master'));
 const RevertBillModifications = lazy(() => import('../../../pages/settings/system/revert-bill-modifications'));
 const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
-const Parties = lazy(() => import('../../../pages/accounts/masters/parties/parties'));
+const Customers = lazy(() => import('../../../pages/accounts/masters/parties/customers'));
+const Suppliers = lazy(() => import('../../../pages/accounts/masters/parties/suppliers'));
 const CustomerSupplierLedger = lazy(() => import('../../../pages/accounts/masters/customer/supplier/ledger/customer-supplier-ledger'));
-
 // Acc End
 
 //side menu account
@@ -81,6 +78,15 @@ const AccTransactionMobile = lazy(() => import('../../../pages/accounts/transact
 const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
 const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
+
+// Inventory Masters
+const ProductGroup = lazy(() => import('../../../pages/inventory/masters/product-group/product-group'));
+const ProductCategory = lazy(() => import('../../../pages/inventory/masters/product-category/product-category'));
+const Brands = lazy(() => import('../../../pages/inventory/masters/brands/brands'));
+const PriceCategory = lazy(() => import('../../../pages/inventory/masters/price-category/price-category'));
+const UnitOfMeasure = lazy(() => import('../../../pages/inventory/masters/unit-of-meassure/unit-of-measure'));
+const Vehicles = lazy(() => import('../../../pages/inventory/masters/vehicles/vehicles'));
+const WareHouse = lazy(() => import('../../../pages/inventory/masters/warehouse/warehouse'));
 
 interface ContentProps { }
 const loading = (
@@ -145,7 +151,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/account-masters/cost-center" element={<CostCenter />} />
         <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
         <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
-        <Route path="account-masters/parties" element={<Parties />} />
+        <Route path="account-masters/suppliers" element={<Suppliers />} />
+        <Route path="account-masters/customers" element={<Customers />} />
         <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
         {/* Accounts End */}
 
@@ -197,6 +204,15 @@ const Content: FC<ContentProps> = () => {
 
         {/* side menu */}
         <Route path="cash-payments" element={<AccTransactionMobile />} />
+
+        {/* Inventory Masters */}
+        <Route path="/inventory-masters/product-group" element={<ProductGroup/>} />
+        <Route path="/inventory-masters/product-category" element={<ProductCategory/>} />
+        <Route path="/inventory-masters/brands" element={<Brands/>} />
+        <Route path="/inventory-masters/price-category" element={<PriceCategory/>} />
+        <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure/>} />
+        <Route path="/inventory-masters/vehicles" element={<Vehicles/>} />
+        <Route path="/inventory-masters/warehouse" element={<WareHouse/>} />
       </Routes>
     </Suspense>
   );

@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 
 const POS = lazy(() => import('../../../pages/rpos/rpos'));
 const RPosTableView = lazy(() => import('../../../pages/rpos/rpos-table-view'));
+const RPosLiveView = lazy(() => import('../../../pages/rpos/live-view'));
 
 interface ContentProps { }
 const loading = (
@@ -20,6 +21,7 @@ const RPosContent: FC<ContentProps> = () => {
         
       <Route path="/" element={<POS />} />
       <Route path="/table-view" element={<RPosTableView />} />
+      <Route path="/live-view" element={<RPosLiveView />} />
       </Routes>
     </Suspense>
   );

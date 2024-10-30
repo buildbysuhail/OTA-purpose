@@ -18,6 +18,7 @@ type DeleteActionType = {
   confirmationRequired: boolean;
   confirmationMessage?: string;
   action?: () => void;
+  onSuccess?: () => void;
 };
 
 const defaultActionType: ActionType = {
@@ -31,7 +32,8 @@ const defaultDeleteAction: DeleteActionType = {
   key: null,
   confirmationRequired: false,
   confirmationMessage: "Are you sure you want to delete this item?",
-  action: () => {}
+  action: () => {},
+  onSuccess: () => {}
 };
 
 type ERPGridActionsProps = {
@@ -64,7 +66,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
         await deleteAction.action();
       } else if (deleteAction.url) {
         let res = await api.delete(`${deleteAction.url}${deleteAction.key || itemId}`);
-        handleResponse(res);
+        handleResponse(res, () => {deleteAction.onSuccess && deleteAction.onSuccess()});
       }
     } catch (error) {
       console.error("Delete failed:", error);

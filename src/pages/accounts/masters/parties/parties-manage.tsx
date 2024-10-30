@@ -14,6 +14,8 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import { Tab, Tabs } from "@mui/material";
 import { APIClient } from "../../../../helpers/api-client";
+import accountGroup from "../account-groups/account-group";
+import partyCategory from "../account-party-category/party-category";
 
 interface PartiesManageProps {
   type: string; // Define type as a string prop
@@ -36,7 +38,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
     onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.parties.key,
     useApiClient: true,
-    initialData: {...initialPartiesData,data: {...initialPartiesData.data, partyType:type, } },
+    initialData: {...initialPartiesData,data: {...initialPartiesData.data, partyType:type,
+       accGroupID:type == 'Cust' ? 154 : 22,
+       partyCategoryID:type == 'Cust'?1:2,
+       priceCategoryID:1
+      } },
   });
 
   const onClose = useCallback(() => {
@@ -126,6 +132,21 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
               handleFieldChange("partyCategoryID", data.partyCategoryID);
             }}
             label={t("party_category")}
+            disabled={true}
+          />
+          <ERPDataCombobox
+            {...getFieldProps("faxNumber")}
+            field={{
+              id: "faxNumber",
+              required: true,
+              getListUrl: Urls.data_CustSupp,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) => {
+              handleFieldChange("faxNumber", data.faxNumber);
+            }}
+            label={t("referred_by")}
           />
           <ERPDataCombobox
             {...getFieldProps("accGroupID")}
@@ -139,7 +160,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
             onChangeData={(data: any) => {
               handleFieldChange("accGroupID", data.accGroupID);
             }}
-            label={t("referred_by")}
+            label={t("acc_group")}
+            disabled={true}
           />
           <ERPInput
             {...getFieldProps("address1")}
@@ -479,7 +501,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
           field={{
             id: "stateName",
             required: false,
-            getListUrl: Urls.data_pricectegory,
+            getListUrl: Urls.data_states,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -502,7 +524,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
         />
       </div>
     </div>}
-        {activeTab === 'more' && <><div className="border p-4 rounded-lg mt-5">
+        {activeTab === 'more' && <>
+        {/* <div className="border p-4 rounded-lg mt-5">
       <h6>Payment Day</h6>
       <div className="grid grid-cols-7 gap-6 mt-3">
         <ERPCheckbox
@@ -541,7 +564,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
           onChangeData={(data: any) => handleFieldChange("saturday", data.saturday)}
         />
       </div>
-    </div>
+    </div> */}
     <div className="border p-4 rounded-lg mt-5">
       <div className="grid grid-cols-4 gap-6">
         <ERPDataCombobox

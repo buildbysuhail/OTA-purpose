@@ -48,7 +48,7 @@ export function useFormManager<T>({
   const appDispatch = useAppDispatch();
   const apiClient = new APIClient();
 
-
+debugger;
   const queryParams = new URLSearchParams(location.search);
   key =
     (key == undefined || key == null || key == "0" || key == ""
@@ -62,7 +62,7 @@ export function useFormManager<T>({
   );
   
   // if(localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data ==null )
-  const [localFormState, setLocalFormState] = useState<ApiResponse<any>>();
+  const [localFormState, setLocalFormState] = useState<ApiResponse<any>>(initialData);
 
   const reduxFormState = useAppSelector<ApiResponse<any>>(
     (state: any) => state?.[rName]

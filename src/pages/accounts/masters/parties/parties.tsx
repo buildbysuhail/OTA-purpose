@@ -11,7 +11,10 @@ import { toggleParties } from "../../../../redux/slices/popup-reducer";
 import { PartiesManage } from "./parties-manage";
 
 
-const Parties = () => {
+interface PartiesProps {
+  type: string; // Define type as a string prop
+}
+const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
   const dispatch = useAppDispatch();
@@ -47,7 +50,7 @@ const Parties = () => {
     },
     {
       dataField: "partyName",
-      caption: t("party"),
+      caption: type =='Cust' ?t("customer"): t("supplier"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -383,7 +386,7 @@ const Parties = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("parties")}
-                  dataUrl={Urls.parties}
+                  dataUrl={`${Urls.parties}type/${type}`}
                   gridId="grd_parties"
                   popupAction={toggleParties}
                   gridAddButtonType="popup"
@@ -405,7 +408,7 @@ const Parties = () => {
         }}
         content={
           <div className="h-[700px] overflow-y-auto">
-            <MemoizedPartiesManage />
+            <MemoizedPartiesManage type={type} />
            </div> 
         }
       />

@@ -1064,5 +1064,8 @@
   "common": "مشترك",
 
   "discount_%": "خصم %",
-  "margin_%": "هامش %"
+  "margin_%": "هامش %",
+
+  "customer": "هامش %",
+  "supplier": "هامش %"
 }

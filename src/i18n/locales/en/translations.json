@@ -1072,5 +1072,8 @@
   "second_unit":"Second Unit",
   "decimal_point":"Decimal Point",
   "total_unit_in_base_unit":"Total Unit In Base Unit",
-  "unit_of_measure":"Unit Of Measure"
+  "unit_of_measure":"Unit Of Measure",
+
+  "customer": "Customer",
+  "supplier": "Supplier"
 }

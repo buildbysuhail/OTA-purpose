@@ -1092,5 +1092,8 @@
   "warehouse_type": "نوع المستودع",
   "cash_ledger": "دفتر النقد",
   "warehouse_name": "اسم المستودع",
-  "type": "النوع"
+  "type": "النوع",
+  
+  "customer": "هامش %",
+  "supplier": "هامش %"
 }

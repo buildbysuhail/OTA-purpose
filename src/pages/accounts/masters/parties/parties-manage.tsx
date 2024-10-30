@@ -11,7 +11,6 @@ import { toggleParties } from "../../../../redux/slices/popup-reducer";
 import { initialPartiesData, PartiesData } from "./parties-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
-import { TFunction } from "i18next";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import { Tab, Tabs } from "@mui/material";
 
@@ -56,7 +55,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
 
   return (
     <div className="w-full bordered-tab">
-      Type:{type}
       <div className="mt-[1.5rem]">
         <div className="grid grid-cols-5 gap-3">
           <ERPInput

@@ -45,6 +45,7 @@ import { useTranslation } from "react-i18next";
 import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
+import ErpGridGlobalFilter from "./erp-grid-global-filter";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -524,6 +525,12 @@ debugger;
             {!hideDefaultExportButton && allowExport && (
               <Item name="exportButton" />
             )}
+            <Item>
+              <ErpGridGlobalFilter
+                gridId={gridId}
+                onApplyPreferences={onApplyPreferences}
+              />
+            </Item>
             <Item>
               <GridPreferenceChooser
                 columns={columns}

@@ -1074,6 +1074,8 @@
   "total_unit_in_base_unit":"Total Unit In Base Unit",
   "unit_of_measure":"Unit Of Measure",
 
+  "customer": "Customer",
+  "supplier": "Supplier",
   "vehicle_name":"Vehicle Name",
   "vehicle_number":"Vehicle Number",
   "no_of_wheels":"No Of Wheels",

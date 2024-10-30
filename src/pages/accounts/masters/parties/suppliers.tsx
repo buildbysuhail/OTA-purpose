@@ -2,14 +2,14 @@ import { Fragment } from "react";
 import Parties from "./parties";
 
 
-const Customers = () => {
+const Suppliers = () => {
   
   return (
     <Fragment>
-      <Parties type="Cust"></Parties>
+      <Parties type="Supp"></Parties>
       
     </Fragment>
   );
 };
 
-export default Customers
+export default Suppliers

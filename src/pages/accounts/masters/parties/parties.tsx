@@ -385,7 +385,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("parties")}
+                  gridHeader={type =='Cust' ?t("customers"): t("suppliers")}
                   dataUrl={`${Urls.parties}type/${type}`}
                   gridId="grd_parties"
                   popupAction={toggleParties}
@@ -400,7 +400,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.parties.isOpen || false}
-        title={t("parties")}
+        title={type =='Cust' ?t("customer"): t("supplier")}
         width="w-full max-w-[1400px]"
         isForm={true}
         closeModal={() => {

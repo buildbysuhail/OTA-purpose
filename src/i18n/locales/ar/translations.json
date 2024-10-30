@@ -1057,5 +1057,9 @@
   "kitchen_ID": "معرف المطبخ",
   "kitchen_name": "اسم المطبخ",
   "group_category": "فئة المجموعة",
-  "section": "القسم"
+  "section": "القسم",
+
+  "category_code": "رمز الفئة",
+  "category_name": "اسم الفئة",
+  "common": "مشترك"
 }

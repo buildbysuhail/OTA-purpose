@@ -61,6 +61,7 @@ export const SettingsMenuItems = [
     columns: 2,
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-group`, type: 'link', active: false, selected: false, title: 'product_group' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-category`, type: 'link', active: false, selected: false, title: 'product_category' },
     ]
   },
   {

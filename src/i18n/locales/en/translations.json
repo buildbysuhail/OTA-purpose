@@ -1056,5 +1056,9 @@
   "kitchen_ID":"Kitchen ID",
   "kitchen_name":"Kitchen Name",
   "group_category":"Group Category",
-  "section":"Section"
+  "section":"Section",
+
+  "category_code":"Category Code",
+  "category_name":"Category Name",
+  "common":"Common"
 }

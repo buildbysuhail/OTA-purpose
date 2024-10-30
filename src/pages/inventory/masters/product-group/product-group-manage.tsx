@@ -1,15 +1,15 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
-import Urls from "../../../redux/urls";
-import { toggleProductGroup } from "../../../redux/slices/popup-reducer";
-import ERPInput from "../../../components/ERPComponents/erp-input";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import { initialProductGroupData, ProductGroupData } from "./products-group-manage-type";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
+import { toggleProductGroup } from "../../../../redux/slices/popup-reducer";
+import Urls from "../../../../redux/urls";
+import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 export const ProductGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
@@ -83,7 +83,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           field={{
             id: "groupCategoryID",
             required: true,
-            getListUrl: Urls.data_warehouse,
+            getListUrl: Urls.data_groupcategory,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -96,7 +96,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
           field={{
             id: "sectionID",
             required: true,
-            getListUrl: Urls.data_warehouse,
+            getListUrl: Urls.data_sections,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -105,16 +105,17 @@ export const ProductGroupManage: React.FC = React.memo(() => {
         />
         <ERPDataCombobox
           {...getFieldProps("gStatus")}
-          id="gStatus"
           field={{
             id: "gStatus",
-            required: true,
-            getListUrl: Urls.data_warehouse,
-            valueKey: "id",
-            labelKey: "name",
+            valueKey: "value",
+            labelKey: "label",
           }}
-          label={t("GStatus")}
           onChangeData={(data: any) => handleFieldChange("gStatus", data.gStatus)}
+          label={t('GStatus')}
+          options={[
+            { value: 'Active', label: t('active') },
+            { value: 'Inactive', label: t('inactive') },
+          ]}
         />
         <ERPInput
           {...getFieldProps("remarks")}

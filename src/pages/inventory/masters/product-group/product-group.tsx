@@ -1,15 +1,14 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react";
-
-import Urls from "../../../redux/urls";
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleProductGroup } from "../../../redux/slices/popup-reducer";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../utilities/hooks/useRootState";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
 import { ProductGroupManage } from "./product-group-manage";
+import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { toggleProductGroup } from "../../../../redux/slices/popup-reducer";
+import Urls from "../../../../redux/urls";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 
 
 const ProductGroup = () => {
@@ -208,7 +207,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid
+                <ErpDevGrid
                   columns={columns}
                   gridHeader={t("product_group")}
                   dataUrl={Urls.productGroup}
@@ -217,7 +216,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
                   gridAddButtonType="popup"
                   reload={rootState?.PopupData?.productGroup?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ERPDevGrid>
+                ></ErpDevGrid>
               </div>
             </div>
           </div>

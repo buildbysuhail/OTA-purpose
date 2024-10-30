@@ -50,7 +50,7 @@ const api = new APIClient();
 
 const getNestedValue = (item: any, path: string) => {
   const keys = path?.split(".");
-  return keys.reduce((obj, key) => obj?.[key], item);
+  return keys?.reduce((obj, key) => obj?.[key], item);
 };
 
 const mapItemsToOptions = (

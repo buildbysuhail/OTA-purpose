@@ -1043,5 +1043,15 @@
   "sign_up_now":"Sign Up Now",
   "read_more":"Read More",
   "whatsapp_integrations":"Whatsapp Integrations",
-  "email_integrations":"Email Integrations"
+  "email_integrations":"Email Integrations",
+
+  "group_name":"Group Name",
+  "margin_percentage":"Margin Percentage",
+  "GStatus":"GStatus",
+  "group_category_ID":"Group Category ID",
+  "group_category_name":"Group Category Name",
+  "section_ID":"Section ID",
+  "section_name":"Section Name",
+  "kitchen_ID":"Kitchen ID",
+  "kitchen_name":"Kitchen Name"
 }

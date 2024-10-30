@@ -7,10 +7,10 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { initialProductCategoryManageData, ProductCategoryManageData } from "./products-category-manage-type";
-import { toggleProductCategory } from "../../../../redux/slices/popup-reducer";
+import { BrandsData, initialBrandsData } from "./brands-manage-type";
+import { toggleBrands } from "../../../../redux/slices/popup-reducer";
 
-export const ProductCategoryManage: React.FC = React.memo(() => {
+export const BrandsManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -21,19 +21,19 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-  } = useFormManager<ProductCategoryManageData>({
-    url: Urls.productCategory,
+  } = useFormManager<BrandsData>({
+    url: Urls.brands,
     onSuccess: useCallback(
-      () => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true })),
+      () => dispatch(toggleBrands({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
-    key: rootState.PopupData.productCategory.key,
+    key: rootState.PopupData.brands.key,
     useApiClient: true,
-    initialData: initialProductCategoryManageData
+    initialData: initialBrandsData
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleProductCategory({ isOpen: false, key: null }));
+    dispatch(toggleBrands({ isOpen: false, key: null }));
   }, []);
 
   const { t } = useTranslation();
@@ -42,24 +42,19 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPInput
-          {...getFieldProps("productCategoryCode")}
-          label={t("code")}
-          placeholder={t("code")}
+          {...getFieldProps("brandName")}
+          label={t("name")}
+          placeholder={t("name")}
+          required={true}
           onChangeData={(data: any) => {
-            handleFieldChange("productCategoryCode", data.productCategoryCode);
+            handleFieldChange("brandName", data.brandName);
           }}
         />
         <ERPInput
-          {...getFieldProps("productCategoryName")}
-          label={t("name")}
-          placeholder={t("name")}
-          onChangeData={(data: any) => handleFieldChange("productCategoryName", data.productCategoryName)}
-        />
-        <ERPInput
-          {...getFieldProps("shortName")}
+          {...getFieldProps("brandShortName")}
           label={t("short_name")}
           placeholder={t("short_name")}
-          onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
+          onChangeData={(data: any) => handleFieldChange("brandShortName", data.brandShortName)}
         />
         <ERPInput
           {...getFieldProps("remarks")}

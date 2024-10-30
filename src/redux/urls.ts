@@ -263,6 +263,8 @@ const Urls = {
   // Inventory
   productGroup: "/Inventory/ProductGroup/",
   productCategory: "/Inventory/ProductCategory/",
+  brands: "/Inventory/Brands/",
+  priceCategory: "/Inventory/PriceCategory/",
 };
 
 export default Urls;

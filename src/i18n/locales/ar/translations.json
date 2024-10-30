@@ -1061,5 +1061,8 @@
 
   "category_code": "رمز الفئة",
   "category_name": "اسم الفئة",
-  "common": "مشترك"
+  "common": "مشترك",
+
+  "discount_%": "خصم %",
+  "margin_%": "هامش %"
 }

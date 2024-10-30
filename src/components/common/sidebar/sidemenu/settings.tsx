@@ -62,6 +62,8 @@ export const SettingsMenuItems = [
     children: [
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-group`, type: 'link', active: false, selected: false, title: 'product_group' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-category`, type: 'link', active: false, selected: false, title: 'product_category' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/brands`, type: 'link', active: false, selected: false, title: 'brands' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/price-category`, type: 'link', active: false, selected: false, title: 'price_category' },
     ]
   },
   {

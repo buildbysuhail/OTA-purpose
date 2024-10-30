@@ -47,6 +47,8 @@ interface popupData {
   upi:popupDataProps
   productGroup:popupDataProps
   productCategory:popupDataProps
+  brands:popupDataProps
+  priceCategory:popupDataProps
 }
 const initialState: popupData = {
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -90,6 +92,8 @@ const initialState: popupData = {
   eInvoiceGST: { isOpen: false, key: null, mode: "edit", reload: true },
   productGroup: { isOpen: false, key: null, mode: "edit", reload: true },
   productCategory: { isOpen: false, key: null, mode: "edit", reload: true },
+  brands: { isOpen: false, key: null, mode: "edit", reload: true },
+  priceCategory: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -236,6 +240,12 @@ const popupDataSlice = createSlice({
     toggleProductCategory: (state, action: PayloadAction<popupDataProps>) => {
       state.productCategory = action.payload;
     },
+    toggleBrands: (state, action: PayloadAction<popupDataProps>) => {
+      state.brands = action.payload;
+    },
+    togglePriceCategory: (state, action: PayloadAction<popupDataProps>) => {
+      state.priceCategory = action.payload;
+    },
 
   },
 });
@@ -284,6 +294,8 @@ export const {
   toggleEInvoiceGST,
   toggleProductGroup,
   toggleProductCategory,
+  toggleBrands,
+  togglePriceCategory,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

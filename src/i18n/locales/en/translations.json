@@ -1060,5 +1060,8 @@
 
   "category_code":"Category Code",
   "category_name":"Category Name",
-  "common":"Common"
+  "common":"Common",
+
+  "discount_%":"Discount %",
+  "margin_%":"Margin %"
 }

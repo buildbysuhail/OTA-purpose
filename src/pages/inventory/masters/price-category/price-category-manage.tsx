@@ -1,16 +1,15 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
-import { initialProductCategoryManageData, ProductCategoryManageData } from "./products-category-manage-type";
-import { toggleProductCategory } from "../../../../redux/slices/popup-reducer";
+import { initialPriceCategoryData, PriceCategoryData } from "./price-category-manage-type";
+import { togglePriceCategory } from "../../../../redux/slices/popup-reducer";
 
-export const ProductCategoryManage: React.FC = React.memo(() => {
+export const PriceCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
@@ -21,19 +20,19 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-  } = useFormManager<ProductCategoryManageData>({
-    url: Urls.productCategory,
+  } = useFormManager<PriceCategoryData>({
+    url: Urls.priceCategory,
     onSuccess: useCallback(
-      () => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true })),
+      () => dispatch(togglePriceCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
-    key: rootState.PopupData.productCategory.key,
+    key: rootState.PopupData.priceCategory.key,
     useApiClient: true,
-    initialData: initialProductCategoryManageData
+    initialData: initialPriceCategoryData
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleProductCategory({ isOpen: false, key: null }));
+    dispatch(togglePriceCategory({ isOpen: false, key: null }));
   }, []);
 
   const { t } = useTranslation();
@@ -42,18 +41,12 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPInput
-          {...getFieldProps("productCategoryCode")}
-          label={t("code")}
-          placeholder={t("code")}
-          onChangeData={(data: any) => {
-            handleFieldChange("productCategoryCode", data.productCategoryCode);
-          }}
-        />
-        <ERPInput
-          {...getFieldProps("productCategoryName")}
+          {...getFieldProps("priceCategoryName")}
           label={t("name")}
           placeholder={t("name")}
-          onChangeData={(data: any) => handleFieldChange("productCategoryName", data.productCategoryName)}
+          onChangeData={(data: any) => {
+            handleFieldChange("priceCategoryName", data.priceCategoryName);
+          }}
         />
         <ERPInput
           {...getFieldProps("shortName")}
@@ -67,10 +60,17 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
         />
-        <ERPCheckbox
-          {...getFieldProps('isCommon')}
-          label={t("common")}
-          onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
+        <ERPInput
+          {...getFieldProps("discountPerc")}
+          label={t("discount_%")}
+          placeholder={t("discount_%")}
+          onChangeData={(data: any) => handleFieldChange("discountPerc", data.discountPerc)}
+        />
+        <ERPInput
+          {...getFieldProps("marginPerc")}
+          label={t("margin_%")}
+          placeholder={t("margin_%")}
+          onChangeData={(data: any) => handleFieldChange("marginPerc", data.marginPerc)}
         />
       </div>
       <ERPFormButtons

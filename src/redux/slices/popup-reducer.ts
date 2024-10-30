@@ -45,6 +45,7 @@ interface popupData {
   eWayBillTaxPro: popupDataProps
   eInvoiceGST: popupDataProps
   upi:popupDataProps
+  productGroup:popupDataProps
 }
 const initialState: popupData = {
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -86,6 +87,7 @@ const initialState: popupData = {
   parties: { isOpen: false, key: null, mode: "edit", reload: true },
   eWayBillTaxPro: { isOpen: false, key: null, mode: "edit", reload: true },
   eInvoiceGST: { isOpen: false, key: null, mode: "edit", reload: true },
+  productGroup: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -226,6 +228,9 @@ const popupDataSlice = createSlice({
     toggleUpi: (state, action: PayloadAction<popupDataProps>) => {
       state.upi = action.payload;
     },
+    toggleProductGroup: (state, action: PayloadAction<popupDataProps>) => {
+      state.productGroup = action.payload;
+    },
 
   },
 });
@@ -272,6 +277,7 @@ export const {
   toggleParties,
   toggleEWayBillTaxPro,
   toggleEInvoiceGST,
+  toggleProductGroup,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

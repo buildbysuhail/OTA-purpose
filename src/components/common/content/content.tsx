@@ -72,7 +72,6 @@ const RevertBillModifications = lazy(() => import('../../../pages/settings/syste
 const ChartOfAccounts = lazy(() => import('../../../pages/accounts/masters/chart-of-accounts/chart-of-accounts'));
 const Parties = lazy(() => import('../../../pages/accounts/masters/parties/parties'));
 const CustomerSupplierLedger = lazy(() => import('../../../pages/accounts/masters/customer/supplier/ledger/customer-supplier-ledger'));
-
 // Acc End
 
 //side menu account
@@ -81,6 +80,9 @@ const AccTransactionMobile = lazy(() => import('../../../pages/accounts/transact
 const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
 const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
+
+// Inventory Masters
+const ProductGroup = lazy(() => import('../../../pages/inventory/masters/product-group'));
 
 interface ContentProps { }
 const loading = (
@@ -197,6 +199,9 @@ const Content: FC<ContentProps> = () => {
 
         {/* side menu */}
         <Route path="cash-payments" element={<AccTransactionMobile />} />
+
+        {/* Inventory Masters */}
+        <Route path="/inventory-masters/product-group" element={<ProductGroup/>} />
       </Routes>
     </Suspense>
   );

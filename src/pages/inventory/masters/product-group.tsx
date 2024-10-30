@@ -1,0 +1,242 @@
+import React, { Fragment, useEffect, useMemo, useState } from "react";
+
+import Urls from "../../../redux/urls";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
+import { toggleProductGroup } from "../../../redux/slices/popup-reducer";
+import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useRootState } from "../../../utilities/hooks/useRootState";
+import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
+import { useTranslation } from "react-i18next";
+import { ProductGroupManage } from "./product-group-manage";
+
+
+const ProductGroup = () => {
+  
+const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage), []);
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const rootState = useRootState();
+  const columns: DevGridColumn[] = useMemo( () => [
+      {
+        dataField: "siNo",
+        caption: t("SiNo"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "id",
+        caption: t("id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "groupName",
+        caption: t("group_name"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+      },
+      {
+        dataField: "shortName",
+        caption: t("short_name"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+      },
+      {
+        dataField: "parentGroup",
+        caption: t("parent_group"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "parentGroupID",
+        caption: t("parent_group_id"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "marginPerc",
+        caption: t("margin_percentage"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "isEditable",
+        caption: t("is_editable"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "isDeletable",
+        caption: t("is_deletable"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "gStatus",
+        caption: t("GStatus"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "remarks",
+        caption: t("remarks"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 100,
+      },
+      {
+        dataField: "groupCategoryID",
+        caption: t("group_category_ID"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "groupCategoryName",
+        caption: t("group_category_name"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+      },
+      {
+        dataField: "sectionID",
+        caption: t("section_ID"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "sectionName",
+        caption: t("section_name"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+      },
+      {
+        dataField: "kitchenID",
+        caption: t("kitchen_ID"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 50,
+      },
+      {
+        dataField: "kitchenName",
+        caption: t("kitchen_name"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+      },
+      {
+        dataField: "arabicName",
+        caption: t("arabic_name"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+      },
+      {
+        dataField: "actions",
+        caption: t("actions"),
+        allowSearch: false,
+        allowFiltering: false,
+        fixed: true,
+        fixedPosition: "right",
+        width: 100,
+        cellRender: (cellElement: any) => {
+          return (
+            <ERPGridActions
+              view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.id }) }}
+              edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.id }) }}
+              delete={{
+                confirmationRequired: true,
+                confirmationMessage: "Are you sure you want to delete this item?",
+                url:Urls?.productGroup,key:cellElement?.data?.id
+              }}
+            />
+          )
+        },
+      },
+    ],
+    []
+  );
+
+  return (
+    <Fragment>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+          <div className="">
+            <div className="p-4">
+              <div className="grid grid-cols-1 gap-3">
+                <ERPDevGrid
+                  columns={columns}
+                  gridHeader={t("product_group")}
+                  dataUrl={Urls.productGroup}
+                  gridId="grd_productGroup"
+                  popupAction={toggleProductGroup}
+                  gridAddButtonType="popup"
+                  reload={rootState?.PopupData?.productGroup?.reload}
+                  gridAddButtonIcon="ri-add-line"
+                ></ERPDevGrid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ERPModal
+        isOpen={rootState.PopupData.productGroup.isOpen || false}
+        title={t("product_group")}
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleProductGroup({ isOpen: false }));
+        }}
+        content={<MemoizedProductGroupManage/>}
+       
+      />
+      
+    </Fragment>
+  );
+};
+
+export default React.memo(ProductGroup);

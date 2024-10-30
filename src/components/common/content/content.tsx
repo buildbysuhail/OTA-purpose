@@ -82,6 +82,7 @@ const ProductGroup = lazy(() => import('../../../pages/inventory/masters/product
 const ProductCategory = lazy(() => import('../../../pages/inventory/masters/product-category/product-category'));
 const Brands = lazy(() => import('../../../pages/inventory/masters/brands/brands'));
 const PriceCategory = lazy(() => import('../../../pages/inventory/masters/price-category/price-category'));
+const UnitOfMeasure = lazy(() => import('../../../pages/inventory/masters/unit-of-meassure/unit-of-measure'));
 
 interface ContentProps { }
 const loading = (
@@ -204,6 +205,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/product-category" element={<ProductCategory/>} />
         <Route path="/inventory-masters/brands" element={<Brands/>} />
         <Route path="/inventory-masters/price-category" element={<PriceCategory/>} />
+        <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure/>} />
       </Routes>
     </Suspense>
   );

@@ -1063,5 +1063,14 @@
   "common":"Common",
 
   "discount_%":"Discount %",
-  "margin_%":"Margin %"
+  "margin_%":"Margin %",
+
+  "unit_code":"Unit Code",
+  "unit_type":"Unit Type",
+  "multiple_factor":"Multiple Factor",
+  "second_unit_ID":"Second Unit ID",
+  "second_unit":"Second Unit",
+  "decimal_point":"Decimal Point",
+  "total_unit_in_base_unit":"Total Unit In Base Unit",
+  "unit_of_measure":"Unit Of Measure"
 }

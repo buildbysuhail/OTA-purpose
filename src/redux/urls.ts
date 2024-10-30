@@ -265,6 +265,7 @@ const Urls = {
   productCategory: "/Inventory/ProductCategory/",
   brands: "/Inventory/Brands/",
   priceCategory: "/Inventory/PriceCategory/",
+  unitOfMeasure: "/Inventory/UnitofMeasures/",
 };
 
 export default Urls;

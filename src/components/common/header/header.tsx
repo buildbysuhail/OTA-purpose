@@ -6,11 +6,11 @@ import product5 from "../../../assets/images/ecommerce/jpg/5.jpg";
 import product4 from "../../../assets/images/ecommerce/jpg/4.jpg";
 import product6 from "../../../assets/images/ecommerce/jpg/6.jpg";
 import { RootState } from "../../../redux/store";
-import desktoplogo from "../../../assets/images/brand-logos/desktop-logo.png";
-import togglelogo from "../../../assets/images/brand-logos/toggle-logo.png";
+import desktoplogo from "../../../assets/images/brand-logos/logo_dark.png";
+import togglelogo from "../../../assets/images/brand-logos/mini_logo.png";
 import desktopdark from "../../../assets/images/brand-logos/desktop-dark.png";
 import toggledark from "../../../assets/images/brand-logos/toggle-dark.png";
-import desktopwhite from "../../../assets/images/brand-logos/desktop-white.png";
+import desktopwhite from "../../../assets/images/brand-logos/desktop-dark.png";
 import togglewhite from "../../../assets/images/brand-logos/toggle-white.png";
 import SimpleBar from "simplebar-react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
@@ -413,13 +413,15 @@ const Header: FC<HeaderProps> = () => {
                 className="header-element md:px-[0.325rem] !items-center"
                 onClick={() => toggleSidebar()}
               >
-                <Link
+                {/* <Link
                   aria-label="Hide Sidebar"
                   className="sidemenu-toggle animated-arrow  hor-toggle horizontal-navtoggle inline-flex items-center"
                   to="#"
+                  onClick={() => toggleSidebar()}
                 >
                   <span></span>
-                </Link>
+                </Link> */}
+                <i className="ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar()}></i>
               </div>
             </div>
 

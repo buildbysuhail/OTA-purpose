@@ -925,13 +925,11 @@
   "batch_id": "رقم الدفعة",
   "specification": "المواصفات",
   "unit_id": "معرف الوحدة",
-
   "notification_settings": "إعدادات الإشعارات",
   "headers_&_footers": "الرؤوس والتذييلات",
   "whatsapp_integration": "تكامل واتساب",
   "email_integration": "تكامل البريد الإلكتروني",
   "integration": "التكامل",
-
   "user_type_name": "اسم نوع المستخدم",
   "user_type": "نوع المستخدم",
   "show_all": "عرض الكل",
@@ -943,7 +941,6 @@
   "inherit_rights_from_usertype": "وراثة الحقوق من نوع المستخدم",
   "load_rights": "تحميل الحقوق",
   "user_privilege": "امتياز المستخدم",
-
   "masters": "الأساسيّات",
   "account_ledger": "دفتر الحسابات",
   "exchange_rate": "سعر الصرف",
@@ -952,7 +949,6 @@
   "project_sites": "مواقع المشروع",
   "account_privilages": "امتيازات الحساب",
   "mr.": "سيد",
-
   "transaction_forms": "نماذج المعاملات",
   "hr_master": "ماستر الموارد البشرية",
   "designation": "التسمية الوظيفية",
@@ -968,7 +964,6 @@
   "product_prices": "أسعار المنتجات",
   "salesman_route": "مسار المندوب",
   "bill_of_material": "فاتورة المواد",
-
   "click_to_add": "انقر لإضافة قالب من معرضنا. يمكنك تخصيص عنوان القالب، والأعمدة، والرؤوس في جدول العناصر.",
   "default": "افتراضي",
   "set_as_default": "تعيين كافتراضي",
@@ -978,7 +973,6 @@
   "standard": "قياسي",
   "use_this": "استخدم هذا",
   "sales_invoice": "فاتورة المبيعات",
-
   "sync_master_data": "مزامنة البيانات الرئيسية من الفرع الرئيسي إلى جميع الفروع عند إضافة فرع جديد للحفاظ على شبكة معلومات متسقة.",
   "customize_your_notifications": "خصص إشعاراتك",
   "....loading": "....جارٍ التحميل",
@@ -986,7 +980,6 @@
   "whatsApp": "واتساب",
   "sms": "رسالة نصية",
   "app_notification": "إشعار التطبيق",
-
   "headers": "الرؤوس",
   "header_1": "الرأس ١",
   "heading_1": "العنوان ١",
@@ -1019,7 +1012,6 @@
   "footer_8": "التذييل ٨",
   "footer_9": "التذييل ٩",
   "footer_10": "التذييل ١٠",
-
   "create_an_account": "أنشئ حسابًا الآن لربط Polosys Books مع Twilio.",
   "enter_the_following_details": "أدخل التفاصيل التالية لربط Polosys Books بحساب Twilio الخاص بك.",
   "don't_have_an_account?": "ليس لديك حساب؟",
@@ -1030,7 +1022,6 @@
   "auth_token": "رمز المصادقة",
   "from_phone": "رقم الهاتف المرسل",
   "connect_with_twilio": "الاتصال بـ Twilio",
-
   "set_up_twilio": "قم بإعداد Twilio وإرسال إشعارات الرسائل النصية التلقائية إلى عملائك حول المعاملات والمدفوعات والتذكيرات.",
   "notify_customers": "أخطر العملاء فوراً حول المعاملات والمدفوعات والتذكيرات عبر الرسائل النصية.",
   "configure_SMS": "قم بتكوين إشعارات الرسائل النصية على مستوى العميل وجهة الاتصال.",
@@ -1044,5 +1035,6 @@
   "sign_up_now": "اشترك الآن",
   "read_more": "اقرأ المزيد",
   "whatsapp_integrations": "التكامل واتس اب",
-  "email_integrations": "تكاملات البريد الإلكتروني"
+  "email_integrations": "تكاملات البريد الإلكتروني",
+  "show_balance": "عرض الرصيد"
 }

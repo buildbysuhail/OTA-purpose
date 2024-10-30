@@ -193,6 +193,7 @@ const Urls = {
   account_party_category: "/Accounts/PartyCategory/",
   account_currency_master: "/Accounts/Currency/",
   chart_of_accounts: "/Accounts/ChartofAccounts/",
+  chart_of_accounts_new: "/Accounts/ChartofAccounts/chartOfAccounts",
   parties: "/Accounts/Parties/",
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
   upi: "/Accounts/UPI/",

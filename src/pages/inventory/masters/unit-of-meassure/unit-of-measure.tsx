@@ -63,7 +63,7 @@ const UnitOfMeasure = () => {
     {
       dataField: "multipleFactor",
       caption: t("multiple_factor"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -71,7 +71,7 @@ const UnitOfMeasure = () => {
     {
       dataField: "secondUnitID",
       caption: t("second_unit_ID"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -87,7 +87,7 @@ const UnitOfMeasure = () => {
     {
       dataField: "decimalPoint",
       caption: t("decimal_point"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -95,7 +95,7 @@ const UnitOfMeasure = () => {
     {
       dataField: "totalUnitInBaseUnit",
       caption: t("total_unit_in_base_unit"),
-      dataType: "boolean",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,

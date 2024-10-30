@@ -1072,5 +1072,18 @@
   "second_unit":"Second Unit",
   "decimal_point":"Decimal Point",
   "total_unit_in_base_unit":"Total Unit In Base Unit",
-  "unit_of_measure":"Unit Of Measure"
+  "unit_of_measure":"Unit Of Measure",
+
+  "vehicle_name":"Vehicle Name",
+  "vehicle_number":"Vehicle Number",
+  "no_of_wheels":"No Of Wheels",
+  "capacity":"Capacity",
+  "manufacturer":"Manufacturer",
+  "manufacture":"Manufacture",
+  "owner":"Owner",
+  "owner_name":"Owner Name",
+  "color":"Color",
+  "is_rental":"Is Rental",
+  "odo_meter":"Odo Meter",
+  "rental":"Rental"
 }

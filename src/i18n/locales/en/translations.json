@@ -232,7 +232,7 @@
   "is_protected": "Is Protected",
   "is_deletable": "Is Deletable",
   "is_editable": "Is Editable",
-  "parent_group": "parent Group",
+  "parent_group": "Parent Group",
   "short_name": "Short Name",
   "ledger_code": "Ledger Code",
   "ledger": "Ledger",
@@ -1045,6 +1045,7 @@
   "whatsapp_integrations":"Whatsapp Integrations",
   "email_integrations":"Email Integrations",
 
+  "inventory_masters":"Inventory Masters",
   "group_name":"Group Name",
   "margin_percentage":"Margin Percentage",
   "GStatus":"GStatus",
@@ -1053,5 +1054,11 @@
   "section_ID":"Section ID",
   "section_name":"Section Name",
   "kitchen_ID":"Kitchen ID",
-  "kitchen_name":"Kitchen Name"
+  "kitchen_name":"Kitchen Name",
+  "group_category":"Group Category",
+  "section":"Section",
+
+  "category_code":"Category Code",
+  "category_name":"Category Name",
+  "common":"Common"
 }

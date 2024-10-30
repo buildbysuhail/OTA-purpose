@@ -1046,6 +1046,7 @@
   "whatsapp_integrations": "التكامل واتس اب",
   "email_integrations": "تكاملات البريد الإلكتروني",
 
+  "inventory_masters":"ماجستير المخزون",
   "group_name": "اسم المجموعة",
   "margin_percentage": "نسبة الهامش",
   "GStatus": "حالة المجموعة",
@@ -1054,5 +1055,11 @@
   "section_ID": "معرف القسم",
   "section_name": "اسم القسم",
   "kitchen_ID": "معرف المطبخ",
-  "kitchen_name": "اسم المطبخ"
+  "kitchen_name": "اسم المطبخ",
+  "group_category": "فئة المجموعة",
+  "section": "القسم",
+
+  "category_code": "رمز الفئة",
+  "category_name": "اسم الفئة",
+  "common": "مشترك"
 }

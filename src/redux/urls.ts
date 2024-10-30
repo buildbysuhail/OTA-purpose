@@ -261,7 +261,8 @@ const Urls = {
   import_parties: "/Accounts/Import/Parties/",
 
   // Inventory
-  productGroup: "/Inventory/ProductGroup/"
+  productGroup: "/Inventory/ProductGroup/",
+  productCategory: "/Inventory/ProductCategory/",
 };
 
 export default Urls;

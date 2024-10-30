@@ -98,7 +98,7 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ isOpen, onClose, childr
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-lg max-w-6xl w-full max-h-[80vh] overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg max-w-6xl w-full min-h-[70vh] overflow-y-auto">
         <div className="flex justify-start">
           <i
             onClick={onClose}

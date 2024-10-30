@@ -25,7 +25,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
   } = useFormManager<ProductGroupData>({
     url: Urls.productGroup,
     onSuccess: useCallback(
-      () => dispatch(toggleProductGroup({ isOpen: false, key: null ,reload:true })),
+      () => dispatch(toggleProductGroup({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
     key: rootState.PopupData.productGroup.key,
@@ -41,57 +41,103 @@ export const ProductGroupManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <ERPInput
-          {...getFieldProps("counterName")}
-          label={t("counter_name")}
-          placeholder={t("counter_name")}
+          {...getFieldProps("groupName")}
+          label={t("group_name")}
+          placeholder={t("group_name")}
           required={true}
           onChangeData={(data: any) => {
-            handleFieldChange("counterName", data.counterName);
+            handleFieldChange("groupName", data.groupName);
           }}
         />
         <ERPInput
-          {...getFieldProps("descriptions")}
-          label={t("descriptions")}
-          placeholder={t("descriptions")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("descriptions", data.descriptions)}
+          {...getFieldProps("arabicName")}
+          label={t("regional_language")}
+          placeholder={t("regional_language")}
+          onChangeData={(data: any) => handleFieldChange("arabicName", data.arabicName)}
+        />
+        <ERPInput
+          {...getFieldProps("shortName")}
+          label={t("short_name")}
+          placeholder={t("short_name")}
+          onChangeData={(data: any) => handleFieldChange("shortName", data.shortName)}
         />
         <ERPDataCombobox
-          {...getFieldProps("warehouseID")}
-          id="warehouseID"
+          {...getFieldProps("parentGroupID")}
+          id="parentGroupID"
           field={{
-            id: "warehouseID",
+            id: "parentGroupID",
             required: true,
             getListUrl: Urls.data_warehouse,
             valueKey: "id",
             labelKey: "name",
           }}
-          label={t("warehouse_id")}
+          label={t("parent_group")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange("warehouseID", data.warehouseID)}
+          onChangeData={(data: any) => handleFieldChange("parentGroupID", data.parentGroupID)}
         />
         <ERPDataCombobox
-          {...getFieldProps("cashLedgerID")}
-          id="cashLedgerID"
+          {...getFieldProps("groupCategoryID")}
+          id="groupCategoryID"
           field={{
-            id: "cashLedgerID",
+            id: "groupCategoryID",
             required: true,
             getListUrl: Urls.data_warehouse,
             valueKey: "id",
             labelKey: "name",
           }}
-          label={t("cashLedger_id")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("cashLedgerID", data.cashLedgerID)}
+          label={t("group_category")}
+          onChangeData={(data: any) => handleFieldChange("groupCategoryID", data.groupCategoryID)}
         />
-           <ERPCheckbox
-          {...getFieldProps('maintainShift')}
-          label={t("maintain_shift")}
-          onChangeData={(data: any) => handleFieldChange('maintainShift', data.maintainShift)}
+        <ERPDataCombobox
+          {...getFieldProps("sectionID")}
+          id="sectionID"
+          field={{
+            id: "sectionID",
+            required: true,
+            getListUrl: Urls.data_warehouse,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("section")}
+          onChangeData={(data: any) => handleFieldChange("sectionID", data.sectionID)}
         />
-
+        <ERPDataCombobox
+          {...getFieldProps("gStatus")}
+          id="gStatus"
+          field={{
+            id: "gStatus",
+            required: true,
+            getListUrl: Urls.data_warehouse,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label={t("GStatus")}
+          onChangeData={(data: any) => handleFieldChange("gStatus", data.gStatus)}
+        />
+        <ERPInput
+          {...getFieldProps("remarks")}
+          label={t("remarks")}
+          placeholder={t("remarks")}
+          onChangeData={(data: any) => handleFieldChange("remarks", data.remarks)}
+        />
+        <ERPInput
+          {...getFieldProps("marginPerc")}
+          label={t("margin_percentage")}
+          placeholder={t("margin_percentage")}
+          onChangeData={(data: any) => handleFieldChange("marginPerc", data.marginPerc)}
+        />
+        <ERPCheckbox
+          {...getFieldProps('isEditable')}
+          label={t("editable")}
+          onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
+        />
+        <ERPCheckbox
+          {...getFieldProps('isDeletable')}
+          label={t("deletable")}
+          onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
+        />
       </div>
       <ERPFormButtons
         onClear={handleClear}

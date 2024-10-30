@@ -4,15 +4,16 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
-import { DataGrid, TreeList } from "devextreme-react";
+import {  TreeList } from "devextreme-react";
 import { Column, Paging, RemoteOperations, Scrolling, Selection } from "devextreme-react/cjs/tree-list";
-
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 const api = new APIClient();
-
 const ChartOfAccounts: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+    const [showbalance, setShowbalance] = useState<boolean>(false);
   const [expandedRowKeys, setExpandedRowKeys] = useState<(string | number)[]>([]);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const ChartOfAccounts: React.FC = React.memo(() => {
   const loadAccountStructure = async () => {
     setLoading(true);
     try {
-      const res: any = await api.getAsync(`${Urls.chart_of_accounts}`);
+      const res: any = await api.getAsync(`${Urls.chart_of_accounts}${showbalance}`);
       const flattenedData = flattenHierarchy(res.data);
       setData(flattenedData);
     } catch (error) {
@@ -45,47 +46,63 @@ const ChartOfAccounts: React.FC = React.memo(() => {
     }, []);
   };
 
-  const onExpandedRowKeysChange = (expandedRowKeys: (string | number)[]) => {
-    setExpandedRowKeys(expandedRowKeys);
-  };
-
   return (
     <div className="w-full flex justify-start">
       <div className="grid grid-cols-12 gap-x-6">
+       
+      
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+       
           <div className="box custom-box">
+         
             <div className="box-body">
+               <div className="w-full flex justify-start items-center">
+       <ERPCheckbox
+                    id="showBalace"
+                     checked={showbalance}
+                    // data={setShowbalance}
+                    label={t("show_balance")}
+                     onChange={(e) => setShowbalance(!showbalance)}
+                  />
+
+                <ERPButton
+                 className="ml-10"
+                  title="Refresh"
+                  variant="primary"
+                  onClick={loadAccountStructure}
+                />
+        </div>
+            
               {loading ? (
                 <div>Loading...</div>
               ) : data.length > 0 ? (
                 <div className="grid grid-cols-1 gap-3">
-                  <DataGrid
-                    dataSource={data}
-                    showRowLines={true}
-                    showBorders={true}
-                    columnAutoWidth={true}
-                    // expandedRowKeys={expandedRowKeys}
-                    // onExpandedRowKeysChange={onExpandedRowKeysChange}
-                    keyExpr="id"
-                    parentIdExpr="parentID"
-                  >
-                    <Paging pageSize={100}></Paging>
-                  <Scrolling mode="standard" />
-                  <RemoteOperations
-                    filtering={false}
-                    sorting={false}
-                    paging={false}
-                  ></RemoteOperations>
-                    <Paging enabled={true} pageSize={30} />
-                    <Selection mode="multiple" />
-                    <Column
-                      dataField="accountGroup"
-                      caption={t("chart_of_accounts")}
-                      dataType="string"
-                      allowSearch={true}
-                      allowFiltering={true}
-                    />
-                  </DataGrid>
+                 <div className="flex items-start justify-between">  <TreeList
+                   id="data"
+    dataSource={data}
+    showRowLines={true}
+    showBorders={true}
+autoExpandAll={true}
+    // columnAutoWidth={true}
+    keyExpr="keyField"
+    parentIdExpr="parentID"
+    height={750} // Set a fixed height here
+    scrolling={{ mode: 'virtual' }} // Specify virtual scrolling mode
+  >
+    <Selection mode="single" />
+    <Column dataField="accountGroup" caption="Account Group"/>
+    <Column dataField="aliasName" caption="Alias Name" />
+ <Column dataField="balance" caption="Balance" />
+ <Column dataField="createdUser" caption="Created User" />
+ <Column dataField="createdDate" caption="Created Date" dataType="date"  />
+ 
+    {/* <Column dataField="code" /> */}
+  </TreeList>
+ 
+                 
+            
+            </div>
+
                 </div>
               ) : (
                 <div>No data available</div>

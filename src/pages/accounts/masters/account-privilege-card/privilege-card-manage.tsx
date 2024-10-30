@@ -19,7 +19,7 @@ export const PrivilegeCardManage = () => {
   const {
     isEdit,
     handleSubmit,
-    formState: postData,
+    formState,
     handleFieldChange,
     getFieldProps,
     handleClear,
@@ -118,17 +118,21 @@ export const PrivilegeCardManage = () => {
           {...getFieldProps("cardType")}
           field={{
             id: "cardType",
-            required: true,
-            getListUrl: Urls.data_privilage_cards,
-            valueKey: "id",
-            labelKey: "name",
+            valueKey: "value",
+            labelKey: "label",
           }}
+          options={[
+            { value: "Privilege", label: "Privilege" },
+            { value: "Gift Card", label: "Gift Card" },
+            { value: "Cash Card", label: "Cash Card" },
+            { value: "Voucher", label: "Voucher" },
+          ]}
           onChangeData={(data: any) => handleFieldChange("cardType", data.cardType)}
           label={t("card_type")}
         />
         <ERPInput
           {...getFieldProps('opBalance')}
-          label={t("op_balance")}
+          label={formState?.data.cardType == "Privilege" ? t("op_balance") :t("amount")}
           placeholder={t("op_balance")}
           type="number"
           required={true}

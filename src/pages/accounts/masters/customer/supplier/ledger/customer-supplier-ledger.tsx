@@ -1,17 +1,8 @@
-import React, {
+import {
   Fragment,
-  useCallback,
   useEffect,
-  useMemo,
   useState,
 } from "react";
-import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "../../../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../../../components/ERPComponents/erp-grid-actions";
-import { toggleAccountGroupPopup } from "../../../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../../redux/urls";
 import ERPRadio from "../../../../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../../../../components/ERPComponents/erp-button";
@@ -19,9 +10,7 @@ import { DataGrid, LoadPanel, Toolbar } from "devextreme-react";
 import {
   Column,
   ColumnFixing,
-  Editing,
   FilterRow,
-  Item,
   Paging,
   Scrolling,
   SearchPanel,
@@ -120,8 +109,8 @@ const CustomerSupplierLedger = () => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
-              <div className="flex justify-around items-center mb-5">
-                <div className="flex space-x-5">
+              <div className="flex justify-end items-center mb-5">
+                <div className="flex space-x-5 pr-5">
                   <ERPRadio
                     id="customer"
                     name="customer"

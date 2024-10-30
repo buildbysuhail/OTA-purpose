@@ -49,6 +49,25 @@ export const SettingsMenuItems = [
     ]
   },
   {
+    icon: (<CheckBadgeIcon className="side-menu__icon" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'inventory_masters',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-group`, type: 'link', active: false, selected: false, title: 'product_group' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/product-category`, type: 'link', active: false, selected: false, title: 'product_category' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/brands`, type: 'link', active: false, selected: false, title: 'brands' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/price-category`, type: 'link', active: false, selected: false, title: 'price_category' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/unit-of-measure`, type: 'link', active: false, selected: false, title: 'unit_of_measure' },
+    ]
+  },
+  {
     icon: (<UserIcon className="side-menu__icon" />),
     type: 'sub',
     Name: '',

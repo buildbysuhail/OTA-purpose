@@ -143,7 +143,7 @@ export const userRights: UserRight[] = [
   { id: 102090202, headId: 1020902, name: "AccTransact_PDC_Receipt_Edit", fullName: "Edit", formCode: "E", treeNode: 5, description: "Edit PDC Receipt" },
   { id: 102090203, headId: 1020902, name: "AccTransact_PDC_Receipt_Delete", fullName: "Delete", formCode: "D", treeNode: 5, description: "Delete PDC Receipt" },
   { id: 102090204, headId: 1020902, name: "AccTransact_PDC_Receipt_Print", fullName: "Print", formCode: "P", treeNode: 5, description: "Print PDC Receipt" },
-  { id: 1020903, headId: 10209, name: "AccTransact_PDC_Report", fullName: "Report", formCode: "CQRpt", treeNode: 4, description: "View PDC Reports" },
+  //{ id: 1020903, headId: 10209, name: "AccTransact_PDC_Report", fullName: "Report", formCode: "CQRpt", treeNode: 4, description: "View PDC Reports" },
 
   { id: 10210, headId: 102, name: "AccTransact_BankRec", fullName: "Bank Reconciliation", formCode: "BRC", treeNode: 3, description: "Manage Bank Reconciliations" },
   { id: 1021001, headId: 10210, name: "AccTransact_BankRec_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Bank Reconciliation" },
@@ -185,27 +185,176 @@ export const userRights: UserRight[] = [
   { id: 1021604, headId: 10216, name: "AccTransact_TaxOnExpenses_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Tax On Expenses" },
 
   // Reports
+  // Account Reports Main
   { id: 103, headId: 1, name: "AccReports", fullName: "Reports", formCode: "ACCR", treeNode: 2, description: "Account Reports" },
-  { id: 10301, headId: 103, name: "AccReports_DayBook", fullName: "Day Book", formCode: "DAYBOOK", treeNode: 3, description: "View Day Book Report" },
-  { id: 10302, headId: 103, name: "AccReports_CashBook", fullName: "Cash Book", formCode: "CASHBOOK", treeNode: 3, description: "View Cash Book Report" },
-  { id: 10303, headId: 103, name: "AccReports_BankBook", fullName: "Bank Book", formCode: "BANKBOOK", treeNode: 3, description: "View Bank Book Report" },
-  { id: 10304, headId: 103, name: "AccReports_JournalBook", fullName: "Journal Book", formCode: "JRNLBOOK", treeNode: 3, description: "View Journal Book Report" },
-  { id: 10305, headId: 103, name: "AccReports_LedgerBook", fullName: "Ledger Book", formCode: "LDGRBOOK", treeNode: 3, description: "View Ledger Book Report" },
-  { id: 10306, headId: 103, name: "AccReports_TrialBalance", fullName: "Trial Balance", formCode: "TRLBAL", treeNode: 3, description: "View Trial Balance Report" },
-  { id: 10307, headId: 103, name: "AccReports_ProfitLoss", fullName: "Profit & Loss", formCode: "PNL", treeNode: 3, description: "View Profit & Loss Report" },
-  { id: 10308, headId: 103, name: "AccReports_BalanceSheet", fullName: "Balance Sheet", formCode: "BALSHEET", treeNode: 3, description: "View Balance Sheet Report" },
-  { id: 10309, headId: 103, name: "AccReports_CashFlow", fullName: "Cash Flow", formCode: "CASHFLOW", treeNode: 3, description: "View Cash Flow Report" },
-  { id: 10310, headId: 103, name: "AccReports_FundFlow", fullName: "Fund Flow", formCode: "FUNDFLOW", treeNode: 3, description: "View Fund Flow Report" },
-  { id: 10311, headId: 103, name: "AccReports_ReceivablePayable", fullName: "Receivable & Payable", formCode: "RECPAY", treeNode: 3, description: "View Receivable & Payable Report" },
-  { id: 10312, headId: 103, name: "AccReports_AgingAnalysis", fullName: "Aging Analysis", formCode: "AGEANAL", treeNode: 3, description: "View Aging Analysis Report" },
-  { id: 10313, headId: 103, name: "AccReports_CostCenterReport", fullName: "Cost Center Report", formCode: "COSTCNTR", treeNode: 3, description: "View Cost Center Report" },
-  { id: 10314, headId: 103, name: "AccReports_BudgetReport", fullName: "Budget Report", formCode: "BUDGET", treeNode: 3, description: "View Budget Report" },
-  { id: 10315, headId: 103, name: "AccReports_VATReport", fullName: "VAT Report", formCode: "VAT", treeNode: 3, description: "View VAT Report" },
-  { id: 10316, headId: 103, name: "AccReports_TaxReport", fullName: "Tax Report", formCode: "TAX", treeNode: 3, description: "View Tax Report" },
-  { id: 10317, headId: 103, name: "AccReports_BankReconciliation", fullName: "Bank Reconciliation", formCode: "BANKREC", treeNode: 3, description: "View Bank Reconciliation Report" },
-  { id: 10318, headId: 103, name: "AccReports_PDCReport", fullName: "PDC Report", formCode: "PDC", treeNode: 3, description: "View PDC Report" },
-  { id: 10319, headId: 103, name: "AccReports_CashTenderReport", fullName: "Cash Tender Report", formCode: "CASHTENDER", treeNode: 3, description: "View Cash Tender Report" },
-  { id: 10320, headId: 103, name: "AccReports_TaxOnExpensesReport", fullName: "Tax On Expenses Report", formCode: "TAXEXP", treeNode: 3, description: "View Tax On Expenses Report" },
+  
+  // Ledger Report Group
+  { id: 10301, headId: 103, name: "TrReports_LedgerReport", fullName: "Ledger Report", formCode: "LEDGRRPT", treeNode: 3, description: "View Ledger Report" },
+  { id: 1031101, headId: 10301, name: "TrReports_LedgerReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Ledger Report" },
+  { id: 1031102, headId: 10301, name: "TrReports_LedgerReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Ledger Report" },
+  { id: 1031103, headId: 10301, name: "TrReports_LedgerReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Ledger Report" },
+
+  // Salary Report Group
+  { id: 10302, headId: 103, name: "TrReports_Salary", fullName: "Ledger Report(Hide Salary Ledger)", formCode: "LEDRSRY", treeNode: 3, description: "View Ledger Report (Hide Salary Ledger)" },
+  { id: 1031201, headId: 10302, name: "TrReports_Salary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Ledger Report" },
+  { id: 1031202, headId: 10302, name: "TrReports_Salary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Ledger Report" },
+  { id: 1031203, headId: 10302, name: "TrReports_Salary_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Ledger Report" },
+
+  // Cash Book Group
+  { id: 10303, headId: 103, name: "TrReports_CB", fullName: "Cash Book", formCode: "CPRPT", treeNode: 3, description: "View Cash Book" },
+  { id: 1031301, headId: 10303, name: "TrReports_CB_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Cash Book" },
+  { id: 1031302, headId: 10303, name: "TrReports_CB_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Cash Book" },
+  { id: 1031303, headId: 10303, name: "TrReports_CB_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Cash Book" },
+
+  // Day Book Group
+  { id: 10304, headId: 103, name: "TrReports_DB", fullName: "Day Book", formCode: "DBRPT", treeNode: 3, description: "View Day Book" },
+  { id: 1031401, headId: 10304, name: "TrReports_DB_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Day Book" },
+  { id: 1031402, headId: 10304, name: "TrReports_DB_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Day Book" },
+  { id: 1031403, headId: 10304, name: "TrReports_DB_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Day Book" },
+
+  // Payments Report Group
+  { id: 10305, headId: 103, name: "TrReports_Payments", fullName: "Payments Report", formCode: "PAYMRPT", treeNode: 3, description: "View Payments Report" },
+  { id: 1031501, headId: 10305, name: "TrReports_Payments_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Payments Report" },
+  { id: 1031502, headId: 10305, name: "TrReports_Payments_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Payments Report" },
+  { id: 1031503, headId: 10305, name: "TrReports_Payments_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Payments Report" },
+
+  // Collection Report Group
+  { id: 10306, headId: 103, name: "TrReports_Collection", fullName: "Collection Report", formCode: "COLLRPT", treeNode: 3, description: "View Collection Report" },
+  { id: 1031601, headId: 10306, name: "TrReports_Collection_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Collection Report" },
+  { id: 1031602, headId: 10306, name: "TrReports_Collection_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Collection Report" },
+  { id: 1031603, headId: 10306, name: "TrReports_Collection_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Collection Report" },
+
+  // Cash Summary Report Group
+  { id: 10307, headId: 103, name: "NdCashSumrpt", fullName: "Cash Summary Report", formCode: "RPTCASHSUM", treeNode: 3, description: "View Cash Summary Report" },
+  { id: 1031701, headId: 10307, name: "NdCashSumrpt_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Cash Summary Report" },
+  { id: 1031702, headId: 10307, name: "NdCashSumrpt_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Cash Summary Report" },
+  { id: 1031703, headId: 10307, name: "NdCashSumrpt_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Cash Summary Report" },
+
+  // Transaction Report Group
+  { id: 10308, headId: 103, name: "TrReports_Transaction", fullName: "Transaction Report", formCode: "TRANSRPT", treeNode: 3, description: "View Transaction Report" },
+  { id: 1031801, headId: 10308, name: "TrReports_Transaction_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Transaction Report" },
+  { id: 1031802, headId: 10308, name: "TrReports_Transaction_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Transaction Report" },
+  { id: 1031803, headId: 10308, name: "TrReports_Transaction_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Transaction Report" },
+
+  // Transaction History Group
+  { id: 10309, headId: 103, name: "TrReports_TransHistory", fullName: "Transaction History", formCode: "RPTTRAHST", treeNode: 3, description: "View Transaction History" },
+  { id: 1031901, headId: 10309, name: "TrReports_TransHistory_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Transaction History" },
+  { id: 1031902, headId: 10309, name: "TrReports_TransHistory_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Transaction History" },
+  { id: 1031903, headId: 10309, name: "TrReports_TransHistory_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Transaction History" },
+
+  // Bill Wise Group
+  { id: 10310, headId: 103, name: "TrReports_OSTBillwise", fullName: "Bill Wise", formCode: "OSTDBILLW", treeNode: 3, description: "View Bill Wise" },
+  { id: 1032001, headId: 10310, name: "TrReports_OSTBillwise_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Bill Wise" },
+  { id: 1032002, headId: 10310, name: "TrReports_OSTBillwise_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Bill Wise" },
+  { id: 1032003, headId: 10310, name: "TrReports_OSTBillwise_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Bill Wise" },
+
+  // Account Payable Group
+  { id: 10311, headId: 103, name: "TrReports_RPTAccPayable", fullName: "Account Payable", formCode: "RPTACCPAY", treeNode: 3, description: "View Account Payable" },
+  { id: 1032101, headId: 10311, name: "TrReports_RPTAccPayable_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Account Payable" },
+  { id: 1032102, headId: 10311, name: "TrReports_RPTAccPayable_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Account Payable" },
+  { id: 1032103, headId: 10311, name: "TrReports_RPTAccPayable_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Account Payable" },
+
+  // Account Receivable Group
+  { id: 10312, headId: 103, name: "TrReports_RPTAccReceivable", fullName: "Account Receivable", formCode: "RPTACCREC", treeNode: 3, description: "View Account Receivable" },
+  { id: 1032201, headId: 10312, name: "TrReports_RPTAccReceivable_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Account Receivable" },
+  { id: 1032202, headId: 10312, name: "TrReports_RPTAccReceivable_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Account Receivable" },
+  { id: 1032203, headId: 10312, name: "TrReports_RPTAccReceivable_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Account Receivable" },
+
+  // Aging Report Group
+  { id: 10313, headId: 103, name: "TrReports_Aging", fullName: "Aging Report", formCode: "RPTAGNG", treeNode: 3, description: "View Aging Report" },
+  { id: 1032301, headId: 10313, name: "TrReports_Aging_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Aging Report" },
+  { id: 1032302, headId: 10313, name: "TrReports_Aging_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Aging Report" },
+  { id: 1032303, headId: 10313, name: "TrReports_Aging_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Aging Report" },
+
+  // Account Receivable Aging Report Group
+  { id: 10314, headId: 103, name: "TrReports_AccRecAging", fullName: "Account Receivable Aging Report", formCode: "ARAGINGRPT", treeNode: 3, description: "View Account Receivable Aging Report" },
+  { id: 1032401, headId: 10314, name: "TrReports_AccRecAging_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Account Receivable Aging Report" },
+  { id: 1032402, headId: 10314, name: "TrReports_AccRecAging_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Account Receivable Aging Report" },
+  { id: 1032403, headId: 10314, name: "TrReports_AccRecAging_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Account Receivable Aging Report" },
+
+  // Account Payable Aging Report Group
+  { id: 10315, headId: 103, name: "TrReports_AccPayAging", fullName: "Account Payable Aging Report", formCode: "APAGINGRPT", treeNode: 3, description: "View Account Payable Aging Report" },
+  { id: 1032501, headId: 10315, name: "TrReports_AccPayAging_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Account Payable Aging Report" },
+  { id: 1032502, headId: 10315, name: "TrReports_AccPayAging_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Account Payable Aging Report" },
+  { id: 1032503, headId: 10315, name: "TrReports_AccPayAging_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Account Payable Aging Report" },
+
+  // Outstanding Report Group
+  { id: 10316, headId: 103, name: "TrReports_Outstanding", fullName: "Outstanding Report", formCode: "OSTD", treeNode: 3, description: "View Outstanding Report" },
+  { id: 1032601, headId: 10316, name: "TrReports_Outstanding_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Outstanding Report" },
+  { id: 1032602, headId: 10316, name: "TrReports_Outstanding_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Outstanding Report" },
+  { id: 1032603, headId: 10316, name: "TrReports_Outstanding_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Outstanding Report" },
+
+  // Account Payable Group
+  { id: 10317, headId: 103, name: "TrReports_AccPayable", fullName: "Account Payable", formCode: "ACCPAYBLE", treeNode: 3, description: "View Account Payable" },
+  { id: 1032701, headId: 10317, name: "TrReports_AccPayable_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Account Payable" },
+  { id: 1032702, headId: 10317, name: "TrReports_AccPayable_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Account Payable" },
+  { id: 1032703, headId: 10317, name: "TrReports_AccPayable_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Account Payable" },
+
+  // Account Receivable Group
+  { id: 10318, headId: 103, name: "TrReports_AccReceivable", fullName: "Account Receivable", formCode: "ACCRECRPT", treeNode: 3, description: "View Account Receivable" },
+  { id: 1032801, headId: 10318, name: "TrReports_AccReceivable_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Account Receivable" },
+  { id: 1032802, headId: 10318, name: "TrReports_AccReceivable_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Account Receivable" },
+  { id: 1032803, headId: 10318, name: "TrReports_AccReceivable_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Account Receivable" },
+
+  // Cash Flow Group
+  { id: 10319, headId: 103, name: "TrReports_Cashflow", fullName: "Cash Flow", formCode: "CashFlwRpt", treeNode: 3, description: "View Cash Flow" },
+  { id: 1032901, headId: 10319, name: "TrReports_Cashflow_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Cash Flow" },
+  { id: 1032902, headId: 10319, name: "TrReports_Cashflow_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Cash Flow" },
+  { id: 1032903, headId: 10319, name: "TrReports_Cashflow_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Cash Flow" },
+
+  // Bank Statement Group
+  { id: 10320, headId: 103, name: "nd_bankStatement", fullName: "Bank Statement", formCode: "BKSTMT", treeNode: 3, description: "View Bank Statement" },
+  { id: 1033001, headId: 10320, name: "nd_bankStatement_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Bank Statement" },
+  { id: 1033002, headId: 10320, name: "nd_bankStatement_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Bank Statement" },
+  { id: 1033003, headId: 10320, name: "nd_bankStatement_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Bank Statement" },
+
+  // Expense Report Group
+  { id: 10321, headId: 103, name: "TrReports_Expense", fullName: "Expense Report", formCode: "ExpRpt", treeNode: 3, description: "View Expense Report" },
+  { id: 1033101, headId: 10321, name: "TrReports_Expense_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Expense Report" },
+  { id: 1033102, headId: 10321, name: "TrReports_Expense_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Expense Report" },
+  { id: 1033103, headId: 10321, name: "TrReports_Expense_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Expense Report" },
+
+  // Income Report Group
+  { id: 10322, headId: 103, name: "TrReports_Income", fullName: "Income Report", formCode: "IcmRpt", treeNode: 3, description: "View Income Report" },
+  { id: 1033201, headId: 10322, name: "TrReports_Income_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Income Report" },
+  { id: 1033202, headId: 10322, name: "TrReports_Income_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Income Report" },
+  { id: 1033203, headId: 10322, name: "TrReports_Income_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Income Report" },
+
+  // Daily Summary Report Group
+  { id: 10323, headId: 103, name: "TrReports_DailyAccStatement", fullName: "Daily Summary Report", formCode: "DSUMRPT", treeNode: 3, description: "View Daily Summary Report" },
+  { id: 1033301, headId: 10323, name: "TrReports_DailyAccStatement_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Daily Summary Report" },
+  { id: 1033302, headId: 10323, name: "TrReports_DailyAccStatement_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Daily Summary Report" },
+  { id: 1033303, headId: 10323, name: "TrReports_DailyAccStatement_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Daily Summary Report" },
+
+  // Profit Report Group
+  { id: 10324, headId: 103, name: "TrReports_Profit", fullName: "Profit Report", formCode: "PFTRPT", treeNode: 3, description: "View Profit Report" },
+  { id: 1033401, headId: 10324, name: "TrReports_Profit_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Profit Report" },
+  { id: 1033402, headId: 10324, name: "TrReports_Profit_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Profit Report" },
+  { id: 1033403, headId: 10324, name: "TrReports_Profit_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Profit Report" },
+
+  // Party Summary Group
+  { id: 10325, headId: 103, name: "TrReports_PartySummary", fullName: "Party Summary", formCode: "PRTSUM", treeNode: 3, description: "View Party Summary" },
+  { id: 1033501, headId: 10325, name: "TrReports_PartySummary_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Party Summary" },
+  { id: 1033502, headId: 10325, name: "TrReports_PartySummary_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Party Summary" },
+  { id: 1033503, headId: 10325, name: "TrReports_PartySummary_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Party Summary" },
+
+  // PDC Report Group
+  { id: 10326, headId: 103, name: "NdPDCReport", fullName: "PDC Report", formCode: "PDCRPT", treeNode: 3, description: "View PDC Report" },
+  { id: 1033601, headId: 10326, name: "NdPDCReport_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print PDC Report" },
+  { id: 1033602, headId: 10326, name: "NdPDCReport_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings PDC Report" },
+  { id: 1033603, headId: 10326, name: "NdPDCReport_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export PDC Report" },
+
+  // Trial Balance Group
+  { id: 10327, headId: 103, name: "TrReports_TrialBalance", fullName: "Trial Balance", formCode: "TBRpt", treeNode: 3, description: "View Trial Balance" },
+  { id: 1033701, headId: 10327, name: "TrReports_TrialBalance_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Trial Balance" },
+  { id: 1033702, headId: 10327, name: "TrReports_TrialBalance_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Trial Balance" },
+  { id: 1033703, headId: 10327, name: "TrReports_TrialBalance_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Trial Balance" },
+
+  // Profit And Loss Account Group
+  { id: 10328, headId: 103, name: "TrReports_PandLAccount", fullName: "Profit And Loss Account", formCode: "PLRPT", treeNode: 3, description: "View Profit And Loss Account" },
+  { id: 1033801, headId: 10328, name: "TrReports_PandLAccount_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Profit And Loss Account" },
+  { id: 1033802, headId: 10328, name: "TrReports_PandLAccount_Settings", fullName: "Settings", formCode: "S", treeNode: 4, description: "Settings Profit And Loss Account" },
+  { id: 1033803, headId: 10328, name: "TrReports_PandLAccount_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Profit And Loss Account" },
 
   // Utilities
   { id: 104, headId: 1, name: "AccUtilities", fullName: "Utilities", formCode: "ACCU", treeNode: 2, description: "Account Utilities" },

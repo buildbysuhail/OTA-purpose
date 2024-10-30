@@ -13,28 +13,48 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { TFunction } from "i18next";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
+import { Tab, Tabs } from "@mui/material";
 
-interface Tab1ContentProps {
-  getFieldProps: (fieldName: string) => any;
-  handleFieldChange: (fieldName: string, value: any) => void;
-  t: TFunction;
-}
+export const PartiesManage: React.FC = React.memo(() => {
+  const [activeTab, setActiveTab] = useState('address');
+  const rootState = useRootState();
+  const dispatch = useDispatch();
 
-const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldChange, t }) => {
-  const [isBankDetailsOpen, setIsBankDetailsOpen] = useState(false);
-  const [isMoreInfoOpen, setIsMoreInfoOpen] = useState(false);
+  const {
+    isEdit,
+    handleClear,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading
+  } = useFormManager<PartiesData>({
+    url: Urls.parties,
+    onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
+    key: rootState.PopupData.parties.key,
+    useApiClient: true,
+    initialData: initialPartiesData,
+  });
 
-  const toggleBankDetails = () => {
-    setIsBankDetailsOpen(!isBankDetailsOpen);
+  const onClose = useCallback(() => {
+    dispatch(toggleParties({ isOpen: false, key: null }));
+  }, [dispatch]);
+
+  const { t } = useTranslation();
+
+  const handleFileChange = (e: { target: { files: any[]; }; }) => {
+    const file = e.target.files[0];
+    if (file) {
+      console.log("File selected:", file.name);
+    }
+  };
+  const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    setActiveTab(newValue);
   };
 
-  const toggleMoreInfo = () => {
-    setIsMoreInfoOpen(!isMoreInfoOpen);
-  };
   return (
-    <>
-      <div className="border p-4 rounded-lg mt-[3rem]">
-        <div className="grid grid-cols-3 gap-3">
+    <div className="w-full bordered-tab">
+      <div className="mt-[1.5rem]">
+        <div className="grid grid-cols-5 gap-3">
           <ERPInput
             {...getFieldProps("partyCode")}
             label={t("code")}
@@ -257,112 +277,16 @@ const Tab1Content: React.FC<Tab1ContentProps> = ({ getFieldProps, handleFieldCha
           />
         </div>
       </div>
-      <div className="border p-4 rounded-lg mt-5">
-        <div
-          className="flex items-center cursor-pointer"
-          onClick={toggleBankDetails}
-        >
-          <span className="mr-2">{isBankDetailsOpen ? '▼' : '▶'}</span>
-          <h6 className="font-bold">Bank Details</h6>
-        </div>
 
-        {isBankDetailsOpen && (
-          <div className="mt-4">
-            <div className="mb-6">
-              <h6 className="font-bold mb-3">Bank 1</h6>
-              <div className="grid grid-cols-3 gap-6">
-                <ERPInput
-                  {...getFieldProps("bankAcNumber1")}
-                  label={t("account_number")}
-                  placeholder={t("account_number")}
-                  required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcNumber1", data.bankAcNumber1)}
-                />
-                <ERPInput
-                  {...getFieldProps("bankAcName1")}
-                  label={t("account_name")}
-                  placeholder={t("account_name")}
-                  required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcName1", data.bankAcName1)}
-                />
-                <ERPInput
-                  {...getFieldProps("bankDetails1")}
-                  label={t("remarks")}
-                  placeholder={t("remarks")}
-                  required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankDetails1", data.bankDetails1)}
-                />
-              </div>
-            </div>
-
-            <div>
-              <h6 className="font-bold mb-3">Bank 2</h6>
-              <div className="grid grid-cols-3 gap-6">
-                <ERPInput
-                  {...getFieldProps("bankAcNumber2")}
-                  label={t("account_number")}
-                  placeholder={t("account_number")}
-                  required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcNumber2", data.bankAcNumber2)}
-                />
-                <ERPInput
-                  {...getFieldProps("bankAcName2")}
-                  label={t("account_name")}
-                  placeholder={t("account_name")}
-                  required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankAcName2", data.bankAcName2)}
-                />
-                <ERPInput
-                  {...getFieldProps("bankDetails2")}
-                  label={t("remarks")}
-                  placeholder={t("remarks")}
-                  required={false}
-                  onChangeData={(data: any) => handleFieldChange("bankDetails2", data.bankDetails2)}
-                />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className="border p-4 rounded-lg mt-5">
-        <div
-          className="flex items-center cursor-pointer"
-          onClick={toggleMoreInfo}
-        >
-          <span className="mr-2">{isMoreInfoOpen ? '▼' : '▶'}</span>
-          <h6 className="font-bold">More Info</h6>
-        </div>
-
-        {isMoreInfoOpen && (
-          <div className="mt-4">
-            <div className="grid grid-cols-3 gap-6">
-              <ERPInput
-                {...getFieldProps("postalCode")}
-                label={t("postal_code")}
-                placeholder={t("postal_code")}
-                required={false}
-                onChangeData={(data: any) =>
-                  handleFieldChange("postalCode", data.postalCode)
-                }
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    </>
-  )
-};
-
-interface Tab2ContentProps {
-  getFieldProps: (fieldName: string) => any;
-  handleFieldChange: (fieldName: string, value: any) => void;
-  t: TFunction;
-}
-
-const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldChange, t }) => (
-  <>
-    <div className="border p-4 rounded-lg mt-[3rem]">
-      <div className="grid grid-cols-3 gap-6">
+      <Tabs value={activeTab} onChange={handleTabChange} >
+        <Tab label="Address" value="address" />
+        <Tab label="Bank" value="bank" />
+        <Tab label="Details" value="details" />
+        <Tab label="More" value="more" />
+        <Tab label="Project/Job" value="project_job" />
+      </Tabs>
+      <div className="pt-4">
+        {activeTab === 'address' &&  <div className="grid grid-cols-5 gap-6">
         <ERPInput
           {...getFieldProps("address2")}
           label={t("address_2_city_district")}
@@ -412,11 +336,71 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           placeholder={t("website")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("webURL", data.webURL)}
-        />
-      </div>
-    </div>
-    <div className="grid grid-cols-2 gap-6 mt-5">
-      <div className="border p-4 flex flex-col gap-4 rounded-lg ">
+        /><ERPInput
+        {...getFieldProps("postalCode")}
+        label={t("postal_code")}
+        placeholder={t("postal_code")}
+        required={false}
+        onChangeData={(data: any) =>
+          handleFieldChange("postalCode", data.postalCode)
+        }
+      />
+      </div>}
+        {activeTab === 'bank' && <><div className="mb-6">
+            <h6 className="mb-3">Bank 1</h6>
+            <div className="grid grid-cols-5 gap-6">
+              <ERPInput
+                {...getFieldProps("bankAcNumber1")}
+                label={t("account_number")}
+                placeholder={t("account_number")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("bankAcNumber1", data.bankAcNumber1)}
+              />
+              <ERPInput
+                {...getFieldProps("bankAcName1")}
+                label={t("account_name")}
+                placeholder={t("account_name")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("bankAcName1", data.bankAcName1)}
+              />
+              <ERPInput
+                {...getFieldProps("bankDetails1")}
+                label={t("remarks")}
+                placeholder={t("remarks")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("bankDetails1", data.bankDetails1)}
+              />
+            </div>
+          </div>
+
+          <div>
+            <h6 className="mb-3">Bank 2</h6>
+            <div className="grid grid-cols-5 gap-6">
+              <ERPInput
+                {...getFieldProps("bankAcNumber2")}
+                label={t("account_number")}
+                placeholder={t("account_number")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("bankAcNumber2", data.bankAcNumber2)}
+              />
+              <ERPInput
+                {...getFieldProps("bankAcName2")}
+                label={t("account_name")}
+                placeholder={t("account_name")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("bankAcName2", data.bankAcName2)}
+              />
+              <ERPInput
+                {...getFieldProps("bankDetails2")}
+                label={t("remarks")}
+                placeholder={t("remarks")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("bankDetails2", data.bankDetails2)}
+              />
+            </div>
+          </div></>}
+        {activeTab === 'details' && <div className="grid grid-cols-2 gap-6 mt-5">
+      <div className="grid grid-cols-2 gap-6 p-5 border rounded-lg">
         <ERPDateInput
           {...getFieldProps("startDate")}
           label={t("start_date")}
@@ -464,7 +448,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           />
         </div>
       </div>
-      <div className="border p-4 flex flex-col gap-4 rounded-lg">
+      <div className="grid grid-cols-2 gap-6 p-5 border rounded-lg">
         <ERPCheckbox
           {...getFieldProps("isTCSApplicable")}
           label={t("is_tcs_applicable")}
@@ -509,10 +493,10 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           onChangeData={(data: any) => handleFieldChange("stopCredit", data.stopCredit)}
         />
       </div>
-    </div>
-    <div className="border p-4 rounded-lg mt-5">
+    </div>}
+        {activeTab === 'more' && <><div className="border p-4 rounded-lg mt-5">
       <h6>Payment Day</h6>
-      <div className="grid grid-cols-3 gap-6 mt-3">
+      <div className="grid grid-cols-7 gap-6 mt-3">
         <ERPCheckbox
           {...getFieldProps("sunday")}
           label={t("sunday")}
@@ -551,7 +535,7 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
       </div>
     </div>
     <div className="border p-4 rounded-lg mt-5">
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid grid-cols-4 gap-6">
         <ERPDataCombobox
           {...getFieldProps("priceCategoryID")}
           field={{
@@ -616,19 +600,8 @@ const Tab2Content: React.FC<Tab2ContentProps> = ({ getFieldProps, handleFieldCha
           />
         </div>
       </div>
-    </div>
-  </>
-);
-
-interface Tab3ContentProps {
-  getFieldProps: (fieldName: string) => any;
-  handleFieldChange: (fieldName: string, value: any) => void;
-  t: TFunction;
-}
-
-const Tab3Content: React.FC<Tab3ContentProps> = ({ getFieldProps, handleFieldChange, t }) => (
-  <div className="border p-4 rounded-lg mt-[3rem]">
-    <div className="grid grid-cols-2 gap-6">
+    </div></>}
+        {activeTab === 'project_job' &&  <div className="grid grid-cols-4 gap-6">
       <ERPInput
         {...getFieldProps("projectName")}
         label={t("project_name")}
@@ -665,70 +638,7 @@ const Tab3Content: React.FC<Tab3ContentProps> = ({ getFieldProps, handleFieldCha
           handleFieldChange("address3", data.address3)
         }
       />
-    </div>
-  </div>
-);
-
-export const PartiesManage: React.FC = React.memo(() => {
-  const [activeTab, setActiveTab] = useState(1);
-  const rootState = useRootState();
-  const dispatch = useDispatch();
-
-  const {
-    isEdit,
-    handleClear,
-    handleSubmit,
-    handleFieldChange,
-    getFieldProps,
-    isLoading
-  } = useFormManager<PartiesData>({
-    url: Urls.parties,
-    onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
-    key: rootState.PopupData.parties.key,
-    useApiClient: true,
-    initialData: initialPartiesData,
-  });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleParties({ isOpen: false, key: null }));
-  }, [dispatch]);
-
-  const { t } = useTranslation();
-
-  const handleFileChange = (e: { target: { files: any[]; }; }) => {
-    const file = e.target.files[0];
-    if (file) {
-      console.log("File selected:", file.name);
-    }
-  };
-
-  const tabs = [
-    { number: 1, name: "Main" },
-    { number: 2, name: "Details" },
-    { number: 3, name: "Projects / Job" }
-  ];
-
-
-  return (
-    <div className="w-full">
-      <div className="fixed top-12  left-0 w-full bg-white z-10 flex align-center justify-end mb-4 p-4">
-        {tabs.map((tab) => (
-          <button
-            key={tab.number}
-            className={`px-4 py-2 mr-2 ${activeTab === tab.number
-              ? "bg-blue text-white"
-              : "bg-gray text-gray-700"
-              } rounded-md text-[14px] font-bold`}
-            onClick={() => setActiveTab(tab.number)}
-          >
-            {tab.name}
-          </button>
-        ))}
-      </div>
-      <div className="pt-4">
-        {activeTab === 1 && <Tab1Content getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} />}
-        {activeTab === 2 && <Tab2Content getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} />}
-        {activeTab === 3 && <Tab3Content getFieldProps={getFieldProps} handleFieldChange={handleFieldChange} t={t} />}
+    </div>}
       </div>
       <ERPFormButtons
         onClear={handleClear}

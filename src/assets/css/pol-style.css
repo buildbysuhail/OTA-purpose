@@ -82,5 +82,8 @@
 .react-resizable-handle-se {
   bottom: 0;
   right: 0;
-  cursor: se-resize;
+  cursor: se-resize; 
+}
+.bordered-tab .MuiTabs-scroller {
+  border-bottom: solid 1px #1976d2;
 }

@@ -49,8 +49,8 @@ const ITEMS_PER_PAGE = 50;
 const api = new APIClient();
 
 const getNestedValue = (item: any, path: string) => {
-  const keys = path.split(".");
-  return keys.reduce((obj, key) => obj?.[key], item);
+  const keys = path?.split(".");
+  return keys?.reduce((obj, key) => obj?.[key], item);
 };
 
 const mapItemsToOptions = (
@@ -58,10 +58,10 @@ const mapItemsToOptions = (
   labelKey: string,
   valueKey: string
 ): Option[] => {
-  return items.map((item: any) => ({
+  return items?.map((item: any) => ({
     label: getNestedValue(item, labelKey) || "",
     value: getNestedValue(item, valueKey) || "",
-    is_active: item.is_active,
+    is_active: item?.is_active,
   }));
 };
 
@@ -120,7 +120,7 @@ export default function ImprovedERPDataCombobox({
       let _options = mapItemsToOptions(_items, labelKey, valueKey);
 
       // Filter out excluded options
-      _options = _options.filter(
+      _options = _options?.filter(
         (option) => !excludeOptions?.includes(option.value)
       );
 
@@ -129,7 +129,7 @@ export default function ImprovedERPDataCombobox({
 
       setItems(_options);
       setFilteredItems(_options);
-      setVisibleItems(_options.slice(0, ITEMS_PER_PAGE));
+      setVisibleItems(_options?.slice(0, ITEMS_PER_PAGE));
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -141,15 +141,15 @@ export default function ImprovedERPDataCombobox({
     const observer = new IntersectionObserver(
       (entries) => {
         if (
-          entries[0].isIntersecting &&
-          filteredItems.length > visibleItems.length
+          entries[0]?.isIntersecting &&
+          filteredItems?.length > visibleItems?.length
         ) {
           const nextPage = page + 1;
           const startIndex = (nextPage - 1) * ITEMS_PER_PAGE;
           const endIndex = startIndex + ITEMS_PER_PAGE;
           setVisibleItems((prev) => [
             ...prev,
-            ...filteredItems.slice(startIndex, endIndex),
+            ...filteredItems?.slice(startIndex, endIndex),
           ]);
           setPage(nextPage);
         }
@@ -162,7 +162,7 @@ export default function ImprovedERPDataCombobox({
     }
 
     return () => observer.disconnect();
-  }, [filteredItems, page, visibleItems.length]);
+  }, [filteredItems, page, visibleItems?.length]);
 
   useEffect(() => {
     const fieldKey = field?.id?.replaceAll("_id", "");
@@ -170,8 +170,8 @@ export default function ImprovedERPDataCombobox({
       defaultData?.[fieldKey],
       field?.valueKey
     );
-    const _default = items.find((option) => option.value === defaultValueKey);
-    const _selected = items.find(
+    const _default = items?.find((option) => option.value === defaultValueKey);
+    const _selected = items?.find(
       (option) => option.value === data?.[field?.id]
     );
     const _exceptional =
@@ -182,16 +182,16 @@ export default function ImprovedERPDataCombobox({
 
   const filterItems = useCallback(
     (inputValue: string) => {
-      const words = inputValue.toLowerCase().split(/\s+/);
-      const filtered = items.filter((item) => {
-        const itemWords = item.label.toLowerCase().split(/\s+/);
+      const words = inputValue?.toLowerCase()?.split(/\s+/);
+      const filtered = items?.filter((item) => {
+        const itemWords = item?.label?.toLowerCase()?.split(/\s+/);
         return words.every(
           (word, index) =>
-            index < itemWords.length && itemWords[index].startsWith(word)
+            index < itemWords?.length && itemWords[index]?.startsWith(word)
         );
       });
       setPage(1);
-      setVisibleItems(filtered.slice(0, ITEMS_PER_PAGE));
+      setVisibleItems(filtered?.slice(0, ITEMS_PER_PAGE));
       return filtered;
     },
     [items]
@@ -216,9 +216,9 @@ export default function ImprovedERPDataCombobox({
   const handleItemClick = (value: Option) => {
     setInitial(value);
     onChange?.(value);
-    onChangeData?.(value && data && { ...data, [id]: value.value });
-    handleChange?.(field?.id, value.value);
-    handleChangeData?.(field?.id, value.value);
+    onChangeData?.(value && data && { ...data, [id]: value?.value });
+    handleChange?.(field?.id, value?.value);
+    handleChangeData?.(field?.id, value?.value);
   };
 
   return (
@@ -245,7 +245,7 @@ export default function ImprovedERPDataCombobox({
               disabled ? "text-gray-400" : "bg-white text-gray-900"
             } px-3 py-2 pr-20 placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             displayValue={(item: Option) => item?.label || ""}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => setQuery(event?.target?.value)}
             placeholder={
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
@@ -281,15 +281,15 @@ export default function ImprovedERPDataCombobox({
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 Loading...
               </div>
-            ) : visibleItems.length === 0 ? (
+            ) : visibleItems?.length === 0 ? (
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 No data found
               </div>
             ) : (
               <>
-                {visibleItems.map((item, index) => (
+                {visibleItems?.map((item, index) => (
                   <Combobox.Option
-                    key={`${item.value}-${index}`}
+                    key={`${item?.value}-${index}`}
                     className={({ active }) =>
                       `${
                         item.is_active === false ? "hidden" : "relative"

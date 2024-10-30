@@ -3,6 +3,7 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
@@ -39,7 +40,7 @@ const PrintSettingForm: React.FC = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}printer`);
-      
+
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -66,7 +67,7 @@ const PrintSettingForm: React.FC = () => {
         const prevValue = formStatePrev[key as keyof FormState];
 
         if (currentValue !== prevValue) {
-          
+
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),
@@ -103,67 +104,81 @@ const PrintSettingForm: React.FC = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
+      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+        <div className="space-y-6 p-6  !mb-[12rem]">
+          <div className="border p-4 rounded-lg">
+            <div className="form-row grid grid-cols-1 gap-3 my-3">
+              {/* <ERPInput
+                id="defaultPrinter"
+                value={formState.defaultPrinter}
+                data={formState}
+                label={t("default_printer")}
+                placeholder={t("enter_number_of_days")}
+                type="text"
+                onChangeData={(data: any) =>
+                  handleFieldChange("defaultPrinter", data.defaultPrinter)
+                }
+              /> */}
 
-    <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
-      <div className="border p-4 rounded-lg">
-        <div className="form-row grid grid-cols-1 gap-3 my-3">
-          <ERPInput
-            id="defaultPrinter"
-            value={formState.defaultPrinter}
-            data={formState}
-            label={t("default_printer")}
-            placeholder={t("enter_number_of_days")}
-            type="text"
-            onChangeData={(data: any) =>
-              handleFieldChange("defaultPrinter", data.defaultPrinter)
-            }
-          />
-        </div>
+              <ERPDataCombobox
+                id="defaultPrinter"
+                value={formState.defaultPrinter}
+                data={formState}
+                field={{
+                  id: "defaultPrinter",
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("defaultPrinter", data.defaultPrinter)
+                }
+                label={t("default_printer")}
+                options={[
+                  { value: 0, label: "Canon" },
+                  { value: 1, label: "HP (Hewlett-Packard)" },
+                  { value: 2, label: "Epson " },
+                  { value: 3, label: "Brother  " },
+                  { value: 4, label: "Lexmark  " },
+                ]}
+              />
+            </div>
 
-        <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
-          <ERPCheckbox
-            id="printGatePass"
-            checked={formState.printGatePass}
-            data={formState}
-            label={t("print_gatePass")}
-            onChangeData={(data: any) =>
-              handleFieldChange("printGatePass", data.printGatePass)
-            }
-          />
-          <ERPCheckbox
-            id="showReprintAuthorisation"
-            checked={formState.showReprintAuthorisation}
-            data={formState}
-            label={t("show_reprint_authorisation")}
-            onChangeData={(data: any) =>
-              handleFieldChange(
-                "showReprintAuthorisation",
-                data.showReprintAuthorisation
-              )
-            }
-          />
+            <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
+              <ERPCheckbox
+                id="printGatePass"
+                checked={formState.printGatePass}
+                data={formState}
+                label={t("print_gatePass")}
+                onChangeData={(data: any) =>
+                  handleFieldChange("printGatePass", data.printGatePass)
+                }
+              />
+              <ERPCheckbox
+                id="showReprintAuthorisation"
+                checked={formState.showReprintAuthorisation}
+                data={formState}
+                label={t("show_reprint_authorisation")}
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "showReprintAuthorisation",
+                    data.showReprintAuthorisation
+                  )
+                }
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      {/* <div className="flex justify-end mt-2">
+      </form>
+      <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
         <ERPButton
           title={t("save_settings")}
           variant="primary"
+          type="button"
           disabled={isSaving}
           loading={isSaving}
-          type="submit"
+          onClick={handleSubmit}
         />
-      </div> */}
-      </form>
-      <div className="flex justify-end items-center p-4">
-      <ERPButton
-        title={t("save_settings")}
-        variant="primary"
-        type="button"
-        disabled={isSaving}
-        loading={isSaving}
-        onClick={handleSubmit}
-      />
-    </div>
+      </div>
     </div>
   );
 };

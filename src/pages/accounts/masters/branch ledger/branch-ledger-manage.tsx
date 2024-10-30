@@ -49,7 +49,7 @@ export const BranchLedgerManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("refBranchID", data.refBranchID)
+            handleFieldChange("refBranchID", data?.refBranchID)
           }}
           label={t("reference_branch")}
         />
@@ -59,14 +59,14 @@ export const BranchLedgerManage = () => {
             id: "purchaseLedgerID",
             required: true,
             freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null ? true : false,
-            getListUrl: formState?.data?.refBranchID
-            ? `${Urls.data_PurchaseAccount}${formState.data.refBranchID}`
+            getListUrl: formState?.data?.refBranchID || formState?.data?.refBranchID == null || formState?.data?.refBranchID == 0
+            ? `${Urls.data_PurchaseAccount}${formState?.data?.refBranchID}`
             : `${Urls.data_PurchaseAccount}`,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("purchaseLedgerID", data.purchaseLedgerID)
+            handleFieldChange("purchaseLedgerID", data?.purchaseLedgerID)
           }}
           label={t("purchase_ledger")}
         />
@@ -80,7 +80,7 @@ export const BranchLedgerManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("receivableLedgerID", data.receivableLedgerID)
+            handleFieldChange("receivableLedgerID", data?.receivableLedgerID)
           }}
           label={t("receivable_ledger")}
         />
@@ -89,15 +89,15 @@ export const BranchLedgerManage = () => {
           field={{
             id: "branchPayableLedgerID",
             required: true,
-            freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null ? true : false,
-            getListUrl: formState?.data?.refBranchID
-            ? `${Urls.data_BranchRecPayAccount}${formState.data.refBranchID}`
+            freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null || formState?.data?.refBranchID == 0 ? true : false,
+            getListUrl: formState?.data?.refBranchID || formState?.data?.refBranchID == null || formState?.data?.refBranchID == 0
+            ? `${Urls.data_BranchRecPayAccount}${formState?.data?.refBranchID}`
             : `${Urls.data_BranchRecPayAccount}`,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("branchPayableLedgerID", data.branchPayableLedgerID)
+            handleFieldChange("branchPayableLedgerID", data?.branchPayableLedgerID)
           }}
           label={t("branch_payable_ledger")}
         />

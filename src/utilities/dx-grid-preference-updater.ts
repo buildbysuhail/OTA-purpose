@@ -31,8 +31,8 @@ export function applyGridColumnPreferences(columns: DevGridColumn[], preferences
 
   // Sort columns based on displayOrder
   updatedColumns.sort((a, b) => {
-    const orderA = preferences?.columnPreferences.find(p => p.dataField === a.dataField)?.displayOrder || 0;
-    const orderB = preferences?.columnPreferences.find(p => p.dataField === b.dataField)?.displayOrder || 0;
+    const orderA = preferences?.columnPreferences.findIndex(p => p.dataField === a.dataField) || 0;
+    const orderB = preferences?.columnPreferences.findIndex(p => p.dataField === b.dataField) || 0;
     return orderA - orderB;
   });
 
@@ -42,16 +42,16 @@ export function getDefaultColumnPreference(column: DevGridColumn, index: number)
     return {
         dataField: column.dataField??"",
     isLocked: column.isLocked??false,    
-    caption: column.caption || capitalizeAndAddSpace(column.dataField??""),
+    caption: column.caption??capitalizeAndAddSpace(column.dataField??""),
     width: column.width,
-    alignment: column.alignment || 'left',
-    visible: true,
+    alignment: column.alignment??'left',
+    visible: column.visible??true,
     readOnly: false,
     fontBold: false,
     fontColor: '',
     fontSize: 0,
     displayOrder: index,
-    showInPdf: column.showInPdf || false
+    showInPdf: column.showInPdf?? false
     }
   };
 export function getInitialPreference(gridId: any, columns: any) {
@@ -76,9 +76,12 @@ export function getInitialPreference(gridId: any, columns: any) {
       };
       return updatedPreferences;
     } else {
-      const initialPreferences = columns?.map((column: DevGridColumn, index: number) => 
-        getDefaultColumnPreference(column, index)
-      ) || [];
+      let initialPreferences: any = [];
+       (columns || []).map((column: DevGridColumn, index: number) => {
+        const preference = getDefaultColumnPreference(column, index);
+        console.log(`Column:`, column, `Preference:`, preference); // Log each preference
+        initialPreferences.push(preference);
+      });
 
       updatedPreferences = {
         ...initialGridPreference,

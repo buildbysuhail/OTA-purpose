@@ -42,7 +42,7 @@ const RevertBillModifications: React.FC = () => {
     
     const res = await api.post(Urls.revertBillModifications, {
       invTransactionMasterID: data.data.invTransactionMasterID,
-      remarks: data.data.remarks,
+      remarks: '',
       tType: data.data.tType,
     });
     handleResponse(res);

@@ -26,6 +26,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      visible: false,
     },
     {
       dataField: "purchaseLedgerID",
@@ -34,6 +35,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      visible: false,
     },
     {
       dataField: "refBranchName",
@@ -57,6 +59,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      visible: false,
     },
     {
       dataField: "payableLedger",
@@ -81,6 +84,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      visible: false,
     },
     {
       dataField: "receivableLedgerID",
@@ -89,6 +93,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      visible: false,
     },
     {
       dataField: "actions",
@@ -97,7 +102,7 @@ const BranchLedger = () => {
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
-      width: 180,
+      width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
           view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID }) }}

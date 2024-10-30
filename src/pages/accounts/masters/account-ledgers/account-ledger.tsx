@@ -34,6 +34,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false,
     },
     {
       dataField: "ledgerCode",

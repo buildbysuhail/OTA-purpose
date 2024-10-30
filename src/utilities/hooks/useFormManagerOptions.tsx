@@ -70,7 +70,7 @@ export function useFormManager<T>({
   const formState = useApiClient ? localFormState : reduxFormState;
 
   useEffect(() => {
-    
+    debugger;
     if (localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data == null) {
       
       const df = {
@@ -100,7 +100,7 @@ export function useFormManager<T>({
           let par = key != undefined && key != null && key != "" ? `${url}${key}` : `${url}`
           response = await apiClient.getAsync(par);
         } else {
-          response = initialData || {};
+          response = initialData.data || {};
         }
         setLocalFormState({
           data: response,

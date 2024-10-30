@@ -11,7 +11,10 @@ import { toggleParties } from "../../../../redux/slices/popup-reducer";
 import { PartiesManage } from "./parties-manage";
 
 
-const Parties = () => {
+interface PartiesProps {
+  type: string; // Define type as a string prop
+}
+const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
 
   const dispatch = useAppDispatch();
@@ -47,7 +50,7 @@ const Parties = () => {
     },
     {
       dataField: "partyName",
-      caption: t("party"),
+      caption: type =='Cust' ?t("customer"): t("supplier"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -382,8 +385,8 @@ const Parties = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("parties")}
-                  dataUrl={Urls.parties}
+                  gridHeader={type =='Cust' ?t("customers"): t("suppliers")}
+                  dataUrl={`${Urls.parties}type/${type}`}
                   gridId="grd_parties"
                   popupAction={toggleParties}
                   gridAddButtonType="popup"
@@ -397,7 +400,7 @@ const Parties = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.parties.isOpen || false}
-        title={t("parties")}
+        title={type =='Cust' ?t("customer"): t("supplier")}
         width="w-full max-w-[1400px]"
         isForm={true}
         closeModal={() => {
@@ -405,7 +408,7 @@ const Parties = () => {
         }}
         content={
           <div className="h-[700px] overflow-y-auto">
-            <MemoizedPartiesManage />
+            <MemoizedPartiesManage type={type} />
            </div> 
         }
       />

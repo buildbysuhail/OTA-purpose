@@ -63,7 +63,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
                 fontSize: barcodeComponent.barcodeProps?.fontSize || 21, // Font size
                 textMargin: barcodeComponent.barcodeProps?.textMargin || 5, // Margin between bars and text
               });
-              images[`${item.id}-${barcodeComponent.id}`] = canvas.toDataURL('image/png');
+              images[`${item.siNo}-${barcodeComponent.id}`] = canvas.toDataURL('image/png');
             }
           });
         });
@@ -114,7 +114,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
         );
 
       case DesignerElementType.barcode:
-        const barcodeKey = `${data.id}-${component.id}`;
+        const barcodeKey = `${data.siNo}-${component.id}`;
         return barcodeImages[barcodeKey] ? (
           <Image
             key={barcodeKey}
@@ -148,7 +148,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
           <View style={styles.row}>
             {row?.map((item: any) => (
               <View
-                key={item.id}
+                key={item.siNo}
                 style={{
                   width: template?.barcodeState?.labelState?.labelWidth || 200,
                   height: template?.barcodeState?.labelState?.labelHeight || 200,

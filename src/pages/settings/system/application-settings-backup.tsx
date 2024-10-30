@@ -38,7 +38,7 @@ const BackupSettingsForm: React.FC = () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}backup`);
-      
+
       console.log(formState);
       setFormStatePrev(response);
       setFormState(response);
@@ -64,7 +64,7 @@ const BackupSettingsForm: React.FC = () => {
         const prevValue = formStatePrev[key as keyof FormState];
 
         if (currentValue !== prevValue) {
-          
+
           acc.push({
             settingsName: key,
             settingsValue: currentValue.toString(),
@@ -86,9 +86,6 @@ const BackupSettingsForm: React.FC = () => {
       setIsSaving(false);
     }
   };
-  //   if (loading) {
-  //     return <div>Loading settings...</div>;
-  //   }
 
   if (error) {
     return (
@@ -101,84 +98,76 @@ const BackupSettingsForm: React.FC = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-
-    <form  className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
-      <div className="border p-4 rounded-lg">
-        <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
-          <ERPDataCombobox
-            id="backupMethods"
-            value={formState.backupMethods}
-            data={formState}
-            field={{
-              id: "backupMethods",
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            onChangeData={(data: any) =>
-              handleFieldChange("backupMethods", data.backupMethods)
-            }
-            label={t("backup_methods")}
-            options={[
-              { value: 0, label: "No BackUp" },
-              { value: 1, label: "BackUp On Close" },
-              { value: 2, label: "Scheduled BackUp" },
-            ]}
-          />
-          <ERPInput
-            id="backUpPath"
-            value={formState.backUpPath}
-            data={formState}
-            label={t("backup_path")}
-            placeholder={t("enter_discount_threshold")}
-            onChangeData={(data: any) =>
-              handleFieldChange("backUpPath", parseFloat(data.backUpPath))
-            }
-          />
-          <ERPInput
-            id="backupDuration"
-            value={formState.backupDuration}
-            data={formState}
-            label={t("duration")}
-            placeholder={t("enter_discount_threshold")}
-            type="number"
-            onChangeData={(data: any) =>
-              handleFieldChange(
-                "backupDuration",
-                parseFloat(data.backupDuration)
-              )
-            }
-          />
-          <ERPCheckbox
-            id="compressBackupFile"
-            checked={formState.compressBackupFile}
-            data={formState}
-            label={t("compress_backup_file")}
-            onChangeData={(data) =>
-              handleFieldChange("compressBackupFile", data.compressBackupFile)
-            }
-          />
+      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+        <div className="space-y-6 p-6">
+          <div className="border p-4 rounded-lg">
+            <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
+              <ERPDataCombobox
+                id="backupMethods"
+                value={formState.backupMethods}
+                data={formState}
+                field={{
+                  id: "backupMethods",
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("backupMethods", data.backupMethods)
+                }
+                label={t("backup_methods")}
+                options={[
+                  { value: 0, label: "No BackUp" },
+                  { value: 1, label: "BackUp On Close" },
+                  { value: 2, label: "Scheduled BackUp" },
+                ]}
+              />
+              <ERPInput
+                id="backUpPath"
+                value={formState.backUpPath}
+                data={formState}
+                label={t("backup_path")}
+                placeholder={t("enter_discount_threshold")}
+                onChangeData={(data: any) =>
+                  handleFieldChange("backUpPath", parseFloat(data.backUpPath))
+                }
+              />
+              <ERPInput
+                id="backupDuration"
+                value={formState.backupDuration}
+                data={formState}
+                label={t("duration")}
+                placeholder={t("enter_discount_threshold")}
+                type="number"
+                onChangeData={(data: any) =>
+                  handleFieldChange(
+                    "backupDuration",
+                    parseFloat(data.backupDuration)
+                  )
+                }
+              />
+              <ERPCheckbox
+                id="compressBackupFile"
+                checked={formState.compressBackupFile}
+                data={formState}
+                label={t("compress_backup_file")}
+                onChangeData={(data) =>
+                  handleFieldChange("compressBackupFile", data.compressBackupFile)
+                }
+              />
+            </div>
+          </div>
         </div>
-      </div>
-      {/* <div className="flex justify-end mt-2">
+      </form>
+      <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
         <ERPButton
           title={t("save_settings")}
           variant="primary"
-          type="submit"
+          type="button"
           loading={isSaving}
           disabled={isSaving}
+          onClick={handleSubmit}
         />
-      </div> */}
-      </form>
-      <div className="flex justify-end items-center p-4 ">
-      <ERPButton
-        title={t("save_settings")}
-        variant="primary"
-        type="button"
-        loading={isSaving}
-        disabled={isSaving}
-        onClick={handleSubmit}
-      />
-    </div>
+      </div>
     </div>
   );
 };

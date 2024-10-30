@@ -43,7 +43,6 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
     },
     {
       dataField: "currencySymbol",

@@ -46,7 +46,7 @@ const SystemSettingsApi = {
   },
   postCurrencyExchange: async (data: any) => {
     try {
-      const responseData = await api.post(Urls.postCurrency,data);
+      const responseData = await api.post(Urls.user_rights,data);
       return responseData;
     } catch (error) {
       console.error("Failed to get available agents for DX Grid:", error);

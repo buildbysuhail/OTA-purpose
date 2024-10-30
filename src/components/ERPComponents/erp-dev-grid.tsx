@@ -45,6 +45,7 @@ import { useTranslation } from "react-i18next";
 import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
+import ErpGridGlobalFilter from "./erp-grid-global-filter";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -268,7 +269,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   popupAction,
   defaultColumnWidth,
   columnAutoWidth = true,
-  columnHidingEnabled = true,
+  columnHidingEnabled = false,
   stateStoring,
   scrollingMode = "virtual",
   allowGrouping = false,
@@ -318,9 +319,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [preferences, setPreferences] = useState<GridPreference>();
   const [isChildOpen, setIsChildOpen] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
+
+  
   useEffect(() => {
     console.log("preferer useeff");
-
+debugger;
     if (gridId != "" && columns != undefined && columns != null) {
       onApplyPreferences(getInitialPreference(gridId, columns));
     }
@@ -339,10 +342,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const isNotEmpty = (value: any) =>
     value !== undefined && value !== null && value !== "";
   const store = useMemo(() => {
+    debugger;
     if (data) {
       return data;
     }
-    if(!dataUrl)
+    else if(!dataUrl)
     {
       return null;
     }
@@ -474,7 +478,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
             ))}
           </FilterRow>}
           {allowSearching && <SearchPanel visible={true} />}
-          <HeaderFilter visible={true} />
+          <HeaderFilter visible={false} />
           {allowColumnChooser && <ColumnChooser enabled={true} />}
           {allowSelection && <Selection mode={selectionMode} />}
           {allowGrouping && <Grouping />}
@@ -521,6 +525,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
             {!hideDefaultExportButton && allowExport && (
               <Item name="exportButton" />
             )}
+            <Item>
+              <ErpGridGlobalFilter
+                gridId={gridId}
+                onApplyPreferences={onApplyPreferences}
+              />
+            </Item>
             <Item>
               <GridPreferenceChooser
                 columns={columns}
@@ -575,13 +585,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               dataType={column.dataType}
               allowSorting={column.allowSorting}
               allowSearch={column.allowSearch}
-              allowFiltering={column.allowFiltering}
+              allowFiltering={column.allowFiltering?? false}
               width={column.width}
               minWidth={column.minWidth}
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
               cellRender={column.cellRender}
-              visible={column.visible}
+              visible={column.visible || false}
             />
           ))}
         </DataGrid>

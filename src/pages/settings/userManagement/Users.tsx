@@ -21,7 +21,7 @@ const Users = () => {
     {
       dataField: "siNo",
       caption: t("si_no"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: false,
@@ -34,6 +34,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 60,
+      visible: false
     },
     {
       dataField: "user",

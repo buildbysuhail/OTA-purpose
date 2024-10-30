@@ -33,6 +33,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      visible: false,
       width: 100,
     },
     {
@@ -73,6 +74,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false,
     },
     {
       dataField: "isDeletable",
@@ -81,6 +83,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false,
     },
     {
       dataField: "isProtected",
@@ -89,6 +92,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false,
     },
     {
       dataField: "isCommon",
@@ -97,6 +101,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false,
     },
     {
       dataField: "createdUser",
@@ -105,6 +110,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible: false,
     },
     {
       dataField: "createdDate",
@@ -113,6 +119,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false,
     },
     {
       dataField: "modifiedUser",
@@ -121,6 +128,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible: false,
     },
     {
       dataField: "modifiedDate",

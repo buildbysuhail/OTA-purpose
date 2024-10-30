@@ -39,7 +39,6 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cost-center`, type: 'link', active: false, selected: false, title: 'costcenter' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/branch-ledgers`, type: 'link', active: false, selected: false, title: 'branch_ledger' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/chart-of-accounts`, type: 'link', active: false, selected: false, title: 'chart_of_accounts' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/opening-balance`, type: 'link', active: false, selected: false, title: 'opening_balance' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/party-category`, type: 'link', active: false, selected: false, title: 'party_category' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/parties`, type: 'link', active: false, selected: false, title: 'parties' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cash-bank-master`, type: 'link', active: false, selected: false, title: 'cash_bank_master' },

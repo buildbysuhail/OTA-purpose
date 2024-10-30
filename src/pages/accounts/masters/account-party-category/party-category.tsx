@@ -21,9 +21,10 @@ const PartyCategory = () => {
     {
       dataField: "siNo",
       caption: t("si_no"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
+      alignment: "left",
       allowFiltering: true,
       width: 100,
     },
@@ -35,6 +36,7 @@ const PartyCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false
     },
     {
       dataField: "partyCategory",
@@ -77,6 +79,7 @@ const PartyCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      visible: false
     },
     {
       dataField: "modifiedDate",
@@ -86,6 +89,7 @@ const PartyCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible: false
     },
     {
       dataField: "actions",

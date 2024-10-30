@@ -62,7 +62,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
   },[])
   const load = async() => {
     const res = await api.getAsync(Urls.get_next_party_code);
-    handleFieldChange("partyCode", res);
+    handleFieldChange("partyCode", res.toString());
   }
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
@@ -73,6 +73,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
       <div className="mt-[1.5rem]">
         <div className="grid grid-cols-5 gap-3">
           <ERPInput
+          type='string'
             {...getFieldProps("partyCode")}
             label={t("code")}
             placeholder={t("code")}
@@ -267,20 +268,34 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
               handleFieldChange("aadharNo", data.aadharNo)
             }
           />
-          <ERPDataCombobox
-            {...getFieldProps("registrationType")}
-            field={{
-              id: "registrationType",
-              required: true,
-              getListUrl: Urls.data_salesRoute,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data: any) => {
-              handleFieldChange("registrationType", data !== null && data !== undefined ? data.registrationType.toString() : data.registrationType);
-            }}
-            label={t("registration_type")}
-          />
+           <ERPDataCombobox
+           {...getFieldProps("registrationType")}
+                field={{
+                  id: "registrationType",
+                  valueKey: "label",
+                  labelKey: "label",
+                }}
+                onChangeData={(data: any) => {
+                  handleFieldChange("registrationType", data !== null && data !== undefined ? data.registrationType.toString() : data.registrationType);
+                }}
+                label={t("registration_type")}
+                options={[
+                   { value : "Regular", label :"Regular" },
+                   { value : "Regular+RCM", label :"Regular+RCM" },
+                   { value : "Composite", label :"Composite" },
+                   { value : "Unregistered", label :"Unregistered" },
+                   { value : "Unregistered+RCM", label :"Unregistered+RCM" },
+                   { value : "Foreign non-Resident Taxpayer", label :"Foreign non-Resident Taxpayer" },
+                   { value : "Input Service distributor", label :"Input Service distributor" },
+                   { value : "Tax Deductor", label :"Tax Deductor" },
+                   { value : "E-commerce Operator", label :"E-commerce Operator" },
+                   { value : "Government Departments", label :"Government Departments" },
+                   { value : "SEZ supplies with payment", label :"SEZ supplies with payment" },
+                   { value : "SEZ supplies without payment", label :"SEZ supplies without payment" },
+                   { value : "Deemed Export", label :"Deemed Export" },
+                   { value : "Intra-State supplies attracting IGST", label :"Intra-State supplies attracting IGST" }
+                ]}
+              />
           <ERPCheckbox
             {...getFieldProps("billwiseBillApplicable")}
             label={t("bill_wise_applicable")}

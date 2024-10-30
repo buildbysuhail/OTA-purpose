@@ -65,16 +65,17 @@ export const WarehouseManage: React.FC = React.memo(() => {
         />
         <ERPDataCombobox
           {...getFieldProps("warehouseType")}
-          id="warehouseType"
           field={{
             id: "warehouseType",
-            required: true,
-            getListUrl: Urls.data_warehouse,
-            valueKey: "id",
-            labelKey: "name",
+            valueKey: "value",
+            labelKey: "label",
           }}
-          label={t("warehouse_type")}
           onChangeData={(data: any) => handleFieldChange("warehouseType", data.warehouseType)}
+          label={t('warehouse_type')}
+          options={[
+            { value: 'Physical', label: t('physical') },
+            { value: 'Van', label: t('van') },
+          ]}
         />
         <ERPInput
           {...getFieldProps("remarks")}

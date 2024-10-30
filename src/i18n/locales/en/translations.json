@@ -1093,5 +1093,8 @@
   "warehouse_type":"Warehouse Type",
   "cash_ledger":"Cash Ledger",
   "warehouse_name":"Warehouse Name",
-  "type":"Type"
+  "type":"Type",
+
+  "physical":"Physical",
+  "van":"Van"
 }

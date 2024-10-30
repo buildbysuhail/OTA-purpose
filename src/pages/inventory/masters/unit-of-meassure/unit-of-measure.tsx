@@ -10,9 +10,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { UnitOfMeasureManage } from "./unit-of-measure-manage";
 import { toggleUnitOfMeasure } from "../../../../redux/slices/popup-reducer";
 
-
 const UnitOfMeasure = () => {
-
   const MemoizedUnitOfMeasureManage = useMemo(() => React.memo(UnitOfMeasureManage), []);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -56,7 +54,7 @@ const UnitOfMeasure = () => {
     {
       dataField: "unitType",
       caption: t("unit_type"),
-      dataType: "string",
+      dataType: "string", 
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -115,38 +113,34 @@ const UnitOfMeasure = () => {
     {
       dataField: "createdUser",
       caption: t("created_user"),
-      dataType: "boolean",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "createdDate",
       caption: t("created_date"),
-      dataType: "boolean",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "modifiedUser",
       caption: t("modified_user"),
-      dataType: "boolean",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "modifiedDate",
       caption: t("modified_date"),
-      dataType: "boolean",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
     },
     {
       dataField: "actions",
@@ -167,12 +161,11 @@ const UnitOfMeasure = () => {
               url: Urls?.unitOfMeasure, key: cellElement?.data?.id
             }}
           />
-        )
+        );
       },
     },
   ],
-    []
-  );
+  []);
 
   return (
     <Fragment>
@@ -209,4 +202,5 @@ const UnitOfMeasure = () => {
     </Fragment>
   );
 };
+
 export default React.memo(UnitOfMeasure);

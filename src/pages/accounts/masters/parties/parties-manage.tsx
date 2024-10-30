@@ -15,7 +15,10 @@ import { TFunction } from "i18next";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import { Tab, Tabs } from "@mui/material";
 
-export const PartiesManage: React.FC = React.memo(() => {
+interface PartiesManageProps {
+  type: string; // Define type as a string prop
+}
+export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= 'Cust' }) => {
   const [activeTab, setActiveTab] = useState('address');
   const rootState = useRootState();
   const dispatch = useDispatch();
@@ -32,7 +35,7 @@ export const PartiesManage: React.FC = React.memo(() => {
     onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.parties.key,
     useApiClient: true,
-    initialData: initialPartiesData,
+    initialData: {...initialPartiesData,partyType: type},
   });
 
   const onClose = useCallback(() => {
@@ -53,6 +56,7 @@ export const PartiesManage: React.FC = React.memo(() => {
 
   return (
     <div className="w-full bordered-tab">
+      Type:{type}
       <div className="mt-[1.5rem]">
         <div className="grid grid-cols-5 gap-3">
           <ERPInput

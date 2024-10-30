@@ -33,6 +33,7 @@ const Urls = {
   data_languages: "/Data/Languages/",
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
+  data_cashLedger:"/Data/CashLedgers/",
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
   data_acc_Branches: "/Data/BranchWithoutDefault",
@@ -267,6 +268,7 @@ const Urls = {
   priceCategory: "/Inventory/PriceCategory/",
   unitOfMeasure: "/Inventory/UnitofMeasures/",
   vehicles: "/Inventory/Vehicles/",
+  Warehouse: "/Inventory/Warehouse/",
 };
 
 export default Urls;

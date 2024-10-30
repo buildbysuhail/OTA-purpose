@@ -1085,5 +1085,11 @@
   "color":"Color",
   "is_rental":"Is Rental",
   "odo_meter":"Odo Meter",
-  "rental":"Rental"
+  "rental":"Rental",
+
+  "is_stock_warehouse":"Is Stock Warehouse",
+  "warehouse_type":"Warehouse Type",
+  "cash_ledger":"Cash Ledger",
+  "warehouse_name":"Warehouse Name",
+  "type":"Type"
 }

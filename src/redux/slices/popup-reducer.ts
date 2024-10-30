@@ -51,6 +51,7 @@ interface popupData {
   priceCategory:popupDataProps
   unitOfMeasure:popupDataProps
   vehicles:popupDataProps
+  warehouse:popupDataProps
 }
 const initialState: popupData = {
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -98,6 +99,7 @@ const initialState: popupData = {
   priceCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   unitOfMeasure: { isOpen: false, key: null, mode: "edit", reload: true },
   vehicles: { isOpen: false, key: null, mode: "edit", reload: true },
+  warehouse: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -256,6 +258,9 @@ const popupDataSlice = createSlice({
     toggleVehicles: (state, action: PayloadAction<popupDataProps>) => {
       state.vehicles = action.payload;
     },
+    toggleWarehouse: (state, action: PayloadAction<popupDataProps>) => {
+      state.warehouse = action.payload;
+    },
 
   },
 });
@@ -308,6 +313,7 @@ export const {
   togglePriceCategory,
   toggleUnitOfMeasure,
   toggleVehicles,
+  toggleWarehouse,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

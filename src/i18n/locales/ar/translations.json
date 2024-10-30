@@ -1064,5 +1064,33 @@
   "common": "مشترك",
 
   "discount_%": "خصم %",
-  "margin_%": "هامش %"
+  "margin_%": "هامش %",
+
+  "unit_code": "رمز الوحدة",
+  "unit_type": "نوع الوحدة",
+  "multiple_factor": "عامل مضاعف",
+  "second_unit_ID": "معرف الوحدة الثانية",
+  "second_unit": "الوحدة الثانية",
+  "decimal_point": "النقطة العشرية",
+  "total_unit_in_base_unit": "إجمالي الوحدات في الوحدة الأساسية",
+  "unit_of_measure": "وحدة القياس",
+
+  "vehicle_name": "اسم المركبة",
+  "vehicle_number": "رقم المركبة",
+  "no_of_wheels": "عدد العجلات",
+  "capacity": "القدرة",
+  "manufacturer": "الشركة المصنعة",
+  "manufacture": "التصنيع",
+  "owner": "المالك",
+  "owner_name": "اسم المالك",
+  "color": "اللون",
+  "is_rental": "هل هو للإيجار",
+  "odo_meter": "عداد المسافة",
+  "rental": "الإيجار",
+
+  "is_stock_warehouse": "هل هو مستودع مخزون",
+  "warehouse_type": "نوع المستودع",
+  "cash_ledger": "دفتر النقد",
+  "warehouse_name": "اسم المستودع",
+  "type": "النوع"
 }

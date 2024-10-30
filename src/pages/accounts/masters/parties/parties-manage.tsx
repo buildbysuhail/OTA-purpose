@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
@@ -13,10 +13,12 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import { Tab, Tabs } from "@mui/material";
+import { APIClient } from "../../../../helpers/api-client";
 
 interface PartiesManageProps {
   type: string; // Define type as a string prop
 }
+const api = new APIClient();
 export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= 'Cust' }) => {
   const [activeTab, setActiveTab] = useState('address');
   const rootState = useRootState();
@@ -34,7 +36,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
     onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.parties.key,
     useApiClient: true,
-    initialData: {...initialPartiesData,partyType: type},
+    initialData: {...initialPartiesData,data: {...initialPartiesData.data, partyType:type, } },
   });
 
   const onClose = useCallback(() => {
@@ -49,6 +51,13 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
       console.log("File selected:", file.name);
     }
   };
+  useEffect(() => {
+    load();
+  },[])
+  const load = async() => {
+    const res = await api.getAsync(Urls.get_next_party_code);
+    handleFieldChange("partyCode", res);
+  }
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);
   };
@@ -72,7 +81,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
             placeholder={t("name")}
             required={true}
             onChangeData={(data: any) =>
+            {
               handleFieldChange("partyName", data.partyName)
+            }
             }
           />
           <ERPInput
@@ -93,19 +104,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type= '
               handleFieldChange("arabicName", data.arabicName)
             }
           />
-          <ERPDataCombobox
-            {...getFieldProps("ledgerID")}
-            field={{
-              id: "ledgerID",
-              required: true,
-              getListUrl: Urls.data_acc_ledgers,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data: any) => {
-              handleFieldChange("ledgerID", data.ledgerID);
-            }}
+           <ERPInput
+            {...getFieldProps("ledgerName")}
             label={t("ledger_name")}
+            placeholder={t("ledger_name")}
+            required={false}
+            onChangeData={(data: any) =>
+              handleFieldChange("ledgerName", data.ledgerName)
+            }
           />
           <ERPDataCombobox
             {...getFieldProps("partyCategoryID")}

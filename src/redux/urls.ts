@@ -194,6 +194,7 @@ const Urls = {
   account_currency_master: "/Accounts/Currency/",
   chart_of_accounts: "/Accounts/ChartofAccounts/",
   parties: "/Accounts/Parties/",
+  get_next_party_code: "/Accounts/Parties/GetNextPartyCode/",
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
   upi: "/Accounts/UPI/",
 

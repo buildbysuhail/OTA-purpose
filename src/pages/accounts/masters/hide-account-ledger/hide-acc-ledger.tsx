@@ -1,8 +1,5 @@
-import { Fragment, useEffect, useState } from "react";
-//   import Urls from "../../../../../../redux/urls";
-//   import ERPRadio from "../../../../../../components/ERPComponents/erp-radio";
-//   import ERPButton from "../../../../../../components/ERPComponents/erp-button";
-import { DataGrid } from "devextreme-react/data-grid";
+import { Fragment, useCallback, useEffect, useState } from "react";
+import { DataGrid, RemoteOperations } from "devextreme-react/data-grid";
 import {
   Column,
   FilterRow,
@@ -12,9 +9,7 @@ import {
   Toolbar,
   Item,
 } from "devextreme-react/data-grid";
-//   import { APIClient } from "../../../../../../helpers/api-client";
-//   import { handleResponse } from "../../../../../../utilities/HandleResponse";
-//   import ERPCheckbox from "../../../../../../components/ERPComponents/erp-checkbox";
+
 //   import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
 import { useNavigate } from "react-router-dom";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -26,23 +21,19 @@ import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
-//   {
-//     "hideLedgerID": 0,
-//     "userTypeCode": "string",
-//     "ledgerGroupId": 0,
-//     "isGroup": true
-//   }
 interface LedgerInf {
   hideLedgerID: number;
   userTypeCode: string;
-  ledgerGroupId: number;
+  ledgerId: number;
+  groupId: number;
   isGroup: boolean;
 }
 
 const initialState: LedgerInf = {
-  hideLedgerID: 0,
+  hideLedgerID: 1,
   userTypeCode: "",
-  ledgerGroupId: 0,
+  ledgerId: 0,
+  groupId: 0,
   isGroup: false,
 };
 const api = new APIClient();
@@ -52,80 +43,53 @@ const HideAccountLedger = () => {
     mobile: number;
     windows: number;
   }>({ mobile: 500, windows: 500 });
-  useEffect(() => {
-    let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200; 
-    let gridHeightWindows = wh - 400; 
-    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-  }, []);
 
-  const [postData, setPostDate] = useState<LedgerInf>(initialState);
-  const [store, setStore] = useState<any>([]);
-  const [storePrev, setStorePrev] = useState<any>([]);
+  const [postData, setPostData] = useState<LedgerInf>(initialState);
+  const [store, setStore] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const navigate = useNavigate();
 
-  // const handleLoad = async () => {
-  //   setLoading(true);
-  //   const partyType = gridType.customer ? "Cust" : "Supp";
-  //   const result: any = await api.get(`${Urls.cust_supp_ledger}?PartyType=${partyType}`);
-  //   setStore(result);
-  //   setStorePrev([...result]);
-  //   setLoading(false);
-  // };
-
-  // const handleCheckboxChange = (rowIndex: number) => {
-  //   setStore((prevStore: any[]) => {
-  //     const updatedStore = [...prevStore];
-  //     updatedStore[rowIndex] = {
-  //       ...updatedStore[rowIndex],
-  //       show: !updatedStore[rowIndex].show,
-  //     };
-  //     return updatedStore;
-  //   });
-  // };
+  useEffect(() => {
+    let wh = window.innerHeight;
+    let gridHeightMobile = wh - 200;
+    let gridHeightWindows = wh - 200;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+  }, []);
 
   const handleSubmit = async () => {
     setIsSaving(true);
-    const updatedPostData = {
-      ...postData,
-      isGroup: Boolean(postData.ledgerGroupId && postData.ledgerGroupId > 0),
-    };
     try {
-      const response: any = await api.post(
-        `${Urls.hide_Ledger}`,
-        updatedPostData
-      );
-      handleResponse(response);
-      console.log("API Response:", response);
-    } catch (error) {
-      console.error("Error submitting data:", error);
-    }
+      if (postData.groupId && postData.groupId > 0) {
+        const response: any = await api.post(`${Urls.hide_Ledger}`, {
+          isGroup: true,
+          ledgerGroupId: postData.groupId,
+          userTypeCode: postData.userTypeCode,
+        });
+        handleResponse(response);
+
+      }
+      if (postData.ledgerId && postData.ledgerId > 0) {
+        const response: any = await api.post(
+          `${Urls.hide_Ledger}`,
+          {
+            isGroup: false,
+            ledgerGroupId: postData.ledgerId,
+            userTypeCode: postData.userTypeCode,
+          }
+        );
+        handleResponse(response);
+      }
+      initialLoadGrid(postData.userTypeCode)
+    } catch (error) {}
 
     setIsSaving(false);
   };
 
-  const handleClose = () => {
-    navigate("/settings");
-  };
-
-  const ChartCell = (cellData: any) => {
-    
-    return (
-      <div className="chart-cell">
-        <i
-          className="ri-delete-bin-5-line delete-icon cursor-pointer"
-        //   onClick={() =>
-        //     handleDelete(cellData.data.exchRateID, cellData.rowIndex)
-        //   }
-        ></i>
-      </div>
-    );
-  };
   const renderToolbarContent = () => (
     <div className="flex flex-col lg:flex-row space-x-3 items-center mb-3">
       <ERPDataCombobox
+        //   className="w-[200px]"
         id="userTypeCode"
         field={{
           id: "userTypeCode",
@@ -134,59 +98,94 @@ const HideAccountLedger = () => {
           valueKey: "id",
           labelKey: "name",
         }}
-        onChangeData={(data: any) => {
-          setPostDate((prev: any) => ({
-            ...prev,
-            userTypeCode: data.userTypeCode,
-          }));
-        }}
+        onChangeData={handleUserTypeChange}
         data={postData}
         defaultData={postData}
         value={postData?.userTypeCode}
         label="User Type"
       />
       <ERPDataCombobox
-        id="ledgerGroupId"
+        //   className="w-[200px]"
+        id="groupId"
         field={{
-          id: "ledgerGroupId",
+          id: "groupId",
           required: true,
           getListUrl: Urls.data_acc_groups,
           valueKey: "id",
           labelKey: "name",
         }}
         onChangeData={(data: any) => {
-            setPostDate((prev: any) => ({
+          setPostData((prev) => ({
             ...prev,
-            ledgerGroupId: data.ledgerGroupId,
+            groupId: data.groupId,
           }));
         }}
         data={postData}
         defaultData={postData}
-        value={postData?.ledgerGroupId}
-        label="Ledger Group"
+        value={postData?.groupId}
+        label="Account Group"
       />
       <ERPDataCombobox
-        id="hideLedgerID"
+        //   className="w-[200px]"
+        id="ledgerId"
         field={{
-          id: "hideLedgerID",
+          id: "ledgerId",
           required: true,
           getListUrl: Urls.data_acc_ledgers,
           valueKey: "id",
           labelKey: "name",
         }}
         onChangeData={(data: any) => {
-            setPostDate((prev: any) => ({
+          setPostData((prev) => ({
             ...prev,
-            hideLedgerID: data.hideLedgerID,
+            ledgerId: data.ledgerId,
           }));
         }}
         data={postData}
         defaultData={postData}
-        value={postData?.hideLedgerID}
-        label="Account Ledger"
+        value={postData?.ledgerId}
+        label="Ledger"
       />
     </div>
   );
+
+  const initialLoadGrid = useCallback(async (userTypeCode: string) => {
+    debugger;
+    setLoading(true);
+    try {
+      const response = await api.getAsync(`${Urls.hide_Ledger}${userTypeCode}`);
+      setStore(response);
+      handleResponse(response);
+      console.log("API Response:", response);
+    } catch (error) {
+      console.error("Error loading data:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleUserTypeChange = useCallback(
+    async (data: any) => {
+      setPostData((prev) => ({
+        ...prev,
+        userTypeCode: data.userTypeCode,
+      }));
+      debugger;
+      await initialLoadGrid(data.userTypeCode);
+    },
+    [initialLoadGrid]
+  );
+
+  const handleDelete = async (id: any) => {
+    try {
+      const Delete: any = await api.delete(`${Urls.hide_Ledger}${id}`);
+      handleResponse(Delete);
+      initialLoadGrid(postData.userTypeCode);
+      // load(postData.baseCurrency);
+    } catch (error) {
+      console.error("Error deleting the currency exchange:", error);
+    }
+  };
 
   return (
     <Fragment>
@@ -194,107 +193,99 @@ const HideAccountLedger = () => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
             <div className="grid grid-cols-1 gap-3">
-            <DataGrid
+              <DataGrid
+                height={gridHeight.windows}
                 dataSource={store}
                 showBorders={true}
                 columnAutoWidth={true}
-                showColumnLines={false}
+                showColumnLines={true}
                 showRowLines={true}
                 allowColumnResizing={true}
                 allowColumnReordering={true}
+                key="hideLedgerId"
               >
                 <FilterRow visible={true} />
                 <SearchPanel visible={false} />
                 <Scrolling mode="standard" />
                 <Paging defaultPageSize={100} />
-
-                <Toolbar>
-                  <Item location="before">
-                    {renderToolbarContent()}
-                  </Item>
-                  <Item
-                    location="after">
-                    <ERPButton
-                    title="Add"
-                    variant="primary"
-                    disabled={isSaving}
-                    loading={isSaving}
-                    type="button"
-                    onClick={handleSubmit}
-                  />
-                </Item>
-                </Toolbar>
+                {/* <RemoteOperations
+                    filtering={false}
+                    sorting={false}
+                    paging={false}
+                  ></RemoteOperations> */}
 
                 <Column
-                  allowSearch={true}
-                  allowEditing={false}
-                  allowFiltering={true}
-                  dataField="HideLedgerID "
-                  caption="Hide Ledger ID "
+                  dataField="hideLedgerID"
+                  caption="Hide Ledger ID"
                   dataType="number"
-                  width={200}
-                />
-
-                <Column
+                  width={120}
+                  allowSorting={true}
                   allowSearch={true}
                   allowEditing={false}
                   allowFiltering={true}
-                  dataField="LedgerID  "
-                  caption="Ledger ID "
+                  visible ={false}
+                />
+                <Column
+                  dataField="ledgerID"
+                  caption="Ledger ID"
                   dataType="number"
-                  width={200}
-                />
-
-                <Column
-                  width={200}
+                  width={120}
+                  allowSorting={true}
                   allowSearch={true}
                   allowEditing={false}
                   allowFiltering={true}
-                  dataField="Particulars "
-                  caption="Particulars "
+                  visible ={false}
+                />
+                <Column
+                  dataField="particulars"
+                  caption="Particulars"
                   dataType="string"
-                />
-                <Column
                   minWidth={200}
+                  allowSorting={true}
                   allowSearch={true}
                   allowEditing={false}
                   allowFiltering={true}
-                  dataField="IsGroup "
-                  caption="IsGroup "
+                />
+                <Column
+                  dataField="isGroup"
+                  caption="Is Group"
                   dataType="boolean"
+                  width={100}
                   cellRender={(cellData) => (
                     <ERPCheckbox
                       id={`show-${cellData.rowIndex}`}
-                      checked={cellData.data.IsGroup }
+                      checked={cellData.data.isGroup}
                       data={cellData.data}
                       noLabel={true}
-                    //   onChange={() => handleCheckboxChange(cellData.rowIndex)}
                     />
                   )}
                 />
-                 <Column 
-                    allowEditing={false} caption="Action" width={80} cellRender={ChartCell} 
+                <Column
+                  caption="Action"
+                  width={80}
+                  cellRender={(cellData) => (
+                    <div className="chart-cell">
+                      <i
+                        onClick={() => handleDelete(cellData.data.hideLedgerID)}
+                        className="ri-delete-bin-5-line delete-icon cursor-pointer"
+                      ></i>
+                    </div>
+                  )}
                 />
-               
-
-              </DataGrid>
-
-              {/* <div className="flex justify-end items-center m-3">
+                <Toolbar>
+                  <Item location="before">{renderToolbarContent()}</Item>
+                  <Item location="after">
                     <ERPButton
-                      title="Close"
-                      variant="secondary"
-                      onClick={handleClose}
-                      type="button"
-                    />
-                    <ERPButton
-                      title="Save"
+                      title="Add"
                       variant="primary"
                       disabled={isSaving}
                       loading={isSaving}
-                      onClick={handleSubmit}
                       type="button"
+                      onClick={handleSubmit}
                     />
-                  </div> */}
+                  </Item>
+                </Toolbar>
+              </DataGrid>
             </div>
           </div>
         </div>

@@ -86,7 +86,7 @@ autoExpandAll={true}
     // columnAutoWidth={true}
     keyExpr="keyField"
     parentIdExpr="parentID"
-    height={750} // Set a fixed height here
+    height={720} // Set a fixed height here
     scrolling={{ mode: 'virtual' }} // Specify virtual scrolling mode
   >
     <Selection mode="single" />

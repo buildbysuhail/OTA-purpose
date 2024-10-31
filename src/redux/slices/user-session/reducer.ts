@@ -19,7 +19,7 @@ export const initialUserSessionData: UserModel = {
   userId: 0,
   displayName: '',
   userimage: '',
-  userTypeId: 0,
+  userTypeCode: "",
   userTypeName: '',
   email: '',
   currentClientId: 0,
@@ -39,7 +39,7 @@ export interface UserModel {
   userId: number;
   displayName: string;
   userimage: string;
-  userTypeId: number;
+  userTypeCode: string;
   userTypeName: string;
   email: string;
   currentClientId: number;
@@ -60,7 +60,7 @@ export interface UserModel {
 export const initialState: UserModel = {
   userId: 0,
   displayName: '',
-  userTypeId: 0,
+  userTypeCode: '',
   userTypeName: '',
   userimage: '',
   email: '',

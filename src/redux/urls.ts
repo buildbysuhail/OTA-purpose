@@ -187,6 +187,7 @@ const Urls = {
   barcodePrintTransaction: "/Core/BarcodePrint/GetBarcodePrintGridFromTransaction/",
   // Accounts Start
   // Masters
+  hide_Ledger:"/Accounts/HideLedger/",
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",

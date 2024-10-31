@@ -1,5 +1,20 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  ClipboardList,
+  Receipt,
+  Filter,
+  RefreshCcw,
+  ArrowLeft,
+  Printer,
+  Info,
+  Grid2x2,
+  Utensils,
+  Truck,
+  PackageCheck,
+  Wifi,
+  BookHeart,
+} from "lucide-react";
 
 interface OrderItem {
   quantity: number;
@@ -46,12 +61,6 @@ const OrderCard: React.FC<OrderCardProps> = ({
         return "bg-[#f3f4f6] text-[#6b7280]";
     }
   };
-  // const navigate = useNavigate();
-
-
-  // const handleClick = () => {
-  //   navigator(-1);
-  // };
 
   return (
     <div className="bg-white rounded-lg shadow-md border border-[#e5e7eb] p-4">
@@ -93,10 +102,10 @@ const OrderCard: React.FC<OrderCardProps> = ({
 
       <div className="flex justify-end items-center">
         <button className="bg-[#e5e7eb] text-[#374151] px-4 py-2 rounded rounded-md mr-[6px]">
-          <i className="ri-printer-line"></i>
+          <Printer className="w-5 h-5" />
         </button>
         <button className="bg-[#e5e7eb] text-[#374151] px-4 py-2 rounded rounded-md mr-[6px]">
-          Info
+          <Info className="w-5 h-5" />
         </button>
         {orderType === "Dine In" ? (
           <button className="bg-[#1f2937] text-white px-4 py-2 rounded rounded-md mr-[6px]">
@@ -161,13 +170,23 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
     },
   ];
 
+  // const orderTypes = [
+  //   "All",
+  //   "Dine In",
+  //   "Delivery",
+  //   "Pick Up",
+  //   "Online",
+  //   "Other",
+  // ];
+
   const orderTypes = [
-    "All",
-    "Dine In",
-    "Delivery",
-    "Pick Up",
-    "Online",
-    "Other",
+    { label: "All", icon: <Grid2x2 /> },
+    { label: "Dine In", icon: <Utensils /> },
+    { label: "Delivery", icon: <Truck /> },
+    { label: "Pick Up", icon: <PackageCheck /> },
+    { label: "Online", icon: <Wifi /> },
+    { label: "Other", icon: <BookHeart /> },
+    // { label: "Other", icon: null },
   ];
 
   const filteredOrders = React.useMemo(() => {
@@ -183,29 +202,22 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
     setSelectedOrderType(type);
   };
 
-  // CSS for the toggle switch
-  const style = document.createElement("style");
-  style.textContent = `
-    .toggle-checkbox:checked {
-        right: 0;
-        border-color: #68D391;
-    }
-    .toggle-checkbox:checked + .toggle-label {
-        background-color: #68D391;
-    }
-`;
+  const navigate = useNavigate();
 
+  const handleClick = () => {
+    navigate(-1);
+  };
 
   return (
     <div>
-      <div className="flex items-center p-4 bg-white shadow">
+      <div className="flex items-center p-2 bg-white shadow border-b-[1px] border-t-[1px] border-gray-200">
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1 p-2 border rounded-lg">
-            <i className="fas fa-clipboard-list text-[#ef4444]"></i>
+            <ClipboardList className="w-[1rem] h-[1rem] text-[#ef4444]" />
             <span className="text-[#ef4444]">Order View</span>
           </div>
           <div className="flex items-center space-x-1 p-2 border rounded-lg">
-            <i className="fas fa-receipt text-black"></i>
+            <Receipt className="w-[1rem] h-[1rem]" />
             <span className="text-black">Kot View</span>
           </div>
         </div>
@@ -213,18 +225,14 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
         <div className="flex items-center space-x-4">
           <span>View Details</span>
           <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-            <input
-              type="checkbox"
-              name="toggle"
-              id="toggle"
-              className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-            />
-            <label
-              htmlFor="toggle"
-              className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
-            ></label>
+            <label className="inline-flex items-center me-5 cursor-pointer">
+              <input type="checkbox" value="" className="sr-only peer" />
+              <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#fca5a5] dark:peer-focus:ring-[#991b1b] dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#dc2626]"></div>
+            </label>
           </div>
-          <i className="fas fa-filter text-black"></i>
+          <div className="flex items-center space-x-2 p-2 border rounded-lg">
+            <Filter className="w-5 h-5" />
+          </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
             <span>Foodready</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">2</span>
@@ -237,101 +245,23 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
             <span>Deliver</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
-          <i className="fas fa-sync-alt text-black"></i>
-          <div className="flex items-center space-x-1 p-2 border rounded-lg">
-            <i className="fas fa-arrow-left text-black"></i>
+          <div className="flex items-center space-x-2 p-2 border rounded-lg">
+            <RefreshCcw className="w-5 h-5" />
+          </div>
+          <div
+            className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer"
+            onClick={handleClick}
+          >
+            <ArrowLeft className="w-5 h-5" />
             <span className="text-black">Back</span>
           </div>
         </div>
       </div>
-      {/* <header className="bg-white shadow-md p-2 flex justify-between items-center">
-        <div className="flex items-center space-x-6 text-gray-600">
-          <div className="flex items-center space-x-4">
-            <button className="bg-slate-400 flex items-center space-x-2 text-[#ef4444]">
-              <span>Order View</span>
-            </button>
-            <button className="text-gray-500">Kot View</button>
-          </div>
-          <div className="flex-grow flex items-center justify-center space-x-4">
-            <span>View Details</span>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" className="sr-only peer" checked />
-              <div className="w-10 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer-checked:bg-green-500 peer-checked:bg-transition duration-200"></div>
-              <div className="absolute w-4 h-4 bg-white rounded-full transition-transform transform peer-checked:translate-x-4"></div>
-            </label>
-          </div>
-          <div className="flex items-center space-x-4">
-            <button className="flex items-center space-x-2 border p-2 rounded">
-              <i className="fas fa-filter"></i>
-              <span>Foodready</span>
-              <span className="bg-[#ef4444] text-white rounded-full px-2">
-                2
-              </span>
-            </button>
-            <button className="flex items-center space-x-2 border p-2 rounded">
-              <span>Dispatch</span>
-              <span className="bg-[#ef4444] text-white rounded-full px-2">
-                0
-              </span>
-            </button>
-            <button className="flex items-center space-x-2 border p-2 rounded">
-              <span>Deliver</span>
-              <span className="bg-[#ef4444] text-white rounded-full px-2">
-                0
-              </span>
-            </button>
-            <button className="p-2 rounded">
-              <i className="fas fa-sync-alt"></i>
-            </button>
-            <button className="flex items-center space-x-2 p-2 rounded">
-              <i className="fas fa-arrow-left"></i>
-              <span>Back</span>
-            </button>
-          </div>
 
-          <Link
-            to="/settings"
-            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
-          >
-            <i className="bx bx-cog header-link-icon text-[23px] "></i>
-          </Link>
-
-          <Link
-            to="/"
-            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
-          >
-            <i className="ri-shut-down-line text-[23px]"></i>
-          </Link>
-        </div>
-      </header> */}
       <header className="bg-white shadow-md p-2 flex justify-between items-center">
         <div className="flex items-center space-x-6 text-gray-600">
-          {/* <button className="flex items-center space-x-2 text-[#ef4444] bg-red-100 p-2 rounded">
-            <i className="fas fa-th-large"></i>
-            <span>All</span>
-          </button>
-          <button className="flex items-center space-x-2">
-            <i className="fas fa-utensils"></i>
-            <span>Dine In</span>
-          </button>
-          <button className="flex items-center space-x-2">
-            <i className="fas fa-truck"></i>
-            <span>Delivery</span>
-          </button>
-          <button className="flex items-center space-x-2">
-            <i className="fas fa-shopping-bag"></i>
-            <span>Pick Up</span>
-          </button>
-          <button className="flex items-center space-x-2">
-            <i className="fas fa-wifi"></i>
-            <span>Online</span>
-          </button>
-          <button className="flex items-center space-x-2">
-            <i className="fas fa-ellipsis-h"></i>
-            <span>Other</span>
-          </button> */}
           <div className="flex space-x-4">
-            {orderTypes.map((type) => (
+            {/* {orderTypes.map((type) => (
               <button
                 key={type}
                 className={`px-4 py-2 rounded rounded-md ${
@@ -343,10 +273,24 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
               >
                 {type}
               </button>
+            ))} */}
+            {orderTypes.map((type) => (
+              <button
+                key={type.label}
+                className={`px-4 py-2 rounded rounded-md flex items-center space-x-2 ${
+                  selectedOrderType === type.label
+                    ? "bg-[#fee2e2] text-[#ef4444]"
+                    : "bg-[#e5e7eb] text-[#6b7280]"
+                }`}
+                onClick={() => handleOrderTypeChange(type.label)}
+              >
+                {type.icon && <span className="mr-2">{type.icon}</span>}
+                {type.label}
+              </button>
             ))}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 p-2 absolute right-4">
             <input
               type="text"
               placeholder="order No"
@@ -357,86 +301,9 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
               MFR
             </button>
           </div>
-
-          {/* <Link
-            to="/settings"
-            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
-          >
-            <i className="bx bx-cog header-link-icon text-[23px] "></i>
-          </Link>
-
-          <Link
-            to="/"
-            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
-          >
-            <i className="ri-shut-down-line text-[23px]"></i>
-          </Link> */}
         </div>
       </header>
       <div className="p-4">
-        {/* <div className="flex justify-between items-center mb-4">
-        <div className="flex items-center space-x-4">
-          <button
-            className={`px-4 py-2 rounded ${
-              activeView === "order"
-                ? "bg-[#fee2e2] text-[#ef4444]"
-                : "bg-[#e5e7eb] text-[#6b7280]"
-            }`}
-            onClick={() => handleViewChange("order")}
-          >
-            Order View
-          </button>
-          <button
-            className={`px-4 py-2 rounded ${
-              activeView === "kot"
-                ? "bg-[#fee2e2] text-[#ef4444]"
-                : "bg-[#e5e7eb] text-[#6b7280]"
-            }`}
-            onClick={() => handleViewChange("kot")}
-          >
-            Kot View
-          </button>
-        </div>
-        <div className="flex items-center space-x-4">
-          <button className="bg-[#e5e7eb] text-[#6b7280] px-4 py-2 rounded">
-            Foodready{" "}
-            <span className="bg-[#ef4444] text-white px-2 py-1 rounded-full">
-              2
-            </span>
-          </button>
-          <button className="bg-[#e5e7eb] text-[#6b7280] px-4 py-2 rounded">
-            Dispatch{" "}
-            <span className="bg-[#ef4444] text-white px-2 py-1 rounded-full">
-              0
-            </span>
-          </button>
-          <button className="bg-[#e5e7eb] text-[#6b7280] px-4 py-2 rounded">
-            Back
-          </button>
-          <input
-            type="text"
-            placeholder="Enter order no."
-            className="border border-[#d1d5db] rounded px-4 py-2"
-          />
-        </div>
-      </div> */}
-
-        {/* <div className="flex space-x-4">
-        {orderTypes.map((type) => (
-          <button
-            key={type}
-            className={`px-4 py-2 rounded ${
-              selectedOrderType === type
-                ? "bg-[#fee2e2] text-[#ef4444]"
-                : "bg-[#e5e7eb] text-[#6b7280]"
-            }`}
-            onClick={() => handleOrderTypeChange(type)}
-          >
-            {type}
-          </button>
-        ))}
-      </div> */}
-
         <div className="mt-4">
           <span className="text-[#6b7280]">
             Total Orders | {filteredOrders.length}

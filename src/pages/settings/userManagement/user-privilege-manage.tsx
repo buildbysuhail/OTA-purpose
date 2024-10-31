@@ -85,6 +85,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       'E': userRights.filter(item => item.formCode === 'E').map(item => item.id),
       'X': userRights.filter(item => item.formCode === 'X').map(item => item.id),
       'D': userRights.filter(item => item.formCode === 'D').map(item => item.id),
+      // 'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
     };
 
     const selectedPermissionIds = permissionMap[permission] || [];
@@ -314,7 +315,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           onSelectionChanged={onSelectionChanged}
         >
           <Selection recursive={true} mode="multiple" />
-          <Column dataField="fullName" />
+          <Column dataField="fullName" caption=""/>
         </TreeList>
       </div>
 
@@ -441,9 +442,27 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
             }}
             validation={postData.validations.showAllDelete}
           />
+
+          {/* <ERPCheckbox
+            id="showAll"
+            label={t("show_all")}
+            data={postData.data}
+            checked={postData.data.showAll}
+            onChangeData={(data) => {
+              setPostData((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  showAll: !prev.data.showAll,
+                },
+              }));
+              handleSelectSpecific('S', data.showAll);
+            }}
+            validation={postData.validations.showAll}
+          /> */}
         </div>
         <ERPCheckbox
-          id="showAllDelete"
+          id="chkbc_inherit"
           label={t("inherit_rights_from_usertype")}
           data={postData.data}
           checked={inherit_rights_from_usertype}

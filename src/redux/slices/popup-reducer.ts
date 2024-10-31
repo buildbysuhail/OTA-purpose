@@ -52,8 +52,10 @@ interface popupData {
   unitOfMeasure:popupDataProps
   vehicles:popupDataProps
   warehouse:popupDataProps
+  hide_acc_ledger:popupDataProps
 }
 const initialState: popupData = {
+  hide_acc_ledger: { isOpen: false, key: null, mode: "edit", reload: true },
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
   miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true },
   headAndFooter: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -261,12 +263,16 @@ const popupDataSlice = createSlice({
     toggleWarehouse: (state, action: PayloadAction<popupDataProps>) => {
       state.warehouse = action.payload;
     },
-
+    toggleHideAccLedger: (state, action: PayloadAction<popupDataProps>) => {
+      state.hide_acc_ledger = action.payload;
+    },
+    
   },
 });
 
 // Extract the actions
 export const {
+  toggleHideAccLedger,
   toggleUpi,
   toggleMiscellaneousSettingsPopup,
   toggleHeaderFooterPopup,

@@ -5,7 +5,7 @@ import SettingsCard from "./Components/SettingsCard";
 import { SettingsMenuItems } from "../../../components/common/sidebar/sidemenu/settings";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import {
   toggleDeleteInactiveTransactionPopup,
   toggleCompanyProfilePopup,
@@ -24,10 +24,12 @@ import {
   toggleRefreshAllBranches,
   toggleChartOfAccounts,
   toggleHeaderFooterPopup,
+  toggleHideAccLedger,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
-import ChartOfAccounts from "../../accounts/masters/chart-of-accounts/chart-of-accounts";
+import { RootState } from "../../../redux/store";
 
+const HideAccountLedger = lazy(() => import("../../accounts/masters/hide-account-ledger/hide-acc-ledger"));
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
 const BankPosSettingsManage = lazy(() => import("../Administration/bank-pos-settings-manage"));
@@ -46,6 +48,8 @@ const RefreshAllBranches = lazy(() => import("../system/refresh-all-branches"));
 const HeadersAndFooters = lazy(() => import("../system/headres-footer"));
 
 const Settings = () => {
+  
+  let userSession = useAppSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation();
   const rootState = useRootState();
   const dispatch = useAppDispatch();
@@ -72,6 +76,19 @@ const Settings = () => {
     // Preload the components after the initial render
     preloadComponents();
   }, []);
+  
+  useEffect(() => {
+    debugger;
+    if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setSettingRoutes([]) }
+    // if (userSession.userTypeCode == "BA") {
+    //   const st = settingsRoutes.filter((x: any) => x.title != 'branches');
+    //   setSettingRoutes(st);
+    // }
+    // if (userSession.userTypeCode == "BA") {
+    //   const st = settingsRoutes.filter((x: any) => x.title != 'branch_info');
+    //   setSettingRoutes(st);
+    // }
+  }, []);
 
 
   return (
@@ -90,6 +107,16 @@ const Settings = () => {
           </div>
         </div>
       </div>
+      <ERPModal
+        isOpen={rootState.PopupData.hide_acc_ledger.isOpen || false}
+        title="Hide Account  Ledger"
+        width="w-full max-w-[1000px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleHideAccLedger({ isOpen: false }));
+        }}
+        content={<HideAccountLedger />}
+      />
       <ERPModal
         isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
         title={t("user_privilege")}

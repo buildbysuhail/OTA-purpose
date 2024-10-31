@@ -30,8 +30,8 @@ export const initialDataUserType = {
     userTypeName: "",
     userTypeCode: "",
     remarks: "",
-    isEditable: false,
-    isDeletable: false
+    isEditable: true,
+    isDeletable: true
   },
   validations: {
     userTypeName: "",

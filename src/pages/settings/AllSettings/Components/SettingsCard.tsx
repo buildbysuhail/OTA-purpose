@@ -1,30 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
+import { RootState } from "../../../../redux/store";
 
 const SettingsCard = ({ data }: any) => {
+  
+  let userSession = useAppSelector((state: RootState) => state.UserSession);
   const navigate = useNavigate();
   const {t}=useTranslation();
   const dispatch = useAppDispatch()
   const columns = Math.max(1, data.columns || 1);
-  const children = data.children || [];
+  const [items, setItems] = useState<any>(data.children || [])
+  const [distributedItems, setDistributedItems] = useState<any>([])
 
   const distributeItems = (): any => {
-    const result: any = Array.from({ length: columns }, () => []);
-    const itemsPerColumn = Math.ceil(children.length / columns);
+    debugger;
+    let st = items;
+    if (userSession.userTypeCode == "BA") {
+      st = st?.filter((x: any) => x.title != 'branches');
+      setItems(st);
+    }
+    if (userSession.userTypeCode == "CA") {
+      st = st?.filter((x: any) => x.title != 'branch_info');
+      setItems(st);
+    }
 
-    children.forEach((item: any, index: any) => {
+    const result: any = Array.from({ length: columns }, () => []);
+    const itemsPerColumn = Math.ceil(st.length / columns);
+
+    st?.forEach((item: any, index: any) => {
       const columnIndex = Math.floor(index / itemsPerColumn);
-      result[columnIndex].push(item);
+      result[columnIndex]?.push(item);
     });
 
     return result;
   };
 
-  const distributedItems = distributeItems();
+  useEffect(() =>{
+    
+    debugger;
+    setDistributedItems(distributeItems());
+  },[])
   return (
     <div className="w-auto bg-gray-50 rounded-lg p-5 border flex flex-grow ">
       <div className="flex flex-col gap-5">

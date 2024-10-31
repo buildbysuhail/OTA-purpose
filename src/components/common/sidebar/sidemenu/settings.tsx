@@ -70,6 +70,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/unit-of-measure`, type: 'link', active: false, selected: false, title: 'unit_of_measure' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/vehicles`, type: 'link', active: false, selected: false, title: 'vehicles' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/warehouse`, type: 'link', active: false, selected: false, title: 'warehouse' },
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/tax-category`, type: 'link', active: false, selected: false, title: 'tax_category' },
     ]
   },
   {

@@ -273,6 +273,7 @@ const Urls = {
   unitOfMeasure: "/Inventory/UnitofMeasures/",
   vehicles: "/Inventory/Vehicles/",
   Warehouse: "/Inventory/Warehouse/",
+  taxCategory: "/Inventory/TaxCategory/",
 };
 
 export default Urls;

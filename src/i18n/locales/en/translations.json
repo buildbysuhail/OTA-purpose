@@ -1090,5 +1090,14 @@
   "physical":"Physical",
   "van":"Van",
 
-  "gst_number":"GST Number"
+  "gst_number":"GST Number",
+  "sales_VAT_%":"Sales VAT %",
+  "purchase_VAT_%":"Purchase VAT %",
+  "purchase_excise_tax_%":"Purchase Excise Tax %",
+  "sales_excise_tax_%":"Sales Excise Tax %",
+  "tax_category_name":"Tax Category Name",
+  "s_VAT_%":"S VAT %",
+  "p_VAT_%":"S VAT %",
+  "s_cst_%":"S CST %",
+  "p_cst_%":"P CST %"
 }

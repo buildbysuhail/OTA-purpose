@@ -48,7 +48,7 @@ export function useFormManager<T>({
   const appDispatch = useAppDispatch();
   const apiClient = new APIClient();
 
-debugger;
+
   const queryParams = new URLSearchParams(location.search);
   key =
     (key == undefined || key == null || key == "0" || key == ""
@@ -272,6 +272,7 @@ debugger;
       
 
       // Update the nested field
+      debugger;
       const newData = setNestedValue(formState?.data, fieldId, value);
 
       if (useApiClient) {

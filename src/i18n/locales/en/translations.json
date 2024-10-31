@@ -221,7 +221,7 @@
   "maintain_shift": "Maintain Shift",
   "descriptions": "Descriptions",
   "SiNo": "S.No",
-  "ledger_name": "ledger Name",
+  "ledger_name": "Ledger Name",
   "voucher_prefix": "Voucher Prefix",
   "employee": "Employee",
   "display_order": "Display Order",
@@ -1088,5 +1088,7 @@
   "type":"Type",
 
   "physical":"Physical",
-  "van":"Van"
+  "van":"Van",
+
+  "gst_number":"GST Number"
 }

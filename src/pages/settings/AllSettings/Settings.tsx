@@ -24,11 +24,12 @@ import {
   toggleRefreshAllBranches,
   toggleChartOfAccounts,
   toggleHeaderFooterPopup,
+  toggleHideAccLedger,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
-import ChartOfAccounts from "../../accounts/masters/chart-of-accounts/chart-of-accounts";
 import { RootState } from "../../../redux/store";
 
+const HideAccountLedger = lazy(() => import("../../accounts/masters/hide-account-ledger/hide-acc-ledger"));
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
 const BankPosSettingsManage = lazy(() => import("../Administration/bank-pos-settings-manage"));
@@ -106,6 +107,16 @@ const Settings = () => {
           </div>
         </div>
       </div>
+      <ERPModal
+        isOpen={rootState.PopupData.hide_acc_ledger.isOpen || false}
+        title="Hide Account  Ledger"
+        width="w-full max-w-[1000px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleHideAccLedger({ isOpen: false }));
+        }}
+        content={<HideAccountLedger />}
+      />
       <ERPModal
         isOpen={rootState.PopupData.userTypePrivilege.isOpen || false}
         title={t("user_privilege")}

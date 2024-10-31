@@ -256,7 +256,8 @@ const ExchangeRates = () => {
                     minWidth={150}
                   />
                   <Column 
-                    allowEditing={false} caption="Action" width={80} cellRender={ChartCell} />
+                    allowEditing={false} caption="Action" width={80} cellRender={ChartCell} 
+                    />
                   <Editing
                     allowUpdating={true}
                     allowAdding={false}

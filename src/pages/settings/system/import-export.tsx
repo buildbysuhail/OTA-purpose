@@ -19,11 +19,13 @@ export const initialImportExportData = {
     filePath: "",
     product: false,
     parties: false,
+    privilegeCard: false,
   },
   validations: {
     filePath: "",
     product: "",
     parties: "",
+    privilegeCard: "",
   },
 };
 const api = new APIClient();
@@ -94,8 +96,7 @@ const ImportExportManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  product: data,
-                  parties: !data ? prev.data.parties : false,
+                  product: !prev.data?.product,
                 },
               }));
             }}
@@ -113,8 +114,24 @@ const ImportExportManage: React.FC = React.memo(() => {
                 ...prev,
                 data: {
                   ...prev.data,
-                  parties: data,
-                  product: !data ? prev.data.product : false,
+                  parties: !prev.data.parties
+                },
+              }));
+            }}
+          />
+
+          <ERPCheckbox
+            label={t("privilege_card")}
+            id="privilegeCard"
+            data={importExport.data}
+            checked={importExport.data.privilegeCard}
+            validation={importExport?.validations?.privilegeCard}
+            onChangeData={(data: any) => {
+              setImportExport((prev: any) => ({
+                ...prev,
+                data: {
+                  ...prev.data,
+                  privilegeCard: !prev.data.privilegeCard,
                 },
               }));
             }}

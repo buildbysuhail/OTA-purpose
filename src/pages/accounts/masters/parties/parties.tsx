@@ -22,7 +22,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "s.No",
+      dataField: "siNo",
       caption: t("SiNo"),
       dataType: "string",
       allowSorting: true,
@@ -32,7 +32,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       isLocked: true,
     },
     {
-      dataField: "partyID",
+      dataField: "id",
       caption: t('id'),
       dataType: "string",
       allowSearch: true,
@@ -40,7 +40,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       width: 100,
     },
     {
-      dataField: "partyCode",
+      dataField: "code",
       caption: t("code"),
       dataType: "string",
       allowSorting: true,
@@ -49,7 +49,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       width: 100,
     },
     {
-      dataField: "partyName",
+      dataField: "party",
       caption: type =='Cust' ?t("customer"): t("supplier"),
       dataType: "string",
       allowSorting: true,
@@ -58,7 +58,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       width: 100,
     },
     {
-      dataField: "ledgerID",
+      dataField: "ledger",
       caption: t("ledger"),
       dataType: "string",
       allowSorting: true,
@@ -76,7 +76,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       width: 100,
     },
     {
-      dataField: "address1",
+      dataField: "address",
       caption: t("address1"),
       dataType: "number",
       allowSorting: true,
@@ -365,8 +365,8 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.partyID }) }}
-          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.partyID }) }}
+          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",

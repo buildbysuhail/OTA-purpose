@@ -107,7 +107,7 @@ const PrintSettingForm: React.FC = () => {
       <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
         <div className="space-y-6 p-6  !mb-[12rem]">
           <div className="border p-4 rounded-lg">
-            <div className="form-row grid grid-cols-1 gap-3 my-3">
+            <div className="form-row grid grid-cols-4 gap-3 my-3">
               {/* <ERPInput
                 id="defaultPrinter"
                 value={formState.defaultPrinter}
@@ -143,7 +143,7 @@ const PrintSettingForm: React.FC = () => {
               />
             </div>
 
-            <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
+            <div className="form-row grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-4">
               <ERPCheckbox
                 id="printGatePass"
                 checked={formState.printGatePass}

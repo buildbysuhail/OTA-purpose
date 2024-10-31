@@ -347,21 +347,17 @@ const ApplicationSettingsProduct = () => {
                   { value: 4, label: "Ignore" },
                 ]}
               />
-              <div className="mb-2">
-                <label
-                  htmlFor="productImagePath"
-                  className="block text-[13px] font-medium text-gray-700">
-                  {t("set_gift_shared_path")}
-                </label>
-                <input
-                  type="file"
-                  id="productImagePath"
-                  className="mt-1 w-full border border-gray-300 p-2 rounded-md"
-                  onChange={(data: any) =>
-                    handleFieldChange("productImagePath", data.productImagePath)
-                  }
-                />
-              </div>
+              <ERPInput
+                id="productImagePath"
+                value={formState.productImagePath}
+                data={formState}
+                label={t("set_gift_shared_path")}
+                type="text"
+                placeholder={t("set_gift_shared_path")}
+                onChangeData={(data) =>
+                  handleFieldChange("productImagePath", data.productImagePath)
+                }
+              />
             </div>
             <div className="grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 mt-4">
               <div className="flex items-center justify-between sm:justify-start  ">

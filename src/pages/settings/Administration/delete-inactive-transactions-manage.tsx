@@ -10,6 +10,7 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { initialDataCounter } from "../system/counters-manage-type";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import { useTranslation } from "react-i18next";
+import ERPButton from "../../../components/ERPComponents/erp-button";
 
 interface DeleteInactiveTransactionManageData {
   date: string;
@@ -19,7 +20,7 @@ interface DeleteInactiveTransactionManageData {
 const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, formState, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<DeleteInactiveTransactionManageData>({
       url: Urls.deleteInactiveTransactions,
       onSuccess: useCallback(
@@ -31,7 +32,8 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
       ),
       method: ActionType.POST,
       useApiClient: true,
-      loadDataRequired: false
+      loadDataRequired: false,
+      initialData: {data:{date:new Date()}}
     });
   
   const onClose = useCallback(() => {
@@ -61,11 +63,12 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         />
           
       </div>
-      <ERPFormButtons
-        isEdit={isEdit}
+      <ERPButton
         title={t("delete_all")}
-        isLoading={isLoading}
-        onSubmit={handleSubmit}
+        loading={isLoading}
+        variant="primary"
+        disabled={formState.data.isAgree == true}
+        onClick={handleSubmit}
       />
     </div>
   );

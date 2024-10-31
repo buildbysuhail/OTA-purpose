@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
@@ -8,10 +9,9 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { initialPrivilegeCard, PrivilegeCardData } from "./privilege-card-types";
-import { useTranslation } from "react-i18next";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
-export const PrivilegeCardManage = () => {
+export const PrivilegeCardManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const { t } = useTranslation();
@@ -26,7 +26,10 @@ export const PrivilegeCardManage = () => {
     isLoading,
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
-    onSuccess: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onSuccess: useCallback(
+      () => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })),
+      [dispatch]
+    ),
     key: rootState.PopupData.privilegeCard.key,
     useApiClient: true,
     initialData: initialPrivilegeCard
@@ -52,7 +55,6 @@ export const PrivilegeCardManage = () => {
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-     
         <ERPInput
           {...getFieldProps('cardNumber')}
           label={t("card_number")}
@@ -132,7 +134,7 @@ export const PrivilegeCardManage = () => {
         />
         <ERPInput
           {...getFieldProps('opBalance')}
-          label={formState?.data.cardType == "Privilege" ? t("op_balance") :t("amount")}
+          label={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
           placeholder={t("op_balance")}
           type="number"
           required={true}
@@ -166,6 +168,6 @@ export const PrivilegeCardManage = () => {
       />
     </div>
   );
-};
+});
 
 export default PrivilegeCardManage;

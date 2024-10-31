@@ -205,21 +205,17 @@ const MiscellaneousSettingsForm: React.FC = () => {
                       )
                     }
                   />
-                  <div className="mb-2">
-                    <label
-                      htmlFor="secondDisplayImagesPath"
-                      className="block text-[12px] font-medium text-gray-700">
-                      {t("second_display_images_path")}
-                    </label>
-                    <input
-                      type="file"
-                      id="secondDisplayImagesPath"
-                      className="mt-1 w-full border border-gray-300 p-2 rounded-md"
-                      onChange={(data: any) =>
-                        handleFieldChange("secondDisplayImagesPath", data.secondDisplayImagesPath)
-                      }
-                    />
-                  </div>
+                  <ERPInput
+                    id="secondDisplayImagesPath"
+                    value={formState.secondDisplayImagesPath}
+                    data={formState}
+                    label={t("second_display_images_path")}
+                    type="text"
+                    placeholder={t("second_display_images_path")}
+                    onChangeData={(data) =>
+                      handleFieldChange("secondDisplayImagesPath", data.secondDisplayImagesPath)
+                    }
+                  />
                   <ERPCheckbox
                     id="maintainAllBranchWithCommonInventory"
                     checked={formState.maintainAllBranchWithCommonInventory}

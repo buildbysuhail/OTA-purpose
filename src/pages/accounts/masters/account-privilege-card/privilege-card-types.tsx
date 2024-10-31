@@ -7,12 +7,12 @@ export interface PrivilegeCardData {
   phone: string,
   mobile: string,
   email: string,
-  dob: string,
+  dob: Date,
   changeID: number,
   cardType: string,
   priceCategoryID: number,
-  expiryDate: string,
-  activateDate: string,
+  expiryDate: Date,
+  activateDate: Date,
   opBalance: number
 }
 
@@ -26,12 +26,12 @@ export const initialPrivilegeCard = {
     phone: "",
     mobile: "",
     email: "",
-    dob: "",
+    dob: null,
     changeID: 0,
     cardType: "",
     priceCategoryID: 0,
-    expiryDate: "",
-    activateDate: "",
+    expiryDate: null,
+    activateDate: null,
     opBalance: 0
   },
   validations: {

@@ -8,6 +8,7 @@ import {
   useAppSelector,
 } from "../../../utilities/hooks/useAppDispatch";
 import { Link } from "react-router-dom";
+import { Handshake } from "lucide-react";
 
 interface RPosHeaderProps {}
 
@@ -38,6 +39,13 @@ const RPosHeader: FC<RPosHeaderProps> = () => {
           />
         </div>
         <div className="flex items-center space-x-6 text-gray-600">
+          <Link
+            to="/rpos/operations"
+            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
+          >
+            {/* <i className="ri-shake-hands-fill text-[33px]"></i> */}
+            <Handshake className="text-[33px]" />
+          </Link>
           <i className="ri-file-list-line text-[33px] "></i>
           <i className="ri-printer-line text-[33px]"></i>
           <Link

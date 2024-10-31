@@ -63,16 +63,16 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange('shortName', data.shortName)}
         />
         <ERPDataCombobox
-          {...getFieldProps("parentGroupId")}
+          {...getFieldProps("parentGroupID")}
           field={{
-            id: "parentGroupId",
+            id: "parentGroupID",
             required: true,
             getListUrl: Urls.data_acc_groups,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("parentGroupId", data.parentGroupId)
+            handleFieldChange("parentGroupID", data.parentGroupID)
           }}
           label={t("group_under")}
         />

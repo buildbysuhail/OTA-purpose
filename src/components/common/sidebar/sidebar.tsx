@@ -1,5 +1,5 @@
 import React, { FC, Fragment, useEffect, useMemo, useState } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import store, { RootState } from "../../../redux/store";
 import logo1 from "../../../assets/images/brand-logos/logo_dark.png";
@@ -23,7 +23,8 @@ interface SidebarProps {
   type: "erp" | "account-settings" | "workspace-settings" | "settings" | "reports";
 }
 
-const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
+const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
+  let userSession = useAppSelector((state: RootState) => state.UserSession);
   const [menuitems, setMenuitems] = useState<any>(() => {
     switch (type) {
       case "erp":
@@ -32,17 +33,29 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
         return AccountSettingsMenuItems;
       case "workspace-settings":
         return WorkspaceSettingsMenuItems;
-        case "settings":
-          return SettingsMenuItems;
-          case "reports":
-            return ReportsMenuItems;
+      case "settings":
+        return SettingsMenuItems;
+      case "reports":
+        return ReportsMenuItems;
       default:
         return []; // or some default menu items
     }
   });
-  const {t} = useTranslation();
+  useEffect(() => {
+    if (type == "settings") {
+      if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setMenuitems([]) }
+      if (userSession.userTypeCode == "BA") {
+        const st = menuitems.filter((x: any) => x.title != 'branches');
+        setMenuitems(st);
+      }
+      if (userSession.userTypeCode == "BA") {
+        const st = menuitems.filter((x: any) => x.title != 'branch_info');
+        setMenuitems(st);
+      }
+    }
+  }, []);
+  const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
-  let userSession = useAppSelector((state: RootState) => state.UserSession);
   const { appState, updateAppState } = useAppState();
 
   const local_varaiable = appState;
@@ -439,14 +452,14 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
   }
   //
   function setMenuUsingUrl(currentPath: any) {
-    
+
     hasParent = false;
     hasParentLevel = 1;
     // Check current url and trigger the setSidemenu method to active the menu.
     const setSubmenuRecursively = (items: any) => {
       items?.forEach((item: any) => {
         if (item.path == "") {
-        } else if (currentPath.includes(item.path) ) {
+        } else if (currentPath.includes(item.path)) {
           setSubmenu(null, item);
         }
         setSubmenuRecursively(item.children);
@@ -462,7 +475,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
       userSession?.companies &&
       Array.isArray(userSession?.companies)
     ) {
-      
+
       const company = userSession?.companies.find(
         (x: any) => x.name === userSession?.currentClientName
       );
@@ -560,10 +573,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
             if (theme.dir == "rtl") {
               if (
                 siblingULRect.left - siblingULRect.width - outterUlWidth + 150 <
-                  0 &&
+                0 &&
                 outterUlWidth < window.innerWidth &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                  window.innerWidth
+                window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -572,10 +585,10 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
             } else {
               if (
                 outterUlWidth + siblingULRect.right + siblingULRect.width + 50 >
-                  window.innerWidth &&
+                window.innerWidth &&
                 siblingULRect.right >= 0 &&
                 outterUlWidth + siblingULRect.width + siblingULRect.width <
-                  window.innerWidth
+                window.innerWidth
               ) {
                 targetObject.dirchange = true;
               } else {
@@ -715,20 +728,17 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
                 {menuitems.map((levelone: any) => (
                   <Fragment key={Math.random()}>
                     <li
-                      className={`${
-                        levelone.menutitle
+                      className={`${levelone.menutitle
                           ? "slide__category"
                           : levelone.menutitle_lg
-                          ? "slide__category slide__category__lg"
-                          : ""
-                      } ${
-                        levelone.hasTopBorder === true
+                            ? "slide__category slide__category__lg"
+                            : ""
+                        } ${levelone.hasTopBorder === true
                           ? "border-t border-t-[1px] border-solid border-t-white/10 pt-2"
                           : ""
-                      } ${levelone.type === "link" ? "slide" : ""}
-                         ${levelone.type === "sub" ? "slide has-sub" : ""} ${
-                        levelone?.active ? "open" : ""
-                      } ${levelone?.selected ? "active" : ""}`}
+                        } ${levelone.type === "link" ? "slide" : ""}
+                         ${levelone.type === "sub" ? "slide has-sub" : ""} ${levelone?.active ? "open" : ""
+                        } ${levelone?.selected ? "active" : ""}`}
                     >
                       {levelone.menutitle ? (
                         <span className="category-name">
@@ -747,9 +757,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
                       {levelone.type === "link" ? (
                         <Link
                           to={levelone.path}
-                          className={`side-menu__item ${
-                            levelone.selected ? "active" : ""
-                          }`}
+                          className={`side-menu__item ${levelone.selected ? "active" : ""
+                            }`}
                         >
                           {levelone.icon}
                           <span className="side-menu__label">
@@ -770,7 +779,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
                         <Link to="#" className="side-menu__item">
                           {levelone.icon}
                           <span className="">
-                          {t(levelone.title)}
+                            {t(levelone.title)}
                             {levelone.badgetxt ? (
                               <span className={levelone.class}>
                                 {levelone.badgetxt}
@@ -794,7 +803,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
                         ""
                       )}
                     </li>
-  
+
                     {levelone.menutitle_lg && levelone.showUserMiniCard && (
                       <li className="slide__category_Detail">
                         <div className="sm:flex items-start items-center">
@@ -871,7 +880,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({type}) => {
       </Fragment>
     );
   }, [menuitems]);
- return renderNavItems
+  return renderNavItems
 });
 
 

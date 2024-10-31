@@ -5,7 +5,7 @@ import SettingsCard from "./Components/SettingsCard";
 import { SettingsMenuItems } from "../../../components/common/sidebar/sidemenu/settings";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import {
   toggleDeleteInactiveTransactionPopup,
   toggleCompanyProfilePopup,
@@ -27,6 +27,7 @@ import {
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import ChartOfAccounts from "../../accounts/masters/chart-of-accounts/chart-of-accounts";
+import { RootState } from "../../../redux/store";
 
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
@@ -46,6 +47,8 @@ const RefreshAllBranches = lazy(() => import("../system/refresh-all-branches"));
 const HeadersAndFooters = lazy(() => import("../system/headres-footer"));
 
 const Settings = () => {
+  
+  let userSession = useAppSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation();
   const rootState = useRootState();
   const dispatch = useAppDispatch();
@@ -71,6 +74,19 @@ const Settings = () => {
   useEffect(() => {
     // Preload the components after the initial render
     preloadComponents();
+  }, []);
+  
+  useEffect(() => {
+    debugger;
+    if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setSettingRoutes([]) }
+    // if (userSession.userTypeCode == "BA") {
+    //   const st = settingsRoutes.filter((x: any) => x.title != 'branches');
+    //   setSettingRoutes(st);
+    // }
+    // if (userSession.userTypeCode == "BA") {
+    //   const st = settingsRoutes.filter((x: any) => x.title != 'branch_info');
+    //   setSettingRoutes(st);
+    // }
   }, []);
 
 

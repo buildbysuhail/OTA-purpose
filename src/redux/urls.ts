@@ -19,6 +19,7 @@ const Urls = {
 
   // Dropdown - core
   data_countries: "/Data/Countries/",
+  data_states: "/Data/States/",
   data_currencies: "/Data/Currencies/",
   data_industries: "/Data/Industries/",
   data_stock_valuation_methods: "/Data/StockValuationMethods/",
@@ -60,7 +61,7 @@ const Urls = {
   data_FormTypeByPR: "/Accounts/Data/FormTypeByPR",
   data_PurchaseAccount: "/Accounts/Data/PurchaseAccount/",
   data_BranchRecPayAccount: "/Accounts/Data/BranchRecPayAccount/",
-
+  data_CustSupp: "/Accounts/Data/CustomerAndSupplier/",
 
   // Dropdown - inventory
   data_productgroup: "/Inventory/Data/ProductGroup",
@@ -186,6 +187,7 @@ const Urls = {
   barcodePrintTransaction: "/Core/BarcodePrint/GetBarcodePrintGridFromTransaction/",
   // Accounts Start
   // Masters
+  hide_Ledger:"/Accounts/HideLedger/",
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",

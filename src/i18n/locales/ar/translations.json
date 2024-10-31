@@ -1090,5 +1090,7 @@
   "supplier": "هامش %",
 
   "physical": "مادي",
-  "van": "فان"
+  "van": "فان",
+
+  "gst_number": "رقم GST"
 }

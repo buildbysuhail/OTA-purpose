@@ -365,8 +365,8 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.partyID }) }}
-          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.partyID }) }}
+          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id }) }}
+          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",

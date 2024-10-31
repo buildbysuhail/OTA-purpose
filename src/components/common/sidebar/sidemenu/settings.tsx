@@ -8,6 +8,7 @@ import {
   toggleDeleteInactiveTransactionPopup,
   toggleExchangeRatesPopup,
   toggleHeaderFooterPopup,
+  toggleHideAccLedger,
   toggleImportExportPopup,
   toggleRefreshAllBranches,
   toggleResetBranchDataForSync,
@@ -47,6 +48,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customer-supplier-ledger`, type: 'link', active: false, selected: false, title: 'cust_supp_ledger' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/bank-cards`, type: 'link', active: false, selected: false, title: 'bank_card' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/upi`, type: 'link', active: false, selected: false, title: 'upi' },
+      { action: toggleHideAccLedger, type: 'popup', active: false, selected: false, title: 'Hide Account Ledger' },
     ]
   },
   {

@@ -314,7 +314,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           parentIdExpr="headId"
           onSelectionChanged={onSelectionChanged}
         >
-          <Selection recursive={true} mode="multiple" />
+          <Selection recursive={false} mode="multiple" />
           <Column dataField="fullName" caption=""/>
         </TreeList>
       </div>

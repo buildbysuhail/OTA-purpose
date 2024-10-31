@@ -29,12 +29,13 @@ export const UpiManage: React.FC = React.memo(() => {
     key: rootState.PopupData.upi.key,
     useApiClient: true,
     initialData: initialUpi,
+    loadDataRequired: true
   });
 
   const onClose = useCallback(() => {
     dispatch(toggleUpi({ isOpen: false, key: null }));
   }, []);
-
+debugger;
   const { t } = useTranslation();
   return (
     <div className="w-full pt-4">
@@ -49,6 +50,8 @@ export const UpiManage: React.FC = React.memo(() => {
             labelKey: "label"
           }}
           onChangeData={(data: any) => {
+            debugger;
+            // handleFieldChange('paymentName', data.paymentType)
             handleFieldChange("paymentType", data.paymentType)
           }}
           label={t("upi")}

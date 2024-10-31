@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -10,14 +10,13 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { PrivilegeCardManage } from "./privilege-card-manage";
 
-
 const PrivilegeCard = () => {
   const MemoizedPrivilegeCardrManage = useMemo(() => React.memo(PrivilegeCardManage), []);
-
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = [
+
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "privilegeCardsID",
       caption: t("privilege_card_ID"),
@@ -50,7 +49,6 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      
     },
     {
       dataField: "address1",
@@ -59,7 +57,6 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-
     },
     {
       dataField: "address2",
@@ -68,7 +65,6 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-
     },
     {
       dataField: "phone",
@@ -166,20 +162,21 @@ const PrivilegeCard = () => {
       fixed: true,
       fixedPosition: "right",
       width: 100,
-      cellRender: (cellElement: any, cellInfo: any) => (
+      cellRender: (cellElement: any) => (
         <ERPGridActions
           view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID }) }}
           edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url: Urls?.account_privilege_card, 
+            url: Urls?.account_privilege_card,
             key: cellElement?.data?.privilegeCardsID
           }}
         />
       ),
     },
-  ];
+  ], []);
+
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -217,4 +214,3 @@ const PrivilegeCard = () => {
 };
 
 export default React.memo(PrivilegeCard);
-

@@ -17,7 +17,7 @@ export const initialAccountLedger = {
     isProtected: true,
     isCommon: true,
     accTransactionID: 0,
-    isCostCentreApplicable: '',
+    isCostCentreApplicable: false,
     arabicName: ''
   },
   validations: {

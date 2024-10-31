@@ -49,6 +49,7 @@ export function useFormManager<T>({
   const apiClient = new APIClient();
 
 
+  debugger;
   const queryParams = new URLSearchParams(location.search);
   key =
     (key == undefined || key == null || key == "0" || key == ""
@@ -272,6 +273,7 @@ export function useFormManager<T>({
       
 
       // Update the nested field
+      debugger;
       const newData = setNestedValue(formState?.data, fieldId, value);
 
       if (useApiClient) {

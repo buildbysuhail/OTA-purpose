@@ -118,8 +118,8 @@ const Upi = () => {
 
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.id }) }}
+            view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID }) }}
+            edit={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",

@@ -89,6 +89,8 @@ const Vehicles = lazy(() => import('../../../pages/inventory/masters/vehicles/ve
 const WareHouse = lazy(() => import('../../../pages/inventory/masters/warehouse/warehouse'));
 const TaxCategory = lazy(() => import('../../../pages/inventory/masters/tax-category/tax-category'));
 const SalesmanRoute = lazy(() => import('../../../pages/inventory/masters/salesman-route/salesman-route'));
+const Schemes = lazy(() => import('../../../pages/inventory/masters/schemes/schemes'));
+const SalesRoute = lazy(() => import('../../../pages/inventory/masters/sales-route/sales-route'));
 
 interface ContentProps { }
 const loading = (
@@ -218,6 +220,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/tax-category" element={<TaxCategory/>} />
         <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute/>} />
 
+        <Route path="/inventory-masters/schemes" element={<Schemes/>} />
+        <Route path="/inventory-masters/sales-route" element={<SalesRoute/>} />
       </Routes>
     </Suspense>
   );

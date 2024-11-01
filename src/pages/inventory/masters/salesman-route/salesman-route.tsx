@@ -176,7 +176,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
         closeModal={() => {
           dispatch(toggleSalesManRoute({ isOpen: false }));
         }}
-        content={<SalesmanRoute  id={rootState.PopupData.salesManRoute.key}  />}
+        content={<SalesmanRoute/>}
        
       />
       

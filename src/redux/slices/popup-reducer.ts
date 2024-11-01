@@ -6,6 +6,7 @@ export interface popupDataProps {
   reload?: boolean;
 }
 interface popupData {
+  salesManRoute:popupDataProps
   userType: popupDataProps
   userTypePrivilege: popupDataProps
   user: popupDataProps
@@ -53,9 +54,12 @@ interface popupData {
   vehicles:popupDataProps
   warehouse:popupDataProps
   taxCategory:popupDataProps
+  schemes:popupDataProps
+  salesRoute:popupDataProps
   hide_acc_ledger:popupDataProps
 }
 const initialState: popupData = {
+  salesManRoute:{ isOpen: false, key: null, mode: "edit", reload: true },
   hide_acc_ledger: { isOpen: false, key: null, mode: "edit", reload: true },
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
   miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -104,6 +108,8 @@ const initialState: popupData = {
   vehicles: { isOpen: false, key: null, mode: "edit", reload: true },
   warehouse: { isOpen: false, key: null, mode: "edit", reload: true },
   taxCategory: { isOpen: false, key: null, mode: "edit", reload: true },
+  schemes: { isOpen: false, key: null, mode: "edit", reload: true },
+  salesRoute: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -268,15 +274,24 @@ const popupDataSlice = createSlice({
     toggleTaxCategory: (state, action: PayloadAction<popupDataProps>) => {
       state.taxCategory = action.payload;
     },
+    toggleSchemes: (state, action: PayloadAction<popupDataProps>) => {
+      state.schemes = action.payload;
+    },
+    toggleSalesRoute: (state, action: PayloadAction<popupDataProps>) => {
+      state.salesRoute = action.payload;
+    },
     toggleHideAccLedger: (state, action: PayloadAction<popupDataProps>) => {
       state.hide_acc_ledger = action.payload;
     },
-    
+    toggleSalesManRoute: (state, action: PayloadAction<popupDataProps>) => {
+      state.salesManRoute = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  toggleSalesManRoute,
   toggleHideAccLedger,
   toggleUpi,
   toggleMiscellaneousSettingsPopup,
@@ -326,6 +341,8 @@ export const {
   toggleVehicles,
   toggleWarehouse,
   toggleTaxCategory,
+  toggleSchemes,
+  toggleSalesRoute,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

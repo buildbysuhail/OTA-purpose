@@ -27,7 +27,7 @@ interface LedgerInf {
 }
 
 const initialState: LedgerInf = {
-  customer: false,
+  customer: true,
   supplier: false,
 };
 const api = new APIClient();

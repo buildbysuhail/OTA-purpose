@@ -32,6 +32,7 @@ import BalanceSheet from '../../../pages/accounts/masters/reports/balanceSheet/b
 import InventoryHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/InventoryHistory/inventory-history-report';
 import BillwiseProfitGlobal from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit-global';
 
+
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
 const AccountSettingsPreference = lazy(() => import('../../../pages/account-settings/account-settings-preference'));
 const WorkSpaceSettings = lazy(() => import('../../../pages/work-space/workspace-settings'));
@@ -87,6 +88,9 @@ const UnitOfMeasure = lazy(() => import('../../../pages/inventory/masters/unit-o
 const Vehicles = lazy(() => import('../../../pages/inventory/masters/vehicles/vehicles'));
 const WareHouse = lazy(() => import('../../../pages/inventory/masters/warehouse/warehouse'));
 const TaxCategory = lazy(() => import('../../../pages/inventory/masters/tax-category/tax-category'));
+const SalesmanRoute = lazy(() => import('../../../pages/inventory/masters/salesman-route/salesman-route'));
+const Schemes = lazy(() => import('../../../pages/inventory/masters/schemes/schemes'));
+const SalesRoute = lazy(() => import('../../../pages/inventory/masters/sales-route/sales-route'));
 
 interface ContentProps { }
 const loading = (
@@ -214,6 +218,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/vehicles" element={<Vehicles/>} />
         <Route path="/inventory-masters/warehouse" element={<WareHouse/>} />
         <Route path="/inventory-masters/tax-category" element={<TaxCategory/>} />
+        <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute/>} />
+
+        <Route path="/inventory-masters/schemes" element={<Schemes/>} />
+        <Route path="/inventory-masters/sales-route" element={<SalesRoute/>} />
       </Routes>
     </Suspense>
   );

@@ -71,7 +71,7 @@ const Urls = {
   data_warranty: "/Inventory/Data/Warranty",
   data_sections: "/Inventory/Data/Sections",
   data_groupcategory: "/Inventory/Data/GroupCategory",
-
+  data_getNextLedgerCode:"/Accounts/AccLedger/GetNextLedgerCode/",
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
   data_company_id: "/Core/Branch/GetBranchData",
@@ -274,6 +274,8 @@ const Urls = {
   vehicles: "/Inventory/Vehicles/",
   Warehouse: "/Inventory/Warehouse/",
   taxCategory: "/Inventory/TaxCategory/",
+  sales_man_route: "/Inventory/SalesManRoute/",
+  salesRoute: "/Inventory/SalesRoute/",
 };
 
 export default Urls;

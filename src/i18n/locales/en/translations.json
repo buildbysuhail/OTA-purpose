@@ -1116,5 +1116,15 @@
   "free_item_product":"Free Item Product",
   "free_product":"Free Product",
   "schemes":"Schemes",
-  "disc_%":"Disc %"
+  "disc_%":"Disc %",
+
+  "parent_route_ID":"Parent Route ID",
+  "is_active":"Is Active",
+  "sales_route_ID":"Sales Route ID",
+  "sales_man_ID":"Salesman ID",
+  "warehouse_ID":"Warehouse ID",
+  "incentive_percentage":"Incentive Percentage",
+  "salesman":"Salesman",
+  "main_route":"Main Route",
+  "sub_route":"Sub Route"
 }

@@ -1118,5 +1118,14 @@
   "free_item_product": "منتج العنصر المجاني",
   "free_product": "منتج مجاني",
   "schemes": "المخططات",
-  "disc_%": "خصم %"
+  "disc_%": "خصم %",
+
+  "parent_route_ID": "معرّف المسار الرئيسي",
+  "sales_route_ID": "معرّف مسار المبيعات",
+  "sales_man_ID": "معرّف مندوب المبيعات",
+  "warehouse_ID": "معرّف المستودع",
+  "incentive_percentage": "نسبة الحافز",
+  "salesman": "مندوب المبيعات",
+  "main_route": "المسار الرئيسي",
+  "sub_route": "المسار الفرعي"
 }

@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";

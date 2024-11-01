@@ -10,11 +10,14 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { toggleBranchGridPopup } from "../../../redux/slices/popup-reducer";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { useTranslation } from "react-i18next";
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { StateStoring } from "devextreme-react/cjs/data-grid";
+import { RootState } from "../../../redux/store";
 
 interface BranchData {
   id: number;
   companyID: number;
-  dateFrom: string;
+  dateFrom: Date;
   dateTo: string;
   branchCode: string;
   branchName: string;
@@ -43,7 +46,7 @@ export const initialDataBranch = {
   data: {
     id: 0,
     companyID: 0,
-    dateFrom: "",
+    dateFrom: null,
     dateTo: "",
     branchCode: "",
     branchName: "",
@@ -108,6 +111,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const rootState = useRootState();
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BranchData>({
       url: Urls.Branch,
@@ -117,7 +121,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
       ),
       key: rootState.PopupData.branchGrid.key,
       useApiClient: true,
-      initialData: initialDataBranch,
+      initialData: {...initialDataBranch, dateFro},
     });
 
   const onClose = useCallback(() => {

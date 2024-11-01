@@ -1099,5 +1099,32 @@
   "s_VAT_%":"S VAT %",
   "p_VAT_%":"S VAT %",
   "s_cst_%":"S CST %",
-  "p_cst_%":"P CST %"
+  "p_cst_%":"P CST %",
+
+  "Dr":"Dr",
+  "Cr":"Cr",
+  "scheme_code":"Scheme Code",
+  "scheme_name":"Scheme Name",
+  "scheme_type":"Scheme Type",
+  "qty_limit":"Qty Limit",
+  "scheme_rate":"Scheme Rate",
+  "free_qty":"Free Qty",
+  "scheme_state":"Scheme State",
+  "item_batch_no":"Item Batch No",
+  "disc_percentage":"Disc Percentage",
+  "item_product":"Item Product",
+  "free_item_product":"Free Item Product",
+  "free_product":"Free Product",
+  "schemes":"Schemes",
+  "disc_%":"Disc %",
+
+  "parent_route_ID":"Parent Route ID",
+  "is_active":"Is Active",
+  "sales_route_ID":"Sales Route ID",
+  "sales_man_ID":"Salesman ID",
+  "warehouse_ID":"Warehouse ID",
+  "incentive_percentage":"Incentive Percentage",
+  "salesman":"Salesman",
+  "main_route":"Main Route",
+  "sub_route":"Sub Route"
 }

@@ -142,6 +142,7 @@ const ApplicationSettingsAccounts = () => {
       [settingName]: value ?? ''
     }));
   });
+  
   const handleSubmit = async () => {
     setIsSaving(true);
     try {

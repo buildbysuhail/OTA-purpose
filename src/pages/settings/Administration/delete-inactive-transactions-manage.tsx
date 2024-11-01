@@ -67,7 +67,7 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         title={t("delete_all")}
         loading={isLoading}
         variant="primary"
-        disabled={formState.data.isAgree == true}
+        disabled={formState.data.isAgree != true}
         onClick={handleSubmit}
       />
     </div>

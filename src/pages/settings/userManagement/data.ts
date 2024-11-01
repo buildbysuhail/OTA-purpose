@@ -49,17 +49,17 @@ export const userRights: UserRight[] = [
   { id: 1010603, headId: 10106, name: "AccMaster_PartyCat_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Party Category" },
   { id: 1010604, headId: 10106, name: "AccMaster_PartyCat_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Party Category" },
 
-  { id: 10107, headId: 101, name: "AccMaster_Customers", fullName: "Customers", formCode: "PARTIES", treeNode: 3, description: "Manage Customers" },
+  { id: 10107, headId: 101, name: "AccMaster_Customers", fullName: "Customers & Supplier", formCode: "PARTIES", treeNode: 3, description: "Manage Customers" },
   { id: 1010701, headId: 10107, name: "AccMaster_Customers_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Customer" },
   { id: 1010702, headId: 10107, name: "AccMaster_Customers_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Customer" },
   { id: 1010703, headId: 10107, name: "AccMaster_Customers_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Customer" },
   { id: 1010704, headId: 10107, name: "AccMaster_Customers_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Customer" },
 
-  { id: 10108, headId: 101, name: "AccMaster_Suppliers", fullName: "Suppliers", formCode: "PARTIES", treeNode: 3, description: "Manage Suppliers" },
-  { id: 1010801, headId: 10108, name: "AccMaster_Suppliers_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Supplier" },
-  { id: 1010802, headId: 10108, name: "AccMaster_Suppliers_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Supplier" },
-  { id: 1010803, headId: 10108, name: "AccMaster_Suppliers_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Supplier" },
-  { id: 1010804, headId: 10108, name: "AccMaster_Suppliers_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Supplier" },
+  // { id: 10108, headId: 101, name: "AccMaster_Suppliers", fullName: "Suppliers", formCode: "PARTIES", treeNode: 3, description: "Manage Suppliers" },
+  // { id: 1010801, headId: 10108, name: "AccMaster_Suppliers_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Supplier" },
+  // { id: 1010802, headId: 10108, name: "AccMaster_Suppliers_Edit", fullName: "Edit", formCode: "E", treeNode: 4, description: "Edit Supplier" },
+  // { id: 1010803, headId: 10108, name: "AccMaster_Suppliers_Delete", fullName: "Delete", formCode: "D", treeNode: 4, description: "Delete Supplier" },
+  // { id: 1010804, headId: 10108, name: "AccMaster_Suppliers_Print", fullName: "Print", formCode: "P", treeNode: 4, description: "Print Supplier" },
 
   { id: 10109, headId: 101, name: "AccMaster_CostCenter", fullName: "Cost Center", formCode: "COSCNTR", treeNode: 3, description: "Manage Cost Centers" },
   { id: 1010901, headId: 10109, name: "AccMaster_CostCenter_Add", fullName: "Add", formCode: "A", treeNode: 4, description: "Add Cost Center" },
@@ -357,12 +357,13 @@ export const userRights: UserRight[] = [
   { id: 1033803, headId: 10328, name: "TrReports_PandLAccount_Export", fullName: "Export", formCode: "X", treeNode: 4, description: "Export Profit And Loss Account" },
 
   // Utilities
-  { id: 104, headId: 1, name: "AccUtilities", fullName: "Utilities", formCode: "ACCU", treeNode: 2, description: "Account Utilities" },
-  { id: 10401, headId: 104, name: "ndFinancialYearSelection", fullName: "Financial Year Selection/Change", formCode: "FY_CHG", treeNode: 1, description: "Financial Year Selection/Change Menu Item" },
+  //{ id: 104, headId: 1, name: "AccUtilities", fullName: "Utilities", formCode: "ACCU", treeNode: 2, description: "Account Utilities" },
+  { id: 10401, headId: 1, name: "ndFinancialYearSelection", fullName: "Financial Year Selection/Change", formCode: "FY_CHG", treeNode: 1, description: "Financial Year Selection/Change Menu Item" },
   { id: 1041101, headId: 10401, name: "ndFinancialYearSelection_Show_List", fullName: "Show List", formCode: "S", treeNode: 1, description: "Show List Menu Item" },
   { id: 10411001, headId: 1041101, name: "ndFinancialYearSelection_Show_List_show", fullName: "Show", formCode: "S", treeNode: 1, description: "Show Menu Item" },
   { id: 1041102, headId: 10401, name: "ndFinancialYearSelection_Add", fullName: "Add", formCode: "A", treeNode: 1, description: "Add Menu Item" },
-  { id: 10402, headId: 104, name: "ndPrePostDatedTransModify", fullName: "Pre/Post Dated Transaction Modify", formCode: "PRE_POST", treeNode: 1, description: "Pre/Post Dated Transaction Modify Menu Item" },
+ 
+  { id: 10402, headId: 1, name: "ndPrePostDatedTransModify", fullName: "Pre/Post Dated Transaction Modify", formCode: "PRE_POST", treeNode: 1, description: "Pre/Post Dated Transaction Modify Menu Item" },
   { id: 1041201, headId: 10402, name: "ndPrePostDatedTransModify_Block", fullName: "Block Add,Edit,Delete", formCode: "B", treeNode: 1, description: "Block Add,Edit,Delete Menu Item" },
-  { id: 10412001, headId: 1041201, name: "Node0", fullName: "", formCode: "", treeNode: 1, description: "" },
+  // { id: 10412001, headId: 1041201, name: "Node0", fullName: "", formCode: "", treeNode: 1, description: "" }, 
 ];

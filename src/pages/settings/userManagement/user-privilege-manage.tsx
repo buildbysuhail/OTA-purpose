@@ -249,8 +249,8 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       generatePostData().then(async (dataForPost) => {
         console.log(dataForPost);
         console.log(gridRef);
-    if(dataForPost && dataForPost?.length > 0){
-        const response = await api.postAsync(Urls.user_rights, dataForPost);
+    if(dataForPost){
+        const response = await api.postAsync(`${Urls.user_rights}${postData.data.userType}`, dataForPost);
         setPostUserTypeLoading(false);
     
         handleResponse(

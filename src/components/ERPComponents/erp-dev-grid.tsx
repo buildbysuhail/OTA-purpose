@@ -526,10 +526,10 @@ debugger;
               <Item name="exportButton" />
             )}
             <Item>
-              <ErpGridGlobalFilter
+              {/* <ErpGridGlobalFilter
                 gridId={gridId}
                 onApplyPreferences={onApplyPreferences}
-              />
+              /> */}
             </Item>
             <Item>
               <GridPreferenceChooser

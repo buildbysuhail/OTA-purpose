@@ -6,6 +6,7 @@ export interface popupDataProps {
   reload?: boolean;
 }
 interface popupData {
+  salesManRoute:popupDataProps
   userType: popupDataProps
   userTypePrivilege: popupDataProps
   user: popupDataProps
@@ -56,6 +57,7 @@ interface popupData {
   hide_acc_ledger:popupDataProps
 }
 const initialState: popupData = {
+  salesManRoute:{ isOpen: false, key: null, mode: "edit", reload: true },
   hide_acc_ledger: { isOpen: false, key: null, mode: "edit", reload: true },
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
   miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -271,12 +273,15 @@ const popupDataSlice = createSlice({
     toggleHideAccLedger: (state, action: PayloadAction<popupDataProps>) => {
       state.hide_acc_ledger = action.payload;
     },
-    
+    toggleSalesManRoute: (state, action: PayloadAction<popupDataProps>) => {
+      state.salesManRoute = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  toggleSalesManRoute,
   toggleHideAccLedger,
   toggleUpi,
   toggleMiscellaneousSettingsPopup,

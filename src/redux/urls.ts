@@ -274,6 +274,7 @@ const Urls = {
   vehicles: "/Inventory/Vehicles/",
   Warehouse: "/Inventory/Warehouse/",
   taxCategory: "/Inventory/TaxCategory/",
+  sales_man_route: "/Inventory/SalesManRoute/",
 };
 
 export default Urls;

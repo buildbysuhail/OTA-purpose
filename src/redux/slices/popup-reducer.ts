@@ -53,6 +53,7 @@ interface popupData {
   vehicles:popupDataProps
   warehouse:popupDataProps
   taxCategory:popupDataProps
+  schemes:popupDataProps
   hide_acc_ledger:popupDataProps
 }
 const initialState: popupData = {
@@ -104,6 +105,7 @@ const initialState: popupData = {
   vehicles: { isOpen: false, key: null, mode: "edit", reload: true },
   warehouse: { isOpen: false, key: null, mode: "edit", reload: true },
   taxCategory: { isOpen: false, key: null, mode: "edit", reload: true },
+  schemes: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -268,10 +270,12 @@ const popupDataSlice = createSlice({
     toggleTaxCategory: (state, action: PayloadAction<popupDataProps>) => {
       state.taxCategory = action.payload;
     },
+    toggleSchemes: (state, action: PayloadAction<popupDataProps>) => {
+      state.schemes = action.payload;
+    },
     toggleHideAccLedger: (state, action: PayloadAction<popupDataProps>) => {
       state.hide_acc_ledger = action.payload;
     },
-    
   },
 });
 
@@ -326,6 +330,7 @@ export const {
   toggleVehicles,
   toggleWarehouse,
   toggleTaxCategory,
+  toggleSchemes,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

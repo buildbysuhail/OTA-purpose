@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountLedgerPopup } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -10,7 +10,9 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
+import { APIClient } from "../../../../helpers/api-client";
 
+const api = new APIClient();
 export const AccountLedgerManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
@@ -25,7 +27,7 @@ export const AccountLedgerManage = () => {
     isLoading
   } = useFormManager<AccountLedgerData>({
     url: Urls.account_ledger,
-    onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.accountLedger.key,
     useApiClient: true,
     initialData: initialAccountLedger
@@ -33,7 +35,22 @@ export const AccountLedgerManage = () => {
 
   const onClose = useCallback(() => {
     dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));
+  }, [dispatch]);
+
+  useEffect(() => {
+    load();
   }, []);
+
+  const load = async () => {
+    try {
+      const res = await api.getAsync(Urls.data_getNextLedgerCode);
+      if (res) {
+        handleFieldChange("ledgerCode", res.toString());
+      }
+    } catch (error) {
+      console.error("Failed to fetch the next ledger code:", error);
+    }
+  };
 
   const { t } = useTranslation();
 
@@ -42,6 +59,7 @@ export const AccountLedgerManage = () => {
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps('ledgerCode')}
+          type="string"
           label={t("code")}
           placeholder={t("enter_code")}
           required={true}
@@ -66,7 +84,6 @@ export const AccountLedgerManage = () => {
           placeholder={t("enter_name_in_arabic")}
           onChangeData={(data: any) => handleFieldChange('arabicName', data.arabicName)}
         />
-
         <ERPDataCombobox
           {...getFieldProps("accGroupID")}
           field={{
@@ -77,44 +94,42 @@ export const AccountLedgerManage = () => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data.accGroupID)
+            handleFieldChange("accGroupID", data.accGroupID);
           }}
           label={t("group_under")}
         />
-
-        <div>
-          <div className="flex items-center gap-2">
-            <ERPInput
-              {...getFieldProps('openingBalance')}
-              label={t("opening_balance")}
-              type="number"
-              className="w-32"
-              onChangeData={(data: any) => handleFieldChange('openingBalance', data.openingBalance)}
-            />
-            <ERPInput
-              {...getFieldProps('balanceType')}
-              type="select"
-              className="w-32"
-              data={{
-                balanceType: postData?.data?.balanceType || '',
-                selectOptions: [
-                  { value: 'debit', label: 'Dr' },
-                  { value: 'credit', label: 'Cr' }
-                ]
-              }}
-              onChangeData={(data: any) => handleFieldChange('balanceType', data.balanceType)}
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4">
         <ERPInput
-          {...getFieldProps('remarks')}
-          label={t("remarks")}
-          placeholder={t("enter_remarks")}
-          onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
+          {...getFieldProps('opBalance')}
+          label={t("opening_balance")}
+          type="number"
+          onChangeData={(data: any) => handleFieldChange('opBalance', data.opBalance)}
         />
+      </div>
+      <div className="flex items-center gap-3 mt-2">
+        <div className="w-full mt-5">
+          <ERPDataCombobox
+            {...getFieldProps("drCr")}
+            field={{
+              id: "drCr",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
+            label=" "
+            options={[
+              { value: 'Dr', label: t('Dr') },
+              { value: 'Cr', label: t('Cr') },
+            ]}
+          />
+        </div>
+        <div className="w-full">
+          <ERPInput
+            {...getFieldProps('remarks')}
+            label={t("remarks")}
+            placeholder={t("enter_remarks")}
+            onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4 mt-4">
@@ -142,7 +157,6 @@ export const AccountLedgerManage = () => {
           {...getFieldProps("isCostCentreApplicable")}
           label={t("cost_center_applicable")}
           onChangeData={(data: any) => handleFieldChange("isCostCentreApplicable", data.isCostCentreApplicable)}
-          
         />
         <ERPCheckbox
           {...getFieldProps("isCommon")}

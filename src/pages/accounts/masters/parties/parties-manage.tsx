@@ -406,7 +406,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
             placeholder={t("website")}
             required={false}
             onChangeData={(data: any) => handleFieldChange("webURL", data.webURL)}
-          /><ERPInput
+          />
+          <ERPInput
             {...getFieldProps("postalCode")}
             label={t("postal_code")}
             placeholder={t("postal_code")}

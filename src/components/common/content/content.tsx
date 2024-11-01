@@ -87,6 +87,7 @@ const UnitOfMeasure = lazy(() => import('../../../pages/inventory/masters/unit-o
 const Vehicles = lazy(() => import('../../../pages/inventory/masters/vehicles/vehicles'));
 const WareHouse = lazy(() => import('../../../pages/inventory/masters/warehouse/warehouse'));
 const TaxCategory = lazy(() => import('../../../pages/inventory/masters/tax-category/tax-category'));
+const Schemes = lazy(() => import('../../../pages/inventory/masters/schemes/schemes'));
 
 interface ContentProps { }
 const loading = (
@@ -214,6 +215,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/vehicles" element={<Vehicles/>} />
         <Route path="/inventory-masters/warehouse" element={<WareHouse/>} />
         <Route path="/inventory-masters/tax-category" element={<TaxCategory/>} />
+        <Route path="/inventory-masters/schemes" element={<Schemes/>} />
       </Routes>
     </Suspense>
   );

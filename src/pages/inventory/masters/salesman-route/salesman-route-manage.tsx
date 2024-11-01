@@ -2,14 +2,9 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import {
-  toggleProductGroup,
-  toggleSalesManRoute,
-} from "../../../../redux/slices/popup-reducer";
+import {toggleSalesManRoute,} from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
-import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import {
@@ -42,15 +37,17 @@ interface SalesmanRouteProps {
   id?: number | null;
 }
 const api = new APIClient();
-export const SalesmanRoute: React.FC<SalesmanRouteProps> = React.memo(({ id }) => {
+export const SalesmanRoute: React.FC = React.memo(() => {
     const [formState, setFormState] = useState(initialSalesManRouteData);
-    const [formStatePrev, setFormStatePrev] = useState<Partial<SalesManRouteData> >({});
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const rootState = useRootState();
     const dispatch = useDispatch();
 
+    //checking key == id
+    const  id=rootState.PopupData.salesManRoute.key;
     const isEdit = id !== null && id !== undefined;
+
     const onClose = useCallback(() => {
       dispatch(toggleSalesManRoute({ isOpen: false, key: null }));
     }, []);
@@ -64,15 +61,7 @@ export const SalesmanRoute: React.FC<SalesmanRouteProps> = React.memo(({ id }) =
       }));
     };
 
-    // const onCheckboxChange = (day: Day) => {
-    //   setSalesDay((prevSalesDay) => {
-    //     if (prevSalesDay.includes(dayMappings[day])) {
-    //       return prevSalesDay.filter((d) => d !== dayMappings[day]);
-    //     } else {
-    //       return [...prevSalesDay, dayMappings[day]];
-    //     }
-    //   });
-    // };
+  
     const onCheckboxChange = (day: Day) => {
         setFormState((prevState) => {
           const currentSalesDay = prevState.salesDay || [];
@@ -95,63 +84,43 @@ export const SalesmanRoute: React.FC<SalesmanRouteProps> = React.memo(({ id }) =
     const handleSubmit = async () => {
       setIsSaving(true);
       try {
-        if (isEdit) {
-            const response: any = await api.put(`${Urls.sales_man_route}`,formState);
-            handleResponse(response,() => dispatch(toggleSalesManRoute({ isOpen:false, key:null , reload: true })))
-        } else {
-          const response: any = await api.post(`${Urls.sales_man_route}`,formState);
-          handleResponse(response,() => dispatch(toggleSalesManRoute({ isOpen:false, key:null , reload: true })))
-        }
-        
+        const apiMethod = isEdit ? api.put : api.post;
+        const response: any = await apiMethod(`${Urls.sales_man_route}`, formState);
+        handleResponse(response,() => dispatch(toggleSalesManRoute({ isOpen:false, key:null , reload: true }))) 
       } catch (error) {
         console.error("Error saving settings:", error);
       } finally {
         setIsSaving(false);
       }
     };
-    // const handleSubmit = async () => {
-    //     setIsSaving(true);
-    //     try {
-    //       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-    //         const currentValue = formState?.[key as keyof AccountSettingsState];
-    //         const prevValue = formStatePrev[key as keyof AccountSettingsState];
     
-    //         if (currentValue !== prevValue) {
-    //           acc.push({
-    //             settingsName: key,
-    //             settingsValue: currentValue.toString()
-    //           });
-    //         }
-    //         return acc;
-    //       }, [] as { settingsName: string; settingsValue: string }[]);
-    //       console.log(modifiedSettings);
-    
-    //       const response = await api.put(Urls.application_settings, { type: 'accounts', updateList: modifiedSettings }) as any
-    //       handleResponse(response);
-    //     } catch (error) {
-    //       console.error('Error saving settings:', error);
-    //     } finally {
-    //       setIsSaving(false);
-    //     }
-    //   };
-    useEffect(() => {
-        if (isEdit) {
-          loadById(id);
-        }
-      }, [id]);
-    
-      const loadById = async (id:number) => {
+    const loadById = useCallback(async (loadId: number) => {
         setLoading(true);
         try {
-          const response = await api.getAsync(`${Urls.sales_man_route}${id}`)
+          const response = await api.getAsync(`${Urls.sales_man_route}${loadId}`);
           setFormState(response);
         } catch (error) {
           console.error('Error loading settings:', error);
         } finally {
           setLoading(false);
         }
-      };
-   
+      }, []);
+    
+      useEffect(() => {
+        if (isEdit && id) {
+          loadById(id);
+        } 
+      }, [isEdit, id, loadById]);
+    
+      const handleClear = useCallback(() => {
+        if (isEdit && id) {
+          loadById(id);
+        } else {
+          setFormState(initialSalesManRouteData);
+        }
+      }, [isEdit, id, loadById]);
+
+      
     return (
       <div className="w-full pt-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -223,6 +192,20 @@ export const SalesmanRoute: React.FC<SalesmanRouteProps> = React.memo(({ id }) =
           />
         </div>
         <div className="flex justify-end items-center ">
+         <ERPButton
+            title="Close"
+            variant="secondary"
+            disabled={isSaving}
+            type="button"
+            onClick={onClose}
+          />
+         <ERPButton
+            title="Clear"
+            variant="secondary"
+            disabled={isSaving}
+            type="button"
+            onClick={handleClear}
+          />
           <ERPButton
             title={isEdit ? "Edit" : "Add"}
             variant="primary"

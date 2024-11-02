@@ -626,7 +626,7 @@ export default function Component() {
             />
           </div>
           <div className="w-[40%] flex space-x-2">
-            {["dine_in"].map((type: any) => (
+            {["dine_in", "Delivery", "Pick Up"].map((type: any) => (
               <button
                 key={type}
                 className={`px-4 py-2 rounded rounded-md ${

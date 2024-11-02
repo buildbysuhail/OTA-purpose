@@ -77,18 +77,18 @@ export default function Component() {
   const [dineInSelection, setDineInSelection] = useState<string[]>(["Dine In"]);
 
   // Function to handle button text based on order type
-  const getButtonText = () => {
+  const getButtonText:any = () => {
     switch (orderType) {
-      case "Dine in":
+      case "Dine In":
         return dineInSelection.length === 0
-          ? "Dine In"
+          ? "dine_in"
           : dineInSelection.join(", ");
       case "Delivery":
-        return "Delivery";
+        return "delivery";
       case "Pick Up":
-        return "Pick Up";
+        return "pick_up";
       default:
-        return "Dine In";
+        return "dine_in";
     }
   };
 
@@ -602,7 +602,7 @@ export default function Component() {
           // onClick={() => setIsPopupOpen(true)}
           onClick={() => orderType === "Dine in" && setIsPopupOpen(true)}
         >
-          {getButtonText()}
+          {t(getButtonText())}
         </button>
       </div>
     );
@@ -619,14 +619,14 @@ export default function Component() {
           <div className="w-[59%]">
             <input
               type="text"
-              placeholder="Search item..."
+              placeholder={t("search_item")}
               className="w-full p-2 rounded rounded-md"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="w-[40%] flex space-x-2">
-            {["dine_in", "Delivery", "Pick Up"].map((type: any) => (
+            {["dine_in", "delivery", "pick_up"].map((type: any) => (
               <button
                 key={type}
                 className={`px-4 py-2 rounded rounded-md ${
@@ -644,13 +644,13 @@ export default function Component() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-lg w-96">
               <div className="p-4">
-                <h2 className="text-lg font-semibold mb-4">Select Options</h2>
-                {["Dine In", "AC", "Dining"].map((option) => (
+                <h2 className="text-lg font-semibold mb-4"> {t("select_options")} </h2>
+                {["dine_in", "ac", "dining"].map((option:any) => (
                   <div
                     key={option}
                     className="flex items-center justify-between py-2 border-b"
                   >
-                    <span>{option}</span>
+                    <span>{t(option)}</span>
                     <input
                       type="radio"
                       name="diningOption"
@@ -665,13 +665,13 @@ export default function Component() {
                     className="px-4 py-2 bg-gray-500 text-white rounded-md mr-2"
                     onClick={() => setIsPopupOpen(false)}
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                   <button
                     className="px-4 py-2 bg-[#f90303] text-white rounded-md"
                     onClick={() => setIsPopupOpen(false)}
                   >
-                    Done
+                    {t("done")}
                   </button>
                 </div>
               </div>
@@ -721,9 +721,9 @@ export default function Component() {
               <table className="w-full">
                 <thead>
                   <tr className="text-left">
-                    <th>ITEMS</th>
-                    <th className="text-center">QTY.</th>
-                    <th className="text-right">PRICE</th>
+                    <th>{t("items")}</th>
+                    <th className="text-center">{t("qty")}</th>
+                    <th className="text-right">{t("price")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -875,14 +875,14 @@ export default function Component() {
 
             <div className="p-4 bg-gray-800 flex justify-between items-center font-bold">
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Split
+              {t("split")}
               </button>
-              <span className="text-white">Total:₹{total.toFixed(2)}</span>
+              <span className="text-white">{t("total")}:₹{total.toFixed(2)}</span>
             </div>
             <div className="bg-gray-600 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
                 <div className="flex items-center space-x-4">
-                  {["Cash", "Card", "Due", "Other"].map((method) => (
+                  {["cash", "card", "due", "other"].map((method:any) => (
                     <label key={method} className="flex items-center space-x-2">
                       <input
                         type="radio"
@@ -892,7 +892,7 @@ export default function Component() {
                         onChange={(e) => setPaymentMethod(e.target.value)}
                         className="form-radio text-[#f90303]"
                       />
-                      <span className="text-white">{method}</span>
+                      <span className="text-white">{t(method)}</span>
                     </label>
                   ))}
                 </div>
@@ -901,28 +901,28 @@ export default function Component() {
             <div className="bg-gray-800 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
                 <label className="flex items-center text-white">
-                  <input type="checkbox" className="mr-2" /> It's Paid
+                  <input type="checkbox" className="mr-2" /> {t("its_paid")}
                 </label>
               </div>
             </div>
             <div className="flex space-x-2 p-4 ml-1">
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Save
+              {t("save")}
               </button>
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Save & Print
+              {t("save_print")}
               </button>
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Save & eBill
+              {t("save_ebill")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-                KOT
+              {t("kot")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-                KOT & Print
+              {t("kot_print")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-                Hold
+              {t("hold")}
               </button>
             </div>
           </div>

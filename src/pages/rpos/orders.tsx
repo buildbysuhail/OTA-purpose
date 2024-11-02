@@ -22,6 +22,7 @@ import {
   Globe,
   RotateCcw,
 } from "lucide-react";
+import { t } from "i18next";
 
 interface OrderItem {
   quantity: number;
@@ -185,10 +186,10 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
   // ];
 
   const orderTypes = [
-    { label: "All", icon: <Grid2x2 /> },
-    { label: "Dine In", icon: <Utensils /> },
-    { label: "Delivery", icon: <Truck /> },
-    { label: "Pick Up", icon: <PackageCheck /> },
+    { label: "all", icon: <Grid2x2 /> },
+    { label: "dine_in", icon: <Utensils /> },
+    { label: "delivery", icon: <Truck /> },
+    { label: "pick_up", icon: <PackageCheck /> },
     // { label: "Online", icon: <Wifi /> },
     // { label: "Other", icon: <BookHeart /> },
     // { label: "Other", icon: null },
@@ -382,24 +383,22 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
     window.location.reload();
   };
 
-
-
   return (
     <div>
       <div className="flex items-center p-2 bg-white shadow border-b-[1px] border-t-[1px] border-gray-200">
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1 p-2 border rounded-lg">
             <ClipboardList className="w-[1rem] h-[1rem] text-[#ef4444]" />
-            <span className="text-[#ef4444]">Order View</span>
+            <span className="text-[#ef4444]">{t("order_view")}</span>
           </div>
           <div className="flex items-center space-x-1 p-2 border rounded-lg">
             <Receipt className="w-[1rem] h-[1rem]" />
-            <span className="text-black">Kot View</span>
+            <span className="text-black">{t("kot_view")}</span>
           </div>
         </div>
         <div className="flex-grow"></div>
         <div className="flex items-center space-x-4">
-          <span>View Details</span>
+          <span>{t("view_details")}</span>
           <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
             <label className="inline-flex items-center me-5 cursor-pointer">
               <input type="checkbox" value="" className="sr-only peer" />
@@ -410,18 +409,21 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             <Filter className="w-5 h-5" />
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>Foodready</span>
+            <span>{t("foodready")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">2</span>
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>Dispatch</span>
+            <span>{t("dispatch")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>Deliver</span>
+            <span>{t("deliver")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
-          <div onClick={handleRefresh} className="flex items-center space-x-2 p-2 border rounded-lg">
+          <div
+            onClick={handleRefresh}
+            className="flex items-center space-x-2 p-2 border rounded-lg"
+          >
             <RefreshCcw className="w-5 h-5" />
           </div>
           <div
@@ -429,7 +431,7 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             onClick={handleClick}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-black">Back</span>
+            <span className="text-black">{t("back")}</span>
           </div>
         </div>
       </div>
@@ -437,7 +439,7 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
       <header className="bg-white shadow-md p-2 flex justify-between items-center">
         <div className="flex items-center space-x-6 text-gray-600">
           <div className="flex space-x-4">
-            {orderTypes.map((type) => (
+            {orderTypes.map((type: any) => (
               <button
                 key={type.label}
                 className={`px-4 py-2 rounded rounded-md flex items-center space-x-2 ${
@@ -448,7 +450,7 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
                 onClick={() => handleOrderTypeChange(type.label)}
               >
                 {type.icon && <span className="mr-2">{type.icon}</span>}
-                {type.label}
+                {t(type.label)}
               </button>
             ))}
           </div>
@@ -465,24 +467,28 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             <Search className="mr-2 w-5 h-5" /> Search
             {/* <i className="fas fa-chevron-down ml-2"></i> */}
             {/* <ChevronDown className="ml-2 w-5 h-5" /> */}
-            {isExpanded ? <ChevronUp  className="ml-2 w-5 h-5"  /> :  <ChevronDown className="ml-2 w-5 h-5" /> }
+            {isExpanded ? (
+              <ChevronUp className="ml-2 w-5 h-5" />
+            ) : (
+              <ChevronDown className="ml-2 w-5 h-5" />
+            )}
           </button>
           <div className="flex space-x-4 bg-gray-100 text-gray-700 px-4 py-2 rounded-md mr-[10px]">
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 rounded-full bg-gray-300"></div>
-              <span>Saved Bill</span>
+              <span>{t("saved_bill")}</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 rounded-full bg-[#22c55e]"></div>
-              <span>Printed Bill</span>
+              <span>{t("printed_bill")}</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 rounded-full bg-[#f97316]"></div>
-              <span>Cancelled Bill</span>
+              <span>{t("cancelled_bill")}</span>
             </div>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 rounded-full bg-[#3b82f6]"></div>
-              <span>Paid</span>
+              <span>{t("paid")}</span>
             </div>
           </div>
         </div>
@@ -579,13 +585,13 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
               </div>
               <div className="flex justify-end mt-[16px] pb-[10px] pr-[10px]">
                 <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md mr-2 flex items-center">
-                <RotateCcw className="mr-2 w-5 h-5" />  Reset
+                  <RotateCcw className="mr-2 w-5 h-5" /> Reset
                 </button>
                 <button className="bg-[#ef4444] text-white px-4 py-2 rounded-md mr-2 flex items-center">
-                <Globe className="mr-2 w-5 h-5" /> Search From Web
+                  <Globe className="mr-2 w-5 h-5" /> Search From Web
                 </button>
                 <button className="bg-[#ef4444] text-white px-4 py-2 rounded-md flex items-center">
-                <Search className="mr-2 w-5 h-5" /> Search
+                  <Search className="mr-2 w-5 h-5" /> Search
                 </button>
               </div>
             </div>
@@ -599,17 +605,17 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             <table className="min-w-full bg-white">
               <thead className="border-t-[1px]">
                 <tr>
-                  <th className="py-2 px-4 border-b">Order No.</th>
-                  <th className="py-2 px-4 border-b">Order Type</th>
-                  <th className="py-2 px-4 border-b">Customer Phone</th>
-                  <th className="py-2 px-4 border-b">Customer Name</th>
-                  <th className="py-2 px-4 border-b">Payment Type</th>
-                  <th className="py-2 px-4 border-b">My Amount (₹)</th>
-                  <th className="py-2 px-4 border-b">Tax (₹)</th>
-                  <th className="py-2 px-4 border-b">Discount (₹)</th>
-                  <th className="py-2 px-4 border-b">Grand Total (₹)</th>
-                  <th className="py-2 px-4 border-b">Created</th>
-                  <th className="py-2 px-4 border-b">Actions</th>
+                  <th className="py-2 px-4 border-b">{t("order_no")}</th>
+                  <th className="py-2 px-4 border-b">{t("order_type")}</th>
+                  <th className="py-2 px-4 border-b">{t("customer_phone")}</th>
+                  <th className="py-2 px-4 border-b">{t("customer_name")}</th>
+                  <th className="py-2 px-4 border-b">{t("payment_type")}</th>
+                  <th className="py-2 px-4 border-b">{t("my_amount")} (₹)</th>
+                  <th className="py-2 px-4 border-b">{t("tax")} (₹)</th>
+                  <th className="py-2 px-4 border-b">{t("discount")} (₹)</th>
+                  <th className="py-2 px-4 border-b">{t("grand_total")} (₹)</th>
+                  <th className="py-2 px-4 border-b">{t("created")}</th>
+                  <th className="py-2 px-4 border-b">{t("actions")}</th>
                 </tr>
               </thead>
               <tbody>

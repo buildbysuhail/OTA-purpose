@@ -224,7 +224,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("product_group")}
-                  dataUrl={Urls.productGroup}P
+                  dataUrl={Urls.productGroup}
                   gridId="grd_productGroup"
                   popupAction={toggleProductGroup}
                   gridAddButtonType="popup"

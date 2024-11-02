@@ -18,7 +18,7 @@ interface BranchData {
   id: number;
   companyID: number;
   dateFrom: Date;
-  dateTo: string;
+  dateTo: Date;
   branchCode: string;
   branchName: string;
   address1: string;
@@ -47,7 +47,7 @@ export const initialDataBranch = {
     id: 0,
     companyID: 0,
     dateFrom: null,
-    dateTo: "",
+    dateTo: null,
     branchCode: "",
     branchName: "",
     address1: "",
@@ -69,32 +69,32 @@ export const initialDataBranch = {
     password: "",
     useMainBranchInventory: false,
   },
-  // validations: {
-  //   id: "",
-  //   companyID: "",
-  //   dateFrom: "",
-  //   dateTo: "",
-  //   branchCode: "",
-  //   branchName: "",
-  //   address1: "",
-  //   address2: "",
-  //   city: "",
-  //   district: "",
-  //   bState: "",
-  //   country: "",
-  //   pinCode: "",
-  //   phone: "",
-  //   mobile: "",
-  //   fax: "",
-  //   email: "",
-  //   tin: "",
-  //   registrationNumber: "",
-  //   branchManager: "",
-  //   remarks: "",
-  //   userName: "",
-  //   password: "",
-  //   useMainBranchInventory: "",
-  // },
+  validations: {
+    id: "",
+    companyID: "",
+    dateFrom: "",
+    dateTo: "",
+    branchCode: "",
+    branchName: "",
+    address1: "",
+    address2: "",
+    city: "",
+    district: "",
+    bState: "",
+    country: "",
+    pinCode: "",
+    phone: "",
+    mobile: "",
+    fax: "",
+    email: "",
+    tin: "",
+    registrationNumber: "",
+    branchManager: "",
+    remarks: "",
+    userName: "",
+    password: "",
+    useMainBranchInventory: "",
+  },
 };
 
 const initconformPassWord = {
@@ -112,6 +112,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const rootState = useRootState();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  debugger;
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
     useFormManager<BranchData>({
       url: Urls.Branch,
@@ -121,7 +122,13 @@ export const BranchGridManage: React.FC = React.memo(() => {
       ),
       key: rootState.PopupData.branchGrid.key,
       useApiClient: true,
-      initialData: {...initialDataBranch, dateFro},
+      initialData: {
+        ...initialDataBranch,
+        data: {initialDataBranch,
+          dateFrom: userSession.finFrom ?? initialDataBranch?.data?.dateFrom,
+          dateTo: userSession.finTo ?? initialDataBranch?.data?.dateTo
+        }
+      }
     });
 
   const onClose = useCallback(() => {

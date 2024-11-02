@@ -14,7 +14,7 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
 
 }
 export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSession: UserModel, locale: Locale) => {
-
+debugger;
   // setReloading(true);
   // let res = await api.get(Urls.getUserThemes);
   dispatch(setUserSession(userSession));

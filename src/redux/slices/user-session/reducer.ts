@@ -55,6 +55,9 @@ export interface UserModel {
   countryId?: Countries;
   companies: IdTextLogoDto[];
   branches: BranchSelectDto[];
+  finFrom?: Date | null;
+  finTo?: Date | null;
+
 }
 // export const initialState : login  =  {loading: false, token: ""};
 export const initialState: UserModel = {
@@ -74,6 +77,7 @@ export const initialState: UserModel = {
   taxDecimalPoint: 0,
   unitPriceDecimalPoint: 0,
   language: '',
+  finFrom: null, finTo:  null,
   companies: [],  // Initializing as an empty array
   branches: []    // Initializing as an empty array
 };
@@ -89,6 +93,7 @@ const userSessionSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(userSession?.fulfilled, (state, action) => {
       if (action.payload.isOk) {
+        debugger;
         Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 });
         return action.payload.item;
       }

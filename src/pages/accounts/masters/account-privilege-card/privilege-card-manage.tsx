@@ -31,6 +31,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
       [dispatch]
     ),
     key: rootState.PopupData.privilegeCard.key,
+    keyField:"privilegeCardsID",
     useApiClient: true,
     initialData: initialPrivilegeCard
   });

@@ -25,6 +25,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
      
       onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
       key: rootState.PopupData.currencyMaster.key,
+      keyField:"currencyId",
       useApiClient: true,
       initialData: initialCurrency,
     });

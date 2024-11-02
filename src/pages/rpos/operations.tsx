@@ -32,6 +32,7 @@ import {
   Vault,
   BadgeDollarSign,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Operations = () => {
   return (
@@ -58,7 +59,7 @@ const Operations = () => {
           {/* <i className="ri-shake-hands-fill"></i> */}
           <div className="grid grid-cols-11 gap-4">
             {[
-              { icon: FileText, label: "Orders" },
+              { icon: FileText, label: "Orders", link: "/rpos/Orders"},
               { icon: Globe, label: "Online Orders" },
               { icon: Receipt, label: "KOTs" },
               { icon: User, label: "Customers" },
@@ -81,6 +82,11 @@ const Operations = () => {
               { icon: Tv, label: "LED Display" },
               { icon: ShoppingCart, label: "Marketplace", new: true },
             ].map((item, index) => (
+              <Link
+            // to= {item.link}
+            to={item.link ?? "/"}
+            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
+          >
               <div
                 key={index}
                 className="flex flex-col items-center p-4 border rounded bg-gray-50"
@@ -89,6 +95,7 @@ const Operations = () => {
                 <span>{item.label}</span>
                 {item.new && <span className="text-xs text-blue-500">New</span>}
               </div>
+              </Link>
             ))}
           </div>
         </section>

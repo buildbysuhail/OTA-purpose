@@ -9,14 +9,14 @@ import { APIClient } from "../../../helpers/api-client";
 import { t } from "i18next";
 
 interface FormState {
-  backupMethods: number;
+  backupMethods: string;
   backUpPath: string;
   backupDuration: number;
   compressBackupFile: boolean;
 }
 
 const initialState: FormState = {
-  backupMethods: 0,
+  backupMethods: "",
   backUpPath: "",
   backupDuration: 0,
   compressBackupFile: false,
@@ -116,15 +116,16 @@ const BackupSettingsForm: React.FC = () => {
                 }
                 label={t("backup_methods")}
                 options={[
-                  { value: 0, label: "No BackUp" },
-                  { value: 1, label: "BackUp On Close" },
-                  { value: 2, label: "Scheduled BackUp" },
+                  { value: "No BackUp", label: "No BackUp" },
+                  { value: "BackUp On Close", label: "BackUp On Close" },
+                  { value: "Scheduled BackUp", label: "Scheduled BackUp" },
                 ]}
               />
               <ERPInput
                 id="backUpPath"
                 value={formState.backUpPath}
                 data={formState}
+                disabled={formState.backupMethods=="No BackUp"}
                 label={t("backup_path")}
                 placeholder={t("enter_discount_threshold")}
                 onChangeData={(data: any) =>
@@ -136,6 +137,7 @@ const BackupSettingsForm: React.FC = () => {
                 value={formState.backupDuration}
                 data={formState}
                 label={t("duration")}
+                disabled={formState.backupMethods=="No BackUp"||formState.backupMethods=="BackUp On Close"}
                 placeholder={t("enter_discount_threshold")}
                 type="number"
                 onChangeData={(data: any) =>

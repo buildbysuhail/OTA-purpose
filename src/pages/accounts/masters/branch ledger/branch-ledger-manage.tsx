@@ -26,6 +26,7 @@ export const BranchLedgerManage = () => {
     url: Urls.branch_ledger,
     onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.branchLedger.key,
+    keyField: "branchLedgerID",
     useApiClient: true,
     initialData: initialBranchLedger
   });

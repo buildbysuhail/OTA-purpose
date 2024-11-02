@@ -25,7 +25,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "id",
@@ -34,7 +34,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "productCategoryCode",
@@ -43,7 +43,8 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
+        visible:false
       },
       {
         dataField: "productCategoryName",
@@ -52,6 +53,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minWidth:200
       },
       {
         dataField: "shortName",
@@ -60,6 +62,9 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 150,
+
+
       },
       {
         dataField: "remarks",
@@ -77,6 +82,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:150
       },
       {
         dataField: "createdDate",
@@ -85,7 +91,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "modifiedUser",
@@ -94,6 +100,8 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:150
+
       },
       {
         dataField: "modifiedDate",
@@ -102,7 +110,7 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "isCommon",

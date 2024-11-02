@@ -175,7 +175,7 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
       <ERPModal
         isOpen={rootState.PopupData.section.isOpen || false}
         title="Section"
-        width="w-full max-w-[900px]"
+        width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleSection({ isOpen: false }));

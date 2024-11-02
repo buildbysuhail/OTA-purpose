@@ -20,6 +20,7 @@ interface UseFormManagerOptions {
   onSuccess?: () => void;
   onError?: (error: any) => void;
   key?: string;
+  keyField?: string;
   method?: ActionType;
   loadDataRequired?: boolean;
   useApiClient?: boolean;
@@ -39,6 +40,7 @@ export function useFormManager<T>({
   onSuccess,
   onError,
   key,
+  keyField = "id",
   method,
   loadDataRequired = true,
   useApiClient = false,
@@ -222,33 +224,6 @@ export function useFormManager<T>({
     url,
   ]);
 
-  // const handleFieldChange = useCallback(
-
-  //   (fieldId: string, value: any) => {
-  //     
-  //     const newData = {
-  //       ...(useApiClient ? localFormState : reduxFormState)?.data,
-  //       [fieldId]: value[fieldId],
-  //     };
-
-  //     if (useApiClient) {
-  //       setLocalFormState((prevState: any) => ({
-  //         ...prevState,
-  //         data: newData,
-  //         validations: { ...prevState?.validations },
-  //       }));
-  //     } else {
-  //       reduxManager.setState(rName, {
-  //         data: newData,
-  //         validations: { ...(useApiClient ? localFormState : reduxFormState)?.validations },
-  //         loading: false,
-  //         error: null,
-  //       });
-  //     }
-  //   },
-  //   [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]
-  // );
-
   // Utility function to set nested value by path
   const setNestedValue = (obj: any, path: string, value: any) => {
     const keys = path.split('.');
@@ -295,15 +270,10 @@ export function useFormManager<T>({
 
 
   const handleClear = useCallback(() => {
-    // const clearedData = Object.keys((useApiClient ? localFormState : reduxFormState)?.data || {}).reduce((acc, key) => {
-    //   acc[key] = "";
-    //   return acc;
-    // }, {} as Record<string, any>);
-
     if (useApiClient) {
       setLocalFormState((prevState: any) => ({
         ...prevState,
-        data: initialData,
+        data: (isEdit || (method != undefined && method == ActionType.POST && loadDataRequired)) ? {...initialData?.data,[keyField]: key}: initialData,
         validations: {},
       }));
     } else {
@@ -316,18 +286,6 @@ export function useFormManager<T>({
     }
   }, [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]);
 
-  // const getFieldProps = useCallback(
-  //   (fieldId: string): FormField => {
-  //     return {
-  //       id: fieldId,
-  //       data: (useApiClient ? localFormState : reduxFormState)?.data,
-  //       value: (useApiClient ? localFormState : reduxFormState)?.data?.[fieldId] || "",
-  //       validation: (useApiClient ? localFormState : reduxFormState)?.validations?.[fieldId],
-  //       checked: (useApiClient ? localFormState : reduxFormState)?.data?.[fieldId] || false,
-  //     };
-  //   },
-  //   [(useApiClient ? localFormState : reduxFormState)?.data]
-  // );
   const getNestedValue = (obj: any, path: string) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };

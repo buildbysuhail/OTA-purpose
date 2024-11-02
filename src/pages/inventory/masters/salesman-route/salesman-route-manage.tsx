@@ -160,6 +160,16 @@ export const SalesmanRoute: React.FC = React.memo(() => {
             handleFieldChange("salesRouteID", data.salesRouteID)
             }
           />
+             <ERPInput
+            id="remarks"
+            value={formState?.remarks}
+            data={formState}
+            label={t("remarks")}
+            placeholder={t("remarks")}
+            onChangeData={(data: any) =>
+              handleFieldChange("remarks", data.remarks)
+            }
+          />
           <div>
             <label
               htmlFor=""
@@ -182,18 +192,9 @@ export const SalesmanRoute: React.FC = React.memo(() => {
             </div>
           </div>
 
-          <ERPInput
-            id="remarks"
-            value={formState?.remarks}
-            data={formState}
-            label={t("remarks")}
-            placeholder={t("remarks")}
-            onChangeData={(data: any) =>
-              handleFieldChange("remarks", data.remarks)
-            }
-          />
+       
         </div>
-        <div className="flex justify-end items-center ">
+        <div className="flex justify-end items-center m-3">
          <ERPButton
             title="Close"
             variant="secondary"

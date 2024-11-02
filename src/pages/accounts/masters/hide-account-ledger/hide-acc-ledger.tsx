@@ -60,28 +60,30 @@ const HideAccountLedger = () => {
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
-      if (postData.groupId && postData.groupId > 0) {
-        const response: any = await api.post(`${Urls.hide_Ledger}`, {
-          isGroup: true,
-          ledgerGroupId: postData.groupId,
-          userTypeCode: postData.userTypeCode,
-        });
-        handleResponse(response);
-
-      }
-      if (postData.ledgerId && postData.ledgerId > 0) {
-        const response: any = await api.post(
-          `${Urls.hide_Ledger}`,
-          {
-            isGroup: false,
-            ledgerGroupId: postData.ledgerId,
+      if ((postData.groupId && postData.groupId) || (postData.ledgerId && postData.ledgerId > 0)) {
+        if (postData.groupId && postData.groupId > 0) {
+          const response: any = await api.post(`${Urls.hide_Ledger}`, {
+            isGroup: true,
+            ledgerGroupId: postData.groupId,
             userTypeCode: postData.userTypeCode,
-          }
-        );
-        handleResponse(response);
-      }
-      initialLoadGrid(postData.userTypeCode)
-    } catch (error) {}
+          });
+          handleResponse(response);
+
+        }
+        if (postData.ledgerId && postData.ledgerId > 0) {
+          const response: any = await api.post(
+            `${Urls.hide_Ledger}`,
+            {
+              isGroup: false,
+              ledgerGroupId: postData.ledgerId,
+              userTypeCode: postData.userTypeCode,
+            }
+          );
+          handleResponse(response);
+        }
+        initialLoadGrid(postData.userTypeCode)
+      }      
+    } catch (error) { }
 
     setIsSaving(false);
   };
@@ -151,16 +153,18 @@ const HideAccountLedger = () => {
 
   const initialLoadGrid = useCallback(async (userTypeCode: string) => {
     debugger;
-    setLoading(true);
-    try {
-      const response = await api.getAsync(`${Urls.hide_Ledger}${userTypeCode}`);
-      setStore(response);
-      handleResponse(response);
-      console.log("API Response:", response);
-    } catch (error) {
-      console.error("Error loading data:", error);
-    } finally {
-      setLoading(false);
+    if (userTypeCode != undefined && userTypeCode != null && userTypeCode != '') {
+      setLoading(true);
+      try {
+        const response = await api.getAsync(`${Urls.hide_Ledger}${userTypeCode}`);
+        setStore(response);
+        handleResponse(response);
+        console.log("API Response:", response);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        setLoading(false);
+      }
     }
   }, []);
 
@@ -223,7 +227,7 @@ const HideAccountLedger = () => {
                   allowSearch={true}
                   allowEditing={false}
                   allowFiltering={true}
-                  visible ={false}
+                  visible={false}
                 />
                 <Column
                   dataField="ledgerID"
@@ -234,7 +238,7 @@ const HideAccountLedger = () => {
                   allowSearch={true}
                   allowEditing={false}
                   allowFiltering={true}
-                  visible ={false}
+                  visible={false}
                 />
                 <Column
                   dataField="particulars"

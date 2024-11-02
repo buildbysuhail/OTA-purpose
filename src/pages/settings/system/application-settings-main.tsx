@@ -88,6 +88,8 @@ const ERPSettingsFormMain = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('submit click');
+    
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(settings).reduce((acc, key) => {
@@ -140,7 +142,7 @@ const ERPSettingsFormMain = () => {
                 handleFieldChange("maintainBusinessType", data.maintainBusinessType)
               }
               options={[
-                { value: "Retail", label: "General" },
+                { value: "General", label: "General" },
                 { value: "Distribution", label: "Distribution" },
                 { value: "Manufacturing", label: "Manufacturing" },
                 { value: "Supermarket", label: "Supermarket" },
@@ -596,7 +598,7 @@ const ERPSettingsFormMain = () => {
           type="button"
           loading={isSaving}
           disabled={isSaving}
-          onClick={() => handleSubmit}
+          onClick={(e: any) => handleSubmit(e)}
         />
       </div>
     </div>

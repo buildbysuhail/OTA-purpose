@@ -239,7 +239,6 @@
   "alias_name": "Alias Name",
   "account_group_id": "Account Group Id",
   "is_billwise_applicable": "Is Billwise Applicable",
-  "is_Active": "Is Active",
   "is_cost_center_applicable": "Is Cost Center Applicable",
   "cost_center": "Cost Center",
   "from_date": "From Date",
@@ -1126,5 +1125,7 @@
   "incentive_percentage":"Incentive Percentage",
   "salesman":"Salesman",
   "main_route":"Main Route",
-  "sub_route":"Sub Route"
+  "sub_route":"Sub Route",
+
+  "dine_in": "Dine in"
 }

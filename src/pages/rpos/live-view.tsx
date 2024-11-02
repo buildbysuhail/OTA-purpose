@@ -208,6 +208,10 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
     navigate(-1);
   };
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
   return (
     <div>
       <div className="flex items-center p-2 bg-white shadow border-b-[1px] border-t-[1px] border-gray-200">
@@ -245,7 +249,7 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
             <span>Deliver</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
-          <div className="flex items-center space-x-2 p-2 border rounded-lg">
+          <div onClick={handleRefresh} className="flex items-center space-x-2 p-2 border rounded-lg">
             <RefreshCcw className="w-5 h-5" />
           </div>
           <div

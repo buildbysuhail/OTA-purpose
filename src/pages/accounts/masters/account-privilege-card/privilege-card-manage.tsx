@@ -134,12 +134,12 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           label={t("card_type")}
         />
         <ERPInput
-          {...getFieldProps('opBalance')}
+          {...getFieldProps('oBalance')}
           label={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
           placeholder={t("op_balance")}
           type="number"
           required={true}
-          onChangeData={(data: any) => handleFieldChange('opBalance', data.opBalance)}
+          onChangeData={(data: any) => handleFieldChange('oBalance', data.opBalance)}
         />
         <ERPDateInput
           {...getFieldProps("activateDate")}

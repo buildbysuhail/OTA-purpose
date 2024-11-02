@@ -43,6 +43,7 @@ interface ERPDataComboboxProps {
   isPaginated?: boolean;
   disabledApiCall?: boolean;
   validation?: string;
+  enableClearOption?: boolean;
 }
 
 const ITEMS_PER_PAGE = 50;
@@ -88,6 +89,7 @@ export default function ImprovedERPDataCombobox({
   className,
   disabledApiCall = false,
   validation,
+  enableClearOption = true
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
 
@@ -241,9 +243,8 @@ export default function ImprovedERPDataCombobox({
       >
         <div className={className}>
           <Combobox.Input
-            className={`w-full appearance-none rounded border border-gray-300 h-9 ${
-              disabled ? "text-gray-400" : "bg-white text-gray-900"
-            } px-3 py-2 pr-20 placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
+            className={`w-full appearance-none rounded border border-gray-300 h-9 ${disabled ? "text-gray-400" : "bg-white text-gray-900"
+              } px-3 py-2 ${enableClearOption ? 'pr-2' : 'pr-20'}placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             displayValue={(item: Option) => item?.label || ""}
             onChange={(event) => setQuery(event?.target?.value)}
             placeholder={
@@ -253,10 +254,12 @@ export default function ImprovedERPDataCombobox({
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-2">
             <button type="button" onClick={clearSelection} className="p-1">
-              <XMarkIcon
-                className="h-5 w-5 text-gray-400 hover:text-gray-500"
-                aria-hidden="true"
-              />
+              {enableClearOption &&
+                <XMarkIcon
+                  className="h-5 w-5 text-gray-400 hover:text-gray-500"
+                  aria-hidden="true"
+                />
+              }
             </button>
             <Combobox.Button className="p-1">
               <ChevronDownIcon
@@ -291,10 +294,8 @@ export default function ImprovedERPDataCombobox({
                   <Combobox.Option
                     key={`${item?.value}-${index}`}
                     className={({ active }) =>
-                      `${
-                        item.is_active === false ? "hidden" : "relative"
-                      } cursor-pointer select-none py-2 pl-10 pr-4 ${
-                        active ? "bg-primary text-white" : "text-gray-900"
+                      `${item.is_active === false ? "hidden" : "relative"
+                      } cursor-pointer select-none py-2 pl-10 pr-4 ${active ? "bg-primary text-white" : "text-gray-900"
                       }`
                     }
                     value={item}
@@ -302,17 +303,15 @@ export default function ImprovedERPDataCombobox({
                     {({ selected, active }) => (
                       <>
                         <span
-                          className={`block truncate ${
-                            selected ? "font-medium" : "font-normal"
-                          }`}
+                          className={`block truncate ${selected ? "font-medium" : "font-normal"
+                            }`}
                         >
                           {item.label}
                         </span>
                         {selected && (
                           <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? "text-white" : "text-accent"
-                            }`}
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? "text-white" : "text-accent"
+                              }`}
                           >
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                           </span>

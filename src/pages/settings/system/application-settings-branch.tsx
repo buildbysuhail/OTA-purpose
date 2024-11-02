@@ -127,7 +127,7 @@ const BranchSettingsForm: React.FC = () => {
                 )}
               </ERPDisableEnable>
 
-              <ERPDataCombobox
+              {/* <ERPDataCombobox
                 id="maintainMultilanguage__"
                 value={formState.maintainMultilanguage__}
                 field={{
@@ -144,7 +144,7 @@ const BranchSettingsForm: React.FC = () => {
                     data.maintainMultilanguage__
                   )
                 }
-              />
+              /> */}
               <ERPInput
                 id="maximum_Allowed_LineItem_Amount"
                 value={formState.maximum_Allowed_LineItem_Amount}

@@ -278,6 +278,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             onChangeData={(data) => handleFieldChange("dateTo", data.dateTo)}
           />
         </div>
+        {formState?.data?.branchID == undefined || formState?.data?.branchID == null  &&
         <div className="flex  gap-5">
           <ERPInput
             {...getFieldProps("username")}
@@ -314,6 +315,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             }
           />
         </div>
+        }
         {formState?.data?.branchID != undefined && formState?.data?.branchID != null && formState?.data?.branchID != 0 &&
           < ERPCheckbox
             {...getFieldProps("isActive")}

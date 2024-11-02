@@ -3,16 +3,17 @@ import { useTranslation } from "react-i18next";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { toggleProductGroup, toggleSection } from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import { PriceCategoryManage } from "./price-category-manage";
-import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { togglePriceCategory } from "../../../../redux/slices/popup-reducer";
+import { SectionManage } from "./section-manage";
 
-const PriceCategory = () => {
+
+const Section = () => {
   
-const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage), []);
+const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -24,7 +25,7 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "id",
@@ -33,47 +34,41 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
-      },
+        width: 50,
+      }, 
       {
-        dataField: "priceCategoryName",
-        caption: t("price_category_name"),
+        dataField: "sectionCode",
+        caption: "Section Code",
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 100,
+
+      },
+      {
+        dataField: "sectionName",
+        caption: t("section_name"),
+        dataType: "number",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        minWidth:200
       },
       {
         dataField: "shortName",
-        caption: t("short_name"),
+        caption: "Short Name",
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "discountPerc",
-        caption: t("discount_%"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "marginPerc",
-        caption: t("margin_%"),
-        dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
+        minWidth:200
+
       },
       {
         dataField: "remarks",
         caption: t("remarks"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -81,37 +76,53 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
       },
       {
         dataField: "createdUser",
-        caption: t("created_user"),
+        caption: "Created User",
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        minWidth:200
+
       },
       {
         dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "string",
+        caption: "Created Date",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:150
+
       },
       {
         dataField: "modifiedUser",
-        caption: t("modified_user"),
+        caption: "Modified User",
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        minWidth:200
+
       },
       {
         dataField: "modifiedDate",
-        caption: t("modified_date"),
-        dataType: "string",
+        caption: "Modified Date",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:150
+
+      },
+      {
+        dataField: "isCommon",
+        caption: "Is Common",
+        dataType: "boolean",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width:100
+
       },
       {
         dataField: "actions",
@@ -124,12 +135,12 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id }) }}
+              edit={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
-                url:Urls?.priceCategory,key:cellElement?.data?.id
+                url:Urls?.section,key:cellElement?.data?.id
               }}
             />
           )
@@ -148,12 +159,12 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("price_category")}
-                  dataUrl={Urls.priceCategory}
-                  gridId="priceCategory"
-                  popupAction={togglePriceCategory}
+                  gridHeader="Section"
+                  dataUrl={Urls.section}
+                  gridId="grd_section"
+                  popupAction={toggleSection}
                   gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.priceCategory?.reload}
+                  reload={rootState?.PopupData?.section?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
@@ -162,16 +173,19 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.priceCategory.isOpen || false}
-        title={t("price_category")}
-        width="w-full max-w-[600px]"
+        isOpen={rootState.PopupData.section.isOpen || false}
+        title="Section"
+        width="w-full max-w-[900px]"
         isForm={true}
         closeModal={() => {
-          dispatch(togglePriceCategory({ isOpen: false }));
+          dispatch(toggleSection({ isOpen: false }));
         }}
-        content={<MemoizedPriceCategoryManage/>}
+        content={<MemoizedSectionManage/>}
+       
       />
+      
     </Fragment>
   );
 };
-export default React.memo(PriceCategory);
+
+export default React.memo(Section);

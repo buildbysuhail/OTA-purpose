@@ -2,7 +2,8 @@ export interface ApplicationMainSettings {
   currency: string;
   unitPrice_decimalPoint: string;
   decimalPoints: number;
-  cashSalesVoucherPrefix: string;
+  // cashSalesVoucherPrefix: string;
+  showNumberFormat: string;
   roundingMethod: string;
   pOSRoundingMethod: string;
   tax_DecimalPoint: string;
@@ -33,7 +34,8 @@ export const ApplicationMainSettingsInitialState: ApplicationMainSettings = {
   currency: "2",
   unitPrice_decimalPoint: "2",
   decimalPoints: 2,
-  cashSalesVoucherPrefix: "Millions",
+  // cashSalesVoucherPrefix: "",
+  showNumberFormat: "Millions",
   roundingMethod: "Normal",
   pOSRoundingMethod: "No Rounding",
   tax_DecimalPoint: "2",

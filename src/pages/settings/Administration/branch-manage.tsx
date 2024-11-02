@@ -125,12 +125,13 @@ export const BranchGridManage: React.FC = React.memo(() => {
       initialData: {
         ...initialDataBranch,
         data: {
-          initialDataBranch,
+          ...initialDataBranch.data,
           dateFrom: userSession.finFrom ?? initialDataBranch?.data?.dateFrom,
           dateTo: userSession.finTo ?? initialDataBranch?.data?.dateTo
         }
       }
     });
+console.log(formState);
 
   const onClose = useCallback(() => {
     dispatch(toggleBranchGridPopup({ isOpen: false, key: null }));
@@ -278,7 +279,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             onChangeData={(data) => handleFieldChange("dateTo", data.dateTo)}
           />
         </div>
-        {formState?.data?.branchID == undefined || formState?.data?.branchID == null  &&
+        {!formState?.data?.branchID  &&
         <div className="flex  gap-5">
           <ERPInput
             {...getFieldProps("username")}

@@ -141,7 +141,7 @@ const AccountLedgerType = () => {
     },
     {
       dataField: "isActive",
-      caption: t("is_Active"),
+      caption: t("is_active"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

@@ -39,23 +39,26 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
       {
         dataField: "groupName",
         caption: t("group_name"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minWidth:200
       },
       {
         dataField: "shortName",
         caption: t("short_name"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minWidth:150
+
       },
       {
         dataField: "parentGroup",
         caption: t("parent_group"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -68,7 +71,8 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 50,
+        width: 100,
+        visible:false
       },
       {
         dataField: "marginPerc",
@@ -77,30 +81,30 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "isEditable",
         caption: t("is_editable"),
-        dataType: "number",
+        dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 50,
+        width: 90,
       },
       {
         dataField: "isDeletable",
         caption: t("is_deletable"),
-        dataType: "number",
+        dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 50,
+        width: 90,
       },
       {
         dataField: "gStatus",
         caption: t("GStatus"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -109,7 +113,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
       {
         dataField: "remarks",
         caption: t("remarks"),
-        dataType: "number",
+        dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -122,7 +126,9 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 50,
+        width: 100,
+        visible:false
+
       },
       {
         dataField: "groupCategoryName",
@@ -131,6 +137,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 150,
       },
       {
         dataField: "sectionID",
@@ -139,7 +146,9 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 50,
+        width: 100,
+        visible:false
+
       },
       {
         dataField: "sectionName",
@@ -148,6 +157,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 150,
       },
       {
         dataField: "kitchenID",
@@ -157,6 +167,8 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSearch: true,
         allowFiltering: true,
         width: 50,
+        visible:false
+
       },
       {
         dataField: "kitchenName",
@@ -165,6 +177,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 150,
       },
       {
         dataField: "arabicName",
@@ -173,6 +186,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 150,
       },
       {
         dataField: "actions",
@@ -185,8 +199,8 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID }) }}
+              edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",

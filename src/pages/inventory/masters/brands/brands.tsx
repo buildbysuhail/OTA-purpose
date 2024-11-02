@@ -43,7 +43,7 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        minWidth:200
       },
       {
         dataField: "brandShortName",
@@ -52,6 +52,8 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 150,
+
       },
       {
         dataField: "remarks",
@@ -69,6 +71,8 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:150,
+        visible:false
       },
       {
         dataField: "createdDate",
@@ -77,6 +81,7 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:200
       },
       {
         dataField: "modifiedUserID",
@@ -85,6 +90,8 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:150,
+        visible:false
       },
       {
         dataField: "modifiedDate",
@@ -93,6 +100,7 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:200
       },
       {
         dataField: "isCommon",
@@ -114,12 +122,12 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID }) }}
+              edit={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
-                url:Urls?.brands,key:cellElement?.data?.id
+                url:Urls?.brands,key:cellElement?.data?.brandID
               }}
             />
           )

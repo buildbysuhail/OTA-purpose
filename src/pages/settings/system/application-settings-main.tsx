@@ -167,18 +167,18 @@ const ERPSettingsFormMain = () => {
             />
             <ERPDataCombobox
               field={{
-                id: "cashSalesVoucherPrefix",
+                id: "showNumberFormat",
                 valueKey: "value",
                 labelKey: "label",
               }}
-              id="cashSalesVoucherPrefix"
+              id="showNumberFormat"
               label={t("currency_format")}
               data={settings}
-              value={settings?.cashSalesVoucherPrefix}
+              value={settings?.showNumberFormat}
               onChangeData={(data) =>
                 handleFieldChange(
-                  "cashSalesVoucherPrefix",
-                  data.cashSalesVoucherPrefix
+                  "showNumberFormat",
+                  data.showNumberFormat
                 )
               }
               options={[

@@ -113,7 +113,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   debugger;
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, formState } =
     useFormManager<BranchData>({
       url: Urls.Branch,
       onSuccess: useCallback(
@@ -124,7 +124,8 @@ export const BranchGridManage: React.FC = React.memo(() => {
       useApiClient: true,
       initialData: {
         ...initialDataBranch,
-        data: {initialDataBranch,
+        data: {
+          initialDataBranch,
           dateFrom: userSession.finFrom ?? initialDataBranch?.data?.dateFrom,
           dateTo: userSession.finTo ?? initialDataBranch?.data?.dateTo
         }
@@ -277,6 +278,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
             onChangeData={(data) => handleFieldChange("dateTo", data.dateTo)}
           />
         </div>
+        {formState?.data?.branchID == undefined || formState?.data?.branchID == null  &&
         <div className="flex  gap-5">
           <ERPInput
             {...getFieldProps("username")}
@@ -312,19 +314,18 @@ export const BranchGridManage: React.FC = React.memo(() => {
               confirmPassword?.data?.confirmPassword ? confirmPassword?.data?.confirmPassword : ""
             }
           />
-
-
-          {/* Show error message if passwords don't match */}
-          {/* {errorMessage && <p className="text-red-500">{errorMessage}</p>} */}
-          {/* <ERPInput
-            {...getFieldProps("confirmPassword")}
-            label="Confirm Password"
-            disabled={isEdit}
-            type="password"
-            required
-            onChangeData={(data) => handleFieldChange("confirmPassword", data)}
-          /> */}
         </div>
+        }
+        {formState?.data?.branchID != undefined && formState?.data?.branchID != null && formState?.data?.branchID != 0 &&
+          < ERPCheckbox
+            {...getFieldProps("isActive")}
+            label={t("is_ctive")}
+            checked={formState?.data?.isActive}
+            onChangeData={(data) =>
+              handleFieldChange("isActive", data.isActive)
+            }
+          />
+        }
       </div>
 
       <ERPFormButtons

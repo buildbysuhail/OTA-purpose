@@ -250,7 +250,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           />
           <ERPCheckbox
             {...getFieldProps("isActive")}
-            label={t("is_Active")}
+            label={t("is_active")}
             onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
           />
           <div className="mt-3">

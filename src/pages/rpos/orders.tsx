@@ -378,6 +378,10 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
     setIsExpanded(!isExpanded);
   };
 
+  const handleRefresh = () => {
+    window.location.reload();
+  };
+
 
 
   return (
@@ -417,7 +421,7 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             <span>Deliver</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
-          <div className="flex items-center space-x-2 p-2 border rounded-lg">
+          <div onClick={handleRefresh} className="flex items-center space-x-2 p-2 border rounded-lg">
             <RefreshCcw className="w-5 h-5" />
           </div>
           <div

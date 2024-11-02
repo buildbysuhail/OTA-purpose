@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import RPosHeader from "../../components/common/header/rpos-header";
 import RPosDropdownPanel from "./rpos-DropdownPanel";
+import { useTranslation } from "react-i18next";
 // import 'remixicon/fonts/remixicon.css';
 
 interface MenuItem {
@@ -25,6 +26,7 @@ const menuItems: Record<string, MenuItem[]> = {
 };
 
 export default function Component() {
+  const {t} = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState("Chinese");
   const [orderItems, setOrderItems] = useState<OrderItem[]>([
     { name: "Test Item", price: 100, quantity: 1 },
@@ -624,7 +626,7 @@ export default function Component() {
             />
           </div>
           <div className="w-[40%] flex space-x-2">
-            {["Dine in", "Delivery", "Pick Up"].map((type) => (
+            {["dine_in"].map((type: any) => (
               <button
                 key={type}
                 className={`px-4 py-2 rounded rounded-md ${
@@ -632,7 +634,7 @@ export default function Component() {
                 } flex-1`}
                 onClick={() => handleOrderTypeChange(type)}
               >
-                {type}
+                {t(type)}
               </button>
             ))}
           </div>

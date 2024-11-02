@@ -319,7 +319,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
         {formState?.data?.branchID != undefined && formState?.data?.branchID != null && formState?.data?.branchID != 0 &&
           < ERPCheckbox
             {...getFieldProps("isActive")}
-            label={t("is_ctive")}
+            label={t("is_active")}
             checked={formState?.data?.isActive}
             onChangeData={(data) =>
               handleFieldChange("isActive", data.isActive)

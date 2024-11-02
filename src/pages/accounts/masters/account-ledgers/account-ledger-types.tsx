@@ -17,7 +17,7 @@ export const initialAccountLedger = {
     isCostCentreApplicable: false,
     arabicName: "",
     opBalance: 0,
-    drCr: ""
+    drCr: "Dr"
   },
   validations: {
     ledgerName: "",

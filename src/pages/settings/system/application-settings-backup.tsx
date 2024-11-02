@@ -98,7 +98,7 @@ const BackupSettingsForm: React.FC = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 h-full">
         <div className="space-y-6 p-6">
           <div className="border p-4 rounded-lg">
             <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">

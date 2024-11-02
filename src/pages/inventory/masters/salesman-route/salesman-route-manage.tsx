@@ -38,7 +38,8 @@ interface SalesmanRouteProps {
 }
 const api = new APIClient();
 export const SalesmanRoute: React.FC = React.memo(() => {
-    const [formState, setFormState] = useState(initialSalesManRouteData);
+    const [formState, setFormState] = useState<SalesManRouteData>(initialSalesManRouteData);
+    const [prevformState, setPrevFormState] = useState<Partial<SalesManRouteData>>({});
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const rootState = useRootState();
@@ -99,6 +100,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
         try {
           const response = await api.getAsync(`${Urls.sales_man_route}${loadId}`);
           setFormState(response);
+          setPrevFormState(response)
         } catch (error) {
           console.error('Error loading settings:', error);
         } finally {
@@ -113,12 +115,12 @@ export const SalesmanRoute: React.FC = React.memo(() => {
       }, [isEdit, id, loadById]);
     
       const handleClear = useCallback(() => {
-        if (isEdit && id) {
-          loadById(id);
+        if (isEdit && id && prevformState) {
+          setFormState(prevformState as SalesManRouteData); 
         } else {
-          setFormState(initialSalesManRouteData);
+          setFormState(initialSalesManRouteData); 
         }
-      }, [isEdit, id, loadById]);
+      }, [isEdit, id, prevformState]);
 
       
     return (

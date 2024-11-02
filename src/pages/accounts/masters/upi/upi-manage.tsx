@@ -27,6 +27,7 @@ export const UpiManage: React.FC = React.memo(() => {
     url: Urls.data_Bank_Cards,
     onSuccess: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.upi.key,
+    keyField:"paymentTypeID",
     useApiClient: true,
     initialData: initialUpi,
     loadDataRequired: true

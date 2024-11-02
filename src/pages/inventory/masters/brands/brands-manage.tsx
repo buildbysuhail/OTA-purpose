@@ -28,6 +28,7 @@ export const BrandsManage: React.FC = React.memo(() => {
       [dispatch]
     ),
     key: rootState.PopupData.brands.key,
+    keyField: 'brandID',
     useApiClient: true,
     initialData: initialBrandsData
   });

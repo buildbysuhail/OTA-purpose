@@ -26,6 +26,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
     url: Urls.data_Bank_Cards,
     onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.bankCard.key,
+    keyField:"paymentTypeID",
     useApiClient: true,
     loadDataRequired: true,
     initialData: initialBankCards,

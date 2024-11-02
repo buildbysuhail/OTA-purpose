@@ -121,6 +121,7 @@ export const BranchGridManage: React.FC = React.memo(() => {
         [dispatch]
       ),
       key: rootState.PopupData.branchGrid.key,
+      keyField:"branchID",
       useApiClient: true,
       initialData: {
         ...initialDataBranch,

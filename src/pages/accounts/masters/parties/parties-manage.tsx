@@ -120,6 +120,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           />
           <ERPDataCombobox
             {...getFieldProps("ledgerName")}
+            disabled
             field={{
               id: "ledgerName",
               required: true,
@@ -235,6 +236,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           />
           <ERPInput
             {...getFieldProps("opBalance")}
+            disabled={isEdit}
             label={t("op_balance")}
             type="number"
             placeholder={t("op_balance")}
@@ -250,7 +252,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           />
           <ERPCheckbox
             {...getFieldProps("isActive")}
-            label={t("is_Active")}
+            label={t("is_active")}
             onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
           />
           <div className="mt-3">

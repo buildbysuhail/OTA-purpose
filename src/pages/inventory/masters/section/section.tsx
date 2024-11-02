@@ -3,17 +3,17 @@ import { useTranslation } from "react-i18next";
 import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import { toggleProductGroup, toggleSection } from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import { VehiclesManage } from "./vehicles-manage";
-import { toggleVehicles } from "../../../../redux/slices/popup-reducer";
+import { SectionManage } from "./section-manage";
 
 
-const Vehicles = () => {
+const Section = () => {
   
-const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
+const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
@@ -25,7 +25,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 60,
+        width: 50,
       },
       {
         dataField: "id",
@@ -34,93 +34,41 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 60,
-      },
+        width: 50,
+      }, 
       {
-        dataField: "vehicleName",
-        caption: t("vehicle_name"),
+        dataField: "sectionCode",
+        caption: t("section_code"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minwidth:150
+        width: 100,
+        visible:false
       },
       {
-        dataField: "vehicleNumber",
-        caption: t("vehicle_number"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 130,
-      },
-      {
-        dataField: "noOfWheels",
-        caption: t("no_of_wheels"),
+        dataField: "sectionName",
+        caption: t("section_name"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 130,
+        minWidth:200
       },
       {
-        dataField: "model",
-        caption: t("model"),
+        dataField: "shortName",
+        caption: t("short_name"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width:100
+
       },
       {
-        dataField: "capacity",
-        caption: t("capacity"),
+        dataField: "remarks",
+        caption: t("remarks"),
         dataType: "number",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "manufacturer",
-        caption: t("manufacturer"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth:150
-      },
-      {
-        dataField: "owner",
-        caption: t("owner"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width:130
-      },
-      {
-        dataField: "color",
-        caption: t("color"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "isRental",
-        caption: t("is_rental"),
-        dataType: "boolean",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "isCommon",
-        caption: t("is_common"),
-        dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -134,15 +82,18 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+
+
       },
       {
         dataField: "createdDate",
         caption: t("created_date"),
-        dataType: "string",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 200,
+        width:200
+
       },
       {
         dataField: "modifiedUser",
@@ -151,34 +102,28 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 150,
+        width: 100,
+
       },
       {
         dataField: "modifiedDate",
         caption: t("modified_date"),
-        dataType: "string",
+        dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 200,
+        width:200
+
       },
       {
-        dataField: "odometer",
-        caption: t("odo_meter"),
-        dataType: "number",
+        dataField: "isCommon",
+        caption: t("is_common"),
+        dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
-      },
-      {
-        dataField: "remarks",
-        caption: t("remarks"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        width: 100,
+        width:100
+
       },
       {
         dataField: "actions",
@@ -191,12 +136,12 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id }) }}
+              edit={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
-                url:Urls?.vehicles,key:cellElement?.data?.id
+                url:Urls?.section,key:cellElement?.data?.id
               }}
             />
           )
@@ -215,12 +160,12 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("vehicles")}
-                  dataUrl={Urls.vehicles}
-                  gridId="grd_vehicles"
-                  popupAction={toggleVehicles}
+                  gridHeader="Section"
+                  dataUrl={Urls.section}
+                  gridId="grd_section"
+                  popupAction={toggleSection}
                   gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.vehicles?.reload}
+                  reload={rootState?.PopupData?.section?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>
@@ -229,16 +174,19 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         </div>
       </div>
       <ERPModal
-        isOpen={rootState.PopupData.vehicles.isOpen || false}
-        title={t("vehicles")}
+        isOpen={rootState.PopupData.section.isOpen || false}
+        title="Section"
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleVehicles({ isOpen: false }));
+          dispatch(toggleSection({ isOpen: false }));
         }}
-        content={<MemoizedVehiclesManage/>}
+        content={<MemoizedSectionManage/>}
+       
       />
+      
     </Fragment>
   );
 };
-export default React.memo(Vehicles);
+
+export default React.memo(Section);

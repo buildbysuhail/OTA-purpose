@@ -91,6 +91,8 @@ const TaxCategory = lazy(() => import('../../../pages/inventory/masters/tax-cate
 const SalesmanRoute = lazy(() => import('../../../pages/inventory/masters/salesman-route/salesman-route'));
 const Schemes = lazy(() => import('../../../pages/inventory/masters/schemes/schemes'));
 const SalesRoute = lazy(() => import('../../../pages/inventory/masters/sales-route/sales-route'));
+const Section = lazy(() => import('../../../pages/inventory/masters/section/section'));
+const GroupCategory = lazy(() => import('../../../pages/inventory/masters/group-category/group-category'));
 
 interface ContentProps { }
 const loading = (
@@ -219,9 +221,12 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/warehouse" element={<WareHouse/>} />
         <Route path="/inventory-masters/tax-category" element={<TaxCategory/>} />
         <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute/>} />
-
+        <Route path="/inventory-masters/section" element={<Section/>} />
         <Route path="/inventory-masters/schemes" element={<Schemes/>} />
         <Route path="/inventory-masters/sales-route" element={<SalesRoute/>} />
+        <Route path="/inventory-masters/group-category" element={<GroupCategory/>} />
+
+        
       </Routes>
     </Suspense>
   );

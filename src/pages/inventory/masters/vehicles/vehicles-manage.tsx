@@ -60,6 +60,7 @@ export const VehiclesManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("noOfWheels")}
           label={t("no_of_wheels")}
+          type="number"
           placeholder={t("no_of_wheels")}
           onChangeData={(data: any) => handleFieldChange("noOfWheels", data.noOfWheels)}
         />

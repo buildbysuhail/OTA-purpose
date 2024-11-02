@@ -20,6 +20,7 @@ interface UseFormManagerOptions {
   onSuccess?: () => void;
   onError?: (error: any) => void;
   key?: string;
+  keyField?: string;
   method?: ActionType;
   loadDataRequired?: boolean;
   useApiClient?: boolean;
@@ -39,6 +40,7 @@ export function useFormManager<T>({
   onSuccess,
   onError,
   key,
+  keyField = "id",
   method,
   loadDataRequired = true,
   useApiClient = false,
@@ -67,7 +69,7 @@ export function useFormManager<T>({
   const reduxFormState = useAppSelector<ApiResponse<any>>(
     (state: any) => state?.[rName]
   );
-  const formState = useApiClient ? localFormState : reduxFormState;
+  // const formState = useApiClient ? localFormState : reduxFormState;
 
   useEffect(() => {
     debugger;
@@ -157,9 +159,9 @@ export function useFormManager<T>({
       try {
         let response;
         if (isEdit) {
-          response = await apiClient.put(`${url}`, formState?.data);
+          response = await apiClient.put(`${url}`, (useApiClient ? localFormState : reduxFormState)?.data);
         } else {
-          response = await apiClient.post(url, formState?.data);
+          response = await apiClient.post(url, (useApiClient ? localFormState : reduxFormState)?.data);
         }
         handleResponse(
           response,
@@ -187,7 +189,7 @@ export function useFormManager<T>({
       const action = reduxManager.getTypedThunk(rName);
       try {
         const response: ResponseModelWithValidation<T, any> = await appDispatch(
-          action({ data: formState?.data }) as any
+          action({ data: (useApiClient ? localFormState : reduxFormState)?.data }) as any
         ).unwrap();
         handleResponse(
           response,
@@ -197,7 +199,7 @@ export function useFormManager<T>({
           },
           () => {
             reduxManager.setState(rName, {
-              data: { ...formState?.data },
+              data: { ...(useApiClient ? localFormState : reduxFormState)?.data },
               validations: { ...response.validations },
               error: null,
               loading: false,
@@ -211,7 +213,7 @@ export function useFormManager<T>({
     }
     setIsLoading(false);
   }, [
-    formState?.data,
+    (useApiClient ? localFormState : reduxFormState)?.data,
     rName,
     appDispatch,
     isEdit,
@@ -221,33 +223,6 @@ export function useFormManager<T>({
     useApiClient,
     url,
   ]);
-
-  // const handleFieldChange = useCallback(
-
-  //   (fieldId: string, value: any) => {
-  //     
-  //     const newData = {
-  //       ...formState?.data,
-  //       [fieldId]: value[fieldId],
-  //     };
-
-  //     if (useApiClient) {
-  //       setLocalFormState((prevState: any) => ({
-  //         ...prevState,
-  //         data: newData,
-  //         validations: { ...prevState?.validations },
-  //       }));
-  //     } else {
-  //       reduxManager.setState(rName, {
-  //         data: newData,
-  //         validations: { ...formState?.validations },
-  //         loading: false,
-  //         error: null,
-  //       });
-  //     }
-  //   },
-  //   [formState?.data, rName, useApiClient]
-  // );
 
   // Utility function to set nested value by path
   const setNestedValue = (obj: any, path: string, value: any) => {
@@ -273,7 +248,7 @@ export function useFormManager<T>({
 
       // Update the nested field
       debugger;
-      const newData = setNestedValue(formState?.data, fieldId, value);
+      const newData = setNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId, value);
 
       if (useApiClient) {
         setLocalFormState((prevState: any) => ({
@@ -284,26 +259,21 @@ export function useFormManager<T>({
       } else {
         reduxManager.setState(rName, {
           data: newData,
-          validations: { ...formState?.validations },
+          validations: { ...(useApiClient ? localFormState : reduxFormState)?.validations },
           loading: false,
           error: null,
         });
       }
     },
-    [formState?.data, rName, useApiClient]
+    [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]
   );
 
 
   const handleClear = useCallback(() => {
-    // const clearedData = Object.keys(formState?.data || {}).reduce((acc, key) => {
-    //   acc[key] = "";
-    //   return acc;
-    // }, {} as Record<string, any>);
-
     if (useApiClient) {
       setLocalFormState((prevState: any) => ({
         ...prevState,
-        data: initialData,
+        data: (isEdit || (method != undefined && method == ActionType.POST && loadDataRequired)) ? {...initialData?.data,[keyField]: key}: initialData,
         validations: {},
       }));
     } else {
@@ -314,20 +284,8 @@ export function useFormManager<T>({
         error: null,
       });
     }
-  }, [formState?.data, rName, useApiClient]);
+  }, [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]);
 
-  // const getFieldProps = useCallback(
-  //   (fieldId: string): FormField => {
-  //     return {
-  //       id: fieldId,
-  //       data: formState?.data,
-  //       value: formState?.data?.[fieldId] || "",
-  //       validation: formState?.validations?.[fieldId],
-  //       checked: formState?.data?.[fieldId] || false,
-  //     };
-  //   },
-  //   [formState?.data]
-  // );
   const getNestedValue = (obj: any, path: string) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };
@@ -335,24 +293,24 @@ export function useFormManager<T>({
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
       
-      const value = getNestedValue(formState?.data, fieldId) || "";
-      const validation = getNestedValue(formState?.validations, fieldId);
-      const checked = getNestedValue(formState?.data, fieldId) || false;
+      const value = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId) || "";
+      const validation = getNestedValue((useApiClient ? localFormState : reduxFormState)?.validations, fieldId);
+      const checked = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId) || false;
 
       return {
         id: fieldId,
-        data: formState?.data,
+        data: (useApiClient ? localFormState : reduxFormState)?.data,
         value,
         validation,
         checked,
       };
     },
-    [formState?.data]
+    [(useApiClient ? localFormState : reduxFormState)?.data]
   );
 
   return {
     isEdit,
-    formState,
+    formState: useApiClient ? localFormState : reduxFormState,
     handleSubmit,
     handleFieldChange,
     handleClear,

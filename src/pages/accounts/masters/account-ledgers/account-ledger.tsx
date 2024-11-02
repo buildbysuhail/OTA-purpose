@@ -141,14 +141,14 @@ const AccountLedgerType = () => {
     },
     {
       dataField: "isActive",
-      caption: t("is_Active"),
+      caption: t("is_active"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
     },
     {
-      dataField: "isCostCenterApplicable",
+      dataField: "isCostCentreApplicable",
       caption: t("is_cost_center_applicable"),
       dataType: "string",
       allowSearch: true,

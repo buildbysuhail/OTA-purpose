@@ -31,6 +31,7 @@ export const CostCentreManage = () => {
       [dispatch]
     ),
     key: rootState.PopupData.costCentre.key,
+    keyField: "costCentreID",
     useApiClient: true,
     initialData: initialCostCentre,
   });

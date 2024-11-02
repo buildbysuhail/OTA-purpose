@@ -73,6 +73,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
         />
         <ERPInput
           {...getFieldProps("decimalPoints")}
+          type="number"
           label={t("decimal_points")}
           placeholder={t("decimal_points")}
           onChangeData={(data: any) => handleFieldChange("decimalPoints", data.decimalPoints)}

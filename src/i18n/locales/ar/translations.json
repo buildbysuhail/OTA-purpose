@@ -1129,5 +1129,9 @@
   "main_route": "المسار الرئيسي",
   "sub_route": "المسار الفرعي",
 
-  "dine_in": "Dine in"
+  "dine_in": "Dine in",
+ "sales_day":"يوم البيع",
+ "sales_man_id":"رقم تعريف البائع",
+ "section_code":"رمز القسم ",
+ "category_name":"اسم الفئة"
 }

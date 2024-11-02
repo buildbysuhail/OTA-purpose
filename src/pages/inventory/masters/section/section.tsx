@@ -38,13 +38,13 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
       }, 
       {
         dataField: "sectionCode",
-        caption: "Section Code",
+        caption: t("section_code"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 100,
-
+        visible:false
       },
       {
         dataField: "sectionName",
@@ -57,12 +57,12 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
       },
       {
         dataField: "shortName",
-        caption: "Short Name",
+        caption: t("short_name"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth:200
+        width:100
 
       },
       {
@@ -76,47 +76,48 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
       },
       {
         dataField: "createdUser",
-        caption: "Created User",
+        caption: t("created_user"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth:200
+        width: 100,
+
 
       },
       {
         dataField: "createdDate",
-        caption: "Created Date",
+        caption: t("created_date"),
         dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width:150
+        width:200
 
       },
       {
         dataField: "modifiedUser",
-        caption: "Modified User",
+        caption: t("modified_user"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth:200
+        width: 100,
 
       },
       {
         dataField: "modifiedDate",
-        caption: "Modified Date",
+        caption: t("modified_date"),
         dataType: "date",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width:150
+        width:200
 
       },
       {
         dataField: "isCommon",
-        caption: "Is Common",
+        caption: t("is_common"),
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,

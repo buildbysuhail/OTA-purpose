@@ -24,7 +24,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "id",
@@ -33,7 +33,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "taxCategoryName",
@@ -42,11 +42,12 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minWidth:200
       },
       {
         dataField: "sVatPerc",
         caption: t("s_VAT_%"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -64,7 +65,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
       {
         dataField: "sCstPerc",
         caption: t("s_cst_%"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -73,7 +74,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
       {
         dataField: "pCstPerc",
         caption: t("p_cst_%"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -95,7 +96,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "modifiedUser",
@@ -104,7 +105,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "modifiedDate",
@@ -113,7 +114,7 @@ const MemoizedTaxCategoryManage = useMemo(() => React.memo(TaxCategoryManage), [
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "actions",

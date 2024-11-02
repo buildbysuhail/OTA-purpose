@@ -276,6 +276,9 @@ const Urls = {
   taxCategory: "/Inventory/TaxCategory/",
   sales_man_route: "/Inventory/SalesManRoute/",
   salesRoute: "/Inventory/SalesRoute/",
+  section: "/Inventory/Section/",
+  group_category: "/Inventory/GroupCategory/",
+
 };
 
 export default Urls;

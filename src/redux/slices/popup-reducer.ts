@@ -6,6 +6,7 @@ export interface popupDataProps {
   reload?: boolean;
 }
 interface popupData {
+  section:popupDataProps
   salesManRoute:popupDataProps
   userType: popupDataProps
   userTypePrivilege: popupDataProps
@@ -57,8 +58,11 @@ interface popupData {
   schemes:popupDataProps
   salesRoute:popupDataProps
   hide_acc_ledger:popupDataProps
+  groupCategory:popupDataProps
 }
 const initialState: popupData = {
+  groupCategory:{ isOpen: false, key: null, mode: "edit", reload: true },
+  section:{ isOpen: false, key: null, mode: "edit", reload: true },
   salesManRoute:{ isOpen: false, key: null, mode: "edit", reload: true },
   hide_acc_ledger: { isOpen: false, key: null, mode: "edit", reload: true },
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -286,11 +290,19 @@ const popupDataSlice = createSlice({
     toggleSalesManRoute: (state, action: PayloadAction<popupDataProps>) => {
       state.salesManRoute = action.payload;
     },
+    toggleSection: (state, action: PayloadAction<popupDataProps>) => {
+      state.section = action.payload;
+    },
+    toggleGroupCategory: (state, action: PayloadAction<popupDataProps>) => {
+      state.groupCategory = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  toggleGroupCategory,
+  toggleSection,
   toggleSalesManRoute,
   toggleHideAccLedger,
   toggleUpi,

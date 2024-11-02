@@ -143,7 +143,7 @@ export const AccountLedgerManage = () => {
           label={t("active")}
           onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
         />
-        <ERPCheckbox
+        {/* <ERPCheckbox
           {...getFieldProps("isEditable")}
           label={t("editable")}
           onChangeData={(data: any) => handleFieldChange("isEditable", data.isEditable)}
@@ -152,7 +152,7 @@ export const AccountLedgerManage = () => {
           {...getFieldProps("isDeletable")}
           label={t("deletable")}
           onChangeData={(data: any) => handleFieldChange("isDeletable", data.isDeletable)}
-        />
+        /> */}
         <ERPCheckbox
           {...getFieldProps("isCostCentreApplicable")}
           label={t("cost_center_applicable")}

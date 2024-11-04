@@ -358,67 +358,68 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
         <Tab label="Project/Job" value="project_job" />
       </Tabs>
       <div className="pt-4">
-        {activeTab === 'address' && <div className="grid grid-cols-5 gap-6">
-          <ERPInput
-            {...getFieldProps("address2")}
-            label={t("address_2_city_district")}
-            placeholder={t("address_2_city_district")}
-            required={false}
-            onChangeData={(data: any) => handleFieldChange("address2", data.address2)}
-          />
-          <ERPInput
-            {...getFieldProps("address4")}
-            label={t("address_4_building_no")}
-            placeholder={t("address_4_building_no")}
-            required={false}
-            onChangeData={(data: any) => handleFieldChange("address4", data.address4)}
-          />
-          <ERPInput
-            {...getFieldProps("officePhone")}
-            label={t("office_phone")}
-            placeholder={t("office_phone")}
-            required={false}
-            onChangeData={(data: any) => handleFieldChange("officePhone", data.officePhone)}
-          />
-          <ERPInput
-            {...getFieldProps("workPhone")}
-            label={t("work_phone")}
-            placeholder={t("work_phone")}
-            required={false}
-            onChangeData={(data: any) => handleFieldChange("workPhone", data.workPhone)}
-          />
-          <ERPInput
-            {...getFieldProps("contactPhone")}
-            label={t("contact_phone")}
-            placeholder={t("contact_phone")}
-            required={false}
-            onChangeData={(data: any) => handleFieldChange("contactPhone", data.contactPhone)}
-          />
-          <ERPInput
-            {...getFieldProps("email")}
-            label={t("email")}
-            placeholder={t("email")}
-            type="email"
-            required={false}
-            onChangeData={(data: any) => handleFieldChange("email", data.email)}
-          />
-          <ERPInput
-            {...getFieldProps("webURL")}
-            label={t("website")}
-            placeholder={t("website")}
-            required={false}
-            onChangeData={(data: any) => handleFieldChange("webURL", data.webURL)}
-          />
-          <ERPInput
-            {...getFieldProps("postalCode")}
-            label={t("postal_code")}
-            placeholder={t("postal_code")}
-            required={false}
-            onChangeData={(data: any) =>
-              handleFieldChange("postalCode", data.postalCode)
-            }
-          />
-        </div>}
+        {activeTab === 'address' &&
+          <div className="grid grid-cols-5 gap-6">
+            <ERPInput
+              {...getFieldProps("address2")}
+              label={t("address_2_city_district")}
+              placeholder={t("address_2_city_district")}
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("address2", data.address2)}
+            />
+            <ERPInput
+              {...getFieldProps("address4")}
+              label={t("address_4_building_no")}
+              placeholder={t("address_4_building_no")}
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("address4", data.address4)}
+            />
+            <ERPInput
+              {...getFieldProps("officePhone")}
+              label={t("office_phone")}
+              placeholder={t("office_phone")}
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("officePhone", data.officePhone)}
+            />
+            <ERPInput
+              {...getFieldProps("workPhone")}
+              label={t("work_phone")}
+              placeholder={t("work_phone")}
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("workPhone", data.workPhone)}
+            />
+            <ERPInput
+              {...getFieldProps("contactPhone")}
+              label={t("contact_phone")}
+              placeholder={t("contact_phone")}
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("contactPhone", data.contactPhone)}
+            />
+            <ERPInput
+              {...getFieldProps("email")}
+              label={t("email")}
+              placeholder={t("email")}
+              type="email"
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("email", data.email)}
+            />
+            <ERPInput
+              {...getFieldProps("webURL")}
+              label={t("website")}
+              placeholder={t("website")}
+              required={false}
+              onChangeData={(data: any) => handleFieldChange("webURL", data.webURL)}
+            />
+            <ERPInput
+              {...getFieldProps("postalCode")}
+              label={t("postal_code")}
+              placeholder={t("postal_code")}
+              required={false}
+              onChangeData={(data: any) =>
+                handleFieldChange("postalCode", data.postalCode)
+              }
+            />
+          </div>}
         {activeTab === 'bank' && <>
           <div className="flex align-center gap-3">
             <div className="w-1/2 border rounded-lg p-4">

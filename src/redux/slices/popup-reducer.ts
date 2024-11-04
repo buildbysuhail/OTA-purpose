@@ -6,8 +6,8 @@ export interface popupDataProps {
   reload?: boolean;
 }
 interface popupData {
-  section:popupDataProps
-  salesManRoute:popupDataProps
+  section: popupDataProps
+  salesManRoute: popupDataProps
   userType: popupDataProps
   userTypePrivilege: popupDataProps
   user: popupDataProps
@@ -46,24 +46,25 @@ interface popupData {
   miscellaneousSettings: popupDataProps
   eWayBillTaxPro: popupDataProps
   eInvoiceGST: popupDataProps
-  upi:popupDataProps
-  productGroup:popupDataProps
-  productCategory:popupDataProps
-  brands:popupDataProps
-  priceCategory:popupDataProps
-  unitOfMeasure:popupDataProps
-  vehicles:popupDataProps
-  warehouse:popupDataProps
-  taxCategory:popupDataProps
-  schemes:popupDataProps
-  salesRoute:popupDataProps
-  hide_acc_ledger:popupDataProps
-  groupCategory:popupDataProps
+  upi: popupDataProps
+  productGroup: popupDataProps
+  productCategory: popupDataProps
+  brands: popupDataProps
+  priceCategory: popupDataProps
+  unitOfMeasure: popupDataProps
+  vehicles: popupDataProps
+  warehouse: popupDataProps
+  taxCategory: popupDataProps
+  schemes: popupDataProps
+  salesRoute: popupDataProps
+  hide_acc_ledger: popupDataProps
+  groupCategory: popupDataProps
+  specialSchemes: popupDataProps
 }
 const initialState: popupData = {
-  groupCategory:{ isOpen: false, key: null, mode: "edit", reload: true },
-  section:{ isOpen: false, key: null, mode: "edit", reload: true },
-  salesManRoute:{ isOpen: false, key: null, mode: "edit", reload: true },
+  groupCategory: { isOpen: false, key: null, mode: "edit", reload: true },
+  section: { isOpen: false, key: null, mode: "edit", reload: true },
+  salesManRoute: { isOpen: false, key: null, mode: "edit", reload: true },
   hide_acc_ledger: { isOpen: false, key: null, mode: "edit", reload: true },
   upi: { isOpen: false, key: null, mode: "edit", reload: true },
   miscellaneousSettings: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -114,6 +115,7 @@ const initialState: popupData = {
   taxCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   schemes: { isOpen: false, key: null, mode: "edit", reload: true },
   salesRoute: { isOpen: false, key: null, mode: "edit", reload: true },
+  specialSchemes: { isOpen: false, key: null, mode: "edit", reload: true },
 };
 
 const popupDataSlice = createSlice({
@@ -296,6 +298,9 @@ const popupDataSlice = createSlice({
     toggleGroupCategory: (state, action: PayloadAction<popupDataProps>) => {
       state.groupCategory = action.payload;
     },
+    toggleSpecialSchemes: (state, action: PayloadAction<popupDataProps>) => {
+      state.specialSchemes = action.payload;
+    },
   },
 });
 
@@ -355,6 +360,7 @@ export const {
   toggleTaxCategory,
   toggleSchemes,
   toggleSalesRoute,
+  toggleSpecialSchemes,
 } = popupDataSlice.actions;
 
 export default popupDataSlice.reducer;

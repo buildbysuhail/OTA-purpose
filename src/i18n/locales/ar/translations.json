@@ -1215,5 +1215,25 @@
   "customer_phone": "هاتف العميل",
   "customer_name": "اسم العميل",
   "my_amount": "المبلغ الخاص بي",
-  "created": "تم الإنشاء"
+  "created": "تم الإنشاء",
+
+  "comments": "التعليقات",
+  "no_of_persons": "عدد الأشخاص",
+  "locality": "المنطقة",
+  "table_no": "رقم الطاولة",
+  "view_kot": "عرض KOT",
+  "available": "متاح",
+  "occupied": "مشغول",
+  "reserved": "محجوز",
+  "customer_details": "تفاصيل العميل",
+  
+  "sub_total": "المجموع الفرعي",
+  "more": "المزيد",
+  "delivery_charge": "رسوم التوصيل",
+  "container_charge": "رسوم الحاوية",
+  "round_off": "تقريب",
+  "customer_paid": "المبلغ المدفوع من العميل",
+  "return_to_customer": "الباقي للعميل",
+  "tip": "إكرامية"
+
 }

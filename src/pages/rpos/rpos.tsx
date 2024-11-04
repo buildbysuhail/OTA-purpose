@@ -194,7 +194,7 @@ export default function Component() {
                           value={selectedTable}
                           onChange={(e) => setSelectedTable(e.target.value)}
                           placeholder="1"
-                          className="w-20 p-2 border rounded-md text-center"
+                          className="w-20 p-2 border rounded-md text-center me-[6px]"
                         />
                         <button
                           className="px-4 py-2 bg-[#f97316] text-white rounded-md hover:bg-orange-600"
@@ -218,22 +218,22 @@ export default function Component() {
                       </div>
 
                       {/* Table Status Section */}
-                      <div className="p-4 bg-gray-50 rounded-b-md mt-[10px]">
+                      <div className="p-4 bg-gray-50 rounded-b-md mt-[10px] w-[300px]">
                         <div className="flex justify-between text-sm">
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#32d62e] rounded-full"></div>
+                            <div className="w-3 h-3 bg-[#32d62e] rounded-full me-[6px]"></div>
                             <span className="text-gray-600 !me-[6px]">
                             {t("available")}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#f01717] rounded-full"></div>
+                            <div className="w-3 h-3 bg-[#f01717] rounded-full me-[6px]"></div>
                             <span className="text-gray-600 !me-[6px]">
                             {t("occupied")}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#f8e618] rounded-full"></div>
+                            <div className="w-3 h-3 bg-[#f8e618] rounded-full me-[6px]"></div>
                             <span className="text-gray-600 !me-[6px]">
                             {t("reserved")}
                             </span>
@@ -662,7 +662,7 @@ export default function Component() {
                 ))}
                 <div className="flex justify-end mt-4">
                   <button
-                    className="px-4 py-2 bg-gray-500 text-white rounded-md rtl:ml-2"
+                    className="px-4 py-2 bg-gray-500 text-white rounded-md me-2"
                     onClick={() => setIsPopupOpen(false)}
                   >
                     {t("cancel")}

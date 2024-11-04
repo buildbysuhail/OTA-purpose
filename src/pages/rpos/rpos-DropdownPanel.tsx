@@ -11,7 +11,8 @@ const RPosDropdownPanel = ({ isOpen, setIsOpen, title, content }: RPosDropdownPr
   return (
     <>
       {isOpen && (
-        <div className="absolute top-full left-0 w-auto bg-white shadow-lg rounded-md mt-1 z-50">
+        // <div className="absolute top-full left-0 w-auto bg-white shadow-lg rounded-md mt-1 z-50">
+        <div className="absolute top-full  w-auto bg-white shadow-lg rounded-md mt-1 z-50">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b">
             <h6 className="font-semibold text-gray-800">{title}</h6>

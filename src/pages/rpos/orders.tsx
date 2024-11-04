@@ -109,18 +109,18 @@ const OrderCard: React.FC<OrderCardProps> = ({
       </div>
 
       <div className="flex justify-end items-center">
-        <button className="bg-[#e5e7eb] text-[#374151] px-4 py-2 rounded rounded-md mr-[6px]">
+        <button className="bg-[#e5e7eb] text-[#374151] px-4 py-2 rounded rounded-md me-[6px]">
           <Printer className="w-5 h-5" />
         </button>
-        <button className="bg-[#e5e7eb] text-[#374151] px-4 py-2 rounded rounded-md mr-[6px]">
+        <button className="bg-[#e5e7eb] text-[#374151] px-4 py-2 rounded rounded-md me-[6px]">
           <Info className="w-5 h-5" />
         </button>
         {orderType === "Dine In" ? (
-          <button className="bg-[#1f2937] text-white px-4 py-2 rounded rounded-md mr-[6px]">
+          <button className="bg-[#1f2937] text-white px-4 py-2 rounded rounded-md me-[6px]">
             Save & Print
           </button>
         ) : (
-          <button className="bg-[#f97316] text-white px-4 py-2 rounded rounded-md mr-[6px]">
+          <button className="bg-[#f97316] text-white px-4 py-2 rounded rounded-md me-[6px]">
             Food Is Ready
           </button>
         )}
@@ -387,7 +387,7 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
     <div>
       <div className="flex items-center p-2 bg-white shadow border-b-[1px] border-t-[1px] border-gray-200">
         <div className="flex items-center space-x-2">
-          <div className="flex items-center space-x-1 p-2 border rounded-lg">
+          <div className="flex items-center space-x-1 p-2 border rounded-lg me-2">
             <ClipboardList className="w-[1rem] h-[1rem] text-[#ef4444]" />
             <span className="text-[#ef4444]">{t("order_view")}</span>
           </div>
@@ -398,8 +398,8 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
         </div>
         <div className="flex-grow"></div>
         <div className="flex items-center space-x-4">
-          <span>{t("view_details")}</span>
-          <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+          <span className="me-2" >{t("view_details")}</span>
+          <div className="relative inline-block w-10 me-2 align-middle select-none transition duration-200 ease-in">
             <label className="inline-flex items-center me-5 cursor-pointer">
               <input type="checkbox" value="" className="sr-only peer" />
               <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#fca5a5] dark:peer-focus:ring-[#991b1b] dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#dc2626]"></div>
@@ -409,15 +409,15 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             <Filter className="w-5 h-5" />
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>{t("foodready")}</span>
-            <span className="bg-[#ef4444] text-white rounded-full px-2">2</span>
+            <span className="me-[5px]">{t("foodready")}</span>
+            <span className="bg-[#ef4444] text-white rounded-full px-2 ">2</span>
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>{t("dispatch")}</span>
+            <span className="me-[5px]" >{t("dispatch")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>{t("deliver")}</span>
+            <span className="me-[5px]" >{t("deliver")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
           <div
@@ -430,8 +430,8 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer"
             onClick={handleClick}
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="text-black">{t("back")}</span>
+            <ArrowLeft className="w-5 h-5 me-1" />
+            <span className="text-black ">{t("back")}</span>
           </div>
         </div>
       </div>
@@ -442,14 +442,14 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
             {orderTypes.map((type: any) => (
               <button
                 key={type.label}
-                className={`px-4 py-2 rounded rounded-md flex items-center space-x-2 ${
+                className={`px-4 py-2 rounded rounded-md flex items-center space-x-2 rtl:ml-4 ${
                   selectedOrderType === type.label
                     ? "bg-[#fee2e2] text-[#ef4444]"
                     : "bg-[#e5e7eb] text-[#6b7280]"
                 }`}
                 onClick={() => handleOrderTypeChange(type.label)}
               >
-                {type.icon && <span className="mr-2">{type.icon}</span>}
+                {type.icon && <span className="me-2">{type.icon}</span>}
                 {t(type.label)}
               </button>
             ))}
@@ -459,35 +459,35 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
       <div>
         <div className="flex items-center justify-between mb-0 mt-[12px]">
           <button
-            className="flex items-center bg-gray-100 text-gray-700 px-4 py-2 rounded-md ml-[10px]"
+            className="flex items-center bg-gray-100 text-gray-700 px-4 py-2 rounded-md ms-[10px]"
             onClick={toggleExpand}
             // onClick={() => toggleExpand(!isExpanded)}
           >
-            {/* <i className="fas fa-search mr-2"></i> Search */}
-            <Search className="mr-2 w-5 h-5" /> Search
-            {/* <i className="fas fa-chevron-down ml-2"></i> */}
-            {/* <ChevronDown className="ml-2 w-5 h-5" /> */}
+            {/* <i className="fas fa-search me-2"></i> Search */}
+            <Search className="me-2 w-5 h-5" /> Search
+            {/* <i className="fas fa-chevron-down ms-2"></i> */}
+            {/* <ChevronDown className="ms-2 w-5 h-5" /> */}
             {isExpanded ? (
-              <ChevronUp className="ml-2 w-5 h-5" />
+              <ChevronUp className="ms-2 w-5 h-5" />
             ) : (
-              <ChevronDown className="ml-2 w-5 h-5" />
+              <ChevronDown className="ms-2 w-5 h-5" />
             )}
           </button>
-          <div className="flex space-x-4 bg-gray-100 text-gray-700 px-4 py-2 rounded-md mr-[10px]">
+          <div className="flex space-x-4 bg-gray-100 text-gray-700 px-4 py-2 rounded-md me-[10px]">
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full bg-gray-300"></div>
+              <div className="w-2 h-2 rounded-full bg-gray-300 me-2"></div>
               <span>{t("saved_bill")}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full bg-[#22c55e]"></div>
+              <div className="w-2 h-2 rounded-full bg-[#22c55e] me-2"></div>
               <span>{t("printed_bill")}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full bg-[#f97316]"></div>
+              <div className="w-2 h-2 rounded-full bg-[#f97316] me-2"></div>
               <span>{t("cancelled_bill")}</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 rounded-full bg-[#3b82f6]"></div>
+              <div className="w-2 h-2 rounded-full bg-[#3b82f6] me-2"></div>
               <span>{t("paid")}</span>
             </div>
           </div>
@@ -584,14 +584,14 @@ const RPosOrders: React.FC<RPosOrdersProps> = ({ initialView = "order" }) => {
                 </div>
               </div>
               <div className="flex justify-end mt-[16px] pb-[10px] pr-[10px]">
-                <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md mr-2 flex items-center">
-                  <RotateCcw className="mr-2 w-5 h-5" /> Reset
+                <button className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md me-2 flex items-center">
+                  <RotateCcw className="me-2 w-5 h-5" /> Reset
                 </button>
-                <button className="bg-[#ef4444] text-white px-4 py-2 rounded-md mr-2 flex items-center">
-                  <Globe className="mr-2 w-5 h-5" /> Search From Web
+                <button className="bg-[#ef4444] text-white px-4 py-2 rounded-md me-2 flex items-center">
+                  <Globe className="me-2 w-5 h-5" /> Search From Web
                 </button>
                 <button className="bg-[#ef4444] text-white px-4 py-2 rounded-md flex items-center">
-                  <Search className="mr-2 w-5 h-5" /> Search
+                  <Search className="me-2 w-5 h-5" /> Search
                 </button>
               </div>
             </div>

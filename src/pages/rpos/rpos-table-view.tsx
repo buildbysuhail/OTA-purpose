@@ -94,11 +94,11 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
   const Section: React.FC<SectionProps> = ({ title, items }) => (
     <div className="mb-4">
       <h2 className="text-[#d62e2e] font-medium text-sm mb-4">{title}</h2>
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 !rtl:ml-2">
         {items.map((item, index) => (
           <div
             key={index}
-            className="w-[6rem] h-[6rem] border-dashed border-2 border-gray-400 flex items-center justify-center bg-gray-100 rounded-md"
+            className="w-[6rem] h-[6rem] border-dashed border-2 border-gray-400 flex items-center justify-center bg-gray-100 rounded-md rtl:ml-2"
           >
             {item}
           </div>
@@ -121,21 +121,21 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
             onClick={handleRefresh}
             className="flex items-center px-4 py-2 bg-gray-100 rounded-md hover:bg-gray-200"
           >
-            <i className="ri-refresh-line mr-2"></i>
+            <i className="ri-refresh-line mr-2 rtl:ml-2"></i>
           </button>
-          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90">
-            <i className="ri-bike-line mr-2"></i>
+          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90 ">
+            <i className="ri-bike-line mr-2 rtl:ml-2"></i>
             {t("delivery")}
           </button>
-          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90">
-            <i className="ri-shopping-bag-line mr-2"></i>
+          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90 ">
+            <i className="ri-shopping-bag-line mr-2 rtl:ml-2"></i>
             {t("pick_up")}
           </button>
           <button
             onClick={onAddTable}
-            className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90"
+            className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90 "
           >
-            <i className="ri-add-line mr-2"></i>
+            <i className="ri-add-line mr-2 rtl:ml-2"></i>
             {t("add_table")}
           </button>
         </div>

@@ -342,6 +342,8 @@ export default function ExtendedPDFBarcodeDesigner() {
           content: component.defaultContent,
           x: x,
           y: y,
+          rotate: 0,
+          textAlign: "center",
           width: componentType === DesignerElementType.barcode ? 150 : 100,
           height: componentType === DesignerElementType.barcode ? 80 : 30,
           ...(componentType === DesignerElementType.barcode && {
@@ -627,7 +629,11 @@ export default function ExtendedPDFBarcodeDesigner() {
       cursor: "move",
       backgroundColor: "white",
       userSelect: "none",
+      transform: `rotate(${component.rotate || 0}deg)`, 
+      transformOrigin: "center", 
+      textAlign: `${component.textAlign || "center"}`
     };
+
 
     switch (component.type) {
       case DesignerElementType.barcode:
@@ -685,6 +691,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         );
     }
   };
+
   return (
     <div
       className="flex h-dvh max-h-dvh bg-gray-100 overflow-hidden"
@@ -926,6 +933,35 @@ export default function ExtendedPDFBarcodeDesigner() {
                       }
                     />
                   </Box>
+                  <Box className="flex justify-start gap-2 items-center">
+                    <Box className="basis-2/3">
+                      <ERPSlider
+                        label="Rotate"
+                        value={selectedComponent.rotate}
+                        onChange={(e) =>
+                          handlePropertyChange("rotate", e.target.valueAsNumber)
+                        }
+                        min={0}
+                        max={360}
+                      />
+                    </Box>
+
+                    <Box className="basis-1/3">
+                      <ERPInput
+                        id="rotate"
+                        type="number"
+                        label="Rotate"
+                        value={selectedComponent.rotate}
+                        data={selectedComponent}
+                        onChange={(e) =>
+                          handlePropertyChange(
+                            "rotate",
+                            parseInt(e.target.value, 10)
+                          )
+                        }
+                      />
+                    </Box>
+                  </Box>
                   <Box>
                     {selectedComponent.type !== DesignerElementType.barcode && (
                       <ERPInput
@@ -960,6 +996,65 @@ export default function ExtendedPDFBarcodeDesigner() {
                       />
                     )}
                   </Box>
+                  <Box>
+                    {selectedComponent.type !== DesignerElementType.barcode && (
+                      <>
+                        <InputLabel
+                          sx={{
+                            textTransform: "capitalize",
+                            marginBottom: "0.25rem",
+                            display: "block",
+                            fontSize: "0.75rem",
+                            color: "rgb(17, 24, 39)",
+                            textAlign: "left",
+                            direction: "rtl",
+                          }}
+                        >
+                          Text Align
+                        </InputLabel>
+
+                        <div className="flex justify-between space-x-2">
+                          <button
+                            className={`ti-btn ${
+                              selectedComponent.textAlign === "left"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                            } px-4 py-2 w-full`}
+                            onClick={() =>
+                              handlePropertyChange("textAlign", "left")
+                            }
+                          >
+                            Left
+                          </button>
+                          <button
+                            className={`ti-btn ${
+                              selectedComponent.textAlign === "center"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                            } px-4 py-2 w-full`}
+                            onClick={() =>
+                              handlePropertyChange("textAlign", "center")
+                            }
+                          >
+                            Center
+                          </button>
+                          <button
+                            className={`ti-btn ${
+                              selectedComponent.textAlign === "right"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
+                            } px-4 py-2 w-full`}
+                            onClick={() =>
+                              handlePropertyChange("textAlign", "right")
+                            }
+                          >
+                            Right
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </Box>
+
                   {selectedComponent.type === DesignerElementType.barcode &&
                     selectedComponent.barcodeProps && (
                       <div className="space-y-4">

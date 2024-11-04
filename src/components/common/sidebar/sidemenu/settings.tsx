@@ -13,6 +13,7 @@ import {
   toggleRefreshAllBranches,
   toggleResetBranchDataForSync,
   toggleResetDataBasePopup,
+  toggleSpecialSchemes,
   toggleUserActionPopup,
   toggleUserTypePrivilegePopup
 } from "../../../../redux/slices/popup-reducer";
@@ -76,7 +77,8 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/schemes`, type: 'link', active: false, selected: false, title: 'schemes' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/sales-route`, type: 'link', active: false, selected: false, title: 'sales_route' },
       { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/group-category`, type: 'link', active: false, selected: false, title: 'Group Category' },
-
+      { path: `${import.meta.env.BASE_URL}settings/_/inventory-masters/special-schemes`, type: 'link', active: false, selected: false, title: 'special_schemes' },
+      // { action: toggleSpecialSchemes, type: 'popup', active: false, selected: false, title: 'special_schemes' },
     ]
   },
   {

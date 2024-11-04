@@ -34,7 +34,7 @@ const Urls = {
   data_languages: "/Data/Languages/",
   data_counters: "/Data/Counters/",
   data_templates: "/Data/Templates/",
-  data_cashLedger:"/Data/CashLedgers/",
+  data_cashLedger: "/Data/CashLedgers/",
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
   data_acc_Branches: "/Data/BranchWithoutDefault",
@@ -71,7 +71,7 @@ const Urls = {
   data_warranty: "/Inventory/Data/Warranty",
   data_sections: "/Inventory/Data/Sections",
   data_groupcategory: "/Inventory/Data/GroupCategory",
-  data_getNextLedgerCode:"/Accounts/AccLedger/GetNextLedgerCode/",
+  data_getNextLedgerCode: "/Accounts/AccLedger/GetNextLedgerCode/",
   //Dropdown - settings
   data_base_currency: "/Core/ExchangeRates/GetExchangeRatesData/",
   data_company_id: "/Core/Branch/GetBranchData",
@@ -187,7 +187,7 @@ const Urls = {
   barcodePrintTransaction: "/Core/BarcodePrint/GetBarcodePrintGridFromTransaction/",
   // Accounts Start
   // Masters
-  hide_Ledger:"/Accounts/HideLedger/",
+  hide_Ledger: "/Accounts/HideLedger/",
   account_group: "/Accounts/AccGroup/",
   account_ledger: "/Accounts/AccLedger/",
   cost_center: "/Accounts/CostCenter/",
@@ -264,6 +264,8 @@ const Urls = {
 
   //Import Excel
   import_parties: "/Accounts/Import/Parties/",
+  import_parties_excel: "/Accounts/Import/PartiesExcel/",
+  download_party_format: "/Accounts/Import/DownloadPartyFormat/",
 
   // Inventory
   productGroup: "/Inventory/ProductGroup/",

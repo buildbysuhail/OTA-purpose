@@ -28,7 +28,7 @@ const ERPFileUploadButton: React.FC<FileUploadButtonProps> = ({
   };
 
   return (
-    <div>
+    <>
       <button
         type="button"
         className={buttonClassName}
@@ -46,7 +46,7 @@ const ERPFileUploadButton: React.FC<FileUploadButtonProps> = ({
         multiple={multiple}
         accept={accept}
       />
-    </div>
+    </>
   );
 };
 

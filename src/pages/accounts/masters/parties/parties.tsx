@@ -23,6 +23,7 @@ import DataGrid, {
   Paging,
   KeyboardNavigation,
 } from "devextreme-react/cjs/data-grid";
+import ERPFileUploadButton from "../../../../components/ERPComponents/erp-file-upload-button";
 
 interface PartiesProps {
   type: string;
@@ -136,6 +137,50 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const onChooseTemplate = async () => {
+    const res = await api.getAsync(Urls.download_party_format);
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.className = "d-none";
+    var blb = new Blob([res], { type: 'application/vnd.ms-excel' });
+    var url = window.URL.createObjectURL(blb);
+    a.href = url;
+    a.download = "PartiesImportTemplate.xlsx";
+    a.click();
+    // const blob = new Blob([json], { type: 'application/json' })
+    // const href = URL.createObjectURL(blob);
+    // const link = document.createElement('a');
+    // link.href = href;
+    // link.download = "file.xlsx";
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+    // const json1 = JSON.stringify(error);
+    // const blob1 = new Blob([json1], { type: 'application/json' })
+    // const href1 = URL.createObjectURL(blob1);
+    // const link1 = document.createElement('a');
+    // link1.href = href1;
+    // link1.download = "file.xlsx";
+    // document.body.appendChild(link1);
+    // link1.click();
+    // document.body.removeChild(link1);
+  }
+
+  const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      let formData = new FormData();
+      formData.append('file', event.target.files[0], event.target.files[0].name);
+      setLoading(true);
+      const res = await api.post(Urls.import_parties_excel, formData, {
+        'Content-Type': 'multipart/form-data',
+        'Accept': 'application/json',
+      });
+      setLoading(false);
+
+      handleResponse(res, () => { }, () => { })
+    };
   };
 
   const onFocusedCellChanging = (e: { isHighlighted: boolean; }) => {
@@ -548,318 +593,333 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
           </div>
         }
       />
-
-      {/* Validation Error Popup */}
-      {showValidation && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-[1000px] relative">
-            <div className="flex flex-col">
-              {/* Toolbar Section */}
-              <div className="flex items-center justify-between gap-4 py-4 px-6 bg-gray-50 rounded-t-lg w-full mb-4">
-                <div className="flex items-center gap-4">
-                  <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
-                    <div className="text-2xl font-bold text-blue">{totalCount}</div>
-                    <span className="text-sm font-medium text-gray">Total Count</span>
-                  </div>
-                  <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
-                    <div className="text-2xl font-bold text-green">{totalCount}</div>
-                    <span className="text-sm font-medium text-gray">Succeed</span>
-                  </div>
-                  <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
-                    <div className="text-2xl font-bold text-red">{totalCount}</div>
-                    <span className="text-sm font-medium text-gray">Failure</span>
-                  </div>
+      <ERPModal
+        isForm={true}
+        isOpen={showValidation}
+        closeButton="LeftArrow"
+        hasSubmit={false}
+        closeTitle="Close"
+        title="Add Items"
+        width="w-full"
+        isFullHeight={true}
+        closeModal={() => setShowValidation(false)}
+        content={
+          <>
+            <div className="flex items-center justify-between gap-4 py-4 px-6 bg-gray-50 rounded-t-lg w-full mb-4">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                  <div className="text-2xl font-bold text-blue">{totalCount}</div>
+                  <span className="text-sm font-medium text-gray">Total Count</span>
                 </div>
-                {/* Buttons Section */}
-                <div>
-                  <ERPButton
-                    type="reset"
-                    title={t("close")}
-                    variant="secondary"
-                    onClick={onClose}
-                  />
-                  <ERPButton
-                    type="button"
-                    variant="primary"
-                    onClick={onSubmit}
-                    title="Ignore and Save"
-                  />
+                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                  <div className="text-2xl font-bold text-green">{totalCount}</div>
+                  <span className="text-sm font-medium text-gray">Succeed</span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                  <div className="text-2xl font-bold text-red">{totalCount}</div>
+                  <span className="text-sm font-medium text-gray">Failure</span>
                 </div>
               </div>
-
-              {/* Grid Section */}
-              <div className="bg-white rounded-lg shadow-sm">
-                <DataGrid
-                  dataSource={store}
-                  height={500}
-                  showBorders={true}
-                  showRowLines={true}
-                  onFocusedCellChanging={onFocusedCellChanging}
-                >
-                  <KeyboardNavigation
-                    editOnKeyPress={true}
-                    enterKeyAction="startEdit"
-                    enterKeyDirection="row"
-                  />
-                  <Paging pageSize={100} />
-                  <Scrolling mode="standard" />
-                  <RemoteOperations
-                    filtering={false}
-                    sorting={false}
-                    paging={false}
-                  />
-                  <Column
-                    dataField="ledgerID"
-                    caption="LedgerID"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={50}
-                  />
-                  <Column
-                    dataField="partyCode"
-                    caption="Party Code"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={80}
-                  />
-                  <Column
-                    dataField="partyName"
-                    caption="Party Name"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="displayName"
-                    caption="Display Name"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="address1"
-                    caption="Address 1"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="address2"
-                    caption="Address 2"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="address3"
-                    caption="Address 3"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="address4"
-                    caption="Address 4"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="officePhone"
-                    caption="Office Phone"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="mobilePhone"
-                    caption="Mobile Phone"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="faxNumber"
-                    caption="Fax Number"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="email"
-                    caption="Email"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="billwiseBillApplicable"
-                    caption="Billwise Bill Applicable"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={80}
-                  />
-                  <Column
-                    dataField="creditDays"
-                    caption="Credit Days"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={80}
-                  />
-                  <Column
-                    dataField="creditAmount"
-                    caption="Credit Amount"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="taxNumber"
-                    caption="Tax Number"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="cstNumber"
-                    caption="CST Number"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="partyType"
-                    caption="Party Type"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="startDate"
-                    caption="Start Date"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="expiryDate"
-                    caption="Expiry Date"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="isActive"
-                    caption="Is Active"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="opBalance"
-                    caption="Op Balance"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="drCr"
-                    caption="Dr Cr"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Column
-                    dataField="obDate"
-                    caption="Ob Date"
-                    dataType="string"
-                    allowSorting={true}
-                    allowSearch={true}
-                    allowFiltering={true}
-                    allowEditing={true}
-                    minWidth={100}
-                  />
-                  <Editing
-                    allowUpdating={true}
-                    allowAdding={false}
-                    allowDeleting={false}
-                    mode="cell"
-                  />
-                </DataGrid>
+              {/* Buttons Section */}
+              <div>
+                <ERPButton
+                  type="reset"
+                  title={t("close")}
+                  variant="secondary"
+                  onClick={onClose}
+                />
+                <ERPButton
+                  type="button"
+                  variant="primary"
+                  onClick={onSubmit}
+                  title="Ignore and Save"
+                />
+                <ERPButton
+                  type="button"
+                  variant="secondary"
+                  onClick={onChooseTemplate}
+                  title="Choose Template"
+                />
+                <ERPFileUploadButton
+                  buttonText="Select Excel"
+                  handleFileChange={onSelectExcel}
+                ></ERPFileUploadButton>
               </div>
             </div>
-          </div>
-        </div>
-      )}
+
+            {/* Grid Section */}
+            <div className="bg-white rounded-lg shadow-sm">
+              <DataGrid
+                dataSource={store}
+                height={500}
+                showBorders={true}
+                showRowLines={true}
+                onFocusedCellChanging={onFocusedCellChanging}
+              >
+                <KeyboardNavigation
+                  editOnKeyPress={true}
+                  enterKeyAction="startEdit"
+                  enterKeyDirection="row"
+                />
+                <Paging pageSize={100} />
+                <Scrolling mode="standard" />
+                <RemoteOperations
+                  filtering={false}
+                  sorting={false}
+                  paging={false}
+                />
+                <Column
+                  dataField="ledgerID"
+                  caption="LedgerID"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={50}
+                />
+                <Column
+                  dataField="partyCode"
+                  caption="Party Code"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={80}
+                />
+                <Column
+                  dataField="partyName"
+                  caption="Party Name"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="displayName"
+                  caption="Display Name"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="address1"
+                  caption="Address 1"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="address2"
+                  caption="Address 2"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="address3"
+                  caption="Address 3"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="address4"
+                  caption="Address 4"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="officePhone"
+                  caption="Office Phone"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="mobilePhone"
+                  caption="Mobile Phone"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="faxNumber"
+                  caption="Fax Number"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="email"
+                  caption="Email"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="billwiseBillApplicable"
+                  caption="Billwise Bill Applicable"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={80}
+                />
+                <Column
+                  dataField="creditDays"
+                  caption="Credit Days"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={80}
+                />
+                <Column
+                  dataField="creditAmount"
+                  caption="Credit Amount"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="taxNumber"
+                  caption="Tax Number"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="cstNumber"
+                  caption="CST Number"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="partyType"
+                  caption="Party Type"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="startDate"
+                  caption="Start Date"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="expiryDate"
+                  caption="Expiry Date"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="isActive"
+                  caption="Is Active"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="opBalance"
+                  caption="Op Balance"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="drCr"
+                  caption="Dr Cr"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Column
+                  dataField="obDate"
+                  caption="Ob Date"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                />
+                <Editing
+                  allowUpdating={true}
+                  allowAdding={false}
+                  allowDeleting={false}
+                  mode="cell"
+                />
+              </DataGrid>
+            </div>
+          </>
+        }
+      />
+
     </Fragment>
   );
 };

@@ -177,6 +177,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
         'Content-Type': 'multipart/form-data',
         'Accept': 'application/json',
       });
+      setStore(res.items);
       setLoading(false);
 
       handleResponse(res, () => { }, () => { })
@@ -190,6 +191,13 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
+  const renderCell = (cellData: any, validation: string) => {
+    return (
+      <div className={validation && validation !== '' ? 'error-cell' : ''}>
+        {cellData.value}
+      </div>
+    );
+  };
 
   const columns: DevGridColumn[] = [
     {
@@ -677,6 +685,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={50}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.ledgerIDValidation)}
                 />
                 <Column
                   dataField="partyCode"
@@ -687,6 +696,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={80}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.partyCodeValidation)}
                 />
                 <Column
                   dataField="partyName"
@@ -697,6 +707,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.partyNameValidation)}
                 />
                 <Column
                   dataField="displayName"
@@ -707,6 +718,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.displayNameValidation)}
                 />
                 <Column
                   dataField="address1"
@@ -717,6 +729,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address1Validation)}
                 />
                 <Column
                   dataField="address2"
@@ -727,6 +740,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address2Validation)}
                 />
                 <Column
                   dataField="address3"
@@ -737,6 +751,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address3Validation)}
                 />
                 <Column
                   dataField="address4"
@@ -747,6 +762,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address4Validation)}
                 />
                 <Column
                   dataField="officePhone"
@@ -757,6 +773,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.officePhoneValidation)}
                 />
                 <Column
                   dataField="mobilePhone"
@@ -767,6 +784,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.mobilePhoneValidation)}
                 />
                 <Column
                   dataField="faxNumber"
@@ -777,6 +795,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.faxNumberValidation)}
                 />
                 <Column
                   dataField="email"
@@ -787,6 +806,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.emailValidation)}
                 />
                 <Column
                   dataField="billwiseBillApplicable"
@@ -797,6 +817,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={80}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.billwiseBillApplicableValidation)}
                 />
                 <Column
                   dataField="creditDays"
@@ -807,6 +828,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={80}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.creditDaysValidation)}
                 />
                 <Column
                   dataField="creditAmount"
@@ -817,6 +839,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.creditAmountValidation)}
                 />
                 <Column
                   dataField="taxNumber"
@@ -827,6 +850,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.taxNumberValidation)}
                 />
                 <Column
                   dataField="cstNumber"
@@ -837,6 +861,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.cstNumberValidation)}
                 />
                 <Column
                   dataField="partyType"
@@ -847,6 +872,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.partyTypeValidation)}
                 />
                 <Column
                   dataField="startDate"
@@ -857,6 +883,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.startDateValidation)}
                 />
                 <Column
                   dataField="expiryDate"
@@ -867,6 +894,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.expiryDateValidation)}
                 />
                 <Column
                   dataField="isActive"
@@ -877,6 +905,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.isActiveValidation)}
                 />
                 <Column
                   dataField="opBalance"
@@ -887,6 +916,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.opBalanceValidation)}
                 />
                 <Column
                   dataField="drCr"
@@ -897,6 +927,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.drCrValidation)}
                 />
                 <Column
                   dataField="obDate"
@@ -907,12 +938,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={100}
-                />
-                <Editing
-                  allowUpdating={true}
-                  allowAdding={false}
-                  allowDeleting={false}
-                  mode="cell"
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.obDateValidation)}
                 />
               </DataGrid>
             </div>

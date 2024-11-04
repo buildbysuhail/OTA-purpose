@@ -1213,5 +1213,21 @@
   "customer_phone": "Customer Phone",
   "customer_name": "Customer Name",
   "my_amount": "My Amount",
-  "created": "Created"
+  "created": "Created",
+
+  "special_schemes":"Special Schemes",
+  "special_price":"Special Price",
+  "FOC_scheme":"FOC Scheme",
+  "group":"Group",
+  "2_mix_brand":"2 Mix Brand",
+  "group_price":"Group Price",
+  "scheme":"Scheme",
+  "name/code":"Name / Code",
+  "std.s.price":"Std.S.Price",
+  "std.p.price":"Std.P.Price",
+  "product_batch_id":"Product Batch ID",
+  "special_price_id":"Special Price ID",
+  "scheme_price":"Scheme Price",
+  "names":"Name",
+  "units":"Unit"
 }

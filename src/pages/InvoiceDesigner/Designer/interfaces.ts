@@ -57,8 +57,13 @@ export interface PlacedComponent {
   content: string;
   x: number;
   y: number;
+  textAlign?: "left" | "center" | "right";
+  fontSize: number;
+  fontStyle: "normal" | "bold" | "italic";
+  font: string;
   width: number;
   height: number;
+  rotate:number
   barcodeProps?: {
     format: string;
     barWidth: number;

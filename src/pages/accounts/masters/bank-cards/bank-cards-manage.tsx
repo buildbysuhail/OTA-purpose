@@ -52,7 +52,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("paymentType", data.paymentType)
           }}
-          label={t("debit_cards")}
+          label={t("bank_cards")}
           options={[
             { value: 'VISA', label: 'VISA' },
             { value: 'MASTER_CARD', label: 'MASTER CARD' },

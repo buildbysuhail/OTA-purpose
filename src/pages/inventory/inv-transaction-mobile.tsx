@@ -115,25 +115,23 @@ const InvTransactionMobile = () => {
     <div className="top-0 left-0 z-50 fixed flex flex-col bg-gray-100 w-screen h-screen max-h-full font-sans overflow-scroll">
       {/* Sale Header */}
       <div className="flex items-center bg-white shadow-sm p-4 border-b-2">
-       <ERPPreviousUrlButton></ERPPreviousUrlButton>
+        <ERPPreviousUrlButton></ERPPreviousUrlButton>
         <h1 className="flex-grow font-semibold text-xl text-zinc-800">Sale</h1>
         <div className="flex bg-gray-200 mr-4 p-0.5 rounded-full">
           <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${
-              activeButton === "credit"
+            className={`px-4 py-2 text-sm transition-colors duration-200 ${activeButton === "credit"
                 ? " bg-green text-white rounded-full"
                 : "bg-transparent text-zinc rounded-full"
-            }`}
+              }`}
             onClick={() => setActiveButton("credit")}
           >
             Credit
           </button>
           <button
-            className={`px-4 py-2 text-sm transition-colors duration-200 ${
-              activeButton === "cash"
+            className={`px-4 py-2 text-sm transition-colors duration-200 ${activeButton === "cash"
                 ? "bg-green text-white rounded-full"
                 : "bg-transparent text-zinc rounded-full"
-            }`}
+              }`}
             onClick={() => setActiveButton("cash")}
           >
             Cash
@@ -186,7 +184,7 @@ const InvTransactionMobile = () => {
               type="number"
               placeholder="Phone Number"
               className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-              // className="bg-white p-2 border rounded w-full"
+            // className="bg-white p-2 border rounded w-full"
             />
           </div>
 
@@ -253,7 +251,7 @@ const InvTransactionMobile = () => {
               ></i>
               <div
                 className="mr-2 text-amber-700"
-                // size={16}
+              // size={16}
               >
                 {" "}
                 Add Items{" "}
@@ -362,13 +360,13 @@ const InvTransactionMobile = () => {
                               if (!showPopup) setIsHovered(false); // Only hide if popup is not shown
                             }}
                             className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
-                            // className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
+                          // className="block border-2 border-gray-300 focus:border-indigo-300 bg-white focus:ring-opacity-50 shadow-sm mt-1 p-2 rounded-md focus:ring focus:ring-indigo-200 w-full focus:border-b-0"
                           />
                           {(showPopup || isHovered) && (
                             <div
                               ref={setPopupRef}
                               className="absolute bg-white shadow-md rounded-lg p-4 mt-0 w-full border border-gray-300 border-t-0 rounded-tr-none rounded-tl-none"
-                              // style={{ top: "calc(100% + 8px)", zIndex: 10 }}
+                            // style={{ top: "calc(100% + 8px)", zIndex: 10 }}
                             >
                               <div className="flex justify-between items-center mb-2">
                                 <span className="text-gray-600 font-medium">

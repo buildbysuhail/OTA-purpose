@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -9,17 +9,184 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { toggleParties } from "../../../../redux/slices/popup-reducer";
 import { PartiesManage } from "./parties-manage";
-
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { handleResponse } from "../../../../utilities/HandleResponse";
+import { APIClient } from "../../../../helpers/api-client";
+import DataGrid, {
+  Toolbar,
+  Item,
+  Editing,
+  Column,
+  Scrolling,
+  RemoteOperations,
+  Paging,
+  KeyboardNavigation,
+} from "devextreme-react/cjs/data-grid";
+import ERPFileUploadButton from "../../../../components/ERPComponents/erp-file-upload-button";
 
 interface PartiesProps {
-  type: string; // Define type as a string prop
+  type: string;
 }
-const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
+
+export const getInitialImportExportData = (type: string) => ({
+  data: {
+    filePath: "",
+    customers: type === 'Cust',
+    suppliers: type === 'Supp',
+  },
+  validations: {
+    filePath: "",
+    customers: "",
+    suppliers: "",
+  },
+});
+
+interface PartiesForImport {
+  ledgerID: number;
+  partyCode: string;
+  partyName: string;
+  displayName: string;
+  address1: string;
+  address2: string;
+  address3: string;
+  address4: string;
+  officePhone: string;
+  mobilePhone: string;
+  faxNumber: string;
+  email: string;
+  billwiseBillApplicable: boolean;
+  creditDays: number;
+  creditAmount: number;
+  taxNumber: string;
+  cstNumber: string;
+  partyType: string;
+  startDate: Date;
+  expiryDate: Date;
+  isActive: boolean;
+  opBalance: number;
+  drCr: string;
+  obDate?: Date | null;
+}
+
+
+const api = new APIClient();
+
+const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
+  const [totalCount, setTotalCount] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+  const [formFile, setFormFile] = useState<FormData>();
+  const [importExport, setImportExport] = useState<any>(() => getInitialImportExportData(type));
+  const [loading, setLoading] = useState(false);
+  const [showValidation, setShowValidation] = useState(false);
+  const [store, setStore] = useState<any[]>([]);
+  const [gridHeight, setGridHeight] = useState(500);
+
+  useEffect(() => {
+    const initialData = Array.from({ length: 30 }, () => ({
+      a: null,
+      b: null,
+      c: null,
+      d: null,
+      e: null,
+    }));
+    setStore(initialData);
+
+    const wh = window.innerHeight;
+    setGridHeight(wh - 400);
+  }, []);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
+
+      const validFileTypes = ['application/vnd.ms-excel', 'application/pdf'];
+      if (!validFileTypes.includes(file.type)) {
+        setShowValidation(true);
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append('file', file, file.name);
+      setFormFile(formData);
+    }
+  };
+
+  const onSubmit = useCallback(async () => {
+    try {
+      const res = await api.postAsync(Urls.import_parties, store,);
+      handleResponse(res, () => { }, () => {});
+    } catch (error) {
+      console.error(error);
+      // setShowValidation(true);
+    } finally {
+      setLoading(false);
+    }
+    setLoading(true);
+    
+  },[]);
+
+  const onChooseTemplate = async () => {
+    const res = await api.getAsync(Urls.download_party_format);
+    var a = document.createElement("a");
+    document.body.appendChild(a);
+    a.className = "d-none";
+    var blb = new Blob([res], { type: 'application/vnd.ms-excel' });
+    var url = window.URL.createObjectURL(blb);
+    a.href = url;
+    a.download = "Parties.xlsx";
+    a.click();
+    // const blob = new Blob([json], { type: 'application/json' })
+    // const href = URL.createObjectURL(blob);
+    // const link = document.createElement('a');
+    // link.href = href;
+    // link.download = "file.xlsx";
+    // document.body.appendChild(link);
+    // link.click();
+    // document.body.removeChild(link);
+    // const json1 = JSON.stringify(error);
+    // const blob1 = new Blob([json1], { type: 'application/json' })
+    // const href1 = URL.createObjectURL(blob1);
+    // const link1 = document.createElement('a');
+    // link1.href = href1;
+    // link1.download = "file.xlsx";
+    // document.body.appendChild(link1);
+    // link1.click();
+    // document.body.removeChild(link1);
+  }
+
+  const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      let formData = new FormData();
+      formData.append('file', event.target.files[0], event.target.files[0].name);
+      setLoading(true);
+      const res = await api.post(Urls.import_parties_excel, formData, {
+        'Content-Type': 'multipart/form-data',
+        'Accept': 'application/json',
+      });
+      setStore(res.items);
+      setLoading(false);
+
+      handleResponse(res, () => { }, () => { })
+    };
+  };
+
+  const onFocusedCellChanging = (e: { isHighlighted: boolean; }) => {
+    e.isHighlighted = true;
+  };
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
+  const renderCell = (cellData: any, validation: string) => {
+    return (
+      <div className={validation && validation !== '' ? 'error-cell' : ''}>
+        {cellData.value}
+      </div>
+    );
+  };
+
   const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
@@ -50,7 +217,7 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
     },
     {
       dataField: "party",
-      caption: type =='Cust' ?t("customer"): t("supplier"),
+      caption: type == 'Cust' ? t("customer") : t("supplier"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -385,22 +552,32 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={type =='Cust' ?t("customers"): t("suppliers")}
+                  gridHeader={type === 'Cust' ? t("customers") : t("suppliers")}
                   dataUrl={`${Urls.parties}type/${type}`}
                   gridId="grd_parties"
                   popupAction={toggleParties}
                   gridAddButtonType="popup"
+                  customToolbarItems={[{
+                    location: 'after', item: (
+                      <button
+                        onClick={() => setShowValidation(true)}
+                        className="w-[33px] h-[33px] leading-[33px] rounded-full shadow-[0_0.2rem_0.4rem_#0005] text-center hover:bg-gray-100 text-lg">
+                        <i className="ri-upload-line text-sm"></i>
+                      </button>)
+                  }]}
                   reload={rootState?.PopupData?.parties?.reload}
                   gridAddButtonIcon="ri-add-line"
-                ></ErpDevGrid>
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Existing Popup */}
       <ERPModal
         isOpen={rootState.PopupData.parties.isOpen || false}
-        title={type =='Cust' ?t("customer"): t("supplier")}
+        title={type === 'Cust' ? t("customer") : t("supplier")}
         width="w-full max-w-[1400px]"
         isForm={true}
         closeModal={() => {
@@ -409,11 +586,351 @@ const Parties:React.FC<PartiesProps> = ({ type= 'Cust' }) => {
         content={
           <div className="h-[700px] overflow-y-auto">
             <MemoizedPartiesManage type={type} />
-           </div> 
+          </div>
         }
       />
+      <ERPModal
+        isForm={true}
+        isOpen={showValidation}
+        closeButton="LeftArrow"
+        hasSubmit={false}
+        closeTitle="Close"
+        title="Add Items"
+        width="w-full"
+        isFullHeight={true}
+        closeModal={() => setShowValidation(false)}
+        content={
+          <>
+            <div className="flex items-center justify-between gap-4 py-4 px-6 bg-gray-50 rounded-t-lg w-full mb-4">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                  <div className="text-2xl font-bold text-blue">{totalCount}</div>
+                  <span className="text-sm font-medium text-gray">Total Count</span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                  <div className="text-2xl font-bold text-green">{totalCount}</div>
+                  <span className="text-sm font-medium text-gray">Succeed</span>
+                </div>
+                <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
+                  <div className="text-2xl font-bold text-red">{totalCount}</div>
+                  <span className="text-sm font-medium text-gray">Failure</span>
+                </div>
+              </div>
+              {/* Buttons Section */}
+              <div>
+                
+                <ERPButton
+                  type="button"
+                  variant="primary"
+                  onClick={onSubmit}
+                  title="Ignore and Save"
+                />
+                <ERPButton
+                  type="button"
+                  variant="secondary"
+                  onClick={onChooseTemplate}
+                  title="Choose Template"
+                />
+                <ERPFileUploadButton
+                  buttonText="Select Excel"
+                  handleFileChange={onSelectExcel}
+                ></ERPFileUploadButton>
+              </div>
+            </div>
+
+            {/* Grid Section */}
+            <div className="bg-white rounded-lg shadow-sm">
+              <DataGrid
+                dataSource={store}
+                height={500}
+                showBorders={true}
+                showRowLines={true}
+                onFocusedCellChanging={onFocusedCellChanging}
+              >
+                <KeyboardNavigation
+                  editOnKeyPress={true}
+                  enterKeyAction="startEdit"
+                  enterKeyDirection="row"
+                />
+                <Paging pageSize={100} />
+                <Scrolling mode="standard" />
+                <RemoteOperations
+                  filtering={false}
+                  sorting={false}
+                  paging={false}
+                />
+                <Column
+                  dataField="ledgerID"
+                  caption="LedgerID"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={50}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.ledgerIDValidation)}
+                />
+                <Column
+                  dataField="partyCode"
+                  caption="Party Code"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={80}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.partyCodeValidation)}
+                />
+                <Column
+                  dataField="partyName"
+                  caption="Party Name"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.partyNameValidation)}
+                />
+                <Column
+                  dataField="displayName"
+                  caption="Display Name"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.displayNameValidation)}
+                />
+                <Column
+                  dataField="address1"
+                  caption="Address 1"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address1Validation)}
+                />
+                <Column
+                  dataField="address2"
+                  caption="Address 2"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address2Validation)}
+                />
+                <Column
+                  dataField="address3"
+                  caption="Address 3"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address3Validation)}
+                />
+                <Column
+                  dataField="address4"
+                  caption="Address 4"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.address4Validation)}
+                />
+                <Column
+                  dataField="officePhone"
+                  caption="Office Phone"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.officePhoneValidation)}
+                />
+                <Column
+                  dataField="mobilePhone"
+                  caption="Mobile Phone"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.mobilePhoneValidation)}
+                />
+                <Column
+                  dataField="faxNumber"
+                  caption="Fax Number"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.faxNumberValidation)}
+                />
+                <Column
+                  dataField="email"
+                  caption="Email"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.emailValidation)}
+                />
+                <Column
+                  dataField="billwiseBillApplicable"
+                  caption="Billwise Bill Applicable"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={80}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.billwiseBillApplicableValidation)}
+                />
+                <Column
+                  dataField="creditDays"
+                  caption="Credit Days"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={80}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.creditDaysValidation)}
+                />
+                <Column
+                  dataField="creditAmount"
+                  caption="Credit Amount"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.creditAmountValidation)}
+                />
+                <Column
+                  dataField="taxNumber"
+                  caption="Tax Number"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.taxNumberValidation)}
+                />
+                <Column
+                  dataField="cstNumber"
+                  caption="CST Number"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.cstNumberValidation)}
+                />
+                <Column
+                  dataField="partyType"
+                  caption="Party Type"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.partyTypeValidation)}
+                />
+                <Column
+                  dataField="startDate"
+                  caption="Start Date"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.startDateValidation)}
+                />
+                <Column
+                  dataField="expiryDate"
+                  caption="Expiry Date"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.expiryDateValidation)}
+                />
+                <Column
+                  dataField="isActive"
+                  caption="Is Active"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.isActiveValidation)}
+                />
+                <Column
+                  dataField="opBalance"
+                  caption="Op Balance"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.opBalanceValidation)}
+                />
+                <Column
+                  dataField="drCr"
+                  caption="Dr Cr"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.drCrValidation)}
+                />
+                <Column
+                  dataField="obDate"
+                  caption="Ob Date"
+                  dataType="string"
+                  allowSorting={true}
+                  allowSearch={true}
+                  allowFiltering={true}
+                  allowEditing={true}
+                  minWidth={100}
+                  cellRender={(cellData) => renderCell(cellData, cellData.data.obDateValidation)}
+                />
+              </DataGrid>
+            </div>
+          </>
+        }
+      />
+
     </Fragment>
   );
 };
 
-export default Parties
+export default Parties;

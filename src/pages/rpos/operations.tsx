@@ -35,20 +35,27 @@ import {
 import { Link } from "react-router-dom";
 import { t } from "i18next";
 
-
 const Operations = () => {
   return (
     <div className="p-0">
       <header className="flex justify-between items-center bg-white p-4 shadow-md border-t-[1px]">
-      <h2 className="text-lg font-bold mb-0">{t("operations")}</h2>
-        <div className="flex items-center space-x-4 absolute right-4">
+        <h2 className="text-lg font-bold mb-0">{t("operations")}</h2>
+        <div
+          className="flex items-center space-x-4 absolute ltr:right-4 rtl:left-4 "
+          // style={{ insetInlineEnd: "1rem" }}
+        >
           <div className="flex items-center space-x-2">
-            <Phone className="w-4 h-4" />
+            <Phone className="w-4 h-4 me-2" />
             <span>{t("call_for_support")}</span>
-            <span className="font-bold">+91 9335 87623</span>
+            <div>
+              {/* <span className="font-bold">+91 9335 87623</span> */}
+              <span className="font-bold">
+              {"+91 " + "123456789".split('').reverse().join('').replace(/(\d{3})(?=\d)/, '$1 ')}
+              </span>
+            </div>
           </div>
           <div className="flex items-center space-x-2">
-            <Mail className="w-4 h-4" />
+            <Mail className="w-4 h-4 me-2" />
             <span>{t("send_a_mail")}</span>
             <span className="font-bold">support@polosys.com</span>
           </div>
@@ -61,7 +68,7 @@ const Operations = () => {
           {/* <i className="ri-shake-hands-fill"></i> */}
           <div className="grid grid-cols-11 gap-4">
             {[
-              { icon: FileText, label: "orders", link: "/rpos/Orders"},
+              { icon: FileText, label: "orders", link: "/rpos/Orders" },
               { icon: Globe, label: "online_orders" },
               { icon: Receipt, label: "kots" },
               { icon: User, label: "customers" },
@@ -83,20 +90,22 @@ const Operations = () => {
               { icon: Bike, label: "delivery_boys" },
               { icon: Tv, label: "led_display" },
               { icon: ShoppingCart, label: "marketplace", new: true },
-            ].map((item:any, index) => (
+            ].map((item: any, index) => (
               <Link
-            // to= {item.link}
-            to={item.link ?? "/"}
-            className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
-          >
-              <div
-                key={index}
-                className="flex flex-col items-center p-4 border rounded bg-gray-50"
+                // to= {item.link}
+                to={item.link ?? "/"}
+                className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
               >
-                <item.icon className="w-6 h-6 mb-2" />
-                <span>{t(item.label)}</span>
-                {item.new && <span className="text-xs text-blue-500">New</span>}
-              </div>
+                <div
+                  key={index}
+                  className="flex flex-col items-center p-4 border rounded bg-gray-50"
+                >
+                  <item.icon className="w-6 h-6 mb-2" />
+                  <span>{t(item.label)}</span>
+                  {item.new && (
+                    <span className="text-xs text-blue-500">New</span>
+                  )}
+                </div>
               </Link>
             ))}
           </div>
@@ -104,7 +113,7 @@ const Operations = () => {
 
         <section className="bg-white p-4  mt-0">
           <h2 className="text-lg font-bold mb-4 border-b-[1px]">
-          {t("set_the_configuration_for_your_restaurant")}
+            {t("set_the_configuration_for_your_restaurant")}
           </h2>
           <div className="grid grid-cols-11 gap-4">
             {[
@@ -117,7 +126,7 @@ const Operations = () => {
               { icon: ToggleRight, label: "menu_item_on_off" },
               { icon: RefreshCw, label: "service_renewal" },
               { icon: ListTodo, label: "custom_order_status" },
-            ].map((item:any , index) => (
+            ].map((item: any, index) => (
               <div
                 key={index}
                 className="flex flex-col items-center p-4 border rounded bg-gray-50"

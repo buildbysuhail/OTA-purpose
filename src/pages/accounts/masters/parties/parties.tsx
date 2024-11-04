@@ -113,31 +113,19 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
     }
   };
 
-  const onClose = useCallback(() => {
-    setShowPopup(false);
-    setShowValidation(false);
-  }, []);
-
-  const onSubmit = async () => {
-    if (!formFile) {
-      setShowValidation(true);
-      return;
-    }
-
-    setLoading(true);
+  const onSubmit = useCallback(async () => {
     try {
-      const res = await api.post(Urls.import_parties, formFile, {
-        'Content-Type': 'multipart/form-data',
-        'Accept': 'application/json',
-      });
-      handleResponse(res, () => { }, () => setShowValidation(true));
+      const res = await api.postAsync(Urls.import_parties, store,);
+      handleResponse(res, () => { }, () => {});
     } catch (error) {
       console.error(error);
-      setShowValidation(true);
+      // setShowValidation(true);
     } finally {
       setLoading(false);
     }
-  };
+    setLoading(true);
+    
+  },[]);
 
   const onChooseTemplate = async () => {
     const res = await api.getAsync(Urls.download_party_format);
@@ -147,7 +135,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
     var blb = new Blob([res], { type: 'application/vnd.ms-excel' });
     var url = window.URL.createObjectURL(blb);
     a.href = url;
-    a.download = "PartiesImportTemplate.xlsx";
+    a.download = "Parties.xlsx";
     a.click();
     // const blob = new Blob([json], { type: 'application/json' })
     // const href = URL.createObjectURL(blob);
@@ -630,12 +618,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
               </div>
               {/* Buttons Section */}
               <div>
-                <ERPButton
-                  type="reset"
-                  title={t("close")}
-                  variant="secondary"
-                  onClick={onClose}
-                />
+                
                 <ERPButton
                   type="button"
                   variant="primary"

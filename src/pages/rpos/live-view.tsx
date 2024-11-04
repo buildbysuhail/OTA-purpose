@@ -15,6 +15,7 @@ import {
   Wifi,
   BookHeart,
 } from "lucide-react";
+import { t } from "i18next";
 
 interface OrderItem {
   quantity: number;
@@ -26,7 +27,7 @@ interface OrderCardProps {
   cafeName: string;
   billNumber: string;
   time: string;
-  orderType: "Pick Up" | "Delivery" | "Dine In" | "Online" | "Other";
+  orderType: "Pick Up" | "Delivery" | "Dine In" | "Online" | "Other" | any;
   status: string;
   items: string[];
   total?: string;
@@ -49,9 +50,9 @@ const OrderCard: React.FC<OrderCardProps> = ({
   phoneNumber,
   table,
 }) => {
-  const getStatusColor = (type: OrderCardProps["orderType"]): string => {
+  const getStatusColor = (type: OrderCardProps["orderType"]): any => {
     switch (type) {
-      case "Pick Up":
+      case "pick_up":
         return "bg-[#dbeafe] text-[#3b82f6]";
       case "Delivery":
         return "bg-[#ede9fe] text-[#8b5cf6]";
@@ -72,7 +73,7 @@ const OrderCard: React.FC<OrderCardProps> = ({
               orderType
             )} px-2 py-1 rounded rounded-md`}
           >
-            {orderType}
+            {t(orderType)}
           </span>
         </div>
 
@@ -109,11 +110,11 @@ const OrderCard: React.FC<OrderCardProps> = ({
         </button>
         {orderType === "Dine In" ? (
           <button className="bg-[#1f2937] text-white px-4 py-2 rounded rounded-md mr-[6px]">
-            Save & Print
+            {t("save_print")}
           </button>
         ) : (
           <button className="bg-[#f97316] text-white px-4 py-2 rounded rounded-md mr-[6px]">
-            Food Is Ready
+            {t("food_is_ready")}
           </button>
         )}
       </div>
@@ -180,12 +181,12 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
   // ];
 
   const orderTypes = [
-    { label: "All", icon: <Grid2x2 /> },
-    { label: "Dine In", icon: <Utensils /> },
-    { label: "Delivery", icon: <Truck /> },
-    { label: "Pick Up", icon: <PackageCheck /> },
-    { label: "Online", icon: <Wifi /> },
-    { label: "Other", icon: <BookHeart /> },
+    { label: "all", icon: <Grid2x2 /> },
+    { label: "dine_in", icon: <Utensils /> },
+    { label: "delivery", icon: <Truck /> },
+    { label: "pick_up", icon: <PackageCheck /> },
+    { label: "online", icon: <Wifi /> },
+    { label: "other", icon: <BookHeart /> },
     // { label: "Other", icon: null },
   ];
 
@@ -218,16 +219,16 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1 p-2 border rounded-lg">
             <ClipboardList className="w-[1rem] h-[1rem] text-[#ef4444]" />
-            <span className="text-[#ef4444]">Order View</span>
+            <span className="text-[#ef4444]">{t("order_view")}</span>
           </div>
           <div className="flex items-center space-x-1 p-2 border rounded-lg">
             <Receipt className="w-[1rem] h-[1rem]" />
-            <span className="text-black">Kot View</span>
+            <span className="text-black">{t("kot_view")}</span>
           </div>
         </div>
         <div className="flex-grow"></div>
         <div className="flex items-center space-x-4">
-          <span>View Details</span>
+          <span>{t("view_details")}</span>
           <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
             <label className="inline-flex items-center me-5 cursor-pointer">
               <input type="checkbox" value="" className="sr-only peer" />
@@ -238,15 +239,15 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
             <Filter className="w-5 h-5" />
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>Foodready</span>
+            <span>{t("foodready")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">2</span>
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>Dispatch</span>
+            <span>{t("dispatch")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
           <div className="flex items-center space-x-2 p-2 border rounded-lg">
-            <span>Deliver</span>
+            <span>{t("deliver")}</span>
             <span className="bg-[#ef4444] text-white rounded-full px-2">0</span>
           </div>
           <div onClick={handleRefresh} className="flex items-center space-x-2 p-2 border rounded-lg">
@@ -257,7 +258,7 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
             onClick={handleClick}
           >
             <ArrowLeft className="w-5 h-5" />
-            <span className="text-black">Back</span>
+            <span className="text-black">{t("back")}</span>
           </div>
         </div>
       </div>
@@ -265,20 +266,7 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
       <header className="bg-white shadow-md p-2 flex justify-between items-center">
         <div className="flex items-center space-x-6 text-gray-600">
           <div className="flex space-x-4">
-            {/* {orderTypes.map((type) => (
-              <button
-                key={type}
-                className={`px-4 py-2 rounded rounded-md ${
-                  selectedOrderType === type
-                    ? "bg-[#fee2e2] text-[#ef4444]"
-                    : "bg-[#e5e7eb] text-[#6b7280]"
-                }`}
-                onClick={() => handleOrderTypeChange(type)}
-              >
-                {type}
-              </button>
-            ))} */}
-            {orderTypes.map((type) => (
+            {orderTypes.map((type:any) => (
               <button
                 key={type.label}
                 className={`px-4 py-2 rounded rounded-md flex items-center space-x-2 ${
@@ -289,7 +277,8 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
                 onClick={() => handleOrderTypeChange(type.label)}
               >
                 {type.icon && <span className="mr-2">{type.icon}</span>}
-                {type.label}
+                {/* {type.label} */}
+                {t(type.label)}
               </button>
             ))}
           </div>
@@ -297,12 +286,12 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
           <div className="flex items-center space-x-2 p-2 absolute right-4">
             <input
               type="text"
-              placeholder="order No"
+              placeholder={t("order_no")}
               className="border p-1 rounded w-24 rounded-md"
             />
 
             <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              MFR
+            {t("mfr")}
             </button>
           </div>
         </div>
@@ -310,7 +299,7 @@ const RPosLiveView: React.FC<RPosLiveViewProps> = ({
       <div className="p-4">
         <div className="mt-4">
           <span className="text-[#6b7280]">
-            Total Orders | {filteredOrders.length}
+          {t("total_orders")} | {filteredOrders.length}
           </span>
         </div>
 

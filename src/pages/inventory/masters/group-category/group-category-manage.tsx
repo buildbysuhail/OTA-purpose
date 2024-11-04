@@ -46,14 +46,14 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("groupCategoryCode")}
-          label="Code"
-          placeholder="Code"
+          label={t("code")}
+          placeholder={t("code")}
           onChangeData={(data: any) => handleFieldChange("groupCategoryCode", data.groupCategoryCode)}
         />
          <ERPInput
           {...getFieldProps("groupCategoryName")}
-          label="Name"
-          placeholder="Name"
+          label={t("name")}
+          placeholder={t("name")}
           onChangeData={(data: any) => handleFieldChange("groupCategoryName", data.groupCategoryName)}
         />
         <ERPInput
@@ -72,7 +72,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
        
         <ERPCheckbox
           {...getFieldProps('isCommon')}
-          label="Common"
+          label={t("common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
         />
        

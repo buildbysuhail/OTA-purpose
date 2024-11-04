@@ -25,7 +25,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 60,
       },
       {
         dataField: "id",
@@ -34,7 +34,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 60,
       },
       {
         dataField: "vehicleName",
@@ -43,6 +43,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minwidth:150
       },
       {
         dataField: "vehicleNumber",
@@ -51,7 +52,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "noOfWheels",
@@ -60,7 +61,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "model",
@@ -74,7 +75,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
       {
         dataField: "capacity",
         caption: t("capacity"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
@@ -87,6 +88,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minWidth:150
       },
       {
         dataField: "owner",
@@ -95,6 +97,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:130
       },
       {
         dataField: "color",
@@ -139,7 +142,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 200,
       },
       {
         dataField: "modifiedUser",
@@ -148,7 +151,7 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "modifiedDate",
@@ -157,12 +160,12 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 200,
       },
       {
         dataField: "odometer",
         caption: t("odo_meter"),
-        dataType: "string",
+        dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,

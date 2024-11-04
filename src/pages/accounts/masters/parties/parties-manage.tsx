@@ -120,6 +120,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           />
           <ERPDataCombobox
             {...getFieldProps("ledgerName")}
+            disabled
             field={{
               id: "ledgerName",
               required: true,
@@ -235,6 +236,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           />
           <ERPInput
             {...getFieldProps("opBalance")}
+            disabled={isEdit}
             label={t("op_balance")}
             type="number"
             placeholder={t("op_balance")}

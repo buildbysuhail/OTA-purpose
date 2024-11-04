@@ -148,7 +148,7 @@ const AccountLedgerType = () => {
       width: 100,
     },
     {
-      dataField: "isCostCenterApplicable",
+      dataField: "isCostCentreApplicable",
       caption: t("is_cost_center_applicable"),
       dataType: "string",
       allowSearch: true,

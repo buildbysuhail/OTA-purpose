@@ -38,7 +38,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       }, 
       {
         dataField: "categoryCode",
-        caption: "Category Code",
+        caption: t("category_code"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -48,7 +48,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       },
       {
         dataField: "categoryName",
-        caption: "Category Name",
+        caption: t("category_name"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -57,7 +57,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       },
       {
         dataField: "shortName",
-        caption: "Short Name",
+        caption: t("short_name"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -76,7 +76,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       },
       {
         dataField: "createdUser",
-        caption: "Created User",
+        caption: t("created_user"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -86,7 +86,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       },
       {
         dataField: "createdDate",
-        caption: "Created Date",
+        caption: t("created_date"),
         dataType: "date",
         allowSorting: true,
         allowSearch: true,
@@ -96,7 +96,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       },
       {
         dataField: "modifiedUser",
-        caption: "Modified User",
+        caption: t("modified_user"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -106,7 +106,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       },
       {
         dataField: "modifiedDate",
-        caption: "Modified Date",
+        caption: t("modified_date"),
         dataType: "date",
         allowSorting: true,
         allowSearch: true,
@@ -116,7 +116,7 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
       },
       {
         dataField: "isCommon",
-        caption: "Is Common",
+        caption: t("is_common"),
         dataType: "boolean",
         allowSorting: true,
         allowSearch: true,

@@ -182,26 +182,27 @@ export default function ImprovedERPDataCombobox({
     setInitial(_selected || _default || _exceptional || initialValue || null);
   }, [items, data, defaultData, field, initialValue]);
 
-  const filterItems = useCallback(
-    (inputValue: string) => {
-      const words = inputValue?.toLowerCase()?.split(/\s+/);
-      const filtered = items?.filter((item) => {
-        const itemWords = item?.label?.toLowerCase()?.split(/\s+/);
-        return words.every(
-          (word, index) =>
-            index < itemWords?.length && itemWords[index]?.startsWith(word)
-        );
-      });
-      setPage(1);
-      setVisibleItems(filtered?.slice(0, ITEMS_PER_PAGE));
-      return filtered;
-    },
-    [items]
-  );
+  // const filterItems = useCallback(
+  //   (inputValue: string) => {
+  //     const words = inputValue != undefined && inputValue != '' ? inputValue.toLowerCase()?.split(/\s+/): '';
+  //     const filtered = items?.filter((item) => {
+  //       debugger;
+  //       const itemWords = item?.label != undefined && item?.label != '' ? item?.label?.toLowerCase().split(/\s+/): '';
+  //       return words != ''  ? words.every(
+  //         (word, index) =>
+  //           index < itemWords?.length && itemWords[index]?.startsWith(word)
+  //       ): '';
+  //     });
+  //     setPage(1);
+  //     setVisibleItems(filtered?.slice(0, ITEMS_PER_PAGE));
+  //     return filtered;
+  //   },
+  //   [items]
+  // );
 
-  useEffect(() => {
-    setFilteredItems(filterItems(query));
-  }, [query, filterItems]);
+  // useEffect(() => {
+  //   setFilteredItems(filterItems(query));
+  // }, [query, filterItems]);
 
   const clearSelection = (e?: React.MouseEvent) => {
     e?.stopPropagation();

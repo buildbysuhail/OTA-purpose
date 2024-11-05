@@ -1250,10 +1250,10 @@
   "return_to_customer": "Return to Customer",
   "tip": "Tip",
 
-  "help_tips": "Help Tips",
-  "shortcut_keys": "Shortcut keys",
-  "used_in_bill": "Used in Bill",
-  "cancelled": "Cancelled",
-  "not_prepared": "Not Prepared ",
-  "preparing": "Preparing"
+  "product_batch_ID":"Product Batch ID",
+  "special_price_ID":"Special Price ID",
+  "X":"X",
+  "group_combo":"Group Combo",
+  "free_quantity":"Free Quantity",
+  "item_barcode":"Item Barcode"
 }

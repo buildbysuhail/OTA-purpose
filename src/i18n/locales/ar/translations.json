@@ -1217,6 +1217,22 @@
   "my_amount": "المبلغ الخاص بي",
   "created": "تم الإنشاء",
 
+  "special_schemes": "الخطط الخاصة",
+  "special_price": "السعر الخاص",
+  "FOC_scheme": "خطة FOC",
+  "group": "المجموعة",
+  "2_mix_brand": "مزيج علامتين تجاريتين",
+  "group_price": "سعر المجموعة",
+  "scheme": "الخطة",
+  "name/code": "الاسم / الرمز",
+  "std.s.price": "سعر البيع القياسي",
+  "std.p.price": "سعر الشراء القياسي",
+  "product_batch_id": "معرّف دفعة المنتج",
+  "special_price_id": "معرّف السعر الخاص",
+  "scheme_price": "سعر الخطة",
+  "names": "الأسماء",
+  "units": "الوحدات",
+
   "comments": "التعليقات",
   "no_of_persons": "عدد الأشخاص",
   "locality": "المنطقة",
@@ -1236,11 +1252,10 @@
   "return_to_customer": "الباقي للعميل",
   "tip": "إكرامية",
 
-  "help_tips": "نصائح المساعدة",
-  "shortcut_keys": "مفاتيح الاختصار",
-  "used_in_bill": "مستخدم في الفاتورة",
-  "cancelled": "ملغى",
-  "not_prepared": "غير مُعد",
-  "preparing": "جاري التحضير"
-
+  "product_batch_ID": "معرّف دفعة المنتج",
+  "special_price_ID": "معرّف السعر الخاص",
+  "X": "X",
+  "group_combo": "مجموعة مشتركة",
+  "free_quantity": "الكمية المجانية",
+  "item_barcode": "الباركود للعنصر"
 }

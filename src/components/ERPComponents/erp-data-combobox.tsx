@@ -36,6 +36,7 @@ interface ERPDataComboboxProps {
   required?: boolean;
   className?: string;
   noLabel?: boolean;
+  noXMarkIcon?: boolean;
   multiple?: boolean;
   autoFocus?: boolean;
   disabled?: boolean;
@@ -79,6 +80,7 @@ export default function ImprovedERPDataCombobox({
   defaultData,
   data,
   noLabel,
+  noXMarkIcon,
   required,
   excludeOptions,
   includeOptions,
@@ -89,9 +91,10 @@ export default function ImprovedERPDataCombobox({
   className,
   disabledApiCall = false,
   validation,
-  enableClearOption = true
+  enableClearOption = true,
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
+  const [isOpen, setIsOpen] = useState(false);
 
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<Option[]>([]);
@@ -104,6 +107,24 @@ export default function ImprovedERPDataCombobox({
   const comboboxRef = useRef<HTMLInputElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const componentRef = useRef<HTMLDivElement>(null);
+
+  // Add click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        componentRef.current &&
+        !componentRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
@@ -217,14 +238,21 @@ export default function ImprovedERPDataCombobox({
 
   const handleItemClick = (value: Option) => {
     setInitial(value);
+    setIsOpen(false);
     onChange?.(value);
     onChangeData?.(value && data && { ...data, [id]: value?.value });
     handleChange?.(field?.id, value?.value);
     handleChangeData?.(field?.id, value?.value);
   };
 
+  const handleInputClick = () => {
+    if (!disabled) {
+      setIsOpen(!isOpen);
+    }
+  };
+
   return (
-    <div className="relative">
+    <div className="relative" ref={componentRef}>
       {!noLabel && (
         <label
           htmlFor={id}
@@ -243,33 +271,57 @@ export default function ImprovedERPDataCombobox({
       >
         <div className={className}>
           <Combobox.Input
-            className={`w-full appearance-none rounded border border-gray-300 h-9 ${disabled ? "text-gray-400" : "bg-white text-gray-900"
-              } px-3 py-2 ${enableClearOption ? 'pr-2' : 'pr-20'}placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
+            className={`w-full appearance-none rounded border border-gray-300 h-9 ${
+              disabled ? "text-gray-400" : "bg-white text-gray-900"
+            } px-3 py-2 ${
+              enableClearOption ? "pr-2" : "pr-20"
+            } placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             displayValue={(item: Option) => item?.label || ""}
-            onChange={(event) => setQuery(event?.target?.value)}
+            onChange={(event) => {
+              setQuery(event?.target?.value);
+              setIsOpen(true); // Always open when typing
+            }}
+            onClick={handleInputClick}
             placeholder={
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
             ref={comboboxRef}
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2">
-            <button type="button" onClick={clearSelection} className="p-1">
-              {enableClearOption &&
+          <div className="absolute inset-y-0 right-0 flex items-center pr-0">
+            {enableClearOption && initial && !noXMarkIcon && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearSelection();
+                  setIsOpen(false);
+                }}
+                className="p-0 hover:bg-gray-100 rounded-full"
+              >
                 <XMarkIcon
                   className="h-5 w-5 text-gray-400 hover:text-gray-500"
                   aria-hidden="true"
                 />
-              }
-            </button>
-            <Combobox.Button className="p-1">
+              </button>
+            )}
+            <Combobox.Button
+              className="p-1 hover:bg-gray-100 rounded-full"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(!isOpen);
+              }}
+            >
               <ChevronDownIcon
-                className="h-5 w-5 text-gray-400 hover:text-gray-500"
+                className={`h-5 w-5 text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
+                  isOpen ? "transform rotate-180" : ""
+                }`}
                 aria-hidden="true"
               />
             </Combobox.Button>
           </div>
         </div>
         <Transition
+          show={isOpen}
           as={React.Fragment}
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
@@ -294,8 +346,10 @@ export default function ImprovedERPDataCombobox({
                   <Combobox.Option
                     key={`${item?.value}-${index}`}
                     className={({ active }) =>
-                      `${item.is_active === false ? "hidden" : "relative"
-                      } cursor-pointer select-none py-2 pl-10 pr-4 ${active ? "bg-primary text-white" : "text-gray-900"
+                      `${
+                        item.is_active === false ? "hidden" : "relative"
+                      } cursor-pointer select-none py-2 pl-10 pr-4 ${
+                        active ? "bg-primary text-white" : "text-gray-900"
                       }`
                     }
                     value={item}
@@ -303,15 +357,17 @@ export default function ImprovedERPDataCombobox({
                     {({ selected, active }) => (
                       <>
                         <span
-                          className={`block truncate ${selected ? "font-medium" : "font-normal"
-                            }`}
+                          className={`block truncate ${
+                            selected ? "font-medium" : "font-normal"
+                          }`}
                         >
                           {item.label}
                         </span>
                         {selected && (
                           <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${active ? "text-white" : "text-accent"
-                              }`}
+                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
+                              active ? "text-white" : "text-accent"
+                            }`}
                           >
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                           </span>

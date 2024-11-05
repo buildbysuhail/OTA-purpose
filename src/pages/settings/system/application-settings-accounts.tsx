@@ -195,6 +195,8 @@ const ApplicationSettingsAccounts = () => {
                 id="defaultCashAcc"
                 value={formState.defaultCashAcc}
                 data={formState}
+                // noLabel={true}
+                // noXMarkIcon={true}
                 label={t("default_cash_account")}
                 field={{
                   id: "defaultCashAcc",

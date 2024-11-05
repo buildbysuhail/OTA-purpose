@@ -47,7 +47,6 @@ import ERPToast from "../../components/ERPComponents/erp-toast";
 import { TemplateReducerState } from "../../redux/reducers/TemplateReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { setTemplate } from "../../redux/slices/templates/reducer";
 import Urls from "../../redux/urls";
 import { APIClient } from "../../helpers/api-client";
 import { handleResponse } from "../../utilities/HandleResponse";
@@ -69,6 +68,8 @@ import { getDetailAction } from "../../redux/slices/app-thunks";
 import { RootState } from "../../redux/store";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-uirl-button";
+import { handleSetTemplateBarcodeLabelBackgroundImage } from "../../redux/slices/templates/reducer";
+import { convertFileToBase64 } from "../../utilities/file-utils";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -262,7 +263,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [value, setValue] = React.useState("element");
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
-
+  const inputFile = useRef<HTMLInputElement>(null);
   const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
@@ -500,6 +501,12 @@ export default function ExtendedPDFBarcodeDesigner() {
     }));
   };
 
+  const handleImagePropsChange = async (property: any, value: any) => {
+    debugger;
+    const imageData = await convertFileToBase64(value);
+    debugger;
+    handleLabelPropsChange(property, imageData??null);
+  };
   const handleLabelPropsChange = (property: any, value: any) => {
     debugger;
     setTemplateData((prev: any) => ({
@@ -1480,7 +1487,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               )}
             </Box>
             <Box hidden={value !== "label"}>
-              <Box sx={{ spaceY: 2 }}>
+              
                 <Box sx={{ mb: 1 }}>
                   <ERPInput
                     id="ColumnsPerRow"
@@ -1530,7 +1537,89 @@ export default function ExtendedPDFBarcodeDesigner() {
                     }
                   />
                 </Box>
-              </Box>
+                
+                <Box sx={{ mb: 1 }}>
+                <div className="flex flex-col gap-3">
+                    <div className="text-xs">Background Image</div>
+                    <ERPInput
+                       id='background_image'
+                        type="file"
+                        ref={inputFile}
+                        onChange={(e: any) => {
+
+                          debugger;
+                            if (e.target.files[0].size > 2097152) {
+                                ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
+                            } else {
+                              
+                              handleImagePropsChange( 'background_image',e.target.files[0]);
+                            }
+                        }}
+                        className={"hidden"}
+                        accept="image/png,image/jpeg"
+                        label="Image"
+                        
+                        placeholder=" "
+                    />
+                    <label htmlFor="background_image">
+                        <div
+                            onClick={() => inputFile?.current?.click()}
+                            className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData?.barcodeState?.labelState?.background_image ? "hidden" : ""}`}
+                        >
+                            Choose from Desktop</div>
+                    </label>
+
+                    {templateData?.barcodeState?.labelState?.background_image &&
+                        <>
+                            <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
+                            {templateData?.barcodeState?.labelState?.background_image && <img
+                                draggable={false}
+                                src={templateData?.barcodeState?.labelState?.background_image}
+                                alt="background_image"
+                                height={100} width={100}
+                                className="size-5" />
+                            }
+                            <div
+                                className="text-accent text-xs cursor-pointer  max-w-min"
+                                onClick={() => handleImagePropsChange( 'background_image','')}
+                            >
+                                Remove
+                            </div>
+                            <div className="font-light text-sm">Image Position</div>
+                            <ERPDataCombobox
+                                noLabel
+                                id="bg_image_position"
+                                value={templateData?.barcodeState?.labelState?.labelHeight}
+                                data={templateData}
+                                defaultValue={templateData?.barcodeState?.labelState?.labelHeight ?? "top left"}
+                                onChange={(e) =>
+                                  handleLabelPropsChange("bg_image_position", e.value)
+                                }
+                                field={{
+                                  id: "bg_image_position",
+                                  valueKey: "value",
+                                  labelKey: "label",
+                                }}
+                                options={[
+                                    { label: "Top Left", value: "top left" },
+                                    { label: "Top Center", value: "top center" },
+                                    { label: "Top Right", value: "top right" },
+                                    { label: "Center Left", value: "center left" },
+                                    { label: "Center Center", value: "center center" },
+                                    { label: "Center Right", value: "center right" },
+                                    { label: "Bottom Left", value: "bottom left" },
+                                    { label: "Bottom Center", value: "bottom center" },
+                                    { label: "Bottom Right", value: "bottom right" },
+                                    { label: "Stretch", value: "stretch" },
+                                    { label: "Contain", value: "contain" },
+                                    { label: "Cover", value: "cover" }
+                                ]}
+                            />
+                           
+                        </>}
+                </div>
+                </Box>
+             
             </Box>
             <Box hidden={value !== "page"}>
               <Box sx={{ spaceY: 2 }}>

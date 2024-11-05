@@ -47,14 +47,14 @@ export const SectionManage: React.FC = React.memo(() => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps("sectionCode")}
-          label="Code"
-          placeholder="Code"
+          label={t("code")}
+          placeholder={t("code")}
           onChangeData={(data: any) => handleFieldChange("sectionCode", data.sectionCode)}
         />
          <ERPInput
           {...getFieldProps("sectionName")}
-          label="Name"
-          placeholder="Name"
+          label={t("name")}
+          placeholder={t("name")}
           onChangeData={(data: any) => handleFieldChange("sectionName", data.sectionName)}
         />
         <ERPInput
@@ -73,7 +73,7 @@ export const SectionManage: React.FC = React.memo(() => {
        
         <ERPCheckbox
           {...getFieldProps('isCommon')}
-          label="Common"
+          label={t("common")}
           onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)}
         />
        

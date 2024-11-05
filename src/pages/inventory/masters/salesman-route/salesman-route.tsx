@@ -30,7 +30,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
       },
     {
         dataField: "id",
-        caption: "ID",
+        caption: t("id"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
@@ -39,7 +39,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
     },
     {
         dataField: "employeeName",
-        caption: "Employee Name",
+        caption: t("employee_name"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -48,7 +48,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
     },
     {
         dataField: "routeName",
-        caption: "Route Name",
+        caption: t("route_name"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -57,7 +57,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
     },
     {
         dataField: "salesDay",
-        caption: "Sales Day",
+        caption: t("sales_day"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -65,19 +65,19 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
         minWidth:200,
      
     },
-    // {
-    //     dataField: "salesDay1",
-    //     caption: "Sales Day 1",
-    //     dataType: "string",
-    //     allowSorting: true,
-    //     allowSearch: true,
-    //     allowFiltering: true,
-    //     width: 150,
-       
-    // },
+    {
+        dataField: "salesDay1",
+        caption: "Sales Day 1",
+        dataType: "string",
+        allowSorting: true,
+        allowSearch: true,
+        allowFiltering: true,
+        width: 150,
+        visible:false
+    },
     {
         dataField: "remarks",
-        caption: "Remarks",
+        caption: t("remarks"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -86,12 +86,13 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
     },
     {
         dataField: "salesManID",
-        caption: "Sales Man ID",
+        caption: t("sales_man_id"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
         width: 120,
+        visible:false
     },
     {
         dataField: "salesRouteID",
@@ -101,10 +102,11 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        visible:false
     },
     {
         dataField: "createdDate",
-        caption: "Created Date",
+        caption: t("created_date"),
         dataType: "date",
         allowSorting: true,
         allowSearch: true,
@@ -113,7 +115,7 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
     },
     {
         dataField: "modifiedDate",
-        caption: "Modified Date",
+        caption: t("modified_date"),
         dataType: "date",
         allowSorting: true,
         allowSearch: true,

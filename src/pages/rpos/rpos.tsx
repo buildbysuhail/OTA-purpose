@@ -34,7 +34,7 @@ export default function Component() {
     { name: "Paneer Labadar", price: 100, quantity: 1 },
   ]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [orderType, setOrderType] = useState("Dine in");
+  const [orderType, setOrderType] = useState("dine_in");
   const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const updateQuantity = (itemName: string, delta: number) => {
@@ -71,24 +71,24 @@ export default function Component() {
   const closePopup = () => {
     setIsPopupOpen(false);
   };
-  const [selectedOptions, setSelectedOptions] = useState<string[]>(["Dine In"]);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>(["dine_in"]);
 
   
-  const [dineInSelection, setDineInSelection] = useState<string[]>(["Dine In"]);
+  const [dineInSelection, setDineInSelection] = useState<string[]>(["dine_in"]);
 
   // Function to handle button text based on order type
-  const getButtonText = () => {
+  const getButtonText:any = () => {
     switch (orderType) {
-      case "Dine in":
+      case "dine_in":
         return dineInSelection.length === 0
-          ? "Dine In"
+          ? "dine_in"
           : dineInSelection.join(", ");
-      case "Delivery":
-        return "Delivery";
-      case "Pick Up":
-        return "Pick Up";
+      case "delivery":
+        return "delivery";
+      case "pick_up":
+        return "pick_up";
       default:
-        return "Dine In";
+        return "dine_in";
     }
   };
 
@@ -102,7 +102,7 @@ export default function Component() {
 
   const handleOrderTypeChange = (type: string) => {
     setOrderType(type);
-    if (type === "Dine in") {
+    if (type === "dine_in") {
       // Restore previous dine in selection when switching back to Dine in
       setSelectedOptions(dineInSelection);
     }
@@ -165,7 +165,7 @@ export default function Component() {
   const renderOrderTypeButtons = () => {
     const getVisibleButtons = () => {
       switch (orderType) {
-        case "Dine in":
+        case "dine_in":
           return (
             <>
               <div className="relative flex-1 min-w-[100px]">
@@ -185,7 +185,7 @@ export default function Component() {
                 <RPosDropdownPanel
                   isOpen={isOpen}
                   setIsOpen={setIsOpen}
-                  title="Table No"
+                  title={t("table_no")}
                   content={
                     <div className="p-4">
                       <div className="flex items-center space-x-2">
@@ -194,13 +194,13 @@ export default function Component() {
                           value={selectedTable}
                           onChange={(e) => setSelectedTable(e.target.value)}
                           placeholder="1"
-                          className="w-20 p-2 border rounded-md text-center"
+                          className="w-20 p-2 border rounded-md text-center me-[6px]"
                         />
                         <button
-                          className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+                          className="px-4 py-2 bg-[#f97316] text-white rounded-md hover:bg-orange-600"
                           onClick={() => setIsOpen(false)}
                         >
-                          View KOT
+                          {t("view_kot")}
                         </button>
                       </div>
 
@@ -218,24 +218,24 @@ export default function Component() {
                       </div>
 
                       {/* Table Status Section */}
-                      <div className="p-4 bg-gray-50 rounded-b-md mt-[10px]">
+                      <div className="p-4 bg-gray-50 rounded-b-md mt-[10px] w-[300px]">
                         <div className="flex justify-between text-sm">
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#32d62e] rounded-full"></div>
-                            <span className="text-gray-600 !mr-[6px]">
-                              Available
+                            <div className="w-3 h-3 bg-[#32d62e] rounded-full me-[6px]"></div>
+                            <span className="text-gray-600 !me-[6px]">
+                            {t("available")}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#f01717] rounded-full"></div>
-                            <span className="text-gray-600 !mr-[6px]">
-                              Occupied
+                            <div className="w-3 h-3 bg-[#f01717] rounded-full me-[6px]"></div>
+                            <span className="text-gray-600 !me-[6px]">
+                            {t("occupied")}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <div className="w-3 h-3 bg-[#f8e618] rounded-full"></div>
-                            <span className="text-gray-600 !mr-[6px]">
-                              Reserved
+                            <div className="w-3 h-3 bg-[#f8e618] rounded-full me-[6px]"></div>
+                            <span className="text-gray-600 !me-[6px]">
+                            {t("reserved")}
                             </span>
                           </div>
                         </div>
@@ -262,13 +262,13 @@ export default function Component() {
                 <RPosDropdownPanel
                   isOpen={isUserDropdownOpen}
                   setIsOpen={setIsUserDropdownOpen}
-                  title="customer details"
+                  title={t("customer_details")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
-                            Mobile:
+                          <label className="w-24 text-right me-4 font-bold">
+                          {t("mobile")}:
                           </label>
                           <input
                             type="text"
@@ -276,8 +276,8 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
-                            Name:
+                          <label className="w-24 text-right me-4 font-bold">
+                          {t("name")}:
                           </label>
                           <input
                             type="text"
@@ -285,8 +285,8 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
-                            Add:
+                          <label className="w-24 text-right me-4 font-bold">
+                          {t("add")}:
                           </label>
                           <input
                             type="text"
@@ -294,8 +294,8 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
-                            Locality:
+                          <label className="w-24 text-right me-4 font-bold">
+                          {t("locality")}:
                           </label>
                           <input
                             type="text"
@@ -325,13 +325,13 @@ export default function Component() {
                 <RPosDropdownPanel
                   isOpen={ispersonDropdownOpen}
                   setIsOpen={setIspersonDropdownOpen}
-                  title="No Of persons"
+                  title={t("no_of_persons")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
-                            No Of persons:
+                          <label className="w-24 text-right me-4 font-bold">
+                          {t("no_of_persons")}:
                           </label>
                           <input
                             type="text"
@@ -361,13 +361,13 @@ export default function Component() {
                 <RPosDropdownPanel
                   isOpen={isCommentsDropdownOpen}
                   setIsOpen={setIsCommentsDropdownOpen}
-                  title="Comments"
+                  title={t("comments")}
                   content={
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
-                            Comments:
+                          <label className="w-24 text-right me-4 font-bold">
+                          {t("comments")}:
                           </label>
                           <input
                             type="text"
@@ -382,7 +382,7 @@ export default function Component() {
             </>
           );
 
-        case "Delivery":
+        case "delivery":
           return (
             <>
               <div className="relative flex-1 min-w-[100px]">
@@ -407,7 +407,7 @@ export default function Component() {
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Mobile:
                           </label>
                           <input
@@ -416,7 +416,7 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Name:
                           </label>
                           <input
@@ -425,7 +425,7 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Add:
                           </label>
                           <input
@@ -434,7 +434,7 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Locality:
                           </label>
                           <input
@@ -470,7 +470,7 @@ export default function Component() {
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Comments:
                           </label>
                           <input
@@ -485,7 +485,7 @@ export default function Component() {
               </div>
             </>
           );
-        case "Pick Up":
+        case "pick_up":
           return (
             <>
               <div className="relative flex-1 min-w-[100px]">
@@ -510,7 +510,7 @@ export default function Component() {
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Mobile:
                           </label>
                           <input
@@ -519,7 +519,7 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Name:
                           </label>
                           <input
@@ -528,7 +528,7 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Add:
                           </label>
                           <input
@@ -537,7 +537,7 @@ export default function Component() {
                           />
                         </div>
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Locality:
                           </label>
                           <input
@@ -573,7 +573,7 @@ export default function Component() {
                     <div>
                       <form className="space-y-6">
                         <div className="flex items-center">
-                          <label className="w-24 text-right mr-4 font-bold">
+                          <label className="w-24 text-right me-4 font-bold">
                             Comments:
                           </label>
                           <input
@@ -600,9 +600,9 @@ export default function Component() {
         <button
           className="flex-1 w-full p-3 flex justify-center items-center bg-[#ff7800] text-white"
           // onClick={() => setIsPopupOpen(true)}
-          onClick={() => orderType === "Dine in" && setIsPopupOpen(true)}
+          onClick={() => orderType === "dine_in" && setIsPopupOpen(true)}
         >
-          {getButtonText()}
+          {t(getButtonText())}
         </button>
       </div>
     );
@@ -619,14 +619,14 @@ export default function Component() {
           <div className="w-[59%]">
             <input
               type="text"
-              placeholder="Search item..."
+              placeholder={t("search_item")}
               className="w-full p-2 rounded rounded-md"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="w-[40%] flex space-x-2">
-            {["dine_in", "Delivery", "Pick Up"].map((type: any) => (
+            {["dine_in", "delivery", "pick_up"].map((type: any) => (
               <button
                 key={type}
                 className={`px-4 py-2 rounded rounded-md ${
@@ -640,17 +640,17 @@ export default function Component() {
           </div>
         </div>
         {/* Popup for Dine in options */}
-        {isPopupOpen && orderType === "Dine in" && (
+        {isPopupOpen && orderType === "dine_in" && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-lg w-96">
               <div className="p-4">
-                <h2 className="text-lg font-semibold mb-4">Select Options</h2>
-                {["Dine In", "AC", "Dining"].map((option) => (
+                <h2 className="text-lg font-semibold mb-4"> {t("select_options")} </h2>
+                {["dine_in", "ac", "dining"].map((option:any) => (
                   <div
                     key={option}
                     className="flex items-center justify-between py-2 border-b"
                   >
-                    <span>{option}</span>
+                    <span>{t(option)}</span>
                     <input
                       type="radio"
                       name="diningOption"
@@ -662,16 +662,16 @@ export default function Component() {
                 ))}
                 <div className="flex justify-end mt-4">
                   <button
-                    className="px-4 py-2 bg-gray-500 text-white rounded-md mr-2"
+                    className="px-4 py-2 bg-gray-500 text-white rounded-md me-2"
                     onClick={() => setIsPopupOpen(false)}
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                   <button
                     className="px-4 py-2 bg-[#f90303] text-white rounded-md"
                     onClick={() => setIsPopupOpen(false)}
                   >
-                    Done
+                    {t("done")}
                   </button>
                 </div>
               </div>
@@ -721,16 +721,16 @@ export default function Component() {
               <table className="w-full">
                 <thead>
                   <tr className="text-left">
-                    <th>ITEMS</th>
-                    <th className="text-center">QTY.</th>
-                    <th className="text-right">PRICE</th>
+                    <th>{t("items")}</th>
+                    <th className="text-center">{t("qty")}</th>
+                    <th className="text-right">{t("price")}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orderItems.map((item) => (
                     <tr key={item.name} className="border-b">
                       <td className="py-2 flex items-center">
-                        <i className="ri-close-circle-line text-[#f90303] mr-2"></i>
+                        <i className="ri-close-circle-line text-[#f90303] me-2 rtl:ml-2"></i>
                         {item.name}
                       </td>
                       <td className="py-2 text-center">
@@ -772,18 +772,18 @@ export default function Component() {
                   {/* <p>test</p> */}
                   <div className="bg-gray-700 p-4 text-white rounded-md">
                     <div className="flex justify-between mb-4">
-                      <span>Sub Total</span>
+                      <span>{t("sub_total")}</span>
                       <span>3</span>
                       <span>181.00</span>
                     </div>
 
                     <div className="flex justify-between mb-4">
-                      <span>Discount</span>
+                      <span>{t("discount")}</span>
                       <button
                         onClick={() => setPopupVisible(!popupVisible)}
                         className="flex items-center space-x-1"
                       >
-                        <span>More</span>{" "}
+                        <span>{t("more")}</span>{" "}
                         <i className="ri-arrow-down-s-line"></i>
                       </button>
                       <span>(0.00)</span>
@@ -797,14 +797,14 @@ export default function Component() {
                           className="flex items-center space-x-1"
                         >
                           <i className="ri-close-line"></i>
-                          <span>Close</span>
+                          <span>{t("close")}</span>
                         </button>
                       </div>
                     )}
 
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block mb-2">Delivery Charge</label>
+                        <label className="block mb-2">{t("delivery_charge")}</label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -813,7 +813,7 @@ export default function Component() {
                       </div>
 
                       <div>
-                        <label className="block mb-2">Container Charge</label>
+                        <label className="block mb-2">{t("container_charge")}</label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -823,9 +823,9 @@ export default function Component() {
                     </div>
 
                     <div className="flex justify-between mb-4">
-                      <span>Tax</span>
+                      <span>{t("tax")}</span>
                       <button className="flex items-center space-x-1">
-                        <span>More</span>{" "}
+                        <span>{t("more")}</span>{" "}
                         <i className="ri-arrow-down-s-line"></i>
                       </button>
                       <span>0.00</span>
@@ -833,7 +833,7 @@ export default function Component() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block mb-2">Round Off</label>
+                        <label className="block mb-2">{t("round_off")}</label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -842,7 +842,7 @@ export default function Component() {
                       </div>
 
                       <div>
-                        <label className="block mb-2">Customer Paid</label>
+                        <label className="block mb-2">{t("customer_paid")}</label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -851,7 +851,7 @@ export default function Component() {
                       </div>
 
                       <div>
-                        <label className="block mb-2">Return to Customer</label>
+                        <label className="block mb-2">{t("return_to_customer")}</label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -860,7 +860,7 @@ export default function Component() {
                       </div>
 
                       <div>
-                        <label className="block mb-2">Tip</label>
+                        <label className="block mb-2">{t("tip")}</label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -875,14 +875,14 @@ export default function Component() {
 
             <div className="p-4 bg-gray-800 flex justify-between items-center font-bold">
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Split
+              {t("split")}
               </button>
-              <span className="text-white">Total:₹{total.toFixed(2)}</span>
+              <span className="text-white">{t("total")}:₹{total.toFixed(2)}</span>
             </div>
             <div className="bg-gray-600 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
-                <div className="flex items-center space-x-4">
-                  {["Cash", "Card", "Due", "Other"].map((method) => (
+                <div className="flex items-center ">
+                  {["cash", "card", "due", "other"].map((method:any) => (
                     <label key={method} className="flex items-center space-x-2">
                       <input
                         type="radio"
@@ -892,7 +892,7 @@ export default function Component() {
                         onChange={(e) => setPaymentMethod(e.target.value)}
                         className="form-radio text-[#f90303]"
                       />
-                      <span className="text-white">{method}</span>
+                      <span className="text-white pr-1">{t(method)}</span>
                     </label>
                   ))}
                 </div>
@@ -901,28 +901,28 @@ export default function Component() {
             <div className="bg-gray-800 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
                 <label className="flex items-center text-white">
-                  <input type="checkbox" className="mr-2" /> It's Paid
+                  <input type="checkbox" className="me-2" /><p className="pr-1" > {t("its_paid")} </p> 
                 </label>
               </div>
             </div>
             <div className="flex space-x-2 p-4 ml-1">
-              <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Save
+              <button className="px-4 py-2 bg-primary text-white rounded rounded-md rtl:ml-2">
+              {t("save")}
               </button>
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Save & Print
+              {t("save_print")}
               </button>
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-                Save & eBill
+              {t("save_ebill")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-                KOT
+              {t("kot")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-                KOT & Print
+              {t("kot_print")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-                Hold
+              {t("hold")}
               </button>
             </div>
           </div>

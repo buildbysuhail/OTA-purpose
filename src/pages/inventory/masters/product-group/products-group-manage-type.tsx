@@ -9,7 +9,7 @@ export interface ProductGroupData {
   isDeletable: true,
   gStatus: string,
   remarks: string,
-  groupCategoryID: number,
+  groupCategoryID:number,
   sectionID: number,
   marginPerc: number,
   kitchenID: number,

@@ -25,7 +25,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "id",
@@ -34,7 +34,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "warehouseName",
@@ -43,6 +43,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minWidth:200
       },
       {
         dataField: "shortName",
@@ -74,19 +75,21 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
       {
         dataField: "isStockWarehouse",
         caption: t("is_stock_warehouse"),
-        dataType: "string",
+        dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "isCommon",
         caption: t("is_common"),
-        dataType: "string",
+        dataType: "boolean",
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width: 100,
+        
       },
       {
         dataField: "createdUser",
@@ -104,7 +107,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "modifiedUser",
@@ -113,7 +116,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "modifiedDate",
@@ -122,7 +125,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "negativeStock",
@@ -131,7 +134,7 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 150,
       },
       {
         dataField: "actions",

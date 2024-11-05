@@ -9,6 +9,7 @@ import {
 } from "../../../utilities/hooks/useAppDispatch";
 import { Link } from "react-router-dom";
 import { Handshake } from "lucide-react";
+import LanguageSwitcher from "./language-switcher";
 
 interface RPosHeaderProps {}
 
@@ -24,21 +25,22 @@ const RPosHeader: FC<RPosHeaderProps> = () => {
           <i className="ri-menu-line text-2xl mr-2"></i>
           <Link to="/rpos/table-view">
             <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              New Order
+            {t("new_order")}
             </button>
           </Link>
           <input
             type="text"
-            placeholder="Bill No"
+            placeholder={t("bill_no")}
             className="border p-1 rounded w-24 rounded-md"
           />
           <input
             type="text"
-            placeholder="KOT No."
+            placeholder={t("kot_no")}
             className="border p-1 rounded w-24 rounded-md"
           />
         </div>
         <div className="flex items-center space-x-6 text-gray-600">
+          <LanguageSwitcher></LanguageSwitcher>
           <Link
             to="/rpos/operations"
             className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"

@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -42,7 +43,7 @@ const defaultData: Required<RPosTableViewProps>["data"] = {
 const RPosTableView: React.FC<RPosTableViewProps> = ({
   data = defaultData,
   onTableClick = () => {},
-  onRefresh = () => {},
+  // onRefresh = () => {},
   onAddTable = () => {},
 }) => {
   // Function to get status color
@@ -55,6 +56,10 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
       runningKOT: "bg-[#fc961f]",
     };
     return colors[status] || colors.blank;
+  };
+
+  const handleRefresh = () => {
+    window.location.reload();
   };
 
   // Function to render a table item
@@ -89,11 +94,11 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
   const Section: React.FC<SectionProps> = ({ title, items }) => (
     <div className="mb-4">
       <h2 className="text-[#d62e2e] font-medium text-sm mb-4">{title}</h2>
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 !rtl:ml-2">
         {items.map((item, index) => (
           <div
             key={index}
-            className="w-[6rem] h-[6rem] border-dashed border-2 border-gray-400 flex items-center justify-center bg-gray-100 rounded-md"
+            className="w-[6rem] h-[6rem] border-dashed border-2 border-gray-400 flex items-center justify-center bg-gray-100 rounded-md rtl:ml-2"
           >
             {item}
           </div>
@@ -109,28 +114,29 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
     <div className="p-4">
       {/* Header */}
       <div className="flex justify-between items-center mb-6 border-b-2 pb-4">
-        <h1 className="text-sm font-semibold">Table View</h1>
+        <h1 className="text-sm font-semibold">{t("table_view")}</h1>
         <div className="flex gap-2">
           <button
-            onClick={onRefresh}
+            // onClick={onRefresh}
+            onClick={handleRefresh}
             className="flex items-center px-4 py-2 bg-gray-100 rounded-md hover:bg-gray-200"
           >
-            <i className="ri-refresh-line mr-2"></i>
+            <i className="ri-refresh-line mr-2 rtl:ml-2"></i>
           </button>
-          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90">
-            <i className="ri-bike-line mr-2"></i>
-            Delivery
+          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90 ">
+            <i className="ri-bike-line mr-2 rtl:ml-2"></i>
+            {t("delivery")}
           </button>
-          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90">
-            <i className="ri-shopping-bag-line mr-2"></i>
-            Pick Up
+          <button className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90 ">
+            <i className="ri-shopping-bag-line mr-2 rtl:ml-2"></i>
+            {t("pick_up")}
           </button>
           <button
             onClick={onAddTable}
-            className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90"
+            className="flex items-center px-4 py-2 bg-[#d62e2e] text-white rounded-md hover:bg-[#d62e2e]/90 "
           >
-            <i className="ri-add-line mr-2"></i>
-            Add Table
+            <i className="ri-add-line mr-2 rtl:ml-2"></i>
+            {t("add_table")}
           </button>
         </div>
       </div>
@@ -139,36 +145,36 @@ const RPosTableView: React.FC<RPosTableViewProps> = ({
       <div className="flex gap-4 mb-6 justify-end">
         <button className="bg-gray-500 flex items-center gap-2 px-3 py-1 text-white rounded-md hover:bg-gray-600">
           <i className="ri-arrow-left-right-line"></i>
-          <span>Move KOT / Items</span>
+          <span>{t("move_kot_items")}</span>
         </button>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-gray-200 rounded-full"></div>
-          <span>Blank Table</span>
+          <span>{t("blank_table")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-[#18adf2] rounded-full"></div>
-          <span>Running Table</span>
+          <span>{t("running_table")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-[#3ea20d] rounded-full"></div>
-          <span>Printed Table</span>
+          <span>{t("printed_table")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-[#faf423] rounded-full"></div>
-          <span>Paid Table</span>
+          <span>{t("paid_table")}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-[#fc961f] rounded-full"></div>
-          <span>Running KOT Table</span>
+          <span>{t("running_kot_table")}</span>
         </div>
       </div>
 
       <div className="p-0">
         <Link to="/rpos">
-          <Section title="AC" items={acItems} />
+          <Section title={t("ac")} items={acItems} />
         </Link>
         <Link to="/rpos">
-          <Section title="Dining" items={diningItems} />
+          <Section title={t("dining")} items={diningItems} />
         </Link>
       </div>
     </div>

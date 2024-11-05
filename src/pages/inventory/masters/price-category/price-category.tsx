@@ -24,7 +24,7 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "id",
@@ -33,7 +33,7 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 50,
       },
       {
         dataField: "priceCategoryName",
@@ -42,6 +42,7 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        minWidth:200
       },
       {
         dataField: "shortName",
@@ -86,7 +87,7 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "createdDate",
@@ -95,6 +96,7 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:200
       },
       {
         dataField: "modifiedUser",
@@ -103,7 +105,7 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        width: 100,
+        width: 130,
       },
       {
         dataField: "modifiedDate",
@@ -112,6 +114,8 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        width:200
+
       },
       {
         dataField: "actions",
@@ -124,8 +128,8 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id })}}
+              edit={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id })}}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",

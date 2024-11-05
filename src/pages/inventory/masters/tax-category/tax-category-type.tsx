@@ -9,7 +9,7 @@ export interface TaxCategoryData {
 
 export const initialTaxCategoryData = {
   data: {
-    taxCategoryID: "",
+    taxCategoryID: 0,
     taxCategoryName: "",
     sVatPerc: "",
     pVatPerc: "",

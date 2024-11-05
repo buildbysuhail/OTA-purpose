@@ -40,6 +40,14 @@ export interface LabelState {
   rowsPerPage?: number;
   labelHeight: number;
   labelWidth: number;
+  background_image?: string;
+  bg_image_position?:string;
+  padding?: {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
 }
 export interface BarcodeState {
   placedComponents: PlacedComponent[];
@@ -57,8 +65,13 @@ export interface PlacedComponent {
   content: string;
   x: number;
   y: number;
+  textAlign?: "left" | "center" | "right";
+  fontSize: number;
+  fontStyle: "normal" | "bold" | "italic";
+  font: string;
   width: number;
   height: number;
+  rotate:number
   barcodeProps?: {
     format: string;
     barWidth: number;

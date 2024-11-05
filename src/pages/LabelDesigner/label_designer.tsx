@@ -853,7 +853,10 @@ export default function ExtendedPDFBarcodeDesigner() {
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
-                padding: `${templateData?.propertiesState?.margins?.top}px 0px 0px ${templateData?.propertiesState?.margins?.left}px`,
+                padding: `${templateData?.barcodeState?.labelState?.padding?.top ?? 0}px 
+                          ${templateData?.barcodeState?.labelState?.padding?.right ?? 0}px 
+                          ${templateData?.barcodeState?.labelState?.padding?.bottom ?? 0}px 
+                          ${templateData?.barcodeState?.labelState?.padding?.left ?? 0}px`,
                 backgroundImage: templateData?.barcodeState?.labelState?.background_image
                 ? `url(${templateData?.barcodeState?.labelState?.background_image})`
                 : "none",
@@ -1167,6 +1170,19 @@ export default function ExtendedPDFBarcodeDesigner() {
                               }
                             >
                               Bold
+                            </button>
+                            <button
+                              className={`ti-btn ${
+                                selectedComponent.fontStyle ===
+                                "normal"
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                              } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handlePropertyChange("fontStyle", "normal")
+                              }
+                            >
+                              Normal
                             </button>
                             <button
                               className={`ti-btn ${
@@ -1644,6 +1660,47 @@ export default function ExtendedPDFBarcodeDesigner() {
                         </>}
                 </div>
                 </Box>
+                <Box sx={{ mb: 1 }}>
+                  <InputLabel
+                    sx={{
+                      textTransform: "capitalize",
+                      marginBottom: "0.25rem",
+                      display: "block",
+                      fontSize: "0.75rem",
+                      color: "rgb(17, 24, 39)",
+                      textAlign: "left",
+                      direction: "rtl",
+                    }}
+                    htmlFor="margin"
+                  >
+                    Padding (px)
+                  </InputLabel>
+                  <Box
+                    display="grid"
+                    gridTemplateColumns="repeat(2, 1fr)"
+                    gap={2}
+                  >
+                    {(["top", "left","right","bottom"] as PaddingMarginSides[]).map((side) => (
+                      <ERPInput
+                        id={side}
+                        label={side.charAt(0).toUpperCase() + side.slice(1)}
+                        key={side}
+                        type="number"
+                        placeholder={
+                          side.charAt(0).toUpperCase() + side.slice(1)
+                        }
+                        value={templateData?.barcodeState?.labelState?.padding?.[side]}
+                        data={templateData?.barcodeState?.labelState}
+                        onChange={(e) =>
+                          handleLabelPropsChange("padding", {
+                            ...templateData?.barcodeState?.labelState?.padding,
+                            [side]: parseInt(e.target.value),
+                          })
+                        }
+                      />
+                    ))}
+                  </Box>
+                </Box>
              
             </Box>
             <Box hidden={value !== "page"}>
@@ -1726,14 +1783,14 @@ export default function ExtendedPDFBarcodeDesigner() {
                     }}
                     htmlFor="margin"
                   >
-                    Margin (px)
+                    Padding (px)
                   </InputLabel>
                   <Box
                     display="grid"
                     gridTemplateColumns="repeat(2, 1fr)"
                     gap={2}
                   >
-                    {(["top", "left"] as PaddingMarginSides[]).map((side) => (
+                    {(["top", "left","right","bottom"] as PaddingMarginSides[]).map((side) => (
                       <ERPInput
                         id={side}
                         label={side.charAt(0).toUpperCase() + side.slice(1)}

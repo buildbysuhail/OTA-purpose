@@ -166,8 +166,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
         'Accept': 'application/json',
       });
       setStore(res.items);
+      setTotalCount(res.items.length);
       setLoading(false);
-
       handleResponse(res, () => { }, () => { })
     };
   };
@@ -615,16 +615,15 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   <div className="text-2xl font-bold text-red">{totalCount}</div>
                   <span className="text-sm font-medium text-gray">Failure</span>
                 </div>
-              </div>
-              {/* Buttons Section */}
-              <div>
-                
                 <ERPButton
                   type="button"
                   variant="primary"
                   onClick={onSubmit}
                   title="Ignore and Save"
                 />
+              </div>
+              {/* Buttons Section */}
+              <div>
                 <ERPButton
                   type="button"
                   variant="secondary"

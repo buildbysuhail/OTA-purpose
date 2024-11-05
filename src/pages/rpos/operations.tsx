@@ -31,6 +31,7 @@ import {
   ListTodo,
   Vault,
   BadgeDollarSign,
+  Keyboard,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { t } from "i18next";
@@ -70,8 +71,8 @@ const Operations = () => {
             {[
               { icon: FileText, label: "orders", link: "/rpos/Orders" },
               { icon: Globe, label: "online_orders" },
-              { icon: Receipt, label: "kots" },
-              { icon: User, label: "customers" },
+              { icon: Receipt, label: "kots", link: "/rpos/kots"  },
+              { icon: User, label: "customers" , link: "/rpos/customers" },
               { icon: Wallet, label: "cash_flow" },
               { icon: DollarSign, label: "expense" },
               { icon: Wallet, label: "withdrawal" },
@@ -80,7 +81,7 @@ const Operations = () => {
               { icon: Bell, label: "notification" },
               { icon: Table, label: "table" },
               { icon: RefreshCw, label: "manual_sync" },
-              { icon: HelpCircle, label: "help" },
+              { icon: Keyboard, label: "shortcut_keys" , link: "/rpos/shortkeys"  },
               { icon: Video, label: "live_view" },
               { icon: ArrowLeftRight, label: "duo_payment" },
               { icon: Languages, label: "language_profiles" },

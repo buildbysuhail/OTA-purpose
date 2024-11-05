@@ -1248,5 +1248,12 @@
   "round_off": "Round Off",
   "customer_paid": "Customer Paid",
   "return_to_customer": "Return to Customer",
-  "tip": "Tip"
+  "tip": "Tip",
+
+  "help_tips": "Help Tips",
+  "shortcut_keys": "Shortcut keys",
+  "used_in_bill": "Used in Bill",
+  "cancelled": "Cancelled",
+  "not_prepared": "Not Prepared ",
+  "preparing": "Preparing"
 }

@@ -1234,6 +1234,13 @@
   "round_off": "تقريب",
   "customer_paid": "المبلغ المدفوع من العميل",
   "return_to_customer": "الباقي للعميل",
-  "tip": "إكرامية"
+  "tip": "إكرامية",
+
+  "help_tips": "نصائح المساعدة",
+  "shortcut_keys": "مفاتيح الاختصار",
+  "used_in_bill": "مستخدم في الفاتورة",
+  "cancelled": "ملغى",
+  "not_prepared": "غير مُعد",
+  "preparing": "جاري التحضير"
 
 }

@@ -113,7 +113,7 @@ const BranchSettingsForm: React.FC = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-[4rem]">
+      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-[8rem]">
         <div className="space-y-6 p-6">
           <div className="border rounded-lg p-4">
             <div className="grid  sm:grid-cols-2 lg:grid-cols-2 xxl:grid-cols-4 gap-6">

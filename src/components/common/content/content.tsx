@@ -94,6 +94,7 @@ const SalesRoute = lazy(() => import('../../../pages/inventory/masters/sales-rou
 const Section = lazy(() => import('../../../pages/inventory/masters/section/section'));
 const GroupCategory = lazy(() => import('../../../pages/inventory/masters/group-category/group-category'));
 const SpecialSchemes = lazy(() => import('../../../pages/inventory/masters/special-schemes/special-schemes'));
+const ListedProductPrices = lazy(() => import('../../../pages/inventory/masters/listed-product-prices/listed-product-prices'));
 
 interface ContentProps { }
 const loading = (
@@ -227,6 +228,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory-masters/sales-route" element={<SalesRoute/>} />
         <Route path="/inventory-masters/group-category" element={<GroupCategory/>} />
         <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes/>} />
+        <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices/>} />
       </Routes>
     </Suspense>
   );

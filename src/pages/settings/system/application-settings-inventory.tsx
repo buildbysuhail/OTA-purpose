@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { getAction, postAction } from "../../../redux/slices/app-thunks";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
@@ -11,6 +11,8 @@ import { LedgerType } from "../../../enums/ledger-types";
 import { APIClient } from "../../../helpers/api-client";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { t } from "i18next";
+import { RootState } from "../../../redux/store";
+import { Countries } from "../../../redux/slices/user-session/reducer";
 
 interface Inventory {
   defaultSalesAcc: number;
@@ -132,6 +134,7 @@ const InventorySettingsForm = () => {
   const [formStatePrev, setFormStatePrev] = useState<Partial<Inventory>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
 
   useEffect(() => {
     loadSettings();
@@ -190,10 +193,20 @@ const InventorySettingsForm = () => {
     }
   };
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset'; 
+    };
+  }, []);
+
   return (
     <div className="h-screen max-h-dvh flex flex-col overflow-hidden">
       <form className="space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
-        <div className="erp-settings-form p-6">
+        <div className="erp-settings-form p-6 mb-16">
           <div className="flex flex-col justify-start items-stretch">
             <div className="flex flex-col gap-3 border rounded-lg p-4 mb-3 xxl:mb-6">
               <div
@@ -753,19 +766,20 @@ const InventorySettingsForm = () => {
                   )
                 }
               />
-
-              <ERPCheckbox
-                id="enableSalesInvoiceDraftOption"
-                checked={formState.enableSalesInvoiceDraftOption}
-                data={formState}
-                label={t("enable_sales_invoice_draft_option")}
-                onChangeData={(data: any) =>
-                  handleFieldChange(
-                    "enableSalesInvoiceDraftOption",
-                    data.enableSalesInvoiceDraftOption
-                  )
-                }
-              />
+              {userSession.countryId != Countries.India &&
+                <ERPCheckbox
+                  id="enableSalesInvoiceDraftOption"
+                  checked={formState.enableSalesInvoiceDraftOption}
+                  data={formState}
+                  label={t("enable_sales_invoice_draft_option")}
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "enableSalesInvoiceDraftOption",
+                      data.enableSalesInvoiceDraftOption
+                    )
+                  }
+                />
+              }
               <ERPCheckbox
                 id="useCostForStockTransferToBranch"
                 checked={formState.useCostForStockTransferToBranch}
@@ -920,15 +934,17 @@ const InventorySettingsForm = () => {
                   )
                 }
               />
-              <ERPCheckbox
-                id="blockHoldItems"
-                checked={formState.blockHoldItems}
-                data={formState}
-                label={t("block_hold_items")}
-                onChangeData={(data: any) =>
-                  handleFieldChange("blockHoldItems", data.blockHoldItems)
-                }
-              />
+              {userSession.countryId != Countries.India &&
+                <ERPCheckbox
+                  id="blockHoldItems"
+                  checked={formState.blockHoldItems}
+                  data={formState}
+                  label={t("block_hold_items")}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("blockHoldItems", data.blockHoldItems)
+                  }
+                />
+              }
               <ERPCheckbox
                 id="showTransitModeStockTransferAlert"
                 checked={formState.showTransitModeStockTransferAlert}
@@ -978,19 +994,20 @@ const InventorySettingsForm = () => {
                   )
                 }
               />
-
-              <ERPCheckbox
-                id="showCashSalesSeperateMenu"
-                checked={formState.showCashSalesSeperateMenu}
-                data={formState}
-                label={t("show_cash_sales_separate_menu")}
-                onChangeData={(data: any) =>
-                  handleFieldChange(
-                    "showCashSalesSeperateMenu",
-                    data.showCashSalesSeperateMenu
-                  )
-                }
-              />
+              {userSession.countryId != Countries.India &&
+                <ERPCheckbox
+                  id="showCashSalesSeperateMenu"
+                  checked={formState.showCashSalesSeperateMenu}
+                  data={formState}
+                  label={t("show_cash_sales_separate_menu")}
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "showCashSalesSeperateMenu",
+                      data.showCashSalesSeperateMenu
+                    )
+                  }
+                />
+              }
               <ERPCheckbox
                 id="needPOApprovalForPrintout"
                 checked={formState.needPOApprovalForPrintout}

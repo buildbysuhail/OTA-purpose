@@ -135,37 +135,33 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
     
   },[]);
 
-  const onChooseTemplate = async () => {
-    try {
-        const res = await api.post(Urls.download_party_format, null, {
-            responseType: 'arraybuffer',  // Changed from 'blob' to 'arraybuffer'
-            headers: {
-                'Accept': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            }
-        });
+ 
+const onChooseTemplate = async () => {
+  try 
+  {
+      const res = await api.post(Urls.download_party_format, null, {
+          responseType: 'arraybuffer'
+      });
+      const blob = new Blob([res], { 
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      });
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "Parties.xlsx";
 
-        // Create blob from ArrayBuffer
-        const blob = new Blob([new Uint8Array(res.data)], { 
-            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        });
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
 
-        // Create and trigger download
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = "Parties.xlsx";
-        
-        document.body.appendChild(link);
-        link.click();
-        
-        // Cleanup
-        setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(link);
-        }, 100);
-    } catch (error) {
-        console.error('Download failed:', error);
-    }
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+  } catch (error) {
+      console.error('Download failed:', error);
+      // Handle error appropriately
+  }
 };
 
   const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => {

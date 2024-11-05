@@ -1255,5 +1255,17 @@
   "X":"X",
   "group_combo":"Group Combo",
   "free_quantity":"Free Quantity",
-  "item_barcode":"Item Barcode"
+  "item_barcode":"Item Barcode",
+  "free_item":"Free Item",
+  "qty_discount_ID":"Qty Discount ID",
+  "qtys":"Qty",
+
+  "help_tips": "Help Tips",
+  "shortcut_keys": "Shortcut keys",
+  "used_in_bill": "Used in Bill",
+  "cancelled": "Cancelled",
+  "not_prepared": "Not Prepared ",
+  "preparing": "Preparing",
+  "enable_order_management": "Enable Order Management",
+    "enable_import_purchase": "Enable Import Purchase"
 }

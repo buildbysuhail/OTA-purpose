@@ -181,7 +181,7 @@ const ApplicationSettingsAccounts = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-      document.documentElement.style.overflow = 'unset'; 
+      document.documentElement.style.overflow = 'unset';
     };
   }, []);
 
@@ -415,59 +415,61 @@ const ApplicationSettingsAccounts = () => {
                 }}
                 onChangeData={(data) => handleFieldChange('defaultBankChargeAccount', data.defaultBankChargeAccount)}
               />
-              <ERPDataCombobox
-                id="defaultIndirectExpenseAccount"
-                value={formState.defaultIndirectExpenseAccount}
-                field={{
-                  id: "defaultIndirectExpenseAccount",
-                  valueKey: "value",
-                  labelKey: "label",
-                }}
-                data={formState}
-                label={t("default_indirect_expense_account")}
-                onChangeData={(data) =>
-                  handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
-                }
-                options={[
-                  { value: 'All', label: 'All' },
-                  { value: 'Customer', label: 'Customer' },
-                  { value: 'Supplier', label: 'Supplier' },
-                  { value: 'ReferalAgent', label: 'Referal Agent' },
-                  { value: 'CashInHand', label: 'Cash In Hand' },
-                  { value: 'BankAccount', label: 'Bank Account' },
-                  { value: 'SuspenseAccount', label: 'Suspense Account' },
-                  { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
-                  { value: 'Cash_Bank', label: 'Cash & Bank' },
-                  { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
-                  { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
-                  { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
-                  { value: 'Sales_Account', label: 'Sales Account' },
-                  { value: 'Purchase_Account', label: 'Purchase Account' },
-                  { value: 'Salaries', label: 'Salaries' },
-                  { value: 'Discount_Received', label: 'Discount Received' },
-                  { value: 'Discount_Given', label: 'Discount Given' },
-                  { value: 'Incentive_Given', label: 'Incentive Given' },
-                  { value: 'Salary_Account', label: 'Salary Account' },
-                  { value: 'Job_Works', label: 'Job Works' },
-                  { value: 'Branch_Receivable', label: 'Branch Receivable' },
-                  { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
-                  { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
-                  { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
-                  { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
-                  { value: 'Branch_Payable', label: 'Branch Payable' },
-                  { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
-                  { value: 'Expenses', label: 'Expenses' },
-                  { value: 'Incomes', label: 'Incomes' },
-                  { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
-                  { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
-                  { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
-                  { value: 'Current_Assets', label: 'Current Assets' },
-                  { value: 'Fixed_Assets', label: 'Fixed Assets' },
-                  { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
-                  { value: 'Indirect_Income', label: 'Indirect Income' },
-                ]}
+              {userSession.countryId == Countries.India &&
+                <>
+                <ERPDataCombobox
+                  id="defaultIndirectExpenseAccount"
+                  value={formState.defaultIndirectExpenseAccount}
+                  field={{
+                    id: "defaultIndirectExpenseAccount",
+                    valueKey: "value",
+                    labelKey: "label",
+                  }}
+                  data={formState}
+                  label={t("default_indirect_expense_account")}
+                  onChangeData={(data) =>
+                    handleFieldChange('defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
+                  }
+                  options={[
+                    { value: 'All', label: 'All' },
+                    { value: 'Customer', label: 'Customer' },
+                    { value: 'Supplier', label: 'Supplier' },
+                    { value: 'ReferalAgent', label: 'Referal Agent' },
+                    { value: 'CashInHand', label: 'Cash In Hand' },
+                    { value: 'BankAccount', label: 'Bank Account' },
+                    { value: 'SuspenseAccount', label: 'Suspense Account' },
+                    { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
+                    { value: 'Cash_Bank', label: 'Cash & Bank' },
+                    { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
+                    { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
+                    { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
+                    { value: 'Sales_Account', label: 'Sales Account' },
+                    { value: 'Purchase_Account', label: 'Purchase Account' },
+                    { value: 'Salaries', label: 'Salaries' },
+                    { value: 'Discount_Received', label: 'Discount Received' },
+                    { value: 'Discount_Given', label: 'Discount Given' },
+                    { value: 'Incentive_Given', label: 'Incentive Given' },
+                    { value: 'Salary_Account', label: 'Salary Account' },
+                    { value: 'Job_Works', label: 'Job Works' },
+                    { value: 'Branch_Receivable', label: 'Branch Receivable' },
+                    { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
+                    { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
+                    { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
+                    { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
+                    { value: 'Branch_Payable', label: 'Branch Payable' },
+                    { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
+                    { value: 'Expenses', label: 'Expenses' },
+                    { value: 'Incomes', label: 'Incomes' },
+                    { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
+                    { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
+                    { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
+                    { value: 'Current_Assets', label: 'Current Assets' },
+                    { value: 'Fixed_Assets', label: 'Fixed Assets' },
+                    { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
+                    { value: 'Indirect_Income', label: 'Indirect Income' },
+                  ]}
 
-              />
+                />
               <ERPDataCombobox
                 id="defaultPurchaseAssetsAccount"
                 value={formState.defaultPurchaseAssetsAccount}
@@ -518,7 +520,9 @@ const ApplicationSettingsAccounts = () => {
                 ]}
                 onChangeData={(data) => handleFieldChange('defaultPurchaseAssetsAccount', data.defaultPurchaseAssetsAccount)}
               />
+                </>
 
+            }
 
               {/* <ERPDataCombobox
           id="defaultExcessAccount"
@@ -561,6 +565,7 @@ const ApplicationSettingsAccounts = () => {
                   disabled={!formState.allowMinimumShiftDuration}
                   onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
                 />
+                &nbsp;Hours
               </div>
             </div>
           </div>
@@ -729,14 +734,15 @@ const ApplicationSettingsAccounts = () => {
                 label={t("enable_24_hours_business")}
                 onChangeData={(data) => handleFieldChange('enable24Hours', data.enable24Hours)}
               />
-
-              <ERPCheckbox
-                id="enableCPEandCRE"
-                checked={formState.enableCPEandCRE}
-                data={formState}
-                label={t("enable_estimate_for_payments_and_receipts")}
-                onChangeData={(data) => handleFieldChange('enableCPEandCRE', data.enableCPEandCRE)}
-              />
+              {userSession.countryId == Countries.India &&
+                <ERPCheckbox
+                  id="enableCPEandCRE"
+                  checked={formState.enableCPEandCRE}
+                  data={formState}
+                  label={t("enable_estimate_for_payments_and_receipts")}
+                  onChangeData={(data) => handleFieldChange('enableCPEandCRE', data.enableCPEandCRE)}
+                />
+              }
             </div>
           </div>
         </div>

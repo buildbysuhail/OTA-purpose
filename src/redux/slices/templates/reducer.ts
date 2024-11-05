@@ -9,23 +9,10 @@ import {
 } from "../../../pages/InvoiceDesigner/Designer/interfaces";
 import { templateInitialState } from "../../reducers/TemplateReducer";
 import { getTemplates } from "./thunk";
+import { convertFileToBase64 } from "../../../utilities/file-utils";
 
 // Helper function to handle file-to-base64 conversion
-const convertFileToBase64 = (file: File): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result?.toString();
-      if (base64String) {
-        resolve(base64String);
-      } else {
-        reject("File conversion failed");
-      }
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-};
+
 
 const templateSlice = createSlice({
   name: "template",
@@ -106,6 +93,18 @@ export const handleSetTemplateThumbImage = (file: File | undefined, dispatch: an
       .catch(console.error);
   } else {
     dispatch(setTemplateThumbImage(undefined));
+  }
+};
+
+export const handleSetTemplateBarcodeLabelBackgroundImage = (file: File | undefined, dispatch: any) => {
+  if (file) {
+    convertFileToBase64(file)
+      .then((base64String) => {
+        return base64String;
+      })
+      .catch(console.error);
+  } else {
+     return undefined;
   }
 };
 

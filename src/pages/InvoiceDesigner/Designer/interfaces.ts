@@ -40,6 +40,8 @@ export interface LabelState {
   rowsPerPage?: number;
   labelHeight: number;
   labelWidth: number;
+  background_image?: string;
+  bg_image_position?:string;
 }
 export interface BarcodeState {
   placedComponents: PlacedComponent[];

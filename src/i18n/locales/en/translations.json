@@ -1268,5 +1268,7 @@
   "not_prepared": "Not Prepared ",
   "preparing": "Preparing",
   "enable_order_management": "Enable Order Management",
-  "enable_import_purchase": "Enable Import Purchase"
+  "enable_import_purchase": "Enable Import Purchase",
+
+  "custom_order_status_configuration": "Custom Order Status Configuration"
 }

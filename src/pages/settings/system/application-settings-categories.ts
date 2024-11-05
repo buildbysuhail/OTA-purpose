@@ -1,15 +1,17 @@
+// Define ApplicationSettingsIds with class names as identifiers
 export type ApplicationSettingsIds =
-  | "main"
-  | "accounts"
-  | "inventory"
-  | "branch"
-  | "backup"
-  | "print"
-  | "products"
-  | "gst"
-  | "tax"
-  | "miscellaneous";
+  | "mainSettings"
+  | "accountsSettings"
+  | "inventorySettings"
+  | "branchSettings"
+  | "backUpSettings"
+  | "printSettings"
+  | "productsSettings"
+  | "gstSettings"
+  | "taxSettings"
+  | "miscellaneousSettings";
 
+// Update ApplicationSettingsTypes with new `settings_group_id` values
 export const ApplicationSettingsTypes: {
   id: number;
   name: string;
@@ -18,51 +20,51 @@ export const ApplicationSettingsTypes: {
   {
     id: 1,
     name: "Main",
-    settings_group_id: "main",
+    settings_group_id: "mainSettings",
   },
   {
     id: 2,
     name: "Accounts",
-    settings_group_id: "accounts",
+    settings_group_id: "accountsSettings",
   },
   {
     id: 3,
     name: "Inventory",
-    settings_group_id: "inventory",
+    settings_group_id: "inventorySettings",
   },
   {
     id: 4,
     name: "Branch",
-    settings_group_id: "branch",
+    settings_group_id: "branchSettings",
   },
   {
     id: 5,
     name: "Backup",
-    settings_group_id: "backup",
+    settings_group_id: "backUpSettings",
   },
   {
     id: 6,
     name: "Print",
-    settings_group_id: "print",
+    settings_group_id: "printSettings",
   },
   {
     id: 7,
     name: "Products",
-    settings_group_id: "products",
+    settings_group_id: "productsSettings",
   },
   {
     id: 8,
     name: "GST",
-    settings_group_id: "gst",
+    settings_group_id: "gstSettings",
   },
   {
     id: 9,
     name: "Tax",
-    settings_group_id: "tax",
+    settings_group_id: "taxSettings",
   },
   {
     id: 10,
     name: "Miscellaneous",
-    settings_group_id: "miscellaneous",
+    settings_group_id: "miscellaneousSettings",
   },
 ];

@@ -1,6 +1,19 @@
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import { AccountSettingsState } from "./application-settings-accounts";
 
-export interface ApplicationMainSettings {
+export interface ApplicationSettingsType {
+    mainSettings: ApplicationMainSettings;
+    // accountsSettings: AccountsSettings;
+    // inventorySettings: InventorySettings;
+    // branchSettings: BranchSettings;
+    // backUpSettings: BackUpSettings;
+    // printSettings: PrintSettings;
+    // productsSettings: ProductsSettings;
+    // gstSettings: GstSettings;
+    // taxSettings: TaxSettings;
+    // miscellaneousSettings: MiscellaneousSettings;
+  }
+  export interface ApplicationMainSettings {
   currency: string;
   unitPrice_decimalPoint: string;
   decimalPoints: number;

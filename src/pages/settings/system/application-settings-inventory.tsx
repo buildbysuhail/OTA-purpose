@@ -435,6 +435,7 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultSalesReturnPayableAcc"
+                  disabled
                   value={formState.defaultSalesReturnPayableAcc}
                   data={formState}
                   field={{

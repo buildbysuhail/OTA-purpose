@@ -44,10 +44,10 @@ const ApplicationSettings = ({ }) => {
         <div className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-10 bg-[#fafafa]">
           <h1 className="font-medium text-xl p-5 mb-5">Application Settings</h1>
           <div className="flex flex-col overflow-y-auto pb-24 h-full">
-            {ApplicationSettingsTypes.filter(x => userSession.countryId == Countries.India ? x.settings_group_id != "tax" : x.settings_group_id != "gst").map((settings, index) => (
+            {ApplicationSettingsTypes.filter(x => userSession.countryId == Countries.India ? x.settings_group_id != "taxSettings" : x.settings_group_id != "gstSettings").map((settings, index) => (
               <button
-              key={`tt_${index}`}
-              className={`
+                key={`tt_${index}`}
+                className={`
                 flex items-center 
                 w-full 
                 px-3 md:px-4 
@@ -56,21 +56,20 @@ const ApplicationSettings = ({ }) => {
                 duration-200 
                 border-r-4 
                 text-left
-                ${
-                  settingsGroup === settings?.settings_group_id
+                ${settingsGroup === settings?.settings_group_id
                     ? "bg-gray border-primary text-primary"
                     : "border-transparent hover:bg-gray hover:border-gray"
-                }
+                  }
               `}
-              tabIndex={0}
+                tabIndex={0}
                 onClick={() => {
                   setSearchParams({ settings_group_id: settings?.settings_group_id });
                   setSettingsGroup(settings?.settings_group_id);
                 }}
-            >
-              <span className="mx-4 md:mx-2 text-sm">{settings.name}</span>
-            </button>
-              
+              >
+                <span className="mx-4 md:mx-2 text-sm">{settings.name}</span>
+              </button>
+
             ))}
           </div>
         </div>
@@ -78,25 +77,25 @@ const ApplicationSettings = ({ }) => {
         {/* Main content */}
         <div className="flex-1 ml-[200px] lg:ml-[300px]">
           <div className="bg-[#fafafa] shadow-md overflow-hidden">
-            {settingsGroup == "main" ? (
+            {settingsGroup === "mainSettings" ? (
               <ERPSettingsFormMain />
-            ) : settingsGroup == "accounts" ? (
+            ) : settingsGroup === "accountsSettings" ? (
               <ApplicationSettingsAccounts />
-            ) : settingsGroup == "products" ? (
+            ) : settingsGroup === "productsSettings" ? (
               <ApplicationSettingsProduct />
-            ) : settingsGroup == "miscellaneous" ? (
+            ) : settingsGroup === "miscellaneousSettings" ? (
               <MiscellaneousSettingsForm />
-            ) : settingsGroup == "inventory" ? (
+            ) : settingsGroup === "inventorySettings" ? (
               <InventorySettingsForm />
-            ) : settingsGroup == "gst" ? (
+            ) : settingsGroup === "gstSettings" ? (
               <ERPSettingsFormGSTTaxes />
-            ) : settingsGroup == "branch" ? (
+            ) : settingsGroup === "branchSettings" ? (
               <BranchSettingsForm />
-            ) : settingsGroup == "print" ? (
+            ) : settingsGroup === "printSettings" ? (
               <PrintSettingForm />
-            ) : settingsGroup == "backup" ? (
+            ) : settingsGroup === "backUpSettings" ? (
               <BackupSettingsForm />
-            ) : settingsGroup == "tax" ? (
+            ) : settingsGroup === "taxSettings" ? (
               <TaxSettingsForm />
             ) : null}
           </div>

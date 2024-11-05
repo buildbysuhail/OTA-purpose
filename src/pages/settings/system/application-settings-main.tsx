@@ -167,7 +167,7 @@ const ERPSettingsFormMain = () => {
               options={[
                 { value: "General", label: "General" },
                 { value: "Distribution", label: "Distribution" },
-                { value: "Manufacturing", label: "Manufacturing" },
+                { value: "Hypermarket", label: "Hypermarket" },
                 { value: "Supermarket", label: "Supermarket" },
                 { value: "Textiles", label: "Textiles" },
                 { value: "Restaurant", label: "Restaurant" },

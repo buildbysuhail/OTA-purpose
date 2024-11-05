@@ -161,7 +161,7 @@ const PrintSettingForm: React.FC = () => {
             </div>
 
             <div className="form-row grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-4">
-
+          
               {userSession.countryId == Countries.India &&
                 <ERPCheckbox
                   id="printGatePass"

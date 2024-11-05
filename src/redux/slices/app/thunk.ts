@@ -13,7 +13,9 @@ export const getAppState = createAsyncThunk('app/getAppState', async () => {
   const response = await api.get(Urls.getUserThemes);
   return response.data;
 });
-export const getApplicationSettings = createAsyncThunk('app/getApplicationSettings', async () => {
+export const getApplicationSettings = createAsyncThunk('api/getApplicationSettings', async () => {
   const response = await api.get(Urls.application_setting);
-  return response.data;
+  
+  debugger;
+  return response;
 });

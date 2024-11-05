@@ -206,7 +206,7 @@ const InventorySettingsForm = () => {
   return (
     <div className="h-screen max-h-dvh flex flex-col overflow-hidden">
       <form className="space-y-6 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
-        <div className="erp-settings-form p-6 mt-16">
+        <div className="erp-settings-form p-6 mb-16">
           <div className="flex flex-col justify-start items-stretch">
             <div className="flex flex-col gap-3 border rounded-lg p-4 mb-3 xxl:mb-6">
               <div

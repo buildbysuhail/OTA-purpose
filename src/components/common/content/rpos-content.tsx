@@ -7,6 +7,10 @@ const RPosTableView = lazy(() => import('../../../pages/rpos/rpos-table-view'));
 const RPosLiveView = lazy(() => import('../../../pages/rpos/live-view'));
 const Operations = lazy(() => import('../../../pages/rpos/operations'));
 const RPosOrders = lazy(() => import('../../../pages/rpos/orders'));
+const ShortKeys = lazy(() => import('../../../pages/rpos/shortkeys'));
+const Kots = lazy(() => import('../../../pages/rpos/kots'));
+const Customers = lazy(() => import('../../../pages/rpos/customers'));
+const CustomOrderStatus = lazy(() => import('../../../pages/rpos/customorderstatus'));
 
 interface ContentProps { }
 const loading = (
@@ -26,6 +30,10 @@ const RPosContent: FC<ContentProps> = () => {
       <Route path="/live-view" element={<RPosLiveView />} />
       <Route path="/operations" element={<Operations />} />
       <Route path="/orders" element={<RPosOrders />} />
+      <Route path="/shortkeys" element={<ShortKeys />} />
+      <Route path="/kots" element={<Kots />} />
+      <Route path="/customers" element={<Customers />} />
+      <Route path="/customorderstatus" element={<CustomOrderStatus />} />
       </Routes>
     </Suspense>
   );

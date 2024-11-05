@@ -1257,5 +1257,12 @@
   "X": "X",
   "group_combo": "مجموعة مشتركة",
   "free_quantity": "الكمية المجانية",
-  "item_barcode": "الباركود للعنصر"
+  "item_barcode": "الباركود للعنصر",
+
+  "help_tips": "نصائح المساعدة",
+  "shortcut_keys": "مفاتيح الاختصار",
+  "used_in_bill": "مستخدم في الفاتورة",
+  "cancelled": "ملغى",
+  "not_prepared": "غير مُعد",
+  "preparing": "جاري التحضير"
 }

@@ -1036,7 +1036,6 @@
   "whatsapp_integrations": "Whatsapp Integrations",
   "email_integrations": "Email Integrations",
   "show_balance": "Show Balance",
-
   "inventory_masters": "Inventory Masters",
   "group_name": "Group Name",
   "margin_percentage": "Margin Percentage",
@@ -1049,13 +1048,10 @@
   "kitchen_name": "Kitchen",
   "group_category": "Group Category",
   "section": "Section",
-
   "category_code": "Category Code",
   "common": "Common",
-
   "discount_%": "Discount %",
   "margin_%": "Margin %",
-
   "unit_code": "Unit Code",
   "unit_type": "Unit Type",
   "multiple_factor": "Multiple Factor",
@@ -1064,7 +1060,6 @@
   "decimal_point": "Decimal Point",
   "total_unit_in_base_unit": "Total Unit In Base Unit",
   "unit_of_measure": "Unit Of Measure",
-
   "customer": "Customer",
   "supplier": "Supplier",
   "vehicle_name": "Vehicle Name",
@@ -1079,16 +1074,13 @@
   "is_rental": "Is Rental",
   "odo_meter": "Odo Meter",
   "rental": "Rental",
-
   "is_stock_warehouse": "Is Stock Warehouse",
   "warehouse_type": "Warehouse Type",
   "cash_ledger": "Cash Ledger",
   "warehouse_name": "Warehouse",
   "type": "Type",
-
   "physical": "Physical",
   "van": "Van",
-
   "gst_number": "GST Number",
   "sales_VAT_%": "Sales VAT %",
   "purchase_VAT_%": "Purchase VAT %",
@@ -1099,7 +1091,6 @@
   "p_VAT_%": "S VAT %",
   "s_cst_%": "S CST %",
   "p_cst_%": "P CST %",
-
   "Dr": "Dr",
   "Cr": "Cr",
   "scheme_code": "Scheme Code",
@@ -1116,7 +1107,6 @@
   "free_product": "Free Product",
   "schemes": "Schemes",
   "disc_%": "Disc %",
-
   "parent_route_ID": "Parent Route ID",
   "is_active": "Is Active",
   "sales_route_ID": "Sales Route ID",
@@ -1126,12 +1116,10 @@
   "salesman": "Salesman",
   "main_route": "Main Route",
   "sub_route": "Sub Route",
-
   "dine_in": "Dine in",
   "sales_day": "Sales Day",
   "sales_man_id": "Sales Man ID",
   "section_code": "Section Code",
-
   "delivery": "Delivery",
   "pick_up": "Pick Up",
   "ac": "AC",
@@ -1160,7 +1148,6 @@
   "printed_table": "Printed Table",
   "paid_table": "Paid Table",
   "running_kot_table": "Running KOT Table",
-
   "order_view": "Order View",
   "kot_view": "Kot View",
   "view_details": "View Details",
@@ -1171,7 +1158,6 @@
   "mfr": "MFR",
   "total_orders": "Total Orders",
   "online": "Online",
-
   "food_is_ready": "Food Is Ready",
   "orders": "Orders",
   "online_orders": "Online Orders",
@@ -1193,7 +1179,6 @@
   "delivery_boys": "Delivery Boys",
   "led_display": "LED Display",
   "marketplace": "Marketplace",
-
   "operations": "Operations",
   "call_for_support": "Call For Support",
   "send_a_mail": "Send a Mail",
@@ -1204,7 +1189,6 @@
   "menu_item_on_off": "Menu Item On Off",
   "service_renewal": "Service Renewal",
   "custom_order_status": "Custom Order Status",
-
   "saved_bill": "Saved Bill",
   "printed_bill": "Printed Bill",
   "cancelled_bill": "Cancelled Bill",
@@ -1214,23 +1198,21 @@
   "customer_name": "Customer Name",
   "my_amount": "My Amount",
   "created": "Created",
-
-  "special_schemes":"Special Schemes",
-  "special_price":"Special Price",
-  "FOC_scheme":"FOC Scheme",
-  "group":"Group",
-  "2_mix_brand":"2 Mix Brand",
-  "group_price":"Group Price",
-  "scheme":"Scheme",
-  "name/code":"Name / Code",
-  "std.s.price":"Std.S.Price",
-  "std.p.price":"Std.P.Price",
-  "product_batch_id":"Product Batch ID",
-  "special_price_id":"Special Price ID",
-  "scheme_price":"Scheme Price",
-  "names":"Name",
-  "units":"Unit",
-
+  "special_schemes": "Special Schemes",
+  "special_price": "Special Price",
+  "FOC_scheme": "FOC Scheme",
+  "group": "Group",
+  "2_mix_brand": "2 Mix Brand",
+  "group_price": "Group Price",
+  "scheme": "Scheme",
+  "name/code": "Name / Code",
+  "std.s.price": "Std.S.Price",
+  "std.p.price": "Std.P.Price",
+  "product_batch_id": "Product Batch ID",
+  "special_price_id": "Special Price ID",
+  "scheme_price": "Scheme Price",
+  "names": "Name",
+  "units": "Unit",
   "comments": "Comments",
   "no_of_persons": "No Of persons",
   "locality": "Locality",
@@ -1240,7 +1222,6 @@
   "occupied": "Occupied",
   "reserved": "Reserved",
   "customer_details": "customer details",
-
   "sub_total": "Sub Total",
   "more": "More",
   "delivery_charge": "Delivery Charge",
@@ -1249,14 +1230,19 @@
   "customer_paid": "Customer Paid",
   "return_to_customer": "Return to Customer",
   "tip": "Tip",
-
-  "product_batch_ID":"Product Batch ID",
-  "special_price_ID":"Special Price ID",
-  "X":"X",
-  "group_combo":"Group Combo",
-  "free_quantity":"Free Quantity",
-  "item_barcode":"Item Barcode",
-  "free_item":"Free Item",
-  "qty_discount_ID":"Qty Discount ID",
-  "qtys":"Qty"
+  "product_batch_ID": "Product Batch ID",
+  "special_price_ID": "Special Price ID",
+  "X": "X",
+  "group_combo": "Group Combo",
+  "free_quantity": "Free Quantity",
+  "item_barcode": "Item Barcode",
+  "free_item": "Free Item",
+  "qty_discount_ID": "Qty Discount ID",
+  "qtys": "Qty",
+  "help_tips": "Help Tips",
+  "shortcut_keys": "Shortcut keys",
+  "used_in_bill": "Used in Bill",
+  "cancelled": "Cancelled",
+  "not_prepared": "Not Prepared ",
+  "preparing": "Preparing"
 }

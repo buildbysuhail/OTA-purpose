@@ -5,9 +5,11 @@ import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import Urls from "../../../redux/urls";
 import { APIClient } from "../../../helpers/api-client";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { t } from "i18next";
+import { Countries } from "../../../redux/slices/user-session/reducer";
+import { RootState } from "../../../redux/store";
 
 interface FormState {
   setDefaultQty1: boolean;
@@ -41,6 +43,8 @@ interface FormState {
   lastSystemGeneratedBarcode: number;
   lastSystemGeneratedBarcodetrue: boolean;
   stopScanningOnWrongBarcodeInSales: boolean;
+  enableOrderMangment: boolean;
+  enableImportPurchase: boolean;
   excludeSchemeProductAmountFromPrivilegeCard: boolean;
   showPurchaseCostChangeWarning: boolean;
   listBarcodeItemsInItemLookup: boolean;
@@ -70,6 +74,8 @@ const ApplicationSettingsProduct = () => {
     stockTransferNegativeStock: "Warn",
     allowMannualProductSelectionInSales: true,
     useProductImages: false,
+    enableOrderMangment: false,
+    enableImportPurchase: false,
     productImagePath: " ",
     maintainSchemes: false,
     weighingScaleBarcodeType: "Standard. No Check Digit",
@@ -111,7 +117,7 @@ const ApplicationSettingsProduct = () => {
   const [error, setError] = useState<string | null>(null);
   const api = new APIClient();
   const dispatch = useAppDispatch();
-
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   useEffect(() => {
     loadSettings();
   }, []);
@@ -256,73 +262,77 @@ const ApplicationSettingsProduct = () => {
                   { value: 2, label: "Ignore" },
                 ]}
               />
-              <ERPDataCombobox
-                field={{
-                  id: "lPPriceLessThanSellingPrice",
-                  valueKey: "label",
-                  labelKey: "label",
-                }}
-                id="lPPriceLessThanSellingPrice"
-                label={t("LP_priceLess_than_selling_price")}
-                value={formState?.lPPriceLessThanSellingPrice}
-                data={formState}
-                onChangeData={(data) => {
-                  handleFieldChange(
-                    "lPPriceLessThanSellingPrice",
-                    data.lPPriceLessThanSellingPrice
-                  );
-                }}
-                options={[
-                  { value: 0, label: "Block" },
-                  { value: 1, label: "Warn" },
-                  { value: 2, label: "Ignore" },
-                ]}
-              />
+              {userSession.countryId == Countries.India &&
+                <>
+                  <ERPDataCombobox
+                    field={{
+                      id: "lPPriceLessThanSellingPrice",
+                      valueKey: "label",
+                      labelKey: "label",
+                    }}
+                    id="lPPriceLessThanSellingPrice"
+                    label={t("LP_priceLess_than_selling_price")}
+                    value={formState?.lPPriceLessThanSellingPrice}
+                    data={formState}
+                    onChangeData={(data) => {
+                      handleFieldChange(
+                        "lPPriceLessThanSellingPrice",
+                        data.lPPriceLessThanSellingPrice
+                      );
+                    }}
+                    options={[
+                      { value: 0, label: "Block" },
+                      { value: 1, label: "Warn" },
+                      { value: 2, label: "Ignore" },
+                    ]}
+                  />
 
-              <ERPDataCombobox
-                field={{
-                  id: "mRPLessThanSalesPrice",
-                  valueKey: "label",
-                  labelKey: "label",
-                }}
-                id="mRPLessThanSalesPrice"
-                label={t("MRP_less_than_sales_price")}
-                value={formState?.mRPLessThanSalesPrice}
-                data={formState}
-                onChangeData={(data) => {
-                  handleFieldChange(
-                    "mRPLessThanSalesPrice",
-                    data.mRPLessThanSalesPrice
-                  );
-                }}
-                options={[
-                  { value: 0, label: "Block" },
-                  { value: 1, label: "Warn" },
-                  { value: 2, label: "Ignore" },
-                ]}
-              />
-              <ERPDataCombobox
-                field={{
-                  id: "zeroMultiRateValidate",
-                  valueKey: "label",
-                  labelKey: "label",
-                }}
-                id="zeroMultiRateValidate"
-                label={t("zero_multi_rate_validate")}
-                value={formState?.zeroMultiRateValidate}
-                data={formState}
-                onChangeData={(data) => {
-                  handleFieldChange(
-                    "zeroMultiRateValidate",
-                    data.zeroMultiRateValidate
-                  );
-                }}
-                options={[
-                  { value: 0, label: "Block" },
-                  { value: 1, label: "Warn" },
-                  { value: 2, label: "Ignore" },
-                ]}
-              />
+                  <ERPDataCombobox
+                    field={{
+                      id: "mRPLessThanSalesPrice",
+                      valueKey: "label",
+                      labelKey: "label",
+                    }}
+                    id="mRPLessThanSalesPrice"
+                    label={t("MRP_less_than_sales_price")}
+                    value={formState?.mRPLessThanSalesPrice}
+                    data={formState}
+                    onChangeData={(data) => {
+                      handleFieldChange(
+                        "mRPLessThanSalesPrice",
+                        data.mRPLessThanSalesPrice
+                      );
+                    }}
+                    options={[
+                      { value: 0, label: "Block" },
+                      { value: 1, label: "Warn" },
+                      { value: 2, label: "Ignore" },
+                    ]}
+                  />
+                  <ERPDataCombobox
+                    field={{
+                      id: "zeroMultiRateValidate",
+                      valueKey: "label",
+                      labelKey: "label",
+                    }}
+                    id="zeroMultiRateValidate"
+                    label={t("zero_multi_rate_validate")}
+                    value={formState?.zeroMultiRateValidate}
+                    data={formState}
+                    onChangeData={(data) => {
+                      handleFieldChange(
+                        "zeroMultiRateValidate",
+                        data.zeroMultiRateValidate
+                      );
+                    }}
+                    options={[
+                      { value: 0, label: "Block" },
+                      { value: 1, label: "Warn" },
+                      { value: 2, label: "Ignore" },
+                    ]}
+                  />
+                </>
+              }
               <ERPDataCombobox
                 field={{
                   id: "weighingScaleBarcodeType",
@@ -609,18 +619,20 @@ const ApplicationSettingsProduct = () => {
                   )
                 }
               />
-              <ERPCheckbox
-                id="allowUpdateMultiRateinPurchase"
-                label={t("allow_update_multiRate")}
-                data={formState}
-                checked={formState?.allowUpdateMultiRateinPurchase}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "allowUpdateMultiRateinPurchase",
-                    data.allowUpdateMultiRateinPurchase
-                  )
-                }
-              />
+              {userSession.countryId == Countries.India &&
+                <ERPCheckbox
+                  id="allowUpdateMultiRateinPurchase"
+                  label={t("allow_update_multiRate")}
+                  data={formState}
+                  checked={formState?.allowUpdateMultiRateinPurchase}
+                  onChangeData={(data) =>
+                    handleFieldChange(
+                      "allowUpdateMultiRateinPurchase",
+                      data.allowUpdateMultiRateinPurchase
+                    )
+                  }
+                />
+              }
               <ERPCheckbox
                 id="enableQtySlabOffer"
                 label={t("enable_qty_slab_offer")}
@@ -766,6 +778,28 @@ const ApplicationSettingsProduct = () => {
                     "listBarcodeItemsInItemLookup",
                     data.listBarcodeItemsInItemLookup
                   )
+                }
+              />
+              {userSession.countryId == Countries.India &&
+                <ERPCheckbox
+                  id="enableOrderMangment"
+                  disabled
+                  label={t("enable_order_management")}
+                  data={formState}
+                  checked={formState?.enableOrderMangment}
+                  onChangeData={(data) =>
+                    handleFieldChange("enableOrderMangment", data.enableOrderMangment)
+                  }
+                />
+              }
+              <ERPCheckbox
+                id="enableImportPurchase"
+                disabled
+                label={t("enable_import_purchase")}
+                data={formState}
+                checked={formState?.enableImportPurchase}
+                onChangeData={(data) =>
+                  handleFieldChange("enableImportPurchase", data.enableImportPurchase)
                 }
               />
             </div>

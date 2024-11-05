@@ -9,6 +9,9 @@ import { useDispatch } from 'react-redux';
 import { APIClient } from '../../../helpers/api-client';
 import { handleResponse } from '../../../utilities/HandleResponse';
 import { t } from 'i18next';
+import { Countries } from '../../../redux/slices/user-session/reducer';
+import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
+import { RootState } from '../../../redux/store';
 
 
 interface AccountSettingsState {
@@ -63,6 +66,7 @@ interface AccountSettingsState {
 }
 const api = new APIClient();
 const ApplicationSettingsAccounts = () => {
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const initialState: AccountSettingsState = {
     defaultCashAcc: 1,
     defaultSuspenseAcc: 9,
@@ -699,15 +703,15 @@ const ApplicationSettingsAccounts = () => {
                 label={t("set_default_customer_in_sales")}
                 onChangeData={(data) => handleFieldChange('setDefaultCustomerInSales', data.setDefaultCustomerInSales)}
               />
-
-              <ERPCheckbox
-                id="allowPostPDC"
-                checked={formState.allowPostPDC}
-                data={formState}
-                label={t("allow_PDC_to_post")}
-                onChangeData={(data) => handleFieldChange('allowPostPDC', data.allowPostPDC)}
-              />
-
+              {userSession.countryId == Countries.India &&
+                <ERPCheckbox
+                  id="allowPostPDC"
+                  checked={formState.allowPostPDC}
+                  data={formState}
+                  label={t("allow_PDC_to_post")}
+                  onChangeData={(data) => handleFieldChange('allowPostPDC', data.allowPostPDC)}
+                />
+              }
               <ERPCheckbox
                 id="showEmployeesInSales"
                 checked={formState.showEmployeesInSales}

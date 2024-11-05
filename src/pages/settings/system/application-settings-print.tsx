@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -8,6 +8,8 @@ import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
 import { t } from "i18next";
+import { RootState } from "../../../redux/store";
+import { Countries } from "../../../redux/slices/user-session/reducer";
 
 interface FormState {
   defaultPrinter: string;
@@ -24,6 +26,7 @@ const initialState: FormState = {
 };
 
 const PrintSettingForm: React.FC = () => {
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const [formState, setFormState] = useState<FormState>(initialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
   const [loading, setLoading] = useState(true);
@@ -129,6 +132,7 @@ const PrintSettingForm: React.FC = () => {
                   valueKey: "value",
                   labelKey: "label",
                 }}
+                disabled
                 onChangeData={(data: any) =>
                   handleFieldChange("defaultPrinter", data.defaultPrinter)
                 }
@@ -144,15 +148,18 @@ const PrintSettingForm: React.FC = () => {
             </div>
 
             <div className="form-row grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-4">
-              <ERPCheckbox
-                id="printGatePass"
-                checked={formState.printGatePass}
-                data={formState}
-                label={t("print_gatePass")}
-                onChangeData={(data: any) =>
-                  handleFieldChange("printGatePass", data.printGatePass)
-                }
-              />
+
+              {userSession.countryId == Countries.India &&
+                <ERPCheckbox
+                  id="printGatePass"
+                  checked={formState.printGatePass}
+                  data={formState}
+                  label={t("print_gatePass")}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("printGatePass", data.printGatePass)
+                  }
+                />
+              }
               <ERPCheckbox
                 id="showReprintAuthorisation"
                 checked={formState.showReprintAuthorisation}

@@ -1256,6 +1256,9 @@
   "group_combo":"Group Combo",
   "free_quantity":"Free Quantity",
   "item_barcode":"Item Barcode",
+  "free_item":"Free Item",
+  "qty_discount_ID":"Qty Discount ID",
+  "qtys":"Qty",
 
   "help_tips": "Help Tips",
   "shortcut_keys": "Shortcut keys",

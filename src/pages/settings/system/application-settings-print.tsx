@@ -39,6 +39,19 @@ const PrintSettingForm: React.FC = () => {
     loadSettings();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const formContainer = document.querySelector('.settings-form-container') as HTMLElement;
+    if (formContainer) {
+      formContainer.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const loadSettings = async () => {
     setLoading(true);
     try {

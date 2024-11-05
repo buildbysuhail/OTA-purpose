@@ -110,14 +110,16 @@ const ERPModal = React.memo(
                   >
                     <DialogTitle
                       as="h3"
-                      className="sticky min-w-full top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
+                      className="place-items-center sticky min-w-full top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
                     >
                       {closeButton === "LeftArrow" && (
+                        <button className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer">
                         <i
                           onClick={handleClose}
                           className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line"
                           style={{ fontSize: "23px" }}
                         ></i>
+                        </button>
                       )}
                       {title}
                       {closeButton === "Button" && (

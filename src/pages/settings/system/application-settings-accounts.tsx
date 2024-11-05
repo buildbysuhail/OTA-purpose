@@ -116,6 +116,7 @@ const ApplicationSettingsAccounts = () => {
   const [formStatePrev, setFormStatePrev] = useState<Partial<AccountSettingsState>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isScrollingDisabled, setIsScrollingDisabled] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -142,7 +143,7 @@ const ApplicationSettingsAccounts = () => {
       [settingName]: value ?? ''
     }));
   });
-  
+
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
@@ -170,6 +171,15 @@ const ApplicationSettingsAccounts = () => {
     }
   };
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset'; 
+    };
+  }, []);
 
   return (
     <div className="h-screen max-h-dvh flex flex-col overflow-hidden">

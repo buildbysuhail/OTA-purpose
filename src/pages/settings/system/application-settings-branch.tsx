@@ -100,6 +100,16 @@ const BranchSettingsForm: React.FC = () => {
     alert("Input is now enabled!");
   };
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset';
+    };
+  }, []);
+
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
       <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-[4rem]">

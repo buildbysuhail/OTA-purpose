@@ -6,17 +6,23 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import Urls from "../../../../redux/urls";
 import { useTranslation } from "react-i18next";
-import { Tab, Tabs } from "@mui/material";
+import { Button, Tab, Tabs } from "@mui/material";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
-import ERPGridActions from "../../../../components/ERPComponents/erp-grid-actions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 
 export interface SpecialSchemesData {
-  // Your existing interface
+  nameCode: string;
+  groupPrice: string;
+  barcode: string;
+  price: string;
+  unit: string;
+  standardSPrice: string;
+  standardPPrice: string;
+  group: boolean;
 }
 
 const SpecialSchemes: React.FC = React.memo(() => {
@@ -25,6 +31,25 @@ const SpecialSchemes: React.FC = React.memo(() => {
   const rootState = useRootState();
 
   const [activeTab, setActiveTab] = useState('specialPrice');
+  const [gridData, setGridData] = useState<SpecialSchemesData[]>([]);
+  const [formData, setFormData] = useState<SpecialSchemesData>({
+    nameCode: "",
+    groupPrice: "",
+    barcode: "",
+    price: "",
+    unit: "",
+    standardSPrice: "",
+    standardPPrice: "",
+    group: false,
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
 
   const {
     isEdit,
@@ -48,85 +73,187 @@ const SpecialSchemes: React.FC = React.memo(() => {
     setActiveTab(newValue);
   };
 
+  const handleAddToGrid = () => {
+    setGridData((prevData) => [...prevData, formData]);
+    setFormData({
+      nameCode: "",
+      groupPrice: "",
+      barcode: "",
+      price: "",
+      unit: "",
+      standardSPrice: "",
+      standardPPrice: "",
+      group: false,
+    }); // Clear form
+  };
+
   // Grid columns definition
-  const columns: DevGridColumn[] = useMemo(() => [
-    {
-      dataField: "name",
-      caption: t("name"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
-    },
-    {
-      dataField: "barcode",
-      caption: t("barcode"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
-    },
-    {
-      dataField: "unit",
-      caption: t("unit"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
-    },
-    {
-      dataField: "productBatchID",
-      caption: t("product_batch_ID"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
-    },
-    {
-      dataField: "specialPriceID",
-      caption: t("special_price_ID"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
-    },
-    {
-      dataField: "salesPrice",
-      caption: t("sales_price"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
-    },
-    {
-      dataField: "schemePrice",
-      caption: t("scheme_price"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
-    },
-    {
-      dataField: "x",
-      caption: t("X"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200
+  const columns: DevGridColumn[] = useMemo(() => {
+    if (activeTab === 'specialPrice') {
+      return [
+        {
+          dataField: "name",
+          caption: t("names"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+        },
+        {
+          dataField: "barcode",
+          caption: t("barcode"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "unit",
+          caption: t("units"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "productBatchID",
+          caption: t("product_batch_ID"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "specialPriceID",
+          caption: t("special_price_ID"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "salesPrice",
+          caption: t("sales_price"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "schemePrice",
+          caption: t("scheme_price"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "x",
+          caption: t("X"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        }
+      ];
+    } else if (activeTab === 'FOCScheme') {
+      return [
+        {
+          dataField: "name",
+          caption: t("names"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "barcode",
+          caption: t("barcode"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "salesPrice",
+          caption: t("sales_price"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "unit",
+          caption: t("units"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "qty",
+          caption: t("qtys"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "freeItem",
+          caption: t("free_item"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "freeQty",
+          caption: t("free_qty"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "qtyDiscountID",
+          caption: t("qty_discount_ID"),
+          dataType: "string",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        },
+        {
+          dataField: "x",
+          caption: t("X"),
+          dataType: "number",
+          allowSorting: true,
+          allowSearch: true,
+          allowFiltering: true,
+          width: 200
+        }
+      ];
     }
-  ], [t, dispatch]);
+    return [];
+  }, [activeTab, t]);
 
   return (
     <>
-      <Tabs value={activeTab} onChange={handleTabChange}>
+      <Tabs value={activeTab} onChange={(e, newValue) => setActiveTab(newValue)}>
         <Tab label="Special Price" value="specialPrice" />
         <Tab label="FOC Scheme" value="FOCScheme" />
       </Tabs>
@@ -140,8 +267,8 @@ const SpecialSchemes: React.FC = React.memo(() => {
                   <ERPInput
                     {...getFieldProps("groupPrice")}
                     label={t("group_price")}
-                    placeholder={t("group_price")}
-                    onChangeData={(data: any) => handleFieldChange("groupPrice", data.groupPrice)}
+                    value={formData.groupPrice}
+                    onChange={handleInputChange}
                   />
                   <ERPDataCombobox
                     {...getFieldProps("groupCombo")}
@@ -160,38 +287,42 @@ const SpecialSchemes: React.FC = React.memo(() => {
                     {...getFieldProps("nameCode")}
                     label={t("name/code")}
                     placeholder={t("name/code")}
-                    onChangeData={(data: any) => handleFieldChange("nameCode", data.nameCode)}
+                    value={formData.nameCode}
+                    onChange={handleInputChange}
                   />
                   <ERPInput
                     {...getFieldProps("barcode")}
                     label={t("barcode")}
                     placeholder={t("barcode")}
-                    onChangeData={(data: any) => handleFieldChange("barcode", data.barcode)}
+                    value={formData.barcode}
+                    onChange={handleInputChange}
                   />
                   <ERPInput
                     {...getFieldProps("price")}
                     label={t("price")}
                     placeholder={t("price")}
-                    onChangeData={(data: any) => handleFieldChange("price", data.price)}
+                    value={formData.price}
+                    onChange={handleInputChange}
                   />
                   <ERPInput
                     {...getFieldProps("unit")}
                     label={t("unit")}
                     placeholder={t("unit")}
-                    onChangeData={(data: any) => handleFieldChange("unit", data.unit)}
+                    value={formData.unit}
+                    onChange={handleInputChange}
                   />
                   <ERPInput
                     {...getFieldProps("standardSPrice")}
                     label={t("std.s.price")}
                     placeholder={t("std.s.price")}
-                    onChangeData={(data: any) => handleFieldChange("standardSPrice", data.standardSPrice)}
-                  />
+                    value={formData.standardSPrice}
+                    onChange={handleInputChange} />
                   <ERPInput
                     {...getFieldProps("standardPPrice")}
                     label={t("std.p.price")}
                     placeholder={t("std.p.price")}
-                    onChangeData={(data: any) => handleFieldChange("standardPPrice", data.standardPPrice)}
-                  />
+                    value={formData.standardPPrice}
+                    onChange={handleInputChange} />
                   <ERPDataCombobox
                     {...getFieldProps("groupCombo")}
                     field={{
@@ -208,16 +339,21 @@ const SpecialSchemes: React.FC = React.memo(() => {
                   <ERPCheckbox
                     {...getFieldProps('group')}
                     label={t("group")}
-                    onChangeData={(data: any) => handleFieldChange('group', data.group)}
+                    checked={formData.group}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
+              <Button variant="contained" color="primary" onClick={handleAddToGrid} className="mt-4">
+                {t("Add")}
+              </Button>
               {/* Integrated Grid */}
               <div className="mt-4">
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("special_schemes")}
                   gridId="grd_special_schemes"
+                  data={gridData}
                   hideDefaultExportButton={true}
                 />
               </div>

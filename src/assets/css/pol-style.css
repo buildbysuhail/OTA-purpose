@@ -87,3 +87,6 @@
 .bordered-tab .MuiTabs-scroller {
   border-bottom: solid 1px #cfe6fd;
 }
+.grid-error-cell {
+  background: #ffd0d0;
+}

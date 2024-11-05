@@ -46,7 +46,7 @@ const ImportExportManage: React.FC = React.memo(() => {
 
   const onSubmit = async () => {
     setLoading(true);
-    const res = await api.post(Urls.import_parties, formFile, {
+    const res = await api.post(Urls.import_privilegeCards_Excel, formFile, {
       'Content-Type': 'multipart/form-data',
       'Accept': 'application/json',
     });

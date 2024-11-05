@@ -465,6 +465,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     setIsSaveDialogOpen(true);
 
     setLoading(true);
+    debugger;
     const outData = { ...templateData, thumbImage: dataUrl };
     var res = await api.postAsync(Urls.templates, outData);
 

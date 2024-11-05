@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Document, Page, View, Text, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
 import JsBarcode from 'jsbarcode';
 import { DesignerElementType, PlacedComponent, TemplateState } from "../InvoiceDesigner/Designer/interfaces";
+import { Style } from '@react-pdf/types';
 
 const styles = StyleSheet.create({
   page: {
@@ -23,10 +24,11 @@ export interface DownloadPreviewProps {
 
 export default function Component({ template, docTitle = "Document Preview", data }: DownloadPreviewProps = {}) {
 
-  const [columnsPerRow, setColumnsPerRow] = useState(2);
+  // const [columnsPerRow, setColumnsPerRow] = useState(2);
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
   const [chunkedData, setChunkedData] = useState<any>();
   useEffect(() => {
+    const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
     const _chunkedData = data?.reduce((resultArray: any, item: any, index: number) => {
       const chunkIndex = Math.floor(index / columnsPerRow)
       if (!resultArray[chunkIndex]) {
@@ -36,7 +38,8 @@ export default function Component({ template, docTitle = "Document Preview", dat
       return resultArray
     }, [])
     setChunkedData(_chunkedData);
-  }, [data, columnsPerRow])
+  }, [data, template?.barcodeState?.labelState?.columnsPerRow])
+
   useEffect(() => {
     const generateBarcodeImages = async () => {
       const images: { [key: string]: string } = {};
@@ -45,7 +48,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
         data?.forEach((item: any) => {
           template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
             if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
-              debugger; 
+              
               const canvas = document.createElement('canvas');
               // canvas.width = template?.barcodeState?.labelState?.labelWidth??200;
               // canvas.
@@ -76,11 +79,25 @@ export default function Component({ template, docTitle = "Document Preview", dat
   }, [template?.barcodeState?.placedComponents]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
-    const baseStyle: { position: 'absolute' | 'relative', left: number, top: number } = {
-      position: 'absolute', // Ensure to use the correct string literal
-      left: component.x || 0, // Use the component's x position
-      top: component.y || 0,  // Use the component's y position
+    // const baseStyle: { position: 'absolute' | 'relative', left: number, top: number,transform:string | undefined,transformOrigin:string } = {
+    //   position: 'absolute', 
+    //   left: component.x || 0, 
+    //   top: component.y || 0,  
+    //   transform: component.rotate ? `rotate(${component.rotate}deg)` : undefined,
+    //   transformOrigin: "center", 
+    // };
+    debugger;
+    const baseStyle: Style = {
+      position: 'absolute',
+      left: component.x,
+      top: component.y,
+      // width: component.width,
+      // height: component.height,
+      transform: `rotate(${component.rotate || 0}deg)`, 
+      transformOrigin: "center",
+      
     };
+console.log("rotate",component.rotate);
 
     switch (component.type) {
       case DesignerElementType.text:
@@ -89,9 +106,10 @@ export default function Component({ template, docTitle = "Document Preview", dat
             key={component.id}
             style={{
               ...baseStyle,
-              fontSize: component.barcodeProps?.fontSize || 12,
-              fontStyle: component.barcodeProps?.fontStyle || "normal",
-              textAlign: component.barcodeProps?.textAlign || "left",
+              fontFamily: component.font ,
+              fontSize: component.fontSize || 12,
+              fontStyle: component.fontStyle || "normal",
+              textAlign: component.textAlign || "center",
             }}
           >
             {component.content}
@@ -103,9 +121,10 @@ export default function Component({ template, docTitle = "Document Preview", dat
           <View key={component.id} style={baseStyle}>
           <Text
             style={{
-              fontSize: component.barcodeProps?.fontSize || 12,
-              fontStyle: component.barcodeProps?.fontStyle || "normal",
-              textAlign: component.barcodeProps?.textAlign || "left",
+              fontFamily: component.font,
+              fontSize: component.fontSize || 12,
+              fontStyle: component.fontStyle || "normal",
+              textAlign: component.textAlign || "center",
             }}
           >
             {component.content}
@@ -123,7 +142,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
               ...baseStyle,
               width: 200 ,
               height: component.height || 50,
-              position: 'absolute', // Ensure position and other properties match `react-pdf` expectations
+              position: 'absolute',
               left: component.x || 0,
               top: component.y || 0,
             }}

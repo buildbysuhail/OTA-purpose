@@ -633,36 +633,40 @@ const ApplicationSettingsProduct = () => {
                   }
                 />
               }
-              <ERPCheckbox
-                id="enableQtySlabOffer"
-                label={t("enable_qty_slab_offer")}
-                data={formState}
-                checked={formState?.enableQtySlabOffer}
-                onChangeData={(data) =>
-                  handleFieldChange("enableQtySlabOffer", data.enableQtySlabOffer)
-                }
-              />
-              <ERPCheckbox
-                id="setProductQtyLimitinSales"
-                label={t("set_product_qty_limit_in_sales")}
-                data={formState}
-                checked={formState?.setProductQtyLimitinSales}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "setProductQtyLimitinSales",
-                    data.setProductQtyLimitinSales
-                  )
-                }
-              />
-              <ERPCheckbox
-                id="enableMultiFOC"
-                label={t("enable_multi_FOC")}
-                data={formState}
-                checked={formState?.enableMultiFOC}
-                onChangeData={(data) =>
-                  handleFieldChange("enableMultiFOC", data.enableMultiFOC)
-                }
-              />
+              {userSession.countryId == Countries.India &&
+                <>
+                  <ERPCheckbox
+                    id="enableQtySlabOffer"
+                    label={t("enable_qty_slab_offer")}
+                    data={formState}
+                    checked={formState?.enableQtySlabOffer}
+                    onChangeData={(data) =>
+                      handleFieldChange("enableQtySlabOffer", data.enableQtySlabOffer)
+                    }
+                  />
+                  <ERPCheckbox
+                    id="setProductQtyLimitinSales"
+                    label={t("set_product_qty_limit_in_sales")}
+                    data={formState}
+                    checked={formState?.setProductQtyLimitinSales}
+                    onChangeData={(data) =>
+                      handleFieldChange(
+                        "setProductQtyLimitinSales",
+                        data.setProductQtyLimitinSales
+                      )
+                    }
+                  />
+                  <ERPCheckbox
+                    id="enableMultiFOC"
+                    label={t("enable_multi_FOC")}
+                    data={formState}
+                    checked={formState?.enableMultiFOC}
+                    onChangeData={(data) =>
+                      handleFieldChange("enableMultiFOC", data.enableMultiFOC)
+                    }
+                  />
+                </>
+              }
               <ERPCheckbox
                 id="loadCustomerLastRate"
                 label={t("load_customer_last_sales_rate")}

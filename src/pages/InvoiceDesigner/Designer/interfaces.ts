@@ -42,6 +42,12 @@ export interface LabelState {
   labelWidth: number;
   background_image?: string;
   bg_image_position?:string;
+  padding?: {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
 }
 export interface BarcodeState {
   placedComponents: PlacedComponent[];

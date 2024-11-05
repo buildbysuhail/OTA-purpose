@@ -13,6 +13,7 @@ import {
 } from "./application-settings-types";
 import ERPDisableEnable from "../../../components/ERPComponents/erp-disable-inable";
 import { t } from "i18next";
+import { Countries } from "../../../redux/slices/user-session/reducer";
 
 const BranchSettingsForm: React.FC = () => {
   const [formState, setFormState] = useState<ApplicationBranchSettings>(
@@ -293,7 +294,7 @@ const BranchSettingsForm: React.FC = () => {
             </div>
           </div>
 
-          {Number(formState?.countryName) === 1 && (
+          {Number(formState?.countryName) === Countries.Saudi && (
             <div className="rounded-lg border p-4">
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
                 <ERPCheckbox
@@ -384,28 +385,28 @@ const BranchSettingsForm: React.FC = () => {
                 />
 
                 <ERPDataCombobox
-                  id="maintainSynchronizationdata"
+                  id="syncMethod"
                   disabled={formState?.maintainSynchronization === false}
                   label=" "
-                  value={formState.maintainSynchronizationdata}
+                  value={formState.syncMethod}
                   field={{
-                    id: "maintainSynchronizationdata",
+                    id: "syncMethod",
                     valueKey: "value",
                     labelKey: "label",
                   }}
                   data={formState}
                   onChangeData={(data) =>
                     handleFieldChange(
-                      "maintainSynchronizationdata",
-                      data.maintainSynchronizationdata
+                      "syncMethod",
+                      data.syncMethod
                     )
                   }
                   options={[
-                    { value: 0, label: "Manual Sync" },
-                    { value: 1, label: "Auto Sync" },
-                    { value: 2, label: "Auto Sync and Upload Only" },
-                    { value: 3, label: "Manual Sync and Upload Only" },
-                    { value: 4, label: "Upload And Download" },
+                    { value: "Manual Sync", label: "Manual Sync" },
+                    { value: "Auto Sync", label: "Auto Sync" },
+                    { value: "Auto Sync and Upload Only", label: "Auto Sync and Upload Only" },
+                    { value: "Manual Sync and Upload Only", label: "Manual Sync and Upload Only" },
+                    { value: "Upload And Download", label: "Upload And Download" },
                   ]}
                 />
               </div>
@@ -416,8 +417,8 @@ const BranchSettingsForm: React.FC = () => {
                 data={formState}
                 label={t("intervals_(minutes)")}
                 disabled={
-                  Number(formState?.maintainSynchronizationdata) !== 1 &&
-                  Number(formState?.maintainSynchronizationdata) !== 2
+                  Number(formState?.syncMethod) !== 1 &&
+                  Number(formState?.syncMethod) !== 2
                 }
                 type="number"
                 onChangeData={(data) =>
@@ -428,6 +429,7 @@ const BranchSettingsForm: React.FC = () => {
                 id="refreshStockAfterSync"
                 checked={formState.refreshStockAfterSync}
                 data={formState}
+                disabled={!formState?.maintainSynchronization}
                 label={t("refresh_stock_after_sync")}
                 onChangeData={(data) =>
                   handleFieldChange(
@@ -440,6 +442,7 @@ const BranchSettingsForm: React.FC = () => {
                 id="refreshServerStockAfterSync"
                 checked={formState.refreshServerStockAfterSync}
                 data={formState}
+                disabled={!formState?.maintainSynchronization}
                 label={t("refresh_server_stock_after_sync")}
                 onChangeData={(data) =>
                   handleFieldChange(
@@ -478,7 +481,7 @@ const BranchSettingsForm: React.FC = () => {
                   handleFieldChange("reportMode", data.reportMode)
                 }
                 options={[
-                  { value: "classic", label: "classic" },
+                  { value: "Classic", label: "Classic" },
                   { value: "Standard", label: "Standard" },
                 ]}
               />
@@ -501,8 +504,8 @@ const BranchSettingsForm: React.FC = () => {
                   )
                 }
                 options={[
-                  { value: 0, label: "Default" },
-                  { value: 1, label: "Standard" },
+                  { value: "Default", label: "Default" },
+                  { value: "Standard", label: "Standard" },
                 ]}
               />
               <ERPDataCombobox
@@ -524,23 +527,25 @@ const BranchSettingsForm: React.FC = () => {
                   )
                 }
                 options={[
-                  { value: 0, label: "No" },
-                  { value: 1, label: "File System" },
-                  { value: 2, label: "Cloud" },
+                  { value: "No", label: "No" },
+                  { value: "File System", label: "File System" },
+                  { value: "Cloud", label: "Cloud" },
                 ]}
               />
-              <ERPInput
-                id="fileAttachmentFolder"
-                value={formState.fileAttachmentFolder}
-                data={formState}
-                label={t("shared_folder")}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "fileAttachmentFolder",
-                    data.fileAttachmentFolder
-                  )
-                }
-              />
+              {formState?.fileAttachmentMethod && formState?.fileAttachmentMethod == "File System" &&
+                <ERPInput
+                  id="fileAttachmentFolder"
+                  value={formState.fileAttachmentFolder}
+                  data={formState}
+                  label={t("shared_folder")}
+                  onChangeData={(data) =>
+                    handleFieldChange(
+                      "fileAttachmentFolder",
+                      data.fileAttachmentFolder
+                    )
+                  }
+                />
+              }
             </div>
           </div>
         </div>

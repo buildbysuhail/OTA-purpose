@@ -1262,5 +1262,7 @@
   "used_in_bill": "Used in Bill",
   "cancelled": "Cancelled",
   "not_prepared": "Not Prepared ",
-  "preparing": "Preparing"
+  "preparing": "Preparing",
+  "enable_order_management": "Enable Order Management",
+    "enable_import_purchase": "Enable Import Purchase"
 }

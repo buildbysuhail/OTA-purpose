@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import Urls from "../../../redux/urls";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
@@ -13,6 +13,8 @@ import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { toggleMiscellaneousSettingsPopup } from "../../../redux/slices/popup-reducer";
 import ApplicationMiscellaneousSettingsPop from "./application-settings-miscellaneous-settings";
+import { RootState } from "../../../redux/store";
+import { Countries } from "../../../redux/slices/user-session/reducer";
 
 interface FormState {
   salesmanIncentive: number;
@@ -65,7 +67,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
   useEffect(() => {
     loadSettings();
   }, []);
-
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
   const loadSettings = async () => {
     setLoading(true);
     try {
@@ -228,42 +230,44 @@ const MiscellaneousSettingsForm: React.FC = () => {
                       )
                     }
                   />
-                  <ERPCheckbox
-                    id="autoSyncSIandPI_BT"
-                    checked={formState.autoSyncSIandPI_BT}
-                    data={formState}
-                    label={t("auto_sync")}
-                    onChangeData={(data) =>
-                      handleFieldChange(
-                        "autoSyncSIandPI_BT",
-                        data.autoSyncSIandPI_BT
-                      )
-                    }
-                  />
-                  <ERPCheckbox
-                    id="maintainUntalliedBills"
-                    checked={formState.maintainUntalliedBills}
-                    data={formState}
-                    label={t("maintain_untallied_bills")}
-                    onChangeData={(data) =>
-                      handleFieldChange(
-                        "maintainUntalliedBills",
-                        data.maintainUntalliedBills
-                      )
-                    }
-                  />
-                  <ERPCheckbox
-                    id="allowSalesDetailedEdit"
-                    checked={formState.allowSalesDetailedEdit}
-                    data={formState}
-                    label={t("allow_sales_detailed_edit")}
-                    onChangeData={(data) =>
-                      handleFieldChange(
-                        "allowSalesDetailedEdit",
-                        data.allowSalesDetailedEdit
-                      )
-                    }
-                  />
+                  {userSession.countryId == Countries.India &&
+                    <><ERPCheckbox
+                      id="autoSyncSIandPI_BT"
+                      checked={formState.autoSyncSIandPI_BT}
+                      data={formState}
+                      label={t("auto_sync")}
+                      onChangeData={(data) =>
+                        handleFieldChange(
+                          "autoSyncSIandPI_BT",
+                          data.autoSyncSIandPI_BT
+                        )
+                      }
+                    />
+                      <ERPCheckbox
+                        id="maintainUntalliedBills"
+                        checked={formState.maintainUntalliedBills}
+                        data={formState}
+                        label={t("maintain_untallied_bills")}
+                        onChangeData={(data) =>
+                          handleFieldChange(
+                            "maintainUntalliedBills",
+                            data.maintainUntalliedBills
+                          )
+                        }
+                      />
+                      <ERPCheckbox
+                        id="allowSalesDetailedEdit"
+                        checked={formState.allowSalesDetailedEdit}
+                        data={formState}
+                        label={t("allow_sales_detailed_edit")}
+                        onChangeData={(data) =>
+                          handleFieldChange(
+                            "allowSalesDetailedEdit",
+                            data.allowSalesDetailedEdit
+                          )
+                        }
+                      /></>
+                  }
                   <div className="flex items-center  justify-between">
                     <ERPCheckbox
                       id="sendSMS"

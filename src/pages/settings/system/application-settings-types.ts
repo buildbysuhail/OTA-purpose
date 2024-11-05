@@ -1,3 +1,5 @@
+import { Countries } from "../../../redux/slices/user-session/reducer";
+
 export interface ApplicationMainSettings {
   currency: string;
   unitPrice_decimalPoint: string;
@@ -66,7 +68,7 @@ export interface ApplicationBranchSettings {
   maintainMultilanguage__: any;
   maintainTax: boolean;
   showFinancialYearSelector: boolean;
-  countryName: string;
+  countryName: number;
   maintainSynchronization: boolean;
   maintainSynchronizationdata: string;
   autoPostingTransaction: boolean;
@@ -101,7 +103,7 @@ export  const ApplicationBranchSettingsInitialState: ApplicationBranchSettings =
   maintainTax: true,
   maintainMultilanguage__ :false,
   showFinancialYearSelector: false,
-  countryName: "1",
+  countryName: Countries.Saudi,
   maintainSynchronization: false,
   autoPostingTransaction: true,
   allowEditPostedTransactions: true,

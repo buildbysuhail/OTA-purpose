@@ -59,6 +59,7 @@ export const ReportsMenuItems = [
     children: [ 
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_summary_report`, type: 'link', active: false, selected: false, title: 'Purchase Summary Report'},
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_register_report`, type: 'link', active: false, selected: false, title: 'Purchase Register Report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_wise_report`, type: 'link', active: false, selected: false, title: 'Party Wise Report'},
     ]
   },
 ];

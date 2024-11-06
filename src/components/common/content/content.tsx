@@ -99,6 +99,7 @@ const ListedProductPrices = lazy(() => import('../../../pages/inventory/masters/
 // Inventory Reports
 import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report';
 import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
+import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/party-wise-report';
 
 interface ContentProps { }
 const loading = (
@@ -212,6 +213,7 @@ const Content: FC<ContentProps> = () => {
         {/* Reports - Inventory */}
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport/>} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport/>} />
+        <Route path="/inventory/party_wise_report" element={<PartyWiseReport/>} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

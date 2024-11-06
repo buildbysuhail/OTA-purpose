@@ -1311,5 +1311,6 @@
   "scheme_disc":"Scheme Disc",
   "warranty":"Warranty",
   "master_ID":"Master ID",
-  "excise_tax":"Excise Tax"
+  "excise_tax":"Excise Tax",
+  "party_wise_report":"Party Wise Report"
 }

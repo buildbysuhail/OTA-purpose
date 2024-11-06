@@ -73,15 +73,6 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
     dragOverItem.current = null;
   };
  
-  // const onSubmit = async () => {
-  //   try {
-  //     const response = await api.post(Urls.acc_group_order, formData) 
-  //     handleResponse(response);
-  //   } catch (error) {
-  //     console.error('Error saving settings:', error);
-  //   }
-  // };
-
   return (
     <>
       <div className="px-1 py-3 flex flex-col gap-1">

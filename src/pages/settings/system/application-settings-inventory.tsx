@@ -602,7 +602,7 @@ const InventorySettingsForm = () => {
                 onChangeData={(data: any) =>
                   handleFieldChange("defaultWareHouse", data.defaultWareHouse)
                 }
-                label={t("ware_house")}
+                label=" "
               />
               <ERPInput
                 id="priceCode"
@@ -612,7 +612,7 @@ const InventorySettingsForm = () => {
                 placeholder={t("enter_the_price_code")}
                 type="Password"
                 onChangeData={(data: any) =>
-                  handleFieldChange("priceCode", parseFloat(data.priceCode))
+                  handleFieldChange("priceCode", data.priceCode)
                 }
               />
               <ERPDataCombobox
@@ -622,10 +622,12 @@ const InventorySettingsForm = () => {
                 field={{
                   id: "defaultBarcodeLabel",
                   required: false,
-                  getListUrl: Urls.data_countries,
                   valueKey: "id",
-                  labelKey: "name",
-                }}
+                  labelKey: "label",
+                }} 
+                options={[
+                  { value: "Default.lba", label: "Default.lba" }
+                ]}
                 onChangeData={(data: any) =>
                   handleFieldChange(
                     "defaultBarcodeLabel",
@@ -646,6 +648,11 @@ const InventorySettingsForm = () => {
                   valueKey: "id",
                   labelKey: "name",
                 }}
+                options={[
+                  { value: "Warn", label: "Warn" },
+                  { value: "Block", label: "Block" },                  
+                  { value: "Ignore", label: "Ignore" }
+                ]}
                 onChangeData={(data: any) =>
                   handleFieldChange("ifLessSalesRate", data.ifLessSalesRate)
                 }
@@ -797,7 +804,7 @@ const InventorySettingsForm = () => {
                 id="setProductCostasPurchasePrice"
                 checked={formState.setProductCostasPurchasePrice}
                 data={formState}
-                label={t("set_product_cost_as_declaration_price")}
+                label={t("set_product_cost_as_purchase_price")}
                 onChangeData={(data: any) => {
                   handleFieldChange(
                     "setProductCostasPurchasePrice",
@@ -844,7 +851,7 @@ const InventorySettingsForm = () => {
                 }
               />
 
-              <ERPCheckbox
+              {/* <ERPCheckbox
                 id="setLastSalesRateAsProctSaleRate"
                 checked={formState.setLastSalesRateAsProctSaleRate}
                 data={formState}
@@ -855,7 +862,7 @@ const InventorySettingsForm = () => {
                     data.setLastSalesRateAsProctSaleRate
                   )
                 }
-              />
+              /> */}
               <ERPCheckbox
                 id="blockNonStockSerialSelling"
                 checked={formState.blockNonStockSerialSelling}

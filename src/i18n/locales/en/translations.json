@@ -1300,5 +1300,16 @@
   "total_discount":"Total Discount",
   "qty_nos":"Qty Nos",
   "product_description":"Product Description",
-  "std_purchase_price":"Std Purchase Price"
+  "std_purchase_price":"Std Purchase Price",
+  "financial_year_ID":"Financial Year ID",
+  "autobarcode":"Autobarcode",
+  "autobarcode1":"Autobarcode 1",
+  "batch_no":"Batch No",
+  "x_rate":"X Rate",
+  "detail_ID":"Detail ID",
+  "vat_number":"VAT Number",
+  "scheme_disc":"Scheme Disc",
+  "warranty":"Warranty",
+  "master_ID":"Master ID",
+  "excise_tax":"Excise Tax"
 }

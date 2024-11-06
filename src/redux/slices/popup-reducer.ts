@@ -60,8 +60,10 @@ interface popupData {
   hide_acc_ledger: popupDataProps
   groupCategory: popupDataProps
   specialSchemes: popupDataProps
+  groupOrder:popupDataProps
 }
 const initialState: popupData = {
+  groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },
   groupCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   section: { isOpen: false, key: null, mode: "edit", reload: true },
   salesManRoute: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -301,11 +303,15 @@ const popupDataSlice = createSlice({
     toggleSpecialSchemes: (state, action: PayloadAction<popupDataProps>) => {
       state.specialSchemes = action.payload;
     },
+    toggleGroupOrder: (state, action: PayloadAction<popupDataProps>) => {
+      state.groupOrder = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  toggleGroupOrder,
   toggleGroupCategory,
   toggleSection,
   toggleSalesManRoute,

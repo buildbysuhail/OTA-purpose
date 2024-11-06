@@ -674,7 +674,7 @@ const BarcodePrint: React.FC = () => {
                           // defaultData={barcodeDesc?.data}
                           value={barcodeDesc?.data?.labelDesign}
                           validation={barcodeDesc?.validations?.labelDesign}
-                          onChangeData={(data: any) => { debugger; handleComboboxChange("labelDesign", data)}}
+                          onChangeData={(data: any) => { handleComboboxChange("labelDesign", data)}}
                         />
                       </div>
                       <div className="flex flex-col">

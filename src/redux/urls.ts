@@ -201,6 +201,7 @@ const Urls = {
   get_next_party_code: "/Accounts/Parties/GetNextPartyCode/",
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
   upi: "/Accounts/UPI/",
+  acc_group_order: "/Accounts/AccGroupOrderArrangement/",
 
   //Reports
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",

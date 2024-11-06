@@ -83,8 +83,7 @@ const TaxSettingsForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -128,9 +127,9 @@ const TaxSettingsForm: React.FC = () => {
   }
 
   return (
-    <div className="h-dvh max-h-dvh flex flex-col  overflow-hidden">
+    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
       <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
-        <div className="space-y-6  p-6">
+        <div className="space-y-6 p-6 !mb-[14rem]">
           <div className="border rounded-lg p-4">
             <div className="grid xxl:grid-cols-4 lg:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
               <ERPDataCombobox
@@ -273,7 +272,7 @@ const TaxSettingsForm: React.FC = () => {
           disabled={isSaving}
           loading={isSaving}
           type="button"
-          onClick={() => handleSubmit}
+          onClick={ handleSubmit}
         />
       </div>
     </div>

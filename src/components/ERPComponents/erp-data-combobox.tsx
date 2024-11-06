@@ -67,6 +67,48 @@ const mapItemsToOptions = (
   }));
 };
 
+const truncateText = (
+  text: string,
+  inputRef: React.RefObject<HTMLInputElement>
+) => {
+  if (!inputRef.current || !text) return text;
+
+  // Create temporary span to measure text width
+  const tempSpan = document.createElement("span");
+  tempSpan.style.visibility = "hidden";
+  tempSpan.style.position = "absolute";
+  tempSpan.style.whiteSpace = "nowrap";
+
+  // Copy input styles for accurate measurement
+  const inputStyle = window.getComputedStyle(inputRef.current);
+  tempSpan.style.font = inputStyle.font;
+  document.body.appendChild(tempSpan);
+
+  // Calculate available width (input width minus padding and button space)
+  const availableWidth = inputRef.current.offsetWidth - 60; // Adjusted for padding and buttons
+
+  // Check if text needs truncation
+  tempSpan.textContent = text;
+  const textWidth = tempSpan.offsetWidth;
+
+  if (textWidth > availableWidth) {
+    let truncated = text;
+    while (truncated.length > 0) {
+      tempSpan.textContent = truncated + "...";
+      if (tempSpan.offsetWidth <= availableWidth) {
+        document.body.removeChild(tempSpan);
+        return truncated + "...";
+      }
+      truncated = truncated.slice(0, -1);
+    }
+    document.body.removeChild(tempSpan);
+    return "...";
+  }
+
+  document.body.removeChild(tempSpan);
+  return text;
+};
+
 export default function ImprovedERPDataCombobox({
   id,
   label,
@@ -103,11 +145,22 @@ export default function ImprovedERPDataCombobox({
   const [filteredItems, setFilteredItems] = useState<Option[]>([]);
   const [visibleItems, setVisibleItems] = useState<Option[]>([]);
   const [page, setPage] = useState(1);
+  const [displayValue, setDisplayValue] = useState(""); // New state for truncated display value
+
 
   const comboboxRef = useRef<HTMLInputElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const componentRef = useRef<HTMLDivElement>(null);
+
+  // Update display value when initial value changes
+  useEffect(() => {
+    if (initial?.label) {
+      setDisplayValue(truncateText(initial.label, comboboxRef));
+    } else {
+      setDisplayValue("");
+    }
+  }, [initial]);
 
   // Add click outside handler
   useEffect(() => {
@@ -270,8 +323,8 @@ export default function ImprovedERPDataCombobox({
         className="relative"
       >
         <div className={className}>
-          <Combobox.Input
-            className={`w-full appearance-none rounded border border-gray-300 h-9 ${
+          {/* <Combobox.Input
+            className={`w-full appearance-none rounded border border-gray-300 h-9 pr-[50px] ${
               disabled ? "text-gray-400" : "bg-white text-gray-900"
             } px-3 py-2 ${
               enableClearOption ? "pr-2" : "pr-20"
@@ -286,8 +339,28 @@ export default function ImprovedERPDataCombobox({
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
             ref={comboboxRef}
+          /> */}
+          <Combobox.Input
+            className={`w-full appearance-none rounded border border-gray-300 h-9 pr-[47px] ${
+              disabled ? "text-gray-400" : "bg-white text-gray-900"
+            } px-3 py-2 ${
+              enableClearOption ? "pr-2" : "pr-20"
+            } placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
+            displayValue={(item: Option) =>
+              isOpen ? item?.label || "" : displayValue
+            }
+            onChange={(event) => {
+              setQuery(event?.target?.value);
+              setIsOpen(true);
+            }}
+            onClick={handleInputClick}
+            placeholder={
+              t("select") + " " + (label || id?.replaceAll("_", " "))
+            }
+            ref={comboboxRef}
+            title={initial?.label || ""} // Add tooltip for full text
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-0">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-0 bg-[#ffffff4d] border-l">
             {enableClearOption && initial && !noXMarkIcon && (
               <button
                 type="button"
@@ -329,7 +402,7 @@ export default function ImprovedERPDataCombobox({
           afterLeave={() => setQuery("")}
         >
           <Combobox.Options
-            className="absolute z-50 mt-2 w-full rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-auto"
+            className="absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-auto"
             ref={containerRef}
           >
             {loading ? (
@@ -348,7 +421,7 @@ export default function ImprovedERPDataCombobox({
                     className={({ active }) =>
                       `${
                         item.is_active === false ? "hidden" : "relative"
-                      } cursor-pointer select-none py-2 pl-10 pr-4 ${
+                      } cursor-pointer  select-none py-2 pl-10 pr-4 ${
                         active ? "bg-primary text-white" : "text-gray-900"
                       }`
                     }

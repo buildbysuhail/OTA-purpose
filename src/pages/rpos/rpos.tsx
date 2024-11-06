@@ -26,7 +26,7 @@ const menuItems: Record<string, MenuItem[]> = {
 };
 
 export default function Component() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState("Chinese");
   const [orderItems, setOrderItems] = useState<OrderItem[]>([
     { name: "Test Item", price: 100, quantity: 1 },
@@ -73,11 +73,10 @@ export default function Component() {
   };
   const [selectedOptions, setSelectedOptions] = useState<string[]>(["dine_in"]);
 
-  
   const [dineInSelection, setDineInSelection] = useState<string[]>(["dine_in"]);
 
   // Function to handle button text based on order type
-  const getButtonText:any = () => {
+  const getButtonText: any = () => {
     switch (orderType) {
       case "dine_in":
         return dineInSelection.length === 0
@@ -146,12 +145,12 @@ export default function Component() {
 
   const toggleTableDropdown = () => {
     setIsOpen((prev) => !prev);
-    setIsUserDropdownOpen(false); 
+    setIsUserDropdownOpen(false);
   };
 
   const toggleUserDropdown = () => {
     setIsUserDropdownOpen((prev) => !prev);
-    setIsOpen(false); 
+    setIsOpen(false);
   };
   const togglepersonDropdown = () => {
     setIspersonDropdownOpen((prev) => !prev);
@@ -223,19 +222,19 @@ export default function Component() {
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 bg-[#32d62e] rounded-full me-[6px]"></div>
                             <span className="text-gray-600 !me-[6px]">
-                            {t("available")}
+                              {t("available")}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 bg-[#f01717] rounded-full me-[6px]"></div>
                             <span className="text-gray-600 !me-[6px]">
-                            {t("occupied")}
+                              {t("occupied")}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2">
                             <div className="w-3 h-3 bg-[#f8e618] rounded-full me-[6px]"></div>
                             <span className="text-gray-600 !me-[6px]">
-                            {t("reserved")}
+                              {t("reserved")}
                             </span>
                           </div>
                         </div>
@@ -268,7 +267,7 @@ export default function Component() {
                       <form className="space-y-6">
                         <div className="flex items-center">
                           <label className="w-24 text-right me-4 font-bold">
-                          {t("mobile")}:
+                            {t("mobile")}:
                           </label>
                           <input
                             type="text"
@@ -277,7 +276,7 @@ export default function Component() {
                         </div>
                         <div className="flex items-center">
                           <label className="w-24 text-right me-4 font-bold">
-                          {t("name")}:
+                            {t("name")}:
                           </label>
                           <input
                             type="text"
@@ -286,7 +285,7 @@ export default function Component() {
                         </div>
                         <div className="flex items-center">
                           <label className="w-24 text-right me-4 font-bold">
-                          {t("add")}:
+                            {t("add")}:
                           </label>
                           <input
                             type="text"
@@ -295,7 +294,7 @@ export default function Component() {
                         </div>
                         <div className="flex items-center">
                           <label className="w-24 text-right me-4 font-bold">
-                          {t("locality")}:
+                            {t("locality")}:
                           </label>
                           <input
                             type="text"
@@ -331,7 +330,7 @@ export default function Component() {
                       <form className="space-y-6">
                         <div className="flex items-center">
                           <label className="w-24 text-right me-4 font-bold">
-                          {t("no_of_persons")}:
+                            {t("no_of_persons")}:
                           </label>
                           <input
                             type="text"
@@ -367,7 +366,7 @@ export default function Component() {
                       <form className="space-y-6">
                         <div className="flex items-center">
                           <label className="w-24 text-right me-4 font-bold">
-                          {t("comments")}:
+                            {t("comments")}:
                           </label>
                           <input
                             type="text"
@@ -609,7 +608,7 @@ export default function Component() {
   };
 
   return (
-    <div className="flex h-[94vh] bg-gray-200 text-gray-800 font-sans">
+    <div className="flex lg:h-[91vh] xl:h-[92vh] bg-gray-200 text-gray-800 font-sans">
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top Navigation */}
@@ -644,8 +643,11 @@ export default function Component() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-lg w-96">
               <div className="p-4">
-                <h2 className="text-lg font-semibold mb-4"> {t("select_options")} </h2>
-                {["dine_in", "ac", "dining"].map((option:any) => (
+                <h2 className="text-lg font-semibold mb-4">
+                  {" "}
+                  {t("select_options")}{" "}
+                </h2>
+                {["dine_in", "ac", "dining"].map((option: any) => (
                   <div
                     key={option}
                     className="flex items-center justify-between py-2 border-b"
@@ -714,7 +716,7 @@ export default function Component() {
           </div>
 
           {/* Order Summary */}
-          <div className="w-[40%] bg-white shadow-md overflow-y-auto flex flex-col">
+          <div className="w-[43%] bg-white shadow-md overflow-y-auto flex flex-col">
             {renderOrderTypeButtons()}
 
             <div className="flex-1 overflow-y-auto p-4">
@@ -763,8 +765,11 @@ export default function Component() {
                 onClick={() => setShowInputBox(!showInputBox)}
                 className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-3 py-1 rounded rounded-full hover:bg-gray-600 transition-colors"
               >
-                
-                {showInputBox ? <i className="ri-arrow-down-s-line"></i> :  <i className="ri-arrow-up-s-line"></i>}
+                {showInputBox ? (
+                  <i className="ri-arrow-down-s-line"></i>
+                ) : (
+                  <i className="ri-arrow-up-s-line"></i>
+                )}
               </button>
               {showInputBox && (
                 <div className="w-[100%] absolute bottom-full mb-0 bg-gray-700 p-4 border border-gray-700 rounded-none shadow-lg">
@@ -804,7 +809,9 @@ export default function Component() {
 
                     <div className="grid grid-cols-2 gap-4 mb-4">
                       <div>
-                        <label className="block mb-2">{t("delivery_charge")}</label>
+                        <label className="block mb-2">
+                          {t("delivery_charge")}
+                        </label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -813,7 +820,9 @@ export default function Component() {
                       </div>
 
                       <div>
-                        <label className="block mb-2">{t("container_charge")}</label>
+                        <label className="block mb-2">
+                          {t("container_charge")}
+                        </label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -842,7 +851,9 @@ export default function Component() {
                       </div>
 
                       <div>
-                        <label className="block mb-2">{t("customer_paid")}</label>
+                        <label className="block mb-2">
+                          {t("customer_paid")}
+                        </label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -851,7 +862,9 @@ export default function Component() {
                       </div>
 
                       <div>
-                        <label className="block mb-2">{t("return_to_customer")}</label>
+                        <label className="block mb-2">
+                          {t("return_to_customer")}
+                        </label>
                         <input
                           type="number"
                           defaultValue={0}
@@ -875,14 +888,16 @@ export default function Component() {
 
             <div className="p-4 bg-gray-800 flex justify-between items-center font-bold">
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              {t("split")}
+                {t("split")}
               </button>
-              <span className="text-white">{t("total")}:₹{total.toFixed(2)}</span>
+              <span className="text-white">
+                {t("total")}:₹{total.toFixed(2)}
+              </span>
             </div>
             <div className="bg-gray-600 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
                 <div className="flex items-center ">
-                  {["cash", "card", "due", "other"].map((method:any) => (
+                  {["cash", "card", "due", "other"].map((method: any) => (
                     <label key={method} className="flex items-center space-x-2">
                       <input
                         type="radio"
@@ -901,28 +916,29 @@ export default function Component() {
             <div className="bg-gray-800 p-2 flex justify-center items-center">
               <div className="flex space-x-2">
                 <label className="flex items-center text-white">
-                  <input type="checkbox" className="me-2" /><p className="pr-1" > {t("its_paid")} </p> 
+                  <input type="checkbox" className="me-2" />
+                  <p className="pr-1"> {t("its_paid")} </p>
                 </label>
               </div>
             </div>
             <div className="flex space-x-2 p-4 ml-1">
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md rtl:ml-2">
-              {t("save")}
+                {t("save")}
               </button>
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              {t("save_print")}
+                {t("save_print")}
               </button>
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
-              {t("save_ebill")}
+                {t("save_ebill")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-              {t("kot")}
+                {t("kot")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-              {t("kot_print")}
+                {t("kot_print")}
               </button>
               <button className="px-4 py-2 bg-gray-600 text-white rounded rounded-md">
-              {t("hold")}
+                {t("hold")}
               </button>
             </div>
           </div>

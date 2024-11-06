@@ -174,7 +174,7 @@ const InventorySettingsForm = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue??"").toString(),
+            settingsValue: (currentValue ?? "").toString(),
           });
         }
         return acc;
@@ -184,8 +184,8 @@ const InventorySettingsForm = () => {
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "inventory",
         updateList: modifiedSettings,
-      })) as any: null;
-      handleResponse(response,() => {}, () => {},false);
+      })) as any : null;
+      handleResponse(response, () => { }, () => { }, false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -624,7 +624,7 @@ const InventorySettingsForm = () => {
                   required: false,
                   valueKey: "id",
                   labelKey: "label",
-                }} 
+                }}
                 options={[
                   { value: "Default.lba", label: "Default.lba" }
                 ]}
@@ -650,7 +650,7 @@ const InventorySettingsForm = () => {
                 }}
                 options={[
                   { value: "Warn", label: "Warn" },
-                  { value: "Block", label: "Block" },                  
+                  { value: "Block", label: "Block" },
                   { value: "Ignore", label: "Ignore" }
                 ]}
                 onChangeData={(data: any) =>

@@ -9,6 +9,7 @@ import { APIClient } from "../../../../helpers/api-client";
 import Urls from "../../../../redux/urls";
 import { moveArrayElement } from "../../../../utilities/Utils";
 import { handleResponse } from "../../../../utilities/HandleResponse";
+import { formatDate } from "devextreme/localization";
 
 export interface GroupOrder {
     groupName: string;
@@ -99,8 +100,10 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
             <span>Group Head </span>
             <span>Arabic Name </span>
           </div>
-          {formData.length > 0 &&
-            formData?.map((column, index) => {
+        
+          {formData.length > 0 && formData?.filter((item: GroupOrder) =>
+          item.groupName?.toLowerCase().includes(searchCols.toLowerCase())
+           )?.map((column: GroupOrder, index: number) => {
               return (
                 <div
                   key={index}

@@ -445,7 +445,7 @@
   "maintain_all_branch": "الحفاظ على جميع الفروع مع المخزون المشترك",
   "maintain_untallied_bills": "الحفاظ على الفواتير غير المطابقة",
   "allow_sales_detailed_edit": "السماح بتعديل تفصيلي للمبيعات",
-  "salesman_incentive": "حافز البائع",
+  "salesman_incentive": "(%)حافز البائع",
   "default_incentive_ledger": "دفتر الحوافز الافتراضي",
   "plu_path": "مسار PLU",
   "second_display_images_path": "مسار صور العرض الثاني",
@@ -748,7 +748,7 @@
   "carry_forward_purchase": "ترحيل كمية طلب الشراء إلى الشراء",
   "enable_sales_invoice_draft_option": "تمكين خيار مسودة فاتورة المبيعات",
   "use_cost_for_stock_transfer_to_branch": "استخدام التكلفة لنقل المخزون إلى الفرع",
-  "set_product_cost_as_declaration_price": "تعيين تكلفة المنتج كسعر الإقرار",
+  "set_product_cost_as_purchase_price": "تعيين تكلفة المنتج كسعر شراء",
   "show_account_receivable_in_purchase": "إظهار الحساب المستحق في المشتريات",
   "set_product_cost_with_TAX_amount": "تعيين تكلفة المنتج مع مبلغ الضريبة",
   "show_printer_selection": "إظهار اختيار الطابعة",
@@ -1285,5 +1285,6 @@
   "round_amount": "مبلغ التقريب",
   "tax_on_discount": "الضريبة على الخصم",
   "si": "رقم الفاتورة",
-  "sr_amount": "مبلغ الاسترجاع"
+  "sr_amount": "مبلغ الاسترجاع",
+  "set_qty1_for_weighing_scale_item_value_mode": "ضبط الكمية 1 لوضع قيمة عنصر الميزان"
 }

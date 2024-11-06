@@ -122,7 +122,7 @@ const ApplicationSettingsProduct = () => {
     loadSettings();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     document.body.style.overflow = 'hidden';
 
     const formContainer = document.querySelector('.settings-form-container') as HTMLElement;
@@ -212,7 +212,7 @@ const ApplicationSettingsProduct = () => {
                   id: "batchCriteria",
 
                   getListUrl: Urls.data_batchcriteria,
-                  valueKey: "name",
+                  valueKey: "id",
                   labelKey: "name",
                 }}
                 data={formState}
@@ -393,7 +393,7 @@ const ApplicationSettingsProduct = () => {
                     handleFieldChange("useProductImages", data.useProductImages)
                   }
                 />
-                <div className="w-2/4">
+                {/* <div className="w-2/4">
                   <label
                     htmlFor="productImagePath"
                     className="block text-sm font-medium text-gray-700">
@@ -406,7 +406,7 @@ const ApplicationSettingsProduct = () => {
                       handleFieldChange("productImagePath", data.productImagePath)
                     }
                   />
-                </div>
+                </div> */}
               </div>
               <div className="flex items-center justify-between sm:justify-start">
                 <ERPCheckbox
@@ -495,9 +495,21 @@ const ApplicationSettingsProduct = () => {
                 }
               />
               <ERPCheckbox
-                id="setQty1ForWeighingScaleItem_ValueMode"
+                id="setDefaultQty1"
                 data={formState}
                 label={t("set_default_qty_1")}
+                checked={formState?.setDefaultQty1}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "setDefaultQty1",
+                    data.setDefaultQty1
+                  )
+                }
+              />
+              <ERPCheckbox
+                id="setQty1ForWeighingScaleItem_ValueMode"
+                data={formState}
+                label={t("set_qty1_for_weighing_scale_item_value_mode")}
                 checked={formState?.setQty1ForWeighingScaleItem_ValueMode}
                 onChangeData={(data) =>
                   handleFieldChange(
@@ -749,6 +761,8 @@ const ApplicationSettingsProduct = () => {
                   )
                 }
               />
+             {1 != 1 && 
+             <>
               <ERPCheckbox
                 id="enableSupplierWiseItemCode"
                 label={t("enable_supplier_wise_item_code")}
@@ -773,6 +787,7 @@ const ApplicationSettingsProduct = () => {
                   )
                 }
               />
+             </>}
               <ERPCheckbox
                 id="usePopupWindowForItemSearch"
                 label={t("use_popup_window_for_item_search")}

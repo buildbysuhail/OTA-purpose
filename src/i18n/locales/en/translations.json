@@ -437,7 +437,7 @@
   "maintain_all_branch": "Maintain All Branch With Common Inventory",
   "maintain_untallied_bills": "Maintain Untallied Bills",
   "allow_sales_detailed_edit": "Allow Sales Detailed Edit",
-  "salesman_incentive": "Salesman Incentive",
+  "salesman_incentive": "Salesman Incentive(%)",
   "default_incentive_ledger": "Default Incentive Ledger",
   "plu_path": "PLU Path",
   "second_display_images_path": "Second Display Images Path",
@@ -740,7 +740,7 @@
   "carry_forward_purchase": "Carry Forward Purchase Order Qty To Purchase",
   "enable_sales_invoice_draft_option": "Enable Sales Invoice Draft Option",
   "use_cost_for_stock_transfer_to_branch": "Use Cost For Stock Transfer To Branch",
-  "set_product_cost_as_declaration_price": "Set Product Cost As Declaration Price",
+  "set_product_cost_as_purchase_price": "Set Product Cost As Purchase Price",
   "show_account_receivable_in_purchase": "Show Account Receivable In Purchase",
   "set_product_cost_with_TAX_amount": "Set Product Cost With TAX Amount",
   "show_printer_selection": "Show Printer Selection",
@@ -1283,5 +1283,6 @@
   "round_amount":"Round Amount",
   "tax_on_discount":"Tax On Discount",
   "si":"SI",
-  "sr_amount":"SR Amount"
+  "sr_amount":"SR Amount",
+  "set_qty1_for_weighing_scale_item_value_mode": "Set Qty1 for Weighing Scale Item Value Mode"
 }

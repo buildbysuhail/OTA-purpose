@@ -1,6 +1,9 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
+import {
+  toggleAccountGroupPopup,
+  toggleGroupOrder,
+} from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
@@ -11,11 +14,29 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import { AccountGroupData, initialAccountGroup } from "./account-group-types";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { AccountGroupOrderContent, AccountGroupOrderFooter, GroupOrder } from "./group-order-manage";
+import { handleResponse } from "../../../../utilities/HandleResponse";
+import { APIClient } from "../../../../helpers/api-client";
+
+const api = new APIClient();
 
 export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
+//  =================this for groupOrder ERPModels ============
+  const [formData, setFormData] = useState<GroupOrder[]>([]);
+
+  const onSubmit = async () => {
+    try {
+      const response = await api.post(Urls.acc_group_order, formData);
+      handleResponse(response);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+    }
+  };
+// =============================================================
   const {
     isEdit,
     handleSubmit,
@@ -23,10 +44,16 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     getFieldProps,
     handleClear,
     isLoading,
-    formState
+    formState,
   } = useFormManager<AccountGroupData>({
     url: Urls.account_group,
-    onSuccess: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
+    onSuccess: useCallback(
+      () =>
+        dispatch(
+          toggleAccountGroupPopup({ isOpen: false, key: null, reload: true })
+        ),
+      [dispatch]
+    ),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
     initialData: initialAccountGroup,
@@ -42,25 +69,31 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
-          {...getFieldProps('accGroupName')}
+          {...getFieldProps("accGroupName")}
           label={t("name")}
           placeholder={t("name")}
           required={true}
-          onChangeData={(data: any) => {  handleFieldChange('accGroupName', data.accGroupName) }}
+          onChangeData={(data: any) => {
+            handleFieldChange("accGroupName", data.accGroupName);
+          }}
         />
         <ERPInput
-          {...getFieldProps('arabicName')}
+          {...getFieldProps("arabicName")}
           label={t("name_in_arabic")}
           placeholder={t("name_in_arabic")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('arabicName', data.arabicName)}
+          onChangeData={(data: any) =>
+            handleFieldChange("arabicName", data.arabicName)
+          }
         />
         <ERPInput
-          {...getFieldProps('shortName')}
+          {...getFieldProps("shortName")}
           label={t("short_name")}
           placeholder={t("short_name")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('shortName', data.shortName)}
+          onChangeData={(data: any) =>
+            handleFieldChange("shortName", data.shortName)
+          }
         />
         <ERPDataCombobox
           {...getFieldProps("parentGroupId")}
@@ -72,34 +105,56 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("parentGroupId", data.parentGroupID)
+            handleFieldChange("parentGroupId", data.parentGroupID);
           }}
           label={t("group_under")}
         />
         <ERPInput
-          {...getFieldProps('remarks')}
+          {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
+          onChangeData={(data: any) =>
+            handleFieldChange("remarks", data.remarks)
+          }
         />
         <ERPInput
-          {...getFieldProps('reasonForModification')}
+          {...getFieldProps("reasonForModification")}
           label={t("reason_for_edit")}
           placeholder={t("reason_for_edit")}
           required={true}
-          onChangeData={(data: any) => handleFieldChange('reasonForModification', data.reasonForModification)}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "reasonForModification",
+              data.reasonForModification
+            )
+          }
         />
         <ERPCheckbox
           {...getFieldProps("isEditable")}
           label={t("editable")}
-          onChangeData={(data: any) => handleFieldChange("isEditable", data.isEditable)}
+          onChangeData={(data: any) =>
+            handleFieldChange("isEditable", data.isEditable)
+          }
         />
         <ERPCheckbox
           {...getFieldProps("isDeletable")}
           label={t("deletable")}
-          onChangeData={(data: any) => handleFieldChange("isDeletable", data.isDeletable)}
+          onChangeData={(data: any) =>
+            handleFieldChange("isDeletable", data.isDeletable)
+          }
         />
+        {/* Link that triggers the modal */}
+        <a
+          href="#"
+          onClick={(e) => {
+            e.preventDefault();
+            dispatch(toggleGroupOrder({ isOpen: true }));
+          }}
+          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500"
+        >
+          Group Order(in trial balance)
+        </a>
       </div>
       <ERPFormButtons
         onClear={handleClear}
@@ -107,6 +162,19 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         isLoading={isLoading}
         onCancel={onClose}
         onSubmit={handleSubmit}
+      />
+      <ERPModal
+        isForm={true}
+        isFullHeight={true}
+        isOpen={rootState.PopupData.groupOrder.isOpen ?? false}
+        title="Group Order"
+        closeModal={() => {
+          dispatch(toggleGroupOrder({ isOpen: false }));
+        }}
+      
+        width="!w-[80rem] !max-w-[60rem]"
+        content={<AccountGroupOrderContent formData={formData} setFormData={setFormData} />}
+        footer={<AccountGroupOrderFooter onSubmit={onSubmit} />}
       />
     </div>
   );

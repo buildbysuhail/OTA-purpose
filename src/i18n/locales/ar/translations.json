@@ -1258,6 +1258,10 @@
   "group_combo": "مجموعة مشتركة",
   "free_quantity": "الكمية المجانية",
   "item_barcode": "الباركود للعنصر",
+  "free_item": "عنصر مجاني",
+  "qty_discount_ID": "معرّف خصم الكمية",
+  "qtys": "الكمية",
+  "listed_product_prices": "أسعار المنتجات المدرجة",
 
   "help_tips": "نصائح المساعدة",
   "shortcut_keys": "مفاتيح الاختصار",
@@ -1266,5 +1270,5 @@
   "not_prepared": "غير مُعد",
   "preparing": "جاري التحضير",
   "enable_order_management": "تمكين إدارة الطلبات",
-    "enable_import_purchase": "تمكين استيراد المشتريات"
+  "enable_import_purchase": "تمكين استيراد المشتريات"
 }

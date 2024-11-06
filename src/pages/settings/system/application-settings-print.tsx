@@ -39,6 +39,19 @@ const PrintSettingForm: React.FC = () => {
     loadSettings();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const formContainer = document.querySelector('.settings-form-container') as HTMLElement;
+    if (formContainer) {
+      formContainer.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const loadSettings = async () => {
     setLoading(true);
     try {
@@ -148,7 +161,7 @@ const PrintSettingForm: React.FC = () => {
             </div>
 
             <div className="form-row grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-4">
-
+          
               {userSession.countryId == Countries.India &&
                 <ERPCheckbox
                   id="printGatePass"

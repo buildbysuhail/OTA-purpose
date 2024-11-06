@@ -122,6 +122,19 @@ const ApplicationSettingsProduct = () => {
     loadSettings();
   }, []);
 
+    useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const formContainer = document.querySelector('.settings-form-container') as HTMLElement;
+    if (formContainer) {
+      formContainer.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const loadSettings = async () => {
     setLoading(true);
     try {
@@ -189,7 +202,7 @@ const ApplicationSettingsProduct = () => {
   }
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-[4rem]">
+      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mb-[8rem]">
         <div className="space-y-6 p-6">
           <div className="border p-4 rounded-lg">
             <div className="grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
@@ -633,36 +646,40 @@ const ApplicationSettingsProduct = () => {
                   }
                 />
               }
-              <ERPCheckbox
-                id="enableQtySlabOffer"
-                label={t("enable_qty_slab_offer")}
-                data={formState}
-                checked={formState?.enableQtySlabOffer}
-                onChangeData={(data) =>
-                  handleFieldChange("enableQtySlabOffer", data.enableQtySlabOffer)
-                }
-              />
-              <ERPCheckbox
-                id="setProductQtyLimitinSales"
-                label={t("set_product_qty_limit_in_sales")}
-                data={formState}
-                checked={formState?.setProductQtyLimitinSales}
-                onChangeData={(data) =>
-                  handleFieldChange(
-                    "setProductQtyLimitinSales",
-                    data.setProductQtyLimitinSales
-                  )
-                }
-              />
-              <ERPCheckbox
-                id="enableMultiFOC"
-                label={t("enable_multi_FOC")}
-                data={formState}
-                checked={formState?.enableMultiFOC}
-                onChangeData={(data) =>
-                  handleFieldChange("enableMultiFOC", data.enableMultiFOC)
-                }
-              />
+              {userSession.countryId == Countries.India &&
+                <>
+                  <ERPCheckbox
+                    id="enableQtySlabOffer"
+                    label={t("enable_qty_slab_offer")}
+                    data={formState}
+                    checked={formState?.enableQtySlabOffer}
+                    onChangeData={(data) =>
+                      handleFieldChange("enableQtySlabOffer", data.enableQtySlabOffer)
+                    }
+                  />
+                  <ERPCheckbox
+                    id="setProductQtyLimitinSales"
+                    label={t("set_product_qty_limit_in_sales")}
+                    data={formState}
+                    checked={formState?.setProductQtyLimitinSales}
+                    onChangeData={(data) =>
+                      handleFieldChange(
+                        "setProductQtyLimitinSales",
+                        data.setProductQtyLimitinSales
+                      )
+                    }
+                  />
+                  <ERPCheckbox
+                    id="enableMultiFOC"
+                    label={t("enable_multi_FOC")}
+                    data={formState}
+                    checked={formState?.enableMultiFOC}
+                    onChangeData={(data) =>
+                      handleFieldChange("enableMultiFOC", data.enableMultiFOC)
+                    }
+                  />
+                </>
+              }
               <ERPCheckbox
                 id="loadCustomerLastRate"
                 label={t("load_customer_last_sales_rate")}

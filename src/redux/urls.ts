@@ -267,6 +267,9 @@ const Urls = {
   import_parties: "/Accounts/Import/Parties/",
   import_parties_excel: "/Accounts/Import/PartiesExcel/",
   download_party_format: "/Accounts/Import/DownloadPartyFormat/",
+  import_privilegeCards: "/Accounts/Import/PrivilegeCards/",
+  import_privilegeCards_Excel: "/Accounts/Import/PrivilegeCardsExcel/",
+  download_privilegeCards_format: "/Accounts/Import/DownloadPrivilegeCardsFormat/",
 
   // Inventory
   productGroup: "/Inventory/ProductGroup/",

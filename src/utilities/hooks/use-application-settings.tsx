@@ -1,19 +1,20 @@
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useAppDispatch } from "./useAppDispatch";
+import { useAppDispatch, useAppSelector } from "./useAppDispatch";
 import { getAction } from "../../redux/slices/app-thunks";
 import { ApplicationSettingsIds } from "../../pages/settings/system/application-settings-categories";
 import { RootState } from "../../redux/store";
+import { ApplicationSettingsType } from "../../pages/settings/system/application-settings-types";
 
-
-const useApplicationSetting = (settingsType: ApplicationSettingsIds, endPointUrl?: string) => {
+const useApplicationSetting = (endPointUrl?: string): ApplicationSettingsType => {
   const appDispatch = useAppDispatch();
 
   useEffect(() => {
-    endPointUrl && appDispatch(getAction({apiUrl: endPointUrl}));
-  }, [endPointUrl]);
+    if (endPointUrl) {
+      appDispatch(getAction({ apiUrl: endPointUrl }));
+    }
+  }, [endPointUrl, appDispatch]);
 
-  return useSelector((state: any) => (settingsType ? state.ApplicationSettings?.[settingsType] : null));
+  return useAppSelector((state: RootState) => (state.ApplicationSettings));
 };
-
 export default useApplicationSetting;

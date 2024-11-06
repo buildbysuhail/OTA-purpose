@@ -139,10 +139,10 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
 const onChooseTemplate = async () => {
   try 
   {
-      const res = await api.post(Urls.download_party_format, null, {
+      const res = await api.postAsync(Urls.download_party_format, null, {
           responseType: 'arraybuffer'
       });
-      const blob = new Blob([res], { 
+      const blob = new Blob([res.data], { 
           type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       });
       // Create download link

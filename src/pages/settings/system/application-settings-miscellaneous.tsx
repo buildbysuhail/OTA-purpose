@@ -15,6 +15,7 @@ import { toggleMiscellaneousSettingsPopup } from "../../../redux/slices/popup-re
 import ApplicationMiscellaneousSettingsPop from "./application-settings-miscellaneous-settings";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import ERPDisableEnable from "../../../components/ERPComponents/erp-disable-inable";
 
 interface FormState {
   salesmanIncentive: number;
@@ -204,19 +205,40 @@ const MiscellaneousSettingsForm: React.FC = () => {
                       )
                     }
                   />
-                  <ERPInput
-                    id="weighingScalePluFilePath"
-                    value={formState.weighingScalePluFilePath}
-                    data={formState}
-                    className="flex-grow"
-                    label={t("plu_path")}
-                    onChangeData={(data) =>
-                      handleFieldChange(
-                        "weighingScalePluFilePath",
-                        data.weighingScalePluFilePath
-                      )
-                    }
-                  />
+                  <ERPDisableEnable targetCount={15} >
+                    {(hasPermitted = false) => (
+                      <>
+                        <ERPInput
+                          id="weighingScalePluFilePath"
+                          value={formState.weighingScalePluFilePath}
+                          data={formState}
+                          className="flex-grow"
+                          label={t("plu_path")}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "weighingScalePluFilePath",
+                              data.weighingScalePluFilePath
+                            )
+                          }
+                        />
+                        {hasPermitted != true &&
+                          <ERPCheckbox
+                            id="allowSalesDetailedEdit"
+                            checked={formState.allowSalesDetailedEdit}
+                            data={formState}
+                            label={t("allow_sales_detailed_edit")}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "allowSalesDetailedEdit",
+                                data.allowSalesDetailedEdit
+                              )
+                            }
+                          />
+                        }
+                      </>
+                    )}
+
+                  </ERPDisableEnable>
                   <ERPInput
                     id="secondDisplayImagesPath"
                     value={formState.secondDisplayImagesPath}
@@ -264,20 +286,9 @@ const MiscellaneousSettingsForm: React.FC = () => {
                             data.maintainUntalliedBills
                           )
                         }
-                      />
-                      <ERPCheckbox
-                        id="allowSalesDetailedEdit"
-                        checked={formState.allowSalesDetailedEdit}
-                        data={formState}
-                        label={t("allow_sales_detailed_edit")}
-                        onChangeData={(data) =>
-                          handleFieldChange(
-                            "allowSalesDetailedEdit",
-                            data.allowSalesDetailedEdit
-                          )
-                        }
                       /></>
                   }
+
                   <div className="flex items-center  justify-between">
                     <ERPCheckbox
                       id="sendSMS"

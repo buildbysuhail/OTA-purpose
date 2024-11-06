@@ -51,7 +51,12 @@ const Operations = () => {
             <div>
               {/* <span className="font-bold">+91 9335 87623</span> */}
               <span className="font-bold">
-              {"+91 " + "123456789".split('').reverse().join('').replace(/(\d{3})(?=\d)/, '$1 ')}
+                {"+91 " +
+                  "123456789"
+                    .split("")
+                    .reverse()
+                    .join("")
+                    .replace(/(\d{3})(?=\d)/, "$1 ")}
               </span>
             </div>
           </div>
@@ -71,8 +76,8 @@ const Operations = () => {
             {[
               { icon: FileText, label: "orders", link: "/rpos/Orders" },
               { icon: Globe, label: "online_orders" },
-              { icon: Receipt, label: "kots", link: "/rpos/kots"  },
-              { icon: User, label: "customers" , link: "/rpos/customers" },
+              { icon: Receipt, label: "kots", link: "/rpos/kots" },
+              { icon: User, label: "customers", link: "/rpos/customers" },
               { icon: Wallet, label: "cash_flow" },
               { icon: DollarSign, label: "expense" },
               { icon: Wallet, label: "withdrawal" },
@@ -81,7 +86,11 @@ const Operations = () => {
               { icon: Bell, label: "notification" },
               { icon: Table, label: "table" },
               { icon: RefreshCw, label: "manual_sync" },
-              { icon: Keyboard, label: "shortcut_keys" , link: "/rpos/shortkeys"  },
+              {
+                icon: Keyboard,
+                label: "shortcut_keys",
+                link: "/rpos/shortkeys",
+              },
               { icon: Video, label: "live_view" },
               { icon: ArrowLeftRight, label: "duo_payment" },
               { icon: Languages, label: "language_profiles" },
@@ -126,15 +135,25 @@ const Operations = () => {
               { icon: Settings, label: "settings" },
               { icon: ToggleRight, label: "menu_item_on_off" },
               { icon: RefreshCw, label: "service_renewal" },
-              { icon: ListTodo, label: "custom_order_status" },
+              {
+                icon: ListTodo,
+                label: "custom_order_status",
+                link: "/rpos/customorderstatus",
+              },
             ].map((item: any, index) => (
-              <div
-                key={index}
-                className="flex flex-col items-center p-4 border rounded bg-gray-50"
+              <Link
+                // to= {item.link}
+                to={item.link ?? "/"}
+                className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
               >
-                <item.icon className="w-6 h-6 mb-2" />
-                <span>{t(item.label)}</span>
-              </div>
+                <div
+                  key={index}
+                  className="flex flex-col items-center p-4 border rounded bg-gray-50"
+                >
+                  <item.icon className="w-6 h-6 mb-2" />
+                  <span>{t(item.label)}</span>
+                </div>
+              </Link>
             ))}
           </div>
         </section>

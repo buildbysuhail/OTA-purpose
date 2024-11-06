@@ -1259,6 +1259,7 @@
   "free_item":"Free Item",
   "qty_discount_ID":"Qty Discount ID",
   "qtys":"Qty",
+  "listed_product_prices":"Listed Product Prices",
 
   "help_tips": "Help Tips",
   "shortcut_keys": "Shortcut keys",
@@ -1267,5 +1268,7 @@
   "not_prepared": "Not Prepared ",
   "preparing": "Preparing",
   "enable_order_management": "Enable Order Management",
-    "enable_import_purchase": "Enable Import Purchase"
+  "enable_import_purchase": "Enable Import Purchase",
+
+  "custom_order_status_configuration": "Custom Order Status Configuration"
 }

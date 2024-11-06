@@ -199,7 +199,7 @@ const InventorySettingsForm = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-      document.documentElement.style.overflow = 'unset'; 
+      document.documentElement.style.overflow = 'unset';
     };
   }, []);
 
@@ -435,6 +435,7 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultSalesReturnPayableAcc"
+                  disabled
                   value={formState.defaultSalesReturnPayableAcc}
                   data={formState}
                   field={{
@@ -1042,18 +1043,20 @@ const InventorySettingsForm = () => {
                   )
                 }
               />
-              <ERPCheckbox
-                id="enableAddStockAdjustment"
-                checked={formState.enableAddStockAdjustment}
-                data={formState}
-                label={t("enable_add_stock_adjustment")}
-                onChangeData={(data: any) =>
-                  handleFieldChange(
-                    "enableAddStockAdjustment",
-                    data.enableAddStockAdjustment
-                  )
-                }
-              />
+              {userSession.countryId == Countries.India &&
+                <ERPCheckbox
+                  id="enableAddStockAdjustment"
+                  checked={formState.enableAddStockAdjustment}
+                  data={formState}
+                  label={t("enable_add_stock_adjustment")}
+                  onChangeData={(data: any) =>
+                    handleFieldChange(
+                      "enableAddStockAdjustment",
+                      data.enableAddStockAdjustment
+                    )
+                  }
+                />
+              }
               <ERPCheckbox
                 id="mobileNumberMandotryInSales"
                 checked={formState.mobileNumberMandotryInSales}

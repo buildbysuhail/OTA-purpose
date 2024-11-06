@@ -31,11 +31,23 @@ const ERPSettingsFormMain = () => {
     loadSettings();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    const formContainer = document.querySelector('.settings-form-container') as HTMLElement;
+    if (formContainer) {
+      formContainer.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
+
   const loadSettings = async () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.application_settings}main`);
-
       console.log(settings);
       setSettingsPrev(response);
       setSettings(response);
@@ -155,7 +167,7 @@ const ERPSettingsFormMain = () => {
               options={[
                 { value: "General", label: "General" },
                 { value: "Distribution", label: "Distribution" },
-                { value: "Manufacturing", label: "Manufacturing" },
+                { value: "Hypermarket", label: "Hypermarket" },
                 { value: "Supermarket", label: "Supermarket" },
                 { value: "Textiles", label: "Textiles" },
                 { value: "Restaurant", label: "Restaurant" },

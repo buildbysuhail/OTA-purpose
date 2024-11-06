@@ -137,7 +137,6 @@ export default function ImprovedERPDataCombobox({
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-
   const [query, setQuery] = useState("");
   const [items, setItems] = useState<Option[]>([]);
   const [loading, setLoading] = useState(false);
@@ -145,8 +144,9 @@ export default function ImprovedERPDataCombobox({
   const [filteredItems, setFilteredItems] = useState<Option[]>([]);
   const [visibleItems, setVisibleItems] = useState<Option[]>([]);
   const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [displayValue, setDisplayValue] = useState(""); // New state for truncated display value
-
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const comboboxRef = useRef<HTMLInputElement>(null);
   const observerRef = useRef<HTMLDivElement>(null);
@@ -206,6 +206,7 @@ export default function ImprovedERPDataCombobox({
       setItems(_options);
       setFilteredItems(_options);
       setVisibleItems(_options?.slice(0, ITEMS_PER_PAGE));
+      setHasMore(_options.length > ITEMS_PER_PAGE);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -215,30 +216,48 @@ export default function ImprovedERPDataCombobox({
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (
-          entries[0]?.isIntersecting &&
-          filteredItems?.length > visibleItems?.length
-        ) {
+      async (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasMore && !isLoadingMore) {
+          setIsLoadingMore(true);
           const nextPage = page + 1;
           const startIndex = (nextPage - 1) * ITEMS_PER_PAGE;
           const endIndex = startIndex + ITEMS_PER_PAGE;
-          setVisibleItems((prev) => [
-            ...prev,
-            ...filteredItems?.slice(startIndex, endIndex),
-          ]);
+
+          // Add delay to prevent rapid scrolling
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          setVisibleItems((prev) => {
+            const newItems = [
+              ...prev,
+              ...filteredItems.slice(startIndex, endIndex),
+            ];
+            setHasMore(newItems.length < filteredItems.length);
+            return newItems;
+          });
+
           setPage(nextPage);
+          setIsLoadingMore(false);
         }
       },
-      { threshold: 0.1 }
+      {
+        threshold: 0.1,
+        root: containerRef.current,
+        rootMargin: "20px",
+      }
     );
 
-    if (observerRef.current) {
-      observer.observe(observerRef.current);
+    const currentObserverRef = observerRef.current;
+    if (currentObserverRef && hasMore) {
+      observer.observe(currentObserverRef);
     }
 
-    return () => observer.disconnect();
-  }, [filteredItems, page, visibleItems?.length]);
+    return () => {
+      if (currentObserverRef) {
+        observer.unobserve(currentObserverRef);
+      }
+    };
+  }, [filteredItems, page, hasMore, isLoadingMore]);
 
   useEffect(() => {
     const fieldKey = field?.id?.replaceAll("_id", "");
@@ -261,13 +280,14 @@ export default function ImprovedERPDataCombobox({
       const words = inputValue?.toLowerCase()?.split(/\s+/);
       const filtered = items?.filter((item) => {
         const itemWords = item?.label?.toLowerCase()?.split(/\s+/);
-        return words.every(
-          (word, index) =>
-            index < itemWords?.length && itemWords[index]?.startsWith(word)
+        return words.every((word) =>
+          itemWords?.some((itemWord) => itemWord?.startsWith(word))
         );
       });
+
       setPage(1);
       setVisibleItems(filtered?.slice(0, ITEMS_PER_PAGE));
+      setHasMore(filtered?.length > ITEMS_PER_PAGE);
       return filtered;
     },
     [items]
@@ -449,7 +469,18 @@ export default function ImprovedERPDataCombobox({
                     )}
                   </Combobox.Option>
                 ))}
-                <div ref={observerRef} className="h-4" />
+                {hasMore && (
+                  <div
+                    ref={observerRef}
+                    className="h-4 flex items-center justify-center"
+                  >
+                    {isLoadingMore && (
+                      <div className="text-xs text-gray-500">
+                        Loading more...
+                      </div>
+                    )}
+                  </div>
+                )}
               </>
             )}
           </Combobox.Options>

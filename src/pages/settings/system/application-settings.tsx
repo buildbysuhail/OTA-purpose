@@ -57,8 +57,8 @@ const ApplicationSettings = ({ }) => {
                 border-r-4 
                 text-left
                 ${settingsGroup === settings?.settings_group_id
-                    ? "bg-gray border-primary text-primary"
-                    : "border-transparent hover:bg-gray hover:border-gray"
+                    ? "bg-gray-300 border-primary text-primary"
+                    : "border-transparent hover:bg-gray hover:border-gray-400 hover:bg-gray-400"
                   }
               `}
                 tabIndex={0}

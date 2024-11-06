@@ -226,24 +226,26 @@ const ERPSettingsFormGSTTaxes = () => {
             />
           </div>
           <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
+            {1 != 1 && 
             <ERPDataCombobox
-              field={{
-                id: "outputFormType",
-                valueKey: "value",
-                labelKey: "label",
-              }}
-              id="outputFormType"
-              value={formState?.outputFormType}
-              data={formState}
-              label={t("default_sales_form_type")}
-              options={[
-                { value: 'Form 8B', label: 'Form 8B' },
-                { value: 'Form 8', label: 'Form 8' },
-                { value: 'purchaseNormalType', label: 'purchaseNormalType' },
-                { value: 'VAT', label: 'VAT' },
-              ]}
-              onChangeData={(data: any) => handleFieldChange("outputFormType", data.outputFormType)}
-            />
+            field={{
+              id: "outputFormType",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            id="outputFormType"
+            value={formState?.outputFormType}
+            data={formState}
+            label={t("default_sales_form_type")}
+            options={[
+              { value: 'Form 8B', label: 'Form 8B' },
+              { value: 'Form 8', label: 'Form 8' },
+              { value: 'purchaseNormalType', label: 'purchaseNormalType' },
+              { value: 'VAT', label: 'VAT' },
+            ]}
+            onChangeData={(data: any) => handleFieldChange("outputFormType", data.outputFormType)}
+          />
+            }
 
             <ERPDataCombobox
               id="inputCSTAccount"
@@ -554,7 +556,7 @@ const ERPSettingsFormGSTTaxes = () => {
               id="inputCalamityCessAccount"
               value={formState?.inputCalamityCessAccount}
               data={formState}
-              disabled={true}
+              // disabled={true}
               label={t("input_calamity_cess_account")}
               field={{
                 id: "inputCalamityCessAccount",

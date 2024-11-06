@@ -117,7 +117,7 @@ const NotificationSettings = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 gap-x-6 bg-[#f8fafc] xxl:max-h-[100vh]">
+      <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa xxl:max-h-[100vh]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
             {/* <div className="flex justify-start m-3"> */}

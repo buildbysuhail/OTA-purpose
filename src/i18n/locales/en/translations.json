@@ -1284,5 +1284,21 @@
   "tax_on_discount":"Tax On Discount",
   "si":"SI",
   "sr_amount":"SR Amount",
-  "set_qty1_for_weighing_scale_item_value_mode": "Set Qty1 for Weighing Scale Item Value Mode"
+  "set_qty1_for_weighing_scale_item_value_mode": "Set Qty1 for Weighing Scale Item Value Mode",
+
+  "purchase_register_report":"Purchase Register Report",
+  "manual_barcode":"Manual Barcode",
+  "brand":"Brand",
+  "unit_price_1":"Unit Price 1",
+  "std_sales_price":"Std Sales Price",
+  "additional_expenses":"Additional Expenses",
+  "warranty_period":"Warranty Period",
+  "free_value":"Free Value",
+  "free_cost":"Free Cost",
+  "total_profit":"Total Profit",
+  "category":"Category",
+  "total_discount":"Total Discount",
+  "qty_nos":"Qty Nos",
+  "product_description":"Product Description",
+  "std_purchase_price":"Std Purchase Price"
 }

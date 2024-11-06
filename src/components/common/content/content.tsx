@@ -96,6 +96,10 @@ const GroupCategory = lazy(() => import('../../../pages/inventory/masters/group-
 const SpecialSchemes = lazy(() => import('../../../pages/inventory/masters/special-schemes/special-schemes'));
 const ListedProductPrices = lazy(() => import('../../../pages/inventory/masters/listed-product-prices/listed-product-prices'));
 
+// Inventory Reports
+import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report';
+import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
+
 interface ContentProps { }
 const loading = (
   <div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -201,12 +205,13 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/trial_balance" element={<TrialBalance/>} />
         <Route path="/accounts/profit_and_loss" element={<ProfitAndLoss/>} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet/>} />
-
-
-
         <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />
         <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport/>} />
         {/* Reports - Accounts */}
+
+        {/* Reports - Inventory */}
+        <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport/>} />
+        <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport/>} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

@@ -1270,5 +1270,18 @@
   "enable_order_management": "Enable Order Management",
   "enable_import_purchase": "Enable Import Purchase",
 
-  "custom_order_status_configuration": "Custom Order Status Configuration"
+  "custom_order_status_configuration": "Custom Order Status Configuration",
+
+  "purchase_summary_report":"Purchase Summary Report",
+  "gross":"Gross",
+  "bill_discount":"Bill Discount",
+  "adjustment_amount":"Adjustment Amount",
+  "master_id":"Master ID",
+  "m_invoice_number":"MInvoice Number",
+  "ref_no2":"Ref No2",
+  "salesman_name":"Salesman Name",
+  "round_amount":"Round Amount",
+  "tax_on_discount":"Tax On Discount",
+  "si":"SI",
+  "sr_amount":"SR Amount"
 }

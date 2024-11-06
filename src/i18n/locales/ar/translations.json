@@ -445,7 +445,7 @@
   "maintain_all_branch": "الحفاظ على جميع الفروع مع المخزون المشترك",
   "maintain_untallied_bills": "الحفاظ على الفواتير غير المطابقة",
   "allow_sales_detailed_edit": "السماح بتعديل تفصيلي للمبيعات",
-  "salesman_incentive": "حافز البائع",
+  "salesman_incentive": "(%)حافز البائع",
   "default_incentive_ledger": "دفتر الحوافز الافتراضي",
   "plu_path": "مسار PLU",
   "second_display_images_path": "مسار صور العرض الثاني",

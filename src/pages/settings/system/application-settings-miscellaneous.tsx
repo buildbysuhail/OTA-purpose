@@ -301,7 +301,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                       id="sMSURL"
                       value={formState.sMSURL}
                       data={formState}
-                      label=" "
+                      label={t("url")}
                       disabled={!formState.sendSMS}
                       onChangeData={(data) => handleFieldChange("sMSURL", data.sMSURL)}
                     />

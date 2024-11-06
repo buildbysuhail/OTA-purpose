@@ -761,6 +761,8 @@ const ApplicationSettingsProduct = () => {
                   )
                 }
               />
+             {1 != 1 && 
+             <>
               <ERPCheckbox
                 id="enableSupplierWiseItemCode"
                 label={t("enable_supplier_wise_item_code")}
@@ -785,6 +787,7 @@ const ApplicationSettingsProduct = () => {
                   )
                 }
               />
+             </>}
               <ERPCheckbox
                 id="usePopupWindowForItemSearch"
                 label={t("use_popup_window_for_item_search")}

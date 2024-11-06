@@ -69,7 +69,7 @@ const ERPModal = React.memo(
           <Dialog
             as="div"
             className={`relative z-50`}
-            onClose={disableOutsideClickClose ? () => {} : handleClose}
+            onClose={disableOutsideClickClose ? () => { } : handleClose}
           >
             <Transition
               as={Fragment}
@@ -85,14 +85,12 @@ const ERPModal = React.memo(
             </Transition>
 
             <div
-              className={`fixed inset-0 ${
-                isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"
-              }`}
+              className={`fixed inset-0 ${isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"
+                }`}
             >
               <div
-                className={`flex min-h-full items-center justify-center text-center ${
-                  isFullHeight ? "" : "p-4 relative"
-                }`}
+                className={`flex min-h-full items-center justify-center text-center ${isFullHeight ? "" : "p-4 relative"
+                  }`}
               >
                 <TransitionChild
                   as={Fragment}
@@ -104,9 +102,8 @@ const ERPModal = React.memo(
                   leaveTo="opacity-0 scale-95"
                 >
                   <DialogPanel
-                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all ${width} ${
-                      isFullHeight ? "min-h-full max-h-screen" : "rounded-md"
-                    } ${isRemoveSomething ? "px-0" : "px-5"}`}
+                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all ${width} ${isFullHeight ? "min-h-full max-h-screen" : "rounded-md"
+                      } ${isRemoveSomething ? "px-0" : "px-5"}`}
                   >
                     <DialogTitle
                       as="h3"
@@ -114,11 +111,11 @@ const ERPModal = React.memo(
                     >
                       {closeButton === "LeftArrow" && (
                         <button className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer">
-                        <i
-                          onClick={handleClose}
-                          className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line"
-                          style={{ fontSize: "23px" }}
-                        ></i>
+                          <i
+                            onClick={handleClose}
+                            className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line"
+                            style={{ fontSize: "23px" }}
+                          ></i>
                         </button>
                       )}
                       {title}
@@ -135,16 +132,14 @@ const ERPModal = React.memo(
                       )}
                     </DialogTitle>
                     <div
-                      className={`${
-                        isFullHeight ? "max-h-[calc(100vh-8rem)]" : "h-auto"
-                      }`}
+                      className={`${isFullHeight ? "max-h-[calc(100vh-8rem)]" : "h-auto"
+                        }`}
                     >
                       <div
-                        className={`${
-                          isFullHeight
-                            ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+                        className={`${isFullHeight
+                            ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto"
                             : ""
-                        }`}
+                          }`}
                       >
                         {content && cloneElement(content, contentProps)}
                       </div>

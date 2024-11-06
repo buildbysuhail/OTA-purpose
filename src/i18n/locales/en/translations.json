@@ -1311,5 +1311,13 @@
   "scheme_disc":"Scheme Disc",
   "warranty":"Warranty",
   "master_ID":"Master ID",
-  "excise_tax":"Excise Tax"
+  "excise_tax":"Excise Tax",
+  "party_wise_report":"Party Wise Report",
+
+  "cash_summary_report":"Cash Summary Report",
+  "transaction_history_accounts":"Transaction History Accounts",
+  "transaction_history_inventory":"Transaction History Inventory",
+  "billwise_profit_report":"Billwise Profit Report",
+  "partywise_summary_report":"Partywise Summary Report",
+  "profit_&_loss_account":"Profit & Loss Account"
 }

@@ -86,7 +86,7 @@ const PrintSettingForm: React.FC = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue??"").toString(),
+            settingsValue: (currentValue ?? "").toString(),
           });
         }
         return acc;
@@ -96,8 +96,8 @@ const PrintSettingForm: React.FC = () => {
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "printer",
         updateList: modifiedSettings,
-      })) as any: null;
-      handleResponse(response,() => {}, () => {},false);
+      })) as any : null;
+      handleResponse(response, () => { }, () => { }, false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -120,7 +120,7 @@ const PrintSettingForm: React.FC = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+      <form className="overflow-y-auto  scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
         <div className="space-y-6 p-6  !mb-[12rem]">
           <div className="border p-4 rounded-lg">
             <div className="form-row grid grid-cols-4 gap-3 my-3">
@@ -161,7 +161,7 @@ const PrintSettingForm: React.FC = () => {
             </div>
 
             <div className="form-row grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-3 mt-4">
-          
+
               {userSession.countryId == Countries.India &&
                 <ERPCheckbox
                   id="printGatePass"

@@ -164,7 +164,7 @@ const NotificationSettings = () => {
                         </tr>
                       </thead>
 
-                      <tbody className=" bg-[#fafafa] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100">
+                      <tbody className=" bg-[#fafafa] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
                         {TableBody.length > 0 ? (
                           TableBody?.filter((item)=>
                           item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())

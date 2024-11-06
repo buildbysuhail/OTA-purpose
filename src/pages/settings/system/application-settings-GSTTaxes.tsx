@@ -175,8 +175,8 @@ const ERPSettingsFormGSTTaxes = () => {
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: 'GSTTaxes',
         updateList: modifiedSettings
-      })) as any: null
-      handleResponse(response,() => {}, () => {},false);
+      })) as any : null
+      handleResponse(response, () => { }, () => { }, false);
 
     } catch (error) {
       console.error('Error saving settings:', error);
@@ -199,7 +199,7 @@ const ERPSettingsFormGSTTaxes = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+      <form className="overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
         <div className='space-y-6 p-6'>
           <div className='grid xxl:grid-cols-7 lg:grid-cols-4 sm:grid-cols-2'>
             <label>{t("default_purchase")}</label>
@@ -226,24 +226,26 @@ const ERPSettingsFormGSTTaxes = () => {
             />
           </div>
           <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
-            <ERPDataCombobox
-              field={{
-                id: "outputFormType",
-                valueKey: "value",
-                labelKey: "label",
-              }}
-              id="outputFormType"
-              value={formState?.outputFormType}
-              data={formState}
-              label={t("default_sales_form_type")}
-              options={[
-                { value: 'Form 8B', label: 'Form 8B' },
-                { value: 'Form 8', label: 'Form 8' },
-                { value: 'purchaseNormalType', label: 'purchaseNormalType' },
-                { value: 'VAT', label: 'VAT' },
-              ]}
-              onChangeData={(data: any) => handleFieldChange("outputFormType", data.outputFormType)}
-            />
+            {1 != 1 &&
+              <ERPDataCombobox
+                field={{
+                  id: "outputFormType",
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+                id="outputFormType"
+                value={formState?.outputFormType}
+                data={formState}
+                label={t("default_sales_form_type")}
+                options={[
+                  { value: 'Form 8B', label: 'Form 8B' },
+                  { value: 'Form 8', label: 'Form 8' },
+                  { value: 'purchaseNormalType', label: 'purchaseNormalType' },
+                  { value: 'VAT', label: 'VAT' },
+                ]}
+                onChangeData={(data: any) => handleFieldChange("outputFormType", data.outputFormType)}
+              />
+            }
 
             <ERPDataCombobox
               id="inputCSTAccount"
@@ -554,7 +556,7 @@ const ERPSettingsFormGSTTaxes = () => {
               id="inputCalamityCessAccount"
               value={formState?.inputCalamityCessAccount}
               data={formState}
-              disabled={true}
+              // disabled={true}
               label={t("input_calamity_cess_account")}
               field={{
                 id: "inputCalamityCessAccount",

@@ -67,7 +67,7 @@ const BackupSettingsForm: React.FC = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: currentValue.toString(),
+            settingsValue: (currentValue??"").toString(),
           });
         }
         return acc;

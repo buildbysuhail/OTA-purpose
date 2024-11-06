@@ -437,7 +437,7 @@
   "maintain_all_branch": "Maintain All Branch With Common Inventory",
   "maintain_untallied_bills": "Maintain Untallied Bills",
   "allow_sales_detailed_edit": "Allow Sales Detailed Edit",
-  "salesman_incentive": "Salesman Incentive",
+  "salesman_incentive": "Salesman Incentive(%)",
   "default_incentive_ledger": "Default Incentive Ledger",
   "plu_path": "PLU Path",
   "second_display_images_path": "Second Display Images Path",
@@ -1271,5 +1271,18 @@
   "enable_import_purchase": "Enable Import Purchase",
 
   "custom_order_status_configuration": "Custom Order Status Configuration",
+
+  "purchase_summary_report":"Purchase Summary Report",
+  "gross":"Gross",
+  "bill_discount":"Bill Discount",
+  "adjustment_amount":"Adjustment Amount",
+  "master_id":"Master ID",
+  "m_invoice_number":"MInvoice Number",
+  "ref_no2":"Ref No2",
+  "salesman_name":"Salesman Name",
+  "round_amount":"Round Amount",
+  "tax_on_discount":"Tax On Discount",
+  "si":"SI",
+  "sr_amount":"SR Amount",
   "set_qty1_for_weighing_scale_item_value_mode": "Set Qty1 for Weighing Scale Item Value Mode"
 }

@@ -10,7 +10,6 @@ import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
 
 interface FormState {
   expensesTaxAccount: string;
@@ -41,6 +40,7 @@ const TaxSettingsForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const api = new APIClient();
   useEffect(() => {
@@ -73,7 +73,6 @@ const TaxSettingsForm: React.FC = () => {
     } finally {
       setLoading(false);
     }
-    const { t } = useTranslation();
   };
 
   const handleFieldChange = (field: keyof typeof initialState, value: any) => {
@@ -83,8 +82,7 @@ const TaxSettingsForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
@@ -95,7 +93,7 @@ const TaxSettingsForm: React.FC = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: currentValue.toString(),
+            settingsValue: (currentValue??"").toString(),
           });
         }
         return acc;
@@ -270,10 +268,10 @@ const TaxSettingsForm: React.FC = () => {
         <ERPButton
           title={t("save_settings")}
           variant="primary"
-          disabled={isSaving}
+          // disabled={isSaving}
           loading={isSaving}
           type="button"
-          onClick={() => handleSubmit}
+          onClick={handleSubmit}
         />
       </div>
     </div>

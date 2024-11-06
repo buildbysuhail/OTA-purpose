@@ -45,4 +45,20 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/accounts/receivable_aging`, type: 'link', active: false, selected: false, title: 'Account Receivable Aging Report', },
     ]
   },
+  {
+    icon: (<CheckBadgeIcon className="side-menu__icon" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'inventory',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 2,
+    children: [ 
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_summary_report`, type: 'link', active: false, selected: false, title: 'Purchase Summary Report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_register_report`, type: 'link', active: false, selected: false, title: 'Purchase Register Report'},
+    ]
+  },
 ];

@@ -138,7 +138,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: currentValue.toString(),
+            settingsValue: (currentValue??"").toString(),
           });
         }
         return acc;
@@ -301,7 +301,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                       id="sMSURL"
                       value={formState.sMSURL}
                       data={formState}
-                      label=" "
+                      label={t("url")}
                       disabled={!formState.sendSMS}
                       onChangeData={(data) => handleFieldChange("sMSURL", data.sMSURL)}
                     />

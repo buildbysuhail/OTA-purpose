@@ -445,7 +445,7 @@
   "maintain_all_branch": "الحفاظ على جميع الفروع مع المخزون المشترك",
   "maintain_untallied_bills": "الحفاظ على الفواتير غير المطابقة",
   "allow_sales_detailed_edit": "السماح بتعديل تفصيلي للمبيعات",
-  "salesman_incentive": "حافز البائع",
+  "salesman_incentive": "(%)حافز البائع",
   "default_incentive_ledger": "دفتر الحوافز الافتراضي",
   "plu_path": "مسار PLU",
   "second_display_images_path": "مسار صور العرض الثاني",
@@ -1271,5 +1271,20 @@
   "preparing": "جاري التحضير",
   "enable_order_management": "تمكين إدارة الطلبات",
   "enable_import_purchase": "تمكين استيراد المشتريات",
+
+  "custom_order_status_configuration": "تكوين حالة الطلب المخصص",
+  
+  "purchase_summary_report": "تقرير ملخص المشتريات",
+  "gross": "إجمالي",
+  "bill_discount": "خصم الفاتورة",
+  "adjustment_amount": "مبلغ التعديل",
+  "master_id": "معرّف رئيسي",
+  "m_invoice_number": "رقم الفاتورة الرئيسي",
+  "ref_no2": "الرقم المرجعي 2",
+  "salesman_name": "اسم رجل المبيعات",
+  "round_amount": "مبلغ التقريب",
+  "tax_on_discount": "الضريبة على الخصم",
+  "si": "رقم الفاتورة",
+  "sr_amount": "مبلغ الاسترجاع",
   "set_qty1_for_weighing_scale_item_value_mode": "ضبط الكمية 1 لوضع قيمة عنصر الميزان"
 }

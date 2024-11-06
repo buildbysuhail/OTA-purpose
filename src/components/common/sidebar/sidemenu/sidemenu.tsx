@@ -137,18 +137,18 @@ export const MENUITEMS = [
     ]
   },
   
-  {
-    icon: (<i className="side-menu__icon ri-line-chart-line"></i>),
-    type: 'link',
-    Name: '',
-    active: false,
-    selected: false,
-    title: 'reports',
-    path: 'reports',
-    badge: '',
-    badgetxt: '',
-    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'
-  },
+  // {
+  //   icon: (<i className="side-menu__icon ri-line-chart-line"></i>),
+  //   type: 'link',
+  //   Name: '',
+  //   active: false,
+  //   selected: false,
+  //   title: 'reports',
+  //   path: 'reports',
+  //   badge: '',
+  //   badgetxt: '',
+  //   class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2'
+  // },
   {
     icon: (<i className="side-menu__icon ri-restaurant-2-fill"></i>),
     type: 'sub',

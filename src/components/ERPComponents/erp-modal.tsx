@@ -142,7 +142,7 @@ const ERPModal = React.memo(
                       <div
                         className={`${
                           isFullHeight
-                            ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100"
+                            ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-300 scrollbar-track-gray-100 overflow-auto"
                             : ""
                         }`}
                       >

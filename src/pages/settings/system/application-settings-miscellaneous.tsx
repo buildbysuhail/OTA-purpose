@@ -169,7 +169,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
   return (
     <Fragment>
       <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-        <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+        <form className="overflow-y-auto  scrollbar scrollbar-thick scrollbar-thumb-gray-300 scrollbar-track-gray-100 overflow-auto">
           <div className="space-y-6 p-6">
             <div className="flex flex-col border p-4 w-full rounded-lg shadow-sm justify-center items-center gap-5 
         lg:flex-row lg:justify-start lg:p-8 lg:items-start lg:gap-10 xxl:justify-around xxl:p-10">

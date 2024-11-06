@@ -127,7 +127,7 @@ const TaxSettingsForm: React.FC = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+      <form className="overflow-y-auto  scrollbar scrollbar-thick scrollbar-thumb-gray-300 scrollbar-track-gray-100 overflow-auto">
         <div className="space-y-6 p-6  !mb-[14rem]">
           <div className="border rounded-lg p-4">
             <div className="grid xxl:grid-cols-4 lg:grid-cols-2  sm:grid-cols-2 gap-3 my-3">

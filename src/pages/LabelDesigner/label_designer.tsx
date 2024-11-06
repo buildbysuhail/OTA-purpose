@@ -921,7 +921,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               {selectedComponent && (
                 <Box 
                   sx={{ maxHeight: 'calc(100vh - 8rem)', overflowY: 'auto', py: 2 ,spaceY: 2 }}
-                className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1"
+                className="scrollbar scrollbar-thick scrollbar-thumb-gray-300 scrollbar-track-gray-100 overflow-auto pr-1"
                 // className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 "
                 >
                   <Box sx={{ mb: 1 }}>

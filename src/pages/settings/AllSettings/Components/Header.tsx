@@ -3,7 +3,7 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
@@ -106,7 +106,11 @@ const Header: React.FC = () => {
     setIsOpen(false);
     setSearch("");
   };
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    searchInputRef.current?.focus();
+  }, []);
   return (
     <div className="py-6 px-4 flex flex-col gap-4">
       <div className="flex justify-between">
@@ -128,6 +132,7 @@ const Header: React.FC = () => {
             <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
           </div>
           <input
+            ref={searchInputRef}
             className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
             value={search}
             onChange={handleSearch}
@@ -160,20 +165,18 @@ export const SearchResultBar: React.FC<SearchResultBarProps> = ({ isOpen, search
 
   return (
     <div
-      className={`${
-        isOpen ? "max-h-[300px]" : "h-0"
-      } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
+      className={`${isOpen ? "max-h-[300px]" : "h-0"
+        } absolute w-full overflow-y-auto bg-white rounded-lg shadow-lg top-12 transition-height ease-in-out delay-1000`}
     >
       <div className="flex flex-col">
         {searchResults.length > 0 ? (
           searchResults.map((item, idx) => (
             <div className="w-full p-1" key={`SR_${idx}`}>
               <p
-                className={`text-[13px] rounded-lg p-2 cursor-pointer ${
-                  idx === selectedIndex
-                    ? "bg-primary text-white"
-                    : "hover:bg-primary hover:text-white"
-                }`}
+                className={`text-[13px] rounded-lg p-2 cursor-pointer ${idx === selectedIndex
+                  ? "bg-primary text-white"
+                  : "hover:bg-primary hover:text-white"
+                  }`}
                 onClick={() => onItemClick(item)}
               >
                 {t(item.title as any)}

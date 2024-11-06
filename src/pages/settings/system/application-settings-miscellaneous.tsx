@@ -145,11 +145,11 @@ const MiscellaneousSettingsForm: React.FC = () => {
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
-      const response = (await api.put(Urls.application_settings, {
+      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "miscellaneous",
         updateList: modifiedSettings,
-      })) as any;
-      handleResponse(response);
+      })) as any: null;
+      handleResponse(response,() => {}, () => {},false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

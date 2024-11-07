@@ -127,26 +127,43 @@ const Header: React.FC = () => {
         </div>
       </div>
       <div className="w-full relative">
-        <div className="flex h-10">
-          <div className="h-full p-2 bg-slate-50 border border-r-0 rounded-md rounded-r-none">
-            <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
-          </div>
-          <input
-            ref={searchInputRef}
-            className="w-full outline-none border rounded-r-md text-xs px-2 focus:border-accent relative"
-            value={search}
-            onChange={handleSearch}
-            onKeyDown={handleKeyDown}
-          />
-          {search && (
-            <XMarkIcon
-              className="w-4 aspect-square stroke-red-700 absolute right-2 top-2"
-              onClick={() => {
-                setSearch("");
-              }}
-            />
-          )}
+      <div className="flex h-10">
+        <div className="h-full p-2 bg-slate-50 border border-r-0 rounded-md rounded-r-none">
+          <MagnifyingGlassIcon className="w-4 mt-1 aspect-square stroke-accent" />
         </div>
+        <input
+          ref={searchInputRef}
+          className="custom-input"
+          value={search}
+          onChange={handleSearch}
+          onKeyDown={handleKeyDown}
+        />
+        <style>{`
+        .custom-input {
+          width: 100%;
+          outline: none;
+          border: 1px solid #d1d5db;
+          border-top-right-radius: 0.375rem;
+          border-bottom-right-radius: 0.375rem;
+          font-size: 0.75rem;
+          padding: 0 0.5rem;
+          transition: all 550ms ease-in-out;
+        }
+
+        .custom-input:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+      `}</style>
+        {search && (
+          <XMarkIcon
+            className="w-4 aspect-square stroke-red-700 absolute right-2 top-3 cursor-pointer"
+            onClick={() => {
+              setSearch('')
+            }}
+          />
+        )}
+      </div>
         <SearchResultBar
           isOpen={open}
           searchResults={searchResults}

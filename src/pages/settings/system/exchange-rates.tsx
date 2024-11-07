@@ -71,8 +71,8 @@ const ExchangeRates = () => {
       const remain = 30 - length;
       for (let index = 0; index < remain; index++) {
         data.push({
-          cStatus: false,
-          exchRateID: 0,
+          cStatus: null,
+          exchRateID: null,
           rate: null,
           rateDate: null,
           toCurrency: null,
@@ -185,7 +185,7 @@ const ExchangeRates = () => {
                     if (e.newData.rate !== undefined) {
                       // Set 'rateDate' to current date and 'cStatus' to 'true'
                       e.newData.rateDate = new Date(); 
-                      e.newData.cStatus = "true"; 
+                      e.newData.cStatus = true; 
                     }
                   }}
                   onFocusedCellChanging={onFocusedCellChanging}

@@ -23,15 +23,6 @@ const UserActionReport: React.FC = React.memo(() => {
       isLocked: false,
     },
     {
-      dataField: "counterName",
-      caption: t("counter"),
-      dataType: "string",
-      allowSorting: true,
-      allowFiltering: true,
-      minWidth: 150,
-      isLocked: false,
-    },
-    {
       dataField: "actionPerformed",
       caption: t("action"),
       dataType: "string",
@@ -70,6 +61,15 @@ const UserActionReport: React.FC = React.memo(() => {
     {
       dataField: "systemName",
       caption: t("system_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowFiltering: true,
+      minWidth: 150,
+      isLocked: false,
+    },
+    {
+      dataField: "counterName",
+      caption: t("counter"),
       dataType: "string",
       allowSorting: true,
       allowFiltering: true,

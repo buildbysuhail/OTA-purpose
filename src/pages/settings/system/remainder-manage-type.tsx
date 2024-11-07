@@ -13,7 +13,7 @@ export interface RemainderData {
       branchID: 0,
       remainderName: "",
       descriptions: "",
-      remaindingDate: "",
+      remaindingDate: new Date(),
       numberOfDays: 0,
     },
     validations: {

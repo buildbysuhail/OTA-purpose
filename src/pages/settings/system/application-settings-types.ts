@@ -1,17 +1,19 @@
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { AccountSettingsState } from "./application-settings-accounts";
+import { ApplicationInventorySettings } from "./application-settings-inventory";
+import { ApplicationMiscellaneousSettings } from "./application-settings-miscellaneous";
 
 export interface ApplicationSettingsType {
     mainSettings: ApplicationMainSettings;
     // accountsSettings: AccountsSettings;
-    // inventorySettings: InventorySettings;
+    inventorySettings: ApplicationInventorySettings;
     branchSettings: ApplicationBranchSettings;
     // backUpSettings: BackUpSettings;
     // printSettings: PrintSettings;
     // productsSettings: ProductsSettings;
     // gstSettings: GstSettings;
     // taxSettings: TaxSettings;
-    // miscellaneousSettings: MiscellaneousSettings;
+    miscellaneousSettings: ApplicationMiscellaneousSettings;
   }
   export interface ApplicationMainSettings {
   currency: string;

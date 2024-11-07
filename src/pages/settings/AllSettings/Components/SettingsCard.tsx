@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../../../utilities/hooks/useA
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../../redux/store";
 
-const SettingsCard = ({ data }: any) => {
+const SettingsCard = ({ data, disabled }: any) => {
   
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   const navigate = useNavigate();

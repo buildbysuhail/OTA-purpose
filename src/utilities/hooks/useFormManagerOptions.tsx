@@ -294,8 +294,9 @@ export function useFormManager<T>({
 
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
+      debugger;
       const _value = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId);
-      const value =  _value == 0 ? "0" : _value|| "";
+      const value =  _value == undefined || _value == null || _value == "" ? "" : _value == 0 ? '0' : _value|| "";
       const validation = getNestedValue((useApiClient ? localFormState : reduxFormState)?.validations, fieldId);
       const checked = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId) || false;
 

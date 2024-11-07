@@ -1324,5 +1324,6 @@
   "profit_&_loss_account": "حساب الأرباح والخسائر",
   "hideLedgerID":"إخفاء رقم الدفتر",
   "isGroup": "هل هو مجموعة",
+  "group_head": "رئيس المجموعة",
   "hide_account_ledger":"إخفاء دفتر حسابات"
 }

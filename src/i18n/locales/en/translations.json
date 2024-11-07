@@ -226,6 +226,7 @@
   "employee": "Employee",
   "display_order": "Display Order",
   "arabic_name": "Arabic Name",
+  "group_head": "Group Head",
   "parent_group_id": "Parent Group Id",
   "reason_for_modification": "Reason For Modification",
   "is_common": "Is Common",

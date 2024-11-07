@@ -10,6 +10,7 @@ import Urls from "../../../../redux/urls";
 import { moveArrayElement } from "../../../../utilities/Utils";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import { formatDate } from "devextreme/localization";
+import { useTranslation } from "react-i18next";
 
 export interface GroupOrder {
     groupName: string;
@@ -26,8 +27,10 @@ interface AccountGroupOrderContentProps {
 interface AccountGroupOrderFooterProps {
   onSubmit: () => Promise<void>;
 }
+
 // AccountGroupOrderContent component
 export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> = React.memo(({ formData, setFormData }) => {
+  const { t } = useTranslation();
   const [searchCols, setSearchCols] = useState<String>("");
   // const [formData, setFormData] = useState<GroupOrder[]>([]);
   const dragItem = useRef<number | null>(null);
@@ -81,15 +84,15 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
           className="mb-3"
           id="search_cols"
           value={searchCols}
-          placeholder="Search"
+          placeholder={t("search")}
           onChange={(e: any) => setSearchCols(e?.target?.value)}
           prefix={<MagnifyingGlassIcon className="w-4 h-4" />}
         />
         <div className="grid-preference-form">
           <div className="header-row bg-gray-100 px-4 py-2 font-bold text-sm grid grid-cols-3 gap-2 items-center">
-            <span>Group Name </span>
-            <span>Group Head </span>
-            <span>Arabic Name </span>
+            <span>{t("group_name")}  </span>
+            <span>{t("group_head")} </span>
+            <span>{t("arabic_name")} </span>
           </div>
         
           {formData.length > 0 && formData?.filter((item: GroupOrder) =>
@@ -139,7 +142,7 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
 // AccountGroupOrderFooter component
 export const AccountGroupOrderFooter: React.FC<AccountGroupOrderFooterProps> = React.memo(({ onSubmit }) => {
   const dispatch = useDispatch();
-
+  const { t } = useTranslation();
   const onClose = useCallback(() => {
     dispatch(toggleGroupOrder({ isOpen: false, key: null }));
   }, [dispatch]);
@@ -147,14 +150,14 @@ export const AccountGroupOrderFooter: React.FC<AccountGroupOrderFooterProps> = R
   return (
     <div className="flex gap-10 justify-between py-3 border-t mt-5">
       <ERPSubmitButton type="button" variant="primary"  onClick={onSubmit}>
-        Save
+        {t("save")}
       </ERPSubmitButton>
       <ERPSubmitButton
         type="reset"
         onClick={onClose}
         className="w-28 bg-[#e5e7eb] text-[#404040]"
       >
-        Cancel
+       {t("cancel")} 
       </ERPSubmitButton>
     </div>
   );

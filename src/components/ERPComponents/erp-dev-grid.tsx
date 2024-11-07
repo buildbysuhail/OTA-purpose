@@ -463,7 +463,7 @@ debugger;
 
         >
           <ColumnFixing enabled={true} />
-          <Scrolling mode={scrollingMode} />
+          <Scrolling mode={scrollingMode}  showScrollbar="always" />
           {allowPaging && (
             <Paging defaultPageSize={pageSize} pageSize={pageSize} />
           )}

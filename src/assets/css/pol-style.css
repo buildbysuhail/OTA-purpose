@@ -153,3 +153,30 @@
   font-weight: 400;
   font-style: italic;
 }
+
+.dx-scrollbar-horizontal .dx-scrollable-scroll-content{
+  height: 1rem !important;
+}
+
+.dx-scrollbar-horizontal{
+  transition: background-color 1000s linear 1000s,height 1000s linear 1000s !important;
+  /* transform: none !important; */
+  height: 1rem !important;
+}
+.dx-scrollbar-horizontal .dx-scrollable-scroll {
+  height: 15px !important;
+}
+
+.dx-scrollbar-vertical .dx-scrollable-scroll-content{
+  width: 1rem !important;
+}
+
+.dx-scrollbar-vertical{
+  transition: background-color 1000s linear 1000s,width 1000s linear 1000s !important;
+  /* transform: none !important; */
+  width: 1rem !important;
+}
+
+.dx-scrollbar-vertical .dx-scrollable-scroll {
+  width: 15px !important;
+}

@@ -18,7 +18,7 @@ const PurchaseRegisterReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 75,
+      width: 125,
     },
     {
       dataField: "form",
@@ -26,7 +26,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 75,
+      width: 80,
     },
     {
       dataField: "manualBarcode",
@@ -34,7 +34,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 90,
     },
     {
       dataField: "vchNo",
@@ -42,7 +42,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 88,
     },
     {
       dataField: "party",
@@ -50,7 +50,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 250,
+      width: 165,
     },
     {
       dataField: "productCode",
@@ -58,7 +58,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 54,
     },
     {
       dataField: "product",
@@ -66,7 +66,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 183,
     },
     {
       dataField: "brand",
@@ -74,7 +74,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 104,
     },
     {
       dataField: "unitPrice1",
@@ -82,7 +82,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
+      width: 61,
     },
     {
       dataField: "quantity",
@@ -98,7 +98,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 60,
     },
     {
       dataField: "unitCode",
@@ -106,7 +106,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      width: 43,
     },
     {
       dataField: "unitPrice",
@@ -114,7 +114,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 92,
     },
     {
       dataField: "routeName",
@@ -122,7 +122,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 86,
     },
     {
       dataField: "stdSalesPrice",
@@ -130,7 +130,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 87,
     },
     {
       dataField: "costCentreName",
@@ -146,7 +146,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 105,
     },
     {
       dataField: "additionalExpenses",
@@ -154,7 +154,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "grossValue",
@@ -186,7 +186,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "freeValue",
@@ -194,7 +194,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "cost",
@@ -202,7 +202,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "freeCost",
@@ -210,7 +210,7 @@ const PurchaseRegisterReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "totalProfit",
@@ -218,7 +218,7 @@ const PurchaseRegisterReport = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "category",
@@ -307,7 +307,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "stdPurchasePrice",
@@ -339,7 +339,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 80,
     },
     {
       dataField: "autoBarcode",
@@ -347,7 +347,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 90,
     },
     {
       dataField: "productGroup",
@@ -363,7 +363,7 @@ const PurchaseRegisterReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 50,
     },
     {
       dataField: "XRate",
@@ -432,6 +432,38 @@ const PurchaseRegisterReport = () => {
     {
       dataField: "schemeDisc",
       caption: t("scheme_disc"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "batchNo",
+      caption: t("batch_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "warranty",
+      caption: t("warranty"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "masterID",
+      caption: t("master_ID"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 100,
+    },
+    {
+      dataField: "exciseTax",
+      caption: t("excise_tax"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,

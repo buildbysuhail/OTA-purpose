@@ -161,15 +161,14 @@ const ApplicationSettingsAccounts = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue??"").toString()
+            settingsValue: (currentValue ?? "").toString()
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
-
-      const response = await api.put(Urls.application_settings, { type: 'accounts', updateList: modifiedSettings }) as any
-      handleResponse(response);
+      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, { type: 'accounts', updateList: modifiedSettings })) as any : null
+      handleResponse(response, () => { }, () => { }, false);
     } catch (error) {
       console.error('Error saving settings:', error);
     } finally {
@@ -189,7 +188,7 @@ const ApplicationSettingsAccounts = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 h-full mb-[53px]">
+      <form className="overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto h-full mb-[53px]">
         <div className='p-6 space-y-6 '>
           <div className='border rounded-lg  p-4'>
             <div className='grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
@@ -370,7 +369,7 @@ const ApplicationSettingsAccounts = () => {
                 }}
                 onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
               />
-              
+
               <ERPDataCombobox
                 id="defaultPDCReceivableAccount"
                 disabled={!formState?.allowPostPDC}
@@ -690,15 +689,15 @@ const ApplicationSettingsAccounts = () => {
                 label={t("maintain_multi_currency_transactions")}
                 onChangeData={(data) => handleFieldChange('maintainMultiCurrencyTransactions', data.maintainMultiCurrencyTransactions)}
               />
-              
+
               {applicationSettings != undefined && (applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Hypermarket || applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Supermarket) &&
-              <ERPCheckbox
-                id="showPartyBalanceInSales"
-                checked={formState.showPartyBalanceInSales}
-                data={formState}
-                label={t("show_party_balance_in_sales")}
-                onChangeData={(data) => handleFieldChange('showPartyBalanceInSales', data.showPartyBalanceInSales)}
-              />
+                <ERPCheckbox
+                  id="showPartyBalanceInSales"
+                  checked={formState.showPartyBalanceInSales}
+                  data={formState}
+                  label={t("show_party_balance_in_sales")}
+                  onChangeData={(data) => handleFieldChange('showPartyBalanceInSales', data.showPartyBalanceInSales)}
+                />
               }
               <ERPCheckbox
                 id="allowUserwiseCounter"

@@ -138,18 +138,18 @@ const MiscellaneousSettingsForm: React.FC = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue??"").toString(),
+            settingsValue: (currentValue ?? "").toString(),
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
-      const response = (await api.put(Urls.application_settings, {
+      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "miscellaneous",
         updateList: modifiedSettings,
-      })) as any;
-      handleResponse(response);
+      })) as any : null;
+      handleResponse(response, () => { }, () => { }, false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -163,13 +163,13 @@ const MiscellaneousSettingsForm: React.FC = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-      document.documentElement.style.overflow = 'unset'; 
+      document.documentElement.style.overflow = 'unset';
     };
   }, []);
   return (
     <Fragment>
       <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-        <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+        <form className="overflow-y-auto  scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
           <div className="space-y-6 p-6">
             <div className="flex flex-col border p-4 w-full rounded-lg shadow-sm justify-center items-center gap-5 
         lg:flex-row lg:justify-start lg:p-8 lg:items-start lg:gap-10 xxl:justify-around xxl:p-10">

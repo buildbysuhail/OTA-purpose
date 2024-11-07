@@ -124,18 +124,18 @@ const ERPSettingsFormMain = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue??"").toString(),
+            settingsValue: (currentValue ?? "").toString(),
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
-      const response = (await api.put(Urls.application_settings, {
+      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "main",
         updateList: modifiedSettings,
-      })) as any;
-      handleResponse(response);
+      })) as any : null;
+      handleResponse(response, () => { }, () => { }, false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -148,7 +148,7 @@ const ERPSettingsFormMain = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col p-6 overflow-hidden relative">
-      <form className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+      <form className="space-y-6  max-h-[calc(100vh-10rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
         <div className="border p-4 flex flex-col gap-6 rounded-lg">
           <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
             <ERPDataCombobox

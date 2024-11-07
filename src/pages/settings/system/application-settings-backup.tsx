@@ -67,18 +67,18 @@ const BackupSettingsForm: React.FC = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue??"").toString(),
+            settingsValue: (currentValue ?? "").toString(),
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
-      const response = (await api.put(Urls.application_settings, {
+      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "backup",
         updateList: modifiedSettings,
-      })) as any;
-      handleResponse(response);
+      })) as any : null;
+      handleResponse(response, () => { }, () => { }, false);
 
     } catch (error) {
       console.error("Error saving settings:", error);
@@ -102,13 +102,13 @@ const BackupSettingsForm: React.FC = () => {
 
     return () => {
       document.body.style.overflow = 'unset';
-      document.documentElement.style.overflow = 'unset'; 
+      document.documentElement.style.overflow = 'unset';
     };
   }, []);
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 h-full">
+      <form className="overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto h-full">
         <div className="space-y-6 p-6">
           <div className="border p-4 rounded-lg">
             <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
@@ -135,7 +135,7 @@ const BackupSettingsForm: React.FC = () => {
                 id="backUpPath"
                 value={formState.backUpPath}
                 data={formState}
-                disabled={formState.backupMethods=="No BackUp"}
+                disabled={formState.backupMethods == "No BackUp"}
                 label={t("backup_path")}
                 placeholder={t("enter_discount_threshold")}
                 onChangeData={(data: any) =>
@@ -147,7 +147,7 @@ const BackupSettingsForm: React.FC = () => {
                 value={formState.backupDuration}
                 data={formState}
                 label={t("duration")}
-                disabled={formState.backupMethods=="No BackUp"||formState.backupMethods=="BackUp On Close"}
+                disabled={formState.backupMethods == "No BackUp" || formState.backupMethods == "BackUp On Close"}
                 placeholder={t("enter_discount_threshold")}
                 type="number"
                 onChangeData={(data: any) =>

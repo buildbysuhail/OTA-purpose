@@ -100,11 +100,11 @@ const TaxSettingsForm: React.FC = () => {
       }, [] as { settingsName: string; settingsValue: string }[]);
       console.log(modifiedSettings);
 
-      const response = (await api.put(Urls.application_settings, {
+      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "taxes",
         updateList: modifiedSettings,
-      })) as any;
-      handleResponse(response);
+      })) as any: null;
+      handleResponse(response,() => {}, () => {},false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -127,7 +127,7 @@ const TaxSettingsForm: React.FC = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
-      <form className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 ">
+      <form className="overflow-y-auto  scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
         <div className="space-y-6 p-6  !mb-[14rem]">
           <div className="border rounded-lg p-4">
             <div className="grid xxl:grid-cols-4 lg:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
@@ -139,7 +139,7 @@ const TaxSettingsForm: React.FC = () => {
                   id: "purchaseFormType",
 
                   getListUrl: Urls.data_FormTypeByPI,
-                  valueKey: "VoucherID",
+                  valueKey: "FormType",
                   labelKey: "FormType",
                 }}
                 onChangeData={(data: any) =>
@@ -156,7 +156,7 @@ const TaxSettingsForm: React.FC = () => {
                   id: "salesFormType",
 
                   getListUrl: Urls.data_FormTypeBySI,
-                  valueKey: "VoucherID",
+                  valueKey: "FormType",
                   labelKey: "FormType",
                 }}
                 onChangeData={(data: any) =>
@@ -196,10 +196,13 @@ const TaxSettingsForm: React.FC = () => {
                 }
                 label={t("sales_tax_ledger")}
               />
+            {1 != 1 && 
+            <>
               <ERPDataCombobox
                 id="purchaseCSTAccount"
                 value={formState.purchaseCSTAccount}
                 data={formState}
+                disabled
                 field={{
                   id: "purchaseCSTAccount",
                   required: false,
@@ -214,6 +217,7 @@ const TaxSettingsForm: React.FC = () => {
               />
               <ERPDataCombobox
                 id="salesCSTAccount"
+                disabled
                 value={formState.salesCSTAccount}
                 data={formState}
                 field={{
@@ -230,6 +234,7 @@ const TaxSettingsForm: React.FC = () => {
               />
               <ERPDataCombobox
                 id="expensesTaxAccount"
+                disabled
                 value={formState.expensesTaxAccount}
                 data={formState}
                 field={{
@@ -246,6 +251,7 @@ const TaxSettingsForm: React.FC = () => {
               />
               <ERPDataCombobox
                 id="incomeTaxAccount"
+                disabled
                 value={formState.incomeTaxAccount}
                 data={formState}
                 field={{
@@ -260,6 +266,8 @@ const TaxSettingsForm: React.FC = () => {
                 }
                 label={t("income_tax_account")}
               />
+            </>
+            }
             </div>
           </div>
         </div>

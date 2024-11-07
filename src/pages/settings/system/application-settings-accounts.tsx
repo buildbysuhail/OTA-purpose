@@ -149,46 +149,7 @@ const ApplicationSettingsAccounts = () => {
       [settingName]: value ?? ''
     }));
   });
-  // const handleSubmit = async () => {
-  //   setIsSaving(true);
-  //   try {
-  //     const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-  //       const currentValue = formState[key as keyof ApplicationBranchSettings];
-  //       const prevValue = formStatePrev[key as keyof ApplicationBranchSettings];
-
-  //       if (currentValue !== prevValue ||
-  //         (currentValue === false && prevValue === true) ||
-  //         (currentValue === true && prevValue === false)) {
-  //         acc.push({
-  //           settingsName: key,
-  //           settingsValue: currentValue === false ? "false" :
-  //             currentValue === true ? "true" :
-  //               (currentValue ?? "").toString(),
-  //         });
-  //       }
-  //       return acc;
-  //     }, [] as { settingsName: string; settingsValue: string }[]);
-
-  //     if (modifiedSettings.length > 0) {
-  //       const response = await api.put(Urls.application_settings, {
-  //         type: "branch",
-  //         updateList: modifiedSettings,
-  //       });
-  //       handleResponse(
-  //         response,
-  //         () => {
-  //           setFormStatePrev(formState);
-  //         },
-  //         () => { },
-  //         false
-  //       );
-  //     }
-  //   } catch (error) {
-  //     console.error("Error saving settings:", error);
-  //   } finally {
-  //     setIsSaving(false);
-  //   }
-  // };
+  
   const handleSubmit = async () => {
     setIsSaving(true);
     try {

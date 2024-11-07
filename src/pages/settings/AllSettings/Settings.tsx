@@ -50,6 +50,7 @@ const HeadersAndFooters = lazy(() => import("../system/headres-footer"));
 const Settings = () => {
   
   let userSession = useAppSelector((state: RootState) => state.UserSession);
+  let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const { t } = useTranslation();
   const rootState = useRootState();
   const dispatch = useAppDispatch();
@@ -102,7 +103,7 @@ const Settings = () => {
         <div className="py-6 px-4 max-w-4xl mx-auto w-full h-full overflow-auto scrollbar-hide">
           <div className="w-full flex flex-wrap gap-4 justify-center">
             {settingsRoutes?.map((item: any, idx: number) => {
-              return <SettingsCard data={item} key={`QKLJM34${idx}`} />;
+              return <SettingsCard data={item} key={`QKLJM34${idx}`} disabled={item.title = "refresh_all_branches"} />;
             })}
           </div>
         </div>

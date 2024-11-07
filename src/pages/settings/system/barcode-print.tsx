@@ -157,7 +157,9 @@ const BarcodePrint: React.FC = () => {
     if(["si","pi","bti","bto","os"].includes(value)) {
       setIsOther(false);
     }
+    
     setVoucherForm((prev: any) => ({
+      
       ...prev,
       data: {
         ...prev.data,
@@ -214,7 +216,6 @@ const BarcodePrint: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted:", { barcodeForm, voucherForm, barcodeDesc, standardBarcode });
   };
 
   const barcodeFormSubmit = useCallback(async () => {
@@ -228,15 +229,14 @@ const BarcodePrint: React.FC = () => {
   }, [barcodeForm.data]);
 
 
-  const voucherFormSubmit = useCallback(async () => {
-    
+  const voucherFormSubmit = useCallback(async () => {    
     setVoucherFormLoading(true);
     const response =
       await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
     setVoucherFormLoading(false);
     
     setData(response);    
-  }, []);
+  }, [voucherForm]);
 
 
   const barcodeDescSubmit = useCallback(() => {
@@ -244,7 +244,6 @@ const BarcodePrint: React.FC = () => {
     setShowPrint(true);
     setPrinting(true);
     setTimeout(() => {
-      console.log('Form submitted:', barcodeDesc?.data);
       setPrinting(false);
       setBarcodeDesc((prevData: any) => ({
         ...prevData,

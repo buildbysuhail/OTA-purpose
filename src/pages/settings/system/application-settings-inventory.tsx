@@ -14,7 +14,7 @@ import { t } from "i18next";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 
-interface Inventory {
+export interface ApplicationInventorySettings {
   defaultSalesAcc: number;
   defaultSalesReturnAcc: number;
   defaultPurchaseAcc: number;
@@ -72,7 +72,7 @@ interface Inventory {
 }
 const api = new APIClient();
 const InventorySettingsForm = () => {
-  const initialState: Inventory = {
+  const initialState: ApplicationInventorySettings = {
     defaultSalesAcc: 1,
     defaultSalesReturnAcc: 0,
     defaultPurchaseAcc: 0,
@@ -130,8 +130,8 @@ const InventorySettingsForm = () => {
   };
 
   const dispatch = useAppDispatch();
-  const [formState, setFormState] = useState<Inventory>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<Inventory>>({});
+  const [formState, setFormState] = useState<ApplicationInventorySettings>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationInventorySettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -168,8 +168,8 @@ const InventorySettingsForm = () => {
     try {
 
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState[key as keyof Inventory];
-        const prevValue = formStatePrev[key as keyof Inventory];
+        const currentValue = formState[key as keyof ApplicationInventorySettings];
+        const prevValue = formStatePrev[key as keyof ApplicationInventorySettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
         (currentValue === true && prevValue === false)) {

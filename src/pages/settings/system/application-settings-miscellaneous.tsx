@@ -17,7 +17,7 @@ import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPDisableEnable from "../../../components/ERPComponents/erp-disable-inable";
 
-interface FormState {
+export interface ApplicationMiscellaneousSettings {
   salesmanIncentive: number;
   defaultIncentiveLedger: number;
   sendSMS: boolean;
@@ -35,7 +35,7 @@ interface systemCode {
   systemCode: string;
 }
 
-const initialState: FormState = {
+const initialState: ApplicationMiscellaneousSettings = {
   salesmanIncentive: 0,
   defaultIncentiveLedger: 0,
   sendSMS: false,
@@ -51,8 +51,8 @@ const initialState: FormState = {
 const api = new APIClient();
 const MiscellaneousSettingsForm: React.FC = () => {
   const rootState = useRootState();
-  const [formState, setFormState] = useState<FormState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [formState, setFormState] = useState<ApplicationMiscellaneousSettings>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationMiscellaneousSettings>>({});
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [systemCode, setSystemCode] = useState<systemCode[]>([]);
@@ -122,7 +122,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
   };
 
   const handleFieldChange = (settingName: any, value: any) => {
-    setFormState((prevSettings = {} as FormState) => ({
+    setFormState((prevSettings = {} as ApplicationMiscellaneousSettings) => ({
       ...prevSettings,
       [settingName]: value ?? "",
     }));
@@ -131,8 +131,8 @@ const MiscellaneousSettingsForm: React.FC = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof FormState];
-        const prevValue = formStatePrev[key as keyof FormState];
+        const currentValue = formState?.[key as keyof ApplicationMiscellaneousSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationMiscellaneousSettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
         (currentValue === true && prevValue === false)) {

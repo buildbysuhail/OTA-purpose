@@ -13,8 +13,8 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { ActionType } from "../../../redux/types";
 
 export interface FinancialYearData {
-  dateFrom: string;
-  dateTo: string;
+  dateFrom: Date;
+  dateTo: Date;
   remarks: string;
   openingStockValue: number;
   fStatus: 'Active' | 'Inactive' | 'Progress';

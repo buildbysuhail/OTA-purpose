@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 
 interface DayCloseManageData {
-  closedDate: string;
+  closedDate: Date;
   isSales: boolean;
   isPurchase: boolean;
   isAccounts: boolean;
@@ -21,13 +21,23 @@ interface DayCloseManageData {
   isAgree: boolean;
 }
 
-export const initialDayCloseData: DayCloseManageData = {
-  closedDate: "",
-  isSales: false,
-  isPurchase: false,
-  isAccounts: false,
-  passWord: "",
-  isAgree: false
+export const initialDayCloseData = {
+  data: {
+    closedDate: new Date(),
+    isSales: false,
+    isPurchase: false,
+    isAccounts: false,
+    passWord: "",
+    isAgree: false
+  },
+  validations: {
+    closedDate: '',
+    isSales: '',
+    isPurchase: '',
+    isAccounts: '',
+    passWord: "",
+    isAgree: ''
+  }
 };
 
 const DayCloseManage = () => {
@@ -40,20 +50,21 @@ const DayCloseManage = () => {
     handleClear,
     handleFieldChange,
     getFieldProps,
-    isLoading
+    isLoading,
+    formState
   } = useFormManager<DayCloseManageData>({
     url: Urls.DayClose,
-    onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false,})),
+    onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, })),
       [dispatch]
     ),
     method: ActionType.POST,
     useApiClient: true,
     loadDataRequired: false,
-    initialData:initialDayCloseData
+    initialData: initialDayCloseData
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleDayClosePopup({ isOpen: false,}));
+    dispatch(toggleDayClosePopup({ isOpen: false, }));
   }, []);
 
   const { t } = useTranslation();
@@ -68,16 +79,15 @@ const DayCloseManage = () => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("passWord", data.passWord)}
         />
-        <ERPDateInput
+         <ERPDateInput
           {...getFieldProps("closedDate")}
-          type="date"
-          id="closedDate"
-          label={t("closed_date")}
+          label={t("from")}
+          required={true}
           onChangeData={(data: any) => handleFieldChange("closedDate", data.closedDate)}
         />
         <div className="flex justify-around items-center">
           <ERPCheckbox
-            {...getFieldProps("isSales")}                                               
+            {...getFieldProps("isSales")}
             label={t("Sales")}
             onChangeData={(data: any) => handleFieldChange("isSales", data.isSales)}
           />
@@ -100,6 +110,7 @@ const DayCloseManage = () => {
       </div>
       <ERPFormButtons
         onClear={handleClear}
+        submitDisabled={!formState?.data?.isAgree}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={onClose}

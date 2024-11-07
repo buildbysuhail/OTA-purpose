@@ -151,7 +151,7 @@ const NotificationSettings = () => {
                   </>
                 ) : (
                   <div className="table-responsive max-h-[60vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
-                    <table className="min-w-full relative table table-bordered rounded-t-lg dark:border-defaultborder/10 ">
+                    <table className="min-w-full relative table table-bordered rounded-t-sm dark:border-defaultborder/10 ">
                       <thead className="bg-[#f3f4f6] sticky top-[-1px] z-40">
                         <tr>
                           {T_Head.map((item, index) => (

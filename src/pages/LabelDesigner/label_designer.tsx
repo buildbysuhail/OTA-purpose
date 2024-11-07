@@ -346,7 +346,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           rotate: 0,
           textAlign: "center",
           fontSize:12,
-          font: "Arial",
+          font: "Roboto",
           fontStyle:"normal",
           width: componentType === DesignerElementType.barcode ? 150 : 100,
           height: componentType === DesignerElementType.barcode ? 80 : 30,
@@ -360,7 +360,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               lineColor: "#000000",
               showText: true,
               textAlign: "center",
-              font: "monospace",
+              font: "Roboto",
               fontSize: 21,
               textMargin: 3,
               fontStyle: "normal",
@@ -657,9 +657,10 @@ export default function ExtendedPDFBarcodeDesigner() {
       transformOrigin: "center", 
       textAlign: component.type !== DesignerElementType.barcode ? component.textAlign : undefined,
       fontSize:component.type == DesignerElementType.barcode ? "0px" :`${component.fontSize}px`,
-      fontStyle:component.type == DesignerElementType.barcode ?"": component.fontStyle,
+      fontStyle:component.type !== DesignerElementType.barcode ?component.fontStyle: undefined ,
       fontFamily:component.type == DesignerElementType.barcode ?"":component.font,
     };
+
 
 
     switch (component.type) {
@@ -838,7 +839,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           <ResizableBox
             width={templateData?.barcodeState?.labelState?.labelWidth ?? 300} // Initial width
             height={templateData?.barcodeState?.labelState?.labelHeight ?? 200}
-            minConstraints={[250, 250]}
+            minConstraints={[50, 50]}
             maxConstraints={[1400, 1000]}
             resizeHandles={["se"]}
             className="box"
@@ -1062,10 +1063,10 @@ export default function ExtendedPDFBarcodeDesigner() {
                               labelKey: "label",
                             }}
                             options={[
-                              { value: "Monospace", label: "Monospace" },
-                              { value: "Arial", label: "Arial" },
-                              { value: "Helvetica", label: "Helvetica" },
-                              { value: "Sans-serif", label: "Sans-serif" },
+                              { value: "Roboto", label: "Roboto" },
+                              { value: "RobotoMono", label: "RobotoMono" },
+                              { value: "FiraSans", label: "FiraSans" },
+                            
                             ]}
                             onChange={(e) =>
                               handlePropertyChange("font", e.value)
@@ -1404,10 +1405,9 @@ export default function ExtendedPDFBarcodeDesigner() {
                               labelKey: "label",
                             }}
                             options={[
-                              { value: "Monospace", label: "Monospace" },
-                              { value: "Arial", label: "Arial" },
-                              { value: "Helvetica", label: "Helvetica" },
-                              { value: "Sans-serif", label: "Sans-serif" },
+                              { value: "Roboto", label: "Roboto" },
+                              { value: "RobotoMono", label: "RobotoMono" },
+                              { value: "FiraSans", label: "FiraSans" },
                             ]}
                             onChange={(e) =>
                               handleBarcodePropertyChange("font", e.value)
@@ -1429,7 +1429,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           >
                             Font Style
                           </InputLabel>
-                          <div className="flex justify-between space-x-2">
+                          <div className="flex justify-between space-x-1">
                             <button
                               className={`ti-btn ${
                                 selectedComponent.barcodeProps.fontStyle ===
@@ -1442,6 +1442,22 @@ export default function ExtendedPDFBarcodeDesigner() {
                               }
                             >
                               Bold
+                            </button>
+                            <button
+                              className={`ti-btn ${
+                                selectedComponent.barcodeProps.fontStyle ===
+                                "normal"
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                              } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handleBarcodePropertyChange(
+                                  "fontStyle",
+                                  "normal"
+                                )
+                              }
+                            >
+                              Normal
                             </button>
                             <button
                               className={`ti-btn ${

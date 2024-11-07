@@ -197,7 +197,7 @@ const BarcodePrint: React.FC = () => {
     switch (id) {
       case 'labelDesign':
         setLoadingTemplate(true);
-        setBarcodeDesc((prev: any) => ({ ...prev, labelDesign: data?.labelDesign }));
+        setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign }}));
         const res = data?.labelDesign != undefined ?await api.getAsync( `${Urls.templates}${data?.labelDesign}`): [];
         
         setTemplate(res);
@@ -671,11 +671,12 @@ const BarcodePrint: React.FC = () => {
                           label={t("label_design")}
                           required={true}
                           data={barcodeDesc?.data}
-                          // defaultData={barcodeDesc?.data}
+                          defaultData={barcodeDesc?.data}
                           value={barcodeDesc?.data?.labelDesign}
                           validation={barcodeDesc?.validations?.labelDesign}
                           onChangeData={(data: any) => { handleComboboxChange("labelDesign", data)}}
                         />
+                         
                       </div>
                       <div className="flex flex-col">
                         <ERPInput

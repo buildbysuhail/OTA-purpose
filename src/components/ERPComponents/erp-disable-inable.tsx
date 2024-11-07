@@ -14,13 +14,13 @@ const ERPDisableEnable: React.FC<ERPDisableEnableProps> = ({
   const [clickCount, setClickCount] = React.useState(0);
   const [active, setActive] = React.useState<boolean>(true);
   const [lastClickTime, setLastClickTime] = React.useState<number | null>(null);
-  const [hasPermitted, setHasPermitted] = React.useState(true); // Initial state is disabled
+  const [hasPermitted, setHasPermitted] = React.useState(false); // Initial state is disabled
   const clickTimeWindow = 3000; // 3 seconds
 
   React.useEffect(() => {
     if(active){
       if (clickCount >= (targetCount??0)) {
-        setHasPermitted(false); // Enable component after the required clicks
+        setHasPermitted(true); // Enable component after the required clicks
         if (onSuccess) onSuccess();
         setActive(false);
         setClickCount(0); // Reset click count after success

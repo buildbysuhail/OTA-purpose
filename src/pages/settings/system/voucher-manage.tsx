@@ -37,20 +37,6 @@ export const VoucherManage: React.FC = React.memo(() => {
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <ERPDataCombobox
-          {...getFieldProps("formType")}
-          id="formType"
-          field={{
-            id: "formType",
-            required: true,
-            getListUrl: Urls.data_form_type,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          label={t("form_type")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("formType", data.formType)}
-        />
-        <ERPDataCombobox
           {...getFieldProps("voucherType")}
           id="voucherType"
           field={{
@@ -64,18 +50,23 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("voucherType", data.voucherType)}
         />
+         <ERPInput
+          {...getFieldProps("formType")}
+          label={t("formType")}
+          placeholder={t("formType")}
+          required={true}
+          onChangeData={(data: any) => handleFieldChange("formType", data.formType)}
+        />
         <ERPInput
           {...getFieldProps("descriptions")}
           label={t("descriptions")}
           placeholder={t("descriptions")}
-          required={true}
           onChangeData={(data: any) => handleFieldChange("descriptions", data.descriptions)}
         />
         <ERPInput
           {...getFieldProps("lastVoucherPrefix")}
           label={t("lastVoucher_prefix")}
           placeholder={t("lastVoucher_prefix")}
-          required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherPrefix", data.lastVoucherPrefix)}
         />
         <ERPInput

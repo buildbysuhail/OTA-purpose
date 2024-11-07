@@ -5,7 +5,7 @@ export interface ApplicationSettingsType {
     mainSettings: ApplicationMainSettings;
     // accountsSettings: AccountsSettings;
     // inventorySettings: InventorySettings;
-    // branchSettings: BranchSettings;
+    branchSettings: ApplicationBranchSettings;
     // backUpSettings: BackUpSettings;
     // printSettings: PrintSettings;
     // productsSettings: ProductsSettings;

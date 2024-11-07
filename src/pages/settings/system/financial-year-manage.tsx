@@ -10,6 +10,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { useTranslation } from "react-i18next";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { ActionType } from "../../../redux/types";
 
 export interface FinancialYearData {
   dateFrom: string;
@@ -27,8 +28,8 @@ export interface FinancialYearData {
 
 export const initialFinancialYearData = {
   data: {
-    dateFrom: "",
-    dateTo: "",
+    dateFrom: new Date(new Date().getFullYear(), 0, 1),
+    dateTo: new Date(new Date().getFullYear(), 11, 31),
     remarks: "",
     openingStockValue: 0,
     fStatus: 'Active',

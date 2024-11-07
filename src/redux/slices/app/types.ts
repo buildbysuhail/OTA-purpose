@@ -66,6 +66,8 @@ export interface AppState {
   pdfTemplates: any;
   locale: Locale;
   tableState?: TableState;
+  scrollbarWidth: string;
+  scrollbarColor: string;
 }
 export const initialThemeData: Theme = {
   direction: "ltr",  // default to left-to-right
@@ -79,6 +81,8 @@ export const initialThemeData: Theme = {
   menuPosition: null, // initialize as null
   headerPosition: 'fixed',  // default position for header
   colorPrimaryRgb: '255,255,255',  // default white color in RGB format
+  scrollbarWidth: "thick",
+  scrollbarColor: 'rgb(230 234 235)'
 };
 export interface Theme {
   direction: "ltr" | "rtl";
@@ -92,6 +96,8 @@ export interface Theme {
   menuPosition: string | null;
   headerPosition: string;
   colorPrimaryRgb: string;
+  scrollbarWidth: string;
+  scrollbarColor: string;
 }
 export interface AppInitialState {
   syncing: boolean;

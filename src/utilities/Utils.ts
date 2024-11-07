@@ -628,3 +628,6 @@ export const customUnShift = (A: any[], B: any[], a_field_key: string, b_field_k
 export const isFile = (obj: any): obj is File => {
   return obj instanceof File;
 };
+export function isNullOrUndefinedOrEmpty(value: any): boolean {
+  return value === undefined || value === null || value === '';
+}

@@ -109,7 +109,7 @@ const Settings = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.hide_acc_ledger.isOpen || false}
-        title="Hide Account  Ledger"
+        title= {t("hide_account_ledger")}
         width="w-full max-w-[1000px]"
         isForm={true}
         closeModal={() => {

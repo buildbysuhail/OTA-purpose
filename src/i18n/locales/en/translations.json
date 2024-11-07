@@ -236,6 +236,7 @@
   "short_name": "Short Name",
   "ledger_code": "Ledger Code",
   "ledger": "Ledger",
+  "hideLedgerID":"Hide Ledger ID",
   "alias_name": "Alias Name",
   "account_group_id": "Account Group Id",
   "is_billwise_applicable": "Is Billwise Applicable",
@@ -866,6 +867,7 @@
   "cash_book_detailed": "Cash Book Detailed",
   "voucher_number": "Voucher No",
   "total": "Total",
+  "isGroup": "isGroup",
   "cash_amount": "Cash Amount",
   "bank_amount": "Bank Amount",
   "sales_man": "Sales Man",
@@ -1314,6 +1316,7 @@
   "excise_tax":"Excise Tax",
   "party_wise_report":"Party Wise Report",
 
+  "hide_account_ledger":"Hide Account Ledger",
   "cash_summary_report":"Cash Summary Report",
   "transaction_history_accounts":"Transaction History Accounts",
   "transaction_history_inventory":"Transaction History Inventory",

@@ -22,10 +22,8 @@ const TransactionFormsCheckboxes: React.FC<TransactionFormsCheckboxesProps> = ({
   const remainingItems = allTransactions?.length % 7;
 
   return (
-    <div className="max-w-3xl max-h-96 overflow-x-auto">
-      {/* <label className="block text-sm font-medium text-gray-700 mb-2">
-        Transaction Forms
-      </label> */}
+    <div className="max-w-3xl">
+    
       <div className="flex space-x-4">
         {[...Array(fullColumns + (remainingItems > 0 ? 1 : 0))].map((_, colIndex) => (
           <div key={colIndex} className="flex flex-col space-y-2">

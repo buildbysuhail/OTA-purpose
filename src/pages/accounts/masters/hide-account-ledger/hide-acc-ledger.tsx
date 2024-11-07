@@ -20,6 +20,7 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useTranslation } from "react-i18next";
 
 interface LedgerInf {
   hideLedgerID: number;
@@ -56,7 +57,7 @@ const HideAccountLedger = () => {
     let gridHeightWindows = wh - 200;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
-
+  const { t } = useTranslation();
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
@@ -104,7 +105,7 @@ const HideAccountLedger = () => {
         data={postData}
         defaultData={postData}
         value={postData?.userTypeCode}
-        label="User Type"
+        label={t("user_type_code")}
       />
       <ERPDataCombobox
         //   className="w-[200px]"
@@ -125,7 +126,7 @@ const HideAccountLedger = () => {
         data={postData}
         defaultData={postData}
         value={postData?.groupId}
-        label="Account Group"
+        label={t("account_group")}
       />
       <ERPDataCombobox
         //   className="w-[200px]"
@@ -146,7 +147,7 @@ const HideAccountLedger = () => {
         data={postData}
         defaultData={postData}
         value={postData?.ledgerId}
-        label="Ledger"
+        label={t("ledger")}
       />
     </div>
   );
@@ -220,7 +221,7 @@ const HideAccountLedger = () => {
 
                 <Column
                   dataField="hideLedgerID"
-                  caption="Hide Ledger ID"
+                  caption={t("hideLedgerID")}
                   dataType="number"
                   width={120}
                   allowSorting={true}
@@ -231,7 +232,7 @@ const HideAccountLedger = () => {
                 />
                 <Column
                   dataField="ledgerID"
-                  caption="Ledger ID"
+                  caption={t("ledger_id")}
                   dataType="number"
                   width={120}
                   allowSorting={true}
@@ -242,7 +243,7 @@ const HideAccountLedger = () => {
                 />
                 <Column
                   dataField="particulars"
-                  caption="Particulars"
+                  caption={t("particulars")}
                   dataType="string"
                   minWidth={200}
                   allowSorting={true}
@@ -251,7 +252,7 @@ const HideAccountLedger = () => {
                   allowFiltering={true}
                 />
                 <Column
-                  dataField="isGroup"
+                  dataField={t("isGroup")}
                   caption="Is Group"
                   dataType="boolean"
                   width={100}
@@ -265,7 +266,7 @@ const HideAccountLedger = () => {
                   )}
                 />
                 <Column
-                  caption="Action"
+                  caption={t("actions")}
                   width={80}
                   cellRender={(cellData) => (
                     <div className="chart-cell">
@@ -280,7 +281,7 @@ const HideAccountLedger = () => {
                   <Item location="before">{renderToolbarContent()}</Item>
                   <Item location="after">
                     <ERPButton
-                      title="Add"
+                      title={t("add")}
                       variant="primary"
                       disabled={isSaving}
                       loading={isSaving}

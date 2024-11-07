@@ -48,6 +48,11 @@ export interface LabelState {
     left?: number;
     right?: number;
   };
+  gap?: {
+    hgap?: number;
+    vgap?: number;
+    
+  };
 }
 export interface BarcodeState {
   placedComponents: PlacedComponent[];

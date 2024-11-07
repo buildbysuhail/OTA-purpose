@@ -533,7 +533,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
 
   type PaddingMarginSides = "top" | "right" | "bottom" | "left";
-
+type  GapSides = "hgap"|"vgap";
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
 
   const generateBarcode = useCallback((component: PlacedComponent) => {
@@ -1705,8 +1705,49 @@ export default function ExtendedPDFBarcodeDesigner() {
                   ))}
                 </Box>
               </Box>
-
+              <Box sx={{ mb: 1 }}>
+                <InputLabel
+                  sx={{
+                    textTransform: "capitalize",
+                    marginBottom: "0.25rem",
+                    display: "block",
+                    fontSize: "0.75rem",
+                    color: "rgb(17, 24, 39)",
+                    textAlign: "left",
+                    direction: "rtl",
+                  }}
+                  htmlFor="margin"
+                >
+                  Gap (px)
+                </InputLabel>
+                <Box
+                  display="grid"
+                  gridTemplateColumns="repeat(2, 1fr)"
+                  gap={2}
+                >
+                  {(["hgap", "vgap", ] as GapSides[]).map((side) => (
+                    <ERPInput
+                      id={side}
+                      label={side.charAt(0).toUpperCase() + side.slice(1)}
+                      key={side}
+                      type="number"
+                      placeholder={
+                        side.charAt(0).toUpperCase() + side.slice(1)
+                      }
+                      value={templateData?.barcodeState?.labelState?.gap?.[side]}
+                      data={templateData?.barcodeState?.labelState}
+                      onChange={(e) =>
+                        handleLabelPropsChange("gap", {
+                          ...templateData?.barcodeState?.labelState?.gap,
+                          [side]: parseInt(e.target.value),
+                        })
+                      }
+                    />
+                  ))}
+                </Box>
+              </Box>
             </Box>
+
             <Box hidden={value !== "page"}>
               <Box sx={{ spaceY: 2 }}>
                 <Box sx={{ mb: 1 }}>
@@ -1746,34 +1787,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   </Box>
                 )}
 
-                {/* <Box>
-                <InputLabel htmlFor="padding">Padding (px)</InputLabel>
-                <Box
-                  display="grid gap-2"
-                  gridTemplateColumns="repeat(2, 1fr)"
-                  gap={2}
-                >
-                  {(
-                    ["top", "right", "bottom", "left"] as PaddingMarginSides[]
-                  )?.map((side) => (
-                    <ERPInput
-                      id={side}
-                      label={side.charAt(0).toUpperCase() + side.slice(1)}
-                      key={side}
-                      type="number"
-                      placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
-                      value={templateData?.propertiesState?.padding[side]}
-                      data={templateData?.propertiesState}
-                      onChange={(e) =>
-                        handlePagePropsChange("padding", {
-                          ...templateData?.propertiesState?.padding,
-                          [side]: parseInt(e.target.value),
-                        })
-                      }
-                    />
-                  ))}
-                </Box>
-              </Box> */}
+            
                 <Box sx={{ mb: 1 }}>
                   <InputLabel
                     sx={{

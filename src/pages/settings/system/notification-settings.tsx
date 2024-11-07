@@ -151,7 +151,7 @@ const NotificationSettings = () => {
                   </>
                 ) : (
                   <div className="table-responsive max-h-[60vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
-                    <table className="min-w-full relative table table-bordered rounded-t-lg dark:border-defaultborder/10 ">
+                    <table className="min-w-full relative table table-bordered rounded-t-sm dark:border-defaultborder/10 ">
                       <thead className="bg-[#f3f4f6] sticky top-[-1px] z-40">
                         <tr>
                           {T_Head.map((item, index) => (
@@ -164,7 +164,7 @@ const NotificationSettings = () => {
                         </tr>
                       </thead>
 
-                      <tbody className=" bg-[#fafafa] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-300 scrollbar-track-gray-100 overflow-auto">
+                      <tbody className=" bg-[#fafafa] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
                         {TableBody.length > 0 ? (
                           TableBody?.filter((item)=>
                           item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())

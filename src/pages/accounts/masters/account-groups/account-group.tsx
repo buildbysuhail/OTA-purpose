@@ -24,7 +24,7 @@ const AccountGroupType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 50,
       isLocked: true,
     },
     {
@@ -34,7 +34,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       visible: false,
-      width: 100,
+      width: 50,
     },
     {
       dataField: "accountGroup",
@@ -42,6 +42,7 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      minWidth:200
     },
     {
       dataField: "shortName",
@@ -65,43 +66,43 @@ const AccountGroupType = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 100,
     },
     {
       dataField: "isEditable",
       caption: t("is_editable"),
-      dataType: "string",
+      dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+     
     },
     {
       dataField: "isDeletable",
       caption: t("is_deletable"),
-      dataType: "string",
+      dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+     
     },
     {
       dataField: "isProtected",
       caption: t("is_protected"),
-      dataType: "string",
+      dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+     
     },
     {
       dataField: "isCommon",
       caption: t("is_common"),
-      dataType: "string",
+      dataType: "boolean",
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+     
     },
     {
       dataField: "createdUser",
@@ -110,7 +111,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: false,
+     
     },
     {
       dataField: "createdDate",
@@ -119,7 +120,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: false,
+     
     },
     {
       dataField: "modifiedUser",
@@ -128,7 +129,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: false,
+     
     },
     {
       dataField: "modifiedDate",

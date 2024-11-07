@@ -346,7 +346,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           rotate: 0,
           textAlign: "center",
           fontSize:12,
-          font: "Arial",
+          font: "Roboto",
           fontStyle:"normal",
           width: componentType === DesignerElementType.barcode ? 150 : 100,
           height: componentType === DesignerElementType.barcode ? 80 : 30,
@@ -360,7 +360,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               lineColor: "#000000",
               showText: true,
               textAlign: "center",
-              font: "monospace",
+              font: "Roboto",
               fontSize: 21,
               textMargin: 3,
               fontStyle: "normal",
@@ -401,9 +401,9 @@ export default function ExtendedPDFBarcodeDesigner() {
         templateData?.barcodeState?.placedComponents?.map((comp) =>
           comp.id === selectedComponent.id && comp.barcodeProps
             ? {
-                ...comp,
-                barcodeProps: { ...comp.barcodeProps, [property]: value },
-              }
+              ...comp,
+              barcodeProps: { ...comp.barcodeProps, [property]: value },
+            }
             : comp
         );
       setTemplateData((prev: TemplateState) => ({
@@ -505,17 +505,17 @@ export default function ExtendedPDFBarcodeDesigner() {
   const handleImagePropsChange = async (property: any, value: any) => {
     debugger;
     if (!value) {
-      handleLabelPropsChange(property, null); 
+      handleLabelPropsChange(property, null);
       return;
     }
     const imageData = await convertFileToBase64(value);
     debugger;
-    handleLabelPropsChange(property, imageData??null);
+    handleLabelPropsChange(property, imageData ?? null);
   };
   const handleRemoveImage = () => {
-    handleImagePropsChange('background_image', ''); 
+    handleImagePropsChange('background_image', '');
     if (inputFile.current) {
-      inputFile.current.value = ''; 
+      inputFile.current.value = '';
     }
   };
   const handleLabelPropsChange = (property: any, value: any) => {
@@ -533,7 +533,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
 
   type PaddingMarginSides = "top" | "right" | "bottom" | "left";
-
+type  GapSides = "hgap"|"vgap";
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
 
   const generateBarcode = useCallback((component: PlacedComponent) => {
@@ -647,19 +647,20 @@ export default function ExtendedPDFBarcodeDesigner() {
         selectedComponent?.id === component.id
           ? "2px solid #2196f3"
           : component.type == DesignerElementType.barcode
-          ? ""
-          : "1px dashed #ccc",
+            ? ""
+            : "1px dashed #ccc",
       padding: component.type == DesignerElementType.barcode ? "0px" : "4px",
       cursor: "move",
       backgroundColor: "white",
       userSelect: "none",
-      transform: `rotate(${component.rotate || 0}deg)`, 
-      transformOrigin: "center", 
+      transform: `rotate(${component.rotate || 0}deg)`,
+      transformOrigin: "center",
       textAlign: component.type !== DesignerElementType.barcode ? component.textAlign : undefined,
       fontSize:component.type == DesignerElementType.barcode ? "0px" :`${component.fontSize}px`,
-      fontStyle:component.type == DesignerElementType.barcode ?"": component.fontStyle,
+      fontStyle:component.type !== DesignerElementType.barcode ?component.fontStyle: undefined ,
       fontFamily:component.type == DesignerElementType.barcode ?"":component.font,
     };
+
 
 
     switch (component.type) {
@@ -672,7 +673,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
             {barcodeErrors &&
-            barcodeErrors?.find((x: any) => x.id == component.id) ? (
+              barcodeErrors?.find((x: any) => x.id == component.id) ? (
               <>
                 <div className="text-red-500 text-sm">
                   {barcodeErrors?.find((x: any) => x.id == component.id).error}
@@ -705,7 +706,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             style={style}
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
-          > 
+          >
             {component.content}
             <DeleteButton
               id={component.id}
@@ -732,9 +733,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         resizeHandles={[appState.appState.dir === "rtl" ? "w" : "e"]}
         handle={
           <div
-            className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "rtl" : "ltr"
-            }`}
+            className={`custom-handle ${appState.appState.dir === "rtl" ? "rtl" : "ltr"
+              }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
@@ -832,13 +832,13 @@ export default function ExtendedPDFBarcodeDesigner() {
             maxHeight:
               (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
               (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1),
-          
+
           }}
         >
           <ResizableBox
             width={templateData?.barcodeState?.labelState?.labelWidth ?? 300} // Initial width
             height={templateData?.barcodeState?.labelState?.labelHeight ?? 200}
-            minConstraints={[250, 250]}
+            minConstraints={[50, 50]}
             maxConstraints={[1400, 1000]}
             resizeHandles={["se"]}
             className="box"
@@ -859,20 +859,20 @@ export default function ExtendedPDFBarcodeDesigner() {
                           ${templateData?.barcodeState?.labelState?.padding?.bottom ?? 0}px 
                           ${templateData?.barcodeState?.labelState?.padding?.left ?? 0}px`,
                 backgroundImage: templateData?.barcodeState?.labelState?.background_image
-                ? `url(${templateData?.barcodeState?.labelState?.background_image})`
-                : "none",
+                  ? `url(${templateData?.barcodeState?.labelState?.background_image})`
+                  : "none",
                 backgroundPosition: ["cover", "contain", "stretch"].includes(templateData?.barcodeState?.labelState?.bg_image_position ?? "")
-                ? "center"
-                : templateData?.barcodeState?.labelState?.bg_image_position ?? "center",
-              backgroundSize:
-                templateData?.barcodeState?.labelState?.bg_image_position === "cover"
-                  ? "cover"
-                  : templateData?.barcodeState?.labelState?.bg_image_position === "contain"
-                  ? "contain"
-                  : templateData?.barcodeState?.labelState?.bg_image_position === "stretch"
-                  ? "100% 100%"
-                  : "auto",
-              backgroundRepeat: "no-repeat",
+                  ? "center"
+                  : templateData?.barcodeState?.labelState?.bg_image_position ?? "center",
+                backgroundSize:
+                  templateData?.barcodeState?.labelState?.bg_image_position === "cover"
+                    ? "cover"
+                    : templateData?.barcodeState?.labelState?.bg_image_position === "contain"
+                      ? "contain"
+                      : templateData?.barcodeState?.labelState?.bg_image_position === "stretch"
+                        ? "100% 100%"
+                        : "auto",
+                backgroundRepeat: "no-repeat",
               }}
             >
               {templateData?.barcodeState?.placedComponents?.map(
@@ -892,9 +892,8 @@ export default function ExtendedPDFBarcodeDesigner() {
         resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
         handle={
           <div
-            className={`custom-handle ${
-              appState.appState.dir === "rtl" ? "ltr" : "rtl"
-            }`}
+            className={`custom-handle ${appState.appState.dir === "rtl" ? "ltr" : "rtl"
+              }`}
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
@@ -917,28 +916,28 @@ export default function ExtendedPDFBarcodeDesigner() {
           </div>
           <Box>
             <Box hidden={value !== "element"}
-            sx={{maxHeight: 'calc(100vh)', pb: 2}}>
+              sx={{ maxHeight: 'calc(100vh)', pb: 2 }}>
               {selectedComponent && (
-                <Box 
-                  sx={{ maxHeight: 'calc(100vh - 8rem)', overflowY: 'auto', py: 2 ,spaceY: 2 }}
-                className="scrollbar scrollbar-thick scrollbar-thumb-gray-300 scrollbar-track-gray-100 overflow-auto pr-1"
+                <Box
+                  sx={{ maxHeight: 'calc(100vh - 8rem)', overflowY: 'auto', py: 2, spaceY: 2 }}
+                  className="scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
                 // className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 "
                 >
                   <Box sx={{ mb: 1 }}>
-           
+
                     {selectedComponent.type === DesignerElementType.field ? (
                       <ERPDataCombobox
                         id="content"
                         value={selectedComponent.content}
                         data={selectedComponent}
-                        
+
                         label="Content"
                         field={{
                           id: "content",
                           valueKey: "value",
                           labelKey: "label",
                         }}
-                        options={fields?.map((field,index) => ({
+                        options={fields?.map((field, index) => ({
                           value: field,
                           label: field,
                         }))}
@@ -948,7 +947,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                         onChangeData={(data) =>
                           handlePropertyChange("content", data.content)
                         }
-                        
+
                       />
                     ) : (
                       <ERPInput
@@ -1062,10 +1061,10 @@ export default function ExtendedPDFBarcodeDesigner() {
                               labelKey: "label",
                             }}
                             options={[
-                              { value: "Monospace", label: "Monospace" },
-                              { value: "Arial", label: "Arial" },
-                              { value: "Helvetica", label: "Helvetica" },
-                              { value: "Sans-serif", label: "Sans-serif" },
+                              { value: "Roboto", label: "Roboto" },
+                              { value: "RobotoMono", label: "RobotoMono" },
+                              { value: "FiraSans", label: "FiraSans" },
+                            
                             ]}
                             onChange={(e) =>
                               handlePropertyChange("font", e.value)
@@ -1075,62 +1074,59 @@ export default function ExtendedPDFBarcodeDesigner() {
                   <Box sx={{ mb: 1 }}>
                     {selectedComponent.type !== DesignerElementType.barcode && (
                       <div className="flex flex-col gap-2">
-                      <Box>
-                        <InputLabel
-                          sx={{
-                            textTransform: "capitalize",
-                            marginBottom: "0.25rem",
-                            display: "block",
-                            fontSize: "0.75rem",
-                            color: "rgb(17, 24, 39)",
-                            textAlign: "left",
-                            direction: "rtl",
-                          }}
-                        >
-                          Text Align
-                        </InputLabel>
+                        <Box>
+                          <InputLabel
+                            sx={{
+                              textTransform: "capitalize",
+                              marginBottom: "0.25rem",
+                              display: "block",
+                              fontSize: "0.75rem",
+                              color: "rgb(17, 24, 39)",
+                              textAlign: "left",
+                              direction: "rtl",
+                            }}
+                          >
+                            Text Align
+                          </InputLabel>
 
-                        <div className="flex justify-between space-x-2">
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.textAlign === "left"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handlePropertyChange("textAlign", "left")
-                            }
-                          >
-                            Left
-                          </button>
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.textAlign === "center"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handlePropertyChange("textAlign", "center")
-                            }
-                          >
-                            Center
-                          </button>
-                          <button
-                            className={`ti-btn ${
-                              selectedComponent.textAlign === "right"
-                                ? "ti-btn-primary-full"
-                                : "bg-slate-100 hover:bg-slate-200 text-black"
-                            } px-4 py-2 w-full`}
-                            onClick={() =>
-                              handlePropertyChange("textAlign", "right")
-                            }
-                          >
-                            Right
-                          </button>
-                        </div>
-                       </Box>
-                       <Box>
-                       <ERPSlider
+                          <div className="flex justify-between space-x-2">
+                            <button
+                              className={`ti-btn ${selectedComponent.textAlign === "left"
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handlePropertyChange("textAlign", "left")
+                              }
+                            >
+                              Left
+                            </button>
+                            <button
+                              className={`ti-btn ${selectedComponent.textAlign === "center"
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handlePropertyChange("textAlign", "center")
+                              }
+                            >
+                              Center
+                            </button>
+                            <button
+                              className={`ti-btn ${selectedComponent.textAlign === "right"
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handlePropertyChange("textAlign", "right")
+                              }
+                            >
+                              Right
+                            </button>
+                          </div>
+                        </Box>
+                        <Box>
+                          <ERPSlider
                             label="Font Size"
                             value={selectedComponent.fontSize}
                             onChange={(e) =>
@@ -1142,10 +1138,10 @@ export default function ExtendedPDFBarcodeDesigner() {
                             min={0}
                             max={50}
                           />
-                       </Box>
-                      
-                       <Box>
-                       <InputLabel
+                        </Box>
+
+                        <Box>
+                          <InputLabel
                             sx={{
                               textTransform: "capitalize",
                               marginBottom: "0.25rem",
@@ -1160,12 +1156,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                           </InputLabel>
                           <div className="flex justify-between space-x-2">
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.fontStyle ===
-                                "bold"
+                              className={`ti-btn ${selectedComponent.fontStyle ===
+                                  "bold"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange("fontStyle", "bold")
                               }
@@ -1173,12 +1168,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Bold
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.fontStyle ===
-                                "normal"
+                              className={`ti-btn ${selectedComponent.fontStyle ===
+                                  "normal"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange("fontStyle", "normal")
                               }
@@ -1186,12 +1180,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Normal
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.fontStyle ===
-                                "italic"
+                              className={`ti-btn ${selectedComponent.fontStyle ===
+                                  "italic"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange(
                                   "fontStyle",
@@ -1202,8 +1195,8 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Italic
                             </button>
                           </div>
-                       </Box>
-                     
+                        </Box>
+
                       </div>
                     )}
                   </Box>
@@ -1233,7 +1226,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                               handleBarcodePropertyChange("format", data.format)
                             }
                           />
-                        
+
                         </Box>
 
                         <Box>
@@ -1345,12 +1338,11 @@ export default function ExtendedPDFBarcodeDesigner() {
 
                           <div className="flex justify-between space-x-2">
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.textAlign ===
-                                "left"
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                  "left"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("textAlign", "left")
                               }
@@ -1358,12 +1350,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Left
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.textAlign ===
-                                "center"
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                  "center"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "textAlign",
@@ -1374,12 +1365,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Center
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.textAlign ===
-                                "right"
+                              className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
+                                  "right"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "textAlign",
@@ -1404,10 +1394,9 @@ export default function ExtendedPDFBarcodeDesigner() {
                               labelKey: "label",
                             }}
                             options={[
-                              { value: "Monospace", label: "Monospace" },
-                              { value: "Arial", label: "Arial" },
-                              { value: "Helvetica", label: "Helvetica" },
-                              { value: "Sans-serif", label: "Sans-serif" },
+                              { value: "Roboto", label: "Roboto" },
+                              { value: "RobotoMono", label: "RobotoMono" },
+                              { value: "FiraSans", label: "FiraSans" },
                             ]}
                             onChange={(e) =>
                               handleBarcodePropertyChange("font", e.value)
@@ -1429,14 +1418,13 @@ export default function ExtendedPDFBarcodeDesigner() {
                           >
                             Font Style
                           </InputLabel>
-                          <div className="flex justify-between space-x-2">
+                          <div className="flex justify-between space-x-1">
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.fontStyle ===
-                                "bold"
+                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                  "bold"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("fontStyle", "bold")
                               }
@@ -1446,10 +1434,25 @@ export default function ExtendedPDFBarcodeDesigner() {
                             <button
                               className={`ti-btn ${
                                 selectedComponent.barcodeProps.fontStyle ===
-                                "italic"
+                                "normal"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
                               } px-4 py-2 w-full`}
+                              onClick={() =>
+                                handleBarcodePropertyChange(
+                                  "fontStyle",
+                                  "normal"
+                                )
+                              }
+                            >
+                              Normal
+                            </button>
+                            <button
+                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                  "italic"
+                                  ? "ti-btn-primary-full"
+                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "fontStyle",
@@ -1529,181 +1532,222 @@ export default function ExtendedPDFBarcodeDesigner() {
               )}
             </Box>
             <Box hidden={value !== "label"}>
-              
-                <Box sx={{ mb: 1 }}>
-                  <ERPInput
-                    id="ColumnsPerRow"
-                    label="Columns Per Row"
-                    type="number"
-                    value={
-                      templateData?.barcodeState?.labelState?.columnsPerRow
-                    }
-                    data={templateData}
-                    onChange={(e) =>
-                      handleLabelPropsChange("columnsPerRow", e.target.value)
-                    }
-                  />
-                </Box>
-                <Box sx={{ mb: 1 }}>
-                  <ERPInput
-                    id="rowsPerPage"
-                    label="Row Per Page"
-                    type="number"
-                    value={templateData?.barcodeState?.labelState?.rowsPerPage}
-                    data={templateData}
-                    onChange={(e) => {
-                      debugger;
-                      handleLabelPropsChange("rowsPerPage", e.target.value);
-                    }}
-                  />
-                </Box>
-                <Box sx={{ mb: 1 }}>
-                  <ERPInput
-                    id="labelWidth"
-                    label="Label Width"
-                    value={templateData?.barcodeState?.labelState?.labelWidth}
-                    data={templateData}
-                    onChange={(e) => {
-                      handleLabelPropsChange("labelWidth", e.target.value);
-                    }}
-                  />
-                </Box>
-                <Box sx={{ mb: 1 }}>
-                  <ERPInput
-                    id="labelHeight"
-                    label="Label  Height"
-                    value={templateData?.barcodeState?.labelState?.labelHeight}
-                    data={templateData}
-                    onChange={(e) =>
-                      handleLabelPropsChange("labelHeight", e.target.value)
-                    }
-                  />
-                </Box>
-                
-                <Box sx={{ mb: 1 }}>
+
+              <Box sx={{ mb: 1 }}>
+                <ERPInput
+                  id="ColumnsPerRow"
+                  label="Columns Per Row"
+                  type="number"
+                  value={
+                    templateData?.barcodeState?.labelState?.columnsPerRow
+                  }
+                  data={templateData}
+                  onChange={(e) =>
+                    handleLabelPropsChange("columnsPerRow", e.target.value)
+                  }
+                />
+              </Box>
+              <Box sx={{ mb: 1 }}>
+                <ERPInput
+                  id="rowsPerPage"
+                  label="Row Per Page"
+                  type="number"
+                  value={templateData?.barcodeState?.labelState?.rowsPerPage}
+                  data={templateData}
+                  onChange={(e) => {
+                    debugger;
+                    handleLabelPropsChange("rowsPerPage", e.target.value);
+                  }}
+                />
+              </Box>
+              <Box sx={{ mb: 1 }}>
+                <ERPInput
+                  id="labelWidth"
+                  label="Label Width"
+                  value={templateData?.barcodeState?.labelState?.labelWidth}
+                  data={templateData}
+                  onChange={(e) => {
+                    handleLabelPropsChange("labelWidth", e.target.value);
+                  }}
+                />
+              </Box>
+              <Box sx={{ mb: 1 }}>
+                <ERPInput
+                  id="labelHeight"
+                  label="Label  Height"
+                  value={templateData?.barcodeState?.labelState?.labelHeight}
+                  data={templateData}
+                  onChange={(e) =>
+                    handleLabelPropsChange("labelHeight", e.target.value)
+                  }
+                />
+              </Box>
+
+              <Box sx={{ mb: 1 }}>
                 <div className="flex flex-col gap-3">
-                    <div className="text-xs">Background Image</div>
-                    <ERPInput
-                       id='background_image'
-                        type="file"
-                        ref={inputFile}
-                        onChange={(e: any) => {
+                  <div className="text-xs">Background Image</div>
+                  <ERPInput
+                    id='background_image'
+                    type="file"
+                    ref={inputFile}
+                    onChange={(e: any) => {
 
-                          debugger;
-                            if (e.target.files[0].size > 2097152) {
-                                ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
-                            } else {
-                              
-                              handleImagePropsChange( 'background_image',e.target.files[0]);
-                            }
-                        }}
-                        className={"hidden"}
-                        accept="image/png,image/jpeg"
-                        label="Image"
-                       
-                        placeholder=" "
-                    />
-                    <label htmlFor="background_image">
-                        <div
-                            onClick={() => inputFile?.current?.click()}
-                            className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData?.barcodeState?.labelState?.background_image ? "hidden" : ""}`}
-                        >
-                            Choose from Desktop</div>
-                    </label>
+                      debugger;
+                      if (e.target.files[0].size > 2097152) {
+                        ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
+                      } else {
 
-                    {templateData?.barcodeState?.labelState?.background_image &&
-                        <>
-                            <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
-                            {templateData?.barcodeState?.labelState?.background_image && <img
-                                draggable={false}
-                                src={templateData?.barcodeState?.labelState?.background_image}
-                                alt="background_image"
-                                height={100} width={100}
-                                className="size-5" />
-                            }
-                            <div
-                                className="text-accent text-xs cursor-pointer  max-w-min"
-                                onClick={handleRemoveImage}
-                            >
-                                Remove
-                            </div>
-                            <div className="font-light text-sm">Image Position</div>
-                            <ERPDataCombobox
-                                noLabel
-                                id="bg_image_position"
-                                value={templateData?.barcodeState?.labelState?.bg_image_position}
-                                data={templateData?.barcodeState?.labelState}
-                                defaultValue={templateData?.barcodeState?.labelState?.labelHeight ?? "top left"}
-                                onChange={(e) =>
-                                  handleLabelPropsChange("bg_image_position", e.value)
-                                }
-                                field={{
-                                  id: "bg_image_position",
-                                  valueKey: "value",
-                                  labelKey: "label",
-                                }}
-                                options={[
-                                    { label: "Top Left", value: "top left" },
-                                    { label: "Top Center", value: "top center" },
-                                    { label: "Top Right", value: "top right" },
-                                    { label: "Center Left", value: "center left" },
-                                    { label: "Center Center", value: "center center" },
-                                    { label: "Center Right", value: "center right" },
-                                    { label: "Bottom Left", value: "bottom left" },
-                                    { label: "Bottom Center", value: "bottom center" },
-                                    { label: "Bottom Right", value: "bottom right" },
-                                    { label: "Stretch", value: "stretch" },
-                                    { label: "Contain", value: "contain" },
-                                    { label: "Cover", value: "cover" }
-                                ]}
-                            />
-                           
-                        </>}
-                </div>
-                </Box>
-                <Box sx={{ mb: 1 }}>
-                  <InputLabel
-                    sx={{
-                      textTransform: "capitalize",
-                      marginBottom: "0.25rem",
-                      display: "block",
-                      fontSize: "0.75rem",
-                      color: "rgb(17, 24, 39)",
-                      textAlign: "left",
-                      direction: "rtl",
+                        handleImagePropsChange('background_image', e.target.files[0]);
+                      }
                     }}
-                    htmlFor="margin"
-                  >
-                    Padding (px)
-                  </InputLabel>
-                  <Box
-                    display="grid"
-                    gridTemplateColumns="repeat(2, 1fr)"
-                    gap={2}
-                  >
-                    {(["top", "left","right","bottom"] as PaddingMarginSides[]).map((side) => (
-                      <ERPInput
-                        id={side}
-                        label={side.charAt(0).toUpperCase() + side.slice(1)}
-                        key={side}
-                        type="number"
-                        placeholder={
-                          side.charAt(0).toUpperCase() + side.slice(1)
-                        }
-                        value={templateData?.barcodeState?.labelState?.padding?.[side]}
+                    className={"hidden"}
+                    accept="image/png,image/jpeg"
+                    label="Image"
+
+                    placeholder=" "
+                  />
+                  <label htmlFor="background_image">
+                    <div
+                      onClick={() => inputFile?.current?.click()}
+                      className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData?.barcodeState?.labelState?.background_image ? "hidden" : ""}`}
+                    >
+                      Choose from Desktop</div>
+                  </label>
+
+                  {templateData?.barcodeState?.labelState?.background_image &&
+                    <>
+                      <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
+                      {templateData?.barcodeState?.labelState?.background_image && <img
+                        draggable={false}
+                        src={templateData?.barcodeState?.labelState?.background_image}
+                        alt="background_image"
+                        height={100} width={100}
+                        className="size-5" />
+                      }
+                      <div
+                        className="text-accent text-xs cursor-pointer  max-w-min"
+                        onClick={handleRemoveImage}
+                      >
+                        Remove
+                      </div>
+                      <div className="font-light text-sm">Image Position</div>
+                      <ERPDataCombobox
+                        noLabel
+                        id="bg_image_position"
+                        value={templateData?.barcodeState?.labelState?.bg_image_position}
                         data={templateData?.barcodeState?.labelState}
+                        defaultValue={templateData?.barcodeState?.labelState?.labelHeight ?? "top left"}
                         onChange={(e) =>
-                          handleLabelPropsChange("padding", {
-                            ...templateData?.barcodeState?.labelState?.padding,
-                            [side]: parseInt(e.target.value),
-                          })
+                          handleLabelPropsChange("bg_image_position", e.value)
                         }
+                        field={{
+                          id: "bg_image_position",
+                          valueKey: "value",
+                          labelKey: "label",
+                        }}
+                        options={[
+                          { label: "Top Left", value: "top left" },
+                          { label: "Top Center", value: "top center" },
+                          { label: "Top Right", value: "top right" },
+                          { label: "Center Left", value: "center left" },
+                          { label: "Center Center", value: "center center" },
+                          { label: "Center Right", value: "center right" },
+                          { label: "Bottom Left", value: "bottom left" },
+                          { label: "Bottom Center", value: "bottom center" },
+                          { label: "Bottom Right", value: "bottom right" },
+                          { label: "Stretch", value: "stretch" },
+                          { label: "Contain", value: "contain" },
+                          { label: "Cover", value: "cover" }
+                        ]}
                       />
-                    ))}
-                  </Box>
+
+                    </>}
+                </div>
+              </Box>
+              <Box sx={{ mb: 1 }}>
+                <InputLabel
+                  sx={{
+                    textTransform: "capitalize",
+                    marginBottom: "0.25rem",
+                    display: "block",
+                    fontSize: "0.75rem",
+                    color: "rgb(17, 24, 39)",
+                    textAlign: "left",
+                    direction: "rtl",
+                  }}
+                  htmlFor="margin"
+                >
+                  Padding (px)
+                </InputLabel>
+                <Box
+                  display="grid"
+                  gridTemplateColumns="repeat(2, 1fr)"
+                  gap={2}
+                >
+                  {(["top", "left", "right", "bottom"] as PaddingMarginSides[]).map((side) => (
+                    <ERPInput
+                      id={side}
+                      label={side.charAt(0).toUpperCase() + side.slice(1)}
+                      key={side}
+                      type="number"
+                      placeholder={
+                        side.charAt(0).toUpperCase() + side.slice(1)
+                      }
+                      value={templateData?.barcodeState?.labelState?.padding?.[side]}
+                      data={templateData?.barcodeState?.labelState}
+                      onChange={(e) =>
+                        handleLabelPropsChange("padding", {
+                          ...templateData?.barcodeState?.labelState?.padding,
+                          [side]: parseInt(e.target.value),
+                        })
+                      }
+                    />
+                  ))}
                 </Box>
-             
+              </Box>
+              <Box sx={{ mb: 1 }}>
+                <InputLabel
+                  sx={{
+                    textTransform: "capitalize",
+                    marginBottom: "0.25rem",
+                    display: "block",
+                    fontSize: "0.75rem",
+                    color: "rgb(17, 24, 39)",
+                    textAlign: "left",
+                    direction: "rtl",
+                  }}
+                  htmlFor="margin"
+                >
+                  Gap (px)
+                </InputLabel>
+                <Box
+                  display="grid"
+                  gridTemplateColumns="repeat(2, 1fr)"
+                  gap={2}
+                >
+                  {(["hgap", "vgap", ] as GapSides[]).map((side) => (
+                    <ERPInput
+                      id={side}
+                      label={side.charAt(0).toUpperCase() + side.slice(1)}
+                      key={side}
+                      type="number"
+                      placeholder={
+                        side.charAt(0).toUpperCase() + side.slice(1)
+                      }
+                      value={templateData?.barcodeState?.labelState?.gap?.[side]}
+                      data={templateData?.barcodeState?.labelState}
+                      onChange={(e) =>
+                        handleLabelPropsChange("gap", {
+                          ...templateData?.barcodeState?.labelState?.gap,
+                          [side]: parseInt(e.target.value),
+                        })
+                      }
+                    />
+                  ))}
+                </Box>
+              </Box>
             </Box>
+
             <Box hidden={value !== "page"}>
               <Box sx={{ spaceY: 2 }}>
                 <Box sx={{ mb: 1 }}>
@@ -1717,7 +1761,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     }
                   />
                 </Box>
-             
+
                 {templateData?.propertiesState?.pageSize === "Custom" && (
                   <Box sx={{ mb: 1 }}>
                     <div className="flex justify-start items-center space-x-1">
@@ -1743,34 +1787,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   </Box>
                 )}
 
-                {/* <Box>
-                <InputLabel htmlFor="padding">Padding (px)</InputLabel>
-                <Box
-                  display="grid gap-2"
-                  gridTemplateColumns="repeat(2, 1fr)"
-                  gap={2}
-                >
-                  {(
-                    ["top", "right", "bottom", "left"] as PaddingMarginSides[]
-                  )?.map((side) => (
-                    <ERPInput
-                      id={side}
-                      label={side.charAt(0).toUpperCase() + side.slice(1)}
-                      key={side}
-                      type="number"
-                      placeholder={side.charAt(0).toUpperCase() + side.slice(1)}
-                      value={templateData?.propertiesState?.padding[side]}
-                      data={templateData?.propertiesState}
-                      onChange={(e) =>
-                        handlePagePropsChange("padding", {
-                          ...templateData?.propertiesState?.padding,
-                          [side]: parseInt(e.target.value),
-                        })
-                      }
-                    />
-                  ))}
-                </Box>
-              </Box> */}
+            
                 <Box sx={{ mb: 1 }}>
                   <InputLabel
                     sx={{
@@ -1791,7 +1808,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     gridTemplateColumns="repeat(2, 1fr)"
                     gap={2}
                   >
-                    {(["top", "left","right","bottom"] as PaddingMarginSides[]).map((side) => (
+                    {(["top", "left", "right", "bottom"] as PaddingMarginSides[]).map((side) => (
                       <ERPInput
                         id={side}
                         label={side.charAt(0).toUpperCase() + side.slice(1)}

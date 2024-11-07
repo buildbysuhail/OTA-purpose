@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Document, Page, View, Text, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
+import { Document, Page, View, Text, StyleSheet, Image, PDFViewer, } from "@react-pdf/renderer";
 import JsBarcode from 'jsbarcode';
 import { DesignerElementType, PlacedComponent, TemplateState } from "../InvoiceDesigner/Designer/interfaces";
 import { Style } from '@react-pdf/types';
+import FontRegistration from './fontRegister';
 
 const styles = StyleSheet.create({
   page: {
@@ -23,7 +24,7 @@ export interface DownloadPreviewProps {
 }
 
 export default function Component({ template, docTitle = "Document Preview", data }: DownloadPreviewProps = {}) {
-
+  
   // const [columnsPerRow, setColumnsPerRow] = useState(2);
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
   const [chunkedData, setChunkedData] = useState<any>();
@@ -53,6 +54,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
               // canvas.width = template?.barcodeState?.labelState?.labelWidth??200;
               // canvas.
               JsBarcode(canvas, item?.autoBarcode, {
+                displayValue: false,
                 ...barcodeComponent.barcodeProps,
                 format: barcodeComponent.barcodeProps?.format ?? "CODE128", // Barcode format
                 width: barcodeComponent.barcodeProps?.barWidth || 2, // Set bar width or default to 2
@@ -60,7 +62,7 @@ export default function Component({ template, docTitle = "Document Preview", dat
                 margin: barcodeComponent.barcodeProps?.margin || 0,    // Margin around the barcode
                 background: barcodeComponent.barcodeProps?.background || "#FFFFFF", // Background color
                 lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",   // Line color for bars
-                displayValue: barcodeComponent.barcodeProps?.showText,  // Display text below the barcode
+                // displayValue: barcodeComponent.barcodeProps?.showText,  // Display text below the barcode
                 textAlign: barcodeComponent.barcodeProps?.textAlign,    // Center-align text
                 font: "monospace",      // Font family for text
                 fontSize: barcodeComponent.barcodeProps?.fontSize || 21, // Font size
@@ -79,20 +81,11 @@ export default function Component({ template, docTitle = "Document Preview", dat
   }, [template?.barcodeState?.placedComponents]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
-    // const baseStyle: { position: 'absolute' | 'relative', left: number, top: number,transform:string | undefined,transformOrigin:string } = {
-    //   position: 'absolute', 
-    //   left: component.x || 0, 
-    //   top: component.y || 0,  
-    //   transform: component.rotate ? `rotate(${component.rotate}deg)` : undefined,
-    //   transformOrigin: "center", 
-    // };
     debugger;
     const baseStyle: Style = {
       position: 'absolute',
       left: component.x,
       top: component.y,
-      // width: component.width,
-      // height: component.height,
       transform: `rotate(${component.rotate || 0}deg)`, 
       transformOrigin: "center",
       
@@ -106,10 +99,12 @@ console.log("rotate",component.rotate);
             key={component.id}
             style={{
               ...baseStyle,
-              fontFamily: component.font ,
+              fontFamily: component.font|| 'Roboto',
               fontSize: component.fontSize || 12,
               fontStyle: component.fontStyle || "normal",
               textAlign: component.textAlign || "center",
+              height: component.height || 50,
+              width: component.width || 50,
             }}
           >
             {component.content}
@@ -121,10 +116,12 @@ console.log("rotate",component.rotate);
           <View key={component.id} style={baseStyle}>
           <Text
             style={{
-              fontFamily: component.font,
+              fontFamily: component.font || 'Roboto',
               fontSize: component.fontSize || 12,
               fontStyle: component.fontStyle || "normal",
               textAlign: component.textAlign || "center",
+              height: component.height || 50,
+              width: component.width || 50,
             }}
           >
             {component.content}
@@ -140,11 +137,7 @@ console.log("rotate",component.rotate);
             src={barcodeImages[barcodeKey]}
             style={{
               ...baseStyle,
-              width: 200 ,
               height: component.height || 50,
-              position: 'absolute',
-              left: component.x || 0,
-              top: component.y || 0,
             }}
           />
         ) : null;
@@ -156,6 +149,7 @@ console.log("rotate",component.rotate);
 
   const PreviewDocument = () => (
     <Document>
+       <FontRegistration />
       <Page size={{
          width:
          (template?.barcodeState?.labelState?.labelWidth ?? 300) * (template?.barcodeState?.labelState?.columnsPerRow ?? 1),
@@ -197,7 +191,7 @@ console.log("rotate",component.rotate);
           className="w-20"
         />
       </div> */}
-      <PDFViewer width="100%" height={600}>
+      <PDFViewer width="100%" height={700}>
         <PreviewDocument />
       </PDFViewer>
     </div>

@@ -174,7 +174,7 @@ const InventorySettingsForm = () => {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue??"").toString(),
+            settingsValue: (currentValue ?? "").toString(),
           });
         }
         return acc;
@@ -184,8 +184,8 @@ const InventorySettingsForm = () => {
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "inventory",
         updateList: modifiedSettings,
-      })) as any: null;
-      handleResponse(response,() => {}, () => {},false);
+      })) as any : null;
+      handleResponse(response, () => { }, () => { }, false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -205,7 +205,7 @@ const InventorySettingsForm = () => {
 
   return (
     <div className="h-screen max-h-dvh flex flex-col overflow-hidden">
-      <form className="space-y-6 overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-300 scrollbar-track-gray-100 overflow-auto">
+      <form className="space-y-6 overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
         <div className="erp-settings-form p-6 mb-16">
           <div className="flex flex-col justify-start items-stretch">
             <div className="flex flex-col gap-3 border rounded-lg p-4 mb-3 xxl:mb-6">
@@ -624,7 +624,7 @@ const InventorySettingsForm = () => {
                   required: false,
                   valueKey: "id",
                   labelKey: "label",
-                }} 
+                }}
                 options={[
                   { value: "Default.lba", label: "Default.lba" }
                 ]}
@@ -650,7 +650,7 @@ const InventorySettingsForm = () => {
                 }}
                 options={[
                   { value: "Warn", label: "Warn" },
-                  { value: "Block", label: "Block" },                  
+                  { value: "Block", label: "Block" },
                   { value: "Ignore", label: "Ignore" }
                 ]}
                 onChangeData={(data: any) =>

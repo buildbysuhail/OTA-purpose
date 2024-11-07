@@ -8,11 +8,11 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
-import { PartyCategoryManage } from "./currency-master-manage";
+import { CurrencyMasterManage } from "./currency-master-manage";
 
 
 const CurrencyMaster = () => {
-  const MemoizedCurrencyMasterManage = useMemo(() => React.memo(PartyCategoryManage), []);
+  const MemoizedCurrencyMasterManage = useMemo(() => React.memo(CurrencyMasterManage), []);
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation();

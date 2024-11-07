@@ -1,9 +1,9 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleCurrencyExchangePopup } from "../../../redux/slices/popup-reducer";
+import { toggleCurrencyExchangePopup, toggleCurrencyMasterPopup } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
@@ -31,6 +31,7 @@ import "./exchange-rates.css";
 import { handleResponse } from "../../../utilities/HandleResponse";
 import { CheckBoxTypes } from "devextreme-react/cjs/check-box";
 import { SelectBoxTypes } from "devextreme-react/cjs/select-box";
+import { CurrencyMasterManage } from "../../accounts/masters/currency-master/currency-master-manage";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
@@ -166,7 +167,7 @@ const ExchangeRates = () => {
   const onFocusedCellChanging = (e: { isHighlighted: boolean; }) => {
     e.isHighlighted = true;
   };
-  
+  const MemoizedCurrencyMasterManage = useMemo(() => React.memo(CurrencyMasterManage), []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -289,16 +290,16 @@ const ExchangeRates = () => {
                         label={t("base_currency")}
                       />
                     </Item>
-                    {/* <Item location="before">
+                    <Item location="after">
                       <ERPButton
                         type="button"
-                        disabled={postDataLoading}
                         variant="primary"
-                        onClick={handleLoad}
-                        loading={postDataLoading}
-                        title={t("load")}
+                        onClick={() => {
+                          dispatch(toggleCurrencyMasterPopup({ isOpen: true, key: null }));
+                        }}
+                        title={t("add")}
                       ></ERPButton>
-                    </Item> */}
+                    </Item>
                   </Toolbar>
                 </DataGrid>
               </div>
@@ -327,6 +328,16 @@ const ExchangeRates = () => {
           dispatch(toggleCurrencyExchangePopup({ isOpen: false }));
         }}
         content={<CurrencyExchangeManage />}
+      />
+        <ERPModal
+        isOpen={rootState.PopupData.currencyMaster.isOpen || false}
+        title={t("currency")}
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
+        }}
+        content={<MemoizedCurrencyMasterManage />}
       />
     </Fragment>
   );

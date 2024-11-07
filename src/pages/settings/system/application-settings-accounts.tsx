@@ -144,10 +144,23 @@ const ApplicationSettingsAccounts = () => {
   };
 
   const handleFieldChange = ((settingName: any, value: any) => {
-    setFormState((prevSettings = {} as AccountSettingsState) => ({
-      ...prevSettings,
-      [settingName]: value ?? ''
-    }));
+    setFormState((prevSettings = {} as AccountSettingsState) => {
+      if (settingName === 'allowSalesCounter' && value == false) {
+        const newSettings = {
+          ...prevSettings,
+          [settingName]: value,
+          ['allowUserwiseCounter']: false,
+          ['enableAuthorizationforShiftClose']: false
+        };
+        return newSettings;
+      } else {
+        const newSettings = {
+          ...prevSettings,
+          [settingName]: value ?? ''
+        };
+        return newSettings;
+      }
+    });
   });
   
   const handleSubmit = async () => {
@@ -656,7 +669,7 @@ const ApplicationSettingsAccounts = () => {
               <ERPCheckbox
                 id="enableAuthorizationforShiftClose"
                 disabled={!formState.allowSalesCounter}
-                checked={!formState.allowSalesCounter ? false : formState.enableAuthorizationforShiftClose}
+                checked={formState.enableAuthorizationforShiftClose}
                 data={formState}
                 label={t("enable_authorization_for_shift_close")}
                 onChangeData={(data) => handleFieldChange('enableAuthorizationforShiftClose', data.enableAuthorizationforShiftClose)}
@@ -706,7 +719,7 @@ const ApplicationSettingsAccounts = () => {
               <ERPCheckbox
                 id="allowUserwiseCounter"
                 disabled={!formState.allowSalesCounter}
-                checked={!formState.allowSalesCounter ? false : formState.allowUserwiseCounter}
+                checked={formState.allowUserwiseCounter}
                 data={formState}
                 label={t("allow_user_wise_counter")}
                 onChangeData={(data) => handleFieldChange('allowUserwiseCounter', data.allowUserwiseCounter)}

@@ -25,6 +25,8 @@ interface TaxSettingsFormState {
   inputCessAccount: string;
   defaultSRPrefixForPOS: string;
   outputCessAccount: string;
+  inputSGSTAccount:string;
+  outputSGSTAccount:string;
   inputSGSTLedgerID: string;
   inputAddCessAccount: string;
   outputSGSTLedgerID: string;
@@ -67,6 +69,8 @@ const initialStateTaxsettings: TaxSettingsFormState = {
   inputSGSTLedgerID: '',
   inputAddCessAccount: '',
   outputSGSTLedgerID: '',
+  inputSGSTAccount:'',
+  outputSGSTAccount:'',
   outputAddCessAccount: '',
   inputCGSTAccount: '',
   expensesTaxAccount: '',
@@ -393,7 +397,7 @@ const ERPSettingsFormGSTTaxes = () => {
               field={{
                 id: "defaultFormTypeForPOS",
                 getListUrl: Urls.data_FormTypeBySI,
-                valueKey: "VoucherID",
+                valueKey: "FormType",
                 labelKey: "FormType",
               }}
               data={formState}
@@ -453,35 +457,35 @@ const ERPSettingsFormGSTTaxes = () => {
             {(hasPermitted) => (
               <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
                 <ERPDataCombobox
-                  id="inputSGSTLedgerID"
-                  value={formState?.inputSGSTLedgerID}
+                  id="inputSGSTAccount"
+                  value={formState?.inputSGSTAccount}
                   data={formState}
-                  disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputSGSTLedgerID)}
+                  disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputSGSTAccount)}
                   label={t("input_SGST_account")}
                   field={{
-                    id: "inputSGSTLedgerID",
+                    id: "inputSGSTAccount",
                     // required: true,
                     getListUrl: Urls.data_duties_taxes,
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("inputSGSTLedgerID", data.inputSGSTLedgerID)}
+                  onChangeData={(data: any) => handleFieldChange("inputSGSTAccount", data.inputSGSTAccount)}
                 />
 
                 <ERPDataCombobox
-                  id="outputSGSTLedgerID"
-                  value={formState?.outputSGSTLedgerID}
+                  id="outputSGSTAccount"
+                  value={formState?.outputSGSTAccount}
                   data={formState}
-                  disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputSGSTLedgerID)}
+                  disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputSGSTAccount)}
                   label={t("output_SGST_account")}
                   field={{
-                    id: "outputSGSTLedgerID",
+                    id: "outputSGSTAccount",
                     // required: true,
                     getListUrl: Urls.data_duties_taxes,
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("outputSGSTLedgerID", data.outputSGSTLedgerID)}
+                  onChangeData={(data: any) => handleFieldChange("outputSGSTAccount", data.outputSGSTAccount)}
                 />
 
                 <ERPDataCombobox

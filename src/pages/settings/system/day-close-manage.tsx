@@ -112,6 +112,7 @@ const DayCloseManage = () => {
         onClear={handleClear}
         submitDisabled={!formState?.data?.isAgree}
         isEdit={isEdit}
+        title={t("close_single_day")}
         isLoading={isLoading}
         onCancel={onClose}
         onSubmit={handleSubmit}

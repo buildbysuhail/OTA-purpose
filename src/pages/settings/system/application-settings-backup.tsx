@@ -133,11 +133,13 @@ const BackupSettingsForm: React.FC = () => {
                   { value: "Scheduled BackUp", label: "Scheduled BackUp" },
                 ]}
               />
+              {/* disabled always
+              disabled={formState.backupMethods == "No BackUp" || true} */}
               <ERPInput
                 id="backUpPath"
                 value={formState.backUpPath}
                 data={formState}
-                disabled={formState.backupMethods == "No BackUp"}
+                disabled={formState.backupMethods == "No BackUp" || true}
                 label={t("backup_path")}
                 placeholder={t("enter_discount_threshold")}
                 onChangeData={(data: any) =>
@@ -150,7 +152,7 @@ const BackupSettingsForm: React.FC = () => {
                 data={formState}
                 label={t("duration")}
                 disabled={formState.backupMethods == "No BackUp" || formState.backupMethods == "BackUp On Close"}
-                placeholder={t("enter_discount_threshold")}
+                placeholder={t("duration")}
                 type="number"
                 onChangeData={(data: any) =>
                   handleFieldChange(

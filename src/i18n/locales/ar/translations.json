@@ -1037,7 +1037,6 @@
   "whatsapp_integrations": "التكامل واتس اب",
   "email_integrations": "تكاملات البريد الإلكتروني",
   "show_balance": "عرض الرصيد",
-
   "inventory_masters": "ماجستير المخزون",
   "group_name": "اسم المجموعة",
   "margin_percentage": "نسبة الهامش",
@@ -1050,14 +1049,11 @@
   "kitchen_name": "اسم المطبخ",
   "group_category": "فئة المجموعة",
   "section": "القسم",
-
   "category_code": "رمز الفئة",
   "category_name": "اسم الفئة",
   "common": "مشترك",
-
   "discount_%": "خصم %",
   "margin_%": "هامش %",
-
   "unit_code": "رمز الوحدة",
   "unit_type": "نوع الوحدة",
   "multiple_factor": "عامل مضاعف",
@@ -1066,7 +1062,6 @@
   "decimal_point": "النقطة العشرية",
   "total_unit_in_base_unit": "إجمالي الوحدات في الوحدة الأساسية",
   "unit_of_measure": "وحدة القياس",
-
   "vehicle_name": "اسم المركبة",
   "vehicle_number": "رقم المركبة",
   "no_of_wheels": "عدد العجلات",
@@ -1079,19 +1074,15 @@
   "is_rental": "هل هو للإيجار",
   "odo_meter": "عداد المسافة",
   "rental": "الإيجار",
-
   "is_stock_warehouse": "هل هو مستودع مخزون",
   "warehouse_type": "نوع المستودع",
   "cash_ledger": "دفتر النقد",
   "warehouse_name": "اسم المستودع",
   "type": "النوع",
-
   "customer": "هامش %",
   "supplier": "هامش %",
-
   "physical": "مادي",
   "van": "فان",
-
   "gst_number": "رقم GST",
   "sales_VAT_%": "ضريبة القيمة المضافة على المبيعات %",
   "purchase_VAT_%": "ضريبة القيمة المضافة على الشراء %",
@@ -1102,7 +1093,6 @@
   "p_VAT_%": "ضريبة القيمة المضافة P %",
   "s_cst_%": "ضريبة المبيعات المركزية S %",
   "p_cst_%": "ضريبة المبيعات المركزية P %",
-
   "Dr": "مدين",
   "Cr": "دائن",
   "scheme_code": "رمز المخطط",
@@ -1119,7 +1109,6 @@
   "free_product": "منتج مجاني",
   "schemes": "المخططات",
   "disc_%": "خصم %",
-
   "parent_route_ID": "معرّف المسار الرئيسي",
   "sales_route_ID": "معرّف مسار المبيعات",
   "sales_man_ID": "معرّف مندوب المبيعات",
@@ -1128,12 +1117,10 @@
   "salesman": "مندوب المبيعات",
   "main_route": "المسار الرئيسي",
   "sub_route": "المسار الفرعي",
-
   "dine_in": "الأكل في المطعم",
   "sales_day": "يوم البيع",
   "sales_man_id": "رقم تعريف البائع",
   "section_code": "رمز القسم ",
-
   "delivery": "التوصيل",
   "pick_up": "الاستلام",
   "ac": "مكيف الهواء",
@@ -1162,7 +1149,6 @@
   "printed_table": "طاولة مطبوعة",
   "paid_table": "طاولة مدفوعة",
   "running_kot_table": "طاولة KOT قيد التشغيل",
-
   "order_view": "عرض الطلب",
   "kot_view": "عرض KOT",
   "view_details": "عرض التفاصيل",
@@ -1173,7 +1159,6 @@
   "mfr": "MFR",
   "total_orders": "إجمالي الطلبات",
   "online": "عبر الإنترنت",
-
   "food_is_ready": "الطعام جاهز",
   "orders": "الطلبات",
   "online_orders": "الطلبات عبر الإنترنت",
@@ -1195,7 +1180,6 @@
   "delivery_boys": "سعاة التوصيل",
   "led_display": "عرض LED",
   "marketplace": "سوق",
-
   "operations": "العمليات",
   "call_for_support": "الاتصال بالدعم",
   "send_a_mail": "إرسال بريد إلكتروني",
@@ -1206,7 +1190,6 @@
   "menu_item_on_off": "تفعيل / تعطيل عنصر القائمة",
   "service_renewal": "تجديد الخدمة",
   "custom_order_status": "حالة الطلب المخصصة",
-
   "saved_bill": "الفاتورة المحفوظة",
   "printed_bill": "الفاتورة المطبوعة",
   "cancelled_bill": "الفاتورة الملغاة",
@@ -1216,7 +1199,6 @@
   "customer_name": "اسم العميل",
   "my_amount": "المبلغ الخاص بي",
   "created": "تم الإنشاء",
-
   "special_schemes": "الخطط الخاصة",
   "special_price": "السعر الخاص",
   "FOC_scheme": "خطة FOC",
@@ -1232,7 +1214,6 @@
   "scheme_price": "سعر الخطة",
   "names": "الأسماء",
   "units": "الوحدات",
-
   "comments": "التعليقات",
   "no_of_persons": "عدد الأشخاص",
   "locality": "المنطقة",
@@ -1242,7 +1223,6 @@
   "occupied": "مشغول",
   "reserved": "محجوز",
   "customer_details": "تفاصيل العميل",
-  
   "sub_total": "المجموع الفرعي",
   "more": "المزيد",
   "delivery_charge": "رسوم التوصيل",
@@ -1251,7 +1231,6 @@
   "customer_paid": "المبلغ المدفوع من العميل",
   "return_to_customer": "الباقي للعميل",
   "tip": "إكرامية",
-
   "product_batch_ID": "معرّف دفعة المنتج",
   "special_price_ID": "معرّف السعر الخاص",
   "X": "X",
@@ -1262,7 +1241,6 @@
   "qty_discount_ID": "معرّف خصم الكمية",
   "qtys": "الكمية",
   "listed_product_prices": "أسعار المنتجات المدرجة",
-
   "help_tips": "نصائح المساعدة",
   "shortcut_keys": "مفاتيح الاختصار",
   "used_in_bill": "مستخدم في الفاتورة",
@@ -1271,9 +1249,7 @@
   "preparing": "جاري التحضير",
   "enable_order_management": "تمكين إدارة الطلبات",
   "enable_import_purchase": "تمكين استيراد المشتريات",
-
   "custom_order_status_configuration": "تكوين حالة الطلب المخصص",
-  
   "purchase_summary_report": "تقرير ملخص المشتريات",
   "gross": "إجمالي",
   "bill_discount": "خصم الفاتورة",
@@ -1287,7 +1263,6 @@
   "si": "رقم الفاتورة",
   "sr_amount": "مبلغ الاسترجاع",
   "set_qty1_for_weighing_scale_item_value_mode": "ضبط الكمية 1 لوضع قيمة عنصر الميزان",
-
   "purchase_register_report": "تقرير سجل المشتريات",
   "manual_barcode": "الباركود اليدوي",
   "brand": "العلامة التجارية",
@@ -1314,16 +1289,17 @@
   "warranty": "الضمان",
   "master_ID": "معرّف الرئيسي",
   "excise_tax": "ضريبة الإنتاج",
-  "party_wise_report":"تقرير الحزب الحكيم",
-
+  "party_wise_report": "تقرير الحزب الحكيم",
   "cash_summary_report": "تقرير ملخص النقد",
   "transaction_history_accounts": "تاريخ المعاملات للحسابات",
   "transaction_history_inventory": "تاريخ المعاملات للمخزون",
   "billwise_profit_report": "تقرير الربح حسب الفاتورة",
   "partywise_summary_report": "تقرير ملخص حسب الطرف",
   "profit_&_loss_account": "حساب الأرباح والخسائر",
-  "hideLedgerID":"إخفاء رقم الدفتر",
+  "hideLedgerID": "إخفاء رقم الدفتر",
   "isGroup": "هل هو مجموعة",
   "group_head": "رئيس المجموعة",
-  "hide_account_ledger":"إخفاء دفتر حسابات"
+  "hide_account_ledger": "إخفاء دفتر حسابات",
+  "close_single_day": "إغلاق يوم واحد",
+  "vr_prefix": "بادئة القسيمة"
 }

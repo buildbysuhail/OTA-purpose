@@ -32,26 +32,50 @@ type EWBTaxProData = {
     };
 };
 
-const initialEWBTaxProData: EWBTaxProData = {
-    ewbApiSetting: {
-        gspName: '',
-        aspUserId: '',
-        aspPassword: '',
-        ewbClientId: '',
-        ewbClientSecret: '',
-        ewbgspUserID: '',
-        authUrl: '',
-        baseUrl: '',
-        aspUrl: ''
+const initialEWBTaxProData = {
+    data:{
+        ewbApiSetting: {
+            gspName: '',
+            aspUserId: '',
+            aspPassword: '',
+            ewbClientId: '',
+            ewbClientSecret: '',
+            ewbgspUserID: '',
+            authUrl: '',
+            baseUrl: '',
+            aspUrl: ''
+        },
+        ewbApiLoginDetails: {
+            ewbGstin: '',
+            ewbUserID: '',
+            ewbPassword: '',
+            ewbAppKey: '',
+            ewbAuthToken: '',
+            ewbTokenExp: '',
+            ewbSEK: ''
+        }
     },
-    ewbApiLoginDetails: {
-        ewbGstin: '',
-        ewbUserID: '',
-        ewbPassword: '',
-        ewbAppKey: '',
-        ewbAuthToken: '',
-        ewbTokenExp: '',
-        ewbSEK: ''
+    validations: {
+        ewbApiSetting: {
+            gspName: '',
+            aspUserId: '',
+            aspPassword: '',
+            ewbClientId: '',
+            ewbClientSecret: '',
+            ewbgspUserID: '',
+            authUrl: '',
+            baseUrl: '',
+            aspUrl: ''
+        },
+        ewbApiLoginDetails: {
+            ewbGstin: '',
+            ewbUserID: '',
+            ewbPassword: '',
+            ewbAppKey: '',
+            ewbAuthToken: '',
+            ewbTokenExp: '',
+            ewbSEK: ''
+        }
     }
 };
 

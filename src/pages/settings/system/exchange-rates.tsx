@@ -84,7 +84,7 @@ const ExchangeRates = () => {
   };
   const handleSubmit = async () => {
     setPostDataLoading(true);
-    
+    try {
     const dataToSubmit = store.filter(
       (row: any) => row.toCurrency !== null && row.rate !== null
     );
@@ -98,6 +98,11 @@ const ExchangeRates = () => {
 
     setStore(result?.data);
     setPostDataLoading(false);
+  } catch (error) {
+    console.error("Error saving settings:", error);
+  } finally {
+    setPostDataLoading(false);
+  }
   };
   useEffect(() => {
     try {

@@ -162,6 +162,7 @@ const InventorySettingsForm = () => {
       [settingName]: value ?? "",
     }));
   };
+  
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
@@ -170,22 +171,24 @@ const InventorySettingsForm = () => {
         const currentValue = formState[key as keyof ApplicationInventorySettings];
         const prevValue = formStatePrev[key as keyof ApplicationInventorySettings];
 
-        if (currentValue !== prevValue) {
+        if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
+        (currentValue === true && prevValue === false)) {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue ?? "").toString(),
+            settingsValue: currentValue === false ? "false" :
+            currentValue === true ? "true" :
+            (currentValue ?? "").toString(),
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
-      console.log(modifiedSettings);
 
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "inventory",
         updateList: modifiedSettings,
       })) as any : null;
-      handleResponse(response, () => { }, () => { }, false);
+      handleResponse(response, () => {setFormStatePrev(formState)}, () => { }, false);
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

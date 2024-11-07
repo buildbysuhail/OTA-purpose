@@ -163,22 +163,24 @@ const ERPSettingsFormGSTTaxes = () => {
         const currentValue = formState?.[key as keyof TaxSettingsFormState];
         const prevValue = formStatePrev[key as keyof TaxSettingsFormState];
 
-        if (currentValue !== prevValue) {
+        if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
+        (currentValue === true && prevValue === false)) {
 
           acc.push({
             settingsName: key,
-            settingsValue: (currentValue ?? "").toString(),
+            settingsValue: currentValue === false ? "false" :
+            currentValue === true ? "true" :
+            (currentValue ?? "").toString(),
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
-      console.log(modifiedSettings);
 
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: 'GSTTaxes',
         updateList: modifiedSettings
       })) as any : null
-      handleResponse(response, () => { }, () => { }, false);
+      handleResponse(response, () => {setFormStatePrev(formState) }, () => { }, false);
 
     } catch (error) {
       console.error('Error saving settings:', error);

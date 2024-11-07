@@ -119,23 +119,25 @@ const ERPSettingsFormMain = () => {
         const currentValue = settings?.[key as keyof ApplicationMainSettings];
         const prevValue = settingsPrev[key as keyof ApplicationMainSettings];
 
-        if (currentValue !== prevValue) {
+      if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
+      (currentValue === true && prevValue === false)) {
 
-
-          acc.push({
-            settingsName: key,
-            settingsValue: (currentValue ?? "").toString(),
-          });
-        }
-        return acc;
-      }, [] as { settingsName: string; settingsValue: string }[]);
-      console.log(modifiedSettings);
+        acc.push({
+          settingsName: key,
+          settingsValue: currentValue === false ? "false" :
+          currentValue === true ? "true" :
+          (currentValue ?? "").toString(),
+        });
+      }
+      return acc;
+    }, [] as { settingsName: string; settingsValue: string }[]);
 
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "main",
         updateList: modifiedSettings,
       })) as any : null;
-      handleResponse(response, () => { }, () => { }, false);
+      handleResponse(response,() => {setSettingsPrev(settings)}, () => { }, false);
+    
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

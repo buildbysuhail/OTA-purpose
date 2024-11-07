@@ -46,7 +46,7 @@ const Templates = ({ }) => {
   const [showPreview, setShowPreview] = useState<previewState>({ show: false });
   const [showTemplateListing, setShowTemplateListing] = useState<boolean>(true);
   const [templateGroup, setTemplateGroup] = useState<TemplateGroupTypes>(
-    (searchParams?.get("template_group")! as TemplateGroupTypes) ?? t("sales_invoice")
+    (searchParams?.get("template_group")! as TemplateGroupTypes) ?? "sales_invoice"
   );
 
   /* ########################################################################################### */

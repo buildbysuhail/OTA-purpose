@@ -23,8 +23,8 @@ const Remainders = () => {
       dataType: "number",
       allowSorting: true,
       allowFiltering: true,
-      minWidth: 150,
-      isLocked: true,
+      width: 150,
+      visible:false,
     },
     {
       dataField: "remainderName",
@@ -42,7 +42,7 @@ const Remainders = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      minWidth: 250,
     },
     {
       dataField: "remaindingDate",
@@ -51,7 +51,7 @@ const Remainders = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      width: 200,
     },
     {
       dataField: "numberOfDays",
@@ -60,7 +60,7 @@ const Remainders = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      width: 150,
     },
 
     {

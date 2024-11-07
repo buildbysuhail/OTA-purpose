@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import {
   toggleCurrencyMasterPopup,
-  togglePartyCategoryPopup,
 } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
@@ -15,7 +14,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { CurrencyData, initialCurrency } from "./currency-master-manage-type";
 
-export const PartyCategoryManage: React.FC = React.memo(() => {
+export const CurrencyMasterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 

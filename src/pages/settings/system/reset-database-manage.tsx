@@ -47,8 +47,8 @@ const ResetDbManage: React.FC = React.memo(() => {
   const location = useLocation();
   const initialResetDbData = {
     data: {
-      from: "",
-      to: "",
+      from: new Date(),
+      to: new Date(),
       password: "",
       selectAll: false,
       updateStock: false,
@@ -111,7 +111,7 @@ const ResetDbManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
 
   const handleSubmit = useCallback(async () => {
-    
+    debugger;
     const masters = Object.keys(master)
       .filter((key) => master[key]) // Filter only the true values
       .map((key) => ({ tableTypeCode: key }));
@@ -143,7 +143,7 @@ const ResetDbManage: React.FC = React.memo(() => {
         }));
       }
     );
-  }, [postData?.data]);
+  }, [postData?.data, master,master]);
 
   const onClose = useCallback(() => {
     dispatch(toggleResetDataBasePopup({ isOpen: false, key: null }));
@@ -191,6 +191,7 @@ const ResetDbManage: React.FC = React.memo(() => {
           <ERPInput
             id="password"
             label={t("password")}
+            type="password"
             placeholder={t("password")}
             required={true}
             data={postData.data}
@@ -537,6 +538,11 @@ const ResetDbManage: React.FC = React.memo(() => {
                   ...prev,
                   data: data,
                 }));
+                const sds = allTransactions?.map((tr: any) => ({
+                  ...tr, // Spread existing properties
+                  checked: data.selectAll, // Add new `checked` property
+                }));
+                setAllTransactions(sds);
               }}
             />
             <ERPCheckbox

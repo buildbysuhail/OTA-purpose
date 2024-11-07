@@ -115,6 +115,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     menuPosition: null,
     headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
+    scrollbarWidth: "thick",
+    scrollbarColor: 'rgb(230 234 235)'
   });
   const [_theme, _setTheme] = useState<Theme>({
     direction: "ltr",
@@ -128,6 +130,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     menuPosition: null,
     headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
+    scrollbarWidth: "thick",
+    scrollbarColor: 'rgb(230 234 235)'
   });
 
   const resetThemeChange = () => {
@@ -853,6 +857,53 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                         }
                                       }}
                                       value={"#FFFFFF"}
+                                    />
+                                  </div>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="ti-form-radio switch-select ps-0 mt-1 color-primary-light"></div>
+                        </div>
+                      </div>
+                      <div className="theme-colors">
+                        <p className="switcher-style-head">Scrollbar:</p>
+                        <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
+                          
+                          <div className="ti-form-radio switch-select ps-0 mt-1 ">
+                            <div
+                              className="theme-container"
+                              style={{
+                                backgroundColor: `${theme.scrollbarColor}`,
+                              }}
+                            ></div>
+                            <div className="h-8 w-8 overflow-hidden rounded-full border border-solid border-inputborder -top-[4px]  after:text-white/70 after:text-[1.25rem]" style={{
+                                backgroundColor: `${theme.scrollbarColor}`,
+                              }}>
+                              <div className="pickr">
+                                <button
+                                  className="pcr-button"
+                                  onClick={(ele: any) => {
+                                    if (ele.target.querySelector("input")) {
+                                      ele.target.querySelector("input").click();
+                                    }
+                                  }}
+                                >
+                                  <div className="Themeprimarycolor  pickr-container-primary">
+                                    <ColorPicker
+                                      onChange={(e: any) => {
+                                        const rgb = hexToRgb(e.target.value);
+
+                                        if (rgb !== null) {
+                                          const { r, g, b } = rgb;
+                                          setTheme((prevTheme) => ({
+                                            ...prevTheme,
+                                            scrollbarColor: `${r},  ${g},  ${b}`,
+                                          }));
+                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                        }
+                                      }}
+                                      value={"rgb(230 234 235)"}
                                     />
                                   </div>
                                 </button>

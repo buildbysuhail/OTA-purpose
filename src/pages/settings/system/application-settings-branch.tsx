@@ -122,7 +122,7 @@ const BranchSettingsForm: React.FC = () => {
                   <ERPDataCombobox
                     id="countryName"
                     value={formState.countryName}
-                    disabled={hasPermitted}
+                    disabled={!hasPermitted}
                     field={{
                       id: "countryName",
                       getListUrl: Urls.data_countries,
@@ -221,7 +221,7 @@ const BranchSettingsForm: React.FC = () => {
                   <ERPCheckbox
                     id="maintainMasterEntry"
                     label={t("maintain_inventory_master_entry")}
-                    disabled={hasPermitted}
+                    disabled={!hasPermitted}
                     data={formState}
                     checked={formState?.maintainMasterEntry}
                     onChangeData={(data) =>
@@ -251,7 +251,7 @@ const BranchSettingsForm: React.FC = () => {
                 {(hasPermitted) => (
                   <ERPCheckbox
                     id="useBranchWiseSalesPrice"
-                    disabled={hasPermitted}
+                    disabled={!hasPermitted}
                     label={t("use_branch_wise_sales_price")}
                     data={formState}
                     checked={formState?.useBranchWiseSalesPrice}
@@ -362,7 +362,7 @@ const BranchSettingsForm: React.FC = () => {
                   {(hasPermitted) => (
                     <ERPInput
                       id="kSA_EInvoice_Sync_SystemCode"
-                      disabled={hasPermitted}
+                      disabled={!hasPermitted}
                       value={formState.kSA_EInvoice_Sync_SystemCode}
                       data={formState}
                       label={t("e-Invoice_sync_systemCode")}

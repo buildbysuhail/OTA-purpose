@@ -270,10 +270,12 @@ export function useFormManager<T>({
 
 
   const handleClear = useCallback(() => {
+    debugger;
     if (useApiClient) {
+      const sds = isEdit || (method != undefined && method == ActionType.POST && loadDataRequired) ? {...initialData?.data,[keyField]: key}: {...initialData.data};
       setLocalFormState((prevState: any) => ({
         ...prevState,
-        data: (isEdit || (method != undefined && method == ActionType.POST && loadDataRequired)) ? {...initialData?.data,[keyField]: key}: initialData,
+        data: {...sds},
         validations: {},
       }));
     } else {
@@ -292,8 +294,8 @@ export function useFormManager<T>({
 
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
-      
-      const value = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId) || "";
+      const _value = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId);
+      const value =  _value == 0 ? "0" : _value|| "";
       const validation = getNestedValue((useApiClient ? localFormState : reduxFormState)?.validations, fieldId);
       const checked = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId) || false;
 

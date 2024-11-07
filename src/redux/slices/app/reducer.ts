@@ -35,6 +35,8 @@ const initialState: AppInitialState = {
     body: {
       class: ""
     },
+    scrollbarWidth: "thick",
+    scrollbarColor: 'rgb(230 234 235)',
     //
     pdfTemplates: null,
     tableState: {

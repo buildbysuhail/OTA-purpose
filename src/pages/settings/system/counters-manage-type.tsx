@@ -3,6 +3,7 @@ export interface CounterData {
   descriptions: string;
   cashLedgerID: number;
   warehouseID: number;
+  vrPrefix: string;
   maintainShift: boolean;
 }
 
@@ -13,13 +14,15 @@ export const initialDataCounter = {
     cashLedgerID: 0,
     warehouseID: 0,
     counterID: 0,
-    maintainShift: true,
+    vrPrefix: "",
+    maintainShift: false,
   },
   validations: {
     counterName: "",
     descriptions: "",
     cashLedgerID: "",
     warehouseID: "",
+    vrPrefix: "",
     maintainShift: "",
   },
 };

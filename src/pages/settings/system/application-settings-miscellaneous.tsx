@@ -221,7 +221,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                             )
                           }
                         />
-                        {hasPermitted != true &&
+                        {hasPermitted == true &&
                           <ERPCheckbox
                             id="allowSalesDetailedEdit"
                             checked={formState.allowSalesDetailedEdit}

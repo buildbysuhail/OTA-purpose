@@ -52,8 +52,8 @@ export const VoucherManage: React.FC = React.memo(() => {
         />
          <ERPInput
           {...getFieldProps("formType")}
-          label={t("formType")}
-          placeholder={t("formType")}
+          label={t("form_type")}
+          placeholder={t("form_type")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("formType", data.formType)}
         />

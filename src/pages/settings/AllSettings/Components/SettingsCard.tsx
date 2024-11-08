@@ -67,9 +67,9 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
         <div className="flex gap-2 items-center">
           <p className="text-sm font-medium">{t(data?.title)}</p>
         </div>
-        <div className={`grid grid-cols-${data?.columns ? data?.columns : 1} gap-24`}>
+        <div className={`grid grid-cols-${data?.columns ? data?.columns : 1}`}>
           {distributedItems.map((columnItems: any, idx: number) => (
-            <div className="flex flex-col gap-3" key={`QQEO39_${idx}`}>
+            <div className="flex flex-col" key={`QQEO39_${idx}`}>
               {columnItems?.filter((x: any) => x.visible == true)?.map((route: any, routeIdx: number) => (
                 <div key={`JPKNE84_${routeIdx}`}>
                   {route?.disabled ? (
@@ -78,7 +78,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
                     </p>
                   ) : (
                     <p
-                      className="text-xs cursor-pointer hover:italic hover:text-accent transition-all ease-in-out"
+                      className="text-xs cursor-pointer hover:text-accent transition-all ease-in-out p-1 hover:bg-gray-400 hover:rounded-[5px]"
                       onClick={() => {
                         route?.path && route?.type === "link"
                           ? navigate(route?.path)

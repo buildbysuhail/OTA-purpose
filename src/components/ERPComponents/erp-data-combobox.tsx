@@ -110,7 +110,7 @@ const truncateText = (
   return text;
 };
 
-export default function ImprovedERPDataCombobox({
+export default function ERPDataCombobox({
   id,
   label,
   handleChange,

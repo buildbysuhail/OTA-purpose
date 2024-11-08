@@ -1,5 +1,7 @@
+'use client'
+
 import React, { useState, useEffect } from 'react';
-import { Document, Page, View, Text, StyleSheet, Image, PDFViewer, } from "@react-pdf/renderer";
+import { Document, Page, View, Text, StyleSheet, Image, PDFViewer } from "@react-pdf/renderer";
 import JsBarcode from 'jsbarcode';
 import { DesignerElementType, PlacedComponent, TemplateState } from "../InvoiceDesigner/Designer/interfaces";
 import { Style } from '@react-pdf/types';
@@ -16,7 +18,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
 export interface DownloadPreviewProps {
   template?: TemplateState;
   data?: any;
@@ -24,10 +25,10 @@ export interface DownloadPreviewProps {
 }
 
 export default function Component({ template, docTitle = "Document Preview", data }: DownloadPreviewProps = {}) {
-  
-  // const [columnsPerRow, setColumnsPerRow] = useState(2);
   const [barcodeImages, setBarcodeImages] = useState<{ [key: string]: string }>({});
   const [chunkedData, setChunkedData] = useState<any>();
+  const pxToPoint = (px: number) => px * (72 / 96);
+
   useEffect(() => {
     const columnsPerRow = template?.barcodeState?.labelState?.columnsPerRow ?? 2;
     const _chunkedData = data?.reduce((resultArray: any, item: any, index: number) => {
@@ -49,26 +50,32 @@ export default function Component({ template, docTitle = "Document Preview", dat
         data?.forEach((item: any) => {
           template.barcodeState?.placedComponents?.forEach((barcodeComponent) => {
             if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
-              
               const canvas = document.createElement('canvas');
-              canvas.height = barcodeComponent.height;
-              canvas.width = barcodeComponent.width;
-              // canvas.width = template?.barcodeState?.labelState?.labelWidth??200;
-              // canvas.
-              JsBarcode(canvas, item?.autoBarcode, {
-                displayValue: false,
+              canvas.height = pxToPoint(barcodeComponent.height);
+              canvas.width = pxToPoint(barcodeComponent.width);
+
+              // Calculate the barWidth based on the component width and the number of characters
+              const barcodeText = item?.autoBarcode || '';
+              const barWidth = 10; // Adjust this calculation as needed
+
+              JsBarcode(canvas, barcodeText, {
                 ...barcodeComponent.barcodeProps,
-                format: barcodeComponent.barcodeProps?.format ?? "CODE128", // Barcode format
-                width: barcodeComponent.barcodeProps?.barWidth || 2, // Set bar width or default to 2
-                height: barcodeComponent.barcodeProps?.height || 75,    // Set height or default to 75
-                margin: barcodeComponent.barcodeProps?.margin || 0,    // Margin around the barcode
-                background: barcodeComponent.barcodeProps?.background || "#FFFFFF", // Background color
-                lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",   // Line color for bars
-                // displayValue: barcodeComponent.barcodeProps?.showText,  // Display text below the barcode
-                textAlign: barcodeComponent.barcodeProps?.textAlign,    // Center-align text
-                font: "monospace",      // Font family for text
-                fontSize: barcodeComponent.barcodeProps?.fontSize || 21, // Font size
-                textMargin: barcodeComponent.barcodeProps?.textMargin || 5, // Margin between bars and text
+                width: 100,
+                format: barcodeComponent.barcodeProps?.format ?? "CODE128",
+                margin: barcodeComponent.barcodeProps?.margin || 0,
+                background: barcodeComponent.barcodeProps?.background || "#FFFFFF",
+                lineColor: barcodeComponent.barcodeProps?.lineColor || "#000000",
+                textAlign: barcodeComponent.barcodeProps?.textAlign,
+                height: pxToPoint(barcodeComponent.height),
+                marginBottom: 0,
+                displayValue: barcodeComponent.barcodeProps.showText,
+                valid: (valid: boolean) => {
+                  if (!valid) {
+                    throw new Error("Invalid barcode");
+                  }
+                },
+                fontSize: barcodeComponent.barcodeProps?.fontSize || 21,
+                textMargin: barcodeComponent.barcodeProps?.textMargin || 5,
               });
               images[`${item.siNo}-${barcodeComponent.id}`] = canvas.toDataURL('image/png');
             }
@@ -80,19 +87,16 @@ export default function Component({ template, docTitle = "Document Preview", dat
     };
 
     generateBarcodeImages();
-  }, [template?.barcodeState?.placedComponents]);
+  }, [template?.barcodeState?.placedComponents, data]);
 
   const renderComponent = (component: PlacedComponent, data: any) => {
-    debugger;
     const baseStyle: Style = {
       position: 'absolute',
       left: component.x,
       top: component.y,
-      transform: `rotate(${component.rotate || 0}deg)`, 
+      transform: `rotate(${component.rotate || 0}deg)`,
       transformOrigin: "center",
-      
     };
-console.log("rotate",component.rotate);
 
     switch (component.type) {
       case DesignerElementType.text:
@@ -101,7 +105,7 @@ console.log("rotate",component.rotate);
             key={component.id}
             style={{
               ...baseStyle,
-              fontFamily: component.font|| 'Roboto',
+              fontFamily: component.font || 'Roboto',
               fontSize: component.fontSize || 12,
               fontStyle: component.fontStyle || "normal",
               textAlign: component.textAlign || "center",
@@ -116,19 +120,19 @@ console.log("rotate",component.rotate);
       case DesignerElementType.field:
         return (
           <View key={component.id} style={baseStyle}>
-          <Text
-            style={{
-              fontFamily: component.font || 'Roboto',
-              fontSize: component.fontSize || 12,
-              fontStyle: component.fontStyle || "normal",
-              textAlign: component.textAlign || "center",
-              height: component.height || 50,
-              width: component.width || 50,
-            }}
-          >
-            {component.content}
-          </Text>
-        </View>
+            <Text
+              style={{
+                fontFamily: component.font || 'Roboto',
+                fontSize: component.fontSize || 12,
+                fontStyle: component.fontStyle || "normal",
+                textAlign: component.textAlign || "center",
+                height: component.height || 50,
+                width: component.width || 50,
+              }}
+            >
+              {data[component.content] || "N/A"}
+            </Text>
+          </View>
         );
 
       case DesignerElementType.barcode:
@@ -139,7 +143,7 @@ console.log("rotate",component.rotate);
             src={barcodeImages[barcodeKey]}
             style={{
               ...baseStyle,
-              height: component.height || 50,
+              height: pxToPoint(component.height) || 50,
               width: component.width || 50,
             }}
           />
@@ -152,23 +156,48 @@ console.log("rotate",component.rotate);
 
   const PreviewDocument = () => (
     <Document>
-       <FontRegistration />
+      <FontRegistration />
       <Page size={{
-         width:
-         (template?.barcodeState?.labelState?.labelWidth ?? 300) * (template?.barcodeState?.labelState?.columnsPerRow ?? 1),
+        width: pxToPoint(
+          (template?.barcodeState?.labelState?.labelWidth ?? 300) *
+          (template?.barcodeState?.labelState?.columnsPerRow ?? 1)
+        ) +
+          (
+            chunkedData &&
+              chunkedData[0] &&
+              chunkedData[0].length > 1
+              ? pxToPoint((template?.barcodeState?.labelState?.gap?.hgap ?? 0) * (chunkedData[0].length - 1))
+              : 0
+          ),
 
-       height:
-         (template?.barcodeState?.labelState?.labelHeight ?? 300) * (template?.barcodeState?.labelState?.rowsPerPage ?? 1), 
+        height: pxToPoint(
+          (template?.barcodeState?.labelState?.labelHeight ?? 300) *
+          (template?.barcodeState?.labelState?.rowsPerPage ?? 1)
+        ) +
+          (
+            template?.barcodeState?.labelState?.rowsPerPage &&
+              template.barcodeState.labelState.rowsPerPage > 1
+              ? pxToPoint((template?.barcodeState?.labelState?.gap?.vgap ?? 0) * (template.barcodeState.labelState.rowsPerPage - 1))
+              : 0
+          ),
       }} style={styles.page}>
-        {chunkedData?.map((row: any, rowIndex: any) => (
-          <View style={styles.row}>
-            {row?.map((item: any) => (
+        {chunkedData?.map((label: any, index: number) => (
+          <View key={index}
+            style={{
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              marginTop: index % (template?.barcodeState?.labelState?.rowsPerPage || 1) !== 0
+                ? pxToPoint(template?.barcodeState?.labelState?.gap?.vgap || 0)
+                : '0pt',
+            }}>
+            {label?.map((item: any, colIndex: number) => (
               <View
                 key={item.siNo}
                 style={{
-                  width: template?.barcodeState?.labelState?.labelWidth || 200,
-                  height: template?.barcodeState?.labelState?.labelHeight || 200,
+                  width: pxToPoint(template?.barcodeState?.labelState?.labelWidth || 200),
+                  height: pxToPoint(template?.barcodeState?.labelState?.labelHeight || 200),
                   position: "relative",
+                  marginLeft: colIndex > 0 ? pxToPoint(template?.barcodeState?.labelState?.gap?.hgap || 0) : '0pt'
                 }}
               >
                 {template?.barcodeState?.placedComponents?.map((component) => renderComponent(component, item))}
@@ -182,18 +211,6 @@ console.log("rotate",component.rotate);
 
   return (
     <div className="flex flex-col space-y-4 p-4">
-      {/* <div className="flex items-center space-x-2">
-        <label htmlFor="columnsPerRow">Columns per row:</label>
-        <input
-          id="columnsPerRow"
-          type="number"
-          value={columnsPerRow}
-          onChange={(e) => setColumnsPerRow(Math.max(1, Math.min(6, parseInt(e.target.value, 10))))}
-          min={1}
-          max={6}
-          className="w-20"
-        />
-      </div> */}
       <PDFViewer width="100%" height={700}>
         <PreviewDocument />
       </PDFViewer>

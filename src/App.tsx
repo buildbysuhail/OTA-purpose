@@ -188,7 +188,6 @@ function App() {
               />
               <Route path="label-designer/:id" element={<PDFBarcodeDesigner />} />
               <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
-              <Route path="/*" element={<Layout setMyClass={setMyClass} />} />
               {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
           </Suspense>

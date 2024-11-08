@@ -21,6 +21,7 @@ interface ERPDataComboboxProps {
   id: string;
   label?: string;
   options?: any[];
+  reload?: boolean;
   excludeOptions?: any[];
   includeOptions?: any[];
   value?: any;
@@ -121,6 +122,7 @@ export default function ImprovedERPDataCombobox({
   field,
   defaultData,
   data,
+  reload = false,
   noLabel,
   noXMarkIcon,
   required,
@@ -183,7 +185,7 @@ export default function ImprovedERPDataCombobox({
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
-  }, [field?.getListUrl, field?.freezeDataLoad, disabledApiCall]);
+  }, [field?.getListUrl, field?.freezeDataLoad, disabledApiCall,reload]);
 
   const loadData = async () => {
     setLoading(true);

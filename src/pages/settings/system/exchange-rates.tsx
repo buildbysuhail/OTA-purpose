@@ -292,6 +292,7 @@ const ExchangeRates = () => {
                         data={postData}
                         defaultData={postData}
                         value={postData?.baseCurrency}
+                        reload={rootState?.PopupData?.currencyMaster?.reload}
                         label={t("base_currency")}
                       />
                     </Item>

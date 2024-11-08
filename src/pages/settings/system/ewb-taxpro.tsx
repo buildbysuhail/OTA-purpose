@@ -32,26 +32,50 @@ type EWBTaxProData = {
     };
 };
 
-const initialEWBTaxProData: EWBTaxProData = {
-    ewbApiSetting: {
-        gspName: '',
-        aspUserId: '',
-        aspPassword: '',
-        ewbClientId: '',
-        ewbClientSecret: '',
-        ewbgspUserID: '',
-        authUrl: '',
-        baseUrl: '',
-        aspUrl: ''
+const initialEWBTaxProData = {
+    data:{
+        ewbApiSetting: {
+            gspName: '',
+            aspUserId: '',
+            aspPassword: '',
+            ewbClientId: '',
+            ewbClientSecret: '',
+            ewbgspUserID: '',
+            authUrl: '',
+            baseUrl: '',
+            aspUrl: ''
+        },
+        ewbApiLoginDetails: {
+            ewbGstin: '',
+            ewbUserID: '',
+            ewbPassword: '',
+            ewbAppKey: '',
+            ewbAuthToken: '',
+            ewbTokenExp: '',
+            ewbSEK: ''
+        }
     },
-    ewbApiLoginDetails: {
-        ewbGstin: '',
-        ewbUserID: '',
-        ewbPassword: '',
-        ewbAppKey: '',
-        ewbAuthToken: '',
-        ewbTokenExp: '',
-        ewbSEK: ''
+    validations: {
+        ewbApiSetting: {
+            gspName: '',
+            aspUserId: '',
+            aspPassword: '',
+            ewbClientId: '',
+            ewbClientSecret: '',
+            ewbgspUserID: '',
+            authUrl: '',
+            baseUrl: '',
+            aspUrl: ''
+        },
+        ewbApiLoginDetails: {
+            ewbGstin: '',
+            ewbUserID: '',
+            ewbPassword: '',
+            ewbAppKey: '',
+            ewbAuthToken: '',
+            ewbTokenExp: '',
+            ewbSEK: ''
+        }
     }
 };
 
@@ -93,36 +117,36 @@ const EWBTaxPro = () => {
                             {...getFieldProps('ewbApiSetting.ewbClientId')}
                             label="Client ID"
                             placeholder="Enter Client ID"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
                             required={false}
-                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientId', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientId', data.ewbApiSetting.ewbClientId)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.ewbClientSecret')}
                             label="Client Secret"
                             placeholder="Enter Client Secret"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
                             type="password"
-                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientSecret', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbClientSecret', data?.ewbApiSetting?.ewbClientSecret)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.ewbgspUserID')}
                             label="GSP User ID"
                             placeholder="Enter GSP User ID"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
-                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbgspUserID', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.ewbgspUserID', data?.ewbApiSetting?.ewbgspUserID)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.gspName')}
                             label="GSP Name"
                             placeholder="Enter GSP Name"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
                             required
-                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.gspName', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.gspName', data?.ewbApiSetting?.gspName)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiSetting.aspUserId')}
@@ -143,10 +167,10 @@ const EWBTaxPro = () => {
                             {...getFieldProps('ewbApiSetting.baseUrl')}
                             label="Base URL"
                             placeholder="Enter Base URL"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
                             required
-                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.baseUrl', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiSetting.baseUrl', data?.ewbApiSetting?.baseUrl)}
                         />
                     </div>
                 </div>
@@ -179,17 +203,17 @@ const EWBTaxPro = () => {
                             {...getFieldProps('ewbApiLoginDetails.ewbAppKey')}
                             label="App Key"
                             placeholder="Enter App Key"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
-                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAppKey', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAppKey', data?.ewbApiLoginDetails.ewbAppKey)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbAuthToken')}
                             label="Auth Token"
                             placeholder="Enter Auth Token"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
-                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAuthToken', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbAuthToken', data?.ewbApiLoginDetails?.ewbAuthToken)}
                         />
                         <ERPDateInput
                             {...getFieldProps('ewbApiLoginDetails.ewbTokenExp')}
@@ -197,15 +221,15 @@ const EWBTaxPro = () => {
                             required={true}
                             placeholder="Enter Token Expiry"
                             readonly
-                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbTokenExp', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbTokenExp', data?.ewbApiLoginDetails?.ewbTokenExp)}
                         />
                         <ERPInput
                             {...getFieldProps('ewbApiLoginDetails.ewbSEK')}
                             label="SEK"
                             placeholder="Enter SEK"
-                            readOnly
+                            //readOnly
                             style={{ color: 'black' }}
-                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbSEK', data)}
+                            onChangeData={(data: any) => handleFieldChange('ewbApiLoginDetails.ewbSEK', data?.ewbApiLoginDetails?.ewbSEK)}
                         />
                     </div>
                 </div>

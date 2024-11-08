@@ -35,7 +35,7 @@ interface systemCode {
   systemCode: string;
 }
 
-const initialState: ApplicationMiscellaneousSettings = {
+export const ApplicationMiscellaneousSettingsInitialState: ApplicationMiscellaneousSettings = {
   salesmanIncentive: 0,
   defaultIncentiveLedger: 0,
   sendSMS: false,
@@ -51,7 +51,7 @@ const initialState: ApplicationMiscellaneousSettings = {
 const api = new APIClient();
 const MiscellaneousSettingsForm: React.FC = () => {
   const rootState = useRootState();
-  const [formState, setFormState] = useState<ApplicationMiscellaneousSettings>(initialState);
+  const [formState, setFormState] = useState<ApplicationMiscellaneousSettings>(ApplicationMiscellaneousSettingsInitialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationMiscellaneousSettings>>({});
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);

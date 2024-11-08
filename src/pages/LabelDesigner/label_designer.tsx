@@ -345,9 +345,9 @@ export default function ExtendedPDFBarcodeDesigner() {
           y: y,
           rotate: 0,
           textAlign: "center",
-          fontSize:12,
+          fontSize: 12,
           font: "Roboto",
-          fontStyle:"normal",
+          fontStyle: "normal",
           width: componentType === DesignerElementType.barcode ? 150 : 100,
           height: componentType === DesignerElementType.barcode ? 80 : 30,
           ...(componentType === DesignerElementType.barcode && {
@@ -533,7 +533,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
 
   type PaddingMarginSides = "top" | "right" | "bottom" | "left";
-type  GapSides = "hgap"|"vgap";
+  type GapSides = "hgap" | "vgap";
   const [barcodeErrors, setBarcodeErrors] = useState<any>([]);
 
   const generateBarcode = useCallback((component: PlacedComponent) => {
@@ -547,7 +547,7 @@ type  GapSides = "hgap"|"vgap";
           JsBarcode(canvasElement, component.content, {
             ...component.barcodeProps,
             width: component.barcodeProps.barWidth,
-            height: component.barcodeProps.height,
+            height: component.height,
             displayValue: component.barcodeProps.showText,
             valid: (valid: boolean) => {
               if (!valid) {
@@ -633,16 +633,16 @@ type  GapSides = "hgap"|"vgap";
     const isSelected = selectedComponent?.id === component.id;
     const style: React.CSSProperties = {
       position: "absolute",
-      left: `${component.x}px`,
-      top: `${component.y}px`,
+      left: `${component.x}pt`,
+      top: `${component.y}pt`,
       width:
         component.type == DesignerElementType.barcode
-          ? "auto"
-          : `${component.width}px`,
+          ? `${component.width}pt`
+          : `${component.width}pt`,
       height:
         component.type == DesignerElementType.barcode
-          ? "auto"
-          : `${component.height}px`,
+          ? `${component.height}pt`
+          : `${component.height}pt`,
       border:
         selectedComponent?.id === component.id
           ? "2px solid #2196f3"
@@ -656,9 +656,9 @@ type  GapSides = "hgap"|"vgap";
       transform: `rotate(${component.rotate || 0}deg)`,
       transformOrigin: "center",
       textAlign: component.type !== DesignerElementType.barcode ? component.textAlign : undefined,
-      fontSize:component.type == DesignerElementType.barcode ? "0px" :`${component.fontSize}px`,
-      fontStyle:component.type !== DesignerElementType.barcode ?component.fontStyle: undefined ,
-      fontFamily:component.type == DesignerElementType.barcode ?"":component.font,
+      fontSize: component.type == DesignerElementType.barcode ? "0px" : `${component.fontSize}pt`,
+      fontStyle: component.type !== DesignerElementType.barcode ? component.fontStyle : undefined,
+      fontFamily: component.type == DesignerElementType.barcode ? "" : component.font,
     };
 
 
@@ -680,15 +680,15 @@ type  GapSides = "hgap"|"vgap";
                 </div>
                 <canvas
                   ref={(el) => (barcodeRefs.current[component.id] = el)}
-                  width={component.width}
-                  height={component.height}
+                  width={`${component.width}pt`}
+                  height={`${component.height}pt`}
                 />
               </>
             ) : (
               <canvas
                 ref={(el) => (barcodeRefs.current[component.id] = el)}
-                width={component.width}
-                height={component.height}
+                width={`${component.width}pt`}
+                height={`${component.height}pt`}
               />
             )}
             <DeleteButton
@@ -854,10 +854,10 @@ type  GapSides = "hgap"|"vgap";
                 transform: `scale(${zoom / 100})`,
                 transformOrigin: "top center",
                 border: "2px dashed #ccc",
-                padding: `${templateData?.barcodeState?.labelState?.padding?.top ?? 0}px 
-                          ${templateData?.barcodeState?.labelState?.padding?.right ?? 0}px 
-                          ${templateData?.barcodeState?.labelState?.padding?.bottom ?? 0}px 
-                          ${templateData?.barcodeState?.labelState?.padding?.left ?? 0}px`,
+                padding: `${templateData?.barcodeState?.labelState?.padding?.top ?? 0}pt 
+                          ${templateData?.barcodeState?.labelState?.padding?.right ?? 0}pt 
+                          ${templateData?.barcodeState?.labelState?.padding?.bottom ?? 0}pt 
+                          ${templateData?.barcodeState?.labelState?.padding?.left ?? 0}pt`,
                 backgroundImage: templateData?.barcodeState?.labelState?.background_image
                   ? `url(${templateData?.barcodeState?.labelState?.background_image})`
                   : "none",
@@ -1014,8 +1014,23 @@ type  GapSides = "hgap"|"vgap";
                       />
                     </Box>
                   </Box>
-                  <Box sx={{ mb: 1 }}>
-                    {selectedComponent.type !== DesignerElementType.barcode && (
+                  <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
+                    <Box className="basis-2/3">
+                      <ERPSlider
+                        label="Width"
+                        value={selectedComponent.width}
+                        onChange={(e) =>
+                          handlePropertyChange(
+                            "width",
+                            e.target.valueAsNumber
+                          )
+                        }
+                        min={10}
+                        max={200}
+                      />
+                    </Box>
+                    <Box className="basis-1/3">
+
                       <ERPInput
                         id="width"
                         type="number"
@@ -1029,7 +1044,24 @@ type  GapSides = "hgap"|"vgap";
                           )
                         }
                       />
-                    )}
+
+                    </Box>
+                  </Box>
+                  <Box>
+
+
+                    <ERPSlider
+                      label="Height"
+                      value={selectedComponent.height}
+                      onChange={(e) =>
+                        handlePropertyChange(
+                          "height",
+                          e.target.valueAsNumber
+                        )
+                      }
+                      min={10}
+                      max={200}
+                    />
                   </Box>
                   <Box sx={{ mb: 1 }}>
                     {selectedComponent.type !== DesignerElementType.barcode && (
@@ -1050,27 +1082,27 @@ type  GapSides = "hgap"|"vgap";
                   </Box>
                   <Box sx={{ mb: 1 }} hidden={selectedComponent.type === DesignerElementType.barcode}>
 
-                       <ERPDataCombobox
-                            id="font"
-                            value={selectedComponent.font}
-                            data={selectedComponent}
-                            label="Font"
-                            field={{
-                              id: "font",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={[
-                              { value: "Roboto", label: "Roboto" },
-                              { value: "RobotoMono", label: "RobotoMono" },
-                              { value: "FiraSans", label: "FiraSans" },
-                            
-                            ]}
-                            onChange={(e) =>
-                              handlePropertyChange("font", e.value)
-                            }
-                          />
-                    </Box>
+                    <ERPDataCombobox
+                      id="font"
+                      value={selectedComponent.font}
+                      data={selectedComponent}
+                      label="Font"
+                      field={{
+                        id: "font",
+                        valueKey: "value",
+                        labelKey: "label",
+                      }}
+                      options={[
+                        { value: "Roboto", label: "Roboto" },
+                        { value: "RobotoMono", label: "RobotoMono" },
+                        { value: "FiraSans", label: "FiraSans" },
+
+                      ]}
+                      onChange={(e) =>
+                        handlePropertyChange("font", e.value)
+                      }
+                    />
+                  </Box>
                   <Box sx={{ mb: 1 }}>
                     {selectedComponent.type !== DesignerElementType.barcode && (
                       <div className="flex flex-col gap-2">
@@ -1092,8 +1124,8 @@ type  GapSides = "hgap"|"vgap";
                           <div className="flex justify-between space-x-2">
                             <button
                               className={`ti-btn ${selectedComponent.textAlign === "left"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange("textAlign", "left")
@@ -1103,8 +1135,8 @@ type  GapSides = "hgap"|"vgap";
                             </button>
                             <button
                               className={`ti-btn ${selectedComponent.textAlign === "center"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange("textAlign", "center")
@@ -1114,8 +1146,8 @@ type  GapSides = "hgap"|"vgap";
                             </button>
                             <button
                               className={`ti-btn ${selectedComponent.textAlign === "right"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange("textAlign", "right")
@@ -1157,9 +1189,9 @@ type  GapSides = "hgap"|"vgap";
                           <div className="flex justify-between space-x-2">
                             <button
                               className={`ti-btn ${selectedComponent.fontStyle ===
-                                  "bold"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "bold"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange("fontStyle", "bold")
@@ -1169,9 +1201,9 @@ type  GapSides = "hgap"|"vgap";
                             </button>
                             <button
                               className={`ti-btn ${selectedComponent.fontStyle ===
-                                  "normal"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "normal"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange("fontStyle", "normal")
@@ -1181,9 +1213,9 @@ type  GapSides = "hgap"|"vgap";
                             </button>
                             <button
                               className={`ti-btn ${selectedComponent.fontStyle ===
-                                  "italic"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "italic"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handlePropertyChange(
@@ -1244,20 +1276,9 @@ type  GapSides = "hgap"|"vgap";
                           />
                         </Box>
 
-                        <Box>
-                          <ERPSlider
-                            label="Height"
-                            value={selectedComponent.barcodeProps.height}
-                            onChange={(e) =>
-                              handleBarcodePropertyChange(
-                                "height",
-                                e.target.valueAsNumber
-                              )
-                            }
-                            min={10}
-                            max={200}
-                          />
-                        </Box>
+
+
+
 
                         <Box>
                           <ERPSlider
@@ -1339,9 +1360,9 @@ type  GapSides = "hgap"|"vgap";
                           <div className="flex justify-between space-x-2">
                             <button
                               className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
-                                  "left"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "left"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("textAlign", "left")
@@ -1351,9 +1372,9 @@ type  GapSides = "hgap"|"vgap";
                             </button>
                             <button
                               className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
-                                  "center"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "center"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
@@ -1366,9 +1387,9 @@ type  GapSides = "hgap"|"vgap";
                             </button>
                             <button
                               className={`ti-btn ${selectedComponent.barcodeProps.textAlign ===
-                                  "right"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "right"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
@@ -1421,9 +1442,9 @@ type  GapSides = "hgap"|"vgap";
                           <div className="flex justify-between space-x-1">
                             <button
                               className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
-                                  "bold"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "bold"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange("fontStyle", "bold")
@@ -1432,12 +1453,11 @@ type  GapSides = "hgap"|"vgap";
                               Bold
                             </button>
                             <button
-                              className={`ti-btn ${
-                                selectedComponent.barcodeProps.fontStyle ===
-                                "normal"
+                              className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
+                                  "normal"
                                   ? "ti-btn-primary-full"
                                   : "bg-slate-100 hover:bg-slate-200 text-black"
-                              } px-4 py-2 w-full`}
+                                } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
                                   "fontStyle",
@@ -1449,9 +1469,9 @@ type  GapSides = "hgap"|"vgap";
                             </button>
                             <button
                               className={`ti-btn ${selectedComponent.barcodeProps.fontStyle ===
-                                  "italic"
-                                  ? "ti-btn-primary-full"
-                                  : "bg-slate-100 hover:bg-slate-200 text-black"
+                                "italic"
+                                ? "ti-btn-primary-full"
+                                : "bg-slate-100 hover:bg-slate-200 text-black"
                                 } px-4 py-2 w-full`}
                               onClick={() =>
                                 handleBarcodePropertyChange(
@@ -1677,7 +1697,7 @@ type  GapSides = "hgap"|"vgap";
                   }}
                   htmlFor="margin"
                 >
-                  Padding (px)
+                  Padding (pt)
                 </InputLabel>
                 <Box
                   display="grid"
@@ -1718,14 +1738,14 @@ type  GapSides = "hgap"|"vgap";
                   }}
                   htmlFor="margin"
                 >
-                  Gap (px)
+                  Gap (pt)
                 </InputLabel>
                 <Box
                   display="grid"
                   gridTemplateColumns="repeat(2, 1fr)"
                   gap={2}
                 >
-                  {(["hgap", "vgap", ] as GapSides[]).map((side) => (
+                  {(["hgap", "vgap",] as GapSides[]).map((side) => (
                     <ERPInput
                       id={side}
                       label={side.charAt(0).toUpperCase() + side.slice(1)}
@@ -1787,7 +1807,7 @@ type  GapSides = "hgap"|"vgap";
                   </Box>
                 )}
 
-            
+
                 <Box sx={{ mb: 1 }}>
                   <InputLabel
                     sx={{
@@ -1801,7 +1821,7 @@ type  GapSides = "hgap"|"vgap";
                     }}
                     htmlFor="margin"
                   >
-                    Padding (px)
+                    Padding (pt)
                   </InputLabel>
                   <Box
                     display="grid"
@@ -1879,7 +1899,7 @@ type  GapSides = "hgap"|"vgap";
             style={{
               width: "8.5in",
               height: "11in",
-              margin: `${templateData?.propertiesState?.margins?.top}px ${templateData?.propertiesState?.margins?.right}px ${templateData?.propertiesState?.margins?.bottom}px ${templateData?.propertiesState?.margins?.left}px`,
+              margin: `${templateData?.propertiesState?.margins?.top}pt ${templateData?.propertiesState?.margins?.right}pt ${templateData?.propertiesState?.margins?.bottom}pt ${templateData?.propertiesState?.margins?.left}pt`,
             }}
           >
             {templateData?.barcodeState?.placedComponents?.map(renderComponent)}

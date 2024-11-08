@@ -30,7 +30,7 @@ export interface ApplicationInventorySettings {
   maintainWarehouse: boolean;
   priceCode: string;
   defaultBarcodeLabel: string;
-  ifLessSalesRate: string;
+  showRateWarning: string;
   setLastSalesRateAsProctSaleRate: boolean;
   setLastPurchaseRateAsProctRate: boolean;
   setAvgPurchaseCostWithStdPurRate: boolean;
@@ -70,9 +70,7 @@ export interface ApplicationInventorySettings {
   holdSalesMan: boolean;
   mobileNumberMandotryInSales: boolean;
 }
-const api = new APIClient();
-const InventorySettingsForm = () => {
-  const initialState: ApplicationInventorySettings = {
+export const ApplicationInventorySettingsInitialState: ApplicationInventorySettings = {
     defaultSalesAcc: 1,
     defaultSalesReturnAcc: 0,
     defaultPurchaseAcc: 0,
@@ -88,7 +86,7 @@ const InventorySettingsForm = () => {
     maintainWarehouse: false,
     priceCode: "",
     defaultBarcodeLabel: "",
-    ifLessSalesRate: "",
+    showRateWarning: "Ignore",
     setLastSalesRateAsProctSaleRate: false,
     setLastPurchaseRateAsProctRate: false,
     setAvgPurchaseCostWithStdPurRate: false,
@@ -128,9 +126,12 @@ const InventorySettingsForm = () => {
     holdSalesMan: false,
     mobileNumberMandotryInSales: false,
   };
+const api = new APIClient();
+const InventorySettingsForm = () => {
+  
 
   const dispatch = useAppDispatch();
-  const [formState, setFormState] = useState<ApplicationInventorySettings>(initialState);
+  const [formState, setFormState] = useState<ApplicationInventorySettings>(ApplicationInventorySettingsInitialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationInventorySettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -621,6 +622,7 @@ const InventorySettingsForm = () => {
               <ERPDataCombobox
                 id="defaultBarcodeLabel"
                 value={formState.defaultBarcodeLabel}
+                disabled
                 data={formState}
                 field={{
                   id: "defaultBarcodeLabel",
@@ -641,15 +643,15 @@ const InventorySettingsForm = () => {
               />
 
               <ERPDataCombobox
-                id="ifLessSalesRate"
-                value={formState.ifLessSalesRate}
+                id="showRateWarning"
+                value={formState.showRateWarning}
                 data={formState}
                 field={{
-                  id: "ifLessSalesRate",
+                  id: "showRateWarning",
                   required: false,
                   getListUrl: Urls.data_languages,
-                  valueKey: "id",
-                  labelKey: "name",
+                  valueKey: "value",
+                  labelKey: "label",
                 }}
                 options={[
                   { value: "Warn", label: "Warn" },
@@ -657,7 +659,7 @@ const InventorySettingsForm = () => {
                   { value: "Ignore", label: "Ignore" }
                 ]}
                 onChangeData={(data: any) =>
-                  handleFieldChange("ifLessSalesRate", data.ifLessSalesRate)
+                  handleFieldChange("showRateWarning", data.showRateWarning)
                 }
                 label={t("if_less_sales_rate")}
               />

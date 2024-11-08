@@ -119,25 +119,25 @@ const ERPSettingsFormMain = () => {
         const currentValue = settings?.[key as keyof ApplicationMainSettings];
         const prevValue = settingsPrev[key as keyof ApplicationMainSettings];
 
-      if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
-      (currentValue === true && prevValue === false)) {
+        if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
+          (currentValue === true && prevValue === false)) {
 
-        acc.push({
-          settingsName: key,
-          settingsValue: currentValue === false ? "false" :
-          currentValue === true ? "true" :
-          (currentValue ?? "").toString(),
-        });
-      }
-      return acc;
-    }, [] as { settingsName: string; settingsValue: string }[]);
+          acc.push({
+            settingsName: key,
+            settingsValue: currentValue === false ? "false" :
+              currentValue === true ? "true" :
+                (currentValue ?? "").toString(),
+          });
+        }
+        return acc;
+      }, [] as { settingsName: string; settingsValue: string }[]);
 
       const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
         type: "main",
         updateList: modifiedSettings,
       })) as any : null;
-      handleResponse(response,() => {setSettingsPrev(settings)}, () => { }, false);
-    
+      handleResponse(response, () => { setSettingsPrev(settings) }, () => { }, false);
+
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -366,18 +366,20 @@ const ERPSettingsFormMain = () => {
           </div>
 
           <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
-            <ERPCheckbox
-              id="autoChangeTransactionDateByMidnight"
-              label={t("auto_change_transaction")}
-              data={settings}
-              checked={settings.autoChangeTransactionDateByMidnight}
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "autoChangeTransactionDateByMidnight",
-                  data.autoChangeTransactionDateByMidnight
-                )
-              }
-            />
+            {userSession.countryId != Countries.India &&
+              <ERPCheckbox
+                id="autoChangeTransactionDateByMidnight"
+                label={t("auto_change_transaction")}
+                data={settings}
+                checked={settings.autoChangeTransactionDateByMidnight}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "autoChangeTransactionDateByMidnight",
+                    data.autoChangeTransactionDateByMidnight
+                  )
+                }
+              />
+            }
             <ERPInput
               id="autoUpdateReleaseUpTo"
               label={t("auto_update_release_up_to")}
@@ -448,7 +450,7 @@ const ERPSettingsFormMain = () => {
                 label=" "
                 type="number"
                 data={settings}
-                className="w-16 ml-6 mt-1"
+                className="w-20 ml-6 mt-1"
                 value={settings?.previlegeCardPerc}
                 disabled={!settings.allowPrivilegeCard}
                 onChangeData={(data) =>
@@ -471,7 +473,7 @@ const ERPSettingsFormMain = () => {
                 type="number"
                 label=" "
                 data={settings}
-                className="w-16 ml-6 mt-1"
+                className="w-20 ml-6 mt-1"
                 value={settings?.postDatedTransInNumbers}
                 disabled={!settings.allowPostdatedTrans}
                 onChangeData={(data) =>
@@ -497,7 +499,7 @@ const ERPSettingsFormMain = () => {
                 label=" "
                 type="number"
                 data={settings}
-                className="w-16 ml-6 mt-1"
+                className="w-20 ml-6 mt-1"
                 value={settings?.preDatedTransInNumbers}
                 disabled={!settings.allowPredatedTrans}
                 onChangeData={(data) =>

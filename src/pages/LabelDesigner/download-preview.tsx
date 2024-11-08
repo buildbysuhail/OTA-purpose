@@ -51,6 +51,8 @@ export default function Component({ template, docTitle = "Document Preview", dat
             if (barcodeComponent.type === DesignerElementType.barcode && barcodeComponent.barcodeProps) {
               
               const canvas = document.createElement('canvas');
+              canvas.height = barcodeComponent.height;
+              canvas.width = barcodeComponent.width;
               // canvas.width = template?.barcodeState?.labelState?.labelWidth??200;
               // canvas.
               JsBarcode(canvas, item?.autoBarcode, {
@@ -138,6 +140,7 @@ console.log("rotate",component.rotate);
             style={{
               ...baseStyle,
               height: component.height || 50,
+              width: component.width || 50,
             }}
           />
         ) : null;

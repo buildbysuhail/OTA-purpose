@@ -437,8 +437,8 @@ const BranchSettingsForm: React.FC = () => {
                 data={formState}
                 label={t("intervals_(minutes)")}
                 disabled={
-                  Number(formState?.syncMethod) !== 1 &&
-                  Number(formState?.syncMethod) !== 2
+                  formState?.syncMethod !== "Auto Sync" &&
+                  formState?.syncMethod !== "Auto Sync and Upload Only"
                 }
                 type="number"
                 onChangeData={(data) =>

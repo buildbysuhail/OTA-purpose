@@ -1301,5 +1301,14 @@
   "partywise_summary_report": "Partywise Summary Report",
   "profit_&_loss_account": "Profit & Loss Account",
   "close_single_day": "Close Single Day",
-  "vr_prefix": "VR Prefix"
+  "vr_prefix": "VR Prefix",
+
+  "company_name":"Company Name",
+  "registration_name":"Registration Name",
+  "cin":"CIN",
+  "pan":"PAN",
+  "tan":"TAN",
+  "fssai":"FSSAI",
+  "leagel_name":"Legal Name",
+  "bank_name":"Bank Name"
 }

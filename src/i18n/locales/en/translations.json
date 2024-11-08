@@ -1310,5 +1310,8 @@
   "tan":"TAN",
   "fssai":"FSSAI",
   "leagel_name":"Legal Name",
-  "bank_name":"Bank Name"
+  "bank_name":"Bank Name",
+
+  "company_profile_others":"Company Profile",
+  "company_profile_india":"Company Profile"
 }

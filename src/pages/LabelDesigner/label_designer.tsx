@@ -548,6 +548,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             ...component.barcodeProps,
             width: component.barcodeProps.barWidth,
             height: component.height,
+            marginBottom:0,
             displayValue: component.barcodeProps.showText,
             valid: (valid: boolean) => {
               if (!valid) {

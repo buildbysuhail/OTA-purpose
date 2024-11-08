@@ -1301,5 +1301,6 @@
   "group_head": "رئيس المجموعة",
   "hide_account_ledger": "إخفاء دفتر حسابات",
   "close_single_day": "إغلاق يوم واحد",
-  "vr_prefix": "بادئة القسيمة"
+  "vr_prefix": "بادئة القسيمة",
+  "add_currency": "إضافة عملة"
 }

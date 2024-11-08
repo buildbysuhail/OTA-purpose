@@ -1484,38 +1484,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                               Italic
                             </button>
                           </div>
-                          {/* <div className="flex space-x-2">
-                          <Button
-                            bg-slate-100
-                            hover:bg-slate-200
-                            text-black={
-                              selectedComponent.barcodeProps.fontStyle ===
-                              "bold"
-                                ? "contained"
-                                : "outlined"
-                            }
-                            onClick={() =>
-                              handleBarcodePropertyChange("fontStyle", "bold")
-                            }
-                          >
-                            Bold
-                          </Button>
-                          <Button
-                            bg-slate-100
-                            hover:bg-slate-200
-                            text-black={
-                              selectedComponent.barcodeProps.fontStyle ===
-                              "italic"
-                                ? "contained"
-                                : "outlined"
-                            }
-                            onClick={() =>
-                              handleBarcodePropertyChange("fontStyle", "italic")
-                            }
-                          >
-                            Italic
-                          </Button>
-                        </div> */}
+                      
                         </Box>
 
                         <Box>

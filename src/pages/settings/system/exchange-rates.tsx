@@ -1,9 +1,18 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleCurrencyExchangePopup, toggleCurrencyMasterPopup } from "../../../redux/slices/popup-reducer";
+import {
+  toggleCurrencyExchangePopup,
+  toggleCurrencyMasterPopup,
+} from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
@@ -32,6 +41,7 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import { CheckBoxTypes } from "devextreme-react/cjs/check-box";
 import { SelectBoxTypes } from "devextreme-react/cjs/select-box";
 import { CurrencyMasterManage } from "../../accounts/masters/currency-master/currency-master-manage";
+import { Link } from "react-router-dom";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
@@ -62,7 +72,7 @@ const ExchangeRates = () => {
     const result: any = await api.getAsync(
       `${Urls.currencyExchange}${baseCurrency ? baseCurrency : "0"}`
     );
-    
+
     updateStore(result?.data);
   };
   const updateStore = (inputData: any) => {
@@ -84,20 +94,24 @@ const ExchangeRates = () => {
   };
   const handleSubmit = async () => {
     setPostDataLoading(true);
-    
-    const dataToSubmit = store.filter(
-      (row: any) => row.toCurrency !== null && row.rate !== null
-    );
+    try {
+      const dataToSubmit = store.filter(
+        (row: any) => row.toCurrency !== null && row.rate !== null
+      );
 
-    
-    const result: any = await api.post(`${Urls.currencyExchange}`, {
-      currencyId: postData.baseCurrency,
+      const result: any = await api.post(`${Urls.currencyExchange}`, {
+        currencyId: postData.baseCurrency,
 
-      data: dataToSubmit,
-    });
+        data: dataToSubmit,
+      });
 
-    setStore(result?.data);
-    setPostDataLoading(false);
+      setStore(result?.data);
+      setPostDataLoading(false);
+    } catch (error) {
+      console.error("Error saving settings:", error);
+    } finally {
+      setPostDataLoading(false);
+    }
   };
   useEffect(() => {
     try {
@@ -132,7 +146,6 @@ const ExchangeRates = () => {
     }
   };
   const ChartCell = (cellData: any) => {
-    
     return (
       <div className="chart-cell">
         <i
@@ -144,7 +157,7 @@ const ExchangeRates = () => {
       </div>
     );
   };
-  
+
   const [enterKeyAction, setEnterKeyAction] =
     useState<DataGridTypes.EnterKeyAction>("startEdit");
   const [enterKeyDirection, setEnterKeyDirection] =
@@ -164,10 +177,13 @@ const ExchangeRates = () => {
     []
   );
 
-  const onFocusedCellChanging = (e: { isHighlighted: boolean; }) => {
+  const onFocusedCellChanging = (e: { isHighlighted: boolean }) => {
     e.isHighlighted = true;
   };
-  const MemoizedCurrencyMasterManage = useMemo(() => React.memo(CurrencyMasterManage), []);
+  const MemoizedCurrencyMasterManage = useMemo(
+    () => React.memo(CurrencyMasterManage),
+    []
+  );
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -185,8 +201,8 @@ const ExchangeRates = () => {
                     // Check if 'rate' is being updated
                     if (e.newData.rate !== undefined) {
                       // Set 'rateDate' to current date and 'cStatus' to 'true'
-                      e.newData.rateDate = new Date(); 
-                      e.newData.cStatus = true; 
+                      e.newData.rateDate = new Date();
+                      e.newData.cStatus = true;
                     }
                   }}
                   onFocusedCellChanging={onFocusedCellChanging}
@@ -256,14 +272,17 @@ const ExchangeRates = () => {
                     allowFiltering={true}
                     minWidth={150}
                   />
-                  <Column 
-                    allowEditing={false} caption="Action" width={80} cellRender={ChartCell} 
-                    />
+                  <Column
+                    allowEditing={false}
+                    caption="Action"
+                    width={80}
+                    cellRender={ChartCell}
+                  />
                   <Editing
                     allowUpdating={true}
                     allowAdding={false}
                     allowDeleting={false}
-                    mode="cell" 
+                    mode="cell"
                   />
                   <Toolbar>
                     <Item location="before" cssClass="mb-4">
@@ -280,25 +299,28 @@ const ExchangeRates = () => {
                         onChangeData={(data: any) => {
                           setPostData((prev: any) => ({
                             ...prev,
-                            baseCurrency: data.baseCurrency,
+                            baseCurrency: data?.baseCurrency,
                           }));
                           load(data?.baseCurrency);
                         }}
                         data={postData}
                         defaultData={postData}
                         value={postData?.baseCurrency}
+                        reload={rootState?.PopupData?.currencyMaster?.reload}
                         label={t("base_currency")}
                       />
                     </Item>
                     <Item location="after">
-                      <ERPButton
-                        type="button"
-                        variant="primary"
-                        onClick={() => {
+                      <a
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
                           dispatch(toggleCurrencyMasterPopup({ isOpen: true, key: null }));
                         }}
-                        title={t("add")}
-                      ></ERPButton>
+                        className="text-[#27272a] text-sm  font-semibold  hover:underline   hover:decoration-[#3b82f6]"
+                      >
+                         {t("add_currency")} 
+                      </a>
                     </Item>
                   </Toolbar>
                 </DataGrid>
@@ -329,7 +351,7 @@ const ExchangeRates = () => {
         }}
         content={<CurrencyExchangeManage />}
       />
-        <ERPModal
+      <ERPModal
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
         title={t("currency")}
         width="w-full max-w-[600px]"

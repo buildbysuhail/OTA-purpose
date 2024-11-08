@@ -132,7 +132,7 @@ const ApplicationSettings: React.FC = () => {
 
       {/* Main content */}
       <div className="flex-1 ml-[200px] lg:ml-[300px]">
-        <div className="bg-[#fafafa] shadow-md overflow-hidden p-6">
+        <div className="bg-[#fafafa] shadow-md overflow-hidden">
           {renderSettingsForm()}
         </div>
       </div>

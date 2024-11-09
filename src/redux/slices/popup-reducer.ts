@@ -61,7 +61,7 @@ interface popupData {
   hide_acc_ledger: popupDataProps
   groupCategory: popupDataProps
   specialSchemes: popupDataProps
-  groupOrder:popupDataProps
+  groupOrder: popupDataProps
 }
 const initialState: popupData = {
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },

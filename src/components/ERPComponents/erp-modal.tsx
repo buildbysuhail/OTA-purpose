@@ -8,6 +8,7 @@ import {
 import React, { cloneElement, Fragment } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
+import PopupShortkey from "../../utilities/shortKeys";
 
 type ERPModalProps = {
   title: string;
@@ -54,6 +55,7 @@ const ERPModal = React.memo(
     disableOutsideClickClose = true,
   }: ERPModalProps) => {
     const handleClose = () => closeModal(false);
+    PopupShortkey();
     const handleSubmit = () => {
       if (onSubmitModel) {
         onSubmitModel();
@@ -137,12 +139,13 @@ const ERPModal = React.memo(
                     >
                       <div
                         className={`${isFullHeight
-                            ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto"
-                            : ""
+                          ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto"
+                          : ""
                           }`}
                       >
                         {content && cloneElement(content, contentProps)}
                       </div>
+
 
                       <div>{footer}</div>
                     </div>

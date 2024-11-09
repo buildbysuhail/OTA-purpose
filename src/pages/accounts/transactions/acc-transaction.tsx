@@ -7,6 +7,8 @@ import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-butto
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
 import ERPInput from "../../../components/ERPComponents/erp-input"
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox"
+import ERPButton from "../../../components/ERPComponents/erp-button"
+import Urls from "../../../redux/urls"
 
 interface CashPaymentData {
   voucherNo: string
@@ -45,70 +47,69 @@ export default function Component() {
   }, [])
 
   return (
-    <div className="grid grid-cols-12 gap-x-6">
-      <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-      <div className="grid grid-cols-8 gap-4">
-          <div className="col-span-2 flex space-x-2">
-            <ERPInput
-              id="voucherNo"
-              label="Voucher Prefix / No."
-              required={true}
-              // value={formData.voucherNo}
-              //data={formData}
-              onChangeData={(value) => handleFieldChange('voucherNo', value)}
-            />
-            <ERPInput
+    <div className="p-4 space-y-6 border rounded-lg">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-6">
+          <ERPInput
             id="voucherNo"
-            label="Voucher Prefix / No."
-            required={true}
+            label="Voucher Prefix"
+            disabled={true}
             // value={formData.voucherNo}
             //data={formData}
             onChangeData={(value) => handleFieldChange('voucherNo', value)}
           />
-            <ERPDateInput
-              id="date"
-              label="Date"
-              // value={formData.date}
-              //data={formData}
-              onChangeData={(value) => handleFieldChange('date', value)}
-            />
-          </div>
-          <div className="col-span-2 flex space-x-2">
-            <ERPInput
-              id="refNo"
-              label="Ref No."
-              // value={formData.refNo}
-              //data={formData}
-              onChangeData={(value) => handleFieldChange('refNo', value)}
-            />
-            <ERPDateInput
-              id="refDate"
-              label="Ref Date"
-              // value={formData.refDate}
-              //data={formData}
-              onChangeData={(value) => handleFieldChange('refDate', value)}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <ERPDataCombobox
-            id="cashAccount"
-            label="Cash Account"
-            // value={formData.cashAccount}
-            data={[
-              { id: '1', name: 'CASH A/C (MADEENA VAN)' },
-              { id: '2', name: 'CASH A/C (MAIN)' }
-            ]}
-            field={{
-              id: 'cashAccount',
-              valueKey: 'id',
-              labelKey: 'name',
-              required: true,
-              getListUrl: '/api/cash-accounts'
-            }}
-            onChangeData={(value) => handleFieldChange('cashAccount', value)}
+          <ERPInput
+            id="voucherNo"
+            label="Voucher No."
+            // value={formData.voucherNo}
+            //data={formData}
+            onChangeData={(value) => handleFieldChange('voucherNo', value)}
           />
+          <ERPDateInput
+            id="date"
+            label="Date"
+            // value={formData.date}
+            //data={formData}
+            onChangeData={(value) => handleFieldChange('date', value)}
+          />
+          <ERPInput
+            id="refNo"
+            label="Ref No."
+            // value={formData.refNo}
+            //data={formData}
+            onChangeData={(value) => handleFieldChange('refNo', value)}
+          />
+          <ERPDateInput
+            id="refDate"
+            label="Ref Date"
+            // value={formData.refDate}
+            //data={formData}
+            onChangeData={(value) => handleFieldChange('refDate', value)}
+          />
+
+          <div className="w-1/4">
+            <div className="flex justify-between items-center">
+              <label htmlFor="cashAccount" className="text-xs font-medium">Cash Account</label>
+              <span className="text-xs text-gray-500">Bal:</span>
+            </div>
+            <ERPDataCombobox
+              id="cashAccount"
+              label=" "
+              // value={formData.cashAccount}
+              data={[
+                { id: '1', name: 'CASH A/C (MADEENA VAN)' },
+                { id: '2', name: 'CASH A/C (MAIN)' }
+              ]}
+              field={{
+                id: 'cashAccount',
+                valueKey: 'id',
+                labelKey: 'name',
+                required: true,
+                getListUrl: '/api/cash-accounts'
+              }}
+              onChangeData={(value) => handleFieldChange('cashAccount', value)}
+            />
+          </div>
           <ERPDataCombobox
             id="paidBy"
             label="Paid By"
@@ -126,33 +127,138 @@ export default function Component() {
             onChangeData={(value) => handleFieldChange('paidBy', value)}
           />
         </div>
+        <div className="flex align-center gap-6">
+          <div className="w-1/4">
+            <ERPInput
+              id="remarks"
+              label="Remarks"
+              // value={formData.remarks}
+              // //data={formData}
+              onChangeData={(value) => handleFieldChange('remarks', value)}
+            />
+          </div>
+          <div className="w-1/4">
+            <ERPInput
+              id="notes"
+              label="Notes"
+              value=""
+              //data={formData}
+              onChangeData={(value) => { }}
+            />
+          </div>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <ERPInput
-            id="remarks"
-            label="Remarks"
-            // value={formData.remarks}
-            // //data={formData}
-            onChangeData={(value) => handleFieldChange('remarks', value)}
+
+      <div className="flex align-center gap-6">
+        <ERPInput
+          id="ledgerCode"
+          label="Ledger Code"
+          value=""
+          //data={formData}
+          onChangeData={(value) => { }}
+        />
+        <div className="w-3/4">
+          <div className="flex justify-between items-center ">
+            <label htmlFor="cashAccount" className="text-xs font-medium">Cash Account</label>
+            <span className="text-xs text-gray-500">Bal:</span>
+          </div>
+          <ERPDataCombobox
+            id="ledger"
+            field={{
+              id: "ledger",
+              required: true,
+              getListUrl: Urls.data_acc_ledgers,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            label=" "
+            onChangeData={(data: any) => handleFieldChange("ledger", data.ledger)}
           />
+        </div>
+        <ERPInput
+          id="amount"
+          label="Amount"
+          value=""
+          //data={formData}
+          onChangeData={(value) => { }}
+        />
+        <div className="w-3/4">
           <ERPInput
-            id="notes"
-            label="Notes"
+            id="narration"
+            label="Narration"
             value=""
             //data={formData}
-            onChangeData={(value) => {}}
+            onChangeData={(value) => { }}
           />
         </div>
-
-      
-
-        <div className="flex justify-between items-center">
-          <div className="text-sm">Amount In Words: Zero only</div>
-          <div className="font-bold">TOTAL: 0.00</div>
+        <ERPButton
+          title="Add"
+          variant="primary"
+          // disabled={isSaving}
+          // loading={isSaving}
+          type="button"
+        // onClick={handleSubmit}
+        />
+      </div>
+      <div className="flex align-center  gap-6">
+        <div className="flex items-center justify-center">
+          <ERPCheckbox
+            onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)} id={""} />
+          <ERPInput
+            id="discount"
+            label="Discount"
+            value=""
+            //data={formData}
+            onChangeData={(value) => { }}
+          />
         </div>
+        <ERPDataCombobox
+          id="costCentre"
+          field={{
+            id: "costCentre",
+            required: true,
+            getListUrl: Urls.data_costcentres,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          label="Cost Centre"
+          onChangeData={(data: any) => handleFieldChange("costCentre", data.costCentre)}
+        />
+        <ERPDataCombobox
+          id="project"
+          label="Project"
+          data={[
+            { id: '22001', name: '22001 MOHAN' }
+          ]}
+          field={{
+            id: 'project',
+            valueKey: 'id',
+            labelKey: 'name',
+            required: true,
+            getListUrl: '/api/employees'
+          }}
+          onChangeData={(value) => handleFieldChange('project', value)}
+        />
+        <div className="flex items-center justify-center">
+          <ERPButton
+            title="Bill Wise"
+            variant="primary"
+            // disabled={isSaving}
+            // loading={isSaving}
+            type="button"
+          // onClick={handleSubmit}
+          />
+        </div>
+      </div>
 
-        <div className="flex items-center space-x-4">
-          {/* <ERPCheckbox
+      <div className="flex justify-between items-center">
+        <div className="text-sm">Amount In Words: Zero only</div>
+        <div className="font-bold">TOTAL: 0.00</div>
+      </div>
+
+      <div className="flex items-center space-x-4">
+        {/* <ERPCheckbox
             id="printOnSave"
             label="Print on Save"
             value={false}
@@ -166,7 +272,6 @@ export default function Component() {
             data={{}}
             onChangeData={() => {}}
           /> */}
-        </div>
       </div>
     </div>
   )

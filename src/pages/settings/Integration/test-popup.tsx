@@ -24,7 +24,7 @@ const TestPopup: FC = () => {
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - 200;
-    let gridHeightWindows = wh - 260;
+    let gridHeightWindows = wh - 200;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 

@@ -726,10 +726,10 @@ export default function ExtendedPDFBarcodeDesigner() {
     >
       {/* Left Sidebar - Components */}
       <ResizableBox
-        width={250} // Initial width
+        width={250}
         height={Infinity}
-        minConstraints={[150, Infinity]} // Minimum width
-        maxConstraints={[400, Infinity]} // Maximum width
+        minConstraints={[150, Infinity]} 
+        maxConstraints={[400, Infinity]}
         resizeHandles={[appState.appState.dir === "rtl" ? "w" : "e"]}
         handle={
           <div
@@ -738,7 +738,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           />
         }
         className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
-      >
+        >
         <div className="bg-white border-r border-gray-200 p-4">
           <div className="mb-4">
             <h2 className="text-sm font-semibold text-gray-700">Components</h2>

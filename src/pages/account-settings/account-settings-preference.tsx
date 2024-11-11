@@ -116,7 +116,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
     scrollbarWidth: "thick",
-    scrollbarColor: 'rgb(230 234 235)'
+    scrollbarColor: "rgb(25,118,210,1)"
   });
   const [_theme, _setTheme] = useState<Theme>({
     direction: "ltr",
@@ -869,7 +869,90 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       <div className="theme-colors">
                         <p className="switcher-style-head">Scrollbar:</p>
                         <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
-                          
+                        <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-1"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.scrollbarColor == "58, 88, 146"}
+                              id="switcher-primary"
+                              onClick={() => {
+                              
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  scrollbarColor: "58, 88, 146",
+                                }));
+                              }}
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-2"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.scrollbarColor == "92, 144 ,163"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary1"
+                              onClick={() => {
+                              
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  scrollbarColor: "92, 144 ,163",
+                                }));
+                              }}
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-3"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.scrollbarColor == "161, 90 ,223"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary2"
+                              onClick={() => {
+                              
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  scrollbarColor: "161, 90 ,223",
+                                }));
+                              }}
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-4"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.scrollbarColor == "78, 172, 76"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary3"
+                              onClick={() => {
+                               
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  scrollbarColor: "78, 172, 76",
+                                }));
+                              }}
+                            />
+                          </div>
+                          <div className="ti-form-radio switch-select">
+                            <input
+                              className="ti-form-radio color-input color-primary-5"
+                              type="radio"
+                              name="theme-primary"
+                              checked={theme.scrollbarColor == "223, 90, 90"}
+                              onChange={(_e) => {}}
+                              id="switcher-primary4"
+                              onClick={() => {
+                                
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  scrollbarColor: "223, 90, 90",
+                                }));
+                              }}
+                            />
+                          </div>
                           <div className="ti-form-radio switch-select ps-0 mt-1 ">
                             <div
                               className="theme-container"
@@ -900,17 +983,16 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                             ...prevTheme,
                                             scrollbarColor: `${r},  ${g},  ${b}`,
                                           }));
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
+                                         
                                         }
                                       }}
-                                      value={"rgb(230 234 235)"}
+                                      value={"rgb(230, 234 ,235)"}
                                     />
                                   </div>
                                 </button>
                               </div>
                             </div>
                           </div>
-                          <div className="ti-form-radio switch-select ps-0 mt-1 color-primary-light"></div>
                         </div>
                       </div>
                     </div>

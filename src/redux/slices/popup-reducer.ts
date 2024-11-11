@@ -61,8 +61,11 @@ interface popupData {
   groupCategory: popupDataProps
   specialSchemes: popupDataProps
   groupOrder:popupDataProps
+  testPopup:popupDataProps
 }
 const initialState: popupData = {
+  
+  testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },
   groupCategory: { isOpen: false, key: null, mode: "edit", reload: true },
   section: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -306,11 +309,15 @@ const popupDataSlice = createSlice({
     toggleGroupOrder: (state, action: PayloadAction<popupDataProps>) => {
       state.groupOrder = action.payload;
     },
+    toggleTestPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.testPopup = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  toggleTestPopup,
   toggleGroupOrder,
   toggleGroupCategory,
   toggleSection,

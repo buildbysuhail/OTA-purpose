@@ -25,6 +25,7 @@ import {
   toggleChartOfAccounts,
   toggleHeaderFooterPopup,
   toggleHideAccLedger,
+  toggleTestPopup,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
@@ -46,6 +47,8 @@ const UserTypePrivilegeManage = lazy(() => import("../userManagement/user-privil
 const ResetBranchDataForSync = lazy(() => import("../system/reset-branch-data-for-sync"));
 const RefreshAllBranches = lazy(() => import("../system/refresh-all-branches"));
 const HeadersAndFooters = lazy(() => import("../system/headres-footer"));
+const TestPopup = lazy(() => import("../Integration/test-popup"));
+
 
 const Settings = () => {
   
@@ -108,6 +111,16 @@ const Settings = () => {
           </div>
         </div>
       </div>
+      <ERPModal
+        isOpen={rootState.PopupData.testPopup.isOpen || false}
+        title= "Test Popup"
+        width="w-full max-w-[1000px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleTestPopup({ isOpen: false }));
+        }}
+        content={<TestPopup />}
+      />
       <ERPModal
         isOpen={rootState.PopupData.hide_acc_ledger.isOpen || false}
         title= {t("hide_account_ledger")}

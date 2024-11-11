@@ -8,7 +8,10 @@ import {
 import React, { cloneElement, Fragment, useEffect } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
-import shortKeys, { cleanupShortKeys, initializeShortKeys, } from "../../utilities/shortKeys";
+// import shortKeys, {
+//   cleanupShortKeys,
+//   initializeShortKeys,
+// } from "../../utilities/shortKeys";
 
 type ERPModalProps = {
   title: string;
@@ -64,27 +67,26 @@ const ERPModal = React.memo(
       }
     };
 
-    useEffect(() => {
-      const PopupCloseShortKey = shortKeys.find(
-        (s: { description: string }) => s.description === 'Close all popups'
-      );
+    // useEffect(() => {
+    //   const PopupCloseShortKey = shortKeys.find(
+    //     (s: { description: string }) => s.description === "Close all popups"
+    //   );
 
-      if (PopupCloseShortKey) {
-        PopupCloseShortKey.action = handleClose;
-        initializeShortKeys();
-      }
-      if (!isOpen) {
-        handleClose();
-      }
+    //   if (PopupCloseShortKey) {
+    //     PopupCloseShortKey.action = handleClose;
+    //     initializeShortKeys();
+    //   }
+    //   if (!isOpen) {
+    //     handleClose();
+    //   }
 
-      return () => {
-        if (PopupCloseShortKey) {
-          PopupCloseShortKey.action = () => console.log('Closing all popups');
-        }
-        cleanupShortKeys();
-      };
-    }, [isOpen]);
-
+    //   return () => {
+    //     if (PopupCloseShortKey) {
+    //       PopupCloseShortKey.action = () => console.log("Closing all popups");
+    //     }
+    //     cleanupShortKeys();
+    //   };
+    // }, [isOpen]);
 
     return (
       <div>
@@ -92,7 +94,7 @@ const ERPModal = React.memo(
           <Dialog
             as="div"
             className={`relative z-50`}
-            onClose={disableOutsideClickClose ? () => { } : handleClose}
+            onClose={disableOutsideClickClose ? () => {} : handleClose}
           >
             <Transition
               as={Fragment}
@@ -107,11 +109,10 @@ const ERPModal = React.memo(
               <div className="fixed inset-0 bg-[#71717a] bg-opacity-50" />
             </Transition>
 
-            <div
-              className={`fixed inset-0 ${isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"}`}
-            >
+            <div className={`fixed inset-0 `}>
               <div
-                className={`flex min-h-full items-center justify-center text-center ${isFullHeight ? "" : "p-4 relative"}`}
+                className={`flex min-h-full items-center justify-center text-center  p-4 
+                    `}
               >
                 <TransitionChild
                   as={Fragment}
@@ -123,7 +124,8 @@ const ERPModal = React.memo(
                   leaveTo="opacity-0 scale-95"
                 >
                   <DialogPanel
-                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all ${width} ${isFullHeight ? "min-h-full max-h-screen" : "rounded-md"} ${isRemoveSomething ? "px-0" : "px-5"}`}
+                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all  min-h-full max-h-screen ${width} rounded-md
+                    ${isRemoveSomething ? "px-0" : "px-5"}`}
                   >
                     <DialogTitle
                       as="h3"
@@ -151,10 +153,15 @@ const ERPModal = React.memo(
                         </div>
                       )}
                     </DialogTitle>
-                    <div className={`${isFullHeight ? "max-h-[calc(100vh-8rem)]" : "h-auto"}`}>
-                      <div className={`${isFullHeight ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto" : ""}`}>
+                    <div className={"max-h-[calc(100vh-8rem)]"}>
+                      <div
+                        className={`
+                          max-h-[calc(100vh-16rem)] 
+                         overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-2`}
+                      >
                         {content && cloneElement(content, contentProps)}
                       </div>
+
                       <div>{footer}</div>
                     </div>
 

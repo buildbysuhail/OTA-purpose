@@ -28,25 +28,20 @@ const TestPopup: FC = () => {
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
 
-  const calculateNetAdjustment = () => {
-    return store.reduce((total, item) => total + (item.AmountToAssign || 0), 0);
-  };
-
-  const handleEditingStart = (e: any) => {
-    if (e.column.dataField === "Select") {
-      const updatedStore = [...store];
-      const row = updatedStore[e.rowIndex];
-  
-      if (row) {  
-        if (e.value) {
-          row.AmountToAssign = row.Amount;
-        } else {
-          row.AmountToAssign = 0;
-        }
-  
-        setStore(updatedStore);
+  const handleSelectionChange = (e: any) => {
+    const { data } = e;
+    const updatedStore = store.map(item => {
+      if (item.SiNo === data.SiNo) {
+        return {
+          ...item,
+          Select: data.Select,
+          AmountToAssign: data.Select ? item.Amount : 0,
+          BalanceAfter: data.Select ? 0 : item.Balance
+        };
       }
-    }
+      return item;
+    });
+    setStore(updatedStore);
   };
   //  ==========================================================================================
   return (
@@ -67,7 +62,7 @@ const TestPopup: FC = () => {
                   showRowLines={true}
                   allowColumnResizing={true}
                   allowColumnReordering={true}
-                  onEditingStart={handleEditingStart} 
+                  onRowUpdated={handleSelectionChange}
                   editing={{
                     allowUpdating: true,
                     mode: "cell", 

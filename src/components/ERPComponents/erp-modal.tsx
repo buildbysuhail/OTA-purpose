@@ -9,6 +9,7 @@ import React, { cloneElement, Fragment } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import PopupShortkey from "../../utilities/shortKeys";
+import { Height } from "devextreme-react/cjs/chart";
 
 type ERPModalProps = {
   title: string;
@@ -27,6 +28,7 @@ type ERPModalProps = {
   isFullHeight?: boolean;
   isRemoveSomething?: boolean;
   width?: string;
+  height?: string;
   closeOnSubmit?: boolean;
   closeButton?: "Button" | "LeftArrow" | "None";
   disableOutsideClickClose?: boolean;
@@ -51,6 +53,8 @@ const ERPModal = React.memo(
     isFullHeight = false,
     isRemoveSomething = false,
     width = "w-full",
+    height = "h-full",
+
     closeOnSubmit = true,
     disableOutsideClickClose = true,
   }: ERPModalProps) => {
@@ -87,12 +91,11 @@ const ERPModal = React.memo(
             </Transition>
 
             <div
-              className={`fixed inset-0 ${isFullHeight ? "overflow-y-inherit" : "overflow-y-auto"
-                }`}
+              className={`fixed inset-0 `}
             >
               <div
-                className={`flex min-h-full items-center justify-center text-center ${isFullHeight ? "" : "p-4 relative"
-                  }`}
+                className={`flex min-h-full items-center justify-center text-center  p-4 
+                  `}
               >
                 <TransitionChild
                   as={Fragment}
@@ -104,8 +107,8 @@ const ERPModal = React.memo(
                   leaveTo="opacity-0 scale-95"
                 >
                   <DialogPanel
-                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all ${width} ${isFullHeight ? "min-h-full max-h-screen" : "rounded-md"
-                      } ${isRemoveSomething ? "px-0" : "px-5"}`}
+                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all  min-h-full max-h-screen ${width} rounded-md
+                       ${isRemoveSomething ? "px-0" : "px-5"}`}
                   >
                     <DialogTitle
                       as="h3"
@@ -134,14 +137,13 @@ const ERPModal = React.memo(
                       )}
                     </DialogTitle>
                     <div
-                      className={`${isFullHeight ? "max-h-[calc(100vh-8rem)]" : "h-auto"
-                        }`}
+                      className={"max-h-[calc(100vh-8rem)]" 
+                        }
                     >
                       <div
-                        className={`${isFullHeight
-                          ? "max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto"
-                          : ""
-                          }`}
+                        className={`
+                          max-h-[calc(100vh-16rem)] 
+                         overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-2`}
                       >
                         {content && cloneElement(content, contentProps)}
                       </div>

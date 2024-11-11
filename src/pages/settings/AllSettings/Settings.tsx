@@ -85,14 +85,6 @@ const Settings = () => {
   useEffect(() => {
     debugger;
     if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setSettingRoutes([]) }
-    // if (userSession.userTypeCode == "BA") {
-    //   const st = settingsRoutes.filter((x: any) => x.title != 'branches');
-    //   setSettingRoutes(st);
-    // }
-    // if (userSession.userTypeCode == "BA") {
-    //   const st = settingsRoutes.filter((x: any) => x.title != 'branch_info');
-    //   setSettingRoutes(st);
-    // }
   }, []);
 
 
@@ -117,6 +109,7 @@ const Settings = () => {
         isOpen={rootState.PopupData.testPopup.isOpen || false}
         title= "Test Popup"
         width="w-full max-w-[1000px]"
+       
         isForm={true}
         closeModal={() => {
           dispatch(toggleTestPopup({ isOpen: false }));

@@ -25,6 +25,7 @@ import {
   toggleChartOfAccounts,
   toggleHeaderFooterPopup,
   toggleHideAccLedger,
+  toggleCompanyProfileIndiaPopup,
   toggleTestPopup,
 } from "../../../redux/slices/popup-reducer";
 import { useTranslation } from "react-i18next";
@@ -33,6 +34,7 @@ import { RootState } from "../../../redux/store";
 const HideAccountLedger = lazy(() => import("../../accounts/masters/hide-account-ledger/hide-acc-ledger"));
 const DeleteInactiveTransactionManage = lazy(() => import("../Administration/delete-inactive-transactions-manage"));
 const CompanyProfileManage = lazy(() => import("../Administration/Company-Profile-manage"));
+const CompanyProfileManageIndia = lazy(() => import("../Administration/Company-Profile-manage-india"));
 const BankPosSettingsManage = lazy(() => import("../Administration/bank-pos-settings-manage"));
 const BranchManage = lazy(() => import("../Administration/branch-info-manage"));
 const DayCloseManage = lazy(() => import("../system/day-close-manage"));
@@ -160,6 +162,16 @@ const Settings = () => {
           dispatch(toggleCompanyProfilePopup({ isOpen: false }));
         }}
         content={<CompanyProfileManage />}
+      />
+      <ERPModal
+        isOpen={rootState.PopupData.companyProfileIndia.isOpen || false}
+        title={t("company_profile")}
+        width="w-full max-w-[800px]"
+        isForm={true}
+        closeModal={() => {
+          dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false }));
+        }}
+        content={<CompanyProfileManageIndia />}
       />
       <ERPModal
         isOpen={rootState.PopupData.bankPos.isOpen || false}

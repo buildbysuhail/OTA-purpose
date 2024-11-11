@@ -16,6 +16,7 @@ interface popupData {
   financialYear: popupDataProps
   deleteInactiveTransactions: popupDataProps
   companyProfile: popupDataProps
+  companyProfileIndia: popupDataProps
   bankPos: popupDataProps
   branch: popupDataProps
   dayClose: popupDataProps
@@ -82,6 +83,7 @@ const initialState: popupData = {
   financialYear: { isOpen: false, key: null, mode: "edit", reload: true },
   deleteInactiveTransactions: { isOpen: false, key: null, mode: "edit", reload: true },
   companyProfile: { isOpen: false, key: null, mode: "edit", reload: true },
+  companyProfileIndia: { isOpen: false, key: null, mode: "edit", reload: true },
   bankPos: { isOpen: false, key: null, mode: "edit", reload: true },
   branch: { isOpen: false, key: null, mode: "edit", reload: true },
   dayClose: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -158,6 +160,10 @@ const popupDataSlice = createSlice({
     toggleCompanyProfilePopup: (state, action: PayloadAction<popupDataProps>) => {
 
       state.companyProfile = action.payload;
+    },
+    toggleCompanyProfileIndiaPopup: (state, action: PayloadAction<popupDataProps>) => {
+
+      state.companyProfileIndia = action.payload;
     },
     toggleBankPosPopup: (state, action: PayloadAction<popupDataProps>) => {
 
@@ -339,6 +345,7 @@ export const {
   toggleFinancialYearPopup,
   toggleDeleteInactiveTransactionPopup,
   toggleCompanyProfilePopup,
+  toggleCompanyProfileIndiaPopup,
   toggleBankPosPopup,
   toggleBranchPopup,
   toggleDayClosePopup,

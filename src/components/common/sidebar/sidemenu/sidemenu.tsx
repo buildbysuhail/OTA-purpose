@@ -122,7 +122,7 @@ export const MENUITEMS = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}cash-payments`, type: 'link', active: false, selected: false, title: 'cash_payments' },
+      { path: `${import.meta.env.BASE_URL}accounts/transactions/cash-payments`, type: 'link', active: false, selected: false, title: 'cash_payments' },
       { path: `${import.meta.env.BASE_URL}cash-receipts`, type: 'link', active: false, selected: false, title: 'cash_receipts' },
       { path: `${import.meta.env.BASE_URL}bank-payment-contra`, type: 'link', active: false, selected: false, title: 'bank_payment_contra' },
       { path: `${import.meta.env.BASE_URL}bank-receipt-contra`, type: 'link', active: false, selected: false, title: 'bank_receipt_contra' },

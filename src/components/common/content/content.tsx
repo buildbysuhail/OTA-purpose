@@ -100,6 +100,7 @@ const ListedProductPrices = lazy(() => import('../../../pages/inventory/masters/
 import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report';
 import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
 import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/party-wise-report';
+import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
 
 interface ContentProps { }
 const loading = (
@@ -146,29 +147,6 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="settings" element={<Settings />} />
 
-        {/* Inventory Starts */}
-
-        <Route path="sales/new" element={<InvTransactionMobile />} />
-
-
-        {/* Inventory End */}
-        {/* Accounts Start */}
-        {/* Masters */}
-        <Route path="account-masters/account-group" element={<AccountsMasters />} />
-        <Route path="account-masters/Bank-Cards" element={<BankCards />} />
-        <Route path="account-masters/upi" element={<Upi />} />
-        <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
-        <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
-        <Route path="account-masters/party-category" element={<PartyCategory />} />
-        <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
-        <Route path="/account-masters/cost-center" element={<CostCenter />} />
-        <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
-        <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
-        <Route path="account-masters/suppliers" element={<Suppliers />} />
-        <Route path="account-masters/customers" element={<Customers />} />
-        <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
-        {/* Accounts End */}
-
 
         {/* Integration Start */}
         <Route path="/integration/sms" element={<SmsIntegration />} />
@@ -182,60 +160,89 @@ const Content: FC<ContentProps> = () => {
         <Route path="/templates/invoice_designer/*" element={<TemplateDesignerLayout />} />
 
         {/* Templates ends */}
+        {/* Inventory Starts */}
+
+        <Route path="sales/new" element={<InvTransactionMobile />} />
+
+
+        {/* Inventory End */}
+        {/* Accounts Start */}
+        {/* Accounts Masters */}
+        <Route path="account-masters/account-group" element={<AccountsMasters />} />
+        <Route path="account-masters/Bank-Cards" element={<BankCards />} />
+        <Route path="account-masters/upi" element={<Upi />} />
+        <Route path="account-masters/privilege-cards" element={<PrivilegeCard />} />
+        <Route path="account-masters/account-ledger" element={<AccountsLedger />} />
+        <Route path="account-masters/party-category" element={<PartyCategory />} />
+        <Route path="/account-masters/currency-master" element={<CurrencyMaster />} />
+        <Route path="/account-masters/cost-center" element={<CostCenter />} />
+        <Route path="account-masters/branch-ledgers" element={<BranchLedger />} />
+        <Route path="account-masters/chart-of-accounts" element={<ChartOfAccounts />} />
+        <Route path="account-masters/suppliers" element={<Suppliers />} />
+        <Route path="account-masters/customers" element={<Customers />} />
+        <Route path="/account-masters/customer-supplier-ledger" element={<CustomerSupplierLedger />} />
+        {/* Accounts Masters End */}
+
+        {/* Accounts Masters */}
+        <Route path="/accounts/transactions/:id" element={<AccTransaction/>} />
+        {/* Accounts Masters End */}
+
 
         {/* Reports */}
         <Route path="/reports" element={<ReportList />} />
         {/* Reports - Accounts */}
-        <Route path="/accounts/ledger_report" element={<LedgerReport/>} />
-        <Route path="/accounts/cash_book" element={<CashBookSummary/>} />
-        <Route path="/accounts/day_book_detailed" element={<DayBookDetailed/>} />
-        <Route path="/accounts/day_book_summary" element={<DayBookSummary/>} />
-        <Route path="/accounts/payment_report" element={<PaymentReport/>} />
-        <Route path="/accounts/collection_report" element={<CollectionReport/>} />
-        <Route path="/accounts/cash_summary" element={<CashSummary/>} />
-        <Route path="/accounts/transaction_report" element={<TransactionReport/>} />
-        <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport/>} />
-        <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport/>} />
-        <Route path="/accounts/daily_summary_report" element={<DailySummary/>} />
-        <Route path="/accounts/billwise_profit" element={0!=0?<BillwiseProfit/>:<BillwiseProfitGlobal/>} />
-        <Route path="/accounts/partywise_summary" element={<PartySummaryBasicInfo/>} />
-        <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport/>} />
-        <Route path="/accounts/outstanding_receivable" element={<OutstandingAccountReceivableReport/>} />
-        <Route path="/accounts/outstanding_aging_payable" element={<OutstandingAccountPayableAgingReport/>} />
-        <Route path="/accounts/outstanding_aging_receivable" element={<OutstandingAccountReceivableAgingReport/>} />
-        <Route path="/accounts/trial_balance" element={<TrialBalance/>} />
-        <Route path="/accounts/profit_and_loss" element={<ProfitAndLoss/>} />
-        <Route path="/accounts/balance_sheet" element={<BalanceSheet/>} />
-        <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport/>} />
-        <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport/>} />
+        <Route path="/accounts/ledger_report" element={<LedgerReport />} />
+        <Route path="/accounts/cash_book" element={<CashBookSummary />} />
+        <Route path="/accounts/day_book_detailed" element={<DayBookDetailed />} />
+        <Route path="/accounts/day_book_summary" element={<DayBookSummary />} />
+        <Route path="/accounts/payment_report" element={<PaymentReport />} />
+        <Route path="/accounts/collection_report" element={<CollectionReport />} />
+        <Route path="/accounts/cash_summary" element={<CashSummary />} />
+        <Route path="/accounts/transaction_report" element={<TransactionReport />} />
+        <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport />} />
+        <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport />} />
+        <Route path="/accounts/daily_summary_report" element={<DailySummary />} />
+        <Route path="/accounts/billwise_profit" element={0 != 0 ? <BillwiseProfit /> : <BillwiseProfitGlobal />} />
+        <Route path="/accounts/partywise_summary" element={<PartySummaryBasicInfo />} />
+        <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport />} />
+        <Route path="/accounts/outstanding_receivable" element={<OutstandingAccountReceivableReport />} />
+        <Route path="/accounts/outstanding_aging_payable" element={<OutstandingAccountPayableAgingReport />} />
+        <Route path="/accounts/outstanding_aging_receivable" element={<OutstandingAccountReceivableAgingReport />} />
+        <Route path="/accounts/trial_balance" element={<TrialBalance />} />
+        <Route path="/accounts/profit_and_loss" element={<ProfitAndLoss />} />
+        <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
+        <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
+        <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />
         {/* Reports - Accounts */}
 
         {/* Reports - Inventory */}
-        <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport/>} />
-        <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport/>} />
-        <Route path="/inventory/party_wise_report" element={<PartyWiseReport/>} />
+        <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
+        <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
+        <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 
         {/* side menu */}
-        <Route path="cash-payments" element={<AccTransactionMobile />} />
+        {/* <Route path="cash-payments" element={<AccTransactionMobile />} /> */}
 
         {/* Inventory Masters */}
-        <Route path="/inventory-masters/product-group" element={<ProductGroup/>} />
-        <Route path="/inventory-masters/product-category" element={<ProductCategory/>} />
-        <Route path="/inventory-masters/brands" element={<Brands/>} />
-        <Route path="/inventory-masters/price-category" element={<PriceCategory/>} />
-        <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure/>} />
-        <Route path="/inventory-masters/vehicles" element={<Vehicles/>} />
-        <Route path="/inventory-masters/warehouse" element={<WareHouse/>} />
-        <Route path="/inventory-masters/tax-category" element={<TaxCategory/>} />
-        <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute/>} />
-        <Route path="/inventory-masters/section" element={<Section/>} />
-        <Route path="/inventory-masters/schemes" element={<Schemes/>} />
-        <Route path="/inventory-masters/sales-route" element={<SalesRoute/>} />
-        <Route path="/inventory-masters/group-category" element={<GroupCategory/>} />
-        <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes/>} />
-        <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices/>} />
+        <Route path="/inventory-masters/product-group" element={<ProductGroup />} />
+        <Route path="/inventory-masters/product-category" element={<ProductCategory />} />
+        <Route path="/inventory-masters/brands" element={<Brands />} />
+        <Route path="/inventory-masters/price-category" element={<PriceCategory />} />
+        <Route path="/inventory-masters/unit-of-measure" element={<UnitOfMeasure />} />
+        <Route path="/inventory-masters/vehicles" element={<Vehicles />} />
+        <Route path="/inventory-masters/warehouse" element={<WareHouse />} />
+        <Route path="/inventory-masters/tax-category" element={<TaxCategory />} />
+        <Route path="/inventory-masters/salesman-route" element={<SalesmanRoute />} />
+        <Route path="/inventory-masters/section" element={<Section />} />
+        <Route path="/inventory-masters/schemes" element={<Schemes />} />
+        <Route path="/inventory-masters/sales-route" element={<SalesRoute />} />
+        <Route path="/inventory-masters/group-category" element={<GroupCategory />} />
+        <Route path="/inventory-masters/special-schemes" element={<SpecialSchemes />} />
+        <Route path="/inventory-masters/listed-product-prices" element={<ListedProductPrices />} />
+
+
       </Routes>
     </Suspense>
   );

@@ -3,7 +3,7 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline";
 import {
-  toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleChartOfAccounts, toggleCommandsPopup, toggleCompanyProfilePopup,
+  toggleAuthorizationSettingsPopup, toggleBankPosPopup, toggleBarcodePrintPopup, toggleBranchPopup, toggleChartOfAccounts, toggleCommandsPopup, toggleCompanyProfileIndiaPopup, toggleCompanyProfilePopup,
   toggleDayClosePopup,
   toggleDeleteInactiveTransactionPopup,
   toggleExchangeRatesPopup,
@@ -109,7 +109,8 @@ export const SettingsMenuItems = [
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { action: toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'company_profile' },
+      { action: toggleCompanyProfilePopup, type: 'popup', active: false, selected: false, title: 'company_profile_others' },
+      { action: toggleCompanyProfileIndiaPopup, type: 'popup', active: false, selected: false, title: 'company_profile_india' },
       { action: toggleBranchPopup, type: 'popup', active: false, selected: false, title: 'branch_info' },
       { path: `${import.meta.env.BASE_URL}settings/_/administration/branch`, type: 'link', active: false, selected: false, title: 'branches' },
       { action: toggleDeleteInactiveTransactionPopup, type: 'popup', active: false, selected: false, title: 'delete_inactive_transactions' },

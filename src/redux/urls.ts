@@ -151,6 +151,7 @@ const Urls = {
 
   //setting/Administrations
   CompanyProfiles: "/Core/CompanyProfile/",
+  CompanyProfileIndia: "/Core/CompanyDetails/",
   Branch: "/Subscription/Branch/",
   BranchInfo: "/Core/Branch/BranchInfo/",
   branch_code: "/Branch/GetNextBranchCode/",

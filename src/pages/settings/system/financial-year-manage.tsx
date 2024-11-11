@@ -94,6 +94,21 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
+           <ERPDataCombobox
+           {...getFieldProps("fStatus")}
+            field={{
+              id: "fStatus",
+              valueKey: "value",
+              labelKey: "label",
+            }}
+            onChangeData={(data: any) => handleFieldChange("fStatus", data.fStatus)}
+            label={t('status')}
+            options={[
+            { value: 'Active', label: t('active') },
+            { value: 'Inactive', label: t('inactive') },
+            { value: 'Progress', label: t('progress') },
+            ]}
+          />
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
@@ -110,21 +125,7 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("openingStockValue", data.openingStockValue)}
         />
    
-          <ERPDataCombobox
-           {...getFieldProps("fStatus")}
-            field={{
-              id: "fStatus",
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            onChangeData={(data: any) => handleFieldChange("fStatus", data.fStatus)}
-            label={t('status')}
-            options={[
-            { value: 'Active', label: t('active') },
-            { value: 'Inactive', label: t('inactive') },
-            { value: 'Progress', label: t('progress') },
-            ]}
-          />
+       
          
         <ERPCheckbox
           {...getFieldProps('visibleOnStartUp')}

@@ -661,6 +661,7 @@ const BarcodePrint: React.FC = () => {
                         <ERPDataCombobox
                           id="labelDesign"
                           field={{
+                          params: `TemplateType=barcode`,
                             id: "labelDesign",
                             required: true,
                             getListUrl: Urls.data_templates,

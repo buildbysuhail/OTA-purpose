@@ -13,7 +13,7 @@ interface ERPFormButtonsProps {
 
 export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoading, title, onCancel, onSubmit, onClear,submitDisabled = false }) => {
   return (
-    <div className="sticky bottom-0 left-0  w-full  flex justify-end space-x-2 bg-white pt-1 pr-3 border-t  z-20">
+    <div className="sticky bottom-0 left-0  w-full  flex justify-end space-x-2 bg-white mt-2 pt-1 pr-3 border-t  z-20">
       
        {onClear && (
       <ERPButton

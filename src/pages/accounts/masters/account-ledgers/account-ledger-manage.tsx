@@ -98,9 +98,9 @@ export const AccountLedgerManage = () => {
           }}
           label={t("group_under")}
         />
-        <div className="w-full max-w-md mx-auto">
-      <div className="flex items-end gap-3">
-        <div className="flex-grow">
+        {/* <div className="w-full max-w-md mx-auto"> */}
+      <div className="flex  space-x-3">
+        <div className="basis-2/3">
           <ERPInput
             {...getFieldProps('opBalance')}
             label={t("opening_balance")}
@@ -108,8 +108,9 @@ export const AccountLedgerManage = () => {
             onChangeData={(data: any) => handleFieldChange('opBalance', data.opBalance)}
           />
         </div>
-        <div className="w-20">
+        <div className="basis-1/3 translate-y-[17px]">
           <ERPDataCombobox
+          
             {...getFieldProps("drCr")}
             field={{
               id: "drCr",
@@ -125,7 +126,7 @@ export const AccountLedgerManage = () => {
             ]}
           />
         </div>
-      </div>
+      {/* </div> */}
     </div>
       </div>
       <div className="flex items-center gap-3 mt-2">

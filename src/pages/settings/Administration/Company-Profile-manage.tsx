@@ -28,10 +28,10 @@ export interface CompanyProfileData {
   countrySubEntity: string
 }
 
+
 const CompanyProfileManage: React.FC = React.memo(() => {
   
   const dispatch = useDispatch();
-  const { t } = useTranslation();
   const {
     isEdit,
     handleSubmit,
@@ -46,13 +46,15 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     useApiClient: true
     
   });
+  const { t } = useTranslation();
+ 
 
   const onClose = useCallback(() => {
     dispatch(toggleCompanyProfilePopup({ isOpen: false}));
   }, []);
   return (
-    <div className="w-full pt-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+    <div className=" w-full pt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-2">
         <ERPInput
           {...getFieldProps("registeredName")}
           label={t("registered_name")}
@@ -170,6 +172,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("mobile", data.mobile)}
         />
       </div>
+    
       <ERPFormButtons
         onClear={handleClear}
         isEdit={isEdit}
@@ -177,6 +180,8 @@ const CompanyProfileManage: React.FC = React.memo(() => {
         onCancel={onClose}
         onSubmit={handleSubmit}
       />
+   
+     
     </div>
   );
 });

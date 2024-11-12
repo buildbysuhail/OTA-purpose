@@ -239,7 +239,7 @@ const AccountLedgerType = () => {
       <ERPModal
         isOpen={rootState.PopupData.accountLedger.isOpen || false}
         title={t("acc_ledger")}
-        width="w-full max-w-[600px]"
+        width="w-full max-w-[700px]"
         isForm={true}
         closeModal={() => {
           dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));

@@ -24,12 +24,17 @@ interface NotificationSettings {
 // const location = useLocation();
 // const path = location.pathname.split("/").pop();
 const NotificationSettings = () => {
-  const [gridHeight, setGridHeight] = useState<number>(500);
+  const [gridHeight, setGridHeight] = useState<{
+    mobile: number;
+    windows: number;
+  }>({ mobile: 500, windows: 500 });
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeight = wh - 180;
-    setGridHeight(gridHeight);
+    let gridHeightMobile = wh - 200;
+    let gridHeightWindows = wh - 300;
+    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
+
   const T_Head = [
     t("transaction"),
     t("email"),
@@ -117,13 +122,13 @@ const NotificationSettings = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa xxl:max-h-[100vh]">
+      <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa] h-full">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
             {/* <div className="flex justify-start m-3"> */}
             <div className="box-header justify-between">
               <div className="box-title">
-                <h5 className="font-semibold text-center text-[1.25rem] text-defaulttextcolor">
+                <h5 className="font-semibold text-center text-[1.25rem] ">
                   {" "}
                   {t("notification_settings")}
                 </h5>
@@ -150,7 +155,8 @@ const NotificationSettings = () => {
                     <p>{t("....loading")}</p>
                   </>
                 ) : (
-                  <div className="table-responsive max-h-[60vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
+                  // <div className="table-responsive max-h-[60vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
+                      <div className={`table-responsive overflow-auto shadow-sm`} style={{ maxHeight: `${gridHeight.windows}px` }}>
                     <table className="min-w-full relative table table-bordered rounded-t-sm dark:border-defaultborder/10 ">
                       <thead className="bg-[#f3f4f6] sticky top-[-1px] z-40">
                         <tr>
@@ -164,7 +170,7 @@ const NotificationSettings = () => {
                         </tr>
                       </thead>
 
-                      <tbody className=" bg-[#fafafa] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
+                      <tbody className=" bg-[#fafafa]">
                         {TableBody.length > 0 ? (
                           TableBody?.filter((item)=>
                           item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())

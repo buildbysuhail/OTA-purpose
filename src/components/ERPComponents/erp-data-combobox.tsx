@@ -8,8 +8,8 @@ import {
   XMarkIcon,
 } from "@heroicons/react/20/solid";
 import { useTranslation } from "react-i18next";
+import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
-import ERPElementValidationMessage from "./erp-element-validation-message";
 
 interface Option {
   value: string;
@@ -21,7 +21,6 @@ interface ERPDataComboboxProps {
   id: string;
   label?: string;
   options?: any[];
-  reload?: boolean;
   excludeOptions?: any[];
   includeOptions?: any[];
   value?: any;
@@ -48,7 +47,20 @@ interface ERPDataComboboxProps {
   enableClearOption?: boolean;
 }
 
+interface RowProps {
+  data: {
+    items: Option[];
+    selectedValue: Option | null;
+    handleSelect: (item: Option) => void;
+    activeIndex: number;
+  };
+  index: number;
+  style: React.CSSProperties;
+}
+
 const ITEMS_PER_PAGE = 50;
+const ITEM_HEIGHT = 36;
+const LIST_HEIGHT = 300;
 const api = new APIClient();
 
 const getNestedValue = (item: any, path: string) => {
@@ -74,21 +86,14 @@ const truncateText = (
 ) => {
   if (!inputRef.current || !text) return text;
 
-  // Create temporary span to measure text width
   const tempSpan = document.createElement("span");
   tempSpan.style.visibility = "hidden";
   tempSpan.style.position = "absolute";
   tempSpan.style.whiteSpace = "nowrap";
-
-  // Copy input styles for accurate measurement
-  const inputStyle = window.getComputedStyle(inputRef.current);
-  tempSpan.style.font = inputStyle.font;
+  tempSpan.style.font = window.getComputedStyle(inputRef.current).font;
   document.body.appendChild(tempSpan);
 
-  // Calculate available width (input width minus padding and button space)
-  const availableWidth = inputRef.current.offsetWidth - 60; // Adjusted for padding and buttons
-
-  // Check if text needs truncation
+  const availableWidth = inputRef.current.offsetWidth - 60;
   tempSpan.textContent = text;
   const textWidth = tempSpan.offsetWidth;
 
@@ -110,7 +115,93 @@ const truncateText = (
   return text;
 };
 
-export default function ERPDataCombobox({
+const Row = ({ data, index, style }: RowProps) => {
+  const { items, selectedValue, handleSelect, activeIndex } = data;
+  const item = items[index];
+  const isSelected = selectedValue?.value === item.value;
+  const isActive = activeIndex === index;
+
+  return (
+    <div style={style} className="px-1">
+      <Combobox.Option
+        key={`${item?.value}-${index}`}
+        className={({ active }) =>
+          `relative cursor-pointer select-none w-full rounded-sm ${
+            active
+              ? "bg-blue-500 text-white"
+              : item.is_active === false
+              ? "bg-gray-200 text-gray-400"
+              : "text-gray-900"
+          }`
+        }
+        value={item}
+        disabled={!item.is_active}
+      >
+        {({ active }) => (
+          <div
+            className={`flex items-center px-3 py-2 ${
+              isSelected ? "bg-gray-200" : ""
+            }`}
+            onClick={() => handleSelect(item)} // Trigger selection on click
+          >
+            <div className="flex-shrink-0 w-5">
+              {isSelected && (
+                <CheckIcon
+                  className={`h-5 w-5 ${active ? "text-white" : "text-accent"}`}
+                  aria-hidden="true"
+                />
+              )}
+            </div>
+            <span
+              className={`block truncate flex-grow ${
+                isSelected ? "font-medium" : "font-normal"
+              }`}
+            >
+              {item.label}
+            </span>
+          </div>
+        )}
+      </Combobox.Option>
+    </div>
+  );
+};
+
+const ComboboxList = React.forwardRef<
+  List,
+  {
+    items: Option[];
+    selectedValue: Option | null;
+    onSelect: (item: Option) => void;
+  }
+>((props, ref) => {
+  const { items, selectedValue, onSelect } = props;
+  const [activeIndex, setActiveIndex] = useState(-1);
+
+  const itemData = {
+    items,
+    selectedValue,
+    handleSelect: onSelect,
+    activeIndex,
+  };
+
+  return (
+    <List
+      height={LIST_HEIGHT}
+      itemCount={items.length}
+      itemSize={ITEM_HEIGHT}
+      width="100%"
+      ref={ref}
+      itemData={itemData}
+      className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent hover:scrollbar-thumb-gray-400"
+    >
+      {Row}
+    </List>
+  );
+});
+
+ComboboxList.displayName = "ComboboxList";
+
+export default function ImprovedERPDataCombobox({
   id,
   label,
   handleChange,
@@ -122,7 +213,6 @@ export default function ERPDataCombobox({
   field,
   defaultData,
   data,
-  reload = false,
   noLabel,
   noXMarkIcon,
   required,
@@ -144,18 +234,12 @@ export default function ERPDataCombobox({
   const [loading, setLoading] = useState(false);
   const [initial, setInitial] = useState<Option | null>(initialValue);
   const [filteredItems, setFilteredItems] = useState<Option[]>([]);
-  const [visibleItems, setVisibleItems] = useState<Option[]>([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [displayValue, setDisplayValue] = useState(""); // New state for truncated display value
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [displayValue, setDisplayValue] = useState("");
 
   const comboboxRef = useRef<HTMLInputElement>(null);
-  const observerRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<List>(null);
   const componentRef = useRef<HTMLDivElement>(null);
 
-  // Update display value when initial value changes
   useEffect(() => {
     if (initial?.label) {
       setDisplayValue(truncateText(initial.label, comboboxRef));
@@ -164,7 +248,6 @@ export default function ERPDataCombobox({
     }
   }, [initial]);
 
-  // Add click outside handler
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -174,18 +257,15 @@ export default function ERPDataCombobox({
         setIsOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
-  }, [field?.getListUrl, field?.freezeDataLoad, disabledApiCall,reload]);
+  }, [field?.getListUrl, field?.freezeDataLoad, disabledApiCall]);
 
   const loadData = async () => {
     setLoading(true);
@@ -196,19 +276,13 @@ export default function ERPDataCombobox({
       const valueKey = field?.valueKey ?? "value";
 
       let _options = mapItemsToOptions(_items, labelKey, valueKey);
-
-      // Filter out excluded options
       _options = _options?.filter(
         (option) => !excludeOptions?.includes(option.value)
       );
-
-      // Add included options at the beginning if they exist
       _options = includeOptions ? [...includeOptions, ..._options] : _options;
 
       setItems(_options);
       setFilteredItems(_options);
-      setVisibleItems(_options?.slice(0, ITEMS_PER_PAGE));
-      setHasMore(_options.length > ITEMS_PER_PAGE);
     } catch (error) {
       console.error("Error loading data:", error);
     } finally {
@@ -216,50 +290,25 @@ export default function ERPDataCombobox({
     }
   };
 
+  const filterItems = useCallback(
+    (searchQuery: string) => {
+      const words = searchQuery?.toLowerCase()?.split(/\s+/) || [];
+      const filtered = items?.filter((item) => {
+        if (!item?.label) return false;
+        const itemWords = item.label.toLowerCase().split(/\s+/);
+        return words.every((word) =>
+          itemWords.some((itemWord) => itemWord.startsWith(word))
+        );
+      });
+
+      setFilteredItems(filtered || []);
+    },
+    [items]
+  );
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      async (entries) => {
-        const target = entries[0];
-        if (target.isIntersecting && hasMore && !isLoadingMore) {
-          setIsLoadingMore(true);
-          const nextPage = page + 1;
-          const startIndex = (nextPage - 1) * ITEMS_PER_PAGE;
-          const endIndex = startIndex + ITEMS_PER_PAGE;
-
-          // Add delay to prevent rapid scrolling
-          await new Promise((resolve) => setTimeout(resolve, 100));
-
-          setVisibleItems((prev) => {
-            const newItems = [
-              ...prev,
-              ...filteredItems.slice(startIndex, endIndex),
-            ];
-            setHasMore(newItems.length < filteredItems.length);
-            return newItems;
-          });
-
-          setPage(nextPage);
-          setIsLoadingMore(false);
-        }
-      },
-      {
-        threshold: 0.1,
-        root: containerRef.current,
-        rootMargin: "20px",
-      }
-    );
-
-    const currentObserverRef = observerRef.current;
-    if (currentObserverRef && hasMore) {
-      observer.observe(currentObserverRef);
-    }
-
-    return () => {
-      if (currentObserverRef) {
-        observer.unobserve(currentObserverRef);
-      }
-    };
-  }, [filteredItems, page, hasMore, isLoadingMore]);
+    filterItems(query);
+  }, [query, filterItems]);
 
   useEffect(() => {
     const fieldKey = field?.id?.replaceAll("_id", "");
@@ -277,28 +326,6 @@ export default function ERPDataCombobox({
     setInitial(_selected || _default || _exceptional || initialValue || null);
   }, [items, data, defaultData, field, initialValue]);
 
-  const filterItems = useCallback(
-    (inputValue: string) => {
-      const words = inputValue?.toLowerCase()?.split(/\s+/);
-      const filtered = items?.filter((item) => {
-        const itemWords = item?.label?.toLowerCase()?.split(/\s+/);
-        return words.every((word) =>
-          itemWords?.some((itemWord) => itemWord?.startsWith(word))
-        );
-      });
-
-      setPage(1);
-      setVisibleItems(filtered?.slice(0, ITEMS_PER_PAGE));
-      setHasMore(filtered?.length > ITEMS_PER_PAGE);
-      return filtered;
-    },
-    [items]
-  );
-
-  useEffect(() => {
-    setFilteredItems(filterItems(query));
-  }, [query, filterItems]);
-
   const clearSelection = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     setQuery("");
@@ -314,16 +341,12 @@ export default function ERPDataCombobox({
   const handleItemClick = (value: Option) => {
     setInitial(value);
     setIsOpen(false);
+    setDisplayValue(truncateText(value.label, comboboxRef)); // Update display value
     onChange?.(value);
-    onChangeData?.(value && data && { ...data, [id]: value?.value });
+    onChangeData?.(value && data ? { ...data, [id]: value?.value } : null);
     handleChange?.(field?.id, value?.value);
     handleChangeData?.(field?.id, value?.value);
-  };
-
-  const handleInputClick = () => {
-    if (!disabled) {
-      setIsOpen(!isOpen);
-    }
+    onSelectItem?.(value);
   };
 
   return (
@@ -345,44 +368,27 @@ export default function ERPDataCombobox({
         className="relative"
       >
         <div className={className}>
-          {/* <Combobox.Input
-            className={`w-full appearance-none rounded border border-gray-300 h-9 pr-[50px] ${
-              disabled ? "text-gray-400" : "bg-white text-gray-900"
-            } px-3 py-2 ${
-              enableClearOption ? "pr-2" : "pr-20"
-            } placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
-            displayValue={(item: Option) => item?.label || ""}
-            onChange={(event) => {
-              setQuery(event?.target?.value);
-              setIsOpen(true); // Always open when typing
-            }}
-            onClick={handleInputClick}
-            placeholder={
-              t("select") + " " + (label || id?.replaceAll("_", " "))
-            }
-            ref={comboboxRef}
-          /> */}
           <Combobox.Input
-            className={`w-full appearance-none rounded border border-gray-300 h-9 pr-[47px] ${
+            className={`w-full appearance-none rounded border border-gray-300 h-9 ${
               disabled ? "text-gray-400" : "bg-white text-gray-900"
             } px-3 py-2 ${
-              enableClearOption ? "pr-2" : "pr-20"
+              enableClearOption ? "pr-16" : "pr-10"
             } placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             displayValue={(item: Option) =>
               isOpen ? item?.label || "" : displayValue
             }
             onChange={(event) => {
-              setQuery(event?.target?.value);
+              setQuery(event.target.value);
               setIsOpen(true);
             }}
-            onClick={handleInputClick}
+            onClick={() => !disabled && setIsOpen(!isOpen)}
             placeholder={
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
             ref={comboboxRef}
-            title={initial?.label || ""} // Add tooltip for full text
+            title={initial?.label || ""}
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-0 bg-[#ffffff4d] border-l">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-1">
             {enableClearOption && initial && !noXMarkIcon && (
               <button
                 type="button"
@@ -391,7 +397,8 @@ export default function ERPDataCombobox({
                   clearSelection();
                   setIsOpen(false);
                 }}
-                className="p-0 hover:bg-gray-100 rounded-full"
+                className="p-1 hover:bg-gray-100 rounded-full"
+                aria-label="Clear selection"
               >
                 <XMarkIcon
                   className="h-5 w-5 text-gray-400 hover:text-gray-500"
@@ -401,10 +408,7 @@ export default function ERPDataCombobox({
             )}
             <Combobox.Button
               className="p-1 hover:bg-gray-100 rounded-full"
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsOpen(!isOpen);
-              }}
+              onClick={() => !disabled && setIsOpen(!isOpen)}
             >
               <ChevronDownIcon
                 className={`h-5 w-5 text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
@@ -424,71 +428,32 @@ export default function ERPDataCombobox({
           afterLeave={() => setQuery("")}
         >
           <Combobox.Options
-            className="absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-auto"
-            ref={containerRef}
+            className="absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
+            static
           >
             {loading ? (
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 Loading...
               </div>
-            ) : visibleItems?.length === 0 ? (
+            ) : filteredItems.length === 0 ? (
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 No data found
               </div>
             ) : (
-              <>
-                {visibleItems?.map((item, index) => (
-                  <Combobox.Option
-                    key={`${item?.value}-${index}`}
-                    className={({ active }) =>
-                      `${
-                        item.is_active === false ? "hidden" : "relative"
-                      } cursor-pointer  select-none py-2 pl-10 pr-4 ${
-                        active ? "bg-primary text-white" : "text-gray-900"
-                      }`
-                    }
-                    value={item}
-                  >
-                    {({ selected, active }) => (
-                      <>
-                        <span
-                          className={`block truncate ${
-                            selected ? "font-medium" : "font-normal"
-                          }`}
-                        >
-                          {item.label}
-                        </span>
-                        {selected && (
-                          <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? "text-white" : "text-accent"
-                            }`}
-                          >
-                            <CheckIcon className="h-5 w-5" aria-hidden="true" />
-                          </span>
-                        )}
-                      </>
-                    )}
-                  </Combobox.Option>
-                ))}
-                {hasMore && (
-                  <div
-                    ref={observerRef}
-                    className="h-4 flex items-center justify-center"
-                  >
-                    {isLoadingMore && (
-                      <div className="text-xs text-gray-500">
-                        Loading more...
-                      </div>
-                    )}
-                  </div>
-                )}
-              </>
+              <ComboboxList
+                ref={listRef}
+                items={filteredItems}
+                selectedValue={initial}
+                onSelect={handleItemClick}
+              />
             )}
           </Combobox.Options>
         </Transition>
       </Combobox>
-      <ERPElementValidationMessage validation={validation} />
+      {validation && (
+        <div className="mt-1 text-xs text-red-500">{validation}</div>
+      )}
     </div>
   );
 }
+  

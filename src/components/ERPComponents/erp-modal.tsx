@@ -8,10 +8,7 @@ import {
 import React, { cloneElement, Fragment, useEffect } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
-// import shortKeys, {
-//   cleanupShortKeys,
-//   initializeShortKeys,
-// } from "../../utilities/shortKeys";
+import { POPUP_CLOSE_EVENT } from "../../utilities/shortKeys";
 
 type ERPModalProps = {
   title: string;
@@ -67,26 +64,21 @@ const ERPModal = React.memo(
       }
     };
 
-    // useEffect(() => {
-    //   const PopupCloseShortKey = shortKeys.find(
-    //     (s: { description: string }) => s.description === "Close all popups"
-    //   );
+    const handlePopupClose = () => {
+      if (isOpen) {
+        handleClose();
+      }
+    };
 
-    //   if (PopupCloseShortKey) {
-    //     PopupCloseShortKey.action = handleClose;
-    //     initializeShortKeys();
-    //   }
-    //   if (!isOpen) {
-    //     handleClose();
-    //   }
+    useEffect(() => {
+      if (isOpen) {
+        document.addEventListener(POPUP_CLOSE_EVENT, handlePopupClose);
+      }
 
-    //   return () => {
-    //     if (PopupCloseShortKey) {
-    //       PopupCloseShortKey.action = () => console.log("Closing all popups");
-    //     }
-    //     cleanupShortKeys();
-    //   };
-    // }, [isOpen]);
+      return () => {
+        document.removeEventListener(POPUP_CLOSE_EVENT, handlePopupClose);
+      };
+    }, [isOpen]);
 
     return (
       <div>
@@ -94,7 +86,7 @@ const ERPModal = React.memo(
           <Dialog
             as="div"
             className={`relative z-50`}
-            onClose={disableOutsideClickClose ? () => {} : handleClose}
+            onClose={disableOutsideClickClose ? () => { } : handleClose}
           >
             <Transition
               as={Fragment}
@@ -109,10 +101,9 @@ const ERPModal = React.memo(
               <div className="fixed inset-0 bg-[#71717a] bg-opacity-50" />
             </Transition>
 
-            <div className={`fixed inset-0 `}>
+            <div className={`fixed inset-0`}>
               <div
-                className={`flex min-h-full items-center justify-center text-center  p-4 
-                    `}
+                className={`flex min-h-full items-center justify-center text-center p-4`}
               >
                 <TransitionChild
                   as={Fragment}
@@ -124,7 +115,7 @@ const ERPModal = React.memo(
                   leaveTo="opacity-0 scale-95"
                 >
                   <DialogPanel
-                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all  min-h-full max-h-screen ${width} rounded-md
+                    className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all min-h-full max-h-screen ${width} rounded-md
                     ${isRemoveSomething ? "px-0" : "px-5"}`}
                   >
                     <DialogTitle

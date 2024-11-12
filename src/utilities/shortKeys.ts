@@ -1,21 +1,28 @@
 interface ShortcutConfig {
+  event: string;
   key: string;
   description: string;
   action: () => void;
 }
-
-const POPUP_CLOSE_EVENT = 'popup-close-event';
+enum ShortKeyEvents {
+  POPUP_CLOSE_EVENT = 'popup-close-event',
+  GO_TO_PREVIOUS_PAGE = 'go-to-previos-page',
+  GO_TO_NEXT_PAGE = 'go-to-next-page',
+  GO_TO_HOME = 'go-to-home'
+}
 
 const shortKeys: ShortcutConfig[] = [
   {
+    event: ShortKeyEvents.POPUP_CLOSE_EVENT,
     key: 'ctrl+shift+b',
     description: 'Close all popups',
     action: () => {
-      const event = new CustomEvent(POPUP_CLOSE_EVENT);
+      const event = new CustomEvent(ShortKeyEvents.POPUP_CLOSE_EVENT);
       document.dispatchEvent(event);
     }
   },
   {
+    event: ShortKeyEvents.GO_TO_PREVIOUS_PAGE,
     key: 'shift+b',
     description: 'Go to previous page',
     action: () => {
@@ -23,6 +30,7 @@ const shortKeys: ShortcutConfig[] = [
     }
   },
   {
+    event: ShortKeyEvents.GO_TO_NEXT_PAGE,
     key: 'alt+f',
     description: 'Go to next page',
     action: () => {
@@ -30,6 +38,7 @@ const shortKeys: ShortcutConfig[] = [
     }
   },
   {
+    event: ShortKeyEvents.GO_TO_HOME,
     key: 'ctrl+x',
     description: 'Go to Home',
     action: () => {
@@ -88,5 +97,5 @@ export const cleanupShortKeys = () => {
 
 initializeShortKeys();
 
-export { POPUP_CLOSE_EVENT };
+export { ShortKeyEvents };
 export default shortKeys;

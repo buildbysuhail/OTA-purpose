@@ -435,7 +435,7 @@ export default function ImprovedERPDataCombobox({
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 Loading...
               </div>
-            ) : filteredItems.length === 0 ? (
+            ) : filteredItems?.length === 0 ? (
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 No data found
               </div>

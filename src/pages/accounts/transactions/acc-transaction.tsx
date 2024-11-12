@@ -64,7 +64,7 @@ export default function Component() {
           <ERPInput
 
             useMUI
-            variant="standard"
+            variant="outlined"
             customSize="sm"
             id="voucherNo"
             label="Voucher No."
@@ -82,6 +82,7 @@ export default function Component() {
           <ERPInput
             id="refNo"
             label="Ref No."
+            customSize="sm"
             // value={formData.refNo}
             //data={formData}
             onChangeData={(value) => handleFieldChange('refNo', value)}
@@ -137,6 +138,7 @@ export default function Component() {
         <div className="flex align-center gap-6">
           <div className="w-1/4">
             <ERPInput
+            prefix="abc"
               id="remarks"
               label="Remarks"
               // value={formData.remarks}

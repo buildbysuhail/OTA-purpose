@@ -5,6 +5,8 @@ import { APIClient } from "../../helpers/api-client";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { useDispatch } from 'react-redux';
 import { popupDataProps } from "../../redux/slices/popup-reducer";
+import ERPAlert from "./erp-sweet-alert";
+import ERPSweetAlert from "./erp-sweet-alert";
 
 type ActionType = {
   type: "link" | "popup";
@@ -52,14 +54,10 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   itemId
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const dispatch = useDispatch();
 
   const handleDelete = async () => {
-    if (deleteAction.confirmationRequired) {
-      const isConfirmed = window.confirm(deleteAction.confirmationMessage);
-      if (!isConfirmed) return;
-    }
-
     setIsDeleting(true);
     try {
       if (deleteAction.action) {
@@ -91,7 +89,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
     if (type === "delete" || (action as ActionType).type === "popup") {
       const handleClick = () => {
         if (type === "delete") {
-          handleDelete();
+          setShowDeleteConfirmation(true);
         } else if ((action as ActionType).action) {
           const payload: popupDataProps = {
             isOpen: true,
@@ -104,6 +102,7 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
       };
 
       return (
+        <>
         <button
           onClick={handleClick}
           disabled={type === "delete" && isDeleting}
@@ -116,6 +115,21 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
             <i className={icons[type]} title={titles[type]}></i>
           )}
         </button>
+        {showDeleteConfirmation && (
+            <ERPAlert
+              title="Are you sure?"
+              text={"You won't be able to revert this!"}
+              icon="warning"
+              confirmButtonText="Yes, delete it!"
+              cancelButtonText="Cancel"
+              onConfirm={() => {
+                handleDelete();
+                setShowDeleteConfirmation(false);
+              }}
+              onCancel={() => setShowDeleteConfirmation(false)}
+            />
+          )}
+        </>
       );
     }
 

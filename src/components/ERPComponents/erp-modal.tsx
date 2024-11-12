@@ -8,7 +8,7 @@ import {
 import React, { cloneElement, Fragment, useEffect } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
-import { POPUP_CLOSE_EVENT } from "../../utilities/shortKeys";
+import { ShortKeyEvents } from "../../utilities/shortKeys";
 
 type ERPModalProps = {
   title: string;
@@ -72,11 +72,11 @@ const ERPModal = React.memo(
 
     useEffect(() => {
       if (isOpen) {
-        document.addEventListener(POPUP_CLOSE_EVENT, handlePopupClose);
+        document.addEventListener(ShortKeyEvents.POPUP_CLOSE_EVENT, handlePopupClose);
       }
 
       return () => {
-        document.removeEventListener(POPUP_CLOSE_EVENT, handlePopupClose);
+        document.removeEventListener(ShortKeyEvents.POPUP_CLOSE_EVENT, handlePopupClose);
       };
     }, [isOpen]);
 

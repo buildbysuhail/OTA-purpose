@@ -100,7 +100,34 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
           },
         
         }
-     
+      case "md":
+        return {
+          "& .MuiInputBase-root": {
+            height: "32px",
+            fontSize: "14px"
+          },
+          "& .MuiInputLabel-root": {
+            fontSize: "14px",
+            transform: "translate(10px, 10px) scale(1)"
+          },
+          "& .MuiInputLabel-shrink": {
+            transform: "translate(10px, 4px) scale(0.75)"
+          }
+        }
+      case "lg":
+        return {
+          "& .MuiInputBase-root": {
+            height: "30px",
+            fontSize: "16px"
+          },
+          "& .MuiInputLabel-root": {
+            fontSize: "16px",
+            transform: "translate(12px, 12px) scale(1)"
+          },
+          "& .MuiInputLabel-shrink": {
+            transform: "translate(12px, 6px) scale(0.75)"
+          }
+        }
       default:
         return {}
     }

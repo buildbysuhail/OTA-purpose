@@ -21,8 +21,10 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<MeasureData>({
     url: Urls.unitOfMeasure,
+    onClose:useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -32,9 +34,6 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
     initialData: initialMeasureData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleUnitOfMeasure({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -89,7 +88,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

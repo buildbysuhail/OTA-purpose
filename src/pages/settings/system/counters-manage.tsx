@@ -24,8 +24,10 @@ export const CounterManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<CounterData>({
     url: Urls.Counter,
+    onClose:useCallback(() => dispatch(toggleCounterPopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -111,7 +113,7 @@ export const CounterManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

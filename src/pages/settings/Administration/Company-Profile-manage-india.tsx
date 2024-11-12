@@ -58,17 +58,16 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfileIndia,
+    onClose:useCallback(() => dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true
 
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false }));
-  }, []);
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
@@ -261,7 +260,7 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

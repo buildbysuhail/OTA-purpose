@@ -22,8 +22,10 @@ export const ProductGroupManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<ProductGroupData>({
     url: Urls.productGroup,
+    onClose:useCallback(() => dispatch(toggleProductGroup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleProductGroup({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -33,9 +35,6 @@ export const ProductGroupManage: React.FC = React.memo(() => {
     initialData: initialProductGroupData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleProductGroup({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -144,7 +143,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

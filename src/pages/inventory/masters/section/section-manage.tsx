@@ -25,8 +25,10 @@ export const SectionManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<SectionData>({
     url: Urls.section,
+    onClose:useCallback(() => dispatch(toggleSection({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleSection({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -36,9 +38,6 @@ export const SectionManage: React.FC = React.memo(() => {
     initialData: initialSectionData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleSection({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -82,7 +81,7 @@ export const SectionManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

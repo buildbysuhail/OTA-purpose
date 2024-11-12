@@ -21,19 +21,17 @@ export const UserManage: React.FC = React.memo(() => {
     getFieldProps,
     handleClear,
     isLoading,
-    formState
+    formState,
+    handleClose
   } = useFormManager<UserData>({
     url: Urls.Users,
+    onClose:useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null,reload:true })), [dispatch]),
     key: rootState.PopupData.user.key,
     keyField:'user',
     useApiClient:true,
     initialData:initialDataUser
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleUserPopup({ isOpen: false, key: null }));
-  }, []);
 
   return (
     <div className="w-full pt-4">
@@ -147,7 +145,7 @@ export const UserManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

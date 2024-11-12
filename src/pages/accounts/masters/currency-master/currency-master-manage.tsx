@@ -18,10 +18,10 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
     useFormManager<CurrencyData>({
       url: Urls.account_currency_master,
-     
+      onClose:useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
       key: rootState.PopupData.currencyMaster.key,
       keyField:"currencyId",
@@ -29,9 +29,6 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
       initialData: initialCurrency,
     });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
   return (
@@ -111,7 +108,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

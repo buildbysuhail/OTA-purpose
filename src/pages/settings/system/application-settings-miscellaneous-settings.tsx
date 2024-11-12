@@ -19,9 +19,10 @@ interface DeleteInactiveTransactionManageData {
 const ApplicationMiscellaneousSettingsPop : React.FC = React.memo(() => {
     const dispatch = useDispatch();
   
-    const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+    const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
       useFormManager<DeleteInactiveTransactionManageData>({
         url: Urls.deleteInactiveTransactions,
+        onClose:useCallback(() => dispatch(toggleMiscellaneousSettingsPopup({ isOpen: false, key: null,})), [dispatch]),
         onSuccess: useCallback(
           () =>
             dispatch(
@@ -34,11 +35,7 @@ const ApplicationMiscellaneousSettingsPop : React.FC = React.memo(() => {
         loadDataRequired: false
       });
   
-    const onClose = useCallback(() => {
-      dispatch(
-        toggleMiscellaneousSettingsPopup({ isOpen: false})
-      );
-    }, []);
+
   
     const { t } = useTranslation();
   
@@ -93,7 +90,7 @@ const ApplicationMiscellaneousSettingsPop : React.FC = React.memo(() => {
           title={t("delete_all")}
           isLoading={isLoading}
           onSubmit={handleSubmit}
-          onCancel={onClose}
+          onCancel={handleClose}
           onClear={handleClear}
         />
       </div>

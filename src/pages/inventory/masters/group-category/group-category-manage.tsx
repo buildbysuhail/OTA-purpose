@@ -24,8 +24,10 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<GroupCategoryData>({
     url: Urls.group_category,
+    onClose:useCallback(() => dispatch(toggleGroupCategory({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleGroupCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -34,10 +36,6 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialGroupCategoryData
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleGroupCategory({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -81,7 +79,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

@@ -26,9 +26,10 @@ export interface UserActionReport {
 const UserActionReportFilter: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
     useFormManager<UserActionReport>({
       url: Urls.userActionReport,
+      onClose:useCallback(() => dispatch(toggleUserActionPopup({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(
         () => dispatch(toggleUserActionPopup({ isOpen: false, key: null })),
         [dispatch]
@@ -48,9 +49,7 @@ const UserActionReportFilter: React.FC = React.memo(() => {
     });
 
 
-  const onClose = useCallback(async () => {
-    dispatch(toggleUserActionPopup({ isOpen: false }));
-  }, []);
+
 
   const { t } = useTranslation();
 
@@ -147,7 +146,7 @@ const UserActionReportFilter: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

@@ -14,10 +14,14 @@ import { useAppDispatch, useAppSelector } from "./useAppDispatch";
 import { handleResponse } from "../HandleResponse";
 import { getAction, getDetailAction } from "../../redux/slices/app-thunks";
 import { APIClient } from "../../helpers/api-client";
+import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
+import { RootState } from "../../redux/store";
+import { onCloseWithUnsavedChange } from "../../redux/slices/popup-reducer";
 
-interface UseFormManagerOptions {
+interface UseFormManagerOptions { 
   url: string;
   onSuccess?: () => void;
+  onClose?: () => void;
   onError?: (error: any) => void;
   key?: string;
   keyField?: string;
@@ -38,6 +42,7 @@ interface FormField {
 export function useFormManager<T>({
   url,
   onSuccess,
+  onClose,
   onError,
   key,
   keyField = "id",
@@ -65,12 +70,20 @@ export function useFormManager<T>({
   debugger;
   // if(localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data ==null )
   const [localFormState, setLocalFormState] = useState<ApiResponse<any>>(initialData);
-
+  const [prevLocalFormState, setPrevLocalFormState] = useState<ApiResponse<any>>(initialData);
   const reduxFormState = useAppSelector<ApiResponse<any>>(
     (state: any) => state?.[rName]
   );
-  // const formState = useApiClient ? localFormState : reduxFormState;
 
+  const withUnsavedChange = useAppSelector((state: RootState) => state.PopupData.onCloseWithUnsavedChange);
+  useEffect(() => {
+    debugger;
+    if (withUnsavedChange.succeeded) {
+      appDispatch(onCloseWithUnsavedChange({warn: false, succeeded: false, canceled: false}));
+      onClose?.();
+      }
+  }, [withUnsavedChange.succeeded]);
+;
   useEffect(() => {
     debugger;
     if (localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data == null) {
@@ -82,6 +95,7 @@ export function useFormManager<T>({
         error: null,
       }
       setLocalFormState(df);
+      setPrevLocalFormState(df);
     }
   }, [initialData]);
   const [isLoading, setIsLoading] = useState(false);
@@ -110,8 +124,20 @@ export function useFormManager<T>({
           loading: false,
           error: null,
         });
+        setPrevLocalFormState({
+          data: response,
+          validations: {},
+          loading: false,
+          error: null,
+        });
       } catch (error: any) {
         setLocalFormState({
+          data: initialData || {},
+          validations: {},
+          loading: false,
+          error: null,
+        });
+        setPrevLocalFormState({
           data: initialData || {},
           validations: {},
           loading: false,
@@ -130,12 +156,24 @@ export function useFormManager<T>({
           loading: false,
           error: null,
         });
+        setPrevLocalFormState({
+          data: response,
+          validations: {},
+          loading: false,
+          error: null,
+        });
       } catch (error: any) {
         reduxManager.setState(rName, {
           data: {},
           validations: {},
           loading: false,
           error: error,
+        });
+        setPrevLocalFormState({
+          data: {},
+          validations: {},
+          loading: false,
+          error: null,
         });
         onError?.(error);
       }
@@ -288,6 +326,19 @@ export function useFormManager<T>({
     }
   }, [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]);
 
+  const handleClose = useCallback(() => {
+    console.log('handleClose');
+    const currentState = useApiClient ? localFormState : reduxFormState;
+    if (JSON.stringify(currentState?.data) !== JSON.stringify(prevLocalFormState?.data)) {
+      console.log('handleClose2');
+      appDispatch(onCloseWithUnsavedChange({warn: true, succeeded: false, canceled: false}));
+      
+    } else {
+      onClose?.();
+    }
+  }, [onClose, useApiClient, localFormState, reduxFormState, prevLocalFormState]);
+
+
   const getNestedValue = (obj: any, path: string) => {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   };
@@ -311,13 +362,16 @@ export function useFormManager<T>({
     [(useApiClient ? localFormState : reduxFormState)?.data]
   );
 
-  return {
-    isEdit,
-    formState: useApiClient ? localFormState : reduxFormState,
-    handleSubmit,
-    handleFieldChange,
-    handleClear,
-    getFieldProps,
-    isLoading,
-  };
+
+    return {
+      isEdit,
+      formState: useApiClient ? localFormState : reduxFormState,
+      handleSubmit,
+      handleFieldChange,
+      handleClear,
+      handleClose,
+      getFieldProps,
+      isLoading,
+    };
+
 }

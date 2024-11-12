@@ -12,8 +12,10 @@ interface ERPAlertProps {
   title: string
   text: string
   width?:number
+  showAnimation?:'animate__fadeInDown' | 'animate__bounceIn' | 'animate__fadeIn' | 'animate__backInDown' 
+  hideAnimation?:'animate__fadeOutDown' | 'animate__bounceOut' | 'animate__fadeOut' | 'animate__backOutDown'
   icon?: 'warning' | 'error' | 'success' | 'info' | 'question'
-  position?: 'center' | 'top' | 'top-start' | 'top-end' | 'bottom'   
+  position?: 'center'|'center-end'|'center-start' | 'top' | 'top-start' | 'top-end' | 'bottom'   
   confirmButtonText?: string
   cancelButtonText?: string
   onConfirm: () => void
@@ -24,6 +26,8 @@ export default function ERPAlert({
   title,
   text,
   width=450,
+  showAnimation='animate__fadeInDown',
+  hideAnimation='animate__fadeOutDown',
   icon = 'warning',
   position='center',
   confirmButtonText = 'Confirm',
@@ -44,10 +48,10 @@ export default function ERPAlert({
       cancelButtonText: cancelButtonText,
       position: position,
       showClass: {
-        popup: 'animate__animated animate__fadeInDown animate__faster'
+        popup: `animate__animated ${showAnimation} animate__faster`
       },
       hideClass: {
-        popup: 'animate__animated animate__fadeOutDown animate__faster'
+        popup: `animate__animated ${hideAnimation} animate__faster`
       },
       //if want any custome style use customClass  now it just a demo class 
       customClass: {

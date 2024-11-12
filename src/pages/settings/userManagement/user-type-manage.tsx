@@ -10,6 +10,7 @@ import React from "react";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { initialDataUserType } from "./user-manage-types";
 import { t } from "i18next";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 
 interface UserTypeData {
   userTypeName: string;
@@ -27,19 +28,17 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
     handleClear,
     handleFieldChange,
     getFieldProps,
-    isLoading
+    handleClose,
+    isLoading,
   } = useFormManager<UserTypeData>({
     url: Urls.UserTypes,
     onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null, reload:true  })), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.userType.key,
     keyField:"userTypeCode",
     useApiClient: true,
     initialData: initialDataUserType
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleUserTypePopup({ isOpen: false, key: null }));
-  }, []);
 
   return (
     <div className="w-full pt-4">
@@ -81,9 +80,10 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
+       
     </div>
   );
 });

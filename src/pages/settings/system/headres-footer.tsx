@@ -35,9 +35,10 @@ interface HeadersAndFootersInf {
 const HeadersAndFooters : React.FC = React.memo(() => {
     const dispatch = useDispatch();
   
-    const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+    const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
       useFormManager<HeadersAndFootersInf>({
         url: Urls.headers_footers,
+        onClose:useCallback(() => dispatch(toggleHeaderFooterPopup({ isOpen: false, key: null,})), [dispatch]),
         onSuccess: useCallback(
           () =>
             dispatch(
@@ -50,11 +51,7 @@ const HeadersAndFooters : React.FC = React.memo(() => {
         loadDataRequired:true
       });
   
-    const onClose = useCallback(() => {
-      dispatch(
-        toggleHeaderFooterPopup({ isOpen: false, key: null })
-      );
-    }, []);
+
   
     const { t } = useTranslation();
   
@@ -218,7 +215,7 @@ const HeadersAndFooters : React.FC = React.memo(() => {
           title={t("save")}
           isLoading={isLoading}
           onSubmit={handleSubmit}
-          onCancel={onClose}
+          onCancel={handleClose}
           onClear={handleClear}
         />
       </div>

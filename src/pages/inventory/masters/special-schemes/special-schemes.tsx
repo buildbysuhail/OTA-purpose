@@ -68,16 +68,15 @@ const SpecialSchemes: React.FC = React.memo(() => {
     getFieldProps,
     handleFieldChange,
     isLoading,
+    handleClose
   } = useFormManager<SpecialSchemesData>({
     url: Urls.CompanyProfiles,
+    onClose:useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleSpecialSchemes({ isOpen: false }));
-  }, []);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
     setActiveTab(newValue);

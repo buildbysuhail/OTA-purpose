@@ -39,8 +39,10 @@ const CompanyProfileManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<CompanyProfileData>({
     url:Urls.CompanyProfiles,
+    onClose:useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleCompanyProfilePopup({ isOpen: false })), [dispatch]),
     method:ActionType.POST,
     useApiClient: true
@@ -49,9 +51,6 @@ const CompanyProfileManage: React.FC = React.memo(() => {
   const { t } = useTranslation();
  
 
-  const onClose = useCallback(() => {
-    dispatch(toggleCompanyProfilePopup({ isOpen: false}));
-  }, []);
   return (
     <div className=" w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-2">
@@ -177,7 +176,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
    

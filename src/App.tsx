@@ -14,7 +14,7 @@ import Layout from "./components/common/layout/layout";
 import Login from "./pages/auth/Login";
 import Cookies from "js-cookie";
 import usFlag from "./assets/images/flags/us_flag.png";
-import { useAppDispatch } from "./utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "./utilities/hooks/useAppDispatch";
 import "./i18n/config";
 
 import { APIClient } from "./helpers/api-client";
@@ -46,6 +46,8 @@ import MobileFooter from "./pages/dashboards/crm/mobile-footer";
 import { getApplicationSettings } from "./redux/slices/app/thunk";
 import RPosLayout from "./components/common/layout/rpos-layout";
 import PDFBarcodeDesigner from "./pages/LabelDesigner/label_designer";
+import ERPAlert from "./components/ERPComponents/erp-sweet-alert";
+import { onCloseWithUnsavedChange } from "./redux/slices/popup-reducer";
 
 export const LoadingAnimation = () => {
   return (
@@ -70,6 +72,7 @@ function App() {
   // const { appState, updateAppState } = useAppState();
   let api = new APIClient();
   const dispatch = useAppDispatch();
+  const withUnsavedChange = useAppSelector((state: RootState) => state.PopupData.onCloseWithUnsavedChange);
   const [MyclassName, setMyClass] = useState("");
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -199,6 +202,20 @@ function App() {
         <div className="w-full h-16 bg-white fixed bottom-0 left-0">
           <MobileFooter />
         </div>
+      )}
+      {withUnsavedChange.warn && (
+        <ERPAlert
+          showAnimation='animate__fadeIn'
+          hideAnimation='animate__fadeOut'
+          title="Are you sure?"
+          text="Unsaved Changes"
+          icon="warning"
+          position="center"
+          confirmButtonText="Ok"
+          cancelButtonText="Cancel"
+          onConfirm={() => dispatch(onCloseWithUnsavedChange({warn: false, succeeded: true, canceled: false}))}
+          // onCancel={() =>dispatch(onCloseWithUnsavedChange({warn: false, succeeded: false, canceled: true}))}
+        />
       )}
     </Fragment>
   );

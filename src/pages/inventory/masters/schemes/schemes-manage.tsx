@@ -22,20 +22,18 @@ export const SchemesManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<SchemesData>({
     url: Urls.vehicles,
     onSuccess: useCallback(
       () => dispatch(toggleSchemes({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
+    onClose:useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.vehicles.key,
     useApiClient: true,
     initialData: initialSchemesData
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleSchemes({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -121,7 +119,7 @@ export const SchemesManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

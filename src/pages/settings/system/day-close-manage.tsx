@@ -51,9 +51,11 @@ const DayCloseManage = () => {
     handleFieldChange,
     getFieldProps,
     isLoading,
-    formState
+    formState,
+    handleClose
   } = useFormManager<DayCloseManageData>({
     url: Urls.DayClose,
+    onClose:useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, })),
       [dispatch]
     ),
@@ -63,9 +65,7 @@ const DayCloseManage = () => {
     initialData: initialDayCloseData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleDayClosePopup({ isOpen: false, }));
-  }, []);
+
 
   const { t } = useTranslation();
 
@@ -114,7 +114,7 @@ const DayCloseManage = () => {
         isEdit={isEdit}
         title={t("close_single_day")}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

@@ -23,9 +23,10 @@ export const SampleMange: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading ,handleClose} =
     useFormManager<SampleData>({
       url: Urls.UserTypes,
+      onClose:useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(
         () => dispatch(toggleUserTypePopup({ isOpen: false, key: null })),
         [dispatch]
@@ -35,9 +36,7 @@ export const SampleMange: React.FC = React.memo(() => {
       initialData: initialDataUserType,
     });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleUserTypePopup({ isOpen: false, key: null }));
-  }, []);
+ 
 
   return (<></>
     // <div className="w-full pt-4">
@@ -99,7 +98,7 @@ export const SampleMange: React.FC = React.memo(() => {
     //     onClear={handleClear}
     //     isEdit={isEdit}
     //     isLoading={isLoading}
-    //     onCancel={onClose}
+    //     onCancel={handleClose}
     //     onSubmit={handleSubmit}
     //   />
     // </div>

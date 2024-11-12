@@ -20,9 +20,10 @@ interface DeleteInactiveTransactionManageData {
 const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
-  const { isEdit, formState, handleSubmit,handleClear,handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, formState, handleSubmit,handleClear,handleFieldChange, getFieldProps, isLoading,handleClose } =
     useFormManager<DeleteInactiveTransactionManageData>({
       url: Urls.deleteInactiveTransactions,
+      onClose:useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(
         () =>
           dispatch(
@@ -75,6 +76,8 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         title={t("delete_all")}
         isLoading={isLoading}
         onSubmit={handleSubmit}
+        onCancel={handleClose}
+        onClear={handleClear}
       />
     </div>
   );

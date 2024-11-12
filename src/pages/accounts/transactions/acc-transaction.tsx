@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardHeader, CardContent } from "@mui/material"
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input"
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons"
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
@@ -41,6 +41,7 @@ const initialData: CashPaymentData = {
 }
 
 export default function Component() {
+  const [asd ,setAsd] = useState<string>('')
   const handleFieldChange = useCallback((field: string, value: any) => {
     // Implementation for field change
     console.log(field, value)
@@ -51,6 +52,8 @@ export default function Component() {
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-6">
           <ERPInput
+
+            useMUI
             id="voucherNo"
             label="Voucher Prefix"
             disabled={true}
@@ -59,11 +62,15 @@ export default function Component() {
             onChangeData={(value) => handleFieldChange('voucherNo', value)}
           />
           <ERPInput
+
+            useMUI
+            variant="standard"
+            customSize="sm"
             id="voucherNo"
             label="Voucher No."
-            // value={formData.voucherNo}
+            value={asd}
             //data={formData}
-            onChangeData={(value) => handleFieldChange('voucherNo', value)}
+            onChange={(e) => setAsd(e.target.value)}
           />
           <ERPDateInput
             id="date"

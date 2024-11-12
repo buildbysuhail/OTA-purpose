@@ -20,7 +20,7 @@ interface DeleteInactiveTransactionManageData {
 const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
 
-  const { isEdit, formState, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, formState, handleSubmit,handleClear,handleFieldChange, getFieldProps, isLoading } =
     useFormManager<DeleteInactiveTransactionManageData>({
       url: Urls.deleteInactiveTransactions,
       onSuccess: useCallback(
@@ -36,11 +36,11 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
       initialData: {data:{date:new Date()}}
     });
   
-  const onClose = useCallback(() => {
-    dispatch(
-      toggleDeleteInactiveTransactionPopup({ isOpen: false,})
-    );
-  }, []);
+  // const onClose = useCallback(() => {
+  //   dispatch(
+  //     toggleDeleteInactiveTransactionPopup({ isOpen: false,})
+  //   );
+  // }, []);
 
   const { t } = useTranslation();
 
@@ -63,12 +63,18 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         />
           
       </div>
-      <ERPButton
+      {/* <ERPButton
         title={t("delete_all")}
         loading={isLoading}
         variant="primary"
         disabled={formState.data.isAgree != true}
         onClick={handleSubmit}
+      /> */}
+        <ERPFormButtons
+        submitDisabled={formState.data.isAgree != true}
+        title={t("delete_all")}
+        isLoading={isLoading}
+        onSubmit={handleSubmit}
       />
     </div>
   );

@@ -88,50 +88,118 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
   const iLabel = label || id?.replaceAll("_", " ")
   const iPlaceholder = placeholder || label
 
-  // Custom size styles for MUI TextField
-  const getMuiSizeStyles = (): SxProps<Theme> => {
+  // Get size-specific styles for both MUI and regular inputs
+  const getSizeStyles = () => {
+    const styles: {
+      mui: SxProps<Theme>;
+      regular: {
+        height: string;
+        fontSize: string;
+        padding: string;
+      };
+    } = {
+      mui: {},
+      regular: {
+        height: "2.5rem",
+        fontSize: "14px",
+        padding: "0.5rem 1rem"
+      }
+    }
+
     switch (customSize) {
       case "sm":
         return {
-          "& .MuiInputBase-root": {
-            height: "12px !importent",
+          mui: {
+            "& .MuiInputBase-root": {
+              height: "2rem",
+              fontSize: "12px"
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "12px",
+              transform: variant === "filled"
+                ? "translate(8px, 9px) scale(0.8)"
+                : variant === "standard"
+                  ? "translate(0, 30px) scale(0.8)"
+                  : "translate(8px, 8px) scale(0.8)"
+            },
+            "& .MuiInputLabel-shrink": {
+              transform: variant === "filled"
+                ? "translate(8px, -10px) scale(0.75)"
+                : variant === "standard"
+                  ? "translate(0, 10px) scale(0.75)"
+                  : "translate(16px, -6px) scale(0.75)"
+            }
+          } as SxProps<Theme>,
+          regular: {
+            height: "2rem",
             fontSize: "12px",
-            padding: "0 8px"
-          },
-        
+            padding: "0.25rem 0.75rem"
+          }
         }
       case "md":
         return {
-          "& .MuiInputBase-root": {
-            height: "32px",
-            fontSize: "14px"
-          },
-          "& .MuiInputLabel-root": {
+          mui: {
+            "& .MuiInputBase-root": {
+              height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
+              fontSize: "14px"
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "12px",
+              transform: variant === "filled"
+                ? "translate(10px, 13px) scale(0.9)"
+                : variant === "standard"
+                  ? "translate(0, 30px) scale(0.9)"
+                  : "translate(10px, 12px) scale(0.9)"
+            },
+            "& .MuiInputLabel-shrink": {
+              transform: variant === "filled"
+                ? "translate(10px, -10px) scale(0.75)"
+                : variant === "standard"
+                  ? "translate(0, 8px) scale(0.75)"
+                  : "translate(16px, -5px) scale(0.75)"
+            }
+          } as SxProps<Theme>,
+          regular: {
+            height: "2.5rem",
             fontSize: "14px",
-            transform: "translate(10px, 10px) scale(1)"
-          },
-          "& .MuiInputLabel-shrink": {
-            transform: "translate(10px, 4px) scale(0.75)"
+            padding: "0.5rem 1rem"
           }
         }
       case "lg":
         return {
-          "& .MuiInputBase-root": {
-            height: "30px",
-            fontSize: "16px"
-          },
-          "& .MuiInputLabel-root": {
+          mui: {
+            "& .MuiInputBase-root": {
+              height: variant === "filled" ? "3rem" : variant === "standard" ? "2rem" : "3rem",
+              fontSize: "16px"
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "14px",
+              transform: variant === "filled"
+                ? "translate(10px, 16px) scale(1)"
+                : variant === "standard"
+                  ? "translate(0, 26px) scale(1)"
+                  : "translate(10px, 15px) scale(1)"
+            },
+            "& .MuiInputLabel-shrink": {
+              transform: variant === "filled"
+                ? "translate(12px, -12px) scale(0.75)"
+                : variant === "standard"
+                  ? "translate(0, 4px) scale(0.75)"
+                  : "translate(16px, -7px) scale(0.75)"
+            }
+          } as SxProps<Theme>,
+          regular: {
+            height: "3rem",
             fontSize: "16px",
-            transform: "translate(12px, 12px) scale(1)"
-          },
-          "& .MuiInputLabel-shrink": {
-            transform: "translate(12px, 6px) scale(0.75)"
+            padding: "0.75rem 1.25rem"
           }
         }
       default:
-        return {}
+        return styles
     }
   }
+
+  const sizeStyles = getSizeStyles()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeData && data && onChangeData(setNestedValue(data, id, e.target?.value))
@@ -149,7 +217,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
     type,
     required,
     disabled,
-    placeholder: iPlaceholder,
     ...props
   }
 
@@ -180,7 +247,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         step,
         accept,
       },
-      sx: getMuiSizeStyles() // Apply custom size styles
+      sx: sizeStyles.mui
     }
 
     return (
@@ -191,10 +258,15 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
     )
   }
 
+  const { height, fontSize, padding } = sizeStyles.regular
+
   return (
     <div className={className}>
       {!noLabel && (
-        <label className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}>
+        <label
+          className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
+          style={{ fontSize: customSize === 'lg' ? '14px' : '12px' }}
+        >
           {iLabel}
           {required && !noLabel && "*"}
         </label>
@@ -203,7 +275,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         {prefix && (
           <div
             onClick={onClickPrefix}
-            className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 text-xs px-2 rounded-l font-medium border-r-0 border-gray-300 border bg-slate-100`}
+            className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l font-medium border-r-0 border-gray-300 border bg-slate-100`}
+            style={{ height, fontSize }}
           >
             {prefix}
           </div>
@@ -211,9 +284,15 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         <div className="flex-1">
           <input
             {...commonProps}
+            placeholder={iPlaceholder}
             ref={ref}
             autoComplete={autocomplete}
-            className={`border border-gray-400 rounded-md block w-full ${prefix ? "" : "rounded-l"} ${suffix ? "" : "rounded-r"} ${inputClassName} border placeholder:capitalize h-9 border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} px-3 py-2 placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500 text-xs`}
+            style={{
+              height,
+              fontSize,
+              padding
+            }}
+            className={`border border-gray-400 rounded-md block w-full ${prefix ? "" : "rounded-l"} ${suffix ? "" : "rounded-r"} ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             onWheel={(e: any) => {
               type === "number" && e?.target?.blur()
@@ -229,7 +308,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         {suffix && (
           <div
             onClick={onClickSuffix}
-            className={`${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 text-xs p-2 rounded-r-md border-l-0 border bg-slate-100`}
+            className={`${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
+            style={{ height, fontSize }}
           >
             {suffix}
           </div>

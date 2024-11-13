@@ -1,7 +1,7 @@
 'use client'
 
 import { Card, CardHeader, CardContent } from "@mui/material"
-import { useCallback } from "react"
+import { useCallback, useState } from "react"
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input"
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons"
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
@@ -41,6 +41,7 @@ const initialData: CashPaymentData = {
 }
 
 export default function Component() {
+  const [asd, setAsd] = useState<string>('')
   const handleFieldChange = useCallback((field: string, value: any) => {
     // Implementation for field change
     console.log(field, value)
@@ -51,6 +52,8 @@ export default function Component() {
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-6">
           <ERPInput
+
+            useMUI
             id="voucherNo"
             label="Voucher Prefix"
             disabled={true}
@@ -59,11 +62,15 @@ export default function Component() {
             onChangeData={(value) => handleFieldChange('voucherNo', value)}
           />
           <ERPInput
+
+            useMUI
+            variant="outlined"
+            customSize="sm"
             id="voucherNo"
             label="Voucher No."
-            // value={formData.voucherNo}
+            value={asd}
             //data={formData}
-            onChangeData={(value) => handleFieldChange('voucherNo', value)}
+            onChange={(e) => setAsd(e.target.value)}
           />
           <ERPDateInput
             id="date"
@@ -75,6 +82,7 @@ export default function Component() {
           <ERPInput
             id="refNo"
             label="Ref No."
+            customSize="lg"
             // value={formData.refNo}
             //data={formData}
             onChangeData={(value) => handleFieldChange('refNo', value)}
@@ -130,6 +138,7 @@ export default function Component() {
         <div className="flex align-center gap-6">
           <div className="w-1/4">
             <ERPInput
+              prefix="abc"
               id="remarks"
               label="Remarks"
               // value={formData.remarks}
@@ -257,7 +266,7 @@ export default function Component() {
         <div className="font-bold">TOTAL: 0.00</div>
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="grid grid-cols-3 gap-6">
         {/* <ERPCheckbox
             id="printOnSave"
             label="Print on Save"
@@ -272,6 +281,96 @@ export default function Component() {
             data={{}}
             onChangeData={() => {}}
           /> */}
+        <ERPInput
+          useMUI
+          variant="outlined"
+          customSize="sm"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="outlined"
+          customSize="md"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="outlined"
+          customSize="lg"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="standard"
+          customSize="sm"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="standard"
+          customSize="md"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="standard"
+          customSize="lg"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="filled"
+          customSize="sm"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="filled"
+          customSize="md"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
+        <ERPInput
+          useMUI
+          variant="filled"
+          customSize="lg"
+          id="voucherNo"
+          label="Voucher No."
+          value={asd}
+          //data={formData}
+          onChange={(e) => setAsd(e.target.value)}
+        />
       </div>
     </div>
   )

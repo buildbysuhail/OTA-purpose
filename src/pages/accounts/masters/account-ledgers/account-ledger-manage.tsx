@@ -23,19 +23,18 @@ export const AccountLedgerManage = () => {
     handleSubmit,
     handleFieldChange,
     handleClear,
+    handleClose,
     getFieldProps,
     isLoading
   } = useFormManager<AccountLedgerData>({
     url: Urls.account_ledger,
     onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.accountLedger.key,
     useApiClient: true,
     initialData: initialAccountLedger
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));
-  }, [dispatch]);
 
   useEffect(() => {
     load();
@@ -173,16 +172,13 @@ export const AccountLedgerManage = () => {
           onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
         />
       </div>
-
-      <div className="w-full p-2 flex justify-center space-x-2 mt-5">
         <ERPFormButtons
           onClear={handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
-          onCancel={onClose}
+          onCancel={handleClose}
           onSubmit={handleSubmit}
         />
-      </div>
     </div>
   );
 };

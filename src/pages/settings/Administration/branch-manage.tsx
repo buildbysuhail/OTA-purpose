@@ -113,9 +113,10 @@ export const BranchGridManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   debugger;
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, formState } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, formState,handleClose } =
     useFormManager<BranchData>({
       url: Urls.Branch,
+      onClose:useCallback(() => dispatch(toggleBranchGridPopup({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(
         () => dispatch(toggleBranchGridPopup({ isOpen: false, key: null })),
         [dispatch]
@@ -132,11 +133,9 @@ export const BranchGridManage: React.FC = React.memo(() => {
         }
       }
     });
-console.log(formState);
 
-  const onClose = useCallback(() => {
-    dispatch(toggleBranchGridPopup({ isOpen: false, key: null }));
-  }, []);
+
+
 
   return (
     <div className="w-full pt-4">
@@ -334,7 +333,7 @@ console.log(formState);
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

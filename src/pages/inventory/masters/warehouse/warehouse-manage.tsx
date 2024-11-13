@@ -22,8 +22,10 @@ export const WarehouseManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<WarehouseData>({
     url: Urls.Warehouse,
+    onClose:useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -33,9 +35,6 @@ export const WarehouseManage: React.FC = React.memo(() => {
     initialData: initialWarehouseData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleWarehouse({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -101,7 +100,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

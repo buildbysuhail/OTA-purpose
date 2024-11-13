@@ -305,6 +305,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     gridAddButtonText == "Add" ? t("add") : gridAddButtonText
   );
   const onPopupOpenClick = useCallback(() => {
+    console.log('onPopupOpenClick');
+    
     popupAction && dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
 

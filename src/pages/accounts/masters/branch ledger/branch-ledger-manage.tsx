@@ -21,9 +21,11 @@ export const BranchLedgerManage = () => {
     handleFieldChange,
     getFieldProps,
     formState,
-    isLoading
+    isLoading,
+    handleClose
   } = useFormManager<BranchLedgerData>({
     url: Urls.branch_ledger,
+    onClose:useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.branchLedger.key,
     keyField: "branchLedgerID",
@@ -31,9 +33,6 @@ export const BranchLedgerManage = () => {
     initialData: initialBranchLedger
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -109,7 +108,7 @@ export const BranchLedgerManage = () => {
           onClear={handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
-          onCancel={onClose}
+          onCancel={handleClose}
           onSubmit={handleSubmit}
         />
       </div>

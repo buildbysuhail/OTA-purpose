@@ -21,8 +21,10 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<TaxCategoryData>({
     url: Urls.taxCategory,
+    onClose:useCallback(() => dispatch(toggleTaxCategory({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleTaxCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -32,9 +34,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
     initialData: initialTaxCategoryData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleTaxCategory({ isOpen: false, key: null }));
-  }, []);
+
 
   const { t } = useTranslation();
 
@@ -84,7 +84,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

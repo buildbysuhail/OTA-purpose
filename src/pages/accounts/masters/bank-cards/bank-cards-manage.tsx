@@ -21,20 +21,17 @@ export const BankCardsManage: React.FC = React.memo(() => {
     getFieldProps,
     handleClear,
     isLoading,
-    formState
+    handleClose
   } = useFormManager<BankCardsData>({
     url: Urls.data_Bank_Cards,
     onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.bankCard.key,
     keyField:"paymentTypeID",
     useApiClient: true,
     loadDataRequired: true,
     initialData: initialBankCards,
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleBankCardsPopup({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -118,7 +115,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

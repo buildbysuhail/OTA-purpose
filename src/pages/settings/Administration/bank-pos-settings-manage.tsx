@@ -46,8 +46,10 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<BankPoseData>({
     url: Urls.BankPosSettings,
+    onClose:useCallback(() => dispatch(toggleBankPosPopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleBankPosPopup({ isOpen: false })),
       [dispatch]
@@ -58,9 +60,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
     initialData: initialBankPosData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleBankPosPopup({ isOpen: false }));
-  }, []);
+;
 
   return (
     <div className="w-full pt-4">
@@ -132,7 +132,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

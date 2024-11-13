@@ -35,9 +35,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
     handleSubmit,
     handleFieldChange,
     getFieldProps,
+    handleClose,
     isLoading
   } = useFormManager<PartiesData>({
     url: Urls.parties,
+    onClose:useCallback(() => dispatch(toggleParties({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.parties.key,
     useApiClient: true,
@@ -52,10 +54,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
       }
     },
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleParties({ isOpen: false, key: null }));
-  }, [dispatch]);
 
   const { t } = useTranslation();
 
@@ -739,7 +737,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
             onClear={handleClear}
             isEdit={isEdit}
             isLoading={isLoading}
-            onCancel={onClose}
+            onCancel={handleClose}
             onSubmit={handleSubmit}
           />
         </div>

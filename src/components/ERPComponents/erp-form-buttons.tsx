@@ -2,7 +2,7 @@ import React from 'react';
 import ERPButton from './erp-button';
 
 interface ERPFormButtonsProps {
-  isEdit: boolean;
+  isEdit?: boolean;
   isLoading: boolean;
   title?: string;
   submitDisabled?: boolean;

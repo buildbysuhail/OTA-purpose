@@ -43,6 +43,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     handleClear,
+    handleClose,
     isLoading,
     formState,
   } = useFormManager<AccountGroupData>({
@@ -54,14 +55,12 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         ),
       [dispatch]
     ),
+    onClose:useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
     initialData: initialAccountGroup,
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -160,7 +159,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
       <ERPModal

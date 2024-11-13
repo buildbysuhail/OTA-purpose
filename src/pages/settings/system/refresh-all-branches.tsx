@@ -35,8 +35,10 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
     getFieldProps,
     isLoading,
     formState,
+    handleClose
   } = useFormManager<RefreshAllBranches>({
     url: Urls.refreshAllBranches,
+    onClose:useCallback(() => dispatch(toggleRefreshAllBranches({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleRefreshAllBranches({ isOpen: false })), [dispatch]),
     initialData: initialRefreshAllBranches,
     method: ActionType.POST,
@@ -44,9 +46,6 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
     loadDataRequired: false
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleRefreshAllBranches({ isOpen: false }));
-  }, [dispatch]);
 
   
   const handleConditionalSubmit = useCallback(async () => {
@@ -73,7 +72,7 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
           <ERPFormButtons
             isEdit={isEdit}
             isLoading={isLoading}
-            onCancel={onClose}
+            onCancel={handleClose}
             onSubmit={handleConditionalSubmit}
           />
         </div>

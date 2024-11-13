@@ -15,9 +15,10 @@ export const VoucherManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
     useFormManager<VoucherData>({
       url: Urls.Voucher,
+      onClose:useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(
         () => dispatch(toggleVoucherPopup({ isOpen: false, key: null ,reload:true})),
         [dispatch]
@@ -27,9 +28,7 @@ export const VoucherManage: React.FC = React.memo(() => {
       initialData: initialDataVoucher
     });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleVoucherPopup({ isOpen: false, key: null }));
-  }, []);
+ 
 
   const { t } = useTranslation();
 
@@ -88,7 +87,7 @@ export const VoucherManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

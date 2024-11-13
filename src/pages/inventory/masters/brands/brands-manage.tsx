@@ -21,8 +21,10 @@ export const BrandsManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<BrandsData>({
     url: Urls.brands,
+    onClose:useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleBrands({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -33,9 +35,6 @@ export const BrandsManage: React.FC = React.memo(() => {
     initialData: initialBrandsData
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleBrands({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -73,7 +72,7 @@ export const BrandsManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

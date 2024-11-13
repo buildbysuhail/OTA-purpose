@@ -30,9 +30,10 @@ export const BranchDataReset: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const { t } = useTranslation();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
     useFormManager<BranchResetData>({
       url: Urls.branchDataReset,
+      onClose:useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false })), [dispatch]),
       method: ActionType.POST,
       useApiClient: true,

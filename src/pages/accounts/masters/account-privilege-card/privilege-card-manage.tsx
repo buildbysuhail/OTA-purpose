@@ -24,21 +24,21 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
     getFieldProps,
     handleClear,
     isLoading,
+    handleClose
   } = useFormManager<PrivilegeCardData>({
     url: Urls.account_privilege_card,
     onSuccess: useCallback(
       () => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
+    onClose:useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.privilegeCard.key,
     keyField:"privilegeCardsID",
     useApiClient: true,
     initialData: initialPrivilegeCard
   });
 
-  const onClose = useCallback(() => {
-    dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null }));
-  }, [dispatch]);
+ 
 
   const handleDateChange = (field: string, value: string | null) => {
     if (value) {
@@ -164,7 +164,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

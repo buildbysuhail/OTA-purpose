@@ -155,12 +155,13 @@ const CustomerSupplierLedger = () => {
                   showRowLines={true}
                   allowColumnResizing={true}
                   allowColumnReordering={true}
+                  // hoverStateEnabled={true}
                 >
                   <FilterRow visible={true} />
                   <SearchPanel visible={false} />
                   <ColumnFixing enabled={true} />
-                  {/* <Scrolling mode="virtual"/> */}
-                  <Scrolling mode="standard"/>
+                 
+                  <Scrolling mode="virtual"/>
                   <Paging defaultPageSize={100} />
                   <LoadPanel visible={loading} />
 

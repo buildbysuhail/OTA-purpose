@@ -21,21 +21,20 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
     useFormManager<PartyCategoryData>({
       url: Urls.account_party_category,
       onSuccess: useCallback(
         () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: true })),
         [dispatch]
       ),
+      onClose:useCallback(() => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null,})), [dispatch]),
       key: rootState.PopupData.partyCategory.key,
       useApiClient: true,
       initialData: initialPartyCategory,
     });
 
-  const onClose = useCallback(() => {
-    dispatch(togglePartyCategoryPopup({ isOpen: false, key: null }));
-  }, []);
+
 
   const { t } = useTranslation();
 
@@ -76,7 +75,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

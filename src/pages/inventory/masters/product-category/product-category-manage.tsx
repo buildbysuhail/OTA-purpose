@@ -21,8 +21,10 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<ProductCategoryManageData>({
     url: Urls.productCategory,
+    onClose:useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -31,10 +33,6 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialProductCategoryManageData
   });
-
-  const onClose = useCallback(() => {
-    dispatch(toggleProductCategory({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
   
@@ -77,7 +75,7 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

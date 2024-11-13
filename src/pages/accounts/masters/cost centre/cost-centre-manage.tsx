@@ -19,7 +19,7 @@ export const CostCentreManage = () => {
     handleSubmit,
     handleFieldChange,
     getFieldProps,
-   
+    handleClose,
     isLoading,
   } = useFormManager<CostCentreData>({
     url: Urls.cost_center,
@@ -30,15 +30,13 @@ export const CostCentreManage = () => {
         ),
       [dispatch]
     ),
+    onClose:useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.costCentre.key,
     keyField: "costCentreID",
     useApiClient: true,
     initialData: initialCostCentre,
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleCostCentrePopup({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -68,12 +66,12 @@ export const CostCentreManage = () => {
         />
       </div>
 
-      <div className="w-full p-2 flex justify-center space-x-2 mt-5">
+      <div className="">
         <ERPFormButtons
           onClear={handleClear}
           isEdit={isEdit}
           isLoading={isLoading}
-          onCancel={onClose}
+          onCancel={handleClose}
           onSubmit={handleSubmit}
         />
       </div>

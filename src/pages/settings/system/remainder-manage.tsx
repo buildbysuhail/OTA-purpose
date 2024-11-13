@@ -20,9 +20,11 @@ export const RemainderManage: React.FC = React.memo(() => {
     handleFieldChange,
     handleClear,
     getFieldProps,
-    isLoading
+    isLoading,
+    handleClose
   } = useFormManager<RemainderData>({
     url: Urls.Remainder,
+    onClose:useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.reminder.key,
     keyField:"remaindersID",
@@ -30,9 +32,6 @@ export const RemainderManage: React.FC = React.memo(() => {
     initialData: initialDataRemainder
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleRemainderPopup({ isOpen: false, key: null }));
-  }, []);
 
   const { t } = useTranslation();
 
@@ -75,7 +74,7 @@ export const RemainderManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

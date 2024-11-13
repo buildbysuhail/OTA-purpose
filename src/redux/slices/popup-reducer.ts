@@ -6,6 +6,7 @@ export interface popupDataProps {
   reload?: boolean;
 }
 interface popupData {
+  onCloseWithUnsavedChange: {warn: boolean, succeeded: boolean, canceled: boolean}
   section: popupDataProps
   salesManRoute: popupDataProps
   userType: popupDataProps
@@ -65,7 +66,7 @@ interface popupData {
   testPopup:popupDataProps
 }
 const initialState: popupData = {
-  
+  onCloseWithUnsavedChange: {warn: false, succeeded: false, canceled: false},
   testPopup: { isOpen: false, key: null, mode: "edit", reload: true },
   groupOrder: { isOpen: false, key: null, mode: "edit", reload: true },
   groupCategory: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -129,6 +130,9 @@ const popupDataSlice = createSlice({
   name: 'popupData',
   initialState,
   reducers: {
+    onCloseWithUnsavedChange: (state, action: PayloadAction<{warn: boolean, succeeded: boolean, canceled: boolean}>) => {
+      state.onCloseWithUnsavedChange = action.payload;
+    },
     toggleUserTypePrivilegePopup: (state, action: PayloadAction<popupDataProps>) => {
 
       state.userTypePrivilege = action.payload;
@@ -323,6 +327,7 @@ const popupDataSlice = createSlice({
 
 // Extract the actions
 export const {
+  onCloseWithUnsavedChange,
   toggleTestPopup,
   toggleGroupOrder,
   toggleGroupCategory,

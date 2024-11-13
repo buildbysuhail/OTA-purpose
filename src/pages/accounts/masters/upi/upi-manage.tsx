@@ -22,9 +22,10 @@ export const UpiManage: React.FC = React.memo(() => {
     getFieldProps,
     handleClear,
     isLoading,
-    formState
+    handleClose,
   } = useFormManager<UpiData>({
     url: Urls.data_Bank_Cards,
+    onClose:useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.upi.key,
     keyField:"paymentTypeID",
@@ -33,10 +34,6 @@ export const UpiManage: React.FC = React.memo(() => {
     loadDataRequired: true
   });
 
-  const onClose = useCallback(() => {
-    dispatch(toggleUpi({ isOpen: false, key: null }));
-  }, []);
-debugger;
   const { t } = useTranslation();
   return (
     <div className="w-full pt-4">
@@ -119,7 +116,7 @@ debugger;
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

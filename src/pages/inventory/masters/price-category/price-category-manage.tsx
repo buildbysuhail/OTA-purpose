@@ -20,8 +20,10 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
     handleFieldChange,
     getFieldProps,
     isLoading,
+    handleClose
   } = useFormManager<PriceCategoryData>({
     url: Urls.priceCategory,
+    onClose:useCallback(() => dispatch(togglePriceCategory({ isOpen: false, key: null,})), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(togglePriceCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -30,11 +32,6 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialPriceCategoryData
   });
-
-  const onClose = useCallback(() => {
-    dispatch(togglePriceCategory({ isOpen: false, key: null }));
-  }, []);
-
   const { t } = useTranslation();
 
   return (
@@ -77,7 +74,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
         onClear={handleClear}
         isEdit={isEdit}
         isLoading={isLoading}
-        onCancel={onClose}
+        onCancel={handleClose}
         onSubmit={handleSubmit}
       />
     </div>

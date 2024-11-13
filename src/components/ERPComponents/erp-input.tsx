@@ -153,10 +153,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
             },
             "& .MuiInputLabel-shrink": {
               transform: variant === "filled"
-                ? "translate(10px, -10px) scale(0.75)"
+                ? "translate(8px, -12px) scale(0.90)"
                 : variant === "standard"
-                  ? "translate(0, 8px) scale(0.75)"
-                  : "translate(16px, -5px) scale(0.75)"
+                  ? "translate(0, 8px) scale(0.90)"
+                  : "translate(15px, -7px) scale(0.90)"
             }
           } as SxProps<Theme>,
           regular: {
@@ -182,10 +182,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
             },
             "& .MuiInputLabel-shrink": {
               transform: variant === "filled"
-                ? "translate(12px, -12px) scale(0.75)"
+                ? "translate(8px, -14px) scale(0.88)"
                 : variant === "standard"
-                  ? "translate(0, 4px) scale(0.75)"
-                  : "translate(16px, -7px) scale(0.75)"
+                  ? "translate(0, 4px) scale(0.88)"
+                  : "translate(16px, -7px) scale(0.88)"
             }
           } as SxProps<Theme>,
           regular: {
@@ -260,12 +260,21 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
 
   const { height, fontSize, padding } = sizeStyles.regular
 
+  // Build border radius classes based on prefix/suffix presence
+  const getBorderRadiusClasses = () => {
+    const classes = []
+    if (!prefix) classes.push('rounded-l-md')
+    if (!suffix) classes.push('rounded-r-md')
+    if (!prefix && !suffix) classes.push('rounded-md')
+    return classes.join(' ')
+  }
+
   return (
     <div className={className}>
       {!noLabel && (
         <label
           className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
-          style={{ fontSize: customSize === 'lg' ? '14px' : '12px' }}
+          style={{ fontSize: customSize === 'sm' ? '12px' : customSize === 'md' ? '14px' : '16px' }}
         >
           {iLabel}
           {required && !noLabel && "*"}
@@ -275,7 +284,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         {prefix && (
           <div
             onClick={onClickPrefix}
-            className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l font-medium border-r-0 border-gray-300 border bg-slate-100`}
+            className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
             style={{ height, fontSize }}
           >
             {prefix}
@@ -292,7 +301,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
               fontSize,
               padding
             }}
-            className={`border border-gray-400 rounded-md block w-full ${prefix ? "" : "rounded-l"} ${suffix ? "" : "rounded-r"} ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
+            className={`border border-gray-400 ${getBorderRadiusClasses()} block w-full ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             onWheel={(e: any) => {
               type === "number" && e?.target?.blur()
@@ -308,7 +317,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         {suffix && (
           <div
             onClick={onClickSuffix}
-            className={`${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
+            className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
             style={{ height, fontSize }}
           >
             {suffix}

@@ -126,9 +126,9 @@ const Row = ({ data, index, style }: RowProps) => {
       <Combobox.Option
         key={`${item?.value}-${index}`}
         className={({ active }) =>
-          `relative cursor-pointer select-none w-full rounded-sm ${
+          `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:text-white ${
             active
-              ? "bg-blue-500 text-white"
+              ? "bg-[#3b82f6] text-white"
               : item.is_active === false
               ? "bg-gray-200 text-gray-400"
               : "text-gray-900"
@@ -140,7 +140,7 @@ const Row = ({ data, index, style }: RowProps) => {
         {({ active }) => (
           <div
             className={`flex items-center px-3 py-2 ${
-              isSelected ? "bg-gray-200" : ""
+              isSelected ? "bg-primary" : ""
             }`}
             onClick={() => handleSelect(item)} // Trigger selection on click
           >
@@ -357,7 +357,7 @@ export default function ImprovedERPDataCombobox({
           className="block text-[12px] font-medium text-gray-700 mb-1"
         >
           {label || id?.replaceAll("_", " ")}
-          {required && <span className="text-red-500"> *</span>}
+          {required && <span className="text-[#ef4444]"> *</span>}
         </label>
       )}
       <Combobox
@@ -373,7 +373,7 @@ export default function ImprovedERPDataCombobox({
               disabled ? "text-gray-400" : "bg-white text-gray-900"
             } px-3 py-2 ${
               enableClearOption ? "pr-16" : "pr-10"
-            } placeholder-gray-400 focus:ring-1 text-xs focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
+            } placeholder-gray-400 focus:ring-1 text-xs focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
             displayValue={(item: Option) =>
               isOpen ? item?.label || "" : displayValue
             }
@@ -435,7 +435,7 @@ export default function ImprovedERPDataCombobox({
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 Loading...
               </div>
-            ) : filteredItems.length === 0 ? (
+            ) : filteredItems?.length === 0 ? (
               <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
                 No data found
               </div>
@@ -451,9 +451,8 @@ export default function ImprovedERPDataCombobox({
         </Transition>
       </Combobox>
       {validation && (
-        <div className="mt-1 text-xs text-red-500">{validation}</div>
+        <div className="mt-1 text-xs text-[#ef4444]">{validation}</div>
       )}
     </div>
   );
 }
-  

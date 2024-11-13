@@ -11,6 +11,7 @@ import ERPSweetAlert from "./erp-sweet-alert";
 type ActionType = {
   type: "link" | "popup";
   path?: string;
+  visible?: boolean,
   action?: (payload: popupDataProps) => void;
 };
 
@@ -18,6 +19,7 @@ type DeleteActionType = {
   url?: string;
   key?: any;
   confirmationRequired: boolean;
+  visible?: boolean;
   confirmationMessage?: string;
   action?: () => void;
   onSuccess?: () => void;
@@ -26,6 +28,7 @@ type DeleteActionType = {
 const defaultActionType: ActionType = {
   type: "link",
   path: "#",
+  visible: false,
   action: () => {}
 };
 
@@ -33,6 +36,7 @@ const defaultDeleteAction: DeleteActionType = {
   url: "",
   key: null,
   confirmationRequired: false,
+  visible: false,
   confirmationMessage: "Are you sure you want to delete this item?",
   action: () => {},
   onSuccess: () => {}
@@ -143,8 +147,8 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   return (
     <div className="action-field">
       {renderActionButton("view", view)}
-      {renderActionButton("edit", edit)}
-      {renderActionButton("delete", deleteAction)}
+      {edit?.visible ? renderActionButton("edit", edit): null}
+      {deleteAction && deleteAction.visible ==true ? renderActionButton("delete", deleteAction): null}
     </div>
   );
 };

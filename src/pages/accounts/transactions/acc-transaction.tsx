@@ -82,6 +82,22 @@ export default function Component() {
           <ERPInput
             id="refNo"
             label="Ref No."
+            customSize="sm"
+            // value={formData.refNo}
+            //data={formData}
+            onChangeData={(value) => handleFieldChange('refNo', value)}
+          />
+          <ERPInput
+            id="refNo"
+            label="Ref No."
+            customSize="md"
+            // value={formData.refNo}
+            //data={formData}
+            onChangeData={(value) => handleFieldChange('refNo', value)}
+          />
+          <ERPInput
+            id="refNo"
+            label="Ref No."
             customSize="lg"
             // value={formData.refNo}
             //data={formData}

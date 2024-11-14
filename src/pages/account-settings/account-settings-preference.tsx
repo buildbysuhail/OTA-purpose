@@ -109,7 +109,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     });
   }, []);
 
-
   const [_theme, _setTheme] = useState<Theme>({
     direction: "ltr",
     mode: "light",
@@ -123,14 +122,14 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
     scrollbarWidth: null,
-    scrollbarColor: "rgb(230 234 235)",
+    scrollbarColor: '219,223,225',
     inputBox: {
-      inputStyle: "normal",       
-      fontSize: 0,           
-      borderColor: '128, 128, 128', 
-      borderFocus: '128, 128, 128',            
-      borderRadius: 0,      
-    }
+      inputStyle: "normal",
+      fontSize: 0,
+      borderColor: "128, 128, 128",
+      borderFocus: "128, 128, 128",
+      borderRadius: 0,
+    },
   });
 
   const resetThemeChange = () => {
@@ -150,7 +149,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   );
 
   const saveThemeChange = async () => {
-    debugger
+    debugger;
     const res = await dispatch(
       updatedUserThemeAction({ data: theme }) as any
     ).unwrap();
@@ -159,14 +158,23 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     });
   };
   const handleThemeChange = (key: string, mode: string) => {
-
     setTheme((prevTheme: any) => ({
       ...prevTheme,
       [key]: mode,
     }));
     console.log(theme);
   };
+  const handleScrollbarColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const rgb = hexToRgb(event.target.value)
+    if (rgb) {
+      setTheme(prevTheme => ({ ...prevTheme, scrollbarColor: `${rgb.r},${rgb.g},${rgb.b}` }))
+    }
+  }
+  // const rgbToHex = (r: number, g: number, b: number): string => {
+  //   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+  // }
 
+  // const scrollbarColorHex = rgbToHex(...theme.scrollbarColor.split(',').map(Number))
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 p-3">
@@ -1108,360 +1116,312 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           <div className="ti-form-radio switch-select ps-0 mt-1 color-primary-light"></div>
                         </div>
                       </div>
-                      <div className="theme-colors">
+
+                      <div className="sidemenu-layout-styles">
                         <p className="switcher-style-head">Scrollbar:</p>
-                        <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
-                          <div className="ti-form-radio switch-select ps-0 mt-1 ">
-                            <div
-                              className="theme-container"
-                              style={{
-                                backgroundColor: `rgb(${theme.scrollbarColor})`,
-                              }}
-                            ></div>
-
-                            <div
-                              className="h-8 w-8 overflow-hidden rounded-full border border-solid border-inputborder -top-[4px]  after:text-white/70 after:text-[1.25rem]"
-                              style={{
-                                backgroundColor: `rgb(${theme.scrollbarColor})`,
-                              }}
-                            >
-                              <div className="pickr">
-                                <button
-                                  className="pcr-button"
-                                  onClick={(ele: any) => {
-                                    const input =
-                                      ele.target.querySelector("input");
-                                    if (input) input.click();
-                                  }}
-                                >
-                                  <div
-                                    className="Themeprimarycolor pickr-container-primary "
-                                    key={theme.scrollbarColor}
-                                    style={{
-                                      backgroundColor: `rgb(${theme.scrollbarColor})`,
-                                    }}
+                        <div className="grid grid-cols-2 gap-2 switcher-style">
+                          <div className="flex flex-col gap-3">
+                            <h6 className="switcher-style-head ">
+                              Scrollbar Width:
+                            </h6>
+                            <div className="flex flex-col gap-2">
+                              {["lg", "md", "sm"].map((width) => (
+                                <div key={width} className="flex items-center">
+                                  <input
+                                    type="radio"
+                                    name="data-page-scrollbar"
+                                    className="ti-form-radio"
+                                    id={`scrollbar-${width}`}
+                                    checked={theme.scrollbarWidth === width}
+                                    onChange={() =>
+                                      setTheme((prevTheme) => ({
+                                        ...prevTheme,
+                                        scrollbarWidth: width as
+                                          | "sm"
+                                          | "md"
+                                          | "lg",
+                                      }))
+                                    }
+                                  />
+                                  <label
+                                    htmlFor={`scrollbar-${width}`}
+                                    className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
                                   >
-                                    <ColorPicker
-                                      onChange={(e: any) => {
-                                        const rgb = hexToRgb(e.target.value);
-
-                                        if (rgb) {
-                                          const { r, g, b } = rgb;
-                                          setTheme((prevTheme) => ({
-                                            ...prevTheme,
-                                            scrollbarColor: `${r},${g},${b}`,
-                                          }));
-                                        }
-                                      }}
-                                      value={"#FFFFFF"}
-                                    />
-                                  </div>
-                                </button>
+                                    {width === "lg"
+                                      ? "Thick"
+                                      : width === "md"
+                                      ? "Medium"
+                                      : "Thin"}
+                                  </label>
+                                </div>
+                              ))}
+                            </div>
+                            <h6 className="switcher-style-head ">
+                              Scrollbar Color:
+                            </h6>
+                            <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                               
+                                style={{
+                                  backgroundColor: `rgb(${theme.scrollbarColor})`,
+                                }}
+                              >
+                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={theme.scrollbarColor}
+                                  onChange={handleScrollbarColorChange}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
                               </div>
                             </div>
-                            {/* <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Scrollbar 
-                  </span> */}
+                          </div>
+                          {/* Preview Section */}
+                          <div
+                          
+                          className={`
+                            w-full h-64 border border-gray-300 rounded-md overflow-y-auto 
+                           scrollbar 
+                            ${theme.scrollbarWidth === "lg" ? "scrollbar-thick" : theme.scrollbarWidth === "sm" ? "scrollbar-thin" : "scrollbar"}
+                          `}
+                            style={
+                              {
+                                "--scrollbar-thumb": `rgb(${theme.scrollbarColor ?? "219,223,225"})`,
+                                "--scrollbar-track": "rgb(241,245,249)",
+                              } as React.CSSProperties
+                            }
+                          >
+                            {/* Content to showcase scrollbar */}
+                            <div className="h-96 p-2">
+                              <p>
+                                This is a preview of the scrollbar style
+                                selected by the user.
+                              </p>
+                              <p>Scroll down to see the effect.</p>
+                              <p>
+                                Thick, medium, and thin options are available.
+                              </p>
+                              <p>
+                                Lorem ipsum dolor sit amet, consectetur
+                                adipiscing elit.
+                              </p>
+                              <p>
+                                Sed do eiusmod tempor incididunt ut labore et
+                                dolore magna aliqua.
+                              </p>
+                              <p>
+                                Ut enim ad minim veniam, quis nostrud
+                                exercitation ullamco.
+                              </p>
+                            </div>
                           </div>
                         </div>
                       </div>
                       <div className="">
-                        <p className="switcher-style-head">Scrollbar Width:</p>
-                        <div className="grid grid-cols-3  switcher-style">
+                        <p className="switcher-style-head">Input Box Style:</p>
+                        <div className="grid  grid-cols-2 sm:grid-cols-4 switcher-style">
                           <div className="flex items-center">
-                            {theme.scrollbarWidth}
                             <input
                               type="radio"
-                              name="data-page-scrollbar"
+                              name="inputBox"
                               className="ti-form-radio"
-                              id="switcher-thin"
-                              checked={theme.scrollbarWidth === "lg"}
-                              onChange={(_e) => {}}
-                              onClick={(e) => {
-                                if (true == true) {
-                                  switcherdata.Thick(
-                                    updateAppState,
-                                    appState
-                                  );
+                              id="input-normal"
+                              checked={theme.inputBox?.inputStyle === "normal"}
+                              onChange={(e) => {
+                                if (e.target.checked) {
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
-                                    scrollbarWidth: "lg",
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      inputStyle: "normal",
+                                    },
                                   }));
                                 }
-                                console.log(theme);
                               }}
                             />
                             <label
-                              htmlFor="scrollbar-lg"
+                              htmlFor="input-normal"
                               className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
                             >
                               {" "}
-                              Thick
+                              Normal
                             </label>
                           </div>
                           <div className="flex item-center">
-                          <input
+                            <input
                               type="radio"
-                              name="data-page-scrollbar"
+                              name="inputBox"
                               className="ti-form-radio"
-                              id="switcher-medium"
-                              checked={theme.scrollbarWidth == "md"}
-                              onChange={(_e) => {}}
-                              onClick={(e) => {
-                                if (true == true) {
-                                  switcherdata.Medium(
-                                    updateAppState,
-                                    appState
-                                  );
+                              id="input-standard"
+                              checked={
+                                theme.inputBox?.inputStyle === "standard"
+                              }
+                              onChange={(e) => {
+                                if (e.target.checked) {
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
-                                    scrollbarWidth: "md",
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      inputStyle: "standard",
+                                    },
                                   }));
                                 }
-                                console.log(theme);
                               }}
                             />
                             <label
-                              htmlFor="scrollbar-md"
+                              htmlFor="input-standard"
                               className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
                             >
                               {" "}
-                              Medium
+                              Standard
                             </label>
                           </div>
                           <div className="flex item-center">
-                          <input
+                            <input
                               type="radio"
-                              name="data-page-scrollbar"
+                              name="inputBox"
                               className="ti-form-radio"
-                              id="switcher-thin"
-                              checked={theme.scrollbarWidth == "sm"}
-                              onChange={(_e) => {}}
-                              onClick={(e) => {
-                                if (true == true) {
-                                  switcherdata.Thin(
-                                    updateAppState,
-                                    appState
-                                  );
+                              id="input-outline"
+                              checked={theme.inputBox?.inputStyle === "outline"}
+                              onChange={(e) => {
+                                if (e.target.checked) {
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
-                                    scrollbarWidth: "sm",
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      inputStyle: "outline",
+                                    },
                                   }));
                                 }
-                                console.log(theme);
                               }}
                             />
                             <label
-                              htmlFor="scrollbar-sm"
+                              htmlFor="input-outline"
                               className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
                             >
                               {" "}
-                              Thin
+                              Outline
+                            </label>
+                          </div>
+                          <div className="flex item-center">
+                            <input
+                              type="radio"
+                              name="inputBox"
+                              className="ti-form-radio"
+                              id="input-fill"
+                              checked={theme.inputBox?.inputStyle === "fill"}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      inputStyle: "fill",
+                                    },
+                                  }));
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-fill"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              Fill
                             </label>
                           </div>
                         </div>
                       </div>
                       <div className="">
-                    <p className="switcher-style-head">Input Box Style:</p>
-                    <div className="grid  grid-cols-2 sm:grid-cols-4 switcher-style">
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-normal"
-                          checked={theme.inputBox?.inputStyle === "normal"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "normal",
-                                },
-                              }));
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="input-normal"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Normal
-                        </label>
-                      </div>
-                      <div className="flex item-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-standard"
-                          checked={theme.inputBox?.inputStyle === "standard"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "standard",
-                                },
-                               
-                              }));
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="input-standard"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Standard
-                        </label>
-                      </div>
-                      <div className="flex item-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-outline"
-                          checked={theme.inputBox?.inputStyle === "outline"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "outline",
-                                },
-                          
-                              }));
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="input-outline"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Outline
-                        </label>
-                      </div>
-                      <div className="flex item-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-fill"
-                          checked={theme.inputBox?.inputStyle === "fill"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "fill",
-                                },
-                              }));
-                            }
-                          }}
-                          
-                        />
-                        <label
-                          htmlFor="input-fill"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Fill
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="">
-                    <p className="switcher-style-head">Input Box Border:</p>
-                    <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style">
-                      <div className="flex items-center space-x-3">
-                        <div className="basis-2/3">
-                        <ERPSlider
-                        id ="borderRadius"
-                        label="Border Radius"
-                        className="bg-slate-300"
-                        value={theme.inputBox?.borderRadius}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              borderRadius: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        min={0}
-                        max={100}
-                      />
-                        </div>
-                        <div className="basis-1/3 translate-y-3">
-                        <ERPInput
-                        id="borderRadius"
-                        noLabel={true}
-                        type="number"
-                        value={theme.inputBox?.borderRadius}
-                        data={theme.inputBox}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              borderRadius: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        />
-                        </div>
-                      </div>
+                        <p className="switcher-style-head">Input Box Border:</p>
+                        <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style">
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-2/3">
+                              <ERPSlider
+                                id="borderRadius"
+                                label="Border Radius"
+                                className="bg-slate-300"
+                                value={theme.inputBox?.borderRadius}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      borderRadius: parseInt(
+                                        e.target.value,
+                                        10
+                                      ),
+                                    },
+                                  }))
+                                }
+                                min={0}
+                                max={100}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                id="borderRadius"
+                                noLabel={true}
+                                type="number"
+                                value={theme.inputBox?.borderRadius}
+                                data={theme.inputBox}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      borderRadius: parseInt(
+                                        e.target.value,
+                                        10
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
 
-                      <div className="flex items-center space-x-3">
-                        <div className="basis-2/3 ">
-                        <ERPSlider
-                        id ="fontSize"
-                        label="Font Size"
-                        className="bg-slate-300"
-                        value={theme.inputBox?.fontSize}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              fontSize: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        min={0}
-                        max={100}
-                      />
-                        </div>
-                        <div className="basis-1/3 translate-y-3">
-                        <ERPInput
-                        id="fontSize"
-                        type="number"
-                        noLabel={true}
-                        value={theme.inputBox?.fontSize}
-                        data={theme.inputBox}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              fontSize: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        />
-                        </div>
-                      </div>
-                      <ERPInput
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-2/3 ">
+                              <ERPSlider
+                                id="fontSize"
+                                label="Font Size"
+                                className="bg-slate-300"
+                                value={theme.inputBox?.fontSize}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      fontSize: parseInt(e.target.value, 10),
+                                    },
+                                  }))
+                                }
+                                min={0}
+                                max={100}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                id="fontSize"
+                                type="number"
+                                noLabel={true}
+                                value={theme.inputBox?.fontSize}
+                                data={theme.inputBox}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      fontSize: parseInt(e.target.value, 10),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+                          <ERPInput
                             id="borderColor"
                             label="Border Color"
                             type="color"
@@ -1472,12 +1432,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 ...prevTheme,
                                 inputBox: {
                                   ...prevTheme.inputBox,
-                                  borderColor:e.target.value,
+                                  borderColor: e.target.value,
                                 },
                               }))
                             }
-                      />
-                       <ERPInput
+                          />
+                          <ERPInput
                             id="borderFocus"
                             label="Border On Focus"
                             type="color"
@@ -1488,13 +1448,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 ...prevTheme,
                                 inputBox: {
                                   ...prevTheme.inputBox,
-                                  borderFocus:e.target.value,
+                                  borderFocus: e.target.value,
                                 },
                               }))
                             }
-                      />
-                    </div>
-                  </div>
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div className="w-full p-2 flex justify-end">

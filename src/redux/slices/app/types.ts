@@ -82,8 +82,8 @@ export const initialThemeData: Theme = {
   menuPosition: null, // initialize as null
   headerPosition: 'fixed',  // default position for header
   colorPrimaryRgb: '255,255,255',  // default white color in RGB format
-  scrollbarWidth: 'lg',
-  scrollbarColor: '128, 128, 128',
+  scrollbarWidth: null,
+  scrollbarColor: '219,223,225',
   inputBox: {
     inputStyle: "normal",       
     fontSize: 0,           
@@ -104,7 +104,7 @@ export interface Theme {
   menuPosition: string | null;
   headerPosition: string;
   colorPrimaryRgb: string;
-  scrollbarWidth:  string | null;
+  scrollbarWidth:  "sm" | "md" | "lg" | null;
   scrollbarColor: string;
   inputBox:inputBox;
 

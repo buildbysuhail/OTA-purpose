@@ -631,3 +631,41 @@ export const isFile = (obj: any): obj is File => {
 export function isNullOrUndefinedOrEmpty(value: any): boolean {
   return value === undefined || value === null || value === '';
 }
+export const setFgAccordingToBgPrimary = () => {
+  // Create a temporary element to determine the color of bgPrimary
+  const tempElement = document.createElement('div');
+  tempElement.className = 'bg-primary';
+  document.body.appendChild(tempElement);
+  const bgColor = window.getComputedStyle(tempElement).backgroundColor;
+  document.body.removeChild(tempElement);
+
+  // Check if the background color is close to white
+  const isW = isLightColor(bgColor);
+  const dfdfd= isW === true ? 'text-gray-900' : 'text-white';
+  return dfdfd;
+};
+// Function to calculate the luminance of a color
+const calculateLuminance = (r:number, g:number, b:number) => {
+  const normalize = (value: any) => {
+    value /= 255;
+    return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+  };
+
+  const rNorm = normalize(r);
+  const gNorm = normalize(g);
+  const bNorm = normalize(b);
+
+  // Luminance formula
+  return 0.2126 * rNorm + 0.7152 * gNorm + 0.0722 * bNorm;
+};
+
+// Function to check if a color is "light" based on luminance
+const isLightColor = (bgColor: any) => {
+  const rgbMatch = bgColor.match(/\d+/g);
+  if (rgbMatch && rgbMatch.length >= 3) {
+    const [r, g, b] = rgbMatch.map(Number);
+    const luminance = calculateLuminance(r, g, b);
+    return luminance > 0.5; // Threshold for "lightness"
+  }
+  return false;
+};

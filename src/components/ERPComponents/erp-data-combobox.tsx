@@ -10,6 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
+import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
 
 interface Option {
   value: string;
@@ -23,7 +24,7 @@ interface ERPDataComboboxProps {
   options?: any[];
   excludeOptions?: any[];
   includeOptions?: any[];
-  value?: any;
+  // value?: any;
   defaultValue?: any;
   handleChange?: (id: string, value: any) => void;
   handleChangeData?: (id: string, value: any) => void;
@@ -116,53 +117,53 @@ const truncateText = (
 };
 
 const Row = ({ data, index, style }: RowProps) => {
+  
   const { items, selectedValue, handleSelect, activeIndex } = data;
   const item = items[index];
   const isSelected = selectedValue?.value === item.value;
-  const isActive = activeIndex === index;
+  const isActive = activeIndex === index; 
 
   return (
-    <div style={style} className="px-1">
       <Combobox.Option
-        key={`${item?.value}-${index}`}
-        className={({ active }) =>
-          `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:text-white ${
-            active
-              ? "bg-[#3b82f6] text-white"
-              : item.is_active === false
-              ? "bg-gray-200 text-gray-400"
-              : "text-gray-900"
-          }`
-        }
-        value={item}
-        disabled={!item.is_active}
-      >
-        {({ active }) => (
-          <div
-            className={`flex items-center px-3 py-2 ${
-              isSelected ? "bg-primary" : ""
-            }`}
-            onClick={() => handleSelect(item)} // Trigger selection on click
-          >
-            <div className="flex-shrink-0 w-5">
-              {isSelected && (
-                <CheckIcon
-                  className={`h-5 w-5 ${active ? "text-white" : "text-accent"}`}
-                  aria-hidden="true"
-                />
-              )}
-            </div>
-            <span
-              className={`block truncate flex-grow ${
-                isSelected ? "font-medium" : "font-normal"
-              }`}
-            >
-              {item.label}
-            </span>
+      style={style}
+      key={`${item?.value}-${index}`}
+      className={({ active }) =>
+        `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:${setFgAccordingToBgPrimary()} ${
+          active || isActive
+            ? "bg-primary text-white"
+            : item.is_active === false
+            ? "bg-gray-200 text-gray-400"
+            : "text-gray-900"
+        }`
+      }
+      value={item}
+      disabled={!item.is_active}
+    >
+      {({ active }) => (
+        <div
+          className={`flex items-center px-3 py-2 ${
+            isSelected ? "bg-primary" : ""
+          }`}
+          onClick={() => handleSelect(item)}
+        >
+          <div className="flex-shrink-0 w-5">
+            {isSelected && (
+              <CheckIcon
+                className={`h-5 w-5 ${setFgAccordingToBgPrimary()}`}
+                aria-hidden="true"
+              />
+            )}
           </div>
-        )}
-      </Combobox.Option>
-    </div>
+          <span
+            className={`block truncate flex-grow ${
+              isSelected ? "font-medium" : "font-normal"
+            } ${isSelected ? setFgAccordingToBgPrimary() : ''}`}
+          >
+            {item.label}
+          </span>
+        </div>
+      )}
+    </Combobox.Option>
   );
 };
 
@@ -172,10 +173,10 @@ const ComboboxList = React.forwardRef<
     items: Option[];
     selectedValue: Option | null;
     onSelect: (item: Option) => void;
+    activeIndex: number;
   }
 >((props, ref) => {
-  const { items, selectedValue, onSelect } = props;
-  const [activeIndex, setActiveIndex] = useState(-1);
+  const { items, selectedValue, onSelect, activeIndex } = props;
 
   const itemData = {
     items,
@@ -235,6 +236,8 @@ export default function ImprovedERPDataCombobox({
   const [initial, setInitial] = useState<Option | null>(initialValue);
   const [filteredItems, setFilteredItems] = useState<Option[]>([]);
   const [displayValue, setDisplayValue] = useState("");
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [inputValue, setInputValue] = useState("");
 
   const comboboxRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<List>(null);
@@ -247,7 +250,18 @@ export default function ImprovedERPDataCombobox({
       setDisplayValue("");
     }
   }, [initial]);
-
+  // useEffect(() => {
+  //   debugger
+  //   if (isOpen == true) {
+  //     setActiveIndex(initial != null ? filteredItems.findIndex(item => item.value === initial.value): -1);
+  //     if (listRef.current) {
+  //       listRef.current.scrollToItem(
+  //         activeIndex + 1,
+  //         activeIndex > filteredItems.length - 5 ? "end" : "center"
+  //       );
+  //     }
+  //   }
+  // }, [isOpen, listRef.current]);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -255,6 +269,7 @@ export default function ImprovedERPDataCombobox({
         !componentRef.current.contains(event.target as Node)
       ) {
         setIsOpen(false);
+        // setActiveIndex(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -292,16 +307,20 @@ export default function ImprovedERPDataCombobox({
 
   const filterItems = useCallback(
     (searchQuery: string) => {
-      const words = searchQuery?.toLowerCase()?.split(/\s+/) || [];
+      if (!searchQuery.trim()) {
+        setFilteredItems(items);
+        return;
+      }
+
+      const words = searchQuery.toLowerCase().split(/\s+/);
       const filtered = items?.filter((item) => {
         if (!item?.label) return false;
-        const itemWords = item.label.toLowerCase().split(/\s+/);
-        return words.every((word) =>
-          itemWords.some((itemWord) => itemWord.startsWith(word))
-        );
+        const itemLabel = item.label.toLowerCase();
+        return words.every((word) => itemLabel.includes(word));
       });
 
       setFilteredItems(filtered || []);
+      // setActiveIndex(-1);
     },
     [items]
   );
@@ -323,14 +342,21 @@ export default function ImprovedERPDataCombobox({
     const _exceptional =
       (defaultData && fieldKey === "payment_terms" && items[0]) ||
       fieldKey === "currency";
-    setInitial(_selected || _default || _exceptional || initialValue || null);
-  }, [items, data, defaultData, field, initialValue]);
+      const final = _selected || _default || _exceptional || initialValue || null;
+    setInitial(final);
+    
+    setActiveIndex(final != null ? filteredItems.findIndex(item => item.value === final.value): -1);
+  }, [items, data, defaultData, field, initialValue, filteredItems]);
 
   const clearSelection = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     setQuery("");
+    setInputValue("");
     setInitial(null);
+    setActiveIndex(-1);
+    setFilteredItems(items);
     if (comboboxRef.current) comboboxRef.current.value = "";
+
     handleChange?.(field?.id, null);
     onChange?.(null);
     onChangeData?.({ ...data, [id]: null });
@@ -341,12 +367,80 @@ export default function ImprovedERPDataCombobox({
   const handleItemClick = (value: Option) => {
     setInitial(value);
     setIsOpen(false);
-    setDisplayValue(truncateText(value.label, comboboxRef)); // Update display value
+    // setActiveIndex(-1);
+    setQuery("");
+    setInputValue(value.label);
+    setDisplayValue(truncateText(value.label, comboboxRef));
+    setFilteredItems(items); // Reset filtered items to original list
+
     onChange?.(value);
     onChangeData?.(value && data ? { ...data, [id]: value?.value } : null);
     handleChange?.(field?.id, value?.value);
     handleChangeData?.(field?.id, value?.value);
     onSelectItem?.(value);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
+    setQuery(value);
+    setIsOpen(true);
+
+    if (!value.trim()) {
+      setFilteredItems(items);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen) {
+      if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+        setIsOpen(true);
+        return;
+      }
+    }
+
+    if (filteredItems.length === 0) return;
+
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        setActiveIndex((prev) =>
+          prev < filteredItems.length - 1 ? prev + 1 : prev
+        );
+        if (listRef.current) {
+          listRef.current.scrollToItem(
+            activeIndex + 1,
+            activeIndex > filteredItems.length - 5 ? "end" : "center"
+          );
+        }
+        break;
+
+      case "ArrowUp":
+        event.preventDefault();
+        setActiveIndex((prev) => (prev > 0 ? prev - 1 : 0));
+        if (listRef.current) {
+          listRef.current.scrollToItem(
+            activeIndex - 1,
+            activeIndex < 5 ? "start" : "center"
+          );
+        }
+        break;
+
+      case "Enter":
+        event.preventDefault();
+        if (activeIndex >= 0 && activeIndex < filteredItems.length) {
+          handleItemClick(filteredItems[activeIndex]);
+        }
+        break;
+
+      case "Escape":
+        setIsOpen(false);
+        // setActiveIndex(-1);
+        break;
+
+      default:
+        break;
+    }
   };
 
   return (
@@ -356,14 +450,15 @@ export default function ImprovedERPDataCombobox({
           htmlFor={id}
           className="block text-[12px] font-medium text-gray-700 mb-1"
         >
-          {label || id?.replaceAll("_", " ")}
-          {required && <span className="text-[#ef4444]"> *</span>}
+          {activeIndex}: {initial?.value} : {filteredItems[activeIndex]?.value}: {filteredItems[activeIndex]?.label}
+          {/* {label || id?.replaceAll("_", " ")} 
+          {required && <span className="text-[#ef4444]"> *</span>} */}
         </label>
       )}
       <Combobox
         disabled={disabled}
         value={initial}
-        onChange={handleItemClick}
+        // onChange={handleItemClick}
         as="div"
         className="relative"
       >
@@ -374,22 +469,21 @@ export default function ImprovedERPDataCombobox({
             } px-3 py-2 ${
               enableClearOption ? "pr-16" : "pr-10"
             } placeholder-gray-400 focus:ring-1 text-xs focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
-            displayValue={(item: Option) =>
-              isOpen ? item?.label || "" : displayValue
-            }
-            onChange={(event) => {
-              setQuery(event.target.value);
-              setIsOpen(true);
-            }}
+            displayValue={() => inputValue || initial?.label || ""}
+            onChange={handleInputChange}
             onClick={() => !disabled && setIsOpen(!isOpen)}
+            onKeyDown={handleKeyDown}
             placeholder={
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
-            ref={comboboxRef}
+            ref={comboboxRef}autoComplete="off"
+            spellCheck={false}
+            autoFocus={autoFocus}
             title={initial?.label || ""}
+            value={isOpen ? inputValue : initial?.label || ""}
           />
           <div className="absolute inset-y-0 right-0 flex items-center pr-1">
-            {enableClearOption && initial && !noXMarkIcon && (
+            {enableClearOption && (initial || inputValue) && !noXMarkIcon && (
               <button
                 type="button"
                 onClick={(e) => {
@@ -425,7 +519,13 @@ export default function ImprovedERPDataCombobox({
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
-          afterLeave={() => setQuery("")}
+          afterLeave={() => {
+            if (!initial) {
+              setQuery("");
+              setInputValue("");
+            // setActiveIndex(-1);
+            }
+          }}
         >
           <Combobox.Options
             className="absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
@@ -445,6 +545,7 @@ export default function ImprovedERPDataCombobox({
                 items={filteredItems}
                 selectedValue={initial}
                 onSelect={handleItemClick}
+                activeIndex={activeIndex}
               />
             )}
           </Combobox.Options>

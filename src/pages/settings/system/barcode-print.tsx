@@ -152,14 +152,14 @@ const BarcodePrint: React.FC = () => {
   };
 
   const handleVoucherStateChange = (e: any) => {
-    
+
     const { name, value } = e.target ? e.target : e;
-    if(["si","pi","bti","bto","os"].includes(value)) {
+    if (["si", "pi", "bti", "bto", "os"].includes(value)) {
       setIsOther(false);
     }
-    
+
     setVoucherForm((prev: any) => ({
-      
+
       ...prev,
       data: {
         ...prev.data,
@@ -194,14 +194,14 @@ const BarcodePrint: React.FC = () => {
     }));
   };
 
-  const handleComboboxChange = async(id: string, data: any) => {
-    
+  const handleComboboxChange = async (id: string, data: any) => {
+
     switch (id) {
       case 'labelDesign':
         setLoadingTemplate(true);
-        setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign }}));
-        const res = data?.labelDesign != undefined ?await api.getAsync( `${Urls.templates}${data?.labelDesign}`): [];
-        
+        setBarcodeDesc((prev: any) => ({ ...prev, data: { ...prev.data, labelDesign: data?.labelDesign } }));
+        const res = data?.labelDesign != undefined ? await api.getAsync(`${Urls.templates}${data?.labelDesign}`) : [];
+
         setTemplate(res);
         setLoadingTemplate(false);
         break;
@@ -224,23 +224,23 @@ const BarcodePrint: React.FC = () => {
     const response =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
     setBarcodeFormLoading(false);
-    
+
     setData(response);
   }, [barcodeForm.data]);
 
 
-  const voucherFormSubmit = useCallback(async () => {    
+  const voucherFormSubmit = useCallback(async () => {
     setVoucherFormLoading(true);
     const response =
       await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
     setVoucherFormLoading(false);
-    
-    setData(response);    
+
+    setData(response);
   }, [voucherForm]);
 
 
   const barcodeDescSubmit = useCallback(() => {
-    
+
     setShowPrint(true);
     setPrinting(true);
     setTimeout(() => {
@@ -254,7 +254,7 @@ const BarcodePrint: React.FC = () => {
     }, 1000);
   }, [barcodeDesc?.data]);
 
- 
+
 
   // Define columns for the Counters grid
   const columns: DevGridColumn[] = useMemo(
@@ -382,14 +382,16 @@ const BarcodePrint: React.FC = () => {
             {/* Top Section */}
             <div className="flex flex-col lg:flex-row lg:space-x-2 mb-2">
               {/* First div - Barcode Inputs */}
-              <div className="flex-1 border p-4 rounded-lg min-h-[200px]">
+              <div className="flex-1 border p-4 rounded-lg">
                 <div className="space-y-2">
                   <div className="flex space-x-2">
                     <ERPInput
+                      useMUI
+                      variant="outlined"
                       id="formBcode"
                       label={t("barcode_form")}
                       type="text"
-                      customSize="md"
+                      customSize="sm"
                       className="w-full"
                       value={barcodeForm.data?.formBcode}
                       data={barcodeForm.data}
@@ -404,11 +406,13 @@ const BarcodePrint: React.FC = () => {
                       placeholder={t("form")}
                     />
                     <ERPInput
+                      useMUI
+                      variant="outlined"
                       id="toBcode"
                       label={t("to")}
                       type="text"
                       value={barcodeForm.data?.toBcode}
-                      customSize="md"
+                      customSize="sm"
                       className="w-full"
                       data={barcodeForm.data}
                       validation={barcodeForm?.validations?.toBcode}
@@ -422,11 +426,13 @@ const BarcodePrint: React.FC = () => {
                     />
                   </div>
                   <ERPInput
+                    useMUI
+                    variant="outlined"
                     id="barCodes"
                     label={t("barcode_comma_seperated")}
                     type="text"
                     value={barcodeForm.data?.barCodes}
-                    customSize="md"
+                    customSize="sm"
                     className="w-full"
                     data={barcodeForm.data}
                     validation={barcodeForm?.validations?.barCodes}
@@ -465,104 +471,110 @@ const BarcodePrint: React.FC = () => {
               </div>
 
               {/* Parent div containing Radio Options and VPrefix/Dates */}
-              <div className="flex-1 border p-4 rounded-lg min-h-[200px]">
+              <div className="flex-1 border p-4 rounded-lg">
                 <div className="flex gap-4 items-start">
                   <div className="flex-1">
-                    <div className="space-y-2">
-                      
-                      {[{key:"si", label: t("sales")},{key:"pi", label: t("purchase")},{key:"bti", label: t("bti")},{key:"bto", label: t("bto")},{key:"os", label: t("os")}].map((_item, index) => (
-                      
-                        <div
-                          key={`type-${_item.key.toLowerCase()}-${index}`}
-                          className="flex items-center space-x-2"
-                        >
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-3 gap-2">
+                        {[{ key: "si", label: t("sales") }, { key: "pi", label: t("purchase") }, { key: "bti", label: t("bti") }, { key: "bto", label: t("bto") }, { key: "os", label: t("os") }].map((_item, index) => (
+                          <div
+                            key={`type-${_item.key.toLowerCase()}-${index}`}
+                            className="flex items-center space-x-2"
+                          >
+                            <ERPRadio
+                              id={`type-${_item.key.toLowerCase()}-${index}`}
+                              name="vType"
+                              value={_item.key.toLowerCase()}
+                              checked={!isOther && voucherForm.data?.vType === _item.key.toLowerCase()}
+                              onChange={handleVoucherStateChange}
+                              label={_item.label}
+                            />
+                          </div>
+                        ))}
+                        <div className="flex items-center space-x-2">
                           <ERPRadio
-                            id={`type-${_item.key.toLowerCase()}-${index}`}
-                            name="vType"
-                            value={_item.key.toLowerCase()}
-
-                            checked={!isOther && voucherForm.data?.vType === _item.key.toLowerCase()}
-                            onChange={handleVoucherStateChange}
-
-                            label={_item.label}
-                          />
-                        </div>
-                      ))}
-                      <div  className="flex items-center space-x-2"
-                        >
-                          <ERPRadio
-                            id=""
+                            id="type-other"
                             name="vType"
                             checked={isOther}
-                            onChange={() =>{setIsOther(!isOther); handleVoucherStateChange({value: ""})}}
-
+                            onChange={() => { setIsOther(!isOther); handleVoucherStateChange({ value: "" }) }}
                             label={t("other")}
                           />
                         </div>
+                      </div>
+
                       {isOther && (
-                        <div className="flex items-center space-x-2">
-                        <ERPInput
-                        id="vType_"
-                        type="text"
-                        inputClassName="w-[100px]"
-                        value={voucherForm.data?.vType}
-                        customSize="md"
-                        className="w-full"
-                        placeholder={t("voucher_type")}
-                        onChange={handleVoucherStateChange}
-                      />
+                        <div className="flex items-center space-x-2 mt-4">
+                          <ERPInput
+                            useMUI
+                            variant="outlined"
+                            id="vType_"
+                            type="text"
+                            inputClassName="w-[100px]"
+                            value={voucherForm.data?.vType}
+                            customSize="sm"
+                            className="w-full"
+                            placeholder={t("voucher_type")}
+                            onChange={handleVoucherStateChange}
+                          />
                         </div>
                       )}
                     </div>
+
                   </div>
                   <div className="flex-1">
                     <div className="space-y-2">
-                      <ERPInput
-                        id="vPrefix"
-                        label={t("VPrefix")}
-                        type="text"
-                        value={voucherForm.data?.vPrefix}
-                        customSize="md"
-                        className="w-full"
-                        placeholder={t("VPrefix")}
-                        data={voucherForm.data}
-                        validation={voucherForm?.validations?.vPrefix}
-                        onChangeData={(data: any) => {
-                          setVoucherForm((prev: any) => ({
-                            ...prev,
-                            data: data,
-                          }));
-                        }}
-                      />
-                      <ERPDataCombobox
-                        id="formType"
-                        field={{
-                          id: "formType",
-                          required: true,
-                          getListUrl: Urls.data_form_type,
-                          valueKey: "name",
-                          labelKey: "name",
-                        }}
-                        label={t("form_type")}
-                        required={true}
-                        data={voucherForm.data}
-                        defaultData={voucherForm?.data}
-                        value={voucherForm.data?.formType}
-                        validation={voucherForm?.validations?.formType}
-                        onChangeData={(data: any) => {
-                          setVoucherForm((prev: any) => ({
-                            ...prev,
-                            data: data,
-                          }));
-                        }}
-                      />
-                      <div className="flex justify-between gap-4">
+                      <div className="flex items-center space-x-2">
                         <ERPInput
+                          useMUI
+                          variant="outlined"
+                          id="vPrefix"
+                          label={t("VPrefix")}
+                          type="text"
+                          value={voucherForm.data?.vPrefix}
+                          customSize="sm"
+                          className="w-full"
+                          placeholder={t("VPrefix")}
+                          data={voucherForm.data}
+                          validation={voucherForm?.validations?.vPrefix}
+                          onChangeData={(data: any) => {
+                            setVoucherForm((prev: any) => ({
+                              ...prev,
+                              data: data,
+                            }));
+                          }}
+                        />
+                        <ERPDataCombobox
+                          id="formType"
+                          field={{
+                            id: "formType",
+                            required: true,
+                            getListUrl: Urls.data_form_type,
+                            valueKey: "name",
+                            labelKey: "name",
+                          }}
+                          label={t("form_type")}
+                          required={true}
+                          data={voucherForm.data}
+                          defaultData={voucherForm?.data}
+                          value={voucherForm.data?.formType}
+                          validation={voucherForm?.validations?.formType}
+                          onChangeData={(data: any) => {
+                            setVoucherForm((prev: any) => ({
+                              ...prev,
+                              data: data,
+                            }));
+                          }}
+                        />
+                      </div>
+                      <div className="flex items-center justify-between gap-4">
+                        <ERPInput
+                          useMUI
+                          variant="outlined"
                           id="vchNo"
                           label={t("bill_no")}
                           type="text"
                           value={voucherForm.data?.vchNo}
-                          customSize="md"
+                          customSize="sm"
                           className="w-full"
                           data={voucherForm.data}
                           validation={voucherForm?.validations?.vchNo}
@@ -574,16 +586,13 @@ const BarcodePrint: React.FC = () => {
                           }}
                           placeholder={t("bill_no")}
                         />
-                        <div className="mt-[11px]">
-                          <ERPButton
-                            title={t("show")}
-                            className="px-3 py-1"
-                            variant="secondary"
-                            disabled={voucherFormLoading}
-                            loading={voucherFormLoading}
-                            onClick={voucherFormSubmit}
-                          />
-                        </div>
+                        <ERPButton
+                          title={t("show")}
+                          variant="secondary"
+                          disabled={voucherFormLoading}
+                          loading={voucherFormLoading}
+                          onClick={voucherFormSubmit}
+                        />
                       </div>
                     </div>
                   </div>
@@ -591,9 +600,12 @@ const BarcodePrint: React.FC = () => {
               </div>
 
               {/* Fourth div - Notes Grid */}
-              <div className="flex-1 border p-4 rounded-lg min-h-[200px]">
+              <div className="flex-1 border p-4 rounded-lg">
                 <div className="grid grid-cols-2 gap-2">
                   <ERPDateInput
+                    useMUI
+                    customSize="sm"
+                    variant="outlined"
                     id="packDate"
                     type="date"
                     label={t("packed_date")}
@@ -608,11 +620,13 @@ const BarcodePrint: React.FC = () => {
                     }}
                   />
                   <ERPInput
+                    useMUI
+                    variant="outlined"
                     id="expDesc"
                     label={t("expiry_description")}
                     type="text"
                     value={barcodeDesc?.data?.expDesc}
-                    customSize="md"
+                    customSize="sm"
                     className="w-full"
                     name="expDesc"
                     data={barcodeDesc?.data}
@@ -627,16 +641,18 @@ const BarcodePrint: React.FC = () => {
                   />
                   {[1, 2, 3, 4].map((num: number) => (
                     <ERPInput
+                      useMUI
+                      variant="outlined"
                       key={num}
                       id={`note${num}`}
                       label={`Note ${num}`}
                       type="text"
-                      value={barcodeDesc?.data ? barcodeDesc?.data[`note${num}` as any]: null}
-                      customSize="md"
+                      value={barcodeDesc?.data ? barcodeDesc?.data[`note${num}` as any] : null}
+                      customSize="sm"
                       className="w-full"
                       name={`note${num}`}
                       data={barcodeDesc?.data}
-                      validation={barcodeDesc?.validations ? barcodeDesc?.validations[`note${num}` as any]: null}
+                      validation={barcodeDesc?.validations ? barcodeDesc?.validations[`note${num}` as any] : null}
                       onChangeData={(data: any) => {
                         setBarcodeDesc((prev: any) => ({
                           ...prev,
@@ -661,7 +677,7 @@ const BarcodePrint: React.FC = () => {
                         <ERPDataCombobox
                           id="labelDesign"
                           field={{
-                          params: `TemplateType=barcode`,
+                            params: `TemplateType=barcode`,
                             id: "labelDesign",
                             required: true,
                             getListUrl: Urls.data_templates,
@@ -674,17 +690,19 @@ const BarcodePrint: React.FC = () => {
                           defaultData={barcodeDesc?.data}
                           value={barcodeDesc?.data?.labelDesign}
                           validation={barcodeDesc?.validations?.labelDesign}
-                          onChangeData={(data: any) => { handleComboboxChange("labelDesign", data)}}
+                          onChangeData={(data: any) => { handleComboboxChange("labelDesign", data) }}
                         />
-                         
+
                       </div>
                       <div className="flex flex-col">
                         <ERPInput
+                          useMUI
+                          variant="outlined"
                           id="startRow"
                           label={t("start_row")}
                           type="text"
                           value={barcodeDesc?.data?.startRow}
-                          customSize="md"
+                          customSize="sm"
                           className="w-full"
                           name="startRow"
                           data={barcodeDesc?.data}
@@ -699,11 +717,13 @@ const BarcodePrint: React.FC = () => {
                       </div>
                       <div className="flex flex-col">
                         <ERPInput
+                          useMUI
+                          variant="outlined"
                           id="endRow"
                           label={t("end_row")}
                           type="text"
                           value={barcodeDesc?.data?.endRow}
-                          customSize="md"
+                          customSize="sm"
                           className="w-full"
                           name="endRow"
                           data={barcodeDesc?.data}
@@ -734,7 +754,7 @@ const BarcodePrint: React.FC = () => {
                         title={t("print")}
                         className="px-3 py-1 w-24"
                         variant="secondary"
-                        disabled={printing||loadingTemplate}
+                        disabled={printing || loadingTemplate}
                         loading={printing || loadingTemplate}
                         onClick={barcodeDescSubmit}
                       />
@@ -743,7 +763,7 @@ const BarcodePrint: React.FC = () => {
                 </div>
 
                 {/* Right side */}
-                
+
 
               </div>
             </div>
@@ -760,7 +780,7 @@ const BarcodePrint: React.FC = () => {
                   hideDefaultSearchPanel={true}
                   hideDefaultExportButton={true}
                   data={data}
-                  
+
                   gridId="grd_barcode_print"
                   popupAction={toggleCounterPopup}
                   gridAddButtonType="popup"
@@ -772,21 +792,21 @@ const BarcodePrint: React.FC = () => {
           </div>
         </div>
 
-      
+
       </div>
       {template && data &&
-      <ERPModal
-         isOpen={showPrint}
-         title={t("barcode_print")}
-         isForm={true}
-         closeModal={() => {
-           setShowPrint(false);
-         }}
-      content={<DownloadPreview template={template} data={data}/>}
-      >
+        <ERPModal
+          isOpen={showPrint}
+          title={t("barcode_print")}
+          isForm={true}
+          closeModal={() => {
+            setShowPrint(false);
+          }}
+          content={<DownloadPreview template={template} data={data} />}
+        >
 
-      </ERPModal>
-}
+        </ERPModal>
+      }
     </Fragment>
   );
 };

@@ -166,6 +166,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/integration/sms`, type: 'link', active: false, selected: false, title: 'sms_integration' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'whatsapp_integration' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/test`, type: 'link', active: false, selected: false, title: 'test' },
       { action: toggleTestPopup, type: 'popup', active: false, selected: false, title: 'test popup' },
 
     ]

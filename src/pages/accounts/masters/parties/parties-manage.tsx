@@ -26,6 +26,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
   const rootState = useRootState();
   const dispatch = useDispatch();
   const userSession = useSelector((state: RootState) => state.UserSession);
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const isIndianCompany = userSession.countryId === Countries.India;
   const [isTCSApplicable, setIsTCSApplicable] = useState(false);
 
@@ -50,7 +51,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
         accGroupID: type == 'Cust' ? 154 : 22,
         partyCategoryID: type == 'Cust' ? 1 : 2,
         priceCategoryID: 1,
-        registrationType: "Regular"
+        registrationType: "Regular",
+        drCr: "Dr"
       }
     },
   });
@@ -230,17 +232,41 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
               handleFieldChange("creditAmount", data.creditAmount)
             }
           />
-          <ERPInput
-            {...getFieldProps("opBalance")}
-            disabled={isEdit}
-            label={t("op_balance")}
-            type="number"
-            placeholder={t("op_balance")}
-            required={false}
-            onChangeData={(data: any) =>
-              handleFieldChange("opBalance", data.opBalance)
-            }
-          />
+
+          <div className="flex  space-x-3">
+            <div className="basis-2/3">
+              <ERPInput
+                {...getFieldProps("opBalance")}
+                disabled={isEdit}
+                label={t("op_balance")}
+                type="number"
+                placeholder={t("op_balance")}
+                required={false}
+                onChangeData={(data: any) =>
+                  handleFieldChange("opBalance", data.opBalance)
+                }
+              />
+            </div>
+            <div className="basis-1/3 translate-y-[17px]">
+              <ERPDataCombobox
+
+                {...getFieldProps("drCr")}
+                field={{
+                  id: "drCr",
+                  valueKey: "value",
+                  labelKey: "label",
+                }}
+                onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
+                label=" "
+                enableClearOption={false}
+                options={[
+                  { value: 'Dr', label: t('Dr') },
+                  { value: 'Cr', label: t('Cr') },
+                ]}
+              />
+            </div>
+          </div>
+          
           <ERPCheckbox
             {...getFieldProps("billwiseBillApplicable")}
             label={t("bill_wise_applicable")}
@@ -352,7 +378,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
         <Tab label="Details" value="details" />
         <Tab label="More" value="more" />
         <Tab label="Project/Job" value="project_job" />
-        {userSession.countryId != Countries.India &&
+        {userSession.countryId != Countries.India && applicationSettings.branchSettings.maintainKSA_EInvoice == true &&
           <Tab label="Other" value="other_details" />
         }
       </Tabs>
@@ -560,14 +586,16 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => {
-                    handleFieldChange("stateName", data !== null && data !== undefined ? data.stateName.toString() : "");
+                  onChange={(data: any) => {
+                    debugger;
+                    handleFieldChange({stateName: data !== null && data !== undefined ? data.value.toString() : "",stateCode: data !== null && data !== undefined ? data.value.toString() : "" });
                   }}
                   label={t("state_name")}
                 />
                 <ERPInput
                   {...getFieldProps("stateCode")}
                   label={t("state_code")}
+                  disabled={true}
                   placeholder={t("state_code")}
                   required={false}
                   onChangeData={(data: any) => handleFieldChange("stateCode", data.stateCode)}

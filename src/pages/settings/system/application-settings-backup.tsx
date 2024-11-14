@@ -116,7 +116,6 @@ const BackupSettingsForm: React.FC = () => {
             <div className="form-row grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 my-3">
               <ERPDataCombobox
                 id="backupMethods"
-                value={formState.backupMethods}
                 data={formState}
                 field={{
                   id: "backupMethods",

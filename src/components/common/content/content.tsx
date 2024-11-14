@@ -49,6 +49,8 @@ const Dashboard = lazy(() => import("../../../pages/dashboards/crm/crm"));
 const Reminders = lazy(() => import("../../../pages/settings/system/remainder"));
 const BranchGrid = lazy(() => import("../../../pages/settings/Administration/branch"));
 const NotificationSettings = lazy(() => import('../../../pages/settings/system/notification-settings'));
+const CounterSettings = lazy(() => import('../../../pages/settings/system/counter-settings'));
+
 
 // Inventory Starts
 
@@ -146,6 +148,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
         <Route path="/system/notification-settings" element={<NotificationSettings />} />
+        <Route path="/system/counter-settings" element={<CounterSettings />} />
         <Route path="settings" element={<Settings />} />
 
 

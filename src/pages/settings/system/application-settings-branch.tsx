@@ -131,7 +131,6 @@ const BranchSettingsForm: React.FC = () => {
                 {(hasPermitted) => (
                   <ERPDataCombobox
                     id="countryName"
-                    value={formState.countryName}
                     disabled={!hasPermitted}
                     field={{
                       id: "countryName",
@@ -408,7 +407,6 @@ const BranchSettingsForm: React.FC = () => {
                   id="syncMethod"
                   disabled={formState?.maintainSynchronization === false}
                   label=" "
-                  value={formState.syncMethod}
                   field={{
                     id: "syncMethod",
                     valueKey: "value",
@@ -489,7 +487,6 @@ const BranchSettingsForm: React.FC = () => {
 
               <ERPDataCombobox
                 id="reportMode"
-                value={formState.reportMode}
                 field={{
                   id: "reportMode",
                   valueKey: "value",
@@ -508,7 +505,6 @@ const BranchSettingsForm: React.FC = () => {
 
               <ERPDataCombobox
                 id="invoicePrintingStyle"
-                value={formState.invoicePrintingStyle}
                 field={{
                   id: "invoicePrintingStyle",
                   // required: true,
@@ -530,7 +526,6 @@ const BranchSettingsForm: React.FC = () => {
               />
               <ERPDataCombobox
                 id="fileAttachmentMethod"
-                value={formState.fileAttachmentMethod}
                 field={{
                   id: "fileAttachmentMethod",
                   // required: true,

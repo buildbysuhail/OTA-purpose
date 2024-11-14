@@ -325,6 +325,7 @@
   "from": "From",
   "to": "To",
   "counter_name": "Counter Name",
+  "counter_settings": "Counter Settings",
   "warehouse_id": "Warehouse ID",
   "cashLedger_id": "cashLedgerID",
   "enter_remarks": "Enter Remarks",

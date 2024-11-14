@@ -1314,5 +1314,6 @@
   "bank_name": "اسم البنك",
 
   "company_profile_others": "ملف الشركة",
-  "company_profile_india": "ملف الشركة (الهند)"
+  "company_profile_india": "ملف الشركة (الهند)",
+  "country_sub_division": "تقسيم فرعي للبلد"
 }

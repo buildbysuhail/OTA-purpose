@@ -203,7 +203,9 @@ const AccountGroupType = () => {
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) , visible:cellElement?.data?.isEditable == true}}
+            edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) 
+            // , visible:cellElement?.data?.isEditable == true
+          }}
             delete={{
               visible:cellElement?.data?.isDeletable == true,
               confirmationRequired: true,

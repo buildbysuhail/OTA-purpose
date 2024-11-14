@@ -28,7 +28,7 @@ type DeleteActionType = {
 const defaultActionType: ActionType = {
   type: "link",
   path: "#",
-  visible: false,
+  visible: true,
   action: () => {}
 };
 
@@ -36,7 +36,7 @@ const defaultDeleteAction: DeleteActionType = {
   url: "",
   key: null,
   confirmationRequired: false,
-  visible: false,
+  visible: true,
   confirmationMessage: "Are you sure you want to delete this item?",
   action: () => {},
   onSuccess: () => {}
@@ -147,8 +147,8 @@ const ERPGridActions: React.FC<ERPGridActionsProps> = ({
   return (
     <div className="action-field">
       {renderActionButton("view", view)}
-      {edit?.visible ? renderActionButton("edit", edit): null}
-      {deleteAction && deleteAction.visible ==true ? renderActionButton("delete", deleteAction): null}
+      {edit?.visible != false ? renderActionButton("edit", edit): null}
+      {deleteAction.visible != false ? renderActionButton("delete", deleteAction): null}
     </div>
   );
 };

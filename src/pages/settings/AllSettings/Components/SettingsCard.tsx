@@ -48,6 +48,10 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
       if(item.title === "company_profile_india" && userSession.countryId != Countries.India) {
         item.visible = false;
       }
+      
+      if(item.title === "hide_account_ledger" && userSession.countryId == Countries.India) {
+        item.visible = false;
+      }
       if(item.title === "company_profile_others" && userSession.countryId == Countries.India) {
         item.visible = false;
       }

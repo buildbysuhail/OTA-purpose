@@ -39,7 +39,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
     isLoading
   } = useFormManager<PartiesData>({
     url: Urls.parties,
-    onClose:useCallback(() => dispatch(toggleParties({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleParties({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.parties.key,
     useApiClient: true,
@@ -64,7 +64,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
     }
   };
   useEffect(() => {
-    load();
+    const key = rootState.PopupData.parties.key;
+    if (Boolean(key && key !== "0" && key !== "") == false) {
+      load();
+    }
   }, [])
   const load = async () => {
     const res = await api.getAsync(Urls.get_next_party_code);
@@ -94,7 +97,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
             placeholder={t("name")}
             required={true}
             onChangeData={(data: any) => {
-              handleFieldChange("partyName", data.partyName)
+              handleFieldChange({ "partyName": data.partyName, "displayName": data.partyName, "ledgerName": data.partyName })
             }
             }
           />
@@ -116,20 +119,15 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
               handleFieldChange("arabicName", data.arabicName)
             }
           />
-          <ERPDataCombobox
+          <ERPInput
             {...getFieldProps("ledgerName")}
-            disabled
-            field={{
-              id: "ledgerName",
-              required: true,
-              getListUrl: Urls.data_acc_ledgers,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            onChangeData={(data: any) => {
-              handleFieldChange("ledgerName", data.ledgerName);
-            }}
             label={t("ledger_name")}
+            placeholder={t("ledger_name")}
+            required={false}
+            disabled={true}
+            onChangeData={(data: any) =>
+              handleFieldChange("ledger_name", data.ledgerName)
+            }
           />
           <ERPDataCombobox
             {...getFieldProps("partyCategoryID")}
@@ -144,7 +142,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
               handleFieldChange("partyCategoryID", data.partyCategoryID);
             }}
             label={t("party_category")}
-            disabled={true}
+          // disabled={true}
           />
           <ERPDataCombobox
             {...getFieldProps("accGroupID")}
@@ -354,6 +352,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
         <Tab label="Details" value="details" />
         <Tab label="More" value="more" />
         <Tab label="Project/Job" value="project_job" />
+        {userSession.countryId != Countries.India &&
+          <Tab label="Other" value="other_details" />
+        }
       </Tabs>
       <div className="pt-4">
         {activeTab === 'address' &&
@@ -729,6 +730,94 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
               handleFieldChange("address3", data.address3)
             }
           />
+        </div>}
+        {activeTab === 'other_details' && <div className="grid grid-cols-4 gap-6">
+          <ERPDataCombobox
+            {...getFieldProps("idType")}
+            field={{
+              id: "idType",
+              valueKey: "label",
+              labelKey: "label",
+            }}
+            onChangeData={(data) => handleFieldChange("idType", data.idType)}
+            label={t("id_type")}
+            options={[
+              { value: "TIN", label: "TIN" },
+              { value: "NAT", label: "NAT" },
+              { value: "IQA", label: "IQA" },
+              { value: "CRN", label: "CRN" },
+              { value: "PAS", label: "PAS" },
+              { value: "MOM", label: "MOM" },
+              { value: "MLS", label: "MLS" },
+              { value: "SAG", label: "SAG" },
+              { value: "GCC", label: "GCC" },
+              { value: "OTH", label: "OTH" },
+            ]}
+          />
+
+          <ERPInput
+            {...getFieldProps("buildingNumber")}
+            label={t("building_number")}
+            placeholder={t("building_number")}
+            required={false}
+            onChangeData={(data) =>
+              handleFieldChange("buildingNumber", data.buildingNumber)
+            }
+          />
+
+          <ERPInput
+            {...getFieldProps("additionalNumber")}
+            label={t("additional_number")}
+            placeholder={t("additional_number")}
+            required={false}
+            onChangeData={(data) =>
+              handleFieldChange("additionalNumber", data.additionalNumber)
+            }
+          />
+
+          <ERPInput
+            {...getFieldProps("citySubDivision")}
+            label={t("city_sub_division")}
+            placeholder={t("city_sub_division")}
+            required={false}
+            onChangeData={(data) =>
+              handleFieldChange("citySubDivision", data.citySubDivision)
+            }
+          />
+
+          <ERPInput
+            {...getFieldProps("postalCode")}
+            label={t("postal_code")}
+            placeholder={t("postal_code")}
+            required={false}
+            onChangeData={(data) =>
+              handleFieldChange("postalCode", data.postalCode)
+            }
+          />
+
+          <ERPDataCombobox
+            {...getFieldProps("country")}
+            onChangeData={(data) =>
+              handleFieldChange("country", data.country)
+            }
+            label={t("country")}
+            field={{
+              id: "country",
+              getListUrl: Urls.data_countries,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+          />
+          <ERPInput
+            {...getFieldProps("countrySubDivision")}
+            label={t("country_sub_division")}
+            placeholder={t("country_sub_division")}
+            required={false}
+            onChangeData={(data) =>
+              handleFieldChange("countrySubDivision", data.countrySubDivision)
+            }
+          />
+
         </div>}
       </div>
       <div className="fixed bottom-0 left-0 right-0 bg-white px-4 py-1 z-50 rounded-b-lg">

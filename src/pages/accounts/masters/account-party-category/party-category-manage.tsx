@@ -55,7 +55,6 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
           {...getFieldProps("remarks")}
           label={t("remarks")}
           placeholder={t("remarks")}
-          required={true}
           onChangeData={(data: any) =>
             handleFieldChange("remarks", data.remarks)
           }

@@ -43,6 +43,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
+          required={true}
           onChangeData={(data: any) => {
             handleFieldChange("countryID", data.countryID);
           }}
@@ -52,7 +53,7 @@ export const CurrencyMasterManage: React.FC = React.memo(() => {
           {...getFieldProps("currencyCode")}
           label={t("currency_code")}
           placeholder={t("currency_code")}
-          required={false}
+          required={true}
           onChangeData={(data: any) =>
             handleFieldChange("currencyCode", data.currencyCode)
           }

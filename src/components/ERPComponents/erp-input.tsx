@@ -5,7 +5,7 @@ import { setNestedValue } from "../../utilities/Utils"
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation }: { validation?: string }) => (
-  <div className="text-red text-xs mt-1">{validation}</div>
+  <div className="text-red text-xs">{validation}</div>
 )
 
 type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'color'>
@@ -112,21 +112,28 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
           mui: {
             "& .MuiInputBase-root": {
               height: "2rem",
-              fontSize: "12px"
+              fontSize: "12px",
+              margin: "0",
+              "& .MuiOutlinedInput-input": {
+                padding: "0 0.75rem"
+              },
+              "& .MuiFilledInput-input": {
+                padding: "0 0.75rem"
+              }
             },
             "& .MuiInputLabel-root": {
               fontSize: "12px",
               transform: variant === "filled"
-                ? "translate(8px, 9px) scale(0.8)"
+                ? "translate(8px, 10px) scale(0.8)"
                 : variant === "standard"
-                  ? "translate(0, 30px) scale(0.8)"
-                  : "translate(8px, 8px) scale(0.8)"
+                  ? "translate(0, 10px) scale(0.8)"
+                  : "translate(8px, 10px) scale(0.8)"
             },
             "& .MuiInputLabel-shrink": {
               transform: variant === "filled"
                 ? "translate(8px, -10px) scale(0.75)"
                 : variant === "standard"
-                  ? "translate(0, 10px) scale(0.75)"
+                  ? "translate(0, -6px) scale(0.75)"
                   : "translate(16px, -6px) scale(0.75)"
             }
           } as SxProps<Theme>,
@@ -140,22 +147,30 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         return {
           mui: {
             "& .MuiInputBase-root": {
-              height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
-              fontSize: "14px"
+              // height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
+              height: "2.5rem",
+              fontSize: "14px",
+              margin: "0",
+              "& .MuiOutlinedInput-input": {
+                padding: "0 0.75rem"
+              },
+              "& .MuiFilledInput-input": {
+                padding: "0 0.75rem"
+              }
             },
             "& .MuiInputLabel-root": {
               fontSize: "12px",
               transform: variant === "filled"
                 ? "translate(10px, 13px) scale(0.9)"
                 : variant === "standard"
-                  ? "translate(0, 30px) scale(0.9)"
-                  : "translate(10px, 12px) scale(0.9)"
+                  ? "translate(0, 13px) scale(0.9)"
+                  : "translate(10px, 13px) scale(0.9)"
             },
             "& .MuiInputLabel-shrink": {
               transform: variant === "filled"
                 ? "translate(8px, -12px) scale(0.90)"
                 : variant === "standard"
-                  ? "translate(0, 8px) scale(0.90)"
+                  ? "translate(0, -6px) scale(0.90)"
                   : "translate(15px, -7px) scale(0.90)"
             }
           } as SxProps<Theme>,
@@ -169,22 +184,30 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
         return {
           mui: {
             "& .MuiInputBase-root": {
-              height: variant === "filled" ? "3rem" : variant === "standard" ? "2rem" : "3rem",
-              fontSize: "16px"
+              // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
+              height: "3rem",
+              fontSize: "16px",
+              margin:"0",
+              "& .MuiOutlinedInput-input": {
+                padding: "0 0.75rem"
+              },
+              "& .MuiFilledInput-input": {
+                padding: "0 0.75rem"
+              }
             },
             "& .MuiInputLabel-root": {
               fontSize: "14px",
               transform: variant === "filled"
-                ? "translate(10px, 16px) scale(1)"
+                ? "translate(10px, 15px) scale(1)"
                 : variant === "standard"
-                  ? "translate(0, 26px) scale(1)"
+                  ? "translate(0, 15px) scale(1)"
                   : "translate(10px, 15px) scale(1)"
             },
             "& .MuiInputLabel-shrink": {
               transform: variant === "filled"
                 ? "translate(8px, -14px) scale(0.88)"
                 : variant === "standard"
-                  ? "translate(1px, 4px) scale(0.88)"
+                  ? "translate(1px,-6px) scale(0.88)"
                   : "translate(16px, -7px) scale(0.88)"
             }
           } as SxProps<Theme>,

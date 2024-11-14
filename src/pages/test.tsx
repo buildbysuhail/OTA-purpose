@@ -3,6 +3,7 @@ import ERPDataCombobox from '../components/ERPComponents/erp-data-combobox';
 import ERPInput from '../components/ERPComponents/erp-input';
 import Urls from '../redux/urls';
 import { LedgerType } from '../enums/ledger-types';
+import ERPDateInput from '../components/ERPComponents/erp-date-input';
 
 const Test: React.FC = () => {
     const [formState, setFormState] = useState({
@@ -19,7 +20,7 @@ const Test: React.FC = () => {
 
     return (
         <div className='flex flex-col gap-6 p-6'>
-            <div className='flex items-center justify-between border-2 rounded-lg p-4'>
+            <div className='flex items-end border-2 rounded-lg p-4'>
                 <ERPDataCombobox
                     id="defaultCustomerLedgerID"
                     value={formState.defaultCustomerLedgerID}
@@ -74,7 +75,7 @@ const Test: React.FC = () => {
                     onChangeData={(data) => handleFieldChange('supervisorPassword', data.supervisorPassword)}
                 />
             </div>
-            <div className='flex items-center justify-between border-2 rounded-lg p-4'>
+            <div className='flex items-end border-2 rounded-lg p-4'>
                 <ERPDataCombobox
                     id="defaultCustomerLedgerID"
                     value={formState.defaultCustomerLedgerID}
@@ -129,7 +130,7 @@ const Test: React.FC = () => {
                     onChangeData={(data) => handleFieldChange('supervisorPassword', data.supervisorPassword)}
                 />
             </div>
-            <div className='flex items-center justify-between border-2 rounded-lg p-4'>
+            <div className='flex items-end border-2 rounded-lg p-4'>
                 <ERPDataCombobox
                     id="defaultCustomerLedgerID"
                     value={formState.defaultCustomerLedgerID}
@@ -182,6 +183,84 @@ const Test: React.FC = () => {
                     data={formState}
                     label="supervisor_password"
                     onChangeData={(data) => handleFieldChange('supervisorPassword', data.supervisorPassword)}
+                />
+            </div>
+            <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
+                <ERPDateInput
+                    useMUI
+                    customSize="sm"
+                    variant="outlined"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    useMUI
+                    customSize="md"
+                    variant="outlined"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    useMUI
+                    customSize="lg"
+                    variant="outlined"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+            </div>
+            <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
+                <ERPDateInput
+                    useMUI
+                    customSize="sm"
+                    variant="standard"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    useMUI
+                    customSize="md"
+                    variant="standard"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    useMUI
+                    customSize="lg"
+                    variant="standard"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+            </div>
+            <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
+                <ERPDateInput
+                    useMUI
+                    customSize="sm"
+                    variant="filled"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    useMUI
+                    customSize="md"
+                    variant="filled"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    useMUI
+                    customSize="lg"
+                    variant="filled"
+                    id="packDate"
+                    type="date"
+                    label="packed_date"
                 />
             </div>
         </div>

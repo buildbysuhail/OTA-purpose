@@ -1,8 +1,6 @@
 import Urls from "../../redux/urls";
 import ERPButton from "../../components/ERPComponents/erp-button";
-import {
-  ActionType,
-} from "../../redux/types";
+import { ActionType } from "../../redux/types";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import "./profile.css";
@@ -15,14 +13,19 @@ import {
 
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
-import { Theme } from "../../redux/slices/app/types";
+import { initialThemeData, Theme } from "../../redux/slices/app/types";
 import Cookies from "js-cookie";
 import { modelToBase64 } from "../../utilities/jsonConverter";
 import ERPSelect from "../../components/ERPComponents/erp-select";
-import { useAppDynamicSelector, useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import {
+  useAppDynamicSelector,
+  useAppSelector,
+} from "../../utilities/hooks/useAppDispatch";
 import { FC, Fragment, useEffect, useState } from "react";
 import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { reduxManager } from "../../redux/dynamic-store-manager-pro";
+import ERPInput from "../../components/ERPComponents/erp-input";
+import ERPSlider from "../../components/ERPComponents/erp-slider";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -48,7 +51,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   const [postDataEmailTokenVerify, setPostDataEmailTokenVerify] = useState<any>(
     { userName: "", newValue: "", otp: "", confirToken: "" }
   );
-  
+
   const { appState, updateAppState } = useAppState();
   const [postDataPhone, setPostDataPhone] = useState<any>();
   const initialBasicInfoWithValidation = {
@@ -65,28 +68,31 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   };
   const dispatch = useDispatch();
 
-  const userLanguageRName = reducerNameFromUrl(Urls.updateLanguage,ActionType.POST);
+  const userLanguageRName = reducerNameFromUrl(
+    Urls.updateLanguage,
+    ActionType.POST
+  );
   let userLanguage = useAppSelector((state: any) => state?.[userLanguageRName]);
   let userLanguageAction = reduxManager.getTypedThunk(userLanguageRName);
   const updateLanguage = async () => {
-    
     try {
-      const response = await dispatch(userLanguageAction({ data: { language },
-        params: 'userId=123' }) as any).unwrap();
+      const response = await dispatch(
+        userLanguageAction({ data: { language }, params: "userId=123" }) as any
+      ).unwrap();
       handleResponse(response, () => {});
     } catch (error) {
-      console.error('Error updating language:', error);
+      console.error("Error updating language:", error);
     }
-
   };
   const restLanguage = async () => {
     setLanguage(_language);
   };
+  const [theme, setTheme] = useState<Theme>(initialThemeData);
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   const userTheme = () => {
     api.get(Urls.getUserThemes).then((theme) => {
-      Cookies.set("ut", modelToBase64(theme), { expires: 30 }); 
+      Cookies.set("ut", modelToBase64(theme), { expires: 30 });
       setTheme(theme);
       _setTheme(theme);
     });
@@ -103,35 +109,28 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     });
   }, []);
 
-  const [theme, setTheme] = useState<Theme>({
-    direction: "ltr",
-    mode: "light",
-    navLayout: null,
-    navigationMenuStyle: null,
-    sidemenuLayoutStyles: null,
-    pageStyle: null,    
-  headerStyle: 'color',
-  menuStyle: 'dark',
-    menuPosition: null,
-    headerPosition: "",
-    colorPrimaryRgb: "rgb(25,118,210,1)",
-    scrollbarWidth: "thick",
-    scrollbarColor: "rgb(25,118,210,1)"
-  });
+
   const [_theme, _setTheme] = useState<Theme>({
     direction: "ltr",
     mode: "light",
     navLayout: null,
     navigationMenuStyle: null,
     sidemenuLayoutStyles: null,
-    pageStyle: null, 
-    headerStyle: 'color',
-    menuStyle: 'dark',
+    pageStyle: null,
+    headerStyle: "color",
+    menuStyle: "dark",
     menuPosition: null,
     headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
-    scrollbarWidth: "thick",
-    scrollbarColor: 'rgb(230 234 235)'
+    scrollbarWidth: null,
+    scrollbarColor: "rgb(230 234 235)",
+    inputBox: {
+      inputStyle: "normal",       
+      fontSize: 0,           
+      borderColor: '128, 128, 128', 
+      borderFocus: '128, 128, 128',            
+      borderRadius: 0,      
+    }
   });
 
   const resetThemeChange = () => {
@@ -139,17 +138,28 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     //   ..._theme
     // }));
   };
-  const updatedUserThemeRName = reducerNameFromUrl(Urls.updateUserThemes,ActionType.POST);
-  let updatedUserTheme = useAppSelector((state: any) => state?.[updatedUserThemeRName]);
-  let updatedUserThemeAction = reduxManager.getTypedThunk(updatedUserThemeRName);
+  const updatedUserThemeRName = reducerNameFromUrl(
+    Urls.updateUserThemes,
+    ActionType.POST
+  );
+  let updatedUserTheme = useAppSelector(
+    (state: any) => state?.[updatedUserThemeRName]
+  );
+  let updatedUserThemeAction = reduxManager.getTypedThunk(
+    updatedUserThemeRName
+  );
 
   const saveThemeChange = async () => {
-    const res = await dispatch(updatedUserThemeAction({data: theme}) as any).unwrap();
+    debugger
+    const res = await dispatch(
+      updatedUserThemeAction({ data: theme }) as any
+    ).unwrap();
     handleResponse(res, () => {
       userTheme();
     });
   };
   const handleThemeChange = (key: string, mode: string) => {
+
     setTheme((prevTheme: any) => ({
       ...prevTheme,
       [key]: mode,
@@ -159,9 +169,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
   return (
     <Fragment>
-      
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
+      <div className="grid grid-cols-12 gap-x-6 p-3">
+        <div className="xxl:col-span-6 xl:col-span-12  col-span-12 ">
           <div className="grid grid-cols-12 gap-x-6">
             <div
               id="avatar"
@@ -209,7 +218,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                 </div>
               </div>
             </div>
-          </div> 
+          </div>
           <div className="grid grid-cols-12 gap-x-6">
             <div
               id="avatar"
@@ -218,323 +227,436 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
               } col-span-12`}
             >
               <div className="box custom-box">
-              <div className="box-header justify-between">
-                <div className="box-title">
-                  Colouring
-                  <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    Set your Theme here.
-                  </p>
+                <div className="box-header justify-between">
+                  <div className="box-title">
+                    Colouring
+                    <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                      Set your Theme here.
+                    </p>
+                  </div>
+                  <div></div>
                 </div>
-                <div></div>
-              </div>
-              <div className="box-body">
-                <div className="grid grid-cols-1 gap-3">
-                  <div className="ti-offcanvas-body" id="switcher-body">
-                    <div
-                      id="switcher-1"
-                      role="tabpanel"
-                      aria-labelledby="switcher-item-1"
-                      className=""
-                    >
-                      <div className="">
-                        <p className="switcher-style-head">Theme Color Mode:</p>
-                        <div className="grid grid-cols-3 switcher-style">
-                          <div className="flex items-center">
-                            <input
-                              type="radio"
-                              name="theme-style"
-                              className="ti-form-radio"
-                              id="switcher-light-theme"
-                              checked={theme.mode === "light"}
-                              onChange={(e) => {
-                                if (e.target.checked == true) {
-                                  switcherdata.Light(updateAppState, appState);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    mode: "light",
-                                  }));
-                                }
-                              }}
-                              // onClick={() =>
-                              //   handleThemeChange("mode", "light")
-                              // }
-                            />
-                            <label
-                              htmlFor="switcher-light-theme"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                            >
-                              Light
-                            </label>
-                          </div>
-                          <div className="flex items-center">
-                            <input
-                              type="radio"
-                              name="theme-style"
-                              className="ti-form-radio"
-                              id="switcher-dark-theme"
-                              defaultChecked={theme.mode === "dark"}
-                              onChange={(e) => {
-                                if (e.target.checked == true) {
-                                  switcherdata.Dark(updateAppState, appState);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    mode: "dark",
-                                  }));
-                                }
-                                console.log(theme);
-                              }}
-                              // onClick={() => { handleThemeChange("mode", "dark")}}
-                            />
-                            <label
-                              htmlFor="switcher-dark-theme"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                            >
-                              Dark
-                            </label>
-                          </div>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="switcher-style-head">Directions:</p>
-                        <div className="grid grid-cols-3  switcher-style">
-                          <div className="flex items-center">
-                            <input
-                              type="radio"
-                              name="direction"
-                              className="ti-form-radio"
-                              id="switcher-ltr"
-                              checked={theme.direction != "rtl"}
-                              onChange={(e) => {}}
-                              onClick={(e) => {
-                                switcherdata.Ltr(updateAppState, appState);
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  direction: "ltr",
-                                }));
-                              }}
-                            />
-                            <label
-                              htmlFor="switcher-ltr"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                            >
-                              LTR
-                            </label>
-                          </div>
-                          <div className="flex items-center">
-                            <input
-                              type="radio"
-                              name="direction"
-                              className="ti-form-radio"
-                              id="switcher-rtl"
-                              checked={theme.direction == "rtl"}
-                              onChange={(e) => {}}
-                              onClick={(e) => {
-                                if (true == true) {
-                                  switcherdata.Rtl(updateAppState, appState);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    direction: "rtl",
-                                  }));
-                                }
-                                console.log(theme);
-                              }}
-                            />
-                            <label
-                              htmlFor="switcher-rtl"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                            >
-                              RTL
-                            </label>
+                <div className="box-body">
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="ti-offcanvas-body" id="switcher-body">
+                      <div
+                        id="switcher-1"
+                        role="tabpanel"
+                        aria-labelledby="switcher-item-1"
+                        className=""
+                      >
+                        <div className="">
+                          <p className="switcher-style-head">
+                            Theme Color Mode:
+                          </p>
+                          <div className="grid grid-cols-3 switcher-style">
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                name="theme-style"
+                                className="ti-form-radio"
+                                id="switcher-light-theme"
+                                checked={theme.mode === "light"}
+                                onChange={(e) => {
+                                  if (e.target.checked == true) {
+                                    switcherdata.Light(
+                                      updateAppState,
+                                      appState
+                                    );
+                                    setTheme((prevTheme) => ({
+                                      ...prevTheme,
+                                      mode: "light",
+                                    }));
+                                  }
+                                }}
+                                // onClick={() =>
+                                //   handleThemeChange("mode", "light")
+                                // }
+                              />
+                              <label
+                                htmlFor="switcher-light-theme"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                Light
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                name="theme-style"
+                                className="ti-form-radio"
+                                id="switcher-dark-theme"
+                                defaultChecked={theme.mode === "dark"}
+                                onChange={(e) => {
+                                  if (e.target.checked == true) {
+                                    switcherdata.Dark(updateAppState, appState);
+                                    setTheme((prevTheme) => ({
+                                      ...prevTheme,
+                                      mode: "dark",
+                                    }));
+                                  }
+                                  console.log(theme);
+                                }}
+                                // onClick={() => { handleThemeChange("mode", "dark")}}
+                              />
+                              <label
+                                htmlFor="switcher-dark-theme"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                Dark
+                              </label>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                 
-            <div className=" sidemenu-layout-styles">
-              <p className="switcher-style-head">Sidemenu Layout Syles:</p>
-              <div className="grid grid-cols-2 gap-2 switcher-style">
-                <div className="flex">
-                  <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-default-menu" 
-                  checked={theme.sidemenuLayoutStyles == "defaultmenu"}
-                     onChange={_e => { }}
-                    onClick={() => {switcherdata.Defaultmenu(updateAppState,appState)
+                        <div>
+                          <p className="switcher-style-head">Directions:</p>
+                          <div className="grid grid-cols-3  switcher-style">
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                name="direction"
+                                className="ti-form-radio"
+                                id="switcher-ltr"
+                                checked={theme.direction != "rtl"}
+                                onChange={(e) => {}}
+                                onClick={(e) => {
+                                  switcherdata.Ltr(updateAppState, appState);
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    direction: "ltr",
+                                  }));
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-ltr"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                LTR
+                              </label>
+                            </div>
+                            <div className="flex items-center">
+                              <input
+                                type="radio"
+                                name="direction"
+                                className="ti-form-radio"
+                                id="switcher-rtl"
+                                checked={theme.direction == "rtl"}
+                                onChange={(e) => {}}
+                                onClick={(e) => {
+                                  if (true == true) {
+                                    switcherdata.Rtl(updateAppState, appState);
+                                    setTheme((prevTheme) => ({
+                                      ...prevTheme,
+                                      direction: "rtl",
+                                    }));
+                                  }
+                                  console.log(theme);
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-rtl"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                RTL
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className=" sidemenu-layout-styles">
+                          <p className="switcher-style-head">
+                            Sidemenu Layout Syles:
+                          </p>
+                          <div className="grid grid-cols-2 gap-2 switcher-style">
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="sidemenu-layout-styles"
+                                className="ti-form-radio"
+                                id="switcher-default-menu"
+                                checked={
+                                  theme.sidemenuLayoutStyles == "defaultmenu"
+                                }
+                                onChange={(_e) => {}}
+                                onClick={() => {
+                                  switcherdata.Defaultmenu(
+                                    updateAppState,
+                                    appState
+                                  );
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     sidemenuLayoutStyles: "defaultmenu",
-                                  }));}} />
-                  <label htmlFor="switcher-default-menu"
-                    className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Default
-                    Menu</label>
-                </div>
-                <div className="flex">
-                  <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-closed-menu" checked={theme.sidemenuLayoutStyles == "closedmenu"} onChange={_e => { }}
-                    onClick={() => {switcherdata.Closedmenu(updateAppState,appState)
+                                  }));
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-default-menu"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold "
+                              >
+                                Default Menu
+                              </label>
+                            </div>
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="sidemenu-layout-styles"
+                                className="ti-form-radio"
+                                id="switcher-closed-menu"
+                                checked={
+                                  theme.sidemenuLayoutStyles == "closedmenu"
+                                }
+                                onChange={(_e) => {}}
+                                onClick={() => {
+                                  switcherdata.Closedmenu(
+                                    updateAppState,
+                                    appState
+                                  );
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     sidemenuLayoutStyles: "closedmenu",
-                                  }));}} />
-                  <label htmlFor="switcher-closed-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">
-                    Closed
-                    Menu</label>
-                </div>
-                <div className="flex">
-                  <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-icontext-menu" checked={theme.sidemenuLayoutStyles == "iconTextfn"} onChange={_e => { }}
-                    onClick={() => {switcherdata.iconTextfn(updateAppState,appState)
+                                  }));
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-closed-menu"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold "
+                              >
+                                Closed Menu
+                              </label>
+                            </div>
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="sidemenu-layout-styles"
+                                className="ti-form-radio"
+                                id="switcher-icontext-menu"
+                                checked={
+                                  theme.sidemenuLayoutStyles == "iconTextfn"
+                                }
+                                onChange={(_e) => {}}
+                                onClick={() => {
+                                  switcherdata.iconTextfn(
+                                    updateAppState,
+                                    appState
+                                  );
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     sidemenuLayoutStyles: "iconTextfn",
-                                  }));}} />
-                  <label htmlFor="switcher-icontext-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Icon
-                    Text</label>
-                </div>
-                <div className="flex">
-                  <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-icon-overlay" checked={theme.sidemenuLayoutStyles == "iconOverayFn"}
-                    onClick={() => {switcherdata.iconOverayFn(updateAppState,appState)
+                                  }));
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-icontext-menu"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold "
+                              >
+                                Icon Text
+                              </label>
+                            </div>
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="sidemenu-layout-styles"
+                                className="ti-form-radio"
+                                id="switcher-icon-overlay"
+                                checked={
+                                  theme.sidemenuLayoutStyles == "iconOverayFn"
+                                }
+                                onClick={() => {
+                                  switcherdata.iconOverayFn(
+                                    updateAppState,
+                                    appState
+                                  );
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     sidemenuLayoutStyles: "iconOverayFn",
-                                  }));}} />
-                  <label htmlFor="switcher-icon-overlay" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Icon
-                    Overlay</label>
-                </div>
-                <div className="flex">
-                  <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-detached" checked={theme.sidemenuLayoutStyles == "detachedFn"} onChange={_e => { }}
-                    onClick={() => {switcherdata.DetachedFn(updateAppState,appState)
+                                  }));
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-icon-overlay"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold "
+                              >
+                                Icon Overlay
+                              </label>
+                            </div>
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="sidemenu-layout-styles"
+                                className="ti-form-radio"
+                                id="switcher-detached"
+                                checked={
+                                  theme.sidemenuLayoutStyles == "detachedFn"
+                                }
+                                onChange={(_e) => {}}
+                                onClick={() => {
+                                  switcherdata.DetachedFn(
+                                    updateAppState,
+                                    appState
+                                  );
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     sidemenuLayoutStyles: "detachedFn",
-                                  }));}} />
-                  <label htmlFor="switcher-detached"
-                    className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold ">Detached</label>
-                </div>
-                <div className="flex">
-                  <input type="radio" name="sidemenu-layout-styles" className="ti-form-radio" id="switcher-double-menu" checked={theme.sidemenuLayoutStyles == "doubletFn"} onChange={_e => { }}
-                    onClick={() => {switcherdata.DoubletFn(updateAppState,appState)
+                                  }));
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-detached"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold "
+                              >
+                                Detached
+                              </label>
+                            </div>
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="sidemenu-layout-styles"
+                                className="ti-form-radio"
+                                id="switcher-double-menu"
+                                checked={
+                                  theme.sidemenuLayoutStyles == "doubletFn"
+                                }
+                                onChange={(_e) => {}}
+                                onClick={() => {
+                                  switcherdata.DoubletFn(
+                                    updateAppState,
+                                    appState
+                                  );
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     sidemenuLayoutStyles: "doubletFn",
-                                  }));}} />
-                  <label htmlFor="switcher-double-menu" className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold">Double
-                    Menu</label>
-                </div>
-              </div>
-              <div className="px-4 text-secondary text-xs"><b className="me-2">Note:</b>Navigation menu styles won't work
-                here.</div>
-            </div>
-                      <div>
-                        <p className="switcher-style-head">Page Styles:</p>
-                        <div className="grid grid-cols-3  switcher-style">
-                          <div className="flex">
-                            <input
-                              type="radio"
-                              name="data-page-styles"
-                              className="ti-form-radio"
-                              id="switcher-regular"
-                              checked={
-                                theme.pageStyle == "regular"
-                              }
-                              onChange={(_e) => {}}
-                              onClick={(e) => {
-                                if (true == true) {
-                                  switcherdata.Regular(updateAppState, appState);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    pageStyle: "regular",
                                   }));
-                                }
-                                console.log(theme);
-                              }}
-                            />
-                            <label
-                              htmlFor="switcher-regular"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                            >
-                              Regular
-                            </label>
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-double-menu"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                Double Menu
+                              </label>
+                            </div>
                           </div>
-                          <div className="flex">
-                            <input
-                              type="radio"
-                              name="data-page-styles"
-                              className="ti-form-radio"
-                              id="switcher-classic"
-                              checked={
-                                theme.pageStyle == "classic"
-                              }
-                              onChange={(_e) => {}}
-                              onClick={(e) => {
-                                if (true == true) {
-                                  switcherdata.Classic(updateAppState, appState);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    pageStyle: "classic",
-                                  }));
-                                }
-                                console.log(theme);
-                              }}
-                            />
-                            <label
-                              htmlFor="switcher-classic"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                            >
-                              Classic
-                            </label>
+                          <div className="px-4 text-secondary text-xs">
+                            <b className="me-2">Note:</b>Navigation menu styles
+                            won't work here.
                           </div>
-                          <div className="flex">
-                            <input
-                              type="radio"
-                              name="data-page-styles"
-                              className="ti-form-radio"
-                              id="switcher-modern"
-                              checked={
-                                theme.pageStyle == "modern"
-                              }
-                              onChange={(_e) => {}}
-                              onClick={(e) => {
-                                if (true == true) {
-                                  switcherdata.Modern(updateAppState, appState);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    pageStyle: "modern",
-                                  }));
-                                }
-                                console.log(theme);
-                              }}
-                            />
-                            <label
-                              htmlFor="switcher-modern"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                            >
-                              {" "}
-                              Modern
-                            </label>
+                        </div>
+                        <div>
+                          <p className="switcher-style-head">Page Styles:</p>
+                          <div className="grid grid-cols-3  switcher-style">
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="data-page-styles"
+                                className="ti-form-radio"
+                                id="switcher-regular"
+                                checked={theme.pageStyle == "regular"}
+                                onChange={(_e) => {}}
+                                onClick={(e) => {
+                                  if (true == true) {
+                                    switcherdata.Regular(
+                                      updateAppState,
+                                      appState
+                                    );
+                                    setTheme((prevTheme) => ({
+                                      ...prevTheme,
+                                      pageStyle: "regular",
+                                    }));
+                                  }
+                                  console.log(theme);
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-regular"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                Regular
+                              </label>
+                            </div>
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="data-page-styles"
+                                className="ti-form-radio"
+                                id="switcher-classic"
+                                checked={theme.pageStyle == "classic"}
+                                onChange={(_e) => {}}
+                                onClick={(e) => {
+                                  if (true == true) {
+                                    switcherdata.Classic(
+                                      updateAppState,
+                                      appState
+                                    );
+                                    setTheme((prevTheme) => ({
+                                      ...prevTheme,
+                                      pageStyle: "classic",
+                                    }));
+                                  }
+                                  console.log(theme);
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-classic"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                Classic
+                              </label>
+                            </div>
+                            <div className="flex">
+                              <input
+                                type="radio"
+                                name="data-page-styles"
+                                className="ti-form-radio"
+                                id="switcher-modern"
+                                checked={theme.pageStyle == "modern"}
+                                onChange={(_e) => {}}
+                                onClick={(e) => {
+                                  if (true == true) {
+                                    switcherdata.Modern(
+                                      updateAppState,
+                                      appState
+                                    );
+                                    setTheme((prevTheme) => ({
+                                      ...prevTheme,
+                                      pageStyle: "modern",
+                                    }));
+                                  }
+                                  console.log(theme);
+                                }}
+                              />
+                              <label
+                                htmlFor="switcher-modern"
+                                className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                              >
+                                {" "}
+                                Modern
+                              </label>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    
                     </div>
-                  </div>
-                  <div className="w-full p-2 flex justify-end">
-                    <ERPButton
-                      title="Reset"
-                      onClick={resetThemeChange}
-                      type="reset"
-                    ></ERPButton>
-                    <ERPButton
-                      title="Save Changes"
-                      onClick={saveThemeChange}
-                      variant="primary"
-                      loading={updatedUserTheme.loading}
-                      disabled={updatedUserTheme.loading}
-                    ></ERPButton>
+                    <div className="w-full p-2 flex justify-end">
+                      <ERPButton
+                        title="Reset"
+                        onClick={resetThemeChange}
+                        type="reset"
+                      ></ERPButton>
+                      <ERPButton
+                        title="Save Changes"
+                        onClick={saveThemeChange}
+                        variant="primary"
+                        loading={updatedUserTheme.loading}
+                        disabled={updatedUserTheme.loading}
+                      ></ERPButton>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            </div>
           </div>
-         
         </div>
-        <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
+        <div className="xxl:col-span-6 xl:col-span-12  col-span-12 ">
           <div
             id="basic-information"
             className={`xxl:col-span-12 xl:col-span-12 ${
@@ -560,164 +682,284 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       aria-labelledby="switcher-item-1"
                       className=""
                     >
-                     
                       <div className="theme-colors">
-              <p className="switcher-style-head">Menu Colors:</p>
-              <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-white" type="radio" name="menu-colors"
-                    checked={theme.menuStyle == "light"} onChange={_e => { }}
-                    id="switcher-menu-light" onClick={() => {switcherdata.lightMenu(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    menuStyle: "light",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Light Menu
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-dark" type="radio" name="menu-colors"
-                    checked={theme.menuStyle == "dark"} onChange={_e => { }}
-                    id="switcher-menu-dark" onClick={() => {switcherdata.darkMenu(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    menuStyle: "dark",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Dark Menu
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-primary" type="radio" name="menu-colors"
-                    checked={theme.menuStyle == "color"} onChange={_e => { }}
-                    id="switcher-menu-primary" onClick={() => {switcherdata.colorMenu(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    menuStyle: "color",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Color Menu
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-gradient" type="radio" name="menu-colors"
-                    checked={theme.menuStyle == "gradient"} onChange={_e => { }}
-                    id="switcher-menu-gradient" onClick={() => {switcherdata.gradientMenu(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    menuStyle: "gradient",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Gradient Menu
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-transparent" type="radio" name="menu-colors"
-                    checked={theme.menuStyle == "transparent"} onChange={_e => { }}
-                    id="switcher-menu-transparent" onClick={() => {switcherdata.transparentMenu(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    menuStyle: "transparent",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Transparent Menu
-                  </span>
-                </div>
-              </div>
-              <div className="px-4 text-[#8c9097] dark:text-white/50 text-[.6875rem]"><b className="me-2">Note:</b>If you want to change color Menu
-                dynamically
-                change from below Theme Primary color picker.</div>
-            </div>
-            <div className="theme-colors">
-              <p className="switcher-style-head">Header Colors:</p>
-              <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-white !border" type="radio" name="header-colors"
-                    checked={theme.headerStyle == "light"} onChange={_e => { }}
-                    id="switcher-header-light" onClick={() => {switcherdata.lightHeader(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    headerStyle: "light",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Light Header
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-dark" type="radio" name="header-colors"
-                    checked={theme.headerStyle == "dark"} onChange={_e => { }}
-                    id="switcher-header-dark" onClick={() => {switcherdata.darkHeader(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    headerStyle: "dark",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Dark Header
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-primary" type="radio" name="header-colors"
-                    checked={theme.headerStyle == "color"} onChange={_e => { }}
-                    id="switcher-header-primary" onClick={() => {switcherdata.colorHeader(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    headerStyle: "color",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Color Header
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-gradient" type="radio" name="header-colors"
-                    checked={theme.headerStyle == "gradient"} onChange={_e => { }}
-                    id="switcher-header-gradient" onClick={() => {switcherdata.gradientHeader(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    headerStyle: "gradient",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Gradient Header
-                  </span>
-                </div>
-                <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
-                  <input className="hs-tooltip-toggle ti-form-radio color-input color-transparent" type="radio"
-                    checked={theme.headerStyle == "transparent"} onChange={_e => { }}
-                    name="header-colors" id="switcher-header-transparent" onClick={() => {switcherdata.transparentHeader(updateAppState,appState)
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    headerStyle: "transparent",
-                                  }));}} />
-                  <span
-                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
-                    role="tooltip">
-                    Transparent Header
-                  </span>
-                </div>
-              </div>
-              <div className="px-4 text-[#8c9097] dark:text-white/50 text-[.6875rem]"><b className="me-2">Note:</b>If you want to change color
-                Header dynamically
-                change from below Theme Primary color picker.</div>
-            </div>
-           
+                        <p className="switcher-style-head">Menu Colors:</p>
+                        <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-white"
+                              type="radio"
+                              name="menu-colors"
+                              checked={theme.menuStyle == "light"}
+                              onChange={(_e) => {}}
+                              id="switcher-menu-light"
+                              onClick={() => {
+                                switcherdata.lightMenu(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  menuStyle: "light",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Light Menu
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-dark"
+                              type="radio"
+                              name="menu-colors"
+                              checked={theme.menuStyle == "dark"}
+                              onChange={(_e) => {}}
+                              id="switcher-menu-dark"
+                              onClick={() => {
+                                switcherdata.darkMenu(updateAppState, appState);
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  menuStyle: "dark",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Dark Menu
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-primary"
+                              type="radio"
+                              name="menu-colors"
+                              checked={theme.menuStyle == "color"}
+                              onChange={(_e) => {}}
+                              id="switcher-menu-primary"
+                              onClick={() => {
+                                switcherdata.colorMenu(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  menuStyle: "color",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Color Menu
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-gradient"
+                              type="radio"
+                              name="menu-colors"
+                              checked={theme.menuStyle == "gradient"}
+                              onChange={(_e) => {}}
+                              id="switcher-menu-gradient"
+                              onClick={() => {
+                                switcherdata.gradientMenu(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  menuStyle: "gradient",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Gradient Menu
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-transparent"
+                              type="radio"
+                              name="menu-colors"
+                              checked={theme.menuStyle == "transparent"}
+                              onChange={(_e) => {}}
+                              id="switcher-menu-transparent"
+                              onClick={() => {
+                                switcherdata.transparentMenu(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  menuStyle: "transparent",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Transparent Menu
+                            </span>
+                          </div>
+                        </div>
+                        <div className="px-4 text-[#8c9097] dark:text-white/50 text-[.6875rem]">
+                          <b className="me-2">Note:</b>If you want to change
+                          color Menu dynamically change from below Theme Primary
+                          color picker.
+                        </div>
+                      </div>
+                      <div className="theme-colors">
+                        <p className="switcher-style-head">Header Colors:</p>
+                        <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-white !border"
+                              type="radio"
+                              name="header-colors"
+                              checked={theme.headerStyle == "light"}
+                              onChange={(_e) => {}}
+                              id="switcher-header-light"
+                              onClick={() => {
+                                switcherdata.lightHeader(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  headerStyle: "light",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Light Header
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-dark"
+                              type="radio"
+                              name="header-colors"
+                              checked={theme.headerStyle == "dark"}
+                              onChange={(_e) => {}}
+                              id="switcher-header-dark"
+                              onClick={() => {
+                                switcherdata.darkHeader(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  headerStyle: "dark",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Dark Header
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-primary"
+                              type="radio"
+                              name="header-colors"
+                              checked={theme.headerStyle == "color"}
+                              onChange={(_e) => {}}
+                              id="switcher-header-primary"
+                              onClick={() => {
+                                switcherdata.colorHeader(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  headerStyle: "color",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Color Header
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-gradient"
+                              type="radio"
+                              name="header-colors"
+                              checked={theme.headerStyle == "gradient"}
+                              onChange={(_e) => {}}
+                              id="switcher-header-gradient"
+                              onClick={() => {
+                                switcherdata.gradientHeader(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  headerStyle: "gradient",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Gradient Header
+                            </span>
+                          </div>
+                          <div className="hs-tooltip ti-main-tooltip ti-form-radio switch-select ">
+                            <input
+                              className="hs-tooltip-toggle ti-form-radio color-input color-transparent"
+                              type="radio"
+                              checked={theme.headerStyle == "transparent"}
+                              onChange={(_e) => {}}
+                              name="header-colors"
+                              id="switcher-header-transparent"
+                              onClick={() => {
+                                switcherdata.transparentHeader(
+                                  updateAppState,
+                                  appState
+                                );
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  headerStyle: "transparent",
+                                }));
+                              }}
+                            />
+                            <span
+                              className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                              role="tooltip"
+                            >
+                              Transparent Header
+                            </span>
+                          </div>
+                        </div>
+                        <div className="px-4 text-[#8c9097] dark:text-white/50 text-[.6875rem]">
+                          <b className="me-2">Note:</b>If you want to change
+                          color Header dynamically change from below Theme
+                          Primary color picker.
+                        </div>
+                      </div>
+
                       <div className="theme-colors">
                         <p className="switcher-style-head">Theme Primary:</p>
                         <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
@@ -869,132 +1111,390 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       <div className="theme-colors">
                         <p className="switcher-style-head">Scrollbar:</p>
                         <div className="flex switcher-style space-x-3 rtl:space-x-reverse">
-                        <div className="ti-form-radio switch-select">
-                            <input
-                              className="ti-form-radio color-input color-primary-1"
-                              type="radio"
-                              name="theme-primary"
-                              checked={theme.scrollbarColor == "58, 88, 146"}
-                              id="switcher-primary"
-                              onClick={() => {
-                              
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  scrollbarColor: "58, 88, 146",
-                                }));
-                              }}
-                            />
-                          </div>
-                          <div className="ti-form-radio switch-select">
-                            <input
-                              className="ti-form-radio color-input color-primary-2"
-                              type="radio"
-                              name="theme-primary"
-                              checked={theme.scrollbarColor == "92, 144 ,163"}
-                              onChange={(_e) => {}}
-                              id="switcher-primary1"
-                              onClick={() => {
-                              
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  scrollbarColor: "92, 144 ,163",
-                                }));
-                              }}
-                            />
-                          </div>
-                          <div className="ti-form-radio switch-select">
-                            <input
-                              className="ti-form-radio color-input color-primary-3"
-                              type="radio"
-                              name="theme-primary"
-                              checked={theme.scrollbarColor == "161, 90 ,223"}
-                              onChange={(_e) => {}}
-                              id="switcher-primary2"
-                              onClick={() => {
-                              
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  scrollbarColor: "161, 90 ,223",
-                                }));
-                              }}
-                            />
-                          </div>
-                          <div className="ti-form-radio switch-select">
-                            <input
-                              className="ti-form-radio color-input color-primary-4"
-                              type="radio"
-                              name="theme-primary"
-                              checked={theme.scrollbarColor == "78, 172, 76"}
-                              onChange={(_e) => {}}
-                              id="switcher-primary3"
-                              onClick={() => {
-                               
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  scrollbarColor: "78, 172, 76",
-                                }));
-                              }}
-                            />
-                          </div>
-                          <div className="ti-form-radio switch-select">
-                            <input
-                              className="ti-form-radio color-input color-primary-5"
-                              type="radio"
-                              name="theme-primary"
-                              checked={theme.scrollbarColor == "223, 90, 90"}
-                              onChange={(_e) => {}}
-                              id="switcher-primary4"
-                              onClick={() => {
-                                
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  scrollbarColor: "223, 90, 90",
-                                }));
-                              }}
-                            />
-                          </div>
                           <div className="ti-form-radio switch-select ps-0 mt-1 ">
                             <div
                               className="theme-container"
                               style={{
-                                backgroundColor: `${theme.scrollbarColor}`,
+                                backgroundColor: `rgb(${theme.scrollbarColor})`,
                               }}
                             ></div>
-                            <div className="h-8 w-8 overflow-hidden rounded-full border border-solid border-inputborder -top-[4px]  after:text-white/70 after:text-[1.25rem]" style={{
-                                backgroundColor: `${theme.scrollbarColor}`,
-                              }}>
+
+                            <div
+                              className="h-8 w-8 overflow-hidden rounded-full border border-solid border-inputborder -top-[4px]  after:text-white/70 after:text-[1.25rem]"
+                              style={{
+                                backgroundColor: `rgb(${theme.scrollbarColor})`,
+                              }}
+                            >
                               <div className="pickr">
                                 <button
                                   className="pcr-button"
                                   onClick={(ele: any) => {
-                                    if (ele.target.querySelector("input")) {
-                                      ele.target.querySelector("input").click();
-                                    }
+                                    const input =
+                                      ele.target.querySelector("input");
+                                    if (input) input.click();
                                   }}
                                 >
-                                  <div className="Themeprimarycolor  pickr-container-primary">
+                                  <div
+                                    className="Themeprimarycolor pickr-container-primary "
+                                    key={theme.scrollbarColor}
+                                    style={{
+                                      backgroundColor: `rgb(${theme.scrollbarColor})`,
+                                    }}
+                                  >
                                     <ColorPicker
                                       onChange={(e: any) => {
                                         const rgb = hexToRgb(e.target.value);
 
-                                        if (rgb !== null) {
+                                        if (rgb) {
                                           const { r, g, b } = rgb;
                                           setTheme((prevTheme) => ({
                                             ...prevTheme,
-                                            scrollbarColor: `${r},  ${g},  ${b}`,
+                                            scrollbarColor: `${r},${g},${b}`,
                                           }));
-                                         
                                         }
                                       }}
-                                      value={"rgb(230, 234 ,235)"}
+                                      value={"#FFFFFF"}
                                     />
                                   </div>
                                 </button>
                               </div>
                             </div>
+                            {/* <span
+                    className="hs-tooltip-content ti-main-tooltip-content !py-1 !px-2 !bg-black text-xs font-medium !text-white shadow-sm dark:!bg-black"
+                    role="tooltip">
+                    Scrollbar 
+                  </span> */}
                           </div>
                         </div>
                       </div>
+                      <div className="">
+                        <p className="switcher-style-head">Scrollbar Width:</p>
+                        <div className="grid grid-cols-3  switcher-style">
+                          <div className="flex items-center">
+                            {theme.scrollbarWidth}
+                            <input
+                              type="radio"
+                              name="data-page-scrollbar"
+                              className="ti-form-radio"
+                              id="switcher-thin"
+                              checked={theme.scrollbarWidth === "lg"}
+                              onChange={(_e) => {}}
+                              onClick={(e) => {
+                                if (true == true) {
+                                  switcherdata.Thick(
+                                    updateAppState,
+                                    appState
+                                  );
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    scrollbarWidth: "lg",
+                                  }));
+                                }
+                                console.log(theme);
+                              }}
+                            />
+                            <label
+                              htmlFor="scrollbar-lg"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              Thick
+                            </label>
+                          </div>
+                          <div className="flex item-center">
+                          <input
+                              type="radio"
+                              name="data-page-scrollbar"
+                              className="ti-form-radio"
+                              id="switcher-medium"
+                              checked={theme.scrollbarWidth == "md"}
+                              onChange={(_e) => {}}
+                              onClick={(e) => {
+                                if (true == true) {
+                                  switcherdata.Medium(
+                                    updateAppState,
+                                    appState
+                                  );
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    scrollbarWidth: "md",
+                                  }));
+                                }
+                                console.log(theme);
+                              }}
+                            />
+                            <label
+                              htmlFor="scrollbar-md"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              Medium
+                            </label>
+                          </div>
+                          <div className="flex item-center">
+                          <input
+                              type="radio"
+                              name="data-page-scrollbar"
+                              className="ti-form-radio"
+                              id="switcher-thin"
+                              checked={theme.scrollbarWidth == "sm"}
+                              onChange={(_e) => {}}
+                              onClick={(e) => {
+                                if (true == true) {
+                                  switcherdata.Thin(
+                                    updateAppState,
+                                    appState
+                                  );
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    scrollbarWidth: "sm",
+                                  }));
+                                }
+                                console.log(theme);
+                              }}
+                            />
+                            <label
+                              htmlFor="scrollbar-sm"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              Thin
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="">
+                    <p className="switcher-style-head">Input Box Style:</p>
+                    <div className="grid  grid-cols-2 sm:grid-cols-4 switcher-style">
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-normal"
+                          checked={theme.inputBox?.inputStyle === "normal"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "normal",
+                                },
+                              }));
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="input-normal"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Normal
+                        </label>
+                      </div>
+                      <div className="flex item-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-standard"
+                          checked={theme.inputBox?.inputStyle === "standard"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "standard",
+                                },
+                               
+                              }));
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="input-standard"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Standard
+                        </label>
+                      </div>
+                      <div className="flex item-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-outline"
+                          checked={theme.inputBox?.inputStyle === "outline"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "outline",
+                                },
+                          
+                              }));
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="input-outline"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Outline
+                        </label>
+                      </div>
+                      <div className="flex item-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-fill"
+                          checked={theme.inputBox?.inputStyle === "fill"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "fill",
+                                },
+                              }));
+                            }
+                          }}
+                          
+                        />
+                        <label
+                          htmlFor="input-fill"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Fill
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="">
+                    <p className="switcher-style-head">Input Box Border:</p>
+                    <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style">
+                      <div className="flex items-center space-x-3">
+                        <div className="basis-2/3">
+                        <ERPSlider
+                        id ="borderRadius"
+                        label="Border Radius"
+                        className="bg-slate-300"
+                        value={theme.inputBox?.borderRadius}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              borderRadius: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        min={0}
+                        max={100}
+                      />
+                        </div>
+                        <div className="basis-1/3 translate-y-3">
+                        <ERPInput
+                        id="borderRadius"
+                        noLabel={true}
+                        type="number"
+                        value={theme.inputBox?.borderRadius}
+                        data={theme.inputBox}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              borderRadius: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <div className="basis-2/3 ">
+                        <ERPSlider
+                        id ="fontSize"
+                        label="Font Size"
+                        className="bg-slate-300"
+                        value={theme.inputBox?.fontSize}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              fontSize: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        min={0}
+                        max={100}
+                      />
+                        </div>
+                        <div className="basis-1/3 translate-y-3">
+                        <ERPInput
+                        id="fontSize"
+                        type="number"
+                        noLabel={true}
+                        value={theme.inputBox?.fontSize}
+                        data={theme.inputBox}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              fontSize: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        />
+                        </div>
+                      </div>
+                      <ERPInput
+                            id="borderColor"
+                            label="Border Color"
+                            type="color"
+                            value={theme.inputBox?.borderColor}
+                            data={theme.inputBox}
+                            onChange={(e) =>
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  borderColor:e.target.value,
+                                },
+                              }))
+                            }
+                      />
+                       <ERPInput
+                            id="borderFocus"
+                            label="Border On Focus"
+                            type="color"
+                            value={theme.inputBox?.borderFocus}
+                            data={theme.inputBox}
+                            onChange={(e) =>
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  borderFocus:e.target.value,
+                                },
+                              }))
+                            }
+                      />
+                    </div>
+                  </div>
                     </div>
                   </div>
                   <div className="w-full p-2 flex justify-end">
@@ -1015,9 +1515,276 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
               </div>
             </div>
           </div>
+
+          {/* <div
+            id="inputBox"
+            className={`xxl:col-span-12 xl:col-span-12 ${
+              path === "inputBox" ? "blink" : ""
+            } col-span-12 `}
+          >
+            <div className="box custom-box">
+              <div className="box-header justify-between">
+                <div className="box-title">
+                  Input Box
+                  <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
+                    Set Style here.
+                  </p>
+                </div>
+              </div>
+              <div className="box-body">
+                <div className="grid grid-cols-1 gap-3 ">
+                  <div className="">
+                    <p className="switcher-style-head">Input Box Style:</p>
+                    <div className="grid  grid-cols-2 sm:grid-cols-4 switcher-style">
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-normal"
+                          checked={theme.inputBox?.inputStyle === "normal"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "normal",
+                                },
+                              }));
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="input-normal"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Normal
+                        </label>
+                      </div>
+                      <div className="flex item-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-standard"
+                          checked={theme.inputBox?.inputStyle === "standard"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "standard",
+                                },
+                               
+                              }));
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="input-standard"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Standard
+                        </label>
+                      </div>
+                      <div className="flex item-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-outline"
+                          checked={theme.inputBox?.inputStyle === "outline"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "outline",
+                                },
+                          
+                              }));
+                            }
+                          }}
+                        />
+                        <label
+                          htmlFor="input-outline"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Outline
+                        </label>
+                      </div>
+                      <div className="flex item-center">
+                        <input
+                          type="radio"
+                          name="inputBox"
+                          className="ti-form-radio"
+                          id="input-fill"
+                          checked={theme.inputBox?.inputStyle === "fill"}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  inputStyle: "fill",
+                                },
+                              }));
+                            }
+                          }}
+                          
+                        />
+                        <label
+                          htmlFor="input-fill"
+                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                        >
+                          {" "}
+                          Fill
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="">
+                    <p className="switcher-style-head">Input Box Border:</p>
+                    <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style">
+                      <div className="flex items-center space-x-3">
+                        <div className="basis-2/3">
+                        <ERPSlider
+                        id ="borderRadius"
+                        label="Border Radius"
+                        className="bg-slate-300"
+                        value={theme.inputBox?.borderRadius}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              borderRadius: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        min={0}
+                        max={100}
+                      />
+                        </div>
+                        <div className="basis-1/3 translate-y-3">
+                        <ERPInput
+                        id="borderRadius"
+                        noLabel={true}
+                        type="number"
+                        value={theme.inputBox?.borderRadius}
+                        data={theme.inputBox}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              borderRadius: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center space-x-3">
+                        <div className="basis-2/3 ">
+                        <ERPSlider
+                        id ="fontSize"
+                        label="Font Size"
+                        className="bg-slate-300"
+                        value={theme.inputBox?.fontSize}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              fontSize: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        min={0}
+                        max={100}
+                      />
+                        </div>
+                        <div className="basis-1/3 translate-y-3">
+                        <ERPInput
+                        id="fontSize"
+                        type="number"
+                        noLabel={true}
+                        value={theme.inputBox?.fontSize}
+                        data={theme.inputBox}
+                        onChange={(e) =>
+                          setTheme((prevTheme) => ({
+                            ...prevTheme,
+                            inputBox: {
+                              ...prevTheme.inputBox,
+                              fontSize: parseInt(e.target.value, 10),
+                            },
+                          }))
+                        }
+                        />
+                        </div>
+                      </div>
+                      <ERPInput
+                            id="borderColor"
+                            label="Border Color"
+                            type="color"
+                            value={theme.inputBox?.borderColor}
+                            data={theme.inputBox}
+                            onChange={(e) =>
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  borderColor:e.target.value,
+                                },
+                              }))
+                            }
+                      />
+                       <ERPInput
+                            id="borderFocus"
+                            label="Border On Focus"
+                            type="color"
+                            value={theme.inputBox?.borderFocus}
+                            data={theme.inputBox}
+                            onChange={(e) =>
+                              setTheme((prevTheme) => ({
+                                ...prevTheme,
+                                inputBox: {
+                                  ...prevTheme.inputBox,
+                                  borderFocus:e.target.value,
+                                },
+                              }))
+                            }
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full p-2 flex justify-end items-center">
+                    <ERPButton
+                      title="Reset"
+                      // onClick={restLanguage}
+                      type="reset"
+                    ></ERPButton>
+                    <ERPButton
+                      title="Save Changes"
+                      // onClick={updateLanguage}
+                      variant="primary"
+                      // loading={userLanguage.loading}
+                      // disabled={userLanguage.loading}
+                    ></ERPButton>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> */}
         </div>
       </div>
-      <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
     </Fragment>
   );
 };

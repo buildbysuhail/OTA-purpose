@@ -66,8 +66,9 @@ export interface AppState {
   pdfTemplates: any;
   locale: Locale;
   tableState?: TableState;
-  scrollbarWidth: string;
+  scrollbarWidth:  "sm"|"md"|"lg";
   scrollbarColor: string;
+  inputBox: inputBox;
 }
 export const initialThemeData: Theme = {
   direction: "ltr",  // default to left-to-right
@@ -81,8 +82,15 @@ export const initialThemeData: Theme = {
   menuPosition: null, // initialize as null
   headerPosition: 'fixed',  // default position for header
   colorPrimaryRgb: '255,255,255',  // default white color in RGB format
-  scrollbarWidth: "thick",
-  scrollbarColor: 'rgb(230 234 235)'
+  scrollbarWidth: 'lg',
+  scrollbarColor: '128, 128, 128',
+  inputBox: {
+    inputStyle: "normal",       
+    fontSize: 0,           
+    borderColor: '128, 128, 128', 
+    borderFocus: '128, 128, 128',          
+    borderRadius: 0,      
+  }
 };
 export interface Theme {
   direction: "ltr" | "rtl";
@@ -96,8 +104,17 @@ export interface Theme {
   menuPosition: string | null;
   headerPosition: string;
   colorPrimaryRgb: string;
-  scrollbarWidth: string;
+  scrollbarWidth:  string | null;
   scrollbarColor: string;
+  inputBox:inputBox;
+
+}
+export interface inputBox{
+  inputStyle:  "normal"|"standard"|"outline"|"fill";
+  fontSize:number;
+  borderColor: string;
+  borderFocus: string;
+  borderRadius:number;
 }
 export interface AppInitialState {
   syncing: boolean;

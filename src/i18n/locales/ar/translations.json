@@ -55,6 +55,7 @@
   "party_category": "فئة الأطراف",
   "supp_cust_master": "سيد المورد/العميل",
   "cash_bank_master": "سيد النقد/البنك",
+  "counter_settings": "إعدادات العداد ",
   "privilege_cards": "بطاقات الامتياز",
   "cust_supp_ledger": "دفتر الأستاذ للعملاء/الموردين",
   "user-roles": "المستخدمون والأدوار",
@@ -1314,5 +1315,6 @@
   "bank_name": "اسم البنك",
 
   "company_profile_others": "ملف الشركة",
-  "company_profile_india": "ملف الشركة (الهند)"
+  "company_profile_india": "ملف الشركة (الهند)",
+  "country_sub_division": "تقسيم فرعي للبلد"
 }

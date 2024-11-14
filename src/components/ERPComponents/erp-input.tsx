@@ -5,7 +5,7 @@ import { setNestedValue } from "../../utilities/Utils"
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation }: { validation?: string }) => (
-  <div className="text-red-500 text-xs mt-1">{validation}</div>
+  <div className="text-red text-xs mt-1">{validation}</div>
 )
 
 type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'color'>

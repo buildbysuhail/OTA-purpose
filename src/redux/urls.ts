@@ -159,6 +159,8 @@ const Urls = {
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
   //setting/system
+  
+  counter_settings: "/Core/CounterSettings/",
   Counter: "/Core/Counter/",
   Voucher: "/Core/Vouchers/",
   FinancialYear: "/Core/FinancialYear/",

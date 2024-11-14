@@ -25,11 +25,12 @@ export const AccountLedgerManage = () => {
     handleClear,
     handleClose,
     getFieldProps,
-    isLoading
+    isLoading,
+    formState
   } = useFormManager<AccountLedgerData>({
     url: Urls.account_ledger,
     onSuccess: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
-    onClose:useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, })), [dispatch]),
     key: rootState.PopupData.accountLedger.key,
     useApiClient: true,
     initialData: initialAccountLedger
@@ -98,35 +99,39 @@ export const AccountLedgerManage = () => {
           label={t("group_under")}
         />
         {/* <div className="w-full max-w-md mx-auto"> */}
-      <div className="flex  space-x-3">
-        <div className="basis-2/3">
-          <ERPInput
-            {...getFieldProps('opBalance')}
-            label={t("opening_balance")}
-            type="number"
-            onChangeData={(data: any) => handleFieldChange('opBalance', data.opBalance)}
-          />
+        <div className="flex  space-x-3">
+          {formState?.data?.ledgerID == undefined || formState?.data?.ledgerID <= 0 &&
+            <>
+              <div className="basis-2/3">
+                <ERPInput
+                  {...getFieldProps('opBalance')}
+                  label={t("opening_balance")}
+                  type="number"
+                  onChangeData={(data: any) => handleFieldChange('opBalance', data.opBalance)}
+                />
+              </div>
+              <div className="basis-1/3 translate-y-[17px]">
+                <ERPDataCombobox
+
+                  {...getFieldProps("drCr")}
+                  field={{
+                    id: "drCr",
+                    valueKey: "value",
+                    labelKey: "label",
+                  }}
+                  onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
+                  label=" "
+                  enableClearOption={false}
+                  options={[
+                    { value: 'Dr', label: t('Dr') },
+                    { value: 'Cr', label: t('Cr') },
+                  ]}
+                />
+              </div>
+            </>
+          }
+          {/* </div> */}
         </div>
-        <div className="basis-1/3 translate-y-[17px]">
-          <ERPDataCombobox
-          
-            {...getFieldProps("drCr")}
-            field={{
-              id: "drCr",
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
-            label=" "
-            enableClearOption={false}
-            options={[
-              { value: 'Dr', label: t('Dr') },
-              { value: 'Cr', label: t('Cr') },
-            ]}
-          />
-        </div>
-      {/* </div> */}
-    </div>
       </div>
       <div className="flex items-center gap-3 mt-2">
 
@@ -172,13 +177,13 @@ export const AccountLedgerManage = () => {
           onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
         />
       </div>
-        <ERPFormButtons
-          onClear={handleClear}
-          isEdit={isEdit}
-          isLoading={isLoading}
-          onCancel={handleClose}
-          onSubmit={handleSubmit}
-        />
-    </div>
+      <ERPFormButtons
+        onClear={handleClear}
+        isEdit={isEdit}
+        isLoading={isLoading}
+        onCancel={handleClose}
+        onSubmit={handleSubmit}
+      />
+    </div >
   );
 };

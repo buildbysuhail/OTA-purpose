@@ -25,7 +25,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
 
-//  =================this for groupOrder ERPModels ============
+  //  =================this for groupOrder ERPModels ============
   const [formData, setFormData] = useState<GroupOrder[]>([]);
 
   const onSubmit = async () => {
@@ -36,7 +36,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       console.error('Error saving settings:', error);
     }
   };
-// =============================================================
+  // =============================================================
   const {
     isEdit,
     handleSubmit,
@@ -55,7 +55,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         ),
       [dispatch]
     ),
-    onClose:useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, })), [dispatch]),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
     initialData: initialAccountGroup,
@@ -75,6 +75,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("accGroupName", data.accGroupName);
           }}
+          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
         <ERPInput
           {...getFieldProps("arabicName")}
@@ -93,6 +94,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("shortName", data.shortName)
           }
+          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
         <ERPDataCombobox
           {...getFieldProps("parentGroupId")}
@@ -106,6 +108,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("parentGroupId", data.parentGroupID);
           }}
+          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
           label={t("group_under")}
         />
         <ERPInput
@@ -116,33 +119,41 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("remarks", data.remarks)
           }
+          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
-        <ERPInput
-          {...getFieldProps("reasonForModification")}
-          label={t("reason_for_edit")}
-          placeholder={t("reason_for_edit")}
-          required={true}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "reasonForModification",
-              data.reasonForModification
-            )
-          }
-        />
-        <ERPCheckbox
-          {...getFieldProps("isEditable")}
-          label={t("editable")}
-          onChangeData={(data: any) =>
-            handleFieldChange("isEditable", data.isEditable)
-          }
-        />
-        <ERPCheckbox
-          {...getFieldProps("isDeletable")}
-          label={t("deletable")}
-          onChangeData={(data: any) =>
-            handleFieldChange("isDeletable", data.isDeletable)
-          }
-        />
+        {formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 &&
+          <ERPInput
+            {...getFieldProps("reasonForModification")}
+            label={t("reason_for_edit")}
+            placeholder={t("reason_for_edit")}
+            required={true}
+            onChangeData={(data: any) =>
+              handleFieldChange(
+                "reasonForModification",
+                data.reasonForModification
+              )
+            }
+          />
+        }
+
+        {1 != 1 &&
+          <>
+            <ERPCheckbox
+              {...getFieldProps("isEditable")}
+              label={t("editable")}
+              onChangeData={(data: any) =>
+                handleFieldChange("isEditable", data.isEditable)
+              }
+            />
+            <ERPCheckbox
+              {...getFieldProps("isDeletable")}
+              label={t("deletable")}
+              onChangeData={(data: any) =>
+                handleFieldChange("isDeletable", data.isDeletable)
+              }
+            />
+          </>
+        }
         {/* Link that triggers the modal */}
         <a
           href="#"
@@ -157,6 +168,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       </div>
       <ERPFormButtons
         onClear={handleClear}
+        submitDisabled={!formState?.data?.isEditable}
         isEdit={isEdit}
         isLoading={isLoading}
         onCancel={handleClose}
@@ -170,7 +182,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         closeModal={() => {
           dispatch(toggleGroupOrder({ isOpen: false }));
         }}
-      
+
         width="!w-[80rem] !max-w-[60rem]"
         content={<AccountGroupOrderContent formData={formData} setFormData={setFormData} />}
         footer={<AccountGroupOrderFooter onSubmit={onSubmit} />}

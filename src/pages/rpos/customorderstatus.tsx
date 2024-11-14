@@ -1,131 +1,86 @@
-// import { t } from "i18next";
-// import {
-//   ArrowLeft,
-//   Mail,
-//   Phone,
-//   Plus,
-// } from "lucide-react";
-// import React from "react";
-// import { useNavigate } from "react-router-dom";
-// import { 
-//   Card, 
-//   CardContent,
-//   CardHeader,
-//   CardTitle,
-//   CardDescription ,
-//   Button
-// } from "@/components/ui/card";
+import React from "react";
+import { AlertCircle } from "lucide-react";
 
-// const CustomOrderStatus = () => {
-//   const navigate = useNavigate();
+const CustomOrderStatus = () => {
+  const statuses = [
+    { label: "Order Accepted", color: "bg-[#dc2626]" },
+    { label: "Food Is Ready", color: "bg-[#f97316]" },
+    { label: "Dispatched", color: "bg-[#3b82f6]" },
+    { label: "Delivered", color: "bg-[#16a34a]" },
+  ];
 
-//   const handleClick = () => {
-//     navigate(-1);
-//   };
+  return (
+    <div className="h-[100vh] mx-auto bg-[#ffffff] rounded-lg border shadow-sm">
+      {/* Header Section */}
+      <div className="p-6 border-b">
+        <div className="bg-[#eff6ff] border border-[#bfdbfe] rounded-lg p-6">
+          <div className="flex gap-4">
+            <AlertCircle className="w-6 h-6 text-[#3b82f6] flex-shrink-0 mt-1" />
+            <div>
+              <h2 className="text-xl font-semibold text-[#1e3a8a]">
+                Add customized order status
+              </h2>
+              <p className="text-[#374151] mt-2">
+                Tired of manually tracking orders in the reports? Streamline
+                your operations with customized order statuses! This feature
+                lets you add custom status buttons to live view and KDS order
+                cards to easily keep track of each order. Stop wasting time and
+                energy on manual updates and take advantage of this convenient
+                solution that allows you to keep your staff up-to-date with the
+                progress of their orders in real-time.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-//   const mainStatuses = [
-//     { id: 1, label: "Order Accepted", color: "bg-destructive" },
-//     { id: 2, label: "Food Is Ready", color: "bg-orange-500" },
-//     { id: 3, label: "Dispatched", color: "bg-blue-500" },
-//     { id: 4, label: "Delivered", color: "bg-green-500" },
-//   ];
+      {/* Content Section */}
+      <div className="p-6">
+        <div className="relative flex flex-col items-center">
+          {statuses.map((status, index) => (
+            <div
+              key={status.label}
+              className="relative flex flex-col items-center pb-16 last:pb-0 w-full"
+            >
+              {/* Status Button */}
+              <button
+                className={`${status.color} text-[#ffffff] py-2 px-8 rounded-full text-sm font-medium`}
+              >
+                {status.label}
+              </button>
 
-//   return (
-//     <div className="p-0">
-//       <header className="flex justify-between items-center bg-white p-4 shadow-md border-t border-b">
-//         <h2 className="text-lg font-bold">
-//           {t("custom_order_status_configuration")}
-//         </h2>
-//         <div className="flex items-center space-x-4 absolute right-4 rtl:left-4">
-//           <div className="flex items-center space-x-2">
-//             <Phone className="w-4 h-4 mr-2" />
-//             <span>{t("call_for_support")}</span>
-//             <div>
-//               <span className="font-bold">
-//                 {"+91 " +
-//                   "123456789"
-//                     .split("")
-//                     .reverse()
-//                     .join("")
-//                     .replace(/(\d{3})(?=\d)/, "$1 ")}
-//               </span>
-//             </div>
-//           </div>
-//           <div className="flex items-center space-x-2">
-//             <Mail className="w-4 h-4 mr-2" />
-//             <span>{t("send_a_mail")}</span>
-//             <span className="font-bold">support@polosys.com</span>
-//           </div>
-//           <button
-//             className="flex items-center space-x-1 p-2 border rounded-lg hover:bg-gray-50 transition-colors"
-//             onClick={handleClick}
-//           >
-//             <ArrowLeft className="w-5 h-5 mr-1" />
-//             <span className="text-black">{t("back")}</span>
-//           </button>
-//         </div>
-//       </header>
+              {/* Vertical line and add button section */}
+              {index < statuses.length - 1 && (
+                <div className="relative w-full h-24">
+                  {/* Vertical line */}
+                  <div className="absolute left-1/2 -translate-x-1/2 top-2 w-0.5 h-full bg-[#e5e7eb]" />
 
-//       <Card className="w-full max-w-3xl mx-auto mt-6">
-//         <CardHeader className="space-y-2">
-//           <div className="flex items-center gap-4">
-//             <div className="bg-blue-50 p-4 rounded-full">
-//               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
-//                 <Plus className="h-5 w-5 text-white" />
-//               </div>
-//             </div>
-//             <div>
-//               <CardTitle>Add customized order status</CardTitle>
-//               <CardDescription className="text-base mt-2">
-//                 Tired of manually tracking orders in the reports? Streamline
-//                 your operations with customized order statuses! This feature
-//                 lets you add custom status buttons to live view and KDS order
-//                 cards to easily keep track of each order.
-//               </CardDescription>
-//             </div>
-//           </div>
-//         </CardHeader>
-//         <CardContent className="pt-6">
-//           <div className="relative flex flex-col items-center">
-//             <div className="absolute top-0 bottom-0 w-0.5 bg-gray-100" />
+                  {/* Add button and text */}
+                  <div className="absolute top-8 left-1/2 -translate-x-1/2 flex flex-col items-center">
+                    <button className="w-10 h-10 rounded-full bg-[#f3f4f6] flex items-center justify-center text-[#9ca3af] hover:bg-[#e5e7eb] transition-colors mb-2">
+                      <span className="text-xl">+</span>
+                    </button>
+                    <span className="text-[#6b7280] text-sm whitespace-nowrap bg-[#ffffff] px-2">
+                      Add up to 3 new status buttons here
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
 
-//             {mainStatuses.map((status, index) => (
-//               <div
-//                 key={status.id}
-//                 className="relative z-10 flex flex-col items-center gap-8 mb-8 last:mb-0"
-//               >
-//                 <div
-//                   className={`${status.color} text-white px-6 py-2.5 rounded-full font-medium shadow-sm`}
-//                 >
-//                   {status.label}
-//                 </div>
+        <div className="flex justify-end gap-4 mt-8 border-t pt-6">
+          <button className="px-6 py-2 rounded bg-[#f3f4f6] text-[#374151] font-medium hover:bg-[#e5e7eb] transition-colors">
+            Cancel
+          </button>
+          <button className="px-6 py-2 rounded bg-[#dc2626] text-[#ffffff] font-medium hover:bg-[#b91c1c] transition-colors">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-//                 {index < mainStatuses.length - 1 && (
-//                   <div className="flex items-center gap-3 bg-white">
-//                     <Button
-//                       variant="outline"
-//                       size="icon"
-//                       className="rounded-full h-10 w-10 border-dashed"
-//                     >
-//                       <Plus className="h-4 w-4" />
-//                     </Button>
-//                     <span className="text-sm text-muted-foreground">
-//                       Add up to 3 new status buttons here
-//                     </span>
-//                   </div>
-//                 )}
-//               </div>
-//             ))}
-//           </div>
-
-//           <div className="flex justify-end gap-3 mt-8 pt-6 border-t">
-//             <Button variant="outline">Cancel</Button>
-//             <Button>Save</Button>
-//           </div>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   );
-// };
-
-// export default CustomOrderStatus;
+export default CustomOrderStatus;

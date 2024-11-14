@@ -84,7 +84,7 @@ const Operations = () => {
               { icon: Vault, label: "cash_top_up" },
               { icon: Package, label: "inventory" },
               { icon: Bell, label: "notification" },
-              { icon: Table, label: "table" },
+              { icon: Table, label: "table" , link: "/rpos/table-view"  },
               { icon: RefreshCw, label: "manual_sync" },
               {
                 icon: Keyboard,

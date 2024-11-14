@@ -211,7 +211,6 @@ const ApplicationSettingsAccounts = () => {
             <div className='grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
               <ERPDataCombobox
                 id="defaultCashAcc"
-                value={formState.defaultCashAcc}
                 data={formState}
                 label={t("default_cash_account")}
                 field={{
@@ -225,7 +224,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultSuspenseAcc"
-                value={formState.defaultSuspenseAcc}
                 data={formState}
                 label={t("default_suspense_account")}
                 field={{
@@ -239,7 +237,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="blockOnCreditLimit"
-                value={formState.blockOnCreditLimit}
                 data={formState}
                 label={t("credit_limit")}
                 field={{
@@ -259,7 +256,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultServiceAccount"
-                value={formState.defaultServiceAccount}
                 data={formState}
                 label={t("default_service_account")}
                 field={{
@@ -272,7 +268,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultBankAcc"
-                value={formState.defaultBankAcc}
                 data={formState}
                 label={t("default_bank_account")}
                 field={{
@@ -285,7 +280,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultCreditCardAcc"
-                value={formState.defaultCreditCardAcc}
                 data={formState}
                 label={t("default_credit_card_account")}
                 field={{
@@ -299,7 +293,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultCostCenterID"
-                value={formState.defaultCostCenterID}
                 data={formState}
                 label={t("default_cost_center")}
                 field={{
@@ -313,7 +306,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultCustomerLedgerID"
-                value={formState.defaultCustomerLedgerID}
                 data={formState}
                 label={t("default_customer")}
                 field={{
@@ -328,7 +320,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultOpeningStockValueAcc"
-                value={formState.defaultOpeningStockValueAcc}
                 data={formState}
                 label={t("default_opening_stock_ledger")}
                 field={{
@@ -344,7 +335,6 @@ const ApplicationSettingsAccounts = () => {
               {/* Second Column of Select Inputs */}
               <ERPDataCombobox
                 id="defaultLoanAcc"
-                value={formState.defaultLoanAcc}
                 data={formState}
                 label={t("default_loan_account")}
                 field={{
@@ -359,7 +349,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultIncentiveAcc1"
-                value={formState.defaultIncentiveAcc1}
                 data={formState}
                 label={t("default_incentive_account_1")}
                 field={{
@@ -374,7 +363,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultIncentiveAcc2"
-                value={formState.defaultIncentiveAcc2}
                 data={formState}
                 label={t("default_incentive_account_2")}
                 field={{
@@ -390,7 +378,6 @@ const ApplicationSettingsAccounts = () => {
               <ERPDataCombobox
                 id="defaultPDCReceivableAccount"
                 disabled={!formState?.allowPostPDC}
-                value={formState.defaultPDCReceivableAccount}
                 data={formState}
                 label={t("default_PDC_receivable_account")}
                 field={{
@@ -406,7 +393,6 @@ const ApplicationSettingsAccounts = () => {
               <ERPDataCombobox
                 id="defaultPDCPayableAccount"
                 disabled={!formState?.allowPostPDC}
-                value={formState.defaultPDCPayableAccount}
                 data={formState}
                 label={t("default_PDC_payable_account")}
                 field={{
@@ -421,7 +407,6 @@ const ApplicationSettingsAccounts = () => {
               />
               <ERPDataCombobox
                 id="defaultBankChargeAccount"
-                value={formState.defaultBankChargeAccount}
                 data={formState}
                 label={t("default_bank_charge_account")}
                 field={{
@@ -438,7 +423,6 @@ const ApplicationSettingsAccounts = () => {
                 <>
                   <ERPDataCombobox
                     id="defaultIndirectExpenseAccount"
-                    value={formState.defaultIndirectExpenseAccount}
                     field={{
                       id: "defaultIndirectExpenseAccount",
                       valueKey: "value",
@@ -491,7 +475,6 @@ const ApplicationSettingsAccounts = () => {
                   />
                   <ERPDataCombobox
                     id="defaultPurchaseAssetsAccount"
-                    value={formState.defaultPurchaseAssetsAccount}
                     field={{
                       id: "defaultPurchaseAssetsAccount",
                       valueKey: "value",

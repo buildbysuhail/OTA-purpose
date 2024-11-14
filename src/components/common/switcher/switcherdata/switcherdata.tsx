@@ -223,6 +223,33 @@ export const Modern = (actionfunction: any, appState: any) => {
     localStorage.removeItem("ynexregular");
     localStorage.removeItem("ynexclassic");
 };
+export const Thick = (actionfunction: any, appState: any) => {
+    actionfunction({
+        ...appState,
+        "dataScrollbarWidth": "lg",
+    });
+    localStorage.setItem("ynexmodern", "Thick");
+    localStorage.removeItem("ynexregular");
+    localStorage.removeItem("ynexclassic");
+};
+export const Medium = (actionfunction: any, appState: any) => {
+    actionfunction({
+        ...appState,
+        "dataScrollbarWidth": "md",
+    });
+    localStorage.setItem("ynexmodern", "Medium");
+    localStorage.removeItem("ynexregular");
+    localStorage.removeItem("ynexclassic");
+};
+export const Thin = (actionfunction: any, appState: any) => {
+    actionfunction({
+        ...appState,
+        "dataScrollbarWidth": "sm",
+    });
+    localStorage.setItem("ynexmodern", "Thin");
+    localStorage.removeItem("ynexregular");
+    localStorage.removeItem("ynexclassic");
+};
 
 export const Defaultmenu = (actionfunction: any, appState: any) => {
     actionfunction({
@@ -657,6 +684,7 @@ export function hexToRgb(hex: any) {
         b: parseInt(result[3], 16)
     } : null;
 }
+
 const Themeprimarycolor: React.FC<actionfunctionProps> = ({ actionfunction, appState }) => {
     
     const [state, updateState] = useState("#FFFFFF");

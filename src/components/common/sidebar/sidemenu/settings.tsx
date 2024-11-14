@@ -149,6 +149,7 @@ export const SettingsMenuItems = [
       { action: toggleAuthorizationSettingsPopup, type: 'popup', active: false, selected: false, title: 'authorization_settings' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/notification-settings`, type: 'link', active: false, selected: false, title: 'notification_settings' },
       { action: toggleHeaderFooterPopup, type: 'popup', active: false, selected: false, title: 'headers_&_footers' },
+      { path: `${import.meta.env.BASE_URL}settings/_/system/counter-settings`, type: 'link', active: false, selected: false, title: 'counter_settings' },
     ]
   },
   {

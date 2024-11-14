@@ -450,9 +450,9 @@ export default function ImprovedERPDataCombobox({
           htmlFor={id}
           className="block text-[12px] font-medium text-gray-700 mb-1"
         >
-          {activeIndex}: {initial?.value} : {filteredItems[activeIndex]?.value}: {filteredItems[activeIndex]?.label}
-          {/* {label || id?.replaceAll("_", " ")} 
-          {required && <span className="text-[#ef4444]"> *</span>} */}
+          {/* {activeIndex}: {initial?.value} : {filteredItems[activeIndex]?.value}: {filteredItems[activeIndex]?.label} */}
+          {label || id?.replaceAll("_", " ")} 
+          {required && <span className="text-[#ef4444]"> *</span>}
         </label>
       )}
       <Combobox

@@ -78,6 +78,7 @@ const AccTransactionMobile = lazy(() => import('../../../pages/accounts/transact
 const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sms-integration'));
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
 const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
+const Test = lazy(() => import('../../../pages/test'));
 
 // Inventory Masters
 const ProductGroup = lazy(() => import('../../../pages/inventory/masters/product-group/product-group'));
@@ -152,6 +153,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/sms" element={<SmsIntegration />} />
         <Route path="/integration/whatsapp" element={<WhatsappIntegration />} />
         <Route path="/integration/email" element={<EmailIntegration />} />
+        <Route path="/integration/test" element={<Test />} />
         {/* Integration End */}
 
         {/* Templates starts */}

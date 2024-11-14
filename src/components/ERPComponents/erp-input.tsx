@@ -133,7 +133,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
           regular: {
             height: "2rem",
             fontSize: "12px",
-            padding: "0.25rem 0.75rem"
+            // padding: "0.25rem 0.75rem"
           }
         }
       case "md":
@@ -162,7 +162,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
           regular: {
             height: "2.5rem",
             fontSize: "14px",
-            padding: "0.5rem 1rem"
+            // padding: "0.5rem 1rem"
           }
         }
       case "lg":
@@ -184,14 +184,15 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
               transform: variant === "filled"
                 ? "translate(8px, -14px) scale(0.88)"
                 : variant === "standard"
-                  ? "translate(0, 4px) scale(0.88)"
+                  ? "translate(1px, 4px) scale(0.88)"
                   : "translate(16px, -7px) scale(0.88)"
             }
           } as SxProps<Theme>,
           regular: {
             height: "3rem",
             fontSize: "16px",
-            padding: "0.75rem 1.25rem"
+            label: "10px",
+            // padding: "0.75rem 1.25rem"
           }
         }
       default:
@@ -258,7 +259,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
     )
   }
 
-  const { height, fontSize, padding } = sizeStyles.regular
+  const { height, fontSize } = sizeStyles.regular
+  // const { height, fontSize, padding } = sizeStyles.regular
 
   // Build border radius classes based on prefix/suffix presence
   const getBorderRadiusClasses = () => {
@@ -299,7 +301,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
             style={{
               height,
               fontSize,
-              padding
+              // padding
             }}
             className={`border border-gray-400 ${getBorderRadiusClasses()} block w-full ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}

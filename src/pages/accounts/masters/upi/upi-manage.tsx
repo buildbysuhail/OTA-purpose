@@ -107,7 +107,7 @@ export const UpiManage: React.FC = React.memo(() => {
           {...getFieldProps('remarks')}
           label={t("remarks")}
           placeholder={t("remarks")}
-          required={true}
+          // required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
         />
 

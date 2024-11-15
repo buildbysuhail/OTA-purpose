@@ -33,7 +33,7 @@ const RPosContent: FC<ContentProps> = () => {
       <Route path="/shortkeys" element={<ShortKeys />} />
       <Route path="/kots" element={<Kots />} />
       <Route path="/customers" element={<Customers />} />
-      <Route path="/customorderstatus" element={<CustomOrderStatus />} />
+      <Route path="/customorder-status" element={<CustomOrderStatus />} />
       </Routes>
     </Suspense>
   );

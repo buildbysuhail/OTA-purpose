@@ -35,6 +35,7 @@ export interface DevGridColumn {
     isLocked: false,
     caption: "Column Header",        // string: the text to display in the header
     width: 150,                         // number: column width in pixels
+    minWidth: 150,                         // number: column width in pixels
     alignment: 'left',                      // 'left' | 'center' | 'right': text alignment
     visible: true,                      // boolean: whether the column is visible
     readOnly: false,                    // boolean: whether the column is read-only
@@ -52,6 +53,7 @@ export interface DevGridColumn {
     isLocked: boolean;
     dataField: string;
     width?: number;
+    minWidth?: number;
     alignment: 'left' | 'center' | 'right';
     visible: boolean;
     readOnly: boolean;

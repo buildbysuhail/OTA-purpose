@@ -205,7 +205,7 @@ const onChooseTemplate = async () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 50,
       isLocked: true,
     },
     {
@@ -214,6 +214,7 @@ const onChooseTemplate = async () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      visible: false,
       width: 100,
     },
     {
@@ -232,7 +233,7 @@ const onChooseTemplate = async () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 250,
     },
     {
       dataField: "ledger",
@@ -241,7 +242,7 @@ const onChooseTemplate = async () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 250,
     },
     {
       dataField: "displayName",
@@ -250,7 +251,7 @@ const onChooseTemplate = async () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      minWidth: 250,
     },
     {
       dataField: "address",
@@ -259,7 +260,7 @@ const onChooseTemplate = async () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 100,
+      width: 200,
     },
     {
       dataField: "ifsc",

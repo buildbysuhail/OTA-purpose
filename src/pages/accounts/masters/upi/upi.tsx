@@ -9,6 +9,7 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { useTranslation } from "react-i18next";
 import { UpiManage } from "./upi-manage";
+import { Countries } from "../../../../redux/slices/user-session/reducer";
 const Upi = () => {
 
   const MemoizedUpiManage = useMemo(() => React.memo(UpiManage), []);
@@ -123,7 +124,7 @@ const Upi = () => {
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
-              url:Urls?.account_group,key:cellElement?.data?.id
+              url:Urls?.account_group,key:cellElement?.data?.paymentTypeID
             }}
           />
         )
@@ -139,7 +140,7 @@ const Upi = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("upi")}
+                  gridHeader={rootState.UserSession.countryId ==Countries.India ? t("upi") : t("qr_pay")}
                   dataUrl={Urls.upi}
                   gridId="grd_acc_group"
                   popupAction={toggleUpi}
@@ -154,7 +155,7 @@ const Upi = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.upi.isOpen || false}
-        title={t("upi")}                                                                                    
+        title={rootState.UserSession.countryId ==Countries.India ? t("upi") : t("qr_pay")}                                                                                    
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {

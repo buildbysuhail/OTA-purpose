@@ -1317,5 +1317,7 @@
   "company_profile_india":"Company Profile",
   "country_sub_division": "Country Sub Division",
   "address_2_city": "Address 2/City",
-  "address3_district": "Address 3/District"
+  "address3_district": "Address 3/District",
+  "qr_pay_name": "QR Pay Name",
+    "qr_pay": "QR Pay"
 }

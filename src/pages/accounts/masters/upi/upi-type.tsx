@@ -5,7 +5,7 @@ export const initialUpi = {
       paymentType: "",
       createdUserID: 0,
       ledgerID: 0,
-      remarks: "",
+      remark: "",
       paymentTypeID: 0
     },
     validations: {
@@ -14,7 +14,7 @@ export const initialUpi = {
       paymentType: "",
       createdUserID: "",
       ledgerID: "",
-      remarks: "",
+      remark: "",
       paymentTypeID: ""
     },
   };
@@ -25,6 +25,6 @@ export const initialUpi = {
     paymentType: string,
     createdUserID: number,
     ledgerID: number,
-    remarks: string,
+    remark: string,
     paymentTypeID: number
   }

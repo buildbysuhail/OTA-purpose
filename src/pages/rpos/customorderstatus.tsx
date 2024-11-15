@@ -50,9 +50,9 @@ const CustomOrderStatus = () => {
                 {status.label}
               </button> */}
               <ERPButton
-                variant="status"
-                status={{ label: status.label, color: status.color }}
-                rounded="full"
+                // variant="status"
+                // status={{ label: status.label, color: status.color }}
+                // rounded="full"
               />
               {/* // Status button usage */}
               {/* <ERPButton

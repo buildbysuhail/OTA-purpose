@@ -242,7 +242,7 @@ const ERPSettingsFormGSTTaxes = () => {
                   labelKey: "label",
                 }}
                 id="outputFormType"
-                value={formState?.outputFormType}
+                // value={formState?.outputFormType}
                 data={formState}
                 label={t("default_sales_form_type")}
                 options={[
@@ -263,7 +263,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="inputCSTAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputCSTAccount)}
-                  value={formState?.inputCSTAccount}
                   data={formState}
                   label={t("input_cst_account")}
                   field={{
@@ -279,7 +278,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="outputCSTAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputCSTAccount)}
-                  value={formState?.outputCSTAccount}
                   data={formState}
                   label={t("output_cst_account")}
                   field={{
@@ -295,7 +293,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="inputCessAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputCessAccount)}
-                  value={formState?.inputCessAccount}
                   field={{
                     id: "inputCessAccount",
                     // required: true,
@@ -311,7 +308,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="outputCessAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputCessAccount)}
-                  value={formState?.outputCessAccount}
                   data={formState}
                   label={t("output_cess_account")}
                   field={{
@@ -327,7 +323,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="inputAddCessAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputAddCessAccount)}
-                  value={formState?.inputAddCessAccount}
                   data={formState}
                   label={t("input_add_cess_account")}
                   field={{
@@ -343,7 +338,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="outputAddCessAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputAddCessAccount)}
-                  value={formState?.outputAddCessAccount}
                   data={formState}
                   label={t("output_add_cess_account")}
                   field={{
@@ -359,7 +353,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="expensesTaxAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.expensesTaxAccount)}
-                  value={formState?.expensesTaxAccount}
                   data={formState}
                   label={t("expenses_tax_account")}
                   field={{
@@ -375,7 +368,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 <ERPDataCombobox
                   id="incomeTaxAccount"
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.incomeTaxAccount)}
-                  value={formState?.incomeTaxAccount}
                   data={formState}
                   label={t("income_tax_account")}
                   field={{
@@ -401,7 +393,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 labelKey: "FormType",
               }}
               data={formState}
-              value={formState?.defaultFormTypeForPOS}
               onChangeData={(data: any) => handleFieldChange("defaultFormTypeForPOS", data.defaultFormTypeForPOS)}
               label={t("default_SI_form_type_for_POS")}
             />
@@ -416,14 +407,12 @@ const ERPSettingsFormGSTTaxes = () => {
                 labelKey: "LastVoucherPrefix",
               }}
               data={formState}
-              value={formState?.defaultPrefixForPOS}
               onChangeData={(data: any) => handleFieldChange("defaultPrefixForPOS", data.defaultPrefixForPOS)}
               label={t("default_SI_prefix_for_POS")}
             />
 
             <ERPDataCombobox
               id="defaultSRFormTypeForPOS"
-              value={formState?.defaultSRFormTypeForPOS}
               data={formState}
               label={t("default_SR_form_type_for_POS")}
               field={{
@@ -438,7 +427,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
             <ERPDataCombobox
               id="defaultSRPrefixForPOS"
-              value={formState?.defaultSRPrefixForPOS}
               data={formState}
               label={t("default_SR_prefix_for_POS")}
               field={{
@@ -458,7 +446,6 @@ const ERPSettingsFormGSTTaxes = () => {
               <div className='border p-4 rounded-lg grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'>
                 <ERPDataCombobox
                   id="inputSGSTAccount"
-                  value={formState?.inputSGSTAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputSGSTAccount)}
                   label={t("input_SGST_account")}
@@ -474,7 +461,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="outputSGSTAccount"
-                  value={formState?.outputSGSTAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputSGSTAccount)}
                   label={t("output_SGST_account")}
@@ -490,7 +476,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="inputCGSTAccount"
-                  value={formState?.inputCGSTAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputCGSTAccount)}
                   label={t("input_CGST_ccount")}
@@ -506,7 +491,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="outputCGSTAccount"
-                  value={formState?.outputCGSTAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputCGSTAccount)}
                   label={t("output_CGST_account")}
@@ -522,7 +506,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="inputIGSTAccount"
-                  value={formState?.inputIGSTAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputIGSTAccount)}
                   label={t("input_IGST_account")}
@@ -538,7 +521,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="outputIGSTAccount"
-                  value={formState?.outputIGSTAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputIGSTAccount)}
                   label={t("output_IGST_account")}
@@ -554,7 +536,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="outputTCSPaidAccount"
-                  value={formState?.outputTCSPaidAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputTCSPaidAccount)}
                   label={t("TCS_paid_account")}
@@ -570,7 +551,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="outputTCSPayableAccount"
-                  value={formState?.outputTCSPayableAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputTCSPayableAccount)}
                   label={t("TCS_payable_account")}
@@ -586,7 +566,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="inputCalamityCessAccount"
-                  value={formState?.inputCalamityCessAccount}
                   data={formState}
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.inputCalamityCessAccount)}
                   // disabled={true}
@@ -603,7 +582,6 @@ const ERPSettingsFormGSTTaxes = () => {
 
                 <ERPDataCombobox
                   id="outputSalesCalamityCessAccount"
-                  value={formState?.outputSalesCalamityCessAccount}
                   data={formState}
                   
                   disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(formState?.outputSalesCalamityCessAccount)}
@@ -697,7 +675,6 @@ const ERPSettingsFormGSTTaxes = () => {
                 }}
                 id="einvoiceProvider"
                 label={t("e-invoice_provider_type")}
-                value={formState?.einvoiceProvider}
                 data={formState}
                 onChangeData={(data) => {
 

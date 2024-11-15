@@ -219,7 +219,6 @@ const InventorySettingsForm = () => {
               >
                 <ERPDataCombobox
                   id="defaultSalesAcc"
-                  value={formState?.defaultSalesAcc}
                   data={formState}
                   field={{
                     id: "defaultSalesAcc",
@@ -237,7 +236,6 @@ const InventorySettingsForm = () => {
 
                 <ERPDataCombobox
                   id="defaultSalesReturnAcc"
-                  value={formState.defaultSalesReturnAcc}
                   data={formState}
                   field={{
                     id: "defaultSalesReturnAcc",
@@ -257,7 +255,6 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultPurchaseAcc"
-                  value={formState.defaultPurchaseAcc}
                   data={formState}
                   field={{
                     id: "defaultPurchaseAcc",
@@ -277,7 +274,6 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultPurchaseReturnAcc"
-                  value={formState.defaultPurchaseReturnAcc}
                   data={formState}
                   field={{
                     id: "defaultPurchaseReturnAcc",
@@ -297,7 +293,6 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultBillDiscGivenLdg"
-                  value={formState.defaultBillDiscGivenLdg}
                   data={formState}
                   field={{
                     id: "defaultBillDiscGivenLdg",
@@ -317,7 +312,6 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultBillDiscRecvdLdg"
-                  value={formState.defaultBillDiscRecvdLdg}
                   data={formState}
                   field={{
                     id: "defaultBillDiscRecvdLdg",
@@ -338,7 +332,6 @@ const InventorySettingsForm = () => {
 
                 <ERPDataCombobox
                   id="defaultCouponSalesAccount"
-                  value={formState.defaultCouponSalesAccount}
                   data={formState}
                   field={{
                     id: "defaultCouponSalesAccount",
@@ -359,7 +352,6 @@ const InventorySettingsForm = () => {
 
                 <ERPDataCombobox
                   id="defaultRoundOffAccount"
-                  value={formState.defaultRoundOffAccount}
                   data={formState}
                   field={{
                     id: "defaultRoundOffAccount",
@@ -379,7 +371,6 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultAdditionalAmountAccount"
-                  value={formState.defaultAdditionalAmountAccount}
                   data={formState}
                   field={{
                     id: "defaultAdditionalAmountAccount",
@@ -399,7 +390,6 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultBTOAccount"
-                  value={formState.defaultBTOAccount}
                   data={formState}
                   field={{
                     id: "defaultBTOAccount",
@@ -419,7 +409,6 @@ const InventorySettingsForm = () => {
                 />
                 <ERPDataCombobox
                   id="defaultBTIAccount"
-                  value={formState.defaultBTIAccount}
                   data={formState}
                   field={{
                     id: "defaultBTIAccount",
@@ -440,7 +429,6 @@ const InventorySettingsForm = () => {
                 <ERPDataCombobox
                   id="defaultSalesReturnPayableAcc"
                   disabled
-                  value={formState.defaultSalesReturnPayableAcc}
                   data={formState}
                   field={{
                     id: "defaultSalesReturnPayableAcc",
@@ -475,7 +463,6 @@ const InventorySettingsForm = () => {
                   />
                   <ERPDataCombobox
                     id="serviceWarrantyInvLedgerID"
-                    value={formState.serviceWarrantyInvLedgerID}
                     disabled={formState.serviceWarrantyInvAccounts !== true}
                     data={formState}
                     field={{
@@ -515,7 +502,6 @@ const InventorySettingsForm = () => {
                     disabled={
                       formState.serviceNonWarrantyInvAccounts !== true
                     }
-                    value={formState.serviceNONWarrantyInvLedgerID}
                     data={formState}
                     field={{
                       id: "serviceNONWarrantyInvLedgerID",
@@ -543,7 +529,6 @@ const InventorySettingsForm = () => {
             >
               <ERPDataCombobox
                 id="defaultBrand"
-                value={formState.defaultBrand}
                 data={formState}
                 field={{
                   id: "defaultBrand",
@@ -560,7 +545,6 @@ const InventorySettingsForm = () => {
 
               <ERPDataCombobox
                 id="showNegStockWarning"
-                value={formState.showNegStockWarning}
                 field={{
                   id: "showNegStockWarning",
                   valueKey: "value",
@@ -595,7 +579,6 @@ const InventorySettingsForm = () => {
               <ERPDataCombobox
                 id="defaultWareHouse"
                 disabled={formState.maintainWarehouse !== true}
-                value={formState.defaultWareHouse}
                 field={{
                   id: "defaultWareHouse",
                   getListUrl: Urls.data_warehouse,
@@ -621,7 +604,6 @@ const InventorySettingsForm = () => {
               />
               <ERPDataCombobox
                 id="defaultBarcodeLabel"
-                value={formState.defaultBarcodeLabel}
                 disabled
                 data={formState}
                 field={{
@@ -644,7 +626,6 @@ const InventorySettingsForm = () => {
 
               <ERPDataCombobox
                 id="showRateWarning"
-                value={formState.showRateWarning}
                 data={formState}
                 field={{
                   id: "showRateWarning",
@@ -666,7 +647,6 @@ const InventorySettingsForm = () => {
 
               <ERPDataCombobox
                 id="defaultServiceSpareWareHouse"
-                value={formState.defaultServiceSpareWareHouse}
                 data={formState}
                 field={{
                   id: "defaultServiceSpareWareHouse",
@@ -712,7 +692,6 @@ const InventorySettingsForm = () => {
               />
               <ERPDataCombobox
                 id="blockBillDiscount"
-                value={formState.blockBillDiscount}
                 field={{
                   id: "blockBillDiscount",
                   valueKey: "value",

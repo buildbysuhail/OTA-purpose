@@ -19,7 +19,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import { CurrencyExchangeManage } from "./exchange-rates-manage";
+// import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid, LoadPanel } from "devextreme-react";
 import {

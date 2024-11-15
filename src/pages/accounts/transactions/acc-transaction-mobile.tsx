@@ -224,7 +224,6 @@ const AccTransactionMobile = () => {
                 labelKey: "name",
               }}
               data={formData}
-              value={formData?.cashacc}
               onChangeData={(data) =>
                 handleFieldChange("cashacc", data.cashacc)
               }
@@ -338,7 +337,6 @@ const AccTransactionMobile = () => {
                     labelKey: "name",
                   }}
                   data={formData}
-                  value={formData?.cashacc}
                   onChangeData={(data) =>
                     handleFieldChange("cashacc", data.cashacc)
                   }
@@ -516,7 +514,6 @@ const AccTransactionMobile = () => {
                               labelKey: "name",
                             }}
                             data={formData}
-                            value={formData?.cashacc}
                             onChangeData={(data) =>
                               handleFieldChange("cashacc", data.cashacc)
                             }
@@ -566,7 +563,6 @@ const AccTransactionMobile = () => {
                               labelKey: "name",
                             }}
                             data={formData}
-                            value={formData?.cashacc}
                             onChangeData={(data) =>
                               handleFieldChange("cashacc", data.cashacc)
                             }

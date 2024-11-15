@@ -202,3 +202,25 @@ export const initialPartiesData = {
     accGroupID: ""
   },
 };
+
+export interface ProjectOrJob{
+projectName:string;
+address1:string;
+address2:string;
+address3:string;
+}
+
+export const initialProjectOrJobData= {
+  data:{
+    projectName:"",
+    address1:"",
+    address2:"",
+    address3:"",
+  },
+  validation:{
+    projectName:"",
+    address1:"",
+    address2:"",
+    address3:"",
+  }
+}

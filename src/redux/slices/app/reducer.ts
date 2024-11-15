@@ -1,9 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { AppInitialState, AppState, Locale, TableState } from './types';
+import { AppInitialState, AppState, Locale, TableState,inputBox } from './types';
 import { getAppState, uploadAppState } from './thunk';
 import usFlag from '../../../assets/images/flags/us_flag.png'
 
-// Define the initial state
 const initialState: AppInitialState = {
   syncing: false,
   appState: {
@@ -35,8 +34,17 @@ const initialState: AppInitialState = {
     body: {
       class: ""
     },
-    scrollbarWidth: "thick",
-    scrollbarColor: 'rgb(230 234 235)',
+    scrollbarWidth: "md",
+    scrollbarColor: '',
+    inputBox: {
+      inputStyle: "outline",       
+      fontSize: 0,  
+      labelFontSize:0,
+      otherLabelFontSize:0,        
+      borderColor: ' ', 
+      borderFocus: ' ',          
+      borderRadius: 0,      
+    },
     //
     pdfTemplates: null,
     tableState: {
@@ -78,6 +86,7 @@ const appStateSlice = createSlice({
   initialState,
   reducers: {
     setAppState: (state, action: PayloadAction<AppState>) => {
+      console.log(action.payload?.inputBox?.borderRadius);
       
       state.appState = action.payload;
     },
@@ -177,11 +186,21 @@ const appStateSlice = createSlice({
     setTableState: (state, action: PayloadAction<TableState>) => {
       state.appState.tableState = action.payload;
     },
+    setScrollbarWidth: (state, action: PayloadAction<"sm" | "md" | "lg">) => {
+      state.appState.scrollbarWidth = action.payload;
+    },
+    setScrollbarColor: (state, action: PayloadAction<string>) => {
+      state.appState.scrollbarColor = action.payload;
+    },
+    
   },
 });
 
 // Extract the actions
 export const {
+  // setInputBox,
+  setScrollbarColor,
+  setScrollbarWidth,
   setAppState,
   setDirection,
   setDecimals,

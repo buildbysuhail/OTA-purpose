@@ -1316,5 +1316,7 @@
 
   "company_profile_others": "ملف الشركة",
   "company_profile_india": "ملف الشركة (الهند)",
-  "country_sub_division": "تقسيم فرعي للبلد"
+  "country_sub_division": "تقسيم فرعي للبلد",
+  "address_2_city": "العنوان 2/المدينة",
+    "address3_district": "العنوان 3/المنطقة"
 }

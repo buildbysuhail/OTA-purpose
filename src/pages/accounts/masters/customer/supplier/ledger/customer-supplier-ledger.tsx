@@ -73,30 +73,28 @@ const CustomerSupplierLedger = () => {
     setIsSaving(true);
     console.log("Current Store:", store);
     console.log("Previous Store:", storePrev);
-    const changedData = store.filter((item: any, index: number) => {
-      const prevItem = storePrev[index];
-      return item.show !== prevItem.show;
-    });
+    // const changedData = store.filter((item: any, index: number) => {
+    //   const prevItem = storePrev[index];
+    //   return item.show !== prevItem.show;
+    // });
 
-    const payload = changedData.map((item: any) => ({
+    const payload = store?.filter((x: any) => x.show == true)?.map((item: any) => ({
       ledgerID: item.ledgerID,
-      showInCustomers: gridType.customer ? false: item.show ,
-      showInSuppliers: gridType.supplier ? false: item.show,
+      showInCustomers: !gridType.customer,
+      showInSuppliers: !gridType.supplier,
     }));
     console.log("Payload to be submitted:", payload);
-    if (payload.length > 0) {
-      try {
-        const response: any = await api.post(
-          `${Urls.cust_supp_ledger}`,
-          payload
-        );
-        handleResponse(response);
-        console.log("API Response:", response);
-      } catch (error) {
-        console.error("Error submitting data:", error);
-      }
-    } else {
-      ERPToast.show("No changes to save");
+    try {
+      const response: any = await api.post(
+        `${Urls.cust_supp_ledger}`,
+        {showInCustomers: gridType.customer,
+          showInSuppliers: gridType.supplier,
+          custSuppLedgerInputItems: payload}
+      );
+      handleResponse(response);
+      console.log("API Response:", response);
+    } catch (error) {
+      console.error("Error submitting data:", error);
     }
     setIsSaving(false);
   };

@@ -19,7 +19,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import { CurrencyExchangeManage } from "./exchange-rates-manage";
+// import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "devextreme-react";
 import {
@@ -305,8 +305,8 @@ const ExchangeRates = () => {
                         }}
                         data={postData}
                         defaultData={postData}
-                        value={postData?.baseCurrency}
-                        reload={rootState?.PopupData?.currencyMaster?.reload}
+                        // value={postData?.baseCurrency}
+                        // reload={rootState?.PopupData?.currencyMaster?.reload}
                         label={t("base_currency")}
                       />
                     </Item>
@@ -340,7 +340,7 @@ const ExchangeRates = () => {
           </div>
         </div>
       </div>
-      <ERPModal
+      {/* <ERPModal
         closeButton="Button"
         isOpen={rootState.PopupData.currencyExchange.isOpen || false}
         title={t("currencies")}
@@ -350,7 +350,7 @@ const ExchangeRates = () => {
           dispatch(toggleCurrencyExchangePopup({ isOpen: false }));
         }}
         content={<CurrencyExchangeManage />}
-      />
+      /> */}
       <ERPModal
         isOpen={rootState.PopupData.currencyMaster.isOpen || false}
         title={t("currency")}

@@ -28,10 +28,10 @@ export const initialPrivilegeCard = {
     email: "",
     dob: null,
     changeID: 0,
-    cardType: "",
-    priceCategoryID: 0,
-    expiryDate: null,
-    activateDate: null,
+    cardType: "Privilege",
+    priceCategoryID: 1,
+    expiryDate: new Date(),
+    activateDate: new Date(),
     opBalance: 0
   },
   validations: {

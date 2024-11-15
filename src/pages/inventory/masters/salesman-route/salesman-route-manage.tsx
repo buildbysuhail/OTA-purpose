@@ -128,7 +128,6 @@ export const SalesmanRoute: React.FC = React.memo(() => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <ERPDataCombobox
             required={true}
-            value={formState?.salesManID}
             data={formState}
             id="salesManID"
             field={{
@@ -145,7 +144,6 @@ export const SalesmanRoute: React.FC = React.memo(() => {
 
           <ERPDataCombobox
             required={true}
-            value={formState?.salesRouteID}
             data={formState}
             id="salesRouteID"
             field={{

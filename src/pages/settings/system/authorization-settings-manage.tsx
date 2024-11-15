@@ -10,7 +10,7 @@ import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
-import { CurrencyExchangeManage } from "./exchange-rates-manage";
+// import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "devextreme-react";
 import { Toolbar, Item, Editing, DataGridTypes } from "devextreme-react/cjs/data-grid";
@@ -171,7 +171,6 @@ const AuthorizationSettings = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ">
                 <ERPDataCombobox
                   data={postData}
-                  value={postData.employeeID}
                   id="employeeID"
                   field={{
                     id: "employeeID",

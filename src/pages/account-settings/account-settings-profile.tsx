@@ -15,7 +15,10 @@ import ERPModal from "../../components/ERPComponents/erp-modal";
 import { handleResponse } from "../../utilities/HandleResponse";
 import { APIClient } from "../../helpers/api-client";
 import AccountSettingsApis from "./account-settings-apis";
-import { useAppDispatch, useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { userSession } from "../../redux/slices/user-session/thunk";
 import { postAction } from "../../redux/slices/app-thunks";
@@ -28,7 +31,7 @@ interface UserProfileBasicInfo {
 }
 let api = new APIClient();
 const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
-  let _userSession  = useAppSelector((state: RootState) => state.UserSession);
+  let _userSession = useAppSelector((state: RootState) => state.UserSession);
   const initialBasicInfoWithValidation = {
     data: {
       nationality: null,
@@ -45,11 +48,12 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
     data: { userName: "", password: "", newValue: "" },
     validations: { userName: "", password: "", newValue: "" },
     tokenSend: false,
-  }
+  };
   const [image, setImage] = useState<string>("#");
-  
-  
-  const [basicInfo, setBasicInfo] = useState<any>(initialBasicInfoWithValidation);  
+
+  const [basicInfo, setBasicInfo] = useState<any>(
+    initialBasicInfoWithValidation
+  );
   const [basicInfoLoading, setBasicInfoLoading] = useState<boolean>(false);
 
   const [isOpenEmailChange, setIsOpenEmailChange] = useState<boolean>(false);
@@ -60,7 +64,6 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
     { userName: "", newValue: "", otp: "", confirToken: "" }
   );
 
-  
   const [phone, setPhone] = useState<string>("");
   const [_phone, set_Phone] = useState<string>("");
   const [phoneLoading, setPhoneChangeLoading] = useState<boolean>(false);
@@ -70,11 +73,10 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
 
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
-  
+
   //////////////////////////////////////////////////////////////////////
-  
+
   const getPhone = async () => {
-    
     let res = await AccountSettingsApis.getPhone();
     setPhone(res);
     set_Phone(res);
@@ -82,57 +84,57 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
   const changePhone = useCallback(async () => {
     setPhoneChangeLoading(true);
     const response: ResponseModelWithValidation<any, any> = await dispatch(
-      postAction({apiUrl:Urls.changePhone, data: {phone: phone}}) as any
+      postAction({ apiUrl: Urls.changePhone, data: { phone: phone } }) as any
     ).unwrap();
-    
+
     setPhoneChangeLoading(false);
     handleResponse(response);
   }, [dispatch, phone]);
-////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////
 
-/////////////////////////////////////////////////////////////////////
+  /////////////////////////////////////////////////////////////////////
 
-const getBasicInfo = async() => {
-  let res = await AccountSettingsApis.getUserBasicInfo();
+  const getBasicInfo = async () => {
+    let res = await AccountSettingsApis.getUserBasicInfo();
     setBasicInfo((prevData: any) => ({
       ...prevData,
-      data: res
-    }))
-}
+      data: res,
+    }));
+  };
 
-const resetBasicInfo = useCallback(async () => {
-  // setBasicInfo(initialBasicInfoWithValidation);
-}, [initialBasicInfoWithValidation]);
+  const resetBasicInfo = useCallback(async () => {
+    // setBasicInfo(initialBasicInfoWithValidation);
+  }, [initialBasicInfoWithValidation]);
 
-const updateBasicInfo = useCallback(async () => {
-  
-  setBasicInfoLoading(true);
-  const response: ResponseModelWithValidation<any, any> = await AccountSettingsApis.updateUserBasicInfo(basicInfo?.data);
-  
-  setBasicInfoLoading(false);
-  
-  setBasicInfo((prevData: any) => ({
-    ...prevData,
-    validations: response.validations
-  }));
-  appDispatch(userSession());
-  handleResponse(response, () => {});
-}, [dispatch, basicInfo?.data]);
+  const updateBasicInfo = useCallback(async () => {
+    setBasicInfoLoading(true);
+    const response: ResponseModelWithValidation<any, any> =
+      await AccountSettingsApis.updateUserBasicInfo(basicInfo?.data);
 
-/////////////////////////////////////////////////////////////////////
+    setBasicInfoLoading(false);
 
-/////////////////////////////////////////////////////////////////////
+    setBasicInfo((prevData: any) => ({
+      ...prevData,
+      validations: response.validations,
+    }));
+    appDispatch(userSession());
+    handleResponse(response, () => {});
+  }, [dispatch, basicInfo?.data]);
+
+  /////////////////////////////////////////////////////////////////////
+
+  /////////////////////////////////////////////////////////////////////
 
   const postFormEmail = async () => {
     if (postDataEmail.tokenSend) {
       await verifyFormEmail();
     } else {
       setEmailLoading(true);
-      
+
       const response: ResponseModelWithValidation<any, any> =
         await AccountSettingsApis.verifyEmail_profile(postDataEmail?.data);
-      
-        setEmailLoading(false);
+
+      setEmailLoading(false);
       handleResponse(response, () => {
         setPostDataEmail((prevData: any) => ({ ...prevData, tokenSend: true }));
         setPostDataEmailTokenVerify((prevData: any) => ({
@@ -145,22 +147,20 @@ const updateBasicInfo = useCallback(async () => {
     }
   };
   const verifyFormEmail = async () => {
-    
     setEmailLoading(true);
     const response: ResponseModelWithValidation<any, any> =
       await AccountSettingsApis.changeEmailRequest_profile(
         postDataEmailTokenVerify
       );
-    
+
     setEmailLoading(false);
     handleResponse(response, () => {
       setIsOpenEmailChange(false);
-      setPostDataEmail({initialEmailData});
+      setPostDataEmail({ initialEmailData });
       getEmail();
     });
   };
   const getEmail = async () => {
-    
     let res = await AccountSettingsApis.getEmail();
     setEmail(res);
     appDispatch(userSession());
@@ -194,7 +194,6 @@ const updateBasicInfo = useCallback(async () => {
               required={true}
               data={postDataEmail?.data}
               onChangeData={(data: any) => {
-                
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
@@ -208,16 +207,12 @@ const updateBasicInfo = useCallback(async () => {
               required={true}
               value={postDataEmail?.data?.password}
               data={postDataEmail?.data}
-              onChangeData={(data: any) =>
-              {
+              onChangeData={(data: any) => {
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
-                }))
-                
-              }
-                
-              }
+                }));
+              }}
             />
             <ERPInput
               id="newValue"
@@ -225,15 +220,12 @@ const updateBasicInfo = useCallback(async () => {
               placeholder="New Email"
               required={true}
               data={postDataEmail?.data}
-              onChangeData={(data: any) =>
-               {
-                
+              onChangeData={(data: any) => {
                 setPostDataEmail((prevData: any) => ({
                   ...prevData,
                   data: data,
-                }))
-               }
-              }
+                }));
+              }}
               value={postDataEmail?.data?.newValue}
             />
           </div>
@@ -249,14 +241,9 @@ const updateBasicInfo = useCallback(async () => {
               required={true}
               value={postDataEmailTokenVerify?.otp}
               data={postDataEmailTokenVerify}
-              onChangeData={(data: any) =>
-              {
-                
-                setPostDataEmailTokenVerify(
-                  data
-                )
-              }
-              }
+              onChangeData={(data: any) => {
+                setPostDataEmailTokenVerify(data);
+              }}
             />
           </div>
         )}
@@ -267,7 +254,7 @@ const updateBasicInfo = useCallback(async () => {
             variant="secondary"
             onClick={() => {
               setIsOpenEmailChange(false);
-              setPostDataEmail({initialEmailData});
+              setPostDataEmail({ initialEmailData });
             }}
             disabled={emailLoading}
           ></ERPButton>
@@ -289,7 +276,6 @@ const updateBasicInfo = useCallback(async () => {
   };
   return (
     <Fragment>
-      
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
           <div className="grid grid-cols-12 gap-x-6">
@@ -316,9 +302,9 @@ const updateBasicInfo = useCallback(async () => {
                       <div>
                         <span className="avatar avatar-xxl avatar-rounded ">
                           <ERPAvatar
-                          alt="Remy Sharp"
-                          src={typeof image === 'string' ? image : ''}
-                          sx={{ width: 75, height: 75 }}
+                            alt="Remy Sharp"
+                            src={typeof image === "string" ? image : ""}
+                            sx={{ width: 75, height: 75 }}
                           />
                         </span>
                       </div>
@@ -366,7 +352,7 @@ const updateBasicInfo = useCallback(async () => {
                   <div className="grid grid-cols-1 gap-3">
                     <div className="sm:flex items-start items-center">
                       <span className="avatar avatar-lg avatar-badge border border-blue-500 p-1">
-                        <img src={emailImage ? emailImage : ''} />
+                        <img src={emailImage ? emailImage : ""} />
                       </span>
                       <div className="flex-grow p-2">
                         <div className="flex items-center !justify-between">
@@ -422,27 +408,24 @@ const updateBasicInfo = useCallback(async () => {
                       id="phone"
                       placeholder="Pleas Enter Phone Number"
                       required={true}
-                      value={phone ? phone : ''}
-                      data={{phone: phone}}
-                      onChangeData={(data: any) =>
-                      {
-                        
-                        setPhone(data.phone)
-                      }
-                      }
+                      value={phone ? phone : ""}
+                      data={{ phone: phone }}
+                      onChangeData={(data: any) => {
+                        setPhone(data.phone);
+                      }}
                     />
- <div className="w-full p-2 flex justify-end">
-                    <ERPButton
-                      title={
-                        phone != undefined && phone != null && phone != ""
-                          ? "Update"
-                          : "Add Phone"
-                      }
-                      disabled={phone == _phone || phoneLoading}
-                      loading={phoneLoading}
-                      onClick={changePhone}
-                      variant="primary"
-                    ></ERPButton>
+                    <div className="w-full p-2 flex justify-end">
+                      <ERPButton
+                        title={
+                          phone != undefined && phone != null && phone != ""
+                            ? "Update"
+                            : "Add Phone"
+                        }
+                        disabled={phone == _phone || phoneLoading}
+                        loading={phoneLoading}
+                        onClick={changePhone}
+                        variant="primary"
+                      ></ERPButton>
                     </div>
                   </div>
                 </div>
@@ -451,7 +434,7 @@ const updateBasicInfo = useCallback(async () => {
           </div>
         </div>
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12">
-        <div
+          <div
             id="basic-information"
             className={`xxl:col-span-12 xl:col-span-12 ${
               path === "basic-information" ? "blink" : ""
@@ -478,11 +461,10 @@ const updateBasicInfo = useCallback(async () => {
                     required={true}
                     data={basicInfo?.data}
                     onChangeData={(data: any) => {
-                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
-                        data: data
-                      }))
+                        data: data,
+                      }));
                     }}
                     validation={basicInfo.validations?.displayName}
                     value={
@@ -491,28 +473,26 @@ const updateBasicInfo = useCallback(async () => {
                         : ""
                     }
                   />
-                    <ERPDataCombobox
-                      id="nationality"
-                      field={{
-                        id: "nationality",
-                        required: true,
-                        getListUrl: Urls.data_countries,
-                        valueKey: "id",
-                        labelKey: "name",
-                      }}
-                      onChangeData={(data: any) => {
-                        
-                        setBasicInfo((prev: any) => ({
-                          ...prev,
-                          data: data
-                        }))
-                      }}
-                      validation={basicInfo.validations.nationality}
-                      data={basicInfo?.data}
-                      defaultData={basicInfo?.data}
-                      value={basicInfo != undefined && basicInfo?.data != undefined && basicInfo?.data?.nationality != undefined ? basicInfo?.data?.nationality : 0}
-                      label="Country"
-                    />
+                  <ERPDataCombobox
+                    id="nationality"
+                    field={{
+                      id: "nationality",
+                      required: true,
+                      getListUrl: Urls.data_countries,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    onChangeData={(data: any) => {
+                      setBasicInfo((prev: any) => ({
+                        ...prev,
+                        data: data,
+                      }));
+                    }}
+                    validation={basicInfo.validations.nationality}
+                    data={basicInfo?.data}
+                    defaultData={basicInfo?.data}
+                    label="Country"
+                  />
                   <ERPDateInput
                     id="dob"
                     type="date"
@@ -521,13 +501,12 @@ const updateBasicInfo = useCallback(async () => {
                     label={"Date of Birth"}
                     data={basicInfo?.data}
                     onChange={(e) => {
-                      
                       setBasicInfo((prev: any) => ({
                         ...prev,
                         data: {
                           ...prev.data,
-                          dob: e.target.value
-                        }
+                          dob: e.target.value,
+                        },
                       }));
                     }}
                     validation={basicInfo.validations.dob}

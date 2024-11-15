@@ -133,7 +133,6 @@ const TaxSettingsForm: React.FC = () => {
             <div className="grid xxl:grid-cols-4 lg:grid-cols-2  sm:grid-cols-2 gap-3 my-3">
               <ERPDataCombobox
                 id="purchaseFormType"
-                value={formState?.purchaseFormType}
                 data={formState}
                 field={{
                   id: "purchaseFormType",
@@ -150,7 +149,6 @@ const TaxSettingsForm: React.FC = () => {
 
               <ERPDataCombobox
                 id="salesFormType"
-                value={formState.salesFormType}
                 data={formState}
                 field={{
                   id: "salesFormType",
@@ -166,7 +164,6 @@ const TaxSettingsForm: React.FC = () => {
               />
               <ERPDataCombobox
                 id="purchaseTaxAccount"
-                value={formState.purchaseTaxAccount}
                 data={formState}
                 field={{
                   id: "purchaseTaxAccount",
@@ -182,7 +179,6 @@ const TaxSettingsForm: React.FC = () => {
               />
               <ERPDataCombobox
                 id="salesTaxAccount"
-                value={formState.salesTaxAccount}
                 data={formState}
                 field={{
                   id: "salesTaxAccount",
@@ -200,7 +196,6 @@ const TaxSettingsForm: React.FC = () => {
             <>
               <ERPDataCombobox
                 id="purchaseCSTAccount"
-                value={formState.purchaseCSTAccount}
                 data={formState}
                 disabled
                 field={{
@@ -218,7 +213,6 @@ const TaxSettingsForm: React.FC = () => {
               <ERPDataCombobox
                 id="salesCSTAccount"
                 disabled
-                value={formState.salesCSTAccount}
                 data={formState}
                 field={{
                   id: "salesCSTAccount",
@@ -235,7 +229,6 @@ const TaxSettingsForm: React.FC = () => {
               <ERPDataCombobox
                 id="expensesTaxAccount"
                 disabled
-                value={formState.expensesTaxAccount}
                 data={formState}
                 field={{
                   id: "expensesTaxAccount",
@@ -252,7 +245,6 @@ const TaxSettingsForm: React.FC = () => {
               <ERPDataCombobox
                 id="incomeTaxAccount"
                 disabled
-                value={formState.incomeTaxAccount}
                 data={formState}
                 field={{
                   id: "incomeTaxAccount",

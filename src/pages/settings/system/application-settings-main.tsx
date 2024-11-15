@@ -161,7 +161,6 @@ const ERPSettingsFormMain = () => {
               }}
               id="maintainBusinessType"
               label={t("business_type")}
-              value={settings?.maintainBusinessType}
               data={settings}
               onChangeData={(data) =>
                 handleFieldChange("maintainBusinessType", data.maintainBusinessType)
@@ -186,7 +185,6 @@ const ERPSettingsFormMain = () => {
                 labelKey: "name",
               }}
               data={settings}
-              value={settings?.currency}
               onChangeData={(data) => handleFieldChange("currency", data.currency)}
               label={t("currency_main")}
             />
@@ -199,7 +197,6 @@ const ERPSettingsFormMain = () => {
               id="showNumberFormat"
               label={t("currency_format")}
               data={settings}
-              value={settings?.showNumberFormat}
               onChangeData={(data) =>
                 handleFieldChange(
                   "showNumberFormat",
@@ -220,7 +217,6 @@ const ERPSettingsFormMain = () => {
               id="decimalPoints"
               label={t("decimal_points")}
               data={settings}
-              value={settings?.decimalPoints}
               defaultData={settings?.decimalPoints}
               onChangeData={(data) =>
                 handleFieldChange("decimalPoints", data.decimalPoints)
@@ -243,7 +239,6 @@ const ERPSettingsFormMain = () => {
                 }}
                 id="roundingMethodGLOBAL"
                 label={t("rounding_method_global")}
-                value={settings?.roundingMethodGLOBAL}
                 data={settings}
                 onChangeData={(data) =>
                   handleFieldChange("roundingMethodGLOBAL", data.roundingMethodGLOBAL)
@@ -276,7 +271,6 @@ const ERPSettingsFormMain = () => {
                 id="roundingMethod"
                 label={t("rounding_method")}
                 data={settings}
-                value={settings?.roundingMethod}
                 onChangeData={(data) =>
                   handleFieldChange("roundingMethod", data.roundingMethod)
                 }
@@ -295,7 +289,6 @@ const ERPSettingsFormMain = () => {
               }}
               id="pOSRoundingMethod"
               label={t("sales_rounding_method")}
-              value={settings?.pOSRoundingMethod}
               data={settings}
               onChangeData={(data) =>
                 handleFieldChange("pOSRoundingMethod", data.pOSRoundingMethod)
@@ -323,7 +316,6 @@ const ERPSettingsFormMain = () => {
               }}
               id="tax_DecimalPoint"
               label={t("tax_decimal_points")}
-              value={settings?.tax_DecimalPoint}
               data={settings}
               onChangeData={(data) =>
                 handleFieldChange("tax_DecimalPoint", data.tax_DecimalPoint)
@@ -345,7 +337,6 @@ const ERPSettingsFormMain = () => {
               }}
               id="unitPrice_decimalPoint"
               label={t("unit_price_decimal_points")}
-              value={settings?.unitPrice_decimalPoint}
               data={settings}
               defaultData={settings?.unitPrice_decimalPoint}
               onChangeData={(data) => {

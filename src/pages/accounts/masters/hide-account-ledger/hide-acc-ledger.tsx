@@ -104,7 +104,6 @@ const HideAccountLedger = () => {
         onChangeData={handleUserTypeChange}
         data={postData}
         defaultData={postData}
-        value={postData?.userTypeCode}
         label={t("user_type_code")}
       />
       <ERPDataCombobox
@@ -125,7 +124,6 @@ const HideAccountLedger = () => {
         }}
         data={postData}
         defaultData={postData}
-        value={postData?.groupId}
         label={t("account_group")}
       />
       <ERPDataCombobox
@@ -146,7 +144,6 @@ const HideAccountLedger = () => {
         }}
         data={postData}
         defaultData={postData}
-        value={postData?.ledgerId}
         label={t("ledger")}
       />
     </div>

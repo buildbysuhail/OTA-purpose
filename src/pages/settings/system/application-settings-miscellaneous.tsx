@@ -189,7 +189,6 @@ const MiscellaneousSettingsForm: React.FC = () => {
                   />
                   <ERPDataCombobox
                     id="defaultIncentiveLedger"
-                    value={formState.defaultIncentiveLedger}
                     field={{
                       id: "defaultIncentiveLedger",
                       required: true,

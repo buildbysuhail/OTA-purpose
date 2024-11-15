@@ -24,8 +24,8 @@ const Test: React.FC = () => {
             <div className='flex items-end border-2 rounded-lg p-4'>
                 <ERPDataCombobox
                     id="defaultCustomerLedgerID"
-                    value={formState.defaultCustomerLedgerID}
-                    customSize='sm'
+                    // value={formState.defaultCustomerLedgerID}
+                    // customSize='sm'
                     data={formState}
                     label="default_customer"
                     field={{
@@ -127,9 +127,9 @@ const Test: React.FC = () => {
             <div className='flex items-end border-2 rounded-lg p-4'>
                 <ERPDataCombobox
                     id="defaultCustomerLedgerID"
-                    value={formState.defaultCustomerLedgerID}
+                    // value={formState.defaultCustomerLedgerID}
                     data={formState}
-                    customSize='md'
+                    // customSize='md'
                     label="default_customer"
                     field={{
                         id: "defaultCustomerLedgerID",
@@ -230,9 +230,9 @@ const Test: React.FC = () => {
             <div className='flex items-end border-2 rounded-lg p-4'>
                 <ERPDataCombobox
                     id="defaultCustomerLedgerID"
-                    value={formState.defaultCustomerLedgerID}
+                    // value={formState.defaultCustomerLedgerID}
                     data={formState}
-                    customSize='lg'
+                    // customSize='lg'
                     label="default_customer"
                     field={{
                         id: "defaultCustomerLedgerID",

@@ -2,8 +2,6 @@ import * as React from "react"
 import { forwardRef } from "react"
 import { TextField, InputAdornment, TextFieldProps, Theme, SxProps } from "@mui/material"
 import { setNestedValue } from "../../utilities/Utils"
-import { useAppSelector } from "../../utilities/hooks/useAppDispatch"
-import { RootState } from "../../redux/store"
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation }: { validation?: string }) => (
@@ -13,83 +11,105 @@ const ERPElementValidationMessage = ({ validation }: { validation?: string }) =>
 type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'color'>
 
 interface ERPInputProps extends ERPInputBaseProps {
-  id: string
-  data?: any
-  value?: any
-  defaultValue?: any
-  label?: string
-  placeholder?: string
-  onChangeData?: (data: any) => void
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
-  required?: boolean
-  minLength?: number
-  maxLength?: number
-  min?: number | string
-  max?: number | string
-  step?: any
-  pattern?: string
-  type?: string
-  autocomplete?: string
-  disabled?: boolean
-  labelClassName?: string
-  className?: string
-  inputClassName?: string
-  noLabel?: boolean
-  prefix?: React.ReactNode
-  suffix?: React.ReactNode
-  onClickPrefix?: () => void
-  onClickSuffix?: () => void
-  accept?: string
-  validation?: string
-  autoFocus?: boolean
-  customSize?: "sm" | "md" | "lg" | "auto"
-  useMUI?: boolean
-  color?: TextFieldProps['color']
-  variant?: "filled" | "outlined" | "standard" |undefined
+    id: string
+    data?: any
+    value?: any
+    defaultValue?: any
+    label?: string
+    placeholder?: string
+    onChangeData?: (data: any) => void
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void
+    onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
+    required?: boolean
+    minLength?: number
+    maxLength?: number
+    min?: number | string
+    max?: number | string
+    step?: any
+    pattern?: string
+    type?: string
+    autocomplete?: string
+    disabled?: boolean
+    labelClassName?: string
+    className?: string
+    inputClassName?: string
+    noLabel?: boolean
+    prefix?: React.ReactNode
+    suffix?: React.ReactNode
+    onClickPrefix?: () => void
+    onClickSuffix?: () => void
+    accept?: string
+    validation?: string
+    autoFocus?: boolean
+    customSize?: "sm" | "md" | "lg" | "auto"
+    useMUI?: boolean
+    color?: TextFieldProps['color']
+    variant?: "standard" | "filled" | "outlined" | undefined
+    inputStyle?: "normal" | "standard" | "outline" | "fill"
+    borderRadius?: number
+    fontSize?: number
+    labelFontSize?: number
+    otherLabelFontSize?: number
+    borderColor?: string
+    borderFocus?: string
 }
 
-const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
-  id,
-  onChangeData,
-  onChange,
-  onFocus,
-  onBlur,
-  data,
-  type = "text",
-  customSize = "sm",
-  autocomplete = "off",
-  label,
-  placeholder,
-  disabled,
-  labelClassName,
-  className,
-  inputClassName,
-  value,
-  defaultValue,
-  required,
-  minLength,
-  maxLength,
-  min,
-  max,
-  pattern,
-  noLabel,
-  prefix,
-  suffix,
-  step,
-  accept,
-  validation,
-  onClickPrefix,
-  onClickSuffix,
-  useMUI = false,
-  color,
-  variant = "outlined",
-  ...props
+const ERPInputCopy = forwardRef<HTMLInputElement, ERPInputProps>(({
+    id,
+    onChangeData,
+    onChange,
+    onFocus,
+    onBlur,
+    data,
+    type = "text",
+    customSize = "sm",
+    autocomplete = "off",
+    label,
+    placeholder,
+    disabled,
+    labelClassName,
+    className,
+    inputClassName,
+    value,
+    defaultValue,
+    required,
+    minLength,
+    maxLength,
+    min,
+    max,
+    pattern,
+    noLabel,
+    prefix,
+    suffix,
+    step,
+    accept,
+    validation,
+    onClickPrefix,
+    onClickSuffix,
+    useMUI = false,
+    color,
+    variant = "outlined",
+    inputStyle,
+    borderRadius,
+    fontSize,
+    labelFontSize,
+    otherLabelFontSize,
+    borderColor,
+    borderFocus,
+    ...props
 }: ERPInputProps, ref) => {
   const iLabel = label || id?.replaceAll("_", " ")
   const iPlaceholder = placeholder || label
-const appState = useAppSelector((state: RootState) => state.AppState.appState)
+
+  const getVariant = () => {
+    switch (inputStyle) {
+      case "standard": return "standard"
+      case "outline": return "outlined"
+      case "fill": return "filled"
+      default: return variant
+    }
+  }
   // Get size-specific styles for both MUI and regular inputs
   const getSizeStyles = () => {
     const styles: {
@@ -263,7 +283,7 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
         ) : undefined,
       },
       fullWidth: true,
-      variant: variant,
+      variant: getVariant(),
       color: color,
       inputProps: {
         maxLength,
@@ -272,6 +292,14 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
         pattern,
         step,
         accept,
+        style: {
+            borderRadius: `${borderRadius}px`,
+            fontSize: `${fontSize}px`,
+          }
+          InputLabelProps: {
+            style: {
+              fontSize: `${labelFontSize}px`,
+            }  
       },
       sx: sizeStyles.mui
     }
@@ -290,9 +318,9 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
   // Build border radius classes based on prefix/suffix presence
   const getBorderRadiusClasses = () => {
     const classes = []
-    if (!prefix) classes.push(`rounded-l-[${appState.inputBox.borderRadius}px]`)
-    if (!suffix) classes.push(`rounded-r-[${appState.inputBox.borderRadius}px]`)
-    if (!prefix && !suffix) classes.push(`rounded-md-[${appState.inputBox.borderRadius}px]`)
+    if (!prefix) classes.push('rounded-l-md')
+    if (!suffix) classes.push('rounded-r-md')
+    if (!prefix && !suffix) classes.push('rounded-md')
     return classes.join(' ')
   }
 
@@ -303,12 +331,10 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
           className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
           style={{ fontSize: customSize === 'sm' ? '12px' : customSize === 'md' ? '14px' : '16px' }}
         >
-          
           {iLabel}
           {required && !noLabel && "*"}
         </label>
       )}
-     
       <div className="flex">
         {prefix && (
           <div
@@ -328,22 +354,9 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
             style={{
               height,
               fontSize,
-              borderTopLeftRadius: `${!prefix ? appState.inputBox.borderRadius : ''}px`,
-              borderBottomLeftRadius: `${!prefix ? appState.inputBox.borderRadius : ''}px`,
-              borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : ''}px`,
-              borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : ''}px`,
-              // If both prefix and suffix are absent, override all corners
-              ...( !prefix && !suffix && {
-                borderTopLeftRadius: `${appState.inputBox.borderRadius}px`,
-                borderTopRightRadius: `${appState.inputBox.borderRadius}px`,
-                borderBottomLeftRadius: `${appState.inputBox.borderRadius}px`,
-                borderBottomRightRadius: `${appState.inputBox.borderRadius}px`,
-              }),
+              // padding
             }}
-            
-            
-            className={`border border-gray-400 
-            block w-full ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
+            className={`border border-gray-400 ${getBorderRadiusClasses()} block w-full ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             onWheel={(e: any) => {
               type === "number" && e?.target?.blur()
@@ -371,4 +384,4 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
   )
 })
 
-export default ERPInput
+export default ERPInputCopy

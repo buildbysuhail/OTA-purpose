@@ -218,7 +218,6 @@ const ApplicationSettingsProduct = () => {
                   labelKey: "name",
                 }}
                 data={formState}
-                value={formState?.batchCriteria}
                 onChangeData={(data) =>
                   handleFieldChange("batchCriteria", data.batchCriteria)
                 }
@@ -243,7 +242,6 @@ const ApplicationSettingsProduct = () => {
                 }}
                 id="stockTransferNegativeStock"
                 label={t("stock_transfer_negative_stock")}
-                value={formState?.stockTransferNegativeStock}
                 data={formState}
                 onChangeData={(data) => {
                   handleFieldChange(
@@ -266,7 +264,6 @@ const ApplicationSettingsProduct = () => {
                 }}
                 id="showHSNCodeWarning"
                 label={t("HSN_code")}
-                value={formState?.showHSNCodeWarning}
                 data={formState}
                 onChangeData={(data) => {
                   handleFieldChange("showHSNCodeWarning", data.showHSNCodeWarning);
@@ -287,7 +284,6 @@ const ApplicationSettingsProduct = () => {
                     }}
                     id="lPPriceLessThanSellingPrice"
                     label={t("LP_priceLess_than_selling_price")}
-                    value={formState?.lPPriceLessThanSellingPrice}
                     data={formState}
                     onChangeData={(data) => {
                       handleFieldChange(
@@ -310,7 +306,6 @@ const ApplicationSettingsProduct = () => {
                     }}
                     id="mRPLessThanSalesPrice"
                     label={t("MRP_less_than_sales_price")}
-                    value={formState?.mRPLessThanSalesPrice}
                     data={formState}
                     onChangeData={(data) => {
                       handleFieldChange(
@@ -332,7 +327,6 @@ const ApplicationSettingsProduct = () => {
                     }}
                     id="zeroMultiRateValidate"
                     label={t("zero_multi_rate_validate")}
-                    value={formState?.zeroMultiRateValidate}
                     data={formState}
                     onChangeData={(data) => {
                       handleFieldChange(
@@ -356,7 +350,6 @@ const ApplicationSettingsProduct = () => {
                 }}
                 id="weighingScaleBarcodeType"
                 label={t("weighing_scale_barcode_type")}
-                value={formState?.weighingScaleBarcodeType}
                 data={formState}
                 onChangeData={(data) => {
                   handleFieldChange(
@@ -427,7 +420,6 @@ const ApplicationSettingsProduct = () => {
                     labelKey: "label",
                   }}
                   id="giftOnBillingAs"
-                  value={formState?.giftOnBillingAs}
                   data={formState}
                   onChangeData={(data) => {
                     handleFieldChange("giftOnBillingAs", data.giftOnBillingAs);

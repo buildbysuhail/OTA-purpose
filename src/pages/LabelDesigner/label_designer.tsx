@@ -941,7 +941,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                     {selectedComponent.type === DesignerElementType.field ? (
                       <ERPDataCombobox
                         id="content"
-                        value={selectedComponent.content}
                         data={selectedComponent}
 
                         label="Content"
@@ -1097,7 +1096,6 @@ export default function ExtendedPDFBarcodeDesigner() {
 
                     <ERPDataCombobox
                       id="font"
-                      value={selectedComponent.font}
                       data={selectedComponent}
                       label="Font"
                       field={{
@@ -1252,7 +1250,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                         <Box>
                           <ERPDataCombobox
                             id="format"
-                            value={selectedComponent.barcodeProps.format}
                             data={selectedComponent.barcodeProps}
                             label="Barcode Format"
                             field={{
@@ -1419,7 +1416,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                         <Box>
                           <ERPDataCombobox
                             id="font"
-                            value={selectedComponent.barcodeProps.font}
                             data={selectedComponent.barcodeProps}
                             label="Font"
                             field={{
@@ -1636,7 +1632,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                       <ERPDataCombobox
                         noLabel
                         id="bg_image_position"
-                        value={templateData?.barcodeState?.labelState?.bg_image_position}
                         data={templateData?.barcodeState?.labelState}
                         defaultValue={templateData?.barcodeState?.labelState?.labelHeight ?? "top left"}
                         onChange={(e) =>
@@ -1847,7 +1842,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                 <Box sx={{ mb: 1 }}>
                   <ERPDataCombobox
                     id="printer"
-                    value={templateData?.propertiesState?.printer}
                     data={templateData?.propertiesState}
                     label="Printer"
                     field={{

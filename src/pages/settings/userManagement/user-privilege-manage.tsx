@@ -340,13 +340,13 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           validation={postData.validations.userType}
           data={postData?.data}
           defaultData={postData?.data}
-          value={
-            postData != undefined &&
-              postData?.data != undefined &&
-              postData?.data?.userType != undefined
-              ? postData?.data?.userType
-              : 0
-          }
+          // value={
+          //   postData != undefined &&
+          //     postData?.data != undefined &&
+          //     postData?.data?.userType != undefined
+          //     ? postData?.data?.userType
+          //     : 0
+          // }
         />
 
         {/* Checkbox options */}
@@ -490,9 +490,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
               }}
               validation={postData.validations.userType2}
               data={{ userTypeForClone: userTypeForClone }}
-              value={
-                userTypeForClone
-              }
+
             />
             <ERPButton
               title={t("load_rights")}

@@ -85,8 +85,10 @@ export const initialThemeData: Theme = {
   scrollbarWidth: null,
   scrollbarColor: '219,223,225',
   inputBox: {
-    inputStyle: "normal",       
-    fontSize: 0,           
+    inputStyle: "outline",       
+    fontSize: 0,  
+    labelFontSize:0,
+    otherLabelFontSize:0,        
     borderColor: '128, 128, 128', 
     borderFocus: '128, 128, 128',          
     borderRadius: 0,      
@@ -112,6 +114,8 @@ export interface Theme {
 export interface inputBox{
   inputStyle:  "normal"|"standard"|"outline"|"fill";
   fontSize:number;
+  labelFontSize:number;
+  otherLabelFontSize:number;
   borderColor: string;
   borderFocus: string;
   borderRadius:number;

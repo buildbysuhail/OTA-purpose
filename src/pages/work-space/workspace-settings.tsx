@@ -473,7 +473,6 @@ Recommended size: 300 x 300 pixels. */}
                     validation={basicInfo.validations?.countryId}
                     data={basicInfo.data}
                     defaultData={basicInfo.data}
-                    value={basicInfo.data.countryId}
                     label="Country"
                   />
                    <ERPDataCombobox
@@ -495,7 +494,6 @@ Recommended size: 300 x 300 pixels. */}
                     validation={basicInfo?.validations?.currencyId}
                     data={basicInfo?.data}
                     defaultData={basicInfo?.data}
-                    value={basicInfo?.data?.currencyId}
                     label="Business Currency"
                   />
                    <ERPDataCombobox
@@ -517,7 +515,6 @@ Recommended size: 300 x 300 pixels. */}
                     validation={basicInfo.validations?.industry}
                     data={basicInfo.data}
                     defaultData={basicInfo.data}
-                    value={basicInfo.data.industry}
                     label="Industry"
                   />
                   {/* <ERPDataCombobox

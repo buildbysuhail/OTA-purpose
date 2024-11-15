@@ -140,7 +140,6 @@ const PrintSettingForm: React.FC = () => {
 
               <ERPDataCombobox
                 id="defaultPrinter"
-                value={formState.defaultPrinter}
                 data={formState}
                 field={{
                   id: "defaultPrinter",

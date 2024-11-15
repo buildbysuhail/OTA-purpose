@@ -13,7 +13,11 @@ import {
 
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
-import { initialThemeData, Theme } from "../../redux/slices/app/types";
+import {
+  initialThemeData,
+  inputBox,
+  Theme,
+} from "../../redux/slices/app/types";
 import Cookies from "js-cookie";
 import { modelToBase64 } from "../../utilities/jsonConverter";
 import ERPSelect from "../../components/ERPComponents/erp-select";
@@ -26,6 +30,9 @@ import { reducerNameFromUrl } from "../../redux/actions/AppActions";
 import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
+import ERPInputCopy from "../../components/ERPComponents/erp-input-copy";
+import { RootState } from "../../redux/store";
+import { setAppState } from "../../redux/slices/app/reducer";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -122,10 +129,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
     scrollbarWidth: null,
-    scrollbarColor: '219,223,225',
+    scrollbarColor: "219,223,225",
     inputBox: {
-      inputStyle: "normal",
+      inputStyle: "outline",
       fontSize: 0,
+      labelFontSize: 0,
+      otherLabelFontSize: 0,
       borderColor: "128, 128, 128",
       borderFocus: "128, 128, 128",
       borderRadius: 0,
@@ -147,7 +156,16 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let updatedUserThemeAction = reduxManager.getTypedThunk(
     updatedUserThemeRName
   );
-
+  const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {
+    const _appState = {
+      ...appState,
+      inputBox: {
+        ...appState.inputBox,
+        [field]: value,
+      },
+    };
+    updateAppState(_appState);
+  };
   const saveThemeChange = async () => {
     debugger;
     const res = await dispatch(
@@ -164,12 +182,17 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     }));
     console.log(theme);
   };
-  const handleScrollbarColorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const rgb = hexToRgb(event.target.value)
+  const handleScrollbarColorChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const rgb = hexToRgb(event.target.value);
     if (rgb) {
-      setTheme(prevTheme => ({ ...prevTheme, scrollbarColor: `${rgb.r},${rgb.g},${rgb.b}` }))
+      setTheme((prevTheme) => ({
+        ...prevTheme,
+        scrollbarColor: `${rgb.r},${rgb.g},${rgb.b}`,
+      }));
     }
-  }
+  };
   // const rgbToHex = (r: number, g: number, b: number): string => {
   //   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
   // }
@@ -1162,12 +1185,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <div className="ti-form-radio">
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-                               
                                 style={{
                                   backgroundColor: `rgb(${theme.scrollbarColor})`,
                                 }}
                               >
-                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                                 <input
                                   type="color"
                                   value={theme.scrollbarColor}
@@ -1179,15 +1201,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           </div>
                           {/* Preview Section */}
                           <div
-                          
-                          className={`
+                            className={`
                             w-full h-64 border border-gray-300 rounded-md overflow-y-auto 
                            scrollbar 
-                            ${theme.scrollbarWidth === "lg" ? "scrollbar-thick" : theme.scrollbarWidth === "sm" ? "scrollbar-thin" : "scrollbar"}
+                            ${
+                              theme.scrollbarWidth === "lg"
+                                ? "scrollbar-thick"
+                                : theme.scrollbarWidth === "sm"
+                                ? "scrollbar-thin"
+                                : "scrollbar"
+                            }
                           `}
                             style={
                               {
-                                "--scrollbar-thumb": `rgb(${theme.scrollbarColor ?? "219,223,225"})`,
+                                "--scrollbar-thumb": `rgb(${
+                                  theme.scrollbarColor ?? "219,223,225"
+                                })`,
                                 "--scrollbar-track": "rgb(241,245,249)",
                               } as React.CSSProperties
                             }
@@ -1220,8 +1249,23 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       </div>
                       <div className="">
                         <p className="switcher-style-head">Input Box Style:</p>
-                        <div className="grid  grid-cols-2 sm:grid-cols-4 switcher-style">
-                          <div className="flex items-center">
+                        <div className="grid  grid-cols-2  switcher-style">
+                          <ERPInput
+                            id="borderRadius"
+                            noLabel={true}
+                            type="number"
+                            // value={theme.inputBox?.borderRadius}
+                            // data={theme.inputBox}
+                            // onChangeData={(data) =>
+                            //   handleInputBoxStyleChange(
+                            //     "borderRadius",
+                            //     data.oTPEmail
+                            //   )
+                            // }
+                          />
+                        </div>
+                        <div className="grid  grid-cols-3  switcher-style">
+                          {/* <div className="flex items-center">
                             <input
                               type="radio"
                               name="inputBox"
@@ -1247,7 +1291,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               {" "}
                               Normal
                             </label>
-                          </div>
+                          </div> */}
                           <div className="flex item-center">
                             <input
                               type="radio"
@@ -1266,6 +1310,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       inputStyle: "standard",
                                     },
                                   }));
+                                  handleInputBoxStyleChange("inputStyle","fill");
                                 }
                               }}
                             />
@@ -1293,6 +1338,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       inputStyle: "outline",
                                     },
                                   }));
+                                  handleInputBoxStyleChange("inputStyle","fill");
                                 }
                               }}
                             />
@@ -1320,6 +1366,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       inputStyle: "fill",
                                     },
                                   }));
+                                  handleInputBoxStyleChange("inputStyle","fill");
                                 }
                               }}
                             />
@@ -1334,7 +1381,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                       <div className="">
-                        <p className="switcher-style-head">Input Box Border:</p>
+                        {/* <p className="switcher-style-head">Input Box Border:</p> */}
                         <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style">
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3">
@@ -1343,20 +1390,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 label="Border Radius"
                                 className="bg-slate-300"
                                 value={theme.inputBox?.borderRadius}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      borderRadius: parseInt(
-                                        e.target.value,
-                                        10
-                                      ),
+                                      borderRadius: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "borderRadius",
+                                    e.target.value
+                                  );
+                                }}
                                 min={0}
-                                max={100}
+                                max={50}
                               />
                             </div>
                             <div className="basis-1/3 translate-y-3">
@@ -1366,18 +1415,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 type="number"
                                 value={theme.inputBox?.borderRadius}
                                 data={theme.inputBox}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      borderRadius: parseInt(
-                                        e.target.value,
-                                        10
-                                      ),
+                                      borderRadius: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "borderRadius",
+                                    e.target.value
+                                  );
+                                }}
+                                min={0}
+                                max={50}
                               />
                             </div>
                           </div>
@@ -1398,8 +1451,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     },
                                   }))
                                 }
-                                min={0}
-                                max={100}
+                                min={5}
+                                max={25}
                               />
                             </div>
                             <div className="basis-1/3 translate-y-3">
@@ -1421,7 +1474,100 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               />
                             </div>
                           </div>
+
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-2/3 ">
+                              <ERPSlider
+                                id="labelFontSize"
+                                label="Label Font Size"
+                                className="bg-slate-300"
+                                value={theme.inputBox?.labelFontSize}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      labelFontSize: parseInt(
+                                        e.target.value,
+                                        10
+                                      ),
+                                    },
+                                  }))
+                                }
+                                min={5}
+                                max={25}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                id="labelFontSize"
+                                type="number"
+                                noLabel={true}
+                                value={theme.inputBox?.labelFontSize}
+                                data={theme.inputBox}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      labelFontSize: parseInt(
+                                        e.target.value,
+                                        10
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-2/3 ">
+                              <ERPSlider
+                                id="otherLabelFontSize"
+                                label="Other Label Font Size"
+                                className="bg-slate-300"
+                                value={theme.inputBox?.otherLabelFontSize}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      otherLabelFontSize: parseInt(
+                                        e.target.value,
+                                        10
+                                      ),
+                                    },
+                                  }))
+                                }
+                                min={5}
+                                max={25}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                id="otherLabelFontSize"
+                                type="number"
+                                noLabel={true}
+                                value={theme.inputBox?.otherLabelFontSize}
+                                data={theme.inputBox}
+                                onChange={(e) =>
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      otherLabelFontSize: parseInt(
+                                        e.target.value,
+                                        10
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
                           <ERPInput
+                            className="w-32"
                             id="borderColor"
                             label="Border Color"
                             type="color"
@@ -1438,6 +1584,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             }
                           />
                           <ERPInput
+                            className="w-32"
                             id="borderFocus"
                             label="Border On Focus"
                             type="color"
@@ -1457,7 +1604,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       </div>
                     </div>
                   </div>
-                  <div className="w-full p-2 flex justify-end">
+                  <div className="w-full p-2 flex justify-end space-x-2">
                     <ERPButton
                       title="Reset"
                       onClick={resetThemeChange}

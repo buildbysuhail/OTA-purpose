@@ -20,7 +20,7 @@ const RPosHeader: FC<RPosHeaderProps> = () => {
 
   return (
     <Fragment>
-      <header className="bg-white shadow-md p-2 flex justify-between items-center">
+      <header className="lg:h-[9vh] xl:h-[8vh] bg-white shadow-md p-2 flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <i className="ri-menu-line text-2xl mr-2"></i>
           <Link to="/rpos/table-view">

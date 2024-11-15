@@ -50,36 +50,16 @@ const CustomOrderStatus = () => {
                 {status.label}
               </button> */}
               <ERPButton
-                // variant="status"
-                // status={{ label: status.label, color: status.color }}
-                // rounded="full"
-              />
-              {/* // Status button usage */}
-              {/* <ERPButton
                 variant="status"
-                status={{ label: "Active", color: "bg-[#22c55e]" }}
+                status={{ label: status.label, color: status.color }}
                 rounded="full"
-              /> */}
-              {/* <ERPButton
-                title={status.label}
-                // onClick={restLanguage}
-                type="button"
-                // className="px-6 py-2 rounded bg-[#f3f4f6] text-[#374151] font-medium hover:bg-[#e5e7eb] transition-colors"
-                className={`${status.color} text-[#ffffff] py-2 px-8 rounded-full text-sm font-medium`}
-              ></ERPButton> */}
-              {/* // Regular usage (unchanged) */}
-              {/* <ERPButton
-                variant="primary"
-                title="Submit"
-                // onClick={handleSubmit}
-              /> */}
-
+              />
               {/* Vertical line and add button section */}
               {index < statuses.length - 1 && (
                 <div className="relative w-full h-24">
                   {/* Vertical line */}
                   {/* <div className="absolute left-1/2 -translate-x-1/2 top-2 w-0.5 h-full bg-[#e5e7eb]" /> */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-2 w-0.5 h-full border-l-2 border-dashed border-[#e5e7eb]" />
+                  <div className="absolute left-1/2 -translate-x-1/2 top-2 w-0.5 h-full border-l-2 border-dashed border-[#00000062]" />
 
                   {/* Add button and text */}
                   <div className="absolute top-8 left-1/2 -translate-x-1/2">

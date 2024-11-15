@@ -1,54 +1,80 @@
 import { CircularProgress } from "@mui/material";
 import { useEffect, useState } from "react";
 
+type StatusType = {
+  label: string;
+  color: string;
+};
 type ERPButtonProps = {
-	title?: string;
-	disabled?: boolean;
-	loading?: boolean;
-	startIcon?: React.ReactNode;
-	onClick?: () => void;
-	className?: string;
-	customVariant?: string;
-	variant?: "primary" | "secondary" | "custom";
-	type?: "button" | "reset" | "submit";
-	tabIndex?: number;
-	
+  title?: string;
+  disabled?: boolean;
+  loading?: boolean;
+  startIcon?: React.ReactNode;
+  onClick?: () => void;
+  className?: string;
+  customVariant?: string;
+  variant?: "primary" | "secondary" | "custom" | "status";
+  type?: "button" | "reset" | "submit";
+  tabIndex?: number;
+  status?: StatusType;
+  rounded?: "md" | "full" | "none";
 };
 
 const ERPButton = ({
-	title,
-	disabled,
-	loading,
-	startIcon,
-	onClick,
-	className,
-	customVariant,
-	variant,
-	type = "button",
-	tabIndex,
-	
+  title,
+  disabled,
+  loading,
+  startIcon,
+  onClick,
+  className = "",
+  customVariant,
+  variant = "secondary",
+  type = "button",
+  tabIndex,
+  status,
+  rounded = "md",
 }: ERPButtonProps) => {
-	const [variantType, setVariantType] = useState<any>();
-	useEffect(() => {
-		variant === "primary"
-			? setVariantType("ti-btn-primary-full")
-			: variant === "custom"
-			? setVariantType(customVariant)
-			: setVariantType(" bg-slate-100 hover:bg-slate-200 text-black");
-	}, []);
+  const [variantType, setVariantType] = useState<string>();
+  useEffect(() => {
+    if (variant === "status" && status) {
+      setVariantType(status.color);
+      return;
+    }
 
+    switch (variant) {
+      case "primary":
+        setVariantType("ti-btn-primary-full");
+        break;
+      case "custom":
+        setVariantType(customVariant || "");
+        break;
+      case "secondary":
+      default:
+        setVariantType("bg-slate-100 hover:bg-slate-200 text-black");
+        break;
+    }
+  }, [variant, customVariant, status]);
 
-	return (
-    <button
-      tabIndex={tabIndex}
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-      className={`ti-btn ti-btn-full py-2 px-4 text-sm ${disabled && "opacity-50"} rounded-md font-medium ${variantType} ${className}`}
-	  
-    >
+  const getRoundedClass = () => {
+    switch (rounded) {
+      case "full":
+        return "rounded-full";
+      case "md":
+        return "rounded-md";
+      case "none":
+        return "";
+      default:
+        return "rounded-md";
+    }
+  };
+
+  const getButtonContent = () => {
+    if (variant === "status" && status) {
+      return status.label;
+    }
+    return (
       <div className="flex gap-2 items-center">
-	  {typeof startIcon === 'string' && <i className={startIcon}></i>}
+        {typeof startIcon === "string" && <i className={startIcon}></i>}
         {title}
         {loading && (
           <div className="flex items-center">
@@ -56,6 +82,31 @@ const ERPButton = ({
           </div>
         )}
       </div>
+    );
+  };
+
+  return (
+    <button
+      tabIndex={tabIndex}
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      className={`
+        ${variant !== "status" ? "ti-btn ti-btn-full" : ""} 
+        py-2 
+        ${variant === "status" ? "px-8" : "px-4"} 
+        text-sm 
+        ${disabled ? "opacity-50" : ""} 
+        ${getRoundedClass()} 
+        font-medium 
+        ${variantType} 
+        ${variant === "status" ? "text-white" : ""} 
+        ${className}
+      `
+        .trim()
+        .replace(/\s+/g, " ")}
+    >
+      {getButtonContent()}
     </button>
   );
 };

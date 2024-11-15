@@ -4,6 +4,7 @@ import ERPInput from '../components/ERPComponents/erp-input';
 import Urls from '../redux/urls';
 import { LedgerType } from '../enums/ledger-types';
 import ERPDateInput from '../components/ERPComponents/erp-date-input';
+import MUIERPDataCombobox from '../components/ERPComponents/erp-data-combobox copy';
 
 const Test: React.FC = () => {
     const [formState, setFormState] = useState({
@@ -25,6 +26,54 @@ const Test: React.FC = () => {
                     id="defaultCustomerLedgerID"
                     value={formState.defaultCustomerLedgerID}
                     customSize='sm'
+                    data={formState}
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    customSize='sm'
+                    variant='outlined'
+                    data={formState}
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    customSize='sm'
+                    variant='standard'
+                    data={formState}
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    customSize='sm'
+                    variant='filled'
                     data={formState}
                     label="default_customer"
                     field={{
@@ -81,6 +130,54 @@ const Test: React.FC = () => {
                     value={formState.defaultCustomerLedgerID}
                     data={formState}
                     customSize='md'
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    data={formState}
+                    customSize='md'
+                    variant='outlined'
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    data={formState}
+                    customSize='md'
+                    variant='standard'
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    data={formState}
+                    customSize='md'
+                    variant='filled'
                     label="default_customer"
                     field={{
                         id: "defaultCustomerLedgerID",
@@ -136,6 +233,54 @@ const Test: React.FC = () => {
                     value={formState.defaultCustomerLedgerID}
                     data={formState}
                     customSize='lg'
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    data={formState}
+                    customSize='lg'
+                    variant='outlined'
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    data={formState}
+                    customSize='lg'
+                    variant='standard'
+                    label="default_customer"
+                    field={{
+                        id: "defaultCustomerLedgerID",
+                        getListUrl: Urls.data_acc_ledgers,
+                        params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    onChangeData={(data) => handleFieldChange('defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
+                />
+                <MUIERPDataCombobox
+                    id="defaultCustomerLedgerID"
+                    value={formState.defaultCustomerLedgerID}
+                    data={formState}
+                    customSize='lg'
+                    variant='filled'
                     label="default_customer"
                     field={{
                         id: "defaultCustomerLedgerID",

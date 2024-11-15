@@ -80,15 +80,15 @@ const CustomerSupplierLedger = () => {
 
     const payload = store?.filter((x: any) => x.show == true)?.map((item: any) => ({
       ledgerID: item.ledgerID,
-      showInCustomers: !gridType.customer,
-      showInSuppliers: !gridType.supplier,
+    showInSuppliers: gridType.customer,
+     showInCustomers : gridType.supplier,
     }));
     console.log("Payload to be submitted:", payload);
     try {
       const response: any = await api.post(
         `${Urls.cust_supp_ledger}`,
-        {showInCustomers: gridType.customer,
-          showInSuppliers: gridType.supplier,
+        {showInSuppliers: gridType.customer,
+          showInCustomers : gridType.supplier,
           custSuppLedgerInputItems: payload}
       );
       handleResponse(response);
@@ -100,7 +100,7 @@ const CustomerSupplierLedger = () => {
   };
   const handleClose = () => {
     navigate("/settings"); 
-  };
+  }; 
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">

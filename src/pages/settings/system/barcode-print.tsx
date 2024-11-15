@@ -387,6 +387,7 @@ const BarcodePrint: React.FC = () => {
                   <div className="flex space-x-2">
                     <ERPInput
                       useMUI
+                      autoFocus={true}
                       variant="outlined"
                       id="formBcode"
                       label={t("barcode_form")}

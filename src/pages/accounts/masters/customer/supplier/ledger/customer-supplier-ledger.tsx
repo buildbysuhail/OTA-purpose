@@ -80,8 +80,8 @@ const CustomerSupplierLedger = () => {
 
     const payload = store?.filter((x: any) => x.show == true)?.map((item: any) => ({
       ledgerID: item.ledgerID,
-      showInCustomers: gridType.customer,
-      showInSuppliers: gridType.supplier,
+      showInCustomers: !gridType.customer,
+      showInSuppliers: !gridType.supplier,
     }));
     console.log("Payload to be submitted:", payload);
     try {

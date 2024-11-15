@@ -386,7 +386,7 @@ debugger;
         exportDataGridToPdf({
           jsPDFDocument: doc,
           component: e.component,
-          columnWidths: [40, 40, 40, 100],
+          // columnWidths: [40, 40, 40, 100],
           customizeCell({ gridCell, pdfCell }) {
             // if (gridCell.rowType === 'data') {
             //   pdfCell.styles = {

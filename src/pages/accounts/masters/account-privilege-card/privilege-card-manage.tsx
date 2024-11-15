@@ -74,7 +74,6 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           {...getFieldProps('address1')}
           label={t("address1")}
           placeholder={t("address1")}
-          required={true}
           onChangeData={(data: any) => handleFieldChange('address1', data.address1)}
         />
         <ERPInput
@@ -88,14 +87,12 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           {...getFieldProps('phone')}
           label={t("phone")}
           placeholder={t("phone")}
-          required={true}
           onChangeData={(data: any) => handleFieldChange('phone', data.phone)}
         />
         <ERPInput
           {...getFieldProps('mobile')}
           label={t("mobile")}
           placeholder={t("mobile")}
-          required={true}
           onChangeData={(data: any) => handleFieldChange('mobile', data.mobile)}
         />
         <ERPInput
@@ -136,29 +133,26 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps('oBalance')}
           label={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
-          placeholder={t("op_balance")}
+          placeholder={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
           type="number"
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('oBalance', data.opBalance)}
+          onChangeData={(data: any) => handleFieldChange('oBalance', data.oBalance)}
         />
         <ERPDateInput
           {...getFieldProps("activateDate")}
-          required={true}
           label={t("activate_date")}
           onChangeData={(data: any) => handleDateChange("activateDate", data.activateDate)}
         />
         <ERPDateInput
           {...getFieldProps("expiryDate")}
-          required={true}
           label={t("expiry_date")}
           onChangeData={(data: any) => handleDateChange("expiryDate", data.expiryDate)}
         />
-        <ERPDateInput
+        {/* <ERPDateInput
           {...getFieldProps("dob")}
           required={false}
           label={t("date_of_birth")}
           onChangeData={(data: any) => handleDateChange("dob", data.dob)}
-        />
+        /> */}
       </div>
       <ERPFormButtons
         onClear={handleClear}

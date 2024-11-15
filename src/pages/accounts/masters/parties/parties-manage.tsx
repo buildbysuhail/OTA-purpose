@@ -266,7 +266,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
               />
             </div>
           </div>
-          
+
           <ERPCheckbox
             {...getFieldProps("billwiseBillApplicable")}
             label={t("bill_wise_applicable")}
@@ -304,7 +304,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                 label={t("referred_by")}
               />
               <ERPInput
-                {...getFieldProps("address4")}
+                {...getFieldProps("address")}
                 label={t("ifsc")}
                 placeholder={t("ifsc")}
                 required={false}
@@ -387,18 +387,41 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           <div className="grid grid-cols-5 gap-6">
             <ERPInput
               {...getFieldProps("address2")}
-              label={t("address_2_city_district")}
-              placeholder={t("address_2_city_district")}
+              label={userSession.countryId == Countries.India ? t("address_2_city_district") : t("address_2_city")}
+              placeholder={userSession.countryId == Countries.India ? t("address_2_city_district") : t("address_2_city")}
               required={false}
               onChangeData={(data: any) => handleFieldChange("address2", data.address2)}
             />
-            <ERPInput
-              {...getFieldProps("address4")}
-              label={t("address_4_building_no")}
-              placeholder={t("address_4_building_no")}
-              required={false}
-              onChangeData={(data: any) => handleFieldChange("address4", data.address4)}
-            />
+            {userSession.countryId != Countries.India &&
+              <ERPInput
+                {...getFieldProps("address3")}
+                label={t("address3_district")}
+                placeholder={t("address3_district")}
+                required={false}
+                onChangeData={(data: any) =>
+                  handleFieldChange("address3", data.address3)
+                }
+              />
+            }
+            {userSession.countryId == Countries.India &&
+              <ERPInput
+                {...getFieldProps("address3")}
+                label={t("address_4_building_no")}
+                placeholder={t("address_4_building_no")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("address3", data.address3)}
+              />
+            }
+
+            {userSession.countryId != Countries.India &&
+              <ERPInput
+                {...getFieldProps("address4")}
+                label={t("address_4_building_no")}
+                placeholder={t("address_4_building_no")}
+                required={false}
+                onChangeData={(data: any) => handleFieldChange("address4", data.address4)}
+              />
+            }
             <ERPInput
               {...getFieldProps("officePhone")}
               label={t("office_phone")}
@@ -588,7 +611,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                   }}
                   onChange={(data: any) => {
                     debugger;
-                    handleFieldChange({stateName: data !== null && data !== undefined ? data.value.toString() : "",stateCode: data !== null && data !== undefined ? data.value.toString() : "" });
+                    handleFieldChange({ stateName: data !== null && data !== undefined ? data.value.toString() : "", stateCode: data !== null && data !== undefined ? data.value.toString() : "" });
                   }}
                   label={t("state_name")}
                 />
@@ -749,15 +772,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
               handleFieldChange("address2", data.address2)
             }
           />
-          <ERPInput
-            {...getFieldProps("address3")}
-            label={t("address3")}
-            placeholder={t("address3")}
-            required={false}
-            onChangeData={(data: any) =>
-              handleFieldChange("address3", data.address3)
-            }
-          />
+
         </div>}
         {activeTab === 'other_details' && <div className="grid grid-cols-4 gap-6">
           <ERPDataCombobox

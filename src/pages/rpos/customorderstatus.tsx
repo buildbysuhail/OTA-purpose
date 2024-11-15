@@ -1,5 +1,6 @@
 import React from "react";
 import { AlertCircle } from "lucide-react";
+import ERPButton from "../../components/ERPComponents/erp-button";
 
 const CustomOrderStatus = () => {
   const statuses = [
@@ -10,7 +11,7 @@ const CustomOrderStatus = () => {
   ];
 
   return (
-    <div className="h-[100vh] mx-auto bg-[#ffffff] rounded-lg border shadow-sm">
+    <div className="h-auto mx-auto bg-[#ffffff] rounded-lg border shadow-sm">
       {/* Header Section */}
       <div className="p-6 border-b">
         <div className="bg-[#eff6ff] border border-[#bfdbfe] rounded-lg p-6">
@@ -40,29 +41,56 @@ const CustomOrderStatus = () => {
           {statuses.map((status, index) => (
             <div
               key={status.label}
-              className="relative flex flex-col items-center pb-16 last:pb-0 w-full"
+              className="relative flex flex-col items-center pb-[1rem] last:pb-0 w-full"
             >
               {/* Status Button */}
-              <button
+              {/* <button
                 className={`${status.color} text-[#ffffff] py-2 px-8 rounded-full text-sm font-medium`}
               >
                 {status.label}
-              </button>
+              </button> */}
+              <ERPButton
+                variant="status"
+                status={{ label: status.label, color: status.color }}
+                rounded="full"
+              />
+              {/* // Status button usage */}
+              {/* <ERPButton
+                variant="status"
+                status={{ label: "Active", color: "bg-[#22c55e]" }}
+                rounded="full"
+              /> */}
+              {/* <ERPButton
+                title={status.label}
+                // onClick={restLanguage}
+                type="button"
+                // className="px-6 py-2 rounded bg-[#f3f4f6] text-[#374151] font-medium hover:bg-[#e5e7eb] transition-colors"
+                className={`${status.color} text-[#ffffff] py-2 px-8 rounded-full text-sm font-medium`}
+              ></ERPButton> */}
+              {/* // Regular usage (unchanged) */}
+              {/* <ERPButton
+                variant="primary"
+                title="Submit"
+                // onClick={handleSubmit}
+              /> */}
 
               {/* Vertical line and add button section */}
               {index < statuses.length - 1 && (
                 <div className="relative w-full h-24">
                   {/* Vertical line */}
-                  <div className="absolute left-1/2 -translate-x-1/2 top-2 w-0.5 h-full bg-[#e5e7eb]" />
+                  {/* <div className="absolute left-1/2 -translate-x-1/2 top-2 w-0.5 h-full bg-[#e5e7eb]" /> */}
+                  <div className="absolute left-1/2 -translate-x-1/2 top-2 w-0.5 h-full border-l-2 border-dashed border-[#e5e7eb]" />
 
                   {/* Add button and text */}
-                  <div className="absolute top-8 left-1/2 -translate-x-1/2 flex flex-col items-center">
-                    <button className="w-10 h-10 rounded-full bg-[#f3f4f6] flex items-center justify-center text-[#9ca3af] hover:bg-[#e5e7eb] transition-colors mb-2">
-                      <span className="text-xl">+</span>
-                    </button>
-                    <span className="text-[#6b7280] text-sm whitespace-nowrap bg-[#ffffff] px-2">
-                      Add up to 3 new status buttons here
-                    </span>
+                  <div className="absolute top-8 left-1/2 -translate-x-1/2">
+                    <div className="relative">
+                      <button className="w-10 h-10 rounded-full bg-[#f3f4f6] flex items-center justify-center text-[#9ca3af] hover:bg-[#e5e7eb] transition-colors mb-2">
+                        <span className="text-xl">+</span>
+                      </button>
+                      <span className="absolute left-12 top-1/2 -translate-y-1/2 text-gray-500 text-sm whitespace-nowrap px-2 bg-[#f3f4f6] p-1 rounded-md ">
+                        Add up to 3 new status buttons here
+                      </span>
+                    </div>
                   </div>
                 </div>
               )}
@@ -71,12 +99,27 @@ const CustomOrderStatus = () => {
         </div>
 
         <div className="flex justify-end gap-4 mt-8 border-t pt-6">
-          <button className="px-6 py-2 rounded bg-[#f3f4f6] text-[#374151] font-medium hover:bg-[#e5e7eb] transition-colors">
+          {/* <button className="px-6 py-2 rounded bg-[#f3f4f6] text-[#374151] font-medium hover:bg-[#e5e7eb] transition-colors">
             Cancel
           </button>
           <button className="px-6 py-2 rounded bg-[#dc2626] text-[#ffffff] font-medium hover:bg-[#b91c1c] transition-colors">
             Save
-          </button>
+          </button> */}
+          <ERPButton
+            title="Cancel"
+            // onClick={restLanguage}
+            type="button"
+            className="px-6 py-2 rounded bg-[#f3f4f6] text-[#374151] font-medium hover:bg-[#e5e7eb] transition-colors"
+          ></ERPButton>
+
+          <ERPButton
+            title="Save"
+            // onClick={updateLanguage}
+            variant="primary"
+            className="px-6 py-2 rounded bg-[#dc2626] text-[#ffffff] font-medium hover:bg-[#b91c1c] transition-colors"
+            // loading={userLanguage.loading}
+            // disabled={userLanguage.loading}
+          ></ERPButton>
         </div>
       </div>
     </div>

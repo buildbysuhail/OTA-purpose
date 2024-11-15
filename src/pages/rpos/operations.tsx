@@ -138,7 +138,7 @@ const Operations = () => {
               {
                 icon: ListTodo,
                 label: "custom_order_status",
-                link: "/rpos/customorderstatus",
+                link: "/rpos/customorder-status",
               },
             ].map((item: any, index) => (
               <Link

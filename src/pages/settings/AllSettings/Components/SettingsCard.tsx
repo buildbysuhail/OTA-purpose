@@ -55,6 +55,12 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
       if(item.title === "company_profile_others" && userSession.countryId == Countries.India) {
         item.visible = false;
       }
+      if(item.title === "upi" && userSession.countryId != Countries.India) {
+        item.visible = false;
+      }
+      if(item.title === "qr_pay" && userSession.countryId == Countries.India) {
+        item.visible = false;
+      }
       result[columnIndex]?.push(item);
     });
 

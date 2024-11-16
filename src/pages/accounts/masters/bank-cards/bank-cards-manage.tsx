@@ -23,7 +23,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
     isLoading,
     handleClose
   } = useFormManager<BankCardsData>({
-    url: Urls.data_Bank_Cards,
+    url: Urls.bankCards,
     onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     onClose:useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null,})), [dispatch]),
     key: rootState.PopupData.bankCard.key,
@@ -46,8 +46,9 @@ export const BankCardsManage: React.FC = React.memo(() => {
             valueKey: "value",
             labelKey: "label",
           }}
-          onChangeData={(data: any) => {
-            handleFieldChange("paymentType", data.paymentType)
+          onChange={(data: any) => {
+            debugger;
+            handleFieldChange({paymentType: data.value, paymentName: data.label})
           }}
           label={t("bank_cards")}
           options={[
@@ -103,11 +104,10 @@ export const BankCardsManage: React.FC = React.memo(() => {
           label={t("ledger")}
         />
         <ERPInput
-          {...getFieldProps('remarks')}
+          {...getFieldProps('remark')}
           label={t("remarks")}
           placeholder={t("remarks")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
+          onChangeData={(data: any) => handleFieldChange('remark', data.remark)}
         />
 
       </div>

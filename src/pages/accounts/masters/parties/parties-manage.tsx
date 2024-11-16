@@ -547,7 +547,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 </div>
               </div>
             </>
-          )}
+          }
           {activeTab === "details" && (
             <div className="grid grid-cols-2 gap-6 mt-5">
               <div className="grid grid-cols-2 gap-6 p-5 border rounded-lg">
@@ -664,7 +664,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               </>
             </div>
           )}
-        </div>}
+        </div>)}
         {activeTab === 'more' && <>
           {/* <div className="border p-4 rounded-lg mt-5">
       <h6>Payment Day</h6>
@@ -807,7 +807,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           />
 
         </div>}
-        {activeTab === 'other_details' && <div className="grid grid-cols-4 gap-6">
+        {activeTab === 'other_details' && (
+        <div className="grid grid-cols-4 gap-6">
           <ERPDataCombobox
             {...getFieldProps("idType")}
             field={{

@@ -1304,7 +1304,6 @@
   "close_single_day": "إغلاق يوم واحد",
   "vr_prefix": "بادئة القسيمة",
   "add_currency": "إضافة عملة",
-
   "company_name": "اسم الشركة",
   "registration_name": "اسم التسجيل",
   "cin": "الرقم التعريفي للشركة",
@@ -1313,10 +1312,11 @@
   "fssai": "هيئة سلامة الأغذية والمعايير الهندية",
   "leagel_name": "الاسم القانوني",
   "bank_name": "اسم البنك",
-
   "company_profile_others": "ملف الشركة",
   "company_profile_india": "ملف الشركة (الهند)",
   "country_sub_division": "تقسيم فرعي للبلد",
   "address_2_city": "العنوان 2/المدينة",
-    "address3_district": "العنوان 3/المنطقة"
+  "address3_district": "العنوان 3/المنطقة",
+  "qr_pay_name": "اسم الدفع عبر QR",
+  "qr_pay": "دفع QR"
 }

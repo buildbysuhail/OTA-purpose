@@ -5,7 +5,7 @@ export const initialBankCards = {
     paymentType: "",
     createdUserID: 0,
     ledgerID: 0,
-    remarks: "",
+    remark: "",
     paymentTypeID: 0
   },
   validations: {
@@ -14,7 +14,7 @@ export const initialBankCards = {
     paymentType: "",
     createdUserID: "",
     ledgerID: "",
-    remarks: "",
+    remark: "",
     paymentTypeID: ""
   },
 };
@@ -24,6 +24,6 @@ export interface BankCardsData {
   paymentType: string,
   createdUserID: number,
   ledgerID: number,
-  remarks: string,
+  remark: string,
   paymentTypeID: number
 }

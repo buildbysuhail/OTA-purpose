@@ -1,5 +1,5 @@
-import React from 'react';
-import ERPButton from './erp-button';
+import React from "react";
+import ERPButton from "./erp-button";
 
 interface ERPFormButtonsProps {
   isEdit?: boolean;
@@ -9,38 +9,82 @@ interface ERPFormButtonsProps {
   onCancel?: () => void;
   onSubmit?: () => void;
   onClear?: () => void;
+  skipClear?: boolean;
+  skipCancel?: boolean;
+  skipSubmit?: boolean;
+  jumpToClear?: string;
+  jumpTargetClear?: string;
+  jumpToCancel?: string;
+  jumpTargetCancel?: string;
+  jumpToSubmit?: string;
+  jumpTargetSubmit?: string;
+  onClearEnterPress?: () => void;
+  onCancelEnterPress?: () => void;
+  onSubmitEnterPress?: () => void;
 }
 
-export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({ isEdit, isLoading, title, onCancel, onSubmit, onClear,submitDisabled = false }) => {
+export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
+  isEdit = false,
+  isLoading = false,
+  title = "Submit",
+  submitDisabled = false,
+  onCancel,
+  onSubmit,
+  onClear,
+  skipClear = false,
+  skipCancel = false,
+  skipSubmit = false,
+  jumpToClear,
+  jumpTargetClear,
+  jumpToCancel,
+  jumpTargetCancel,
+  jumpToSubmit,
+  jumpTargetSubmit,
+  onClearEnterPress,
+  onCancelEnterPress,
+  onSubmitEnterPress,
+}) => {
   return (
-    <div className="sticky bottom-0 left-0  w-full  flex justify-end space-x-2 bg-white mt-2 pt-1 pr-3 border-t  z-20">
-      
-       {onClear && (
-      <ERPButton
-        type="button"
-        title="Clear"
-        variant="secondary"
-        onClick={onClear}
-      />
-    )}
-       {onCancel && (
-      <ERPButton
-        type="reset"
-        title="Cancel"
-        variant="secondary"
-        onClick={onCancel}
-      />
-      )}
-       {onSubmit && (
+    <div className="flex gap-2 justify-end mt-4">
+      {onClear && (
         <ERPButton
-          type="button"
-          disabled={isLoading || submitDisabled}
-          variant="primary"
+          title="Clear"
+          onClick={onClear}
+          skip={skipClear}
+          jumpTo={jumpToClear}
+          jumpTarget={jumpTargetClear}
+          onEnterPress={onClearEnterPress}
+          variant="secondary"
+        />
+      )}
+
+      {onCancel && (
+        <ERPButton
+          title="Cancel"
+          onClick={onCancel}
+          skip={skipCancel}
+          jumpTo={jumpToCancel}
+          jumpTarget={jumpTargetCancel}
+          onEnterPress={onCancelEnterPress}
+          variant="secondary"
+        />
+      )}
+
+      {onSubmit && (
+        <ERPButton
+          title={title}
           onClick={onSubmit}
           loading={isLoading}
-          title={title ? title:  isEdit ? 'Update' : 'Submit'}
+          disabled={submitDisabled}
+          skip={skipSubmit}
+          jumpTo={jumpToSubmit}
+          jumpTarget={jumpTargetSubmit}
+          onEnterPress={onSubmitEnterPress}
+          variant="primary"
         />
       )}
     </div>
   );
 };
+
+export default ERPFormButtons;

@@ -1,10 +1,12 @@
 import { CircularProgress } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, KeyboardEvent } from "react";
+import { handleNavigation } from "../../utilities/shortKeys";
 
 type StatusType = {
   label: string;
   color: string;
 };
+
 type ERPButtonProps = {
   title?: string;
   disabled?: boolean;
@@ -18,6 +20,10 @@ type ERPButtonProps = {
   tabIndex?: number;
   status?: StatusType;
   rounded?: "md" | "full" | "none";
+  skip?: boolean;
+  jumpTo?: string;
+  jumpTarget?: string;
+  onEnterPress?: () => void;
 };
 
 const ERPButton = ({
@@ -33,14 +39,17 @@ const ERPButton = ({
   tabIndex,
   status,
   rounded = "md",
+  skip = false,
+  jumpTo,
+  jumpTarget,
 }: ERPButtonProps) => {
   const [variantType, setVariantType] = useState<string>();
+  const buttonRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (variant === "status" && status) {
       setVariantType(status.color);
       return;
     }
-
     switch (variant) {
       case "primary":
         setVariantType("ti-btn-primary-full");
@@ -67,7 +76,6 @@ const ERPButton = ({
         return "rounded-md";
     }
   };
-
   const getButtonContent = () => {
     if (variant === "status" && status) {
       return status.label;
@@ -84,13 +92,17 @@ const ERPButton = ({
       </div>
     );
   };
-
   return (
     <button
+      ref={buttonRef}
       tabIndex={tabIndex}
       type={type}
       disabled={disabled}
       onClick={onClick}
+      onKeyDown={handleNavigation}
+      data-skip={skip}
+      data-jump-to={jumpTo}
+      data-jump-target={jumpTarget}
       className={`
         ${variant !== "status" ? "ti-btn ti-btn-full" : ""} 
         py-2 
@@ -101,11 +113,9 @@ const ERPButton = ({
         font-medium 
         ${variantType} 
         ${variant === "status" ? "text-white" : ""} 
-        ${className}
-      `
+        ${className}`
         .trim()
-        .replace(/\s+/g, " ")}
-    >
+        .replace(/\s+/g, " ")}>
       {getButtonContent()}
     </button>
   );

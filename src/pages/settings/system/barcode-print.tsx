@@ -557,6 +557,7 @@ const BarcodePrint: React.FC = () => {
                           required={true}
                           data={voucherForm.data}
                           defaultData={voucherForm?.data}
+                          // value={voucherForm.data?.formType}
                           validation={voucherForm?.validations?.formType}
                           onChangeData={(data: any) => {
                             setVoucherForm((prev: any) => ({
@@ -688,6 +689,7 @@ const BarcodePrint: React.FC = () => {
                           required={true}
                           data={barcodeDesc?.data}
                           defaultData={barcodeDesc?.data}
+                          // value={barcodeDesc?.data?.labelDesign}
                           validation={barcodeDesc?.validations?.labelDesign}
                           onChangeData={(data: any) => { handleComboboxChange("labelDesign", data) }}
                         />

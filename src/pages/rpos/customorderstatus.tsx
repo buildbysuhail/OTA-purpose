@@ -1,5 +1,5 @@
-import React from "react";
-import { AlertCircle } from "lucide-react";
+import React, { useState } from "react";
+import { AlertCircle, X } from "lucide-react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 
 const CustomOrderStatus = () => {
@@ -9,6 +9,36 @@ const CustomOrderStatus = () => {
     { label: "Dispatched", color: "bg-[#3b82f6]" },
     { label: "Delivered", color: "bg-[#16a34a]" },
   ];
+
+  const [showInput, setShowInput] = useState(false);
+  const [activeInputIndex, setActiveInputIndex] = useState(null);
+  const [newStatus, setNewStatus] = useState("");
+  const [statusess, setStatusess] = useState([...statuses]); // Add this line
+
+
+  const handleAddClick = (index: any) => {
+    setActiveInputIndex(index);
+    setShowInput(true);
+    setNewStatus("");
+  };
+
+  const handleSubmit = () => {
+    if (newStatus.trim() && activeInputIndex !== null) {
+      const newStatuses = [...statuses];
+      newStatuses.splice(activeInputIndex + 1, 0, {
+        label: newStatus,
+        color: "bg-blue-500",
+      });
+      setStatusess(newStatuses); // Update the state with the new statuses
+      setShowInput(false);
+      setNewStatus("");
+    }
+  };
+
+  const handleCancel = () => {
+    setShowInput(false);
+    setNewStatus("");
+  };
 
   return (
     <div className="h-auto mx-auto bg-[#ffffff] rounded-lg border shadow-sm">
@@ -63,14 +93,43 @@ const CustomOrderStatus = () => {
 
                   {/* Add button and text */}
                   <div className="absolute top-8 left-1/2 -translate-x-1/2">
-                    <div className="relative">
-                      <button className="w-10 h-10 rounded-full bg-[#f3f4f6] flex items-center justify-center text-[#9ca3af] hover:bg-[#e5e7eb] transition-colors mb-2">
-                        <span className="text-xl">+</span>
-                      </button>
-                      <span className="absolute left-12 top-1/2 -translate-y-1/2 text-gray-500 text-sm whitespace-nowrap px-2 bg-[#f3f4f6] p-1 rounded-md ">
-                        Add up to 3 new status buttons here
-                      </span>
-                    </div>
+                    {showInput && activeInputIndex === index ? (
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          value={newStatus}
+                          onChange={(e) => setNewStatus(e.target.value)}
+                          placeholder="Enter status name"
+                          className="border rounded px-3 py-2 text-sm"
+                          autoFocus
+                        />
+                        <button
+                          onClick={handleSubmit}
+                          className="bg-gray-100 hover:bg-gray-200 rounded-md px-3 py-2 text-sm"
+                        >
+                          Ok
+                        </button>
+                        <button
+                          onClick={handleCancel}
+                          className="rounded-md p-2 hover:bg-gray-100"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <button
+                          onClick={() => handleAddClick(index)}
+                          className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 hover:bg-gray-200 transition-colors mb-2"
+                        >
+                          <span className="text-xl">+</span>
+                        </button>
+                        <span className="absolute left-12 top-1/2 -translate-y-1/2 text-gray-500 text-sm whitespace-nowrap px-2 bg-gray-100 p-1 rounded-md">
+                          Add up to {3 - (statuses.length - 2)} new status
+                          buttons here
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

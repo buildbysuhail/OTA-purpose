@@ -11,6 +11,7 @@ const ShortKeys = lazy(() => import('../../../pages/rpos/shortkeys'));
 const Kots = lazy(() => import('../../../pages/rpos/kots'));
 const Customers = lazy(() => import('../../../pages/rpos/customers'));
 const CustomOrderStatus = lazy(() => import('../../../pages/rpos/customorderstatus'));
+const Payments = lazy(() => import('../../../pages/rpos/payments'));
 
 interface ContentProps { }
 const loading = (
@@ -34,6 +35,7 @@ const RPosContent: FC<ContentProps> = () => {
       <Route path="/kots" element={<Kots />} />
       <Route path="/customers" element={<Customers />} />
       <Route path="/customorder-status" element={<CustomOrderStatus />} />
+      <Route path="/payments" element={<Payments />} />
       </Routes>
     </Suspense>
   );

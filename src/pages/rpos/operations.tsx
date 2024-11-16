@@ -78,7 +78,7 @@ const Operations = () => {
               { icon: Globe, label: "online_orders" },
               { icon: Receipt, label: "kots", link: "/rpos/kots" },
               { icon: User, label: "customers", link: "/rpos/customers" },
-              { icon: Wallet, label: "cash_flow" },
+              { icon: Wallet, label: "cash_flow", link: "/rpos/payments"  },
               { icon: DollarSign, label: "expense" },
               { icon: Wallet, label: "withdrawal" },
               { icon: Vault, label: "cash_top_up" },

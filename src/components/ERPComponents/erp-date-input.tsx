@@ -160,7 +160,17 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
         };
     }
   };
+  const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value === "" ? null : dayjs(e.target.value).utc(true).format();
+    
+    if (onChange) {
+      onChange(e);
+    }
 
+    if (onChangeData && data) {
+      onChangeData({ ...data, [id]: newValue });
+    }
+  };
   const handleChange = (newValue: dayjs.Dayjs | null) => {
     if (!newValue) {
       if (onChange) {
@@ -230,7 +240,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
         placeholder={placeholder}
         disabled={disabled}
         type={type}
-        onChange={onChange}
+        onChange={handleChangeNormal}
         required={required}
         readOnly={readonly}
         min={minDate ? dateTrimmer(minDate) : minDateKey ? formatDate(data?.[minDateKey]) : undefined}

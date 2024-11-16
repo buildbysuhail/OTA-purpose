@@ -1,6 +1,7 @@
 import * as React from "react";
 import { forwardRef } from "react";
 import ERPElementValidationMessage from "./erp-element-validation-message";
+import { handleNavigation } from "../../utilities/shortKeys";
 
 interface ERPRadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -16,6 +17,10 @@ interface ERPRadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputClassName?: string;
   labelClassName?: string;
   validation?: string;
+  customSize?: "sm" | "md" | "lg";
+  skip?: boolean;
+  jumpTo?: string;
+  jumpTarget?: string;
 }
 
 const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
@@ -32,9 +37,53 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
   inputClassName,
   labelClassName,
   validation,
+  customSize = "sm",
+  skip = false,
+  jumpTo,
+  jumpTarget,
   ...props
 }: ERPRadioProps, ref) => {
   const iLabel = label || id?.replaceAll("_", " ");
+
+  const getSizeStyles = () => {
+    switch (customSize) {
+      case "sm":
+        return {
+          radio: {
+            width: "14px",
+            height: "14px"
+          },
+          label: {
+            fontSize: "12px",
+            lineHeight: "14px"
+          }
+        };
+      case "lg":
+        return {
+          radio: {
+            width: "1.25rem",
+            height: "1.25rem"
+          },
+          label: {
+            fontSize: "16px",
+            lineHeight: "1.25rem"
+          }
+        };
+      default:
+        return {
+          radio: {
+            width: "1rem",
+            height: "1rem"
+          },
+          label: {
+            fontSize: "14px",
+            lineHeight: "1rem"
+          }
+        };
+    }
+  };
+
+  const sizeStyles = getSizeStyles();
 
   return (
     <div className={className}>
@@ -51,23 +100,37 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
             }
             onChange && onChange(e);
           }}
+          onKeyDown={handleNavigation}
           disabled={disabled}
           required={required}
-          className={`form-check-input ${inputClassName} ${
-            disabled ? "text-gray-400" : "text-gray-900"
-          }`}
+          data-skip={skip}
+          data-jump-to={jumpTo}
+          data-jump-target={jumpTarget}
+          style={{
+            ...sizeStyles.radio,
+            cursor: disabled ? 'not-allowed' : 'pointer'
+          }}
+          className={`form-check-input appearance-none rounded-full border border-gray-300 
+            checked:bg-blue-500 checked:border-blue-500 focus:outline-none transition duration-200 
+            align-top bg-no-repeat bg-center bg-contain float-left cursor-pointer
+            ${inputClassName} 
+            ${disabled ? "opacity-50 bg-gray-100" : "hover:border-blue-500"}`}
           {...props}
         />
         <label
           htmlFor={id}
-          className={`form-check-label ml-2 ${labelClassName} capitalize text-xs text-gray-900 rtl:text-right`}
-        >
+          style={sizeStyles.label}
+          className={`form-check-label ${labelClassName} 
+            capitalize text-gray-900 rtl:text-right select-none
+            ${disabled ? "text-gray-400" : "text-gray-900"}`}>
           {iLabel}
+          {required && <span className="text-red-500">*</span>}
         </label>
       </div>
-      <ERPElementValidationMessage validation={validation}></ERPElementValidationMessage>
+      <ERPElementValidationMessage validation={validation} />
     </div>
   );
 });
 
+ERPRadio.displayName = "ERPRadio";
 export default ERPRadio;

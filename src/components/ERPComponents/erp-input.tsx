@@ -4,6 +4,7 @@ import { TextField, InputAdornment, TextFieldProps, Theme, SxProps } from "@mui/
 import { setNestedValue } from "../../utilities/Utils"
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch"
 import { RootState } from "../../redux/store"
+import { handleNavigation } from "../../utilities/shortKeys"
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({ validation }: { validation?: string }) => (
@@ -47,7 +48,10 @@ interface ERPInputProps extends ERPInputBaseProps {
   customSize?: "sm" | "md" | "lg" | "auto"
   useMUI?: boolean
   color?: TextFieldProps['color']
-  variant?: "filled" | "outlined" | "standard" |undefined
+  variant?: "filled" | "outlined" | "standard" | undefined
+  skip?: boolean
+  jumpTo?: string;     
+  jumpTarget?: string; 
 }
 
 const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
@@ -85,12 +89,15 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
   useMUI = false,
   color,
   variant = "outlined",
+  skip = false,
+  jumpTo,      
+  jumpTarget,  
   ...props
 }: ERPInputProps, ref) => {
   const iLabel = label || id?.replaceAll("_", " ")
   const iPlaceholder = placeholder || label
-const appState = useAppSelector((state: RootState) => state.AppState.appState)
-  // Get size-specific styles for both MUI and regular inputs
+  const appState = useAppSelector((state: RootState) => state.AppState.appState)
+
   const getSizeStyles = () => {
     const styles: {
       mui: SxProps<Theme>;
@@ -189,7 +196,7 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
               // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
               height: "3rem",
               fontSize: "16px",
-              margin:"0",
+              margin: "0",
               "& .MuiOutlinedInput-input": {
                 padding: "0 0.75rem"
               },
@@ -224,14 +231,11 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
         return styles
     }
   }
-
   const sizeStyles = getSizeStyles()
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChangeData && data && onChangeData(setNestedValue(data, id, e.target?.value))
     onChange && onChange(e)
   }
-
   const commonProps = {
     id,
     name: id,
@@ -272,6 +276,10 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
         pattern,
         step,
         accept,
+        'data-skip': skip,
+        'data-jump-to': jumpTo,        
+        'data-jump-target': jumpTarget, 
+        onKeyDown: handleNavigation,
       },
       sx: sizeStyles.mui
     }
@@ -286,7 +294,6 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
 
   const { height, fontSize } = sizeStyles.regular
   // const { height, fontSize, padding } = sizeStyles.regular
-
   // Build border radius classes based on prefix/suffix presence
   const getBorderRadiusClasses = () => {
     const classes = []
@@ -295,30 +302,27 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
     if (!prefix && !suffix) classes.push(`rounded-md-[${appState.inputBox.borderRadius}px]`)
     return classes.join(' ')
   }
-
   return (
     <div className={className}>
       {!noLabel && (
         <label
           className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
-          style={{ fontSize: customSize === 'sm' ? '12px' : customSize === 'md' ? '14px' : '16px' }}
-        >
-          
+          style={{ fontSize: customSize === 'sm' ? '12px' : customSize === 'md' ? '14px' : '16px' }}>
           {iLabel}
           {required && !noLabel && "*"}
         </label>
       )}
-     
+
       <div className="flex">
         {prefix && (
           <div
             onClick={onClickPrefix}
             className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-            style={{ height, fontSize }}
-          >
+            style={{ height, fontSize }}>
             {prefix}
           </div>
         )}
+
         <div className="flex-1">
           <input
             {...commonProps}
@@ -333,18 +337,19 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
               borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : ''}px`,
               borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : ''}px`,
               // If both prefix and suffix are absent, override all corners
-              ...( !prefix && !suffix && {
+              ...(!prefix && !suffix && {
                 borderTopLeftRadius: `${appState.inputBox.borderRadius}px`,
                 borderTopRightRadius: `${appState.inputBox.borderRadius}px`,
                 borderBottomLeftRadius: `${appState.inputBox.borderRadius}px`,
                 borderBottomRightRadius: `${appState.inputBox.borderRadius}px`,
               }),
             }}
-            
-            
             className={`border border-gray-400 
             block w-full ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
-            onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+            onKeyDown={handleNavigation}
+            data-skip={skip}
+            data-jump-to={jumpTo}         
+            data-jump-target={jumpTarget} 
             onWheel={(e: any) => {
               type === "number" && e?.target?.blur()
             }}
@@ -360,8 +365,7 @@ const appState = useAppSelector((state: RootState) => state.AppState.appState)
           <div
             onClick={onClickSuffix}
             className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
-            style={{ height, fontSize }}
-          >
+            style={{ height, fontSize }}>
             {suffix}
           </div>
         )}

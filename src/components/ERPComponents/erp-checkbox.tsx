@@ -1,6 +1,7 @@
 import * as React from "react";
 import { forwardRef } from "react";
 import ERPElementValidationMessage from "./erp-element-validation-message";
+import { handleNavigation } from "../../utilities/shortKeys";
 
 interface ERPCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   id: string;
@@ -17,6 +18,10 @@ interface ERPCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
   inputClassName?: string;
   noLabel?: boolean;
   validation?: string;
+  skip?: boolean;
+  jumpTo?: string;
+  jumpTarget?: string;
+  customSize?: 'sm' | 'md' | 'lg';
 }
 
 const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
@@ -34,42 +39,86 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
   required,
   noLabel,
   validation,
+  skip = false,
+  jumpTo,
+  jumpTarget,
+  customSize = "sm",
   ...props
 }: ERPCheckboxProps, ref) => {
   const iLabel = label || id?.replaceAll("_", " ");
-  
+
+  const getSizeStyles = (customSize: 'sm' | 'md' | 'lg') => {
+    switch (customSize) {
+      case 'sm':
+        return {
+          checkbox: {
+            width: "1rem",
+            height: "1rem"
+          },
+          label: {
+            fontSize: "12px",
+            lineHeight: "1rem"
+          }
+        };
+      case 'lg':
+        return {
+          checkbox: {
+            width: "1.5rem",
+            height: "1.5rem"
+          },
+          label: {
+            fontSize: "16px",
+            lineHeight: "1.5rem"
+          }
+        };
+      default: // md
+        return {
+          checkbox: {
+            width: "1.25rem",
+            height: "1.25rem"
+          },
+          label: {
+            fontSize: "14px",
+            lineHeight: "1.25rem"
+          }
+        };
+    }
+  };
+
+  const sizeStyles = getSizeStyles(customSize);
+
   return (
-    <div className={`flex items-center ${className}`}>
-      <input
-        ref={ref}
-        type="checkbox"
-        id={id}
-        name={id}
-        onChange={(e) => {
-          onChangeData && data && onChangeData({ ...data, [id]: e.target.checked });
-          onChange && onChange(e);
-        }}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        defaultChecked={false}
-        disabled={disabled}
-        required={required}
-        className={`form-check-input ${
-          disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-        } ${inputClassName}`}
-        {...props}
-      />
-      {!noLabel && (
-        <label
-          htmlFor={id}
-          className={`ml-2 mr-2 block form-check-label ${
-            disabled ? 'text-gray-400' : 'text-gray-700'
-          } ${labelClassName}`}
-        >
-          {iLabel}
-          {required && !noLabel && "*"}
-        </label>
-      )}
+    <div className={className}>
+      <label className={`inline-flex items-center ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+        <input
+          ref={ref}
+          type="checkbox"
+          id={id}
+          name={id}
+          onChange={(e) => {
+            onChangeData && data && onChangeData({ ...data, [id]: e.target.checked });
+            onChange && onChange(e);
+          }}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onKeyDown={handleNavigation}
+          defaultChecked={false}
+          disabled={disabled}
+          required={required}
+          data-skip={skip}
+          data-jump-to={jumpTo}
+          data-jump-target={jumpTarget}
+          style={sizeStyles.checkbox}
+          className={`form-check-input ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'} ${inputClassName}`}
+          {...props}
+        />
+        {!noLabel && (
+          <span className={`ml-2 ${labelClassName} ${disabled ? 'text-gray-400' : ''}`} style={sizeStyles.label}>
+            {iLabel}
+            {required && !noLabel && "*"}
+          </span>
+        )}
+      </label>
       <ERPElementValidationMessage validation={validation} />
     </div>
   );

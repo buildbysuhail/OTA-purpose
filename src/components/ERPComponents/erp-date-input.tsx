@@ -37,6 +37,9 @@ interface ERPDateInputProps {
   variant?: "standard" | "outlined" | "filled";
   customSize?: "sm" | "md" | "lg";
   color?: TextFieldProps['color'];
+  skip?: boolean;
+  jumpTo?: string;
+  jumpTarget?: string;
 }
 
 const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
@@ -64,6 +67,9 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   variant = "outlined",
   customSize = "sm",
   color,
+  skip = false,
+  jumpTo,
+  jumpTarget,
   ...props
 }, ref) => {
   const formatDate = (date: string | undefined) => {
@@ -71,7 +77,26 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     return dayjs(date).format("YYYY-MM-DD");
   };
 
-  // Get size-specific styles for MUI DatePicker
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const inputs = Array.from(document.querySelectorAll('input:not([disabled])'));
+      const currentIndex = inputs.indexOf(e.target as HTMLInputElement);
+      let nextIndex = currentIndex + 1;
+      while (nextIndex < inputs.length) {
+        const nextElement = inputs[nextIndex] as HTMLInputElement;
+        const skipAttr = nextElement.getAttribute('data-skip');
+        if (skipAttr !== 'true') {
+          break;
+        }
+        nextIndex++;
+      }
+      if (nextIndex < inputs.length) {
+        (inputs[nextIndex] as HTMLInputElement).focus();
+      }
+    }
+  };
+
   const getSizeStyles = () => {
     switch (customSize) {
       case "sm":
@@ -184,16 +209,13 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
       }
       return;
     }
-
     const formattedDate = newValue.utc(true).format();
-
     if (onChange) {
       const event = {
         target: { value: newValue.format("YYYY-MM-DD"), id }
       } as React.ChangeEvent<HTMLInputElement>;
       onChange(event);
     }
-
     if (onChangeData && data) {
       onChangeData({ ...data, [id]: formattedDate });
     }
@@ -219,6 +241,12 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                 sx: getSizeStyles(),
                 InputLabelProps: {
                   shrink: true
+                },
+                onKeyDown: handleKeyDown,
+                inputProps: {
+                  'data-skip': skip ? 'true' : 'false',
+                  'data-jump-to': jumpTo,
+                  'data-jump-target': jumpTarget,
                 }
               }
             }}
@@ -228,31 +256,28 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
       </div>
     );
   }
-
   const displayValue = formatDate(value) || formatDate(defaultValue) || "";
-
   return (
     <div className={className}>
       <ERPInput
         ref={ref}
         id={id}
         label={label}
-        placeholder={placeholder}
-        disabled={disabled}
-        type={type}
-        onChange={handleChangeNormal}
-        required={required}
-        readOnly={readonly}
-        min={minDate ? dateTrimmer(minDate) : minDateKey ? formatDate(data?.[minDateKey]) : undefined}
-        max={maxDate ? dateTrimmer(maxDate) : maxDateKey ? formatDate(data?.[maxDateKey]) : undefined}
         value={displayValue}
-        labelClassName={labelClassName}
-        inputClassName={inputClassName}
+        placeholder={placeholder}
+        disabled={disabled || readonly}
+        required={required}
+        onChange={handleChangeNormal}
+        onBlur={onChangeData}
+        validation={validation}
+        skip={skip}
+        data-jump-to={jumpTo}
+        data-jump-target={jumpTarget}
         {...props}
       />
-      <ERPElementValidationMessage validation={validation} />
     </div>
   );
 });
 
+ERPDateInput.displayName = "ERPDateInput";
 export default ERPDateInput;

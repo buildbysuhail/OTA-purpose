@@ -46,6 +46,9 @@ interface ERPDataComboboxProps {
   disabledApiCall?: boolean;
   validation?: string;
   enableClearOption?: boolean;
+  skip?: boolean;
+  jumpTo?: string;     
+  jumpTarget?: string; 
 }
 
 interface RowProps {
@@ -117,21 +120,20 @@ const truncateText = (
 };
 
 const Row = ({ data, index, style }: RowProps) => {
-  
+
   const { items, selectedValue, handleSelect, activeIndex } = data;
   const item = items[index];
   const isSelected = selectedValue?.value === item.value;
-  const isActive = activeIndex === index; 
+  const isActive = activeIndex === index;
 
   return (
-      <Combobox.Option
+    <Combobox.Option
       style={style}
       key={`${item?.value}-${index}`}
       className={({ active }) =>
-        `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:${setFgAccordingToBgPrimary()} ${
-          active || isActive
-            ? "bg-primary text-white"
-            : item.is_active === false
+        `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:${setFgAccordingToBgPrimary()} ${active || isActive
+          ? "bg-primary text-white"
+          : item.is_active === false
             ? "bg-gray-200 text-gray-400"
             : "text-gray-900"
         }`
@@ -141,9 +143,8 @@ const Row = ({ data, index, style }: RowProps) => {
     >
       {({ active }) => (
         <div
-          className={`flex items-center px-3 py-2 ${
-            isSelected ? "bg-primary" : ""
-          }`}
+          className={`flex items-center px-3 py-2 ${isSelected ? "bg-primary" : ""
+            }`}
           onClick={() => handleSelect(item)}
         >
           <div className="flex-shrink-0 w-5">
@@ -155,9 +156,8 @@ const Row = ({ data, index, style }: RowProps) => {
             )}
           </div>
           <span
-            className={`block truncate flex-grow ${
-              isSelected ? "font-medium" : "font-normal"
-            } ${isSelected ? setFgAccordingToBgPrimary() : ''}`}
+            className={`block truncate flex-grow ${isSelected ? "font-medium" : "font-normal"
+              } ${isSelected ? setFgAccordingToBgPrimary() : ''}`}
           >
             {item.label}
           </span>
@@ -226,6 +226,9 @@ export default function ImprovedERPDataCombobox({
   className,
   disabledApiCall = false,
   validation,
+  skip,
+  jumpTo,      
+  jumpTarget, 
   enableClearOption = true,
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
@@ -342,10 +345,10 @@ export default function ImprovedERPDataCombobox({
     const _exceptional =
       (defaultData && fieldKey === "payment_terms" && items[0]) ||
       fieldKey === "currency";
-      const final = _selected || _default || _exceptional || initialValue || null;
+    const final = _selected || _default || _exceptional || initialValue || null;
     setInitial(final);
-    
-    setActiveIndex(final != null ? filteredItems.findIndex(item => item.value === final.value): -1);
+
+    setActiveIndex(final != null ? filteredItems.findIndex(item => item.value === final.value) : -1);
   }, [items, data, defaultData, field, initialValue, filteredItems]);
 
   const clearSelection = (e?: React.MouseEvent) => {
@@ -391,12 +394,46 @@ export default function ImprovedERPDataCombobox({
     }
   };
 
+  const handleKeyDownEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const inputs = Array.from(document.querySelectorAll('input:not([disabled])'));
+      const currentIndex = inputs.indexOf(e.target as HTMLInputElement);
+      let nextIndex = currentIndex + 1;
+
+      // Skip elements with skip={true}
+      while (nextIndex < inputs.length) {
+        const nextElement = inputs[nextIndex] as HTMLInputElement;
+        const skipAttr = nextElement.getAttribute('data-skip');
+        if (skipAttr !== 'true') {
+          break;
+        }
+        nextIndex++;
+      }
+
+      if (nextIndex < inputs.length) {
+        (inputs[nextIndex] as HTMLInputElement).focus();
+      }
+    }
+  };
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen) {
       if (event.key === "ArrowDown" || event.key === "ArrowUp") {
         setIsOpen(true);
         return;
       }
+    }
+
+    if (event.key === "Enter") {
+      if (activeIndex >= 0 && activeIndex < filteredItems.length && isOpen) {
+        event.preventDefault();
+        handleItemClick(filteredItems[activeIndex]);
+        handleKeyDownEnter(event); 
+      } else {
+        handleKeyDownEnter(event); 
+      }
+      return;
     }
 
     if (filteredItems.length === 0) return;
@@ -443,6 +480,8 @@ export default function ImprovedERPDataCombobox({
     }
   };
 
+
+
   return (
     <div className="relative" ref={componentRef}>
       {!noLabel && (
@@ -451,11 +490,13 @@ export default function ImprovedERPDataCombobox({
           className="block text-[12px] font-medium text-gray-700 mb-1"
         >
           {/* {activeIndex}: {initial?.value} : {filteredItems[activeIndex]?.value}: {filteredItems[activeIndex]?.label} */}
-          {label || id?.replaceAll("_", " ")} 
+          {label || id?.replaceAll("_", " ")}
           {required && <span className="text-[#ef4444]"> *</span>}
         </label>
       )}
       <Combobox
+        onKeyDown={handleKeyDownEnter}
+        data-skip={skip}
         disabled={disabled}
         value={initial}
         // onChange={handleItemClick}
@@ -464,11 +505,9 @@ export default function ImprovedERPDataCombobox({
       >
         <div className={className}>
           <Combobox.Input
-            className={`w-full appearance-none rounded border border-gray-300 h-9 ${
-              disabled ? "text-gray-400" : "bg-white text-gray-900"
-            } px-3 py-2 ${
-              enableClearOption ? "pr-16" : "pr-10"
-            } placeholder-gray-400 focus:ring-1 text-xs focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
+            className={`w-full appearance-none rounded border border-gray-300 h-9 ${disabled ? "text-gray-400" : "bg-white text-gray-900"
+              } px-3 py-2 ${enableClearOption ? "pr-16" : "pr-10"
+              } placeholder-gray-400 focus:ring-1 text-xs focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
             displayValue={() => inputValue || initial?.label || ""}
             onChange={handleInputChange}
             onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -476,7 +515,7 @@ export default function ImprovedERPDataCombobox({
             placeholder={
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
-            ref={comboboxRef}autoComplete="off"
+            ref={comboboxRef} autoComplete="off"
             spellCheck={false}
             autoFocus={autoFocus}
             title={initial?.label || ""}
@@ -505,9 +544,8 @@ export default function ImprovedERPDataCombobox({
               onClick={() => !disabled && setIsOpen(!isOpen)}
             >
               <ChevronDownIcon
-                className={`h-5 w-5 text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
-                  isOpen ? "transform rotate-180" : ""
-                }`}
+                className={`h-5 w-5 text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
+                  }`}
                 aria-hidden="true"
               />
             </Combobox.Button>
@@ -523,7 +561,7 @@ export default function ImprovedERPDataCombobox({
             if (!initial) {
               setQuery("");
               setInputValue("");
-            // setActiveIndex(-1);
+              // setActiveIndex(-1);
             }
           }}
         >

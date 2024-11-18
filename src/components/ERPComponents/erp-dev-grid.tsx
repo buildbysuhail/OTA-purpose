@@ -347,8 +347,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
-
-
+  
   useEffect(() => {
 
     if (gridId != "" && columns != undefined && columns != null) {

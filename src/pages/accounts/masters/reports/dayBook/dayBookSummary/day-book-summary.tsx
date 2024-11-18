@@ -155,7 +155,6 @@ const DayBookSummary = () => {
                   gridHeader={t("day_book_summary")}
                   dataUrl= {Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

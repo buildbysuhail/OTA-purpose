@@ -108,7 +108,6 @@ const InventoryHistoryPopup = () => {
                   gridHeader={t("inventory_transaction_history_popup")}
                   dataUrl= {Urls.acc_reports_inventory_history_popup}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

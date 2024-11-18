@@ -115,7 +115,6 @@ const LedgerReport = () => {
                   gridHeader={t("ledger_report")}
                   dataUrl= {Urls.acc_reports_ledger}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}

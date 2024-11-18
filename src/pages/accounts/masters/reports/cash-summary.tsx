@@ -165,7 +165,6 @@ const CashSummary = () => {
                   gridHeader={t("cash_summary")}
                   dataUrl= {Urls.acc_reports_cash_summary}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

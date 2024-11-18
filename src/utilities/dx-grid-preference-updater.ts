@@ -79,7 +79,7 @@ export function getInitialPreference(gridId: any, columns: any) {
       let initialPreferences: any = [];
        (columns || []).map((column: DevGridColumn, index: number) => {
         const preference = getDefaultColumnPreference(column, index);
-        console.log(`Column:`, column, `Preference:`, preference); // Log each preference
+        // console.log(`Column:`, column, `Preference:`, preference); // Log each preference
         initialPreferences.push(preference);
       });
 

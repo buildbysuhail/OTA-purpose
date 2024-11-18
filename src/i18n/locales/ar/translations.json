@@ -1318,5 +1318,7 @@
   "address_2_city": "العنوان 2/المدينة",
   "address3_district": "العنوان 3/المنطقة",
   "qr_pay_name": "اسم الدفع عبر QR",
-  "qr_pay": "دفع QR"
+  "qr_pay": "دفع QR",
+  "filters": "الفلاتر",
+    "apply": "تطبيق"
 }

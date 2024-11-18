@@ -17,9 +17,11 @@ import { APIClient } from "../../helpers/api-client";
 import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { RootState } from "../../redux/store";
 import { onCloseWithUnsavedChange } from "../../redux/slices/popup-reducer";
+import { FormField } from "../form-types";
+import { getFieldPropsGlobal, handleFieldChangeGlobal } from "../form-utils";
 
 interface UseFormManagerOptions { 
-  url: string;
+  url?: string;
   onSuccess?: () => void;
   onClose?: () => void;
   onError?: (error: any) => void;
@@ -31,16 +33,10 @@ interface UseFormManagerOptions {
   initialData?: any;
 }
 
-interface FormField {
-  id: string;
-  value: any;
-  data: any;
-  validation?: string;
-  checked?: any;
-}
+
 
 export function useFormManager<T>({
-  url,
+  url = "",
   onSuccess,
   onClose,
   onError,
@@ -308,15 +304,9 @@ export function useFormManager<T>({
   // );
 
   const handleFieldChange = useCallback(
-    (fields: { [fieldId: string]: any } | string, value?: any) => {
-      // Convert single field updates to multi-field format
-      const fieldUpdates = typeof fields === 'string' ? { [fields]: value } : fields;
-  
+    (fields: { [fieldId: string]: any } | string, value?: any) => {  
       // Update the nested fields for all provided fieldIds
-      const updatedData = Object.entries(fieldUpdates).reduce(
-        (acc, [fieldId, val]) => setNestedValue(acc, fieldId, val),
-        (useApiClient ? localFormState : reduxFormState)?.data
-      );
+      const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: (useApiClient ? localFormState : reduxFormState)?.data})
   
       if (useApiClient) {
         setLocalFormState((prevState: any) => ({
@@ -369,25 +359,10 @@ export function useFormManager<T>({
   }, [onClose, useApiClient, localFormState, reduxFormState, prevLocalFormState]);
 
 
-  const getNestedValue = (obj: any, path: string) => {
-    return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-  };
-
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
       
-      const _value = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId);
-      const value =  _value == undefined || _value == null || _value == "" ? "" : _value == 0 ? '0' : _value|| "";
-      const validation = getNestedValue((useApiClient ? localFormState : reduxFormState)?.validations, fieldId);
-      const checked = getNestedValue((useApiClient ? localFormState : reduxFormState)?.data, fieldId) || false;
-
-      return {
-        id: fieldId,
-        data: (useApiClient ? localFormState : reduxFormState)?.data,
-        value,
-        validation,
-        checked,
-      };
+      return getFieldPropsGlobal(fieldId,(useApiClient ? localFormState : reduxFormState));
     },
     [(useApiClient ? localFormState : reduxFormState)?.data]
   );

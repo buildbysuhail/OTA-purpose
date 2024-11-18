@@ -188,7 +188,7 @@ const ComboboxList = React.forwardRef<
   return (
     <List
       height={LIST_HEIGHT}
-      itemCount={items.length}
+      itemCount={items?.length}
       itemSize={ITEM_HEIGHT}
       width="100%"
       ref={ref}

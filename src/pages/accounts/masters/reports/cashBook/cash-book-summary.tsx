@@ -178,20 +178,21 @@ const CashBookSummary = () => {
                   gridHeader={t("cash_book")}
                   dataUrl= {Urls.acc_reports_cash_book}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}
+                  enablefilter={true}
+                  showFilterInitially={true}
                   // gridAddButtonType="popup"
                   reload={true}
                   // CashBookMonthWise
                   childPopupProps={{
                     content: <CashBookMonthWise />,
-                    title: "sds",
+                    title: t("cash_book_monthwise"),
                     isForm: false,
                     width: "mw-100",
-                    buttonField: "SiNo",
+                    drillDownCells: "ledgerName",
                     bodyProps: "ledgerID"
                   }}
                 ></ErpDevGrid>

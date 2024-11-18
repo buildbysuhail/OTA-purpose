@@ -116,7 +116,6 @@ const TransactionReport = () => {
                   gridHeader={t("transaction_report")}
                   dataUrl= {Urls.acc_reports_transaction}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

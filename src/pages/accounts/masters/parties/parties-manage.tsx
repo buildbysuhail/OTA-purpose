@@ -219,7 +219,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             <ERPInput
               {...getFieldProps("cstNumber")}
               label={t("cr_no")}
-              type="number"
+              
               placeholder={t("cr_no")}
               required={false}
               onChangeData={(data: any) =>
@@ -318,7 +318,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 label={t("referred_by")}
               />
               <ERPInput
-                {...getFieldProps("address")}
+                {...getFieldProps("address4")}
                 label={t("ifsc")}
                 placeholder={t("ifsc")}
                 required={false}
@@ -634,9 +634,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     />
 
                 <ERPDataCombobox
-                  {...getFieldProps("stateName")}
+                  {...getFieldProps("stateCode")}
                   field={{
-                    id: "stateName",
+                    id: "stateCode",
                     required: false,
                     getListUrl: Urls.data_states,
                     valueKey: "id",
@@ -644,7 +644,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   }}
                   onChange={(data: any) => {
                     debugger;
-                    handleFieldChange({ stateName: data !== null && data !== undefined ? data.value.toString() : "", stateCode: data !== null && data !== undefined ? data.value.toString() : "" });
+                    handleFieldChange({ stateName: data !== null && data !== undefined ? data.label.toString() : "", stateCode: data !== null && data !== undefined ? data.value.toString() : "" });
                   }}
                   label={t("state_name")}
                 />
@@ -729,7 +729,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   valueKey: "id",
                   labelKey: "name",
                 }}
-                onChangeData={(data: any) => handleFieldChange("formTypeID", data.formTypeID)}
+                onChangeData={(data: any) => handleFieldChange("formTypeID", data.formTypeID.toString())}
                 label={t("form_type")}
               />
               <ERPInput

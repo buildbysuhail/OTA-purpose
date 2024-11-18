@@ -59,7 +59,7 @@ interface ERPDevGridProps {
   showSerialNo?: boolean;
   gridId: string;
   dataUrl?: string;
-  filterInitialData?: string;
+  filterInitialData?: any;
   enablefilter?: boolean;
   filterContent?: React.ReactNode;
   data?: any;

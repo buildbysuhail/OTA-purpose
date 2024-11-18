@@ -1,9 +1,12 @@
+import React from 'react';
+
 interface ShortcutConfig {
   event: string;
   key: string;
   description: string;
   action: () => void;
 }
+
 enum ShortKeyEvents {
   POPUP_CLOSE_EVENT = 'popup-close-event',
   GO_TO_PREVIOUS_PAGE = 'go-to-previos-page',
@@ -92,6 +95,45 @@ export const cleanupShortKeys = () => {
   if (isInitialized) {
     document.removeEventListener('keydown', handleKeyPress);
     isInitialized = false;
+  }
+};
+
+export const getFocusableElements = () => {
+  return Array.from(
+    document.querySelectorAll(
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+  );
+};
+export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    const focusableElements = getFocusableElements();
+    const currentElement = e.target as HTMLElement;
+    const currentIndex = focusableElements.indexOf(currentElement);
+    
+    const jumpToAttr = currentElement.getAttribute('data-jump-to');
+    if (jumpToAttr) {
+      const jumpTargetElement = focusableElements.find(
+        (el) => el.getAttribute('data-jump-target') === jumpToAttr
+      ) as HTMLElement;
+      if (jumpTargetElement) {
+        jumpTargetElement.focus();
+        return;
+      }
+    }
+    let nextIndex = currentIndex + 1;
+    while (nextIndex < focusableElements.length) {
+      const nextElement = focusableElements[nextIndex] as HTMLElement;
+      const skipAttr = nextElement.getAttribute('data-skip');
+      if (skipAttr !== 'true') {
+        break;
+      }
+      nextIndex++;
+    }
+    if (nextIndex < focusableElements.length) {
+      (focusableElements[nextIndex] as HTMLElement).focus();
+    }
   }
 };
 

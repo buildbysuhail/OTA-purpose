@@ -387,6 +387,65 @@ const BranchSettingsForm: React.FC = () => {
               </div>
             </div>
           )}
+          {Number(formState?.countryName) === Countries.India && (
+            <div className="rounded-lg border p-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
+                <ERPCheckbox
+                  id="enableVanSale"
+                  label={t("enable_PPOS_integration")}
+                  data={formState}
+                  className="h-9 translate-y-[20px] "
+                  checked={formState?.enableVanSale}
+                  onChangeData={(data) =>
+                    handleFieldChange("enableVanSale", data.enableVanSale)
+                  }
+                />
+                <div className='flex justify-start space-x-3 align-center'>
+                <ERPInput
+                  id="clientPPOSBranchID"
+                  label={t("PPOS_branchid")}
+                  disabled={formState?.enableVanSale === false}
+                  className="w-2/3"
+                  value={formState?.clientPPOSBranchID}
+                  data={formState}
+                  onChangeData={(data) =>
+                    handleFieldChange("clientPPOSBranchID", data.clientPPOSBranchID)
+                  }
+                />
+                <ERPButton
+                  title={t("verify")}
+                  disabled={formState?.enableVanSale === false}
+                  variant="secondary"
+                 className="h-8 translate-y-[20px] "
+                  // onClick={() => sendOtp()}
+                />
+               </div>
+                <ERPInput
+                  id="vanSaleProductSerial"
+                  label={t("PPOS_productSerial")}
+                  disabled={formState?.enableVanSale === false}
+                  className="w-full"
+                  value={formState?.vanSaleProductSerial}
+                  data={formState}
+                  onChangeData={(data) =>
+                    handleFieldChange("vanSaleProductSerial", data.vanSaleProductSerial)
+                  }
+                />
+                <ERPInput
+                  id="pPOSEmail"
+                  label={t("PPOS_email")}
+                  disabled={formState?.enableVanSale === false}
+                  className="w-full"
+                  value={formState.pPOSEmail}
+                  data={formState}
+                  onChangeData={(data) =>
+                    handleFieldChange("pPOSEmail", data.pPOSEmail)
+                  }
+                />
+              </div>
+            </div>
+          )}
+
           <div className="rounded-lg border p-4">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
               <div>

@@ -102,7 +102,6 @@ const OutstandingAccountReceivableReport = () => {
                   gridHeader={t("account_receivable")}
                   dataUrl= {Urls.acc_reports_receivable}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

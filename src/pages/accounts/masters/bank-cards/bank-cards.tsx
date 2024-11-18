@@ -122,7 +122,7 @@ const BankCards = () => {
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url: Urls?.data_bankcards,
+            url: Urls?.bankCards,
             key: cellInfo?.data?.paymentTypeID
           }}
         />
@@ -139,7 +139,7 @@ const BankCards = () => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("bank_cards")}
-                  dataUrl={Urls.data_bankcards}
+                  dataUrl={Urls.bankCards}
                   gridId="grd_bank_cards"
                   popupAction={toggleBankCardsPopup}
                   gridAddButtonType="popup"

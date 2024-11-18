@@ -38,15 +38,14 @@ const Urls = {
   // Dropdown - accounts
   data_acc_groups: "/Accounts/Data/AccGroups/",
   data_acc_Branches: "/Data/BranchWithoutDefault",
-  data_Bank_Cards: "/Accounts/BankCards/",
   data_acc_ledgers: "/Accounts/Data/AccLedgers/",
+   data_acc_ledgers_Code: "/Accounts/Data/LedgerCode/",
   data_costcentres: "/Accounts/Data/CostCentres/",
   data_parties: "/Accounts/Data/Parties/",
   data_party_categories: "/Accounts/Data/PartyCategories/",
   data_privilage_cards: "/Accounts/Data/PrivilageCards/",
   data_projects: "/Accounts/Data/Projects/{partyID}}",
   data_upis: "/Accounts/Data/UPIs/",
-  data_bankcards: "/Accounts/BankCards/",
   data_vouchertype: "/Accounts/Data/VoucherType",
   data_InputCalamity: "/Accounts/Data/InputCalamity",
   data_FormTypeBySI: "/Accounts/Data/FormTypeBySI",
@@ -205,7 +204,7 @@ const Urls = {
   cust_supp_ledger: "/Accounts/CustSuppLedger/",
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
-
+  bankCards: "/Accounts/BankCards/",
   //Reports
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",

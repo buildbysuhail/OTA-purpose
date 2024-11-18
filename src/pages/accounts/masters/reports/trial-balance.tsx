@@ -87,7 +87,6 @@ const TrialBalance = () => {
                   gridHeader={t("trial_balance")}
                   dataUrl= {Urls.acc_reports_trial_balance}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

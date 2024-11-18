@@ -305,7 +305,6 @@ const PurchaseSummaryReport = () => {
                   gridHeader={t("purchase_summary_report")}
                   dataUrl= {Urls.acc_reports_ledger}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   hideGridAddButton={true}
                   reload={true}

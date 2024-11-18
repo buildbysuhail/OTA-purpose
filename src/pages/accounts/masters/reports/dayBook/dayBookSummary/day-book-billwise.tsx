@@ -86,7 +86,6 @@ const DayBookBillWise = () => {
                   gridHeader={t("daybook_billwise")}
                   dataUrl= {Urls.acc_reports_ledger}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

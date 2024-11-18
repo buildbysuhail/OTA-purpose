@@ -763,7 +763,7 @@ export default function Component() {
               <button
                 // onClick={togglePopup}
                 onClick={() => setShowInputBox(!showInputBox)}
-                className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-3 py-1 rounded rounded-full hover:bg-gray-600 transition-colors"
+                className="absolute top-2 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white px-3 py-1 rounded rounded-full hover:bg-gray-600 transition-colors"
               >
                 {showInputBox ? (
                   <i className="ri-arrow-down-s-line"></i>
@@ -886,7 +886,7 @@ export default function Component() {
               )}
             </div>
 
-            <div className="p-4 bg-gray-800 flex justify-between items-center font-bold">
+            <div className="p-2 bg-gray-800 flex justify-between items-center font-bold">
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md">
                 {t("split")}
               </button>
@@ -921,7 +921,7 @@ export default function Component() {
                 </label>
               </div>
             </div>
-            <div className="flex space-x-2 p-4 ml-1">
+            <div className="flex space-x-2 p-2 ml-1">
               <button className="px-4 py-2 bg-primary text-white rounded rounded-md rtl:ml-2">
                 {t("save")}
               </button>

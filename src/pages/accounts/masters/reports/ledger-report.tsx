@@ -10,9 +10,9 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import LedgerReportFilter, { LedgerReportFilterInitialState } from "./ledger-report-filter";
 
 interface LedgerReport {
-
   from: Date
 }
 const LedgerReport = () => {
@@ -114,12 +114,16 @@ const LedgerReport = () => {
                   columns={columns}
                   gridHeader={t("ledger_report")}
                   dataUrl= {Urls.acc_reports_ledger}
+                  hideGridAddButton={true}
+                  enablefilter={true}
+                  showFilterInitially={true}
                   method={ActionType.POST}
-                  postData={filter}
+                  filterContent={<LedgerReportFilter/>}
+                  filterInitialData={LedgerReportFilterInitialState}
+                  reload={true} 
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  hideGridAddButton={true}
-                  reload={true}
+                  // reload={true}
                 ></ErpDevGrid>
               </div>
             </div>

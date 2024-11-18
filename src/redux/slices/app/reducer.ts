@@ -34,16 +34,20 @@ const initialState: AppInitialState = {
     body: {
       class: ""
     },
-    scrollbarWidth: "md",
+    scrollbarWidth: "sm",
     scrollbarColor: '',
     inputBox: {
-      inputStyle: "outline",       
-      fontSize: 0,  
-      labelFontSize:0,
-      otherLabelFontSize:0,        
-      borderColor: ' ', 
-      borderFocus: ' ',          
-      borderRadius: 0,      
+      inputStyle: "normal", 
+      inputSize:"sm",
+      inputHeight:2,        
+      fontSize: 13, 
+      fontWeight: 400, 
+      labelFontSize:13,
+      otherLabelFontSize:13,        
+      borderColor: '',
+      fontColor:'128, 128, 128', 
+      borderFocus: '',          
+      borderRadius: 5,      
     },
     //
     pdfTemplates: null,

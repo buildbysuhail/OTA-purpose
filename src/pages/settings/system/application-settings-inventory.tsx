@@ -189,7 +189,7 @@ const InventorySettingsForm = () => {
         type: "inventory",
         updateList: modifiedSettings,
       })) as any : null;
-      handleResponse(response, () => {setFormStatePrev(formState)}, () => { }, false);
+      handleResponse(response, () => {setFormStatePrev(formState)}, () => { });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

@@ -61,6 +61,7 @@ interface ERPDevGridProps {
   dataUrl?: string;
   filterInitialData?: string;
   enablefilter?: boolean;
+  filterContent?: React.ReactNode;
   data?: any;
   method?: ActionType;
   filterData?: any;
@@ -242,6 +243,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   data,
   filterInitialData,
   enablefilter = true,
+  filterContent = <></>,
   method = ActionType.GET,
   filterData,
   height,
@@ -380,15 +382,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       console.log(`filterShowCountww: ${filterShowCount}`);
       if (filterShowCount == 0) {
         setFilter({});
-      }
+        
+      setFilterShowCount((prev) => prev + 1);
       console.log(`filterShowCount333: ${filterShowCount}`);
+      }
       setShowFilter(false);
     },
     []
   );
   useEffect(() => {
     debugger;
-    console.log(`filterShowCount: ${filterShowCount}`);
+    console.log(`showFilterChange: ${filterShowCount}`);
     if (filterShowCount == 0 && showFilter == false) {
       console.log(`filterShowCountSafvan: ${filterShowCount}`);
       setFilterShowCount((prev) => prev + 1);
@@ -404,6 +408,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     else if (!dataUrl) {
       return null;
     }
+    debugger;
     if (filterShowCount == 0 && enablefilter == true && showFilterInitially) {
       setShowFilter(true);
       return;
@@ -593,7 +598,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                   gridId={gridId}
                   initialData={filterInitialData}
                   content={
-                    <LedgerReportFilter /> // Pass standalone JSX content
+                    filterContent
+                    // <LedgerReportFilter /> // Pass standalone JSX content
                   }
                   toogleFilter={showFilter}
                   onApplyFilters={(filters) => onApplyFilter(filters)}

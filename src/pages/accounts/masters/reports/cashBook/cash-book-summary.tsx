@@ -21,6 +21,7 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import CashBookMonthWise from "./cash-book-monthwise";
+import LedgerReportFilter from "../ledger-report-filter";
 
 interface CashBookSummary {
 
@@ -184,6 +185,7 @@ const CashBookSummary = () => {
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}
+                  filterContent={<LedgerReportFilter/>}
                   // gridAddButtonType="popup"
                   reload={true}
                   // CashBookMonthWise

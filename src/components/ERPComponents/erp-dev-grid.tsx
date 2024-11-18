@@ -62,6 +62,7 @@ interface ERPDevGridProps {
   filterInitialData?: any;
   enablefilter?: boolean;
   filterContent?: React.ReactNode;
+  filterWidth?: string;
   data?: any;
   method?: ActionType;
   height?: number | string;
@@ -243,6 +244,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   filterInitialData,
   enablefilter = true,
   filterContent = <></>,
+  filterWidth = "w-full max-w-[1000px]",
   method = ActionType.GET,
   height,
   className = "custom-data-grid",
@@ -593,6 +595,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               <Item>
 
                 <ErpGridGlobalFilter
+                  width={filterWidth}
                   gridId={gridId}
                   initialData={_filterInitialData}
                   content={

@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 interface ErpGridGlobalFilterProps {
   gridId: string;
-  width: string;
+  width?: string;
   initialData: any;
   content: React.ReactNode; // Pass pre-defined JSX for content
   onApplyFilters?: (filters: any) => void;

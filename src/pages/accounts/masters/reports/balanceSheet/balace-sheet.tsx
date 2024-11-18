@@ -1,144 +1,281 @@
-import { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
-import Urls from "../../../../../redux/urls";
-import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowLeftRight } from "lucide-react";
 
-interface BalanceSheet {
-  from: Date;
+// Types for balance sheet data
+interface BalanceSheetItem {
+  name: string;
+  amount?: number;
+  indent?: number;
+  isBold?: boolean;
+  isTotal?: boolean;
+  isLink?: boolean;
+  link?: string;
+  children?: BalanceSheetItem[];
 }
-const BalanceSheet = () => {
+
+interface BalanceSheetData {
+  companyName: string;
+  date: string;
+  items: BalanceSheetItem[];
+  timestamp?: string;
+}
+
+// Utility function for currency formatting
+const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: "GBP",
+    minimumFractionDigits: 2,
+  }).format(amount);
+};
+
+// Sample data
+const initialData: BalanceSheetData = {
+  companyName: "UK Company",
+  date: "December 20, 2023",
+  timestamp: "Wednesday, 20 December 2023 11:30 am GMT+00:00",
+  items: [
+    { name: "Fixed Asset" },
+    { name: "Total Fixed Asset", isBold: true },
+    { name: "- Debtors", indent: 1 },
+    {
+      name: "Debtors",
+      amount: 20.0,
+      indent: 2,
+      isLink: true,
+      link: "/balance-sheet",
+    },
+    { name: "Total Debtors", amount: 20.0, isBold: true, isTotal: true },
+    { name: "NET CURRENT ASSETS", amount: 20.0, isBold: true, isTotal: true },
+    {
+      name: "- Creditors: amounts falling due within one year",
+      indent: 1,
+    },
+    { name: "- Current Liabilities", indent: 2 },
+    {
+      name: "Employee National Insurance Liability",
+      amount: 204.96,
+      indent: 3,
+      isLink: true,
+      link: "/balance-sheet",
+    },
+    {
+      name: "National Insurance Liability",
+      amount: 243.98,
+      indent: 3,
+      isLink: true,
+      link: "/balance-sheet",
+    },
+    {
+      name: "PAYE Liability",
+      amount: 0.0,
+      indent: 3,
+      isLink: true,
+      link: "/balance-sheet",
+    },
+    {
+      name: "Payment",
+      amount: 2295.04,
+      indent: 3,
+      isLink: true,
+      link: "/balance-sheet",
+    },
+    {
+      name: "Student Loan Liability",
+      amount: 0.0,
+      indent: 3,
+      isLink: true,
+      link: "/balance-sheet",
+    },
+    {
+      name: "VAT Control",
+      amount: 20.0,
+      indent: 3,
+      isLink: true,
+      link: "/balance-sheet",
+    },
+    {
+      name: "Total Current Liabilities",
+      amount: 2763.98,
+      isBold: true,
+      isTotal: true,
+    },
+    {
+      name: "Total Creditors: amounts falling due within one year",
+      amount: 2763.98,
+      isBold: true,
+      isTotal: true,
+    },
+    {
+      name: "NET CURRENT ASSETS (LIABILITIES)",
+      amount: -2743.98,
+      isBold: true,
+      isTotal: true,
+    },
+    {
+      name: "TOTAL ASSETS LESS CURRENT LIABILITIES",
+      amount: -2743.98,
+      isBold: true,
+      isTotal: true,
+    },
+    {
+      name: "TOTAL NET ASSETS (LIABILITIES)",
+      amount: -2743.98,
+      isBold: true,
+      isTotal: true,
+    },
+    { name: "- Capital and Reserves" },
+    {
+      name: "Retained Earnings",
+      amount: -2743.98,
+      indent: 1,
+    },
+    { name: "Profit for the year", indent: 1 },
+    {
+      name: "Total Capital and Reserves",
+      amount: -2743.98,
+      isBold: true,
+      isTotal: true,
+    },
+  ],
+};
+
+// Individual row component for vertical format
+const BalanceSheetRow: React.FC<{ item: BalanceSheetItem }> = ({ item }) => {
+  const paddingLeft = `pl-${item.indent ? item.indent * 4 : 0}`;
+  const fontWeight = item.isBold ? "font-bold" : "font-normal";
+
+  if (item.isLink && item.link) {
+    return (
+      <tr>
+        <td className={`py-2 ${paddingLeft} ${fontWeight}`}>
+          <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]">
+            {item.name}
+          </Link>
+        </td>
+        {item.amount !== undefined && (
+          <td className="py-2 text-right">
+            <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]">
+              {item.amount.toFixed(2)}
+            </Link>
+          </td>
+        )}
+      </tr>
+    );
+  }
+
   return (
-    <div className="p-6">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-center text-xl font-bold mb-2">UK Company</h1>
-        <h2 className="text-center text-lg mb-4">Balance Sheet</h2>
-        <p className="text-center mb-4">As of December 20, 2023</p>
+    <tr>
+      <td className={`py-2 ${paddingLeft} ${fontWeight}`}>{item.name}</td>
+      {item.amount !== undefined && (
+        <td className={`py-2 text-right ${fontWeight}`}>
+          {item.isTotal ? formatCurrency(item.amount) : item.amount.toFixed(2)}
+        </td>
+      )}
+    </tr>
+  );
+};
+
+// Horizontal format component
+const HorizontalBalanceSheet: React.FC<{ data: BalanceSheetData }> = ({
+  data,
+}) => {
+  const assets = data.items.filter(
+    (item) =>
+      !item.name.toLowerCase().includes("liabilities") &&
+      !item.name.toLowerCase().includes("creditors") &&
+      !item.name.toLowerCase().includes("capital")
+  );
+
+  const liabilities = data.items.filter(
+    (item) =>
+      item.name.toLowerCase().includes("liabilities") ||
+      item.name.toLowerCase().includes("creditors") ||
+      item.name.toLowerCase().includes("capital")
+  );
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <h3 className="text-lg font-bold mb-2">Assets</h3>
         <table className="w-full text-left border-collapse">
           <thead>
-            {/* <tr>
-              <th className="border-b-2 border-black py-2">Account</th>
-              <th className="border-b-2 border-black py-2">TOTAL</th>
-            </tr> */}
-            <tr>
-              <th className="border-b-2 border-black py-2">Account</th>
-              <th className="border-b-2 border-black py-2 end-1">TOTAL</th>
+            <tr className="bg-gray-400">
+              <th className="py-2 pl-2">Account</th>
+              <th className="py-2 text-right pr-2">Amount</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="py-2">Fixed Asset</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Fixed Asset</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">- Debtors</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-8">Debtors</td>
-              <td className="py-2 text-right">20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Debtors</td>
-              <td className="py-2 text-right font-bold">£20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">NET CURRENT ASSETS</td>
-              <td className="py-2 text-right font-bold">£20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">
-                - Creditors: amounts falling due within one year
-              </td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-8">- Current Liabilities</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">
-                Employee National Insurance Liability
-              </td>
-              <td className="py-2 text-right">204.96</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">National Insurance Liability</td>
-              <td className="py-2 text-right">243.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">PAYE Liability</td>
-              <td className="py-2 text-right">0.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">Payment</td>
-              <td className="py-2 text-right">2,295.04</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">
-                Postgraduate Student Loan Liability
-              </td>
-              <td className="py-2 text-right">0.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">Student Loan Liability</td>
-              <td className="py-2 text-right">0.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">VAT Control</td>
-              <td className="py-2 text-right">20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Current Liabilities</td>
-              <td className="py-2 text-right font-bold">£2,763.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">
-                Total Creditors: amounts falling due within one year
-              </td>
-              <td className="py-2 text-right font-bold">£2,763.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">
-                NET CURRENT ASSETS (LIABILITIES)
-              </td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">
-                TOTAL ASSETS LESS CURRENT LIABILITIES
-              </td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">TOTAL NET ASSETS (LIABILITIES)</td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2">- Capital and Reserves</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">Retained Earnings</td>
-              <td className="py-2 text-right">-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">Profit for the year</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Capital and Reserves</td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
+            {assets.map((item, index) => (
+              <BalanceSheetRow key={`asset-${index}`} item={item} />
+            ))}
           </tbody>
         </table>
-        <p className="text-center mt-4">
-          Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
-        </p>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold mb-2">Liabilities & Capital</h3>
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-400">
+              <th className="py-2 pl-2">Account</th>
+              <th className="py-2 text-right pr-2">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {liabilities.map((item, index) => (
+              <BalanceSheetRow key={`liability-${index}`} item={item} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+// Main component
+const BalanceSheet = () => {
+  const [data] = useState<BalanceSheetData>(initialData);
+  const [isHorizontal, setIsHorizontal] = useState(false);
+
+  return (
+    <div className="p-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-xl font-bold">{data.companyName}</h1>
+          <button
+            onClick={() => setIsHorizontal(!isHorizontal)}
+            className="flex items-center gap-2 px-4 py-2 bg-[#3b82f6] text-white rounded hover:bg-[#2563eb] transition-colors"
+          >
+            <ArrowLeftRight size={16} />
+            {isHorizontal ? "Vertical Format" : "Horizontal Format"}
+          </button>
+        </div>
+
+        <h2 className="text-center text-lg mb-2">Balance Sheet</h2>
+        <p className="text-center mb-4">As of {data.date}</p>
+
+        {isHorizontal ? (
+          <HorizontalBalanceSheet data={data} />
+        ) : (
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-400">
+                <th className="py-2 pl-2">Account</th>
+                <th className="py-2 text-right pr-2">TOTAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.items.map((item, index) => (
+                <BalanceSheetRow key={index} item={item} />
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {data.timestamp && (
+          <p className="text-center mt-4">Accrual basis {data.timestamp}</p>
+        )}
       </div>
     </div>
   );

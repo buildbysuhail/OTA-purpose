@@ -548,7 +548,7 @@ const onChooseTemplate = async () => {
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url: Urls?.parties, key: cellElement?.data?.partyID
+            url: Urls?.parties, key: cellElement?.data?.id
           }}
         />
       ),

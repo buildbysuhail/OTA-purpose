@@ -109,7 +109,7 @@ export interface ApplicationBranchSettings {
   enableVanSale: boolean;
   clientPPOSBranchID: string;
   vanSaleProductSerial: string;
-  pPosEmail: string;
+  pPOSEmail: string;
   maximum_Allowed_LineItem_Amount: number;
   fileAttachmentMethod: string;
   fileAttachmentFolder: string;
@@ -144,7 +144,7 @@ export  const ApplicationBranchSettingsInitialState: ApplicationBranchSettings =
   enableVanSale: false,
   clientPPOSBranchID: "",
   vanSaleProductSerial: "",
-  pPosEmail: "",
+  pPOSEmail: "",
   maximum_Allowed_LineItem_Amount: 0.0,
   fileAttachmentMethod: "No",
   fileAttachmentFolder: "",

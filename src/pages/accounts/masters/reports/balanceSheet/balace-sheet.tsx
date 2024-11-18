@@ -10,14 +10,23 @@ const BalanceSheet = () => {
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    LoadAsync();
+    if(filterShowCount == 0)
+    {
+      setShowFilter(true);
+    }
+    else{
+      LoadAsync();
+    }
   }, []);
 
   const LoadAsync = async (_filter?: any) => {
+    setLoading(true);
     const res = await api.postAsync(Urls.acc_reports_balance_sheet, _filter || filter);
     setData(res?.data || []);
+    setLoading(false);
   };
 
   const onApplyFilter = useCallback(
@@ -51,6 +60,9 @@ const BalanceSheet = () => {
         />
         <h2 className="text-center text-lg mb-4">Balance Sheet</h2>
         <p className="text-center mb-4">As of December 20, 2023</p>
+        {loading ? (
+          <>loading..</>
+        ) :  (
         <table className="w-full text-left border-collapse">
           <thead>
             <tr>
@@ -71,6 +83,7 @@ const BalanceSheet = () => {
             ))}
           </tbody>
         </table>
+)}
         <p className="text-center mt-4">
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p>

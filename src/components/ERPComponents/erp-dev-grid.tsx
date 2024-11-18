@@ -59,7 +59,7 @@ interface ERPDevGridProps {
   showSerialNo?: boolean;
   gridId: string;
   dataUrl?: string;
-  filterInitialData?: string;
+  filterInitialData?: any;
   enablefilter?: boolean;
   filterContent?: React.ReactNode;
   data?: any;
@@ -346,6 +346,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [isChildOpen, setIsChildOpen] = useState<boolean>(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
+  const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
 
 
   useEffect(() => {
@@ -596,7 +597,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
                 <ErpGridGlobalFilter
                   gridId={gridId}
-                  initialData={filterInitialData}
+                  initialData={_filterInitialData}
                   content={
                     filterContent
                     // <LedgerReportFilter /> // Pass standalone JSX content

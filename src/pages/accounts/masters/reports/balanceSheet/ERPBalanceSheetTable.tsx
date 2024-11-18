@@ -1,6 +1,7 @@
 // import React, { Fragment, useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 // import { useDispatch } from "react-redux";
+// import { getCurrentCurrencySymbol } from "../../../../../utilities/Utils";
 
 // function ERPBalanceSheetTable({ data, customizationData, hasBalanceSheet, reportLoading }: any) {
 //   const CurrencySymbol = getCurrentCurrencySymbol();
@@ -38,38 +39,6 @@
 //   const dispatch = useDispatch();
 
 //   const navigate = useNavigate();
-
-//   // let mapper = (obj: any) => {
-//   //     let node = obj?.map((item: any, idx: number) => {
-//   //         if (item?.children) {
-//   //             return (
-//   //                 <div>
-//   //                     <div className="flex justify-between">
-//   //                         <p className="py-1">{item?.account_name || item?.name}</p>
-//   //                         <p>{item?.balance_amount?.toFixed(2)}</p>
-//   //                     </div>
-//   //                     <div>
-//   //                         <p className="ml-5 py-1 text-accent">{mapper(item?.children)}</p>
-
-//   //                     </div>
-
-//   //                 </div>
-//   //             )
-//   //         } else {
-//   //             return (
-//   //                 <div className="flex justify-between">
-//   //                     <p className="py-1 hover:underline cursor-pointer">{item?.account_name || item?.name}</p>
-//   //                     <p className="hover:underline cursor-pointer">{item?.balance_amount?.toFixed(2)}</p>
-//   //                 </div>
-//   //             )
-//   //         }
-//   //     })
-//   //     return node
-//   // }
-
-//   // let values = mapper(data)
-
-//   // Organize data into a hierarchical structure
 //   const organizedData: any = [];
 //   data &&
 //     data.forEach((item: any) => {

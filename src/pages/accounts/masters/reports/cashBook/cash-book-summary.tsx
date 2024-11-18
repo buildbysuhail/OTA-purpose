@@ -88,7 +88,7 @@ const CashBookSummary = () => {
                   showFilterInitially={true}
                   filterContent={<LedgerReportFilter/>}
                   // gridAddButtonType="popup"
-                  reload={true}
+                  reload={true} 
                   // CashBookMonthWise
                   childPopupProps={{
                     content: <CashBookMonthWise />,

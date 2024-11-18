@@ -201,7 +201,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "siNo",
       caption: t("SiNo"),
-      dataType: "string",
+      dataType: "number",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -211,7 +211,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "id",
       caption: t('id'),
-      dataType: "string",
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       visible: false,
@@ -255,26 +255,26 @@ const onChooseTemplate = async () => {
     },
     {
       dataField: "address",
-      caption: t("address1"),
-      dataType: "number",
+      caption: t("address"),
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
     },
-    {
-      dataField: "ifsc",
-      caption: t("ifsc"),
-      dataType: "number",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-    },
+    // {
+    //   dataField: "ifsc",
+    //   caption: t("ifsc"),
+    //   dataType: "number",
+    //   allowSorting: true,
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 100,
+    // },
     {
       dataField: "officePhone",
       caption: t("office_phone"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -283,7 +283,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "mobilePhone",
       caption: t("mobile_phone"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -292,7 +292,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "workPhone",
       caption: t("work_phone"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -301,7 +301,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "contactPhone",
       caption: t("contact_phone"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -310,7 +310,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "faxNumber",
       caption: t("care_of_party"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -319,7 +319,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "webURL",
       caption: t("web_URL"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -328,7 +328,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "email",
       caption: t("email"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -337,7 +337,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "startDate",
       caption: t("start_date"),
-      dataType: "number",
+      dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -346,7 +346,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "expiryDate",
       caption: t("expiry_date"),
-      dataType: "number",
+      dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -373,7 +373,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "priceCategoryName",
       caption: t("price_category_name"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -382,7 +382,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "taxNumber",
       caption: t("tax_number"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -391,7 +391,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "cstNumber",
       caption: t("cst_number"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -400,7 +400,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "userName",
       caption: t("user_name"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -409,7 +409,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "createdDate",
       caption: t("created_date"),
-      dataType: "number",
+      dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -418,7 +418,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "modifiedUser",
       caption: t("modified_user"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -427,7 +427,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "modifiedDate",
       caption: t("modified_date"),
-      dataType: "number",
+      dataType: "date",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -436,7 +436,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "routeName",
       caption: t("route_name"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -445,7 +445,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "arabicName",
       caption: t("arabic_name"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -454,7 +454,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "buildingNumber",
       caption: t("building_number"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -463,7 +463,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "plotIdentificationNumber",
       caption: t("plot_identification_number"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -472,7 +472,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "postalCode",
       caption: t("postal_code"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -481,7 +481,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "citySubDivision",
       caption: t("city_sub_division"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -490,7 +490,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "country",
       caption: t("country"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -499,7 +499,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "countrySubEntity",
       caption: t("country_sub_entity"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -508,7 +508,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "idType",
       caption: t("id_type"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -517,7 +517,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "idNumber",
       caption: t("id_number"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -526,7 +526,7 @@ const onChooseTemplate = async () => {
     {
       dataField: "parentRoute",
       caption: t("parent_route"),
-      dataType: "number",
+      dataType: "string",
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,

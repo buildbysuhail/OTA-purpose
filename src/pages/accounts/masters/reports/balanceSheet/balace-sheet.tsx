@@ -12,174 +12,135 @@ import { ActionType } from "../../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 
 interface BalanceSheet {
-
-  from: Date
+  from: Date;
 }
 const BalanceSheet = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
-  const dispatch = useAppDispatch();
-  const { t } = useTranslation();
-  const [filter, setFilter] =useState<BalanceSheet>({from: new Date()});
-  const rootState = useRootState();
-  const columns: DevGridColumn[] = [
-    {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 50,
-    },
-    {
-      dataField: "form",
-      caption: t("form"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
-      dataField: "vchNo",
-      caption:  t("voucher_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refNo",
-      caption: t("ref_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "refDate",
-      caption: t("ref_date"),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "narration",
-      caption: t("narration"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "debit",
-      caption: t('debit'),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
-  ];
   return (
-    <Fragment>
-      <div className="grid grid-cols-12 gap-x-6">
-        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-          <div className="">
-            <div className="p-4">
-              <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
-                  columns={columns}
-                  gridHeader={t("account_payable_aging_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
-                  method={ActionType.POST}
-                  gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
-                  hideGridAddButton={true}
-                  // gridAddButtonType="popup"
-                  reload={true}
-                ></ErpDevGrid>
-              </div>
-            </div>
-          </div>
-        </div>
+    <div className="p-6">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-center text-xl font-bold mb-2">UK Company</h1>
+        <h2 className="text-center text-lg mb-4">Balance Sheet</h2>
+        <p className="text-center mb-4">As of December 20, 2023</p>
+        <table className="w-full text-left border-collapse">
+          <thead>
+            {/* <tr>
+              <th className="border-b-2 border-black py-2">Account</th>
+              <th className="border-b-2 border-black py-2">TOTAL</th>
+            </tr> */}
+            <tr>
+              <th className="border-b-2 border-black py-2">Account</th>
+              <th className="border-b-2 border-black py-2 end-1">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="py-2">Fixed Asset</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">Total Fixed Asset</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-4">- Debtors</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-8">Debtors</td>
+              <td className="py-2 text-right">20.00</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">Total Debtors</td>
+              <td className="py-2 text-right font-bold">£20.00</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">NET CURRENT ASSETS</td>
+              <td className="py-2 text-right font-bold">£20.00</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-4">
+                - Creditors: amounts falling due within one year
+              </td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-8">- Current Liabilities</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-12">
+                Employee National Insurance Liability
+              </td>
+              <td className="py-2 text-right">204.96</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-12">National Insurance Liability</td>
+              <td className="py-2 text-right">243.98</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-12">PAYE Liability</td>
+              <td className="py-2 text-right">0.00</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-12">Payment</td>
+              <td className="py-2 text-right">2,295.04</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-12">
+                Postgraduate Student Loan Liability
+              </td>
+              <td className="py-2 text-right">0.00</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-12">Student Loan Liability</td>
+              <td className="py-2 text-right">0.00</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-12">VAT Control</td>
+              <td className="py-2 text-right">20.00</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">Total Current Liabilities</td>
+              <td className="py-2 text-right font-bold">£2,763.98</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">
+                Total Creditors: amounts falling due within one year
+              </td>
+              <td className="py-2 text-right font-bold">£2,763.98</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">
+                NET CURRENT ASSETS (LIABILITIES)
+              </td>
+              <td className="py-2 text-right font-bold">£-2,743.98</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">
+                TOTAL ASSETS LESS CURRENT LIABILITIES
+              </td>
+              <td className="py-2 text-right font-bold">£-2,743.98</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">TOTAL NET ASSETS (LIABILITIES)</td>
+              <td className="py-2 text-right font-bold">£-2,743.98</td>
+            </tr>
+            <tr>
+              <td className="py-2">- Capital and Reserves</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-4">Retained Earnings</td>
+              <td className="py-2 text-right">-2,743.98</td>
+            </tr>
+            <tr>
+              <td className="py-2 pl-4">Profit for the year</td>
+            </tr>
+            <tr>
+              <td className="py-2 font-bold">Total Capital and Reserves</td>
+              <td className="py-2 text-right font-bold">£-2,743.98</td>
+            </tr>
+          </tbody>
+        </table>
+        <p className="text-center mt-4">
+          Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
+        </p>
       </div>
-      
-    </Fragment>
+    </div>
   );
 };
 

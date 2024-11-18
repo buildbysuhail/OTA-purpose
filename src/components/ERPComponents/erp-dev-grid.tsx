@@ -46,6 +46,7 @@ import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
+import LedgerReportFilter from "../../pages/accounts/masters/reports/ledger-report-filter";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -58,9 +59,12 @@ interface ERPDevGridProps {
   showSerialNo?: boolean;
   gridId: string;
   dataUrl?: string;
+  filterInitialData?: string;
+  enablefilter?: boolean;
+  filterContent?: React.ReactNode;
   data?: any;
   method?: ActionType;
-  postData?: any;
+  filterData?: any;
   height?: number | string;
   className?: string;
   showBorders?: boolean;
@@ -131,26 +135,31 @@ interface ERPDevGridProps {
   initialPreferences?: GridPreference;
   paramNames?: string[];
   reload?: boolean;
+  showFilterInitially?: boolean;
   childPopupProps?: {
     title: string,
     width: string,
     isForm: boolean,
     content: any,
-    buttonField: string,
-    bodyProps: string
+    drillDownCells: string,
+    bodyProps: string,
+    enableFilter?: boolean
   }
 }
 const api = new APIClient();
 const createStore = (
   keyExpr: string | string[] | undefined,
   dataUrl: string,
+  enablefilter: boolean,
   allowEditing?: boolean,
   method?: ActionType,
-  postData?: any,
+  filterData?: any,
   initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
   paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
-  bodyProps?: string
+  bodyProps?: any,
 ) => {
+
+  
   return new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
@@ -164,7 +173,7 @@ const createStore = (
         });
       }
 
-      
+
       const params = Object.fromEntries(
         paramNames
           .filter((paramName) => isNotEmpty(loadOptions[paramName]))
@@ -174,9 +183,11 @@ const createStore = (
           ])
       );
 
-      // Append bodyProps to params
-      if (bodyProps != undefined) {
-        Object.entries(bodyProps).forEach(([key, value]) => {
+      // Append filterData to params
+
+
+      if (enablefilter == true && filterData != undefined && filterData != null) {
+        Object.entries(filterData).forEach(([key, value]) => {
           params[key] = JSON.stringify(value);
         });
       }
@@ -184,10 +195,10 @@ const createStore = (
 
       const queryString = new URLSearchParams(params).toString();
 
-      
+
       try {
-        const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, postData, queryString) : null;
-        
+        const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, filterData != undefined && filterData != null ? filterData : {}, queryString) : null;
+
         return result
           ? {
             data: result.data,
@@ -230,8 +241,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   gridId,
   dataUrl,
   data,
+  filterInitialData,
+  enablefilter = true,
+  filterContent = <></>,
   method = ActionType.GET,
-  postData,
+  filterData,
   height,
   className = "custom-data-grid",
   showBorders = true,
@@ -290,8 +304,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   hoverStateEnabled = true,
   initialPreferences,
   reload,
+  showFilterInitially = false,
   paramNames = ["skip", "take", "requireTotalCount", "sort", "filter"],
-  childPopupProps
+  childPopupProps = {
+    title: '',
+    width: 'mw-100',
+    isForm: false,
+    content: null,
+    drillDownCells: '',
+    bodyProps: '',
+    enableFilter: false
+  }
 }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -305,8 +328,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     gridAddButtonText == "Add" ? t("add") : gridAddButtonText
   );
   const onPopupOpenClick = useCallback(() => {
-    console.log('onPopupOpenClick');
-    
+
     popupAction && dispatch(popupAction({ isOpen: true, key: null }));
   }, [dispatch, popupAction]);
 
@@ -319,13 +341,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
   const [preferences, setPreferences] = useState<GridPreference>();
+  const [filter, setFilter] = useState<any>(filterData);
+  const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [isChildOpen, setIsChildOpen] = useState<boolean>(false);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
 
-  
+
   useEffect(() => {
-    console.log("preferer useeff");
-debugger;
+
     if (gridId != "" && columns != undefined && columns != null) {
       onApplyPreferences(getInitialPreference(gridId, columns));
     }
@@ -341,41 +365,68 @@ debugger;
     [columns]
   ); // Add any other dependencies here
 
-  const isNotEmpty = (value: any) =>
-    value !== undefined && value !== null && value !== "";
-  const store = useMemo(() => {
+  const onApplyFilter = useCallback(
+    (_filter: any) => {
+      debugger;
+      const dss = { ..._filter }
+      console.log(`prev:${filter}`);
+      console.log(`latest:${_filter}`);
+
+      setFilter(dss);
+    },
+    []
+  ); // Add any other dependencies here
+  const onCloseFilter = useCallback(
+    () => {
+      debugger;
+      console.log(`filterShowCountww: ${filterShowCount}`);
+      if (filterShowCount == 0) {
+        setFilter({});
+        
+      setFilterShowCount((prev) => prev + 1);
+      console.log(`filterShowCount333: ${filterShowCount}`);
+      }
+      setShowFilter(false);
+    },
+    []
+  );
+  useEffect(() => {
     debugger;
+    console.log(`showFilterChange: ${filterShowCount}`);
+    if (filterShowCount == 0 && showFilter == false) {
+      console.log(`filterShowCountSafvan: ${filterShowCount}`);
+      setFilterShowCount((prev) => prev + 1);
+    }
+  }, [showFilter])
+
+  const store = useMemo(() => {
+
+
     if (data) {
       return data;
     }
-    else if(!dataUrl)
-    {
+    else if (!dataUrl) {
       return null;
+    }
+    debugger;
+    if (filterShowCount == 0 && enablefilter == true && showFilterInitially) {
+      setShowFilter(true);
+      return;
+    } else {
+      setShowFilter(false);
     }
     return createStore(
       keyExpr,
       dataUrl ?? "",
+      enablefilter,
       allowEditing,
       method,
-      postData,
+      filter,
       initialFilters,
       paramNames,
-      childPopupProps?.bodyProps
+      bodyProps,
     );
-  }, [data, keyExpr, dataUrl, allowEditing, method, postData, initialFilters, reload, childPopupProps?.bodyProps]);
-
-  // const store = data != undefined && data != null ? data : useMemo(
-  //   () => {
-  //     
-  //     if (reload) {
-  //       const newStore = createStore(keyExpr, dataUrl??"", allowEditing, method, postData, initialFilters,undefined, childPopupProps?.bodyProps);
-  //       setCurrentStore(newStore);  // Update current store whenever reload is true
-  //       return newStore;
-  //     }
-  //     return currentStore;
-  //   },
-  //   [keyExpr, dataUrl, allowEditing, reload, childPopupProps?.bodyProps]
-  // );
+  }, [data, keyExpr, dataUrl, allowEditing, method, filter, reload]);
 
   const onExportingHandler = useCallback((e: any) => {
     if (onExporting) {
@@ -418,9 +469,11 @@ debugger;
     }
   }, [onExporting, gridId]);
   const handleCellClick = useCallback((event: any) => {
-    
-    // Check if the clicked cell's field matches childPopupProps.buttonField
-    if (event.column?.dataField === childPopupProps?.buttonField) {
+
+    // Check if the clicked cell's field matches childPopupProps.drillDownCells
+    const _drillDownCells = childPopupProps?.drillDownCells.split(',')
+    const _drillDownCell = _drillDownCells.find((x: string) => x == event.column?.dataField)
+    if (_drillDownCell != undefined) {
       const updatedBodyProps: { [key: string]: any } = {};
 
       // Ensure childPopupProps.bodyProps is a string before splitting and iterating over it
@@ -428,15 +481,25 @@ debugger;
         const trimmedProp = prop.trim();
         updatedBodyProps[trimmedProp] = event.data[trimmedProp];
       });
-
       // Update bodyProps state
       setBodyProps(updatedBodyProps);
       setIsChildOpen(true);
     }
   }, []);
+  const onCellPrepared = useCallback((e: any) => {
+    const _drillDownCells = childPopupProps?.drillDownCells.split(',')
+    const _drillDownCell = _drillDownCells.find((x: string) => x == e.column.dataField)
+    if (e.rowType === "data" && _drillDownCell != undefined) {
+
+      e.cellElement.innerHTML = `<a href="#" style="color: #1976d2; text-decoration: underline;">${e.row?.data?.[e.column.dataField]}</a>`;
+      e.cellElement.onclick = (event: any) => {
+        event.preventDefault();
+      };
+    }
+  }, []);
   return (
     <Fragment>
-      
+
       <div className={className}>
         <DataGrid
           dataSource={store}
@@ -456,6 +519,7 @@ debugger;
           showRowLines={showRowLines}
           rowAlternationEnabled={true}
           onCellClick={handleCellClick}
+          onCellPrepared={onCellPrepared}
           // columnRenderingMode={columnRenderingMode}
           // rowRenderingMode={rowRenderingMode}
           keyExpr={keyExpr}
@@ -465,7 +529,7 @@ debugger;
 
         >
           <ColumnFixing enabled={true} />
-          <Scrolling mode={scrollingMode}  showScrollbar="always" />
+          <Scrolling mode={scrollingMode} showScrollbar="always" />
           {allowPaging && (
             <Paging defaultPageSize={pageSize} pageSize={pageSize} />
           )}
@@ -514,7 +578,7 @@ debugger;
             />
           )}
           <Toolbar>
-            {!hideGridHeader && (
+            {!hideGridHeader && (filterData == undefined || filterData == null) && (
               <Item location="before">
                 <div className="flex  flex-col">
                   <div className="box-title !text-xl !font-medium">
@@ -527,12 +591,21 @@ debugger;
             {!hideDefaultExportButton && allowExport && (
               <Item name="exportButton" />
             )}
-            <Item>
-              {/* <ErpGridGlobalFilter
-                gridId={gridId}
-                onApplyPreferences={onApplyPreferences}
-              /> */}
-            </Item>
+            {enablefilter == true &&
+              <Item>
+
+                <ErpGridGlobalFilter
+                  gridId={gridId}
+                  initialData={filterInitialData}
+                  content={
+                    filterContent
+                    // <LedgerReportFilter /> // Pass standalone JSX content
+                  }
+                  toogleFilter={showFilter}
+                  onApplyFilters={(filters) => onApplyFilter(filters)}
+                  onClose={onCloseFilter}
+                />
+              </Item>}
             <Item>
               <GridPreferenceChooser
                 columns={columns}
@@ -587,7 +660,7 @@ debugger;
               dataType={column.dataType}
               allowSorting={column.allowSorting}
               allowSearch={column.allowSearch}
-              allowFiltering={column.allowFiltering?? false}
+              allowFiltering={column.allowFiltering ?? false}
               width={column.width}
               minWidth={column.minWidth}
               fixed={column.fixed}

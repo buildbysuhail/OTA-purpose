@@ -167,7 +167,6 @@ const PartySummarySales = () => {
                   gridHeader={t("party_summary_sales")}
                   dataUrl= {Urls.acc_reports_party_summary_sales}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

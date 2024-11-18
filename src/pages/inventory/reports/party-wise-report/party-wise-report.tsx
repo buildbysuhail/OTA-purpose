@@ -121,7 +121,6 @@ const PartyWiseReport = () => {
                   gridHeader={t("party_wise_report")}
                   dataUrl= {Urls.acc_reports_ledger}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   hideGridAddButton={true}
                   reload={true}

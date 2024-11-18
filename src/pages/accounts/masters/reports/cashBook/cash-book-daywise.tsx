@@ -86,7 +86,6 @@ const CashBookDayWise = () => {
                   gridHeader={t("cash_book_daywise")}
                   dataUrl= {Urls.acc_reports_cash_book_daywise}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}

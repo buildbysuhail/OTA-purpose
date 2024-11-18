@@ -7,6 +7,7 @@ import { RootState } from "../../../../redux/store";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
 import { SettingsMenuItems } from "../../../../components/common/sidebar/sidemenu/settings";
 import { useTranslation } from "react-i18next";
+import { ReportsMenuItems } from "../../../common/sidebar/sidemenu/reports-routes";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Header = () => {
   const [search, setSearch] = useState<any>(null);
   const [open, setIsOpen] = useState(false);
   const [searchResults, setSearchResults] = useState<any>();
-  const [routes, setRoutes] = useState(SettingsMenuItems);
+  const [routes, setRoutes] = useState(ReportsMenuItems);
 
 
   useEffect(() => {

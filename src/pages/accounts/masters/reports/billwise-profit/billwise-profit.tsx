@@ -160,7 +160,6 @@ const BillwiseProfit = () => {
                   gridHeader={t("billwise_profit_report_sales")}
                   dataUrl= {Urls.acc_reports_billwise_profit}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

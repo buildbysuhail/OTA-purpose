@@ -97,7 +97,6 @@ const BalanceSheetAccLedgerBalanceView = () => {
                   gridHeader={t("account_ledger_report")}
                   dataUrl= {Urls.acc_reports_account_ledger_balance_view}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

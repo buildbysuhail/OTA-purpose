@@ -1319,5 +1319,7 @@
   "address_2_city": "Address 2/City",
   "address3_district": "Address 3/District",
   "qr_pay_name": "QR Pay Name",
-    "qr_pay": "QR Pay"
+    "qr_pay": "QR Pay",
+     "filters": "Filters",
+    "apply": "Apply"
 }

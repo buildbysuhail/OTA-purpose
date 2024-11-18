@@ -10,38 +10,31 @@ import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer
 
 interface CashBookMonthWiseProps {
   contentProps?: any
+  enablefilter?: boolean;
 }
 interface CashBookMonthWiseFilters {
   from: Date
 }
-const CashBookMonthWise = ({contentProps}:CashBookMonthWiseProps) => {
+const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "year",
-      caption: t('year'),
+      dataField: "SiNo",
+      caption: t('si_no'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 80,
     },
     {
-      dataField: "month",
-      caption: t("month"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    {
       dataField: "ledgerName",
-      caption:  t("ledger_name"),
+      caption: t("ledger_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
     },
     {
       dataField: "debit",
@@ -49,7 +42,7 @@ const CashBookMonthWise = ({contentProps}:CashBookMonthWiseProps) => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 200,
     },
     {
       dataField: "credit",
@@ -57,24 +50,79 @@ const CashBookMonthWise = ({contentProps}:CashBookMonthWiseProps) => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 200,
     },
     {
-      dataField: "monthBal",
-      caption: t("month_balance"),
+      dataField: "balance",
+      caption: t("balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 200,
     },
     {
-      dataField: "closingBalance",
-      caption: t("closing_balance"),
-      dataType: "number",
+      dataField: "branch",
+      caption:  t("branch"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 250,
     },
+    // {
+    //   dataField: "year",
+    //   caption: t('year'),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 80,
+    // },
+    // {
+    //   dataField: "month",
+    //   caption: t("month"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    // },
+    // {
+    //   dataField: "ledgerName",
+    //   caption:  t("ledger_name"),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "debit",
+    //   caption: t('debit'),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "credit",
+    //   caption: t("credit"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "monthBal",
+    //   caption: t("month_balance"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "closingBalance",
+    //   caption: t("closing_balance"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
   ];
   return (
     <Fragment>
@@ -83,16 +131,30 @@ const CashBookMonthWise = ({contentProps}:CashBookMonthWiseProps) => {
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid
+               
+
+<ErpDevGrid
+                  filterData = {contentProps}
+                  enablefilter={enablefilter}
                   columns={columns}
-                  gridHeader={t("cash_book_monthwise")}
-                  dataUrl= {Urls.acc_reports_cash_book_monthwise}
-                  postData = {contentProps}
+                  gridHeader={t("cash_book")}
+                  dataUrl= {Urls.acc_reports_cash_book}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
+                  // allowEditing={false}
                   hideGridAddButton={true}
+                  // gridAddButtonType="popup"
                   reload={true}
+                  // CashBookMonthWise
+                  childPopupProps={{
+                    content: <CashBookMonthWise />,
+                    title: t("cash_book_monthwise"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "SiNo",
+                    bodyProps: "ledgerID"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

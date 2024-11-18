@@ -1,24 +1,58 @@
-import { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import { useCallback, useEffect, useState } from "react";
+import { APIClient } from "../../../../../helpers/api-client";
+import ErpGridGlobalFilter from "../../../../../components/ERPComponents/erp-grid-global-filter";
+import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
 import Urls from "../../../../../redux/urls";
-import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 
 interface BalanceSheet {
   from: Date;
 }
+const api = new APIClient();
 const BalanceSheet = () => {
+  const [data, setData] = useState();
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
+  const [filterShowCount, setFilterShowCount] = useState<number>(0);
+  useEffect(() => {
+
+  }, []);
+  const LoadAsysnc = async () => {
+    const res = await api.postAsync(Urls.acc_reports_balance_sheet,filter)
+    setData(res);
+  }
+  const onApplyFilter = useCallback(
+    (_filter: any) => {
+      const dss = { ..._filter }
+      setFilter(dss);
+    },
+    []
+  ); 
+  const onCloseFilter = useCallback(
+    () => {
+      if (filterShowCount == 0) {
+        setFilter({});
+        setFilterShowCount((prev) => prev + 1);
+      }
+      setShowFilter(false);
+    },
+    []
+  );
   return (
     <div className="p-6">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-center text-xl font-bold mb-2">UK Company</h1>
+        <ErpGridGlobalFilter
+        width="w-full max-w-[1000px]"
+          gridId={"gridBalanceSheet"}
+          initialData={BalanceSheetFilterInitialState}
+          content={
+            <BalanceSheetFilter/>
+            // <LedgerReportFilter /> // Pass standalone JSX content
+          }
+          toogleFilter={showFilter}
+          onApplyFilters={(filters) => onApplyFilter(filters)}
+          onClose={onCloseFilter}
+        />
         <h2 className="text-center text-lg mb-4">Balance Sheet</h2>
         <p className="text-center mb-4">As of December 20, 2023</p>
         <table className="w-full text-left border-collapse">

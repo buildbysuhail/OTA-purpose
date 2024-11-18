@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 
 interface ErpGridGlobalFilterProps {
   gridId: string;
+  width: string;
   initialData: any;
   content: React.ReactNode; // Pass pre-defined JSX for content
   onApplyFilters?: (filters: any) => void;
@@ -17,6 +18,7 @@ interface ErpGridGlobalFilterProps {
 
 const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   gridId,
+  width="w-full max-w-[1000px]",
   content,
   initialData,
   onApplyFilters,
@@ -71,7 +73,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
         isFullHeight
         isOpen={isOpen}
         hasSubmit={false}
-        width="w-full max-w-[1000px]"
+        width={width}
         closeTitle={t("close")}
         title={t("filters")}
         closeModal={() => setIsOpen(false)}

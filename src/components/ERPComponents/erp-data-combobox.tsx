@@ -202,7 +202,7 @@ const ComboboxList = React.forwardRef<
 
 ComboboxList.displayName = "ComboboxList";
 
-export default function ImprovedERPDataCombobox({
+export default function ERPDataCombobox({
   id,
   label,
   handleChange,

@@ -1,378 +1,550 @@
-import * as React from "react"
-import { forwardRef } from "react"
-import { TextField, InputAdornment, TextFieldProps, Theme, SxProps } from "@mui/material"
-import { setNestedValue } from "../../utilities/Utils"
-import { useAppSelector } from "../../utilities/hooks/useAppDispatch"
-import { RootState } from "../../redux/store"
-import { handleNavigation } from "../../utilities/shortKeys"
+// import * as React from "react";
+import { forwardRef, useEffect, useState } from "react";
+import {
+  TextField,
+  InputAdornment,
+  TextFieldProps,
+  Theme,
+  SxProps,
+} from "@mui/material";
+import { setNestedValue } from "../../utilities/Utils";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
 
 // Mocking the ERPElementValidationMessage component
-const ERPElementValidationMessage = ({ validation }: { validation?: string }) => (
-  <div className="text-red text-xs">{validation}</div>
-)
+const ERPElementValidationMessage = ({
+  validation,
+}: {
+  validation?: string;
+}) => <div className="text-red text-xs">{validation}</div>;
 
-type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'prefix' | 'color'>
+type ERPInputBaseProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size" | "prefix" | "color"
+>;
 
 interface ERPInputProps extends ERPInputBaseProps {
-  id: string
-  data?: any
-  value?: any
-  defaultValue?: any
-  label?: string
-  placeholder?: string
-  onChangeData?: (data: any) => void
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
-  required?: boolean
-  minLength?: number
-  maxLength?: number
-  min?: number | string
-  max?: number | string
-  step?: any
-  pattern?: string
-  type?: string
-  autocomplete?: string
-  disabled?: boolean
-  labelClassName?: string
-  className?: string
-  inputClassName?: string
-  noLabel?: boolean
-  prefix?: React.ReactNode
-  suffix?: React.ReactNode
-  onClickPrefix?: () => void
-  onClickSuffix?: () => void
-  accept?: string
-  validation?: string
-  autoFocus?: boolean
-  customSize?: "sm" | "md" | "lg" | "auto"
-  useMUI?: boolean
-  color?: TextFieldProps['color']
-  variant?: "filled" | "outlined" | "standard" | undefined
-  skip?: boolean
-  jumpTo?: string;     
-  jumpTarget?: string; 
+  id: string;
+  data?: any;
+  value?: any;
+  defaultValue?: any;
+  label?: string;
+  placeholder?: string;
+  onChangeData?: (data: any) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  min?: number | string;
+  max?: number | string;
+  step?: any;
+  pattern?: string;
+  type?: string;
+  autocomplete?: string;
+  disabled?: boolean;
+  labelClassName?: string;
+  className?: string;
+  inputClassName?: string;
+  noLabel?: boolean;
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
+  onClickPrefix?: () => void;
+  onClickSuffix?: () => void;
+  accept?: string;
+  validation?: string;
+  autoFocus?: boolean;
+  customSize?: "sm" | "md" | "lg" | "customize";
+  useMUI?: boolean;
+  // color?: TextFieldProps["color"];
+  
+  variant?: "filled" | "outlined" | "standard";
 }
 
-const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(({
-  id,
-  onChangeData,
-  onChange,
-  onFocus,
-  onBlur,
-  data,
-  type = "text",
-  customSize = "sm",
-  autocomplete = "off",
-  label,
-  placeholder,
-  disabled,
-  labelClassName,
-  className,
-  inputClassName,
-  value,
-  defaultValue,
-  required,
-  minLength,
-  maxLength,
-  min,
-  max,
-  pattern,
-  noLabel,
-  prefix,
-  suffix,
-  step,
-  accept,
-  validation,
-  onClickPrefix,
-  onClickSuffix,
-  useMUI = false,
-  color,
-  variant = "outlined",
-  skip = false,
-  jumpTo,      
-  jumpTarget,  
-  ...props
-}: ERPInputProps, ref) => {
-  const iLabel = label || id?.replaceAll("_", " ")
-  const iPlaceholder = placeholder || label
-  const appState = useAppSelector((state: RootState) => state.AppState.appState)
+const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
+  (
+    {
+      id,
+      onChangeData,
+      onChange,
+      onFocus,
+      onBlur,
+      data,
+      type = "text",
+      customSize,
+      autocomplete = "off",
+      label,
+      placeholder,
+      disabled,
+      labelClassName,
+      className,
+      inputClassName,
+      value,
+      defaultValue,
+      required,
+      minLength,
+      maxLength,
+      min,
+      max,
+      pattern,
+      noLabel,
+      prefix,
+      suffix,
+      step,
+      accept,
+      validation,
+      onClickPrefix,
+      onClickSuffix,
+      useMUI = false,
+      // color,
+      variant = "outlined",
+      ...props
+    }: ERPInputProps,
+    ref
+  ) => {
+    
+    const appState = useAppSelector(
+      (state: RootState) => state.AppState.appState
+    );
+    const iLabel = label || id?.replaceAll("_", " ");
+    const iPlaceholder = placeholder || label;
+    const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+    useEffect(() => {
+      setCustomSize(appState.inputBox.inputSize)
+    },[appState.inputBox.inputSize])
 
-  const getSizeStyles = () => {
-    const styles: {
-      mui: SxProps<Theme>;
-      regular: {
-        height: string;
-        fontSize: string;
-        padding: string;
+    const [isHovered, setIsHovered] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
+    const handleFocus = () => setIsFocused(true);
+    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+      setIsFocused(false);
+      if (onBlur) onBlur(e);
+    };
+    // Get size-specific styles for both MUI and regular inputs
+    const getSizeStyles = () => {
+      const styles: {
+        mui: SxProps<Theme>;
+        regular: {
+          height: string;
+          fontSize: string;
+          padding: string;
+          fontWeight?: number;
+          color?:string;
+          borderColor?:string;
+          // borderFocusColor?:string;
+        };
+      } = {
+        mui: {},
+        regular: {
+          height: "2.5rem",
+          fontSize: "14px",
+          padding: "0.5rem 1rem",
+        },
       };
-    } = {
-      mui: {},
-      regular: {
-        height: "2.5rem",
-        fontSize: "14px",
-        padding: "0.5rem 1rem"
-      }
-    }
 
-    switch (customSize) {
-      case "sm":
-        return {
-          mui: {
-            "& .MuiInputBase-root": {
+      switch (_customSize) {
+        case "sm":
+          return {
+            mui: {
+              "& .MuiInputBase-root": {
+                height: "2rem",
+                fontSize: "12px",
+                color: `rgb(${appState.inputBox.fontColor})`,
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `rgb(${appState.inputBox.borderColor})`,
+                },
+                 // Add hover and focused states
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                },
+                margin: "0",
+                "& .MuiOutlinedInput-input": {
+                  padding: "0 0.75rem",
+                },
+                "& .MuiFilledInput-input": {
+                  padding: "0 0.75rem",
+                },
+              },
+              "& .MuiInputLabel-root": {
+                fontSize: "12px",
+                transform:
+                  variant === "filled"
+                    ? "translate(8px, 10px) scale(0.8)"
+                    : variant === "standard"
+                    ? "translate(0, 10px) scale(0.8)"
+                    : "translate(8px, 10px) scale(0.8)",
+              },
+              "& .MuiInputLabel-shrink": {
+                transform:
+                  variant === "filled"
+                    ? "translate(8px, -10px) scale(0.75)"
+                    : variant === "standard"
+                    ? "translate(0, -6px) scale(0.75)"
+                    : "translate(16px, -6px) scale(0.75)",
+              },
+            } as SxProps<Theme>,
+            regular: {
               height: "2rem",
               fontSize: "12px",
-              margin: "0",
-              "& .MuiOutlinedInput-input": {
-                padding: "0 0.75rem"
+              color: appState.inputBox.fontColor
+              ? `rgb(${appState.inputBox.fontColor})`
+              : "inherit", 
+              borderColor:`rgb(${appState.inputBox.borderColor})`,
+              // padding: "0.25rem 0.75rem"
+            },
+          };
+        case "md":
+          return {
+            mui: {
+              "& .MuiInputBase-root": {
+                // height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
+                height: "2.5rem",
+                fontSize: "14px",
+                color: `rgb(${appState.inputBox.fontColor})`,
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `rgb(${appState.inputBox.borderColor})`,
+                },
+                  // Add hover and focused states
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                  },
+                margin: "0",
+                "& .MuiOutlinedInput-input": {
+                  padding: "0 0.75rem",
+                },
+                "& .MuiFilledInput-input": {
+                  padding: "0 0.75rem",
+                },
               },
-              "& .MuiFilledInput-input": {
-                padding: "0 0.75rem"
-              }
-            },
-            "& .MuiInputLabel-root": {
-              fontSize: "12px",
-              transform: variant === "filled"
-                ? "translate(8px, 10px) scale(0.8)"
-                : variant === "standard"
-                  ? "translate(0, 10px) scale(0.8)"
-                  : "translate(8px, 10px) scale(0.8)"
-            },
-            "& .MuiInputLabel-shrink": {
-              transform: variant === "filled"
-                ? "translate(8px, -10px) scale(0.75)"
-                : variant === "standard"
-                  ? "translate(0, -6px) scale(0.75)"
-                  : "translate(16px, -6px) scale(0.75)"
-            }
-          } as SxProps<Theme>,
-          regular: {
-            height: "2rem",
-            fontSize: "12px",
-            // padding: "0.25rem 0.75rem"
-          }
-        }
-      case "md":
-        return {
-          mui: {
-            "& .MuiInputBase-root": {
-              // height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
+              "& .MuiInputLabel-root": {
+                fontSize: "12px",
+                transform:
+                  variant === "filled"
+                    ? "translate(10px, 13px) scale(0.9)"
+                    : variant === "standard"
+                    ? "translate(0, 13px) scale(0.9)"
+                    : "translate(10px, 13px) scale(0.9)",
+              },
+              "& .MuiInputLabel-shrink": {
+                transform:
+                  variant === "filled"
+                    ? "translate(8px, -12px) scale(0.90)"
+                    : variant === "standard"
+                    ? "translate(0, -6px) scale(0.90)"
+                    : "translate(15px, -7px) scale(0.90)",
+              },
+            } as SxProps<Theme>,
+            regular: {
               height: "2.5rem",
               fontSize: "14px",
-              margin: "0",
-              "& .MuiOutlinedInput-input": {
-                padding: "0 0.75rem"
+              color: appState.inputBox.fontColor
+              ? `rgb(${appState.inputBox.fontColor})`
+              : "inherit", 
+              borderColor:`rgb(${appState.inputBox.borderColor})`,
+              // padding: "0.5rem 1rem"
+            },
+          };
+        case "lg":
+          return {
+            mui: {
+              "& .MuiInputBase-root": {
+                // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
+                height: "3rem",
+                fontSize: "16px",
+                color: `rgb(${appState.inputBox.fontColor})`,
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `rgb(${appState.inputBox.borderColor})`,
+                },
+                  // Add hover and focused states
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                  },
+                margin: "0",
+                "& .MuiOutlinedInput-input": {
+                  padding: "0 0.75rem",
+                },
+                "& .MuiFilledInput-input": {
+                  padding: "0 0.75rem",
+                },
               },
-              "& .MuiFilledInput-input": {
-                padding: "0 0.75rem"
-              }
-            },
-            "& .MuiInputLabel-root": {
-              fontSize: "12px",
-              transform: variant === "filled"
-                ? "translate(10px, 13px) scale(0.9)"
-                : variant === "standard"
-                  ? "translate(0, 13px) scale(0.9)"
-                  : "translate(10px, 13px) scale(0.9)"
-            },
-            "& .MuiInputLabel-shrink": {
-              transform: variant === "filled"
-                ? "translate(8px, -12px) scale(0.90)"
-                : variant === "standard"
-                  ? "translate(0, -6px) scale(0.90)"
-                  : "translate(15px, -7px) scale(0.90)"
-            }
-          } as SxProps<Theme>,
-          regular: {
-            height: "2.5rem",
-            fontSize: "14px",
-            // padding: "0.5rem 1rem"
-          }
-        }
-      case "lg":
-        return {
-          mui: {
-            "& .MuiInputBase-root": {
-              // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
+              "& .MuiInputLabel-root": {
+                fontSize: "14px",
+                transform:
+                  variant === "filled"
+                    ? "translate(10px, 15px) scale(1)"
+                    : variant === "standard"
+                    ? "translate(0, 15px) scale(1)"
+                    : "translate(10px, 15px) scale(1)",
+              },
+              "& .MuiInputLabel-shrink": {
+                transform:
+                  variant === "filled"
+                    ? "translate(8px, -14px) scale(0.88)"
+                    : variant === "standard"
+                    ? "translate(1px,-6px) scale(0.88)"
+                    : "translate(16px, -7px) scale(0.88)",
+              },
+            } as SxProps<Theme>,
+            regular: {
               height: "3rem",
               fontSize: "16px",
-              margin: "0",
-              "& .MuiOutlinedInput-input": {
-                padding: "0 0.75rem"
+              color: appState.inputBox.fontColor
+              ? `rgb(${appState.inputBox.fontColor})`
+              : "inherit", 
+              borderColor:`rgb(${appState.inputBox.borderColor})`,
+              // label: "10px",
+              // padding: "0.75rem 1.25rem"
+            },
+          };
+          case "customize":
+            return {
+              mui: {
+                "& .MuiInputBase-root": {
+                  height: `${appState.inputBox.inputHeight??2.5}rem`,
+                  fontSize: `${appState.inputBox.fontSize??15}px`,
+                  borderRadius:`${appState.inputBox.borderRadius??15}px`,
+                  fontWeight:appState.inputBox.fontWeight??500,
+                  color: `rgb(${appState.inputBox.fontColor})`, 
+                  
+                  // border: appState.inputBox.borderColor
+                  // ? `1px solid rgb(${appState.inputBox.borderColor})`
+                  // : "1px solid #ccc",
+                  margin: "0",
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: `rgb(${appState.inputBox.borderColor})`,
+                  },
+                    // Add hover and focused states
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
+                },
+                  "& .MuiOutlinedInput-input": {
+                    padding: "0 0.75rem",
+                  },
+                  "& .MuiFilledInput-input": {
+                    padding: "0 0.75rem",
+                  },
+                },
+                "& .MuiInputLabel-root": {
+                  fontSize: `${appState.inputBox.labelFontSize??14}px`,
+                 
+                  transform:
+                    variant === "filled"
+                      ? "translate(10px, 15px) scale(1)"
+                      : variant === "standard"
+                      ? "translate(0, 15px) scale(1)"
+                      : "translate(10px, 15px) scale(1)",
+                },
+                "& .MuiInputLabel-shrink": {
+                  transform:
+                    variant === "filled"
+                      ? "translate(8px, -14px) scale(0.88)"
+                      : variant === "standard"
+                      ? "translate(1px,-6px) scale(0.88)"
+                      : "translate(16px, -7px) scale(0.88)",
+                },
+              } as SxProps<Theme>,
+              regular: {
+                height: `${appState.inputBox.inputHeight??2.5}rem`,
+                fontSize: `${appState.inputBox.fontSize??15}px`,
+                fontWeight:appState.inputBox.fontWeight,
+                color: appState.inputBox.fontColor
+                ? `rgb(${appState.inputBox.fontColor})`
+                : "inherit", 
+                borderColor:`rgb(${appState.inputBox.borderColor})`,
+               borderFouc:`rgb(${appState.inputBox.borderColor})`,
+                // label: "10px",
+                // padding: "0.75rem 1.25rem"
               },
-              "& .MuiFilledInput-input": {
-                padding: "0 0.75rem"
-              }
-            },
-            "& .MuiInputLabel-root": {
-              fontSize: "14px",
-              transform: variant === "filled"
-                ? "translate(10px, 15px) scale(1)"
-                : variant === "standard"
-                  ? "translate(0, 15px) scale(1)"
-                  : "translate(10px, 15px) scale(1)"
-            },
-            "& .MuiInputLabel-shrink": {
-              transform: variant === "filled"
-                ? "translate(8px, -14px) scale(0.88)"
-                : variant === "standard"
-                  ? "translate(1px,-6px) scale(0.88)"
-                  : "translate(16px, -7px) scale(0.88)"
-            }
-          } as SxProps<Theme>,
-          regular: {
-            height: "3rem",
-            fontSize: "16px",
-            label: "10px",
-            // padding: "0.75rem 1.25rem"
-          }
-        }
-      default:
-        return styles
-    }
-  }
-  const sizeStyles = getSizeStyles()
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChangeData && data && onChangeData(setNestedValue(data, id, e.target?.value))
-    onChange && onChange(e)
-  }
-  const commonProps = {
-    id,
-    name: id,
-    value: value === undefined ? "" : value,
-    defaultValue,
-    onChange: handleChange,
-    onFocus,
-    onBlur,
-    type,
-    required,
-    disabled,
-    ...props
-  }
+            };
+        default:
+          return styles;
+      }
+    };
 
-  if (useMUI) {
-    const muiProps: TextFieldProps = {
-      ...commonProps,
-      label: !noLabel ? iLabel : undefined,
-      InputProps: {
-        startAdornment: prefix ? (
-          <InputAdornment position="start" onClick={onClickPrefix}>
-            {prefix}
-          </InputAdornment>
-        ) : undefined,
-        endAdornment: suffix ? (
-          <InputAdornment position="end" onClick={onClickSuffix}>
-            {suffix}
-          </InputAdornment>
-        ) : undefined,
-      },
-      fullWidth: true,
-      variant: variant,
-      color: color,
-      inputProps: {
-        maxLength,
-        min,
-        max,
-        pattern,
-        step,
-        accept,
-        'data-skip': skip,
-        'data-jump-to': jumpTo,        
-        'data-jump-target': jumpTarget, 
-        onKeyDown: handleNavigation,
-      },
-      sx: sizeStyles.mui
+    const sizeStyles = getSizeStyles();
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChangeData &&
+        data &&
+        onChangeData(setNestedValue(data, id, e.target?.value));
+      onChange && onChange(e);
+    };
+
+    const commonProps = {
+      id,
+      name: id,
+      value: value === undefined ? "" : value,
+      defaultValue,
+      onChange: handleChange,
+      onFocus,
+      onBlur,
+      type,
+      required,
+      disabled,
+      ...props,
+    };
+
+    if (useMUI) {
+      const muiProps: TextFieldProps = {
+        ...commonProps,
+        label: !noLabel ? iLabel : undefined,
+        InputProps: {
+          startAdornment: prefix ? (
+            <InputAdornment position="start" onClick={onClickPrefix}>
+              {prefix}
+            </InputAdornment>
+          ) : undefined,
+          endAdornment: suffix ? (
+            <InputAdornment position="end" onClick={onClickSuffix}>
+              {suffix}
+            </InputAdornment>
+          ) : undefined,
+        },
+        fullWidth: true,
+        variant: variant,
+        // color: color,
+        inputProps: {
+          maxLength,
+          min,
+          max,
+          pattern,
+          step,
+          accept,
+        },
+        sx: sizeStyles.mui,
+      };
+
+      return (
+        <div className={className}>
+          <TextField {...muiProps} />
+          <ERPElementValidationMessage validation={validation} />
+        </div>
+      );
     }
 
+    const { height, fontSize , fontWeight,color,borderColor,} = sizeStyles.regular;
+    const inputBorderColor = isFocused
+    ? `rgb(${appState.inputBox.borderFocus})`
+    : isHovered
+    ? `rgb(${appState.inputBox.borderFocus})`
+    : `rgb(${appState.inputBox.borderColor})`;
     return (
       <div className={className}>
-        <TextField {...muiProps} />
+        {!noLabel && (
+          <label
+            className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
+            style={{
+              fontSize: customSize
+                ? customSize === "sm"
+                  ? "12px"
+                  : customSize === "md"
+                  ? "14px"
+                  : "16px"
+                : `${appState.inputBox.labelFontSize}px`, // Ensure the fontSize is a string with 'px' suffix
+            }}
+          >
+            {iLabel}
+            {required && !noLabel && "*"}
+          </label>
+        )}
+
+        <div className="flex">
+          {prefix && (
+            <div
+              onClick={onClickPrefix}
+              className={`${
+                onClickPrefix && "cursor-pointer"
+              } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
+              style={{ height, fontSize,fontWeight,color,borderColor}}
+            >
+              {prefix}
+            </div>
+          )}
+          <div className="flex-1">
+            <input
+              {...commonProps}
+              placeholder={iPlaceholder}
+              ref={ref}
+              autoComplete={autocomplete}
+              style={{
+                height,
+                fontSize,
+                fontWeight,
+                color,
+                border: `1px solid ${inputBorderColor}`,
+                outline: "none",
+                transition: "border-color 0.2s ease-in-out",
+            
+                borderTopLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
+                borderBottomLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
+                borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
+                borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
+                ...(!prefix && !suffix && {
+                  borderRadius: `${appState.inputBox.borderRadius}px`,
+                }), 
+              }as React.CSSProperties}
+                     
+              className={`
+                border border-gray-400 
+                block w-full 
+                ${inputClassName} 
+                border 
+                placeholder:capitalize 
+                border-gray-300 
+                ${disabled ? "text-gray-400" : "bg-white text-gray-900"}
+                placeholder-gray-400 
+              
+              `}
+              
+              onKeyDown={(e) =>  e.key === "Enter" && e.preventDefault()}
+             
+              onWheel={(e: any) => {
+                type === "number" && e?.target?.blur();
+              }}
+              maxLength={maxLength}
+              min={min}
+              max={max}
+              pattern={pattern}
+              step={step}
+              accept={accept}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+          </div>
+          {suffix && (
+            <div
+              onClick={onClickSuffix}
+              className={`border border-gray-400 ${
+                onClickSuffix && "cursor-pointer"
+              } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
+              style={{ height, fontSize }}
+            >
+              {suffix}
+            </div>
+          )}
+        </div>
         <ERPElementValidationMessage validation={validation} />
       </div>
-    )
+    );
   }
+);
 
-  const { height, fontSize } = sizeStyles.regular
-  // const { height, fontSize, padding } = sizeStyles.regular
-  // Build border radius classes based on prefix/suffix presence
-  const getBorderRadiusClasses = () => {
-    const classes = []
-    if (!prefix) classes.push(`rounded-l-[${appState.inputBox.borderRadius}px]`)
-    if (!suffix) classes.push(`rounded-r-[${appState.inputBox.borderRadius}px]`)
-    if (!prefix && !suffix) classes.push(`rounded-md-[${appState.inputBox.borderRadius}px]`)
-    return classes.join(' ')
-  }
-  return (
-    <div className={className}>
-      {!noLabel && (
-        <label
-          className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
-          style={{ fontSize: customSize === 'sm' ? '12px' : customSize === 'md' ? '14px' : '16px' }}>
-          {iLabel}
-          {required && !noLabel && "*"}
-        </label>
-      )}
-
-      <div className="flex">
-        {prefix && (
-          <div
-            onClick={onClickPrefix}
-            className={`${onClickPrefix && "cursor-pointer"} flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-            style={{ height, fontSize }}>
-            {prefix}
-          </div>
-        )}
-
-        <div className="flex-1">
-          <input
-            {...commonProps}
-            placeholder={iPlaceholder}
-            ref={ref}
-            autoComplete={autocomplete}
-            style={{
-              height,
-              fontSize,
-              borderTopLeftRadius: `${!prefix ? appState.inputBox.borderRadius : ''}px`,
-              borderBottomLeftRadius: `${!prefix ? appState.inputBox.borderRadius : ''}px`,
-              borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : ''}px`,
-              borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : ''}px`,
-              // If both prefix and suffix are absent, override all corners
-              ...(!prefix && !suffix && {
-                borderTopLeftRadius: `${appState.inputBox.borderRadius}px`,
-                borderTopRightRadius: `${appState.inputBox.borderRadius}px`,
-                borderBottomLeftRadius: `${appState.inputBox.borderRadius}px`,
-                borderBottomRightRadius: `${appState.inputBox.borderRadius}px`,
-              }),
-            }}
-            className={`border border-gray-400 
-            block w-full ${inputClassName} border placeholder:capitalize border-gray-300 ${disabled ? "text-gray-400" : "bg-white text-gray-900"} placeholder-gray-400 focus:ring-0 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-blue-500`}
-            onKeyDown={handleNavigation}
-            data-skip={skip}
-            data-jump-to={jumpTo}         
-            data-jump-target={jumpTarget} 
-            onWheel={(e: any) => {
-              type === "number" && e?.target?.blur()
-            }}
-            maxLength={maxLength}
-            min={min}
-            max={max}
-            pattern={pattern}
-            step={step}
-            accept={accept}
-          />
-        </div>
-        {suffix && (
-          <div
-            onClick={onClickSuffix}
-            className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"} flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
-            style={{ height, fontSize }}>
-            {suffix}
-          </div>
-        )}
-      </div>
-      <ERPElementValidationMessage validation={validation} />
-    </div>
-  )
-})
-
-export default ERPInput
+export default ERPInput;

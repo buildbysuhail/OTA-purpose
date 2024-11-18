@@ -195,15 +195,70 @@ const HorizontalBalanceSheet: React.FC<{ data: BalanceSheetData }> = ({
       item.name.toLowerCase().includes("capital")
   );
 
+import { useCallback, useEffect, useState } from "react";
+import { APIClient } from "../../../../../helpers/api-client";
+import ErpGridGlobalFilter from "../../../../../components/ERPComponents/erp-grid-global-filter";
+import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
+import Urls from "../../../../../redux/urls";
+
+const api = new APIClient();
+const BalanceSheet = () => {
+  const [data, setData] = useState<any[]>([]);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
+  const [filterShowCount, setFilterShowCount] = useState<number>(0);
+
+  useEffect(() => {
+    LoadAsync();
+  }, []);
+
+  const LoadAsync = async (_filter?: any) => {
+    const res = await api.postAsync(Urls.acc_reports_balance_sheet, _filter || filter);
+    setData(res?.data || []);
+  };
+
+  const onApplyFilter = useCallback(
+    (_filter: any) => {
+      setFilter({ ..._filter });
+      LoadAsync(_filter);
+    },
+    []
+  );
+
+  const onCloseFilter = useCallback(() => {
+    if (filterShowCount === 0) {
+      setFilter({});
+      setFilterShowCount((prev) => prev + 1);
+    }
+    setShowFilter(false);
+  }, [filterShowCount]);
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
         <h3 className="text-lg font-bold mb-2">Assets</h3>
+    <div className="p-6">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-center text-xl font-bold mb-2">UK Company</h1>
+        <ErpGridGlobalFilter
+          width="w-full max-w-[500px]"
+          gridId="gridBalanceSheet"
+          initialData={BalanceSheetFilterInitialState}
+          content={<BalanceSheetFilter />}
+          toogleFilter={showFilter}
+          onApplyFilters={(filters) => onApplyFilter(filters)}
+          onClose={onCloseFilter}
+        />
+        <h2 className="text-center text-lg mb-4">Balance Sheet</h2>
+        <p className="text-center mb-4">As of December 20, 2023</p>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
               <th className="py-2 pl-2">Account</th>
               <th className="py-2 text-right pr-2">Amount</th>
+            <tr>
+              <th className="border-b-2 border-black py-2">Group Name</th>
+              <th className="border-b-2 border-black py-2 text-right">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -225,6 +280,16 @@ const HorizontalBalanceSheet: React.FC<{ data: BalanceSheetData }> = ({
           <tbody>
             {liabilities.map((item, index) => (
               <BalanceSheetRow key={`liability-${index}`} item={item} />
+            ))}
+            {data?.map((item, index) => (
+              <tr key={index}>
+                <td className={`py-2 ${item.groupID < 0 ? "pl-4" : ""}`}>
+                  {item.groupName || "Unnamed Group"}
+                </td>
+                <td className="py-2 text-right">
+                  {item.total ? `£${item.total.toLocaleString()}` : "£0.00"}
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>

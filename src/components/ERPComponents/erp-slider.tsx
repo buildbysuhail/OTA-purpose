@@ -14,9 +14,10 @@ interface ERPSliderProps {
   disabled?: boolean;
   min?: number;
   max?: number;
+  step?: number;
 }
 
-const ERPSlider = ({ id, label, placeholder, required, noLabel, min, max, value, defaultValue, disabled, onChange,className }: ERPSliderProps) => {
+const ERPSlider = ({ id, label, placeholder, required, noLabel, min, max,step, value, defaultValue, disabled, onChange,className }: ERPSliderProps) => {
   const iLabel = label || id?.replaceAll("_", " ");
   return (
     <div>
@@ -31,6 +32,7 @@ const ERPSlider = ({ id, label, placeholder, required, noLabel, min, max, value,
         type="range"
         min={min}
         max={max}
+        step={step}
         onChange={onChange}
         value={value}
         defaultValue={defaultValue}

@@ -114,10 +114,12 @@ const LedgerReport = () => {
                   columns={columns}
                   gridHeader={t("ledger_report")}
                   dataUrl= {Urls.acc_reports_ledger}
+                  hideGridAddButton={true}
+                  enablefilter={true}
+                  showFilterInitially={true}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  hideGridAddButton={true}
                   reload={true}
                 ></ErpDevGrid>
               </div>

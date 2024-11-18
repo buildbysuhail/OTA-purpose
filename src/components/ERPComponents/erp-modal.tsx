@@ -124,9 +124,9 @@ const ERPModal = React.memo(
                     >
                       {closeButton === "LeftArrow" && (
                         <button className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer"
-                        onClick={handleClose}
+                          onClick={handleClose}
                         >
-                          <i                           
+                          <i
                             className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line"
                             style={{ fontSize: "23px" }}
                           ></i>
@@ -151,7 +151,7 @@ const ERPModal = React.memo(
                           max-h-[calc(100vh-16rem)] 
                          overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-2`}
                       >
-                        {content && cloneElement(content, contentProps)}
+                        {content && cloneElement(content, contentProps ? { contentProps: contentProps } : {})}
                       </div>
 
                       <div>{footer}</div>

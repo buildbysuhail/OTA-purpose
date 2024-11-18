@@ -150,7 +150,6 @@ const DailySummaryReceiptDetails = () => {
                   gridHeader={t("daily_summary_receipt_details")}
                   dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

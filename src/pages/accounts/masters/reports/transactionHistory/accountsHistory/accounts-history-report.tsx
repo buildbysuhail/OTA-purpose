@@ -134,7 +134,6 @@ const AccountsHistoryReport = () => {
                   gridHeader={t("accounts_transaction_history")}
                   dataUrl= {Urls.acc_reports_accounts_history}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

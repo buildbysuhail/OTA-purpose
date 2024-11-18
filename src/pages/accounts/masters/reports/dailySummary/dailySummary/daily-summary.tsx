@@ -57,7 +57,6 @@ const DailySummary = () => {
                   gridHeader={t("daily_summary_report")}
                   dataUrl= {Urls.acc_reports_daily_summary}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   remoteOperations={{filtering:false,paging:false,sorting:false}}

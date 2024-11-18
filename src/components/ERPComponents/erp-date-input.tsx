@@ -190,7 +190,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   };
   const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value === "" ? null : dayjs(e.target.value).utc(true).format();
-    
+    debugger;
     if (onChange) {
       onChange(e);
     }

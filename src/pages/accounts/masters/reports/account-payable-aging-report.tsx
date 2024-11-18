@@ -123,7 +123,6 @@ const AccountPayableAgingReport = () => {
                   gridHeader={t("account_payable_aging_report")}
                   dataUrl= {Urls.acc_reports_aging_payable}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

@@ -161,7 +161,6 @@ const DailySummaryCreditDetails = () => {
                   gridHeader={t("daily_summary_sales_credit_details")}
                   dataUrl= {Urls.acc_reports_daily_summary_credit_details}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

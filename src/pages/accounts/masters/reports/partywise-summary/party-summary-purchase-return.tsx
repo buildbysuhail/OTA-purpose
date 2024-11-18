@@ -172,7 +172,6 @@ const PartySummaryPurchaseReturn = () => {
                   gridHeader={t("party_summary_purchase_return")}
                   dataUrl= {Urls.acc_reports_party_summary_purchase_return}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

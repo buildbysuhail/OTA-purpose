@@ -155,7 +155,6 @@ const OutstandingAccountReceivableAgingReport = () => {
                   gridHeader={t("account_receivable_aging_report")}
                   dataUrl= {Urls.acc_reports_outstanding_aging_receivable}
                   method={ActionType.POST}
-                  postData={filter}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

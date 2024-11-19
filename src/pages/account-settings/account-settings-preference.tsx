@@ -39,6 +39,7 @@ interface UserLanguage {
 
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let api = new APIClient();
+  const [demo, setDemo] = useState<string>("");
   const [language, setLanguage] = useState<string>("en");
   const [_language, _setLanguage] = useState<string>("en");
   const [languages, setLanguages] = useState<any[]>([
@@ -127,14 +128,18 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     menuPosition: null,
     headerPosition: "",
     colorPrimaryRgb: "rgb(25,118,210,1)",
-    scrollbarWidth: null,
+    scrollbarWidth: "sm",
     scrollbarColor: "219,223,225",
     inputBox: {
-      inputStyle: "outline",
+      inputStyle: "normal",
+      inputSize:"sm",
+      inputHeight:0,
       fontSize: 0,
+      fontWeight: 400,
       labelFontSize: 0,
       otherLabelFontSize: 0,
       borderColor: "128, 128, 128",
+      fontColor:"128, 128, 128", 
       borderFocus: "128, 128, 128",
       borderRadius: 0,
     },
@@ -1200,25 +1205,23 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           </div>
                           {/* Preview Section */}
                           <div
-                            className={`
-                            w-full h-64 border border-gray-300 rounded-md overflow-y-auto 
-                           scrollbar 
-                            ${
-                              theme.scrollbarWidth === "lg"
-                                ? "scrollbar-thick"
-                                : theme.scrollbarWidth === "sm"
-                                ? "scrollbar-thin"
-                                : "scrollbar"
-                            }
-                          `}
-                            style={
-                              {
-                                "--scrollbar-thumb": `rgb(${
-                                  theme.scrollbarColor ?? "219,223,225"
-                                })`,
-                                "--scrollbar-track": "rgb(241,245,249)",
-                              } as React.CSSProperties
-                            }
+                         className={`
+                          w-full h-64 border border-gray-300 rounded-md overflow-y-auto
+                          scrollbar
+                          ${
+                            theme.scrollbarWidth === "lg"
+                              ? "scrollbar-thick"
+                              : theme.scrollbarWidth === "md"
+                              ? "scrollbar"
+                              : "scrollbar-thin"
+                          }
+                        `}
+                        style={{
+                          "--scrollbar-thumb": `rgb(${theme.scrollbarColor ?? '219,223,225'})`,
+                          "--scrollbar-track": "rgb(241,245,249)",
+                          "--tw-scrollbar-thumb": `rgb(${theme.scrollbarColor ?? '219,223,225'})`,
+                          "--tw-scrollbar-track": "rgb(241,245,249)",
+                        } as React.CSSProperties}
                           >
                             {/* Content to showcase scrollbar */}
                             <div className="h-96 p-2">
@@ -1249,22 +1252,30 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       <div className="">
                         <p className="switcher-style-head">Input Box Style:</p>
                         <div className="grid  grid-cols-2  switcher-style">
-                          <ERPInput
-                            id="borderRadius"
-                            noLabel={true}
-                            type="number"
-                            // value={theme.inputBox?.borderRadius}
-                            // data={theme.inputBox}
-                            // onChangeData={(data) =>
-                            //   handleInputBoxStyleChange(
-                            //     "borderRadius",
-                            //     data.oTPEmail
-                            //   )
-                            // }
-                          />
+                          {theme.inputBox?.inputStyle === "normal" ? (
+                            <ERPInput
+                              id="borderRadius"
+                              label="Demo Input"
+                              onChange={(e) => {
+                                setDemo(e.target.value)
+                              }}
+                              value={demo}
+                            />
+                          ) : (
+                            <ERPInput
+                              useMUI
+                              onChange={(e) => {
+                                setDemo(e.target.value)
+                              }}
+                              value={demo}
+                              variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
+                              id="demoInput"
+                              label="Demo Input"
+                            />
+                          )}
                         </div>
-                        <div className="grid  grid-cols-3  switcher-style">
-                          {/* <div className="flex items-center">
+                        <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
+                          <div className="flex items-center">
                             <input
                               type="radio"
                               name="inputBox"
@@ -1290,7 +1301,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               {" "}
                               Normal
                             </label>
-                          </div> */}
+                          </div>
                           <div className="flex item-center">
                             <input
                               type="radio"
@@ -1309,7 +1320,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       inputStyle: "standard",
                                     },
                                   }));
-                                  handleInputBoxStyleChange("inputStyle","fill");
+                                  handleInputBoxStyleChange(
+                                    "inputStyle",
+                                    "standard"
+                                  );
                                 }
                               }}
                             />
@@ -1327,17 +1341,20 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-outline"
-                              checked={theme.inputBox?.inputStyle === "outline"}
+                              checked={theme.inputBox?.inputStyle === "outlined"}
                               onChange={(e) => {
                                 if (e.target.checked) {
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      inputStyle: "outline",
+                                      inputStyle: "outlined",
                                     },
                                   }));
-                                  handleInputBoxStyleChange("inputStyle","fill");
+                                  handleInputBoxStyleChange(
+                                    "inputStyle",
+                                    "outlined"
+                                  );
                                 }
                               }}
                             />
@@ -1355,17 +1372,20 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-fill"
-                              checked={theme.inputBox?.inputStyle === "fill"}
+                              checked={theme.inputBox?.inputStyle === "filled"}
                               onChange={(e) => {
                                 if (e.target.checked) {
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      inputStyle: "fill",
+                                      inputStyle: "filled",
                                     },
                                   }));
-                                  handleInputBoxStyleChange("inputStyle","fill");
+                                  handleInputBoxStyleChange(
+                                    "inputStyle",
+                                    "filled"
+                                  );
                                 }
                               }}
                             />
@@ -1378,10 +1398,138 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             </label>
                           </div>
                         </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            name="inputBoxSize"
+                            className="ti-form-radio"
+                            id="input-sm"
+                            checked={theme.inputBox?.inputSize === "sm"}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  inputBox: {
+                                    ...prevTheme.inputBox,
+                                    inputSize: "sm",
+                                  },
+                                }));
+                                handleInputBoxStyleChange(
+                                  "inputSize",
+                                  "sm"
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor="input-sm"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                          >
+                            {" "}
+                            sm
+                          </label>
+                        </div>
+                        <div className="flex item-center">
+                          <input
+                            type="radio"
+                            name="inputBoxSize"
+                            className="ti-form-radio"
+                            id="input-md"
+                            checked={
+                              theme.inputBox?.inputSize === "md"
+                            }
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  inputBox: {
+                                    ...prevTheme.inputBox,
+                                    inputSize: "md",
+                                  },
+                                }));
+                                handleInputBoxStyleChange(
+                                  "inputSize",
+                                  "md"
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor="input-md"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                          >
+                            {" "}
+                            md
+                          </label>
+                        </div>
+                        <div className="flex item-center">
+                          <input
+                            type="radio"
+                            name="inputBoxSize"
+                            className="ti-form-radio"
+                            id="input-lg"
+                            checked={theme.inputBox?.inputSize === "lg"}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  inputBox: {
+                                    ...prevTheme.inputBox,
+                                    inputSize: "lg",
+                                  },
+                                }));
+                                handleInputBoxStyleChange(
+                                  "inputSize",
+                                  "lg"
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor="input-lg"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                          >
+                            {" "}
+                            lg
+                          </label>
+                        </div>
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            name="inputBoxSize"
+                            className="ti-form-radio"
+                            id="input-customize"
+                            checked={theme.inputBox?.inputSize === "customize"}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  inputBox: {
+                                    ...prevTheme.inputBox,
+                                    inputSize: "customize",
+                                  },
+                                }));
+                                handleInputBoxStyleChange(
+                                  "inputSize",
+                                  "customize"
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor="input-customize"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                          >
+                            {" "}
+                            customize
+                          </label>
+                        </div>
+                      </div>
                       </div>
                       <div className="">
-                        {/* <p className="switcher-style-head">Input Box Border:</p> */}
-                        <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style">
+                       {theme.inputBox.inputSize === "customize" && (
+                        <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3">
                               <ERPSlider
@@ -1400,11 +1548,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   }));
                                   handleInputBoxStyleChange(
                                     "borderRadius",
-                                    e.target.value
+                                    newValue
                                   );
                                 }}
                                 min={0}
-                                max={50}
+                                max={20}
                               />
                             </div>
                             <div className="basis-1/3 translate-y-3">
@@ -1415,21 +1563,21 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 value={theme.inputBox?.borderRadius}
                                 data={theme.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10);
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      borderRadius: newValue, // Update the theme state
+                                      borderRadius: newValue,
                                     },
                                   }));
                                   handleInputBoxStyleChange(
                                     "borderRadius",
-                                    e.target.value
+                                    newValue
                                   );
                                 }}
                                 min={0}
-                                max={50}
+                                max={20}
                               />
                             </div>
                           </div>
@@ -1441,15 +1589,20 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 label="Font Size"
                                 className="bg-slate-300"
                                 value={theme.inputBox?.fontSize}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      fontSize: parseInt(e.target.value, 10),
+                                      fontSize: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "fontSize",
+                                    newValue
+                                  );
+                                }}
                                 min={5}
                                 max={25}
                               />
@@ -1461,15 +1614,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 noLabel={true}
                                 value={theme.inputBox?.fontSize}
                                 data={theme.inputBox}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      fontSize: parseInt(e.target.value, 10),
+                                      fontSize: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "fontSize",
+                                    newValue
+                                  );
+                                }}
+                                min={5}
+                                max={25}
                               />
                             </div>
                           </div>
@@ -1481,18 +1641,20 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 label="Label Font Size"
                                 className="bg-slate-300"
                                 value={theme.inputBox?.labelFontSize}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      labelFontSize: parseInt(
-                                        e.target.value,
-                                        10
-                                      ),
+                                      labelFontSize: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "labelFontSize",
+                                    newValue
+                                  );
+                                }}
                                 min={5}
                                 max={25}
                               />
@@ -1504,18 +1666,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 noLabel={true}
                                 value={theme.inputBox?.labelFontSize}
                                 data={theme.inputBox}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      labelFontSize: parseInt(
-                                        e.target.value,
-                                        10
-                                      ),
+                                      labelFontSize: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "labelFontSize",
+                                    newValue
+                                  );
+                                }}
+                                min={5}
+                                max={25}
                               />
                             </div>
                           </div>
@@ -1527,20 +1693,23 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 label="Other Label Font Size"
                                 className="bg-slate-300"
                                 value={theme.inputBox?.otherLabelFontSize}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      otherLabelFontSize: parseInt(
-                                        e.target.value,
-                                        10
-                                      ),
+                                      otherLabelFontSize: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "otherLabelFontSize",
+                                    newValue
+                                  );
+                                }}
                                 min={5}
                                 max={25}
+                               
                               />
                             </div>
                             <div className="basis-1/3 translate-y-3">
@@ -1550,56 +1719,260 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 noLabel={true}
                                 value={theme.inputBox?.otherLabelFontSize}
                                 data={theme.inputBox}
-                                onChange={(e) =>
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      otherLabelFontSize: parseInt(
-                                        e.target.value,
-                                        10
-                                      ),
+                                      otherLabelFontSize: newValue, // Update the theme state
                                     },
-                                  }))
-                                }
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "otherLabelFontSize",
+                                    newValue
+                                  );
+                                }}
+                                min={5}
+                                max={25}
                               />
                             </div>
                           </div>
-                          <ERPInput
-                            className="w-32"
-                            id="borderColor"
-                            label="Border Color"
-                            type="color"
-                            value={theme.inputBox?.borderColor}
-                            data={theme.inputBox}
-                            onChange={(e) =>
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  borderColor: e.target.value,
-                                },
-                              }))
-                            }
-                          />
-                          <ERPInput
-                            className="w-32"
-                            id="borderFocus"
-                            label="Border On Focus"
-                            type="color"
-                            value={theme.inputBox?.borderFocus}
-                            data={theme.inputBox}
-                            onChange={(e) =>
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  borderFocus: e.target.value,
-                                },
-                              }))
-                            }
-                          />
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-2/3 ">
+                              <ERPSlider
+                                id="fontWeight"
+                                label="Font Weight"
+                                className="bg-slate-300"
+                                value={theme.inputBox?.fontWeight}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      fontWeight: newValue, // Update the theme state
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "fontWeight",
+                                    newValue
+                                  );
+                                }}
+                                min={300}
+                                max={700}
+                                step={100}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                id="fontWeight"
+                                type="number"
+                                noLabel={true}
+                                value={theme.inputBox?.fontWeight}
+                                data={theme.inputBox}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      fontWeight: newValue, // Update the theme state
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "fontWeight",
+                                    newValue
+                                  );
+                                }}
+                                min={300}
+                                max={700}
+                                step={100}
+                              />
+                            </div>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-2/3 ">
+                              <ERPSlider
+                                id="inputHeight"
+                                label="Height"
+                                className="bg-slate-300"
+                                value={theme.inputBox?.inputHeight}
+                                onChange={(e) => {
+                                  const newValue = parseFloat(e.target.value); // Ensure we parse the value as a number
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      inputHeight: newValue, // Update the theme state
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "inputHeight",
+                                    newValue
+                                  );
+                                }}
+                                min={0}
+                                max={5}
+                                step={0.1}
+                              />
+                            </div>
+                            <div className="basis-1/3 translate-y-3">
+                              <ERPInput
+                                id="inputHeight"
+                                type="number"
+                                noLabel={true}
+                                value={theme.inputBox?.inputHeight}
+                                data={theme.inputBox}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      inputHeight: newValue, // Update the theme state
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "inputHeight",
+                                    newValue
+                                  );
+                                }}
+                                min={0}
+                                max={5}
+                                step={0.1}
+                              />
+                            </div>
+                          </div>
+                          </div>
+                       )}
+                          
+                       
+                       <div className="grid grid-cols-3 switcher-style">
+                        <div className="flex items-center ">
+                        <label
+                            htmlFor="borderColor"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                          >
+                            {" "}
+                            Border Color
+                          </label>
+                        <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${theme.inputBox?.borderColor})`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={theme.inputBox?.borderColor}
+                                  onChange={(e) => {
+                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    if (rgb) {
+                                      setTheme((prevTheme) => ({
+                                        ...prevTheme,
+                                        inputBox: {
+                                          ...prevTheme.inputBox,
+                                          borderColor: `${rgb.r},${rgb.g},${rgb.b}`,
+                                        },
+                                      }))
+                                    }
+                                    handleInputBoxStyleChange(
+                                      "borderColor",
+                                      `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                    );
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
                         </div>
+                        
+                        <div className="flex items-center ">
+                        <label
+                            htmlFor="fontColor"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                          >
+                            {" "}
+                            Font Color 
+                          </label>
+                        <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${theme.inputBox?.fontColor})`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={theme.inputBox?.fontColor}
+                                  onChange={(e) => {
+                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    if (rgb) {
+                                      setTheme((prevTheme) => ({
+                                        ...prevTheme,
+                                        inputBox: {
+                                          ...prevTheme.inputBox,
+                                          fontColor: `${rgb.r},${rgb.g},${rgb.b}`,
+                                        },
+                                      }))
+                                    }
+                                    handleInputBoxStyleChange(
+                                      "fontColor",
+                                      `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                    );
+                                    
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                        </div>
+                        <div className="flex items-center ">
+                        <label
+                            htmlFor="borderFocus"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                          >
+                            {" "}
+                            Border Focus
+                          </label>
+                        <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${theme.inputBox?.borderFocus})`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={theme.inputBox?.borderFocus}
+                                  onChange={(e) => {
+                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    if (rgb) {
+                                      setTheme((prevTheme) => ({
+                                        ...prevTheme,
+                                        inputBox: {
+                                          ...prevTheme.inputBox,
+                                          borderFocus: `${rgb.r},${rgb.g},${rgb.b}`,
+                                        },
+                                      }))
+                                    }
+                                    handleInputBoxStyleChange(
+                                      "borderFocus",
+                                      `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                    );
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                        </div>
+                       </div>
+                         
                       </div>
                     </div>
                   </div>

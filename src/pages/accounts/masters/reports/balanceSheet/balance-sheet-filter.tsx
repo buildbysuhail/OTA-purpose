@@ -21,7 +21,7 @@ const BalanceSheetFilter = ({ getFieldProps, handleFieldChange, t }: any) => (
           {...getFieldProps("stockValue")}
           label={t("Stock Value")}
           field={{
-            // id: "stockValue",
+            id: "stockValue",
             getListUrl: Urls.data_stock_valuation_methods,
             valueKey: "id",
             labelKey: "name",
@@ -51,7 +51,7 @@ const BalanceSheetFilter = ({ getFieldProps, handleFieldChange, t }: any) => (
 export default BalanceSheetFilter;
 export const BalanceSheetFilterInitialState = {
   asOnDate: new Date(), 
-  stockValue:"Purchase Price",
+  stockValue:"SPP",
   closingStock: 0,
   showVertical: false, 
 };

@@ -62,9 +62,9 @@ interface ERPDevGridProps {
   filterInitialData?: any;
   enablefilter?: boolean;
   filterContent?: React.ReactNode;
+  filterWidth?: string;
   data?: any;
   method?: ActionType;
-  filterData?: any;
   height?: number | string;
   className?: string;
   showBorders?: boolean;
@@ -244,8 +244,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   filterInitialData,
   enablefilter = true,
   filterContent = <></>,
+  filterWidth = "w-full max-w-[1000px]",
   method = ActionType.GET,
-  filterData,
   height,
   className = "custom-data-grid",
   showBorders = true,
@@ -341,13 +341,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
   const [preferences, setPreferences] = useState<GridPreference>();
-  const [filter, setFilter] = useState<any>(filterData);
+  const [filter, setFilter] = useState<any>(filterInitialData);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [isChildOpen, setIsChildOpen] = useState<boolean>(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
-  
+
   useEffect(() => {
 
     if (gridId != "" && columns != undefined && columns != null) {
@@ -573,7 +573,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
             />
           )}
           <Toolbar>
-            {!hideGridHeader && (filterData == undefined || filterData == null) && (
+            {!hideGridHeader && (filterInitialData == undefined || filterInitialData == null) && (
               <Item location="before">
                 <div className="flex  flex-col">
                   <div className="box-title !text-xl !font-medium">
@@ -590,6 +590,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               <Item>
 
                 <ErpGridGlobalFilter
+                  width={filterWidth}
                   gridId={gridId}
                   initialData={_filterInitialData}
                   content={

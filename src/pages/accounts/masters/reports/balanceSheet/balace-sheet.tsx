@@ -1,141 +1,161 @@
-import { Fragment, useState } from "react";
-import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { useRootState } from "../../../../../utilities/hooks/useRootState";
-import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
-import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
+import { useCallback, useEffect, useState } from "react";
+import { APIClient } from "../../../../../helpers/api-client";
+import ErpGridGlobalFilter from "../../../../../components/ERPComponents/erp-grid-global-filter";
+import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
 import Urls from "../../../../../redux/urls";
-import ERPModal from "../../../../../components/ERPComponents/erp-modal";
-import { useTranslation } from "react-i18next";
-import { ActionType } from "../../../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 
-interface BalanceSheet {
-  from: Date;
+const api = new APIClient();
+
+const BalanceSheetRow: React.FC<{ item: any }> = ({ item }) => {
+
+return (
+  <tr>
+    <td className={`py-2`}style={{ paddingLeft: item.groupID == 0 ? '0px' : '10px', fontWeight: item.groupID == 0 ? 'normal' : 'bold' }}>
+      {/* <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]"> */}
+        {item.groupName}
+      {/* </Link> */}
+    </td>
+    {
+      item.total !== undefined && (
+        <td className="py-2 text-right">
+          {/* <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]"> */}
+            {item.total}
+          {/* </Link> */}
+        </td>
+      )
+    }
+  </tr >
+);
 }
+// Horizontal format component
+const HorizontalBalanceSheet: React.FC<{ data: any }> = ({
+  data,
+}) => {
+  const assets = data?.filter(
+    (item: any) =>
+      item?.transType == 'A'
+  );
+
+  const liabilities = data?.filter(
+    (item: any) =>
+      item?.transType == 'L'
+  );
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      <div>
+        <h3 className="text-lg font-bold mb-2">Assets</h3>
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-400">
+              <th className="py-2 pl-2">Account</th>
+              <th className="py-2 text-right pr-2">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {assets?.map((item: any, index: number) => (
+              <BalanceSheetRow key={`asset-${index}`} item={item} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold mb-2">Liabilities & Capital</h3>
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-400">
+              <th className="py-2 pl-2">Account</th>
+              <th className="py-2 text-right pr-2">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {liabilities?.map((item: any, index: number) => (
+              <BalanceSheetRow key={`liability-${index}`} item={item} />
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
 const BalanceSheet = () => {
+  const [data, setData] = useState<any[]>([]);
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
+  const [filterShowCount, setFilterShowCount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (filterShowCount == 0) {
+      setShowFilter(true);
+    }
+    else {
+      LoadAsync();
+    }
+  }, []);
+
+  const LoadAsync = async (_filter?: any) => {
+    setLoading(true);
+    const res = await api.postAsync(Urls.acc_reports_balance_sheet, _filter || filter);
+    setData(res?.data || []);
+    setLoading(false);
+  };
+
+  const onApplyFilter = useCallback(
+    (_filter: any) => {
+      setFilter({ ..._filter });
+      LoadAsync(_filter);
+    },
+    []
+  );
+
+  const onCloseFilter = useCallback(() => {
+    if (filterShowCount === 0) {
+      setFilter({});
+      setFilterShowCount((prev) => prev + 1);
+    }
+    setShowFilter(false);
+  }, [filterShowCount]);
+
   return (
     <div className="p-6">
       <div className="max-w-2xl mx-auto">
         <h1 className="text-center text-xl font-bold mb-2">UK Company</h1>
+        <ErpGridGlobalFilter
+          width="w-full max-w-[500px]"
+          gridId="gridBalanceSheet"
+          initialData={BalanceSheetFilterInitialState}
+          content={<BalanceSheetFilter />}
+          toogleFilter={showFilter}
+          onApplyFilters={(filters) => onApplyFilter(filters)}
+          onClose={onCloseFilter}
+        />
         <h2 className="text-center text-lg mb-4">Balance Sheet</h2>
         <p className="text-center mb-4">As of December 20, 2023</p>
-        <table className="w-full text-left border-collapse">
-          <thead>
-            {/* <tr>
-              <th className="border-b-2 border-black py-2">Account</th>
-              <th className="border-b-2 border-black py-2">TOTAL</th>
-            </tr> */}
-            <tr>
-              <th className="border-b-2 border-black py-2">Account</th>
-              <th className="border-b-2 border-black py-2 end-1">TOTAL</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="py-2">Fixed Asset</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Fixed Asset</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">- Debtors</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-8">Debtors</td>
-              <td className="py-2 text-right">20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Debtors</td>
-              <td className="py-2 text-right font-bold">£20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">NET CURRENT ASSETS</td>
-              <td className="py-2 text-right font-bold">£20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">
-                - Creditors: amounts falling due within one year
-              </td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-8">- Current Liabilities</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">
-                Employee National Insurance Liability
-              </td>
-              <td className="py-2 text-right">204.96</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">National Insurance Liability</td>
-              <td className="py-2 text-right">243.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">PAYE Liability</td>
-              <td className="py-2 text-right">0.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">Payment</td>
-              <td className="py-2 text-right">2,295.04</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">
-                Postgraduate Student Loan Liability
-              </td>
-              <td className="py-2 text-right">0.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">Student Loan Liability</td>
-              <td className="py-2 text-right">0.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-12">VAT Control</td>
-              <td className="py-2 text-right">20.00</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Current Liabilities</td>
-              <td className="py-2 text-right font-bold">£2,763.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">
-                Total Creditors: amounts falling due within one year
-              </td>
-              <td className="py-2 text-right font-bold">£2,763.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">
-                NET CURRENT ASSETS (LIABILITIES)
-              </td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">
-                TOTAL ASSETS LESS CURRENT LIABILITIES
-              </td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">TOTAL NET ASSETS (LIABILITIES)</td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2">- Capital and Reserves</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">Retained Earnings</td>
-              <td className="py-2 text-right">-2,743.98</td>
-            </tr>
-            <tr>
-              <td className="py-2 pl-4">Profit for the year</td>
-            </tr>
-            <tr>
-              <td className="py-2 font-bold">Total Capital and Reserves</td>
-              <td className="py-2 text-right font-bold">£-2,743.98</td>
-            </tr>
-          </tbody>
-        </table>
+        {loading ? (
+          <>loading..</>
+        ) : (
+          <>
+            {filter.showVertical != true ? (
+              <HorizontalBalanceSheet data={data??[]} />
+            ) : (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-400">
+                    <th className="py-2 pl-2">Account</th>
+                    <th className="py-2 text-right pr-2">TOTAL</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.map((item, index) => (
+                    <BalanceSheetRow key={index} item={item??[]} />
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
+        )}
         <p className="text-center mt-4">
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p>

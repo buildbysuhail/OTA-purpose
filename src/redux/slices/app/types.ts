@@ -82,16 +82,20 @@ export const initialThemeData: Theme = {
   menuPosition: null, // initialize as null
   headerPosition: 'fixed',  // default position for header
   colorPrimaryRgb: '255,255,255',  // default white color in RGB format
-  scrollbarWidth: null,
+  scrollbarWidth: "sm",
   scrollbarColor: '219,223,225',
   inputBox: {
-    inputStyle: "outline",       
-    fontSize: 0,  
-    labelFontSize:0,
-    otherLabelFontSize:0,        
+    inputStyle: "normal",  
+    inputSize:"sm", 
+    inputHeight:2,    
+    fontSize: 13, 
+    fontWeight: 400, 
+    labelFontSize:13,
+    otherLabelFontSize:13,        
     borderColor: '128, 128, 128', 
-    borderFocus: '128, 128, 128',          
-    borderRadius: 0,      
+    borderFocus: '128, 128, 128',
+    fontColor:'128, 128, 128',
+    borderRadius: 5,      
   }
 };
 export interface Theme {
@@ -106,17 +110,21 @@ export interface Theme {
   menuPosition: string | null;
   headerPosition: string;
   colorPrimaryRgb: string;
-  scrollbarWidth:  "sm" | "md" | "lg" | null;
+  scrollbarWidth:  "sm" | "md" | "lg" ;
   scrollbarColor: string;
   inputBox:inputBox;
 
 }
 export interface inputBox{
-  inputStyle:  "normal"|"standard"|"outline"|"fill";
+  inputStyle:  "normal"|"filled" | "outlined" | "standard";
+  inputSize:"sm"|"md"|"lg"|"customize",
+  inputHeight:number,
   fontSize:number;
+  fontWeight:number;
   labelFontSize:number;
   otherLabelFontSize:number;
   borderColor: string;
+  fontColor:string;
   borderFocus: string;
   borderRadius:number;
 }

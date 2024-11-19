@@ -32,6 +32,9 @@ import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { RootState } from "../../redux/store";
 import { setAppState } from "../../redux/slices/app/reducer";
+import ERPRadio from "../../components/ERPComponents/erp-radio";
+import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
+import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -39,7 +42,12 @@ interface UserLanguage {
 
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let api = new APIClient();
-  const [demo, setDemo] = useState<string>("");
+  const [demo, setDemo] = useState({
+    inputBox:"",
+    dateBox:"",
+    radioButton:false,
+    checkBox:false,
+  });
   const [language, setLanguage] = useState<string>("en");
   const [_language, _setLanguage] = useState<string>("en");
   const [languages, setLanguages] = useState<any[]>([
@@ -1251,29 +1259,93 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       </div>
                       <div className="">
                         <p className="switcher-style-head">Input Box Style:</p>
-                        <div className="grid  grid-cols-2  switcher-style">
+                        <div className="grid  grid-cols-3 gap-3 items-center  switcher-style">
                           {theme.inputBox?.inputStyle === "normal" ? (
                             <ERPInput
-                              id="borderRadius"
+                              id="inputBox"
                               label="Demo Input"
                               onChange={(e) => {
-                                setDemo(e.target.value)
+                                setDemo((prevTheme) => ({
+                                  ...prevTheme,             
+                                  inputBox: e.target.value  
+                                }));
                               }}
-                              value={demo}
+                              value={demo.inputBox}
                             />
                           ) : (
                             <ERPInput
                               useMUI
                               onChange={(e) => {
-                                setDemo(e.target.value)
+                                setDemo((prevTheme) => ({
+                                  ...prevTheme,             
+                                  inputBox: e.target.value  
+                                }));
                               }}
-                              value={demo}
+                              value={demo.inputBox}
                               variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
                               id="demoInput"
                               label="Demo Input"
                             />
                           )}
+                          {theme.inputBox?.inputStyle === "normal" ? (
+                            <ERPDateInput
+                              id="dateBox"                          
+                              label="Date Input"
+                              onChange={(e) => {
+                                setDemo((prevTheme) => ({
+                                  ...prevTheme,             
+                                  dateBox: e.target.value  
+                                }));
+                              }}
+                              value={demo.dateBox}
+                            />
+                          ) : (
+                            <ERPDateInput
+                              useMUI
+                              onChange={(e) => {
+                                setDemo((prevTheme) => ({
+                                  ...prevTheme,             
+                                  dateBox: e.target.value  
+                                }));
+                              }}
+                              value={demo.dateBox}
+                              variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
+                              id="dateBox"
+                              label="Date Input"
+                            />
+                          )}
+                           
                         </div>
+                        <div className="grid  grid-cols-2 gap-3 items-center  switcher-style">
+                         
+                            <ERPRadio
+                            id="radioButton"
+                            name="radioButton"
+                            data={demo}
+                            checked={demo.radioButton}
+                            onChange={(e) => {
+                              setDemo((prevTheme) => ({
+                                ...prevTheme,             
+                                radioButton: !demo.radioButton 
+                              }));
+                            }}
+                            label="Radio Button"
+                          />
+                          <ERPCheckbox
+                            id="radioButton"
+                            name="radioButton"
+                            data={demo}
+                            checked={demo.checkBox}
+                            onChange={(e) => {
+                              setDemo((prevTheme) => ({
+                                ...prevTheme,             
+                                checkBox: !demo.checkBox 
+                              }));
+                            }}
+                            label="Radio Button"
+                          />
+                        </div>
+                      
                         <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
                           <div className="flex items-center">
                             <input
@@ -1686,7 +1758,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             </div>
                           </div>
 
-                          <div className="flex items-center space-x-3">
+                          {/* <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider
                                 id="otherLabelFontSize"
@@ -1737,7 +1809,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 max={25}
                               />
                             </div>
-                          </div>
+                          </div> */}
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider

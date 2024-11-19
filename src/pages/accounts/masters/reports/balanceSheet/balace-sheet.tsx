@@ -1,45 +1,45 @@
 import { useCallback, useEffect, useState } from "react";
 import { APIClient } from "../../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../../components/ERPComponents/erp-grid-global-filter";
-import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
+import BalanceSheetFilter, {
+  BalanceSheetFilterInitialState,
+} from "./balance-sheet-filter";
 import Urls from "../../../../../redux/urls";
+import "./Loader.css";
+import LoadingPopup from "./LoadingPopup";
+import { Clock1, FileDown, Forward, Printer, Timer, X } from "lucide-react";
 
 const api = new APIClient();
 
 const BalanceSheetRow: React.FC<{ item: any }> = ({ item }) => {
-
-return (
-  <tr>
-    <td className={`py-2`}style={{ paddingLeft: item.groupID == 0 ? '0px' : '10px', fontWeight: item.groupID == 0 ? 'normal' : 'bold' }}>
-      {/* <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]"> */}
+  return (
+    <tr>
+      <td
+        className={`py-2`}
+        style={{
+          paddingLeft: item.groupID == 0 ? "10px" : "0px",
+          fontWeight: item.groupID == 0 ? "bold" : "normal",
+        }}
+      >
+        {/* <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]"> */}
         {item.groupName}
-      {/* </Link> */}
-    </td>
-    {
-      item.total !== undefined && (
+        {/* </Link> */}
+      </td>
+      {item.total !== undefined && (
         <td className="py-2 text-right">
           {/* <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]"> */}
-            {item.total}
+          {item.total}
           {/* </Link> */}
         </td>
-      )
-    }
-  </tr >
-);
-}
+      )}
+    </tr>
+  );
+};
 // Horizontal format component
-const HorizontalBalanceSheet: React.FC<{ data: any }> = ({
-  data,
-}) => {
-  const assets = data?.filter(
-    (item: any) =>
-      item?.transType == 'A'
-  );
+const HorizontalBalanceSheet: React.FC<{ data: any }> = ({ data }) => {
+  const assets = data?.filter((item: any) => item?.transType == "A");
 
-  const liabilities = data?.filter(
-    (item: any) =>
-      item?.transType == 'L'
-  );
+  const liabilities = data?.filter((item: any) => item?.transType == "L");
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -89,26 +89,25 @@ const BalanceSheet = () => {
   useEffect(() => {
     if (filterShowCount == 0) {
       setShowFilter(true);
-    }
-    else {
+    } else {
       LoadAsync();
     }
   }, []);
 
   const LoadAsync = async (_filter?: any) => {
     setLoading(true);
-    const res = await api.postAsync(Urls.acc_reports_balance_sheet, _filter || filter);
+    const res = await api.postAsync(
+      Urls.acc_reports_balance_sheet,
+      _filter || filter
+    );
     setData(res?.data || []);
     setLoading(false);
   };
 
-  const onApplyFilter = useCallback(
-    (_filter: any) => {
-      setFilter({ ..._filter });
-      LoadAsync(_filter);
-    },
-    []
-  );
+  const onApplyFilter = useCallback((_filter: any) => {
+    setFilter({ ..._filter });
+    LoadAsync(_filter);
+  }, []);
 
   const onCloseFilter = useCallback(() => {
     if (filterShowCount === 0) {
@@ -120,25 +119,83 @@ const BalanceSheet = () => {
 
   return (
     <div className="p-6">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-center text-xl font-bold mb-2">UK Company</h1>
-        <ErpGridGlobalFilter
-          width="w-full max-w-[500px]"
-          gridId="gridBalanceSheet"
-          initialData={BalanceSheetFilterInitialState}
-          content={<BalanceSheetFilter />}
-          toogleFilter={showFilter}
-          onApplyFilters={(filters) => onApplyFilter(filters)}
-          onClose={onCloseFilter}
-        />
-        <h2 className="text-center text-lg mb-4">Balance Sheet</h2>
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
+          {/* <div className="flex items-center border border-gray-300 rounded-md p-2">
+            <input
+              type="text"
+              value="Today"
+              className="border-none focus:outline-none"
+              readOnly
+            />
+            <i className="fas fa-calendar-alt ml-2 text-gray-500"></i>
+          </div> */}
+          {/* <div className="flex items-center ml-4 text-blue-500 cursor-pointer">
+            <span>Customise</span>
+            <i className="fas fa-cog ml-1"></i>
+          </div> */}
+          {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
+          <div className="flex items-center ml-4 text-blue-500 cursor-pointer">
+            {/* <span>Customise</span> */}
+            <h6 className="text-center text-lg font-bold  mb-0">Balance Sheet</h6>
+            <i className="fas fa-cog ml-1"></i>
+          </div>
+
+          <div className="flex items-center ml-auto space-x-4">
+            <button className="flex items-center bg-gray-100 p-0 rounded-md">
+              <ErpGridGlobalFilter
+                width="w-full max-w-[500px]"
+                gridId="gridBalanceSheet"
+                initialData={BalanceSheetFilterInitialState}
+                content={<BalanceSheetFilter />}
+                toogleFilter={showFilter}
+                onApplyFilters={(filters) => onApplyFilter(filters)}
+                onClose={onCloseFilter}
+              />
+            </button>
+            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+              {/* <i className="fas fa-share-alt mr-1"></i> */}
+              <Forward className="pr-2" />
+              <span>Share</span>
+              <span className="ml-1 bg-[#3b82f6] text-white rounded-full px-2">
+                0
+              </span>
+            </button>
+            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+              {/* <i className="fas fa-clock mr-1"></i> */}
+              <Clock1 className="pr-2" />
+              <span>Schedule Report</span>
+            </button>
+            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+              {/* <i className="fas fa-print mr-1"></i> */}
+              <Printer className="pr-2" />
+              <span>Print</span>
+            </button>
+            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+              {/* <i className="fas fa-file-export mr-1"></i> */}
+              <FileDown className="pr-2" />
+              <span>Export</span>
+            </button>
+            <button className="flex items-center bg-gray-100 p-2 rounded-md">
+              {/* <i className="fas fa-times"></i> */}
+              {/* <Timer /> */}
+              <X />
+            </button>
+          </div>
+        </div>
+        {/* <h1 className="text-center text-xl font-bold mb-2">UK Company</h1> */}
+        {/* <h2 className="text-center text-lg mb-4">Balance Sheet</h2> */}
         <p className="text-center mb-4">As of December 20, 2023</p>
         {loading ? (
-          <>loading..</>
+          <>
+            <div className="bg-white">
+              <LoadingPopup loading={loading} />
+            </div>
+          </>
         ) : (
           <>
             {filter.showVertical != true ? (
-              <HorizontalBalanceSheet data={data??[]} />
+              <HorizontalBalanceSheet data={data ?? []} />
             ) : (
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -149,7 +206,7 @@ const BalanceSheet = () => {
                 </thead>
                 <tbody>
                   {data?.map((item, index) => (
-                    <BalanceSheetRow key={index} item={item??[]} />
+                    <BalanceSheetRow key={index} item={item ?? []} />
                   ))}
                 </tbody>
               </table>

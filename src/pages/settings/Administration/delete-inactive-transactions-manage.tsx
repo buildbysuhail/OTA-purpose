@@ -12,7 +12,7 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 
-interface DeleteInactiveTransactionManageData {
+interface   DeleteInactiveTransactionManageData {
   date: string;
   isAgree: boolean;
 }

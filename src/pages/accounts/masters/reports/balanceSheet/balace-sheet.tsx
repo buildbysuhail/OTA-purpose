@@ -16,12 +16,14 @@ import { Link } from "react-router-dom";
 
 const api = new APIClient();
 
-const BalanceSheetRow: React.FC<{ item: any }> = ({ item }) => {
+const BalanceSheetRow: React.FC<{ item: any, setIsOpenDetails: any }> = ({ item }) => {
   const [isOpenDetails, setIsOpenDetails] = useState<boolean>(false);
   const { t } = useTranslation();
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event: any) => {
-    event.preventDefault();
+   
+    console.log('sdsdsdsd');
+    
     setIsOpenDetails(true);
   };
   return (
@@ -47,13 +49,13 @@ const BalanceSheetRow: React.FC<{ item: any }> = ({ item }) => {
           fontWeight: item.groupID == 0 ? "bold" : "normal",
         }}
       >
-        <Link
-          to={item.link}
+        <a
           onClick={handleClick}
           className="hover:text-[#1d4ed8]"
         >
+          dsd
           {item.groupName}
-        </Link>
+        </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-right">
@@ -68,7 +70,7 @@ const BalanceSheetRow: React.FC<{ item: any }> = ({ item }) => {
   );
 };
 // Horizontal format component
-const HorizontalBalanceSheet: React.FC<{ data: any }> = ({ data }) => {
+const HorizontalBalanceSheet: React.FC<{ data: any, setIsOpenDetails: any}> = ({ data, setIsOpenDetails }) => {
   const assets = data?.filter((item: any) => item?.transType == "A");
 
   const liabilities = data?.filter((item: any) => item?.transType == "L");
@@ -86,7 +88,7 @@ const HorizontalBalanceSheet: React.FC<{ data: any }> = ({ data }) => {
           </thead>
           <tbody>
             {assets?.map((item: any, index: number) => (
-              <BalanceSheetRow key={`asset-${index}`} item={item} />
+              <BalanceSheetRow key={`asset-${index}`} item={item} setIsOpenDetails={setIsOpenDetails}/>
             ))}
           </tbody>
         </table>
@@ -102,7 +104,7 @@ const HorizontalBalanceSheet: React.FC<{ data: any }> = ({ data }) => {
           </thead>
           <tbody>
             {liabilities?.map((item: any, index: number) => (
-              <BalanceSheetRow key={`liability-${index}`} item={item} />
+              <BalanceSheetRow key={`liability-${index}`} item={item} setIsOpenDetails={setIsOpenDetails}/>
             ))}
           </tbody>
         </table>
@@ -219,7 +221,7 @@ const BalanceSheet = () => {
         ) : (
           <>
             {filter.showVertical != true ? (
-              <HorizontalBalanceSheet data={data ?? []} />
+              <HorizontalBalanceSheet data={data ?? []} setIsOpenDetails={setIsOpenDetails}/>
             ) : (
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -230,7 +232,7 @@ const BalanceSheet = () => {
                 </thead>
                 <tbody>
                   {data?.map((item, index) => (
-                    <BalanceSheetRow key={index} item={item ?? []} />
+                    <BalanceSheetRow key={index} item={item ?? []} setIsOpenDetails={setIsOpenDetails} />
                   ))}
                 </tbody>
               </table>

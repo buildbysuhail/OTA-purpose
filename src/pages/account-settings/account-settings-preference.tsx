@@ -141,6 +141,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     inputBox: {
       inputStyle: "normal",
       inputSize:"sm",
+      CheckButtonInputSize:"sm",
       inputHeight:0,
       fontSize: 0,
       fontWeight: 400,
@@ -243,7 +244,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       defaultValue={language}
                       label="Language"
                     />
-                    <div className="w-full p-2 flex justify-end">
+                    <div className="w-full p-2 flex justify-end space-x-2">
                       <ERPButton
                         title="Reset"
                         onClick={restLanguage}
@@ -679,7 +680,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                     </div>
-                    <div className="w-full p-2 flex justify-end">
+                    <div className="w-full p-2 flex justify-end space-x-2">
                       <ERPButton
                         title="Reset"
                         onClick={resetThemeChange}
@@ -1316,35 +1317,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           )}
                            
                         </div>
-                        <div className="grid  grid-cols-2 gap-3 items-center  switcher-style">
-                         
-                            <ERPRadio
-                            id="radioButton"
-                            name="radioButton"
-                            data={demo}
-                            checked={demo.radioButton}
-                            onChange={(e) => {
-                              setDemo((prevTheme) => ({
-                                ...prevTheme,             
-                                radioButton: !demo.radioButton 
-                              }));
-                            }}
-                            label="Radio Button"
-                          />
-                          <ERPCheckbox
-                            id="radioButton"
-                            name="radioButton"
-                            data={demo}
-                            checked={demo.checkBox}
-                            onChange={(e) => {
-                              setDemo((prevTheme) => ({
-                                ...prevTheme,             
-                                checkBox: !demo.checkBox 
-                              }));
-                            }}
-                            label="Radio Button"
-                          />
-                        </div>
+                        
                       
                         <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
                           <div className="flex items-center">
@@ -2045,6 +2018,141 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                        </div>
                          
+                      </div>
+
+                      <div className="">
+                      <p className="switcher-style-head">Radio & Check Box:</p>
+                      <div className="grid  grid-cols-2 gap-3 items-center  switcher-style">
+                         
+                            <ERPRadio
+                            id="radioButton"
+                            name="radioButton"
+                            data={demo}
+                            checked={demo.radioButton}
+                            onChange={(e) => {
+                              setDemo((prevTheme) => ({
+                                ...prevTheme,             
+                                radioButton: !demo.radioButton 
+                              }));
+                            }}
+                            label="Demo Radio Button"
+                          />
+                          <ERPCheckbox
+                            id="radioButton"
+                            name="radioButton"
+                            data={demo}
+                            checked={demo.checkBox}
+                            onChange={(e) => {
+                              setDemo((prevTheme) => ({
+                                ...prevTheme,             
+                                checkBox: !demo.checkBox 
+                              }));
+                            }}
+                            label="Demo checkBox"
+                          />
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            name="inputCheckBoxSize"
+                            className="ti-form-radio"
+                            id="inputCheck-sm"
+                            checked={
+                              theme.inputBox?.CheckButtonInputSize === "sm"
+                            }
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  inputBox: {
+                                    ...prevTheme.inputBox,
+                                    CheckButtonInputSize: "sm",
+                                  },
+                                }));
+                                handleInputBoxStyleChange(
+                                  "CheckButtonInputSize",
+                                  "sm"
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor="input-sm"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                          >
+                            {" "}
+                            sm
+                          </label>
+                        </div>
+                        <div className="flex item-center">
+                          <input
+                            type="radio"
+                            name="inputCheckBoxSize"
+                            className="ti-form-radio"
+                            id="inputCheck-md"
+                            checked={
+                              theme.inputBox?.CheckButtonInputSize === "md"
+                            }
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  inputBox: {
+                                    ...prevTheme.inputBox,
+                                    CheckButtonInputSize: "md",
+                                  },
+                                }));
+                                handleInputBoxStyleChange(
+                                  "CheckButtonInputSize",
+                                  "md"
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor="input-md"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                          >
+                            {" "}
+                            md
+                          </label>
+                        </div>
+                        <div className="flex item-center">
+                          <input
+                            type="radio"
+                            name="inputCheckBoxSize"
+                            className="ti-form-radio"
+                            id="inputCheck-lg"
+                            checked={
+                              theme.inputBox?.CheckButtonInputSize === "lg"
+                            }
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setTheme((prevTheme) => ({
+                                  ...prevTheme,
+                                  inputBox: {
+                                    ...prevTheme.inputBox,
+                                    CheckButtonInputSize: "lg",
+                                  },
+                                }));
+                                handleInputBoxStyleChange(
+                                  "CheckButtonInputSize",
+                                  "lg"
+                                );
+                              }
+                            }}
+                          />
+                          <label
+                            htmlFor="input-lg"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                          >
+                            {" "}
+                            lg
+                          </label>
+                        </div>
+                      
+                      </div>
                       </div>
                     </div>
                   </div>

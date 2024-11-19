@@ -39,6 +39,7 @@ const initialState: AppInitialState = {
     inputBox: {
       inputStyle: "normal", 
       inputSize:"sm",
+      CheckButtonInputSize:"sm",
       inputHeight:2,        
       fontSize: 13, 
       fontWeight: 400, 
@@ -49,6 +50,7 @@ const initialState: AppInitialState = {
       borderFocus: '',          
       borderRadius: 5,      
     },
+   
     //
     pdfTemplates: null,
     tableState: {

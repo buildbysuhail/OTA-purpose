@@ -87,6 +87,7 @@ export const initialThemeData: Theme = {
   inputBox: {
     inputStyle: "normal",  
     inputSize:"sm", 
+    CheckButtonInputSize:"sm",
     inputHeight:2,    
     fontSize: 13, 
     fontWeight: 400, 
@@ -96,7 +97,7 @@ export const initialThemeData: Theme = {
     borderFocus: '128, 128, 128',
     fontColor:'128, 128, 128',
     borderRadius: 5,      
-  }
+  },
 };
 export interface Theme {
   direction: "ltr" | "rtl";
@@ -118,6 +119,7 @@ export interface Theme {
 export interface inputBox{
   inputStyle:  "normal"|"filled" | "outlined" | "standard";
   inputSize:"sm"|"md"|"lg"|"customize",
+  CheckButtonInputSize:  "sm" | "md" | "lg" ;
   inputHeight:number,
   fontSize:number;
   fontWeight:number;

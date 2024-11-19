@@ -19,7 +19,7 @@ interface ERPRadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputClassName?: string;
   labelClassName?: string;
   validation?: string;
-  customSize?: "sm" | "md" | "lg"|"customize",
+  customSize?: "sm" | "md" | "lg",
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
@@ -39,7 +39,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
   inputClassName,
   labelClassName,
   validation,
-  customSize = "sm",
+  customSize ,
   skip = false,
   jumpTo,
   jumpTarget,
@@ -49,12 +49,12 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
   const appState = useAppSelector(
     (state: RootState) => state.AppState.appState
   );
-  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.CheckButtonInputSize);
  useEffect(() => {
     if (customSize == undefined || customSize == null) {
-      setCustomSize(appState.inputBox.inputSize);
+      setCustomSize(appState.inputBox.CheckButtonInputSize);
     }
-  }, [appState.inputBox.inputSize]);
+  }, [appState.inputBox.CheckButtonInputSize]);
 
 
   const getSizeStyles = () => {
@@ -73,12 +73,12 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
         case "md":
           return {
             radio: {
-              width: "17px",
-              height: "17px"
+              width: "1rem",
+              height: "1rem"
             },
             label: {
               fontSize: "14px",
-              lineHeight: "17px"
+              lineHeight: "1rem"
             }
           };
       case "lg":
@@ -92,17 +92,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
             lineHeight: "1.25rem"
           }
         };
-        case "customize":
-          return {
-            radio: {
-              width: "1.25rem",
-              height: "1.25rem"
-            },
-            label: {
-              fontSize: "16px",
-              lineHeight: "1.25rem"
-            }
-          };
+       
       default:
         return {
           radio: {
@@ -154,7 +144,7 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
         <label
           htmlFor={id}
           style={sizeStyles.label}
-          className={`form-check-label ${labelClassName} 
+          className={`form-check-label ${labelClassName} ${_customSize == "sm" ? '-translate-y-[2.5px]':"-translate-y-[1px]"} 
             capitalize text-gray-900 rtl:text-right select-none
             ${disabled ? "text-gray-400" : "text-gray-900"}`}>
           {iLabel}

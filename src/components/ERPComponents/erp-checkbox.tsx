@@ -1,7 +1,9 @@
-import * as React from "react";
-import { forwardRef } from "react";
+
+import { forwardRef, useEffect, useState } from "react";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { handleNavigation } from "../../utilities/shortKeys";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
 
 interface ERPCheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   id: string;
@@ -42,50 +44,69 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
   skip = false,
   jumpTo,
   jumpTarget,
-  customSize = "sm",
+  customSize ,
   ...props
 }: ERPCheckboxProps, ref) => {
   const iLabel = label || id?.replaceAll("_", " ");
-
-  const getSizeStyles = (customSize: 'sm' | 'md' | 'lg') => {
-    switch (customSize) {
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
+  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.CheckButtonInputSize);
+ useEffect(() => {
+    if (customSize == undefined || customSize == null) {
+      setCustomSize(appState.inputBox.CheckButtonInputSize);
+    }
+  }, [appState.inputBox.CheckButtonInputSize]);
+  const getSizeStyles = () => {
+    switch (_customSize) {
       case 'sm':
+        return {
+          checkbox: {
+            width: "14px",
+            height: "14px"
+          },
+          label: {
+            fontSize: "12px",
+            lineHeight: "14px"
+          }
+        };
+        case 'md':
+          return {
+            checkbox: {
+             width: "1rem",
+              height: "1rem"
+            },
+            label: {
+               fontSize: "14px",
+              lineHeight: "1rem"
+            }
+          };
+      case 'lg':
+        return {
+          checkbox: {
+             width: "1.25rem",
+            height: "1.25rem"
+          },
+          label: {
+           fontSize: "16px",
+            lineHeight: "1.25rem"
+          }
+        };
+      default: 
         return {
           checkbox: {
             width: "1rem",
             height: "1rem"
           },
           label: {
-            fontSize: "12px",
-            lineHeight: "1rem"
-          }
-        };
-      case 'lg':
-        return {
-          checkbox: {
-            width: "1.5rem",
-            height: "1.5rem"
-          },
-          label: {
-            fontSize: "16px",
-            lineHeight: "1.5rem"
-          }
-        };
-      default: // md
-        return {
-          checkbox: {
-            width: "1.25rem",
-            height: "1.25rem"
-          },
-          label: {
             fontSize: "14px",
-            lineHeight: "1.25rem"
+            lineHeight: "1rem"
           }
         };
     }
   };
 
-  const sizeStyles = getSizeStyles(customSize);
+  const sizeStyles = getSizeStyles();
 
   return (
     <div className={className}>

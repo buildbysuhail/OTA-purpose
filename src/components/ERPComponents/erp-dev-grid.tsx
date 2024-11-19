@@ -371,7 +371,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       const dss = { ..._filter }
       console.log(`prev:${filter}`);
       console.log(`latest:${_filter}`);
-
+      if (filterShowCount == 0) {
+      setFilterShowCount((prev) => prev + 1);
+      console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);
+      }
       setFilter(dss);
     },
     []
@@ -390,14 +393,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     },
     []
   );
-  useEffect(() => {
-    debugger;
-    console.log(`showFilterChange: ${filterShowCount}`);
-    if (filterShowCount == 0 && showFilter == false) {
-      console.log(`filterShowCountSafvan: ${filterShowCount}`);
-      setFilterShowCount((prev) => prev + 1);
-    }
-  }, [showFilter])
 
   const store = useMemo(() => {
 

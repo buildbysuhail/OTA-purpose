@@ -7,6 +7,7 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import DayBookReportFilter, { DayBookReportFilterInitialState } from "./day-book-report-filter";
 interface DayBookDetailed {
 
   from: Date
@@ -59,7 +60,6 @@ const DayBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
     },
     {
       dataField: "refNo",
@@ -127,28 +127,6 @@ const DayBookDetailed = () => {
     //   allowFiltering: true,
     //   width: 150,
     // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
   ];
   return (
     <Fragment>
@@ -163,10 +141,13 @@ const DayBookDetailed = () => {
                   dataUrl= {Urls.acc_reports_day_book_detailed}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
+                  enablefilter={true}
+                  showFilterInitially={true}
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  filterWidth="100"
+                  filterContent={<DayBookReportFilter/>}
+                  filterInitialData={DayBookReportFilterInitialState}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
                 ></ErpDevGrid>
               </div>

@@ -10,6 +10,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-report-filter";
 
 interface PaymentReport {
 
@@ -97,9 +98,11 @@ const PaymentReport = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterContent={<PaymentReportFilter/>}
+                  filterInitialData={PaymentReportFilterInitialState}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
                 ></ErpDevGrid>
               </div>

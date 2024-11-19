@@ -97,16 +97,16 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
         />
         <ERPDataCombobox
-          {...getFieldProps("parentGroupId")}
+          {...getFieldProps("parentGroupID")}
           field={{
-            id: "parentGroupId",
+            id: "parentGroupID",
             required: true,
             getListUrl: Urls.data_acc_groups,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) => {
-            handleFieldChange("parentGroupId", data.parentGroupID);
+            handleFieldChange("parentGroupID", data.parentGroupID);
           }}
           disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
           label={t("group_under")}

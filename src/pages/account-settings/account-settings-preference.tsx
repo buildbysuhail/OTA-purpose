@@ -35,6 +35,8 @@ import { setAppState } from "../../redux/slices/app/reducer";
 import ERPRadio from "../../components/ERPComponents/erp-radio";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../components/ERPComponents/erp-date-input";
+import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
+import MUIERPDataCombobox from "../../components/ERPComponents/erp-data-combobox-mui";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -45,6 +47,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   const [demo, setDemo] = useState({
     inputBox:"",
     dateBox:"",
+    selectBox:"",
     radioButton:false,
     checkBox:false,
   });
@@ -1260,7 +1263,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       </div>
                       <div className="">
                         <p className="switcher-style-head">Input Box Style:</p>
-                        <div className="grid  grid-cols-3 gap-3 items-center  switcher-style">
+                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center  switcher-style">
                           {theme.inputBox?.inputStyle === "normal" ? (
                             <ERPInput
                               id="inputBox"
@@ -1314,6 +1317,64 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               id="dateBox"
                               label="Date Input"
                             />
+                          )}
+
+                            {theme.inputBox?.inputStyle === "normal" ? (
+                            <ERPDataCombobox
+                            id="selectBox"
+                            data={demo}
+                            label="Demo Select Box"
+                            field={{
+                              id: "selectBox",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            
+                            // customSize='sm'
+                            onChange={(e) => {
+                              setDemo((prevTheme) => ({
+                                ...prevTheme,             
+                                selectBox: e?.value ?? null,
+                              }));
+                            }}
+                            options={[
+                              { value: 0, label: "0" },
+                              { value: 1, label: "1" },
+                              { value: 2, label: "2" },
+                              { value: 3, label: "3" },
+                              { value: 4, label: "4" },
+                              { value: 5, label: "5" },
+                            ]}
+                        />
+                     
+                          ) : (
+                          <ERPDataCombobox
+                          useMUI
+                          id="selectBox"
+                          field={{
+                            id: "selectBox",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={[
+                            { value: 0, label: "0" },
+                            { value: 1, label: "1" },
+                            { value: 2, label: "2" },
+                            { value: 3, label: "3" },
+                            { value: 4, label: "4" },
+                            { value: 5, label: "5" },
+                          ]}
+                          
+                          data={demo}
+                          label="Demo Select Box"
+                          variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
+                          onChange={(e) => {
+                            setDemo((prevTheme) => ({
+                              ...prevTheme,             
+                              selectBox: e?.value ?? null, 
+                            }));
+                          }}
+                          />
                           )}
                            
                         </div>

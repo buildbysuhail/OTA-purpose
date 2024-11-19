@@ -85,14 +85,23 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
 
     const commonMuiStyles = {
       color: `rgb(${appState.inputBox.fontColor})`,
-      "& .MuiOutlinedInput-notchedOutline, & .MuiFilledInput-underline, &:before": {
+      "& .MuiOutlinedInput-notchedOutline": {
         borderColor: `rgb(${appState.inputBox.borderColor})`,
       },
-      "&:hover .MuiOutlinedInput-notchedOutline, &:hover .MuiFilledInput-underline, &:hover:before": {
+      "& .MuiFilledInput-underline, &:before": {
+        borderBottomColor: `rgb(${appState.inputBox.borderColor})`,
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
         borderColor: `rgb(${appState.inputBox.borderFocus})`,
       },
-      "&.Mui-focused .MuiOutlinedInput-notchedOutline, &.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before": {
+      "&:hover .MuiFilledInput-underline, &:hover:before": {
+        borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
         borderColor: `rgb(${appState.inputBox.borderFocus})`,
+      },
+      "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after": {
+        borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
       },
       margin: "0",
       "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {

@@ -9,45 +9,191 @@ import ERPInput from "../../../components/ERPComponents/erp-input"
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox"
 import ERPButton from "../../../components/ERPComponents/erp-button"
 import Urls from "../../../redux/urls"
+import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
+import { useParams } from 'react-router-dom';
 
-interface CashPaymentData {
-  voucherNo: string
-  date: string
-  refNo: string
-  refDate: string
-  cashAccount: string
-  paidBy: string
-  amount: number
-  costCenter: string
-  narration: string
-  ledgerEntries: Array<{
-    code: string
-    amount: number
-    narration: string
-  }>
-}
 
-const initialData: CashPaymentData = {
-  voucherNo: '',
-  date: new Date().toISOString().split('T')[0],
-  refNo: '',
-  refDate: new Date().toISOString().split('T')[0],
-  cashAccount: '',
-  paidBy: '',
-  amount: 0,
-  costCenter: '',
-  narration: '',
-  ledgerEntries: []
-}
+
 
 export default function Component() {
-  const [asd, setAsd] = useState<string>('')
+  const { type } = useParams();
+  const [gridName, setGridName] = useState<string>(`grd_acc_transaction_${type}`)
   const handleFieldChange = useCallback((field: string, value: any) => {
     // Implementation for field change
     console.log(field, value)
   }, [])
-
+  const columns = [
+    {
+      dataField: 'siNo',
+      caption: 'SI No',
+      width:60,
+      cellRender: (cellElement: any) => (
+       <div>{cellElement.value}</div>
+      ),
+    },
+    {
+      dataField: 'ledgerId',
+      caption: 'Ledger ID',
+      width:100,
+    },
+    {
+      dataField: 'ledgerCode',
+      caption: 'Ledger Code',
+      width:100,
+    },
+    {
+      dataField: 'ledger',
+      caption: 'Ledger',
+    },
+    {
+      dataField: 'amount',
+      caption: 'Amount',
+      // alignment: 'right',
+      customizeText: (cellInfo: any) => `${parseFloat(cellInfo.value).toFixed(2)}`,
+      width:200,
+    },
+    {
+      dataField: 'drCr',
+      caption: 'Dr/Cr',
+      width:100,
+    },
+    {
+      dataField: 'chequeNo',
+      caption: 'Cheque No',
+      visible: false
+    },
+    {
+      dataField: 'chequeDate',
+      caption: 'Cheque Date',
+      visible: false
+    },
+    {
+      dataField: 'narration',
+      caption: 'Narration',
+      visible: false
+    },
+    {
+      dataField: 'billwiseDetails',
+      caption: 'Billwise Details',
+      visible: false
+    },
+    {
+      dataField: 'accTransaction',
+      caption: 'Acc Transaction',
+      visible: false
+    },
+    {
+      dataField: 'discount',
+      caption: 'Discount',
+      visible: false,
+      // alignment: 'right',
+      customizeText: (cellInfo: any) => `${parseFloat(cellInfo.value).toFixed(2)}`,
+    },
+    {
+      dataField: 'costCentreId',
+      caption: 'Cost Centre ID',
+      visible: false
+    },
+    {
+      dataField: 'checkStatus',
+      caption: 'Check Status',
+      visible: false
+    },
+    {
+      dataField: 'amountFC',
+      caption: 'Amount FC',
+      // alignment: 'right',
+      customizeText: (cellInfo: any) => `${parseFloat(cellInfo.value).toFixed(2)}`,
+      visible: false
+    },
+    {
+      dataField: 'nameOnCheque',
+      caption: 'Name on Cheque',
+      visible: false
+    },
+    {
+      dataField: 'bankName',
+      caption: 'Bank Name',
+      visible: false
+    },
+    {
+      dataField: 'debit',
+      caption: 'Debit',
+      // alignment: 'right',
+      customizeText: (cellInfo: any) => `${parseFloat(cellInfo.value).toFixed(2)}`,
+      visible: false
+    },
+    {
+      dataField: 'credit',
+      caption: 'Credit',
+      // alignment: 'right',
+      customizeText: (cellInfo: any) => `${parseFloat(cellInfo.value).toFixed(2)}`,
+      visible: false
+    },
+    {
+      dataField: 'projectId',
+      caption: 'Project ID',
+      visible: false
+    },
+    {
+      dataField: 'projects',
+      caption: 'Projects',
+      visible: false
+    },
+  ];
+  const [data] = useState([
+    {
+      siNo: 1,
+      ledgerId: 'LD001',
+      ledgerCode: 'LC001',
+      ledger: 'Cash Account',
+      amount: 5000.00,
+      drCr: 'Dr',
+      chequeNo: 'CHQ001',
+      chequeDate: '2024-01-19',
+      narration: 'Payment for supplies',
+      billwiseDetails: 'BILL001',
+      accTransaction: 'TR001',
+      discount: 0,
+      x: '',
+      costCentreId: 'CC001',
+      checkStatus: 'Cleared',
+      amountFC: 5000.00,
+      nameOnCheque: 'John Doe',
+      bankName: 'ABC Bank',
+      debit: 5000.00,
+      credit: 0,
+      projectId: 'PRJ001',
+      projects: 'Main Project'
+    },
+    {
+      siNo: 2,
+      ledgerId: 'LD001',
+      ledgerCode: 'LC001',
+      ledger: 'Cash Account',
+      amount: 5000.00,
+      drCr: 'Dr',
+      chequeNo: 'CHQ001',
+      chequeDate: '2024-01-19',
+      narration: 'Payment for supplies',
+      billwiseDetails: 'BILL001',
+      accTransaction: 'TR001',
+      discount: 0,
+      x: '',
+      costCentreId: 'CC001',
+      checkStatus: 'Cleared',
+      amountFC: 5000.00,
+      nameOnCheque: 'John Doe',
+      bankName: 'ABC Bank',
+      debit: 5000.00,
+      credit: 0,
+      projectId: 'PRJ001',
+      projects: 'Main Project'
+    },
+    // Add more sample data here
+  ])
   return (
+    <>
     <div className="p-4 space-y-6 border rounded-lg">
       <div className="space-y-3">
         <div className="flex items-center justify-between gap-6">
@@ -68,9 +214,6 @@ export default function Component() {
             customSize="sm"
             id="voucherNo"
             label="Voucher No."
-            value={asd}
-            //data={formData}
-            onChange={(e) => setAsd(e.target.value)}
           />
           <ERPDateInput
             id="date"
@@ -83,22 +226,6 @@ export default function Component() {
             id="refNo"
             label="Ref No."
             customSize="sm"
-            // value={formData.refNo}
-            //data={formData}
-            onChangeData={(value) => handleFieldChange('refNo', value)}
-          />
-          <ERPInput
-            id="refNo"
-            label="Ref No."
-            customSize="md"
-            // value={formData.refNo}
-            //data={formData}
-            onChangeData={(value) => handleFieldChange('refNo', value)}
-          />
-          <ERPInput
-            id="refNo"
-            label="Ref No."
-            customSize="lg"
             // value={formData.refNo}
             //data={formData}
             onChangeData={(value) => handleFieldChange('refNo', value)}
@@ -184,10 +311,6 @@ export default function Component() {
           onChangeData={(value) => { }}
         />
         <div className="w-3/4">
-          <div className="flex justify-between items-center ">
-            <label htmlFor="cashAccount" className="text-xs font-medium">Cash Account</label>
-            <span className="text-xs text-gray-500">Bal:</span>
-          </div>
           <ERPDataCombobox
             id="ledger"
             field={{
@@ -197,7 +320,7 @@ export default function Component() {
               valueKey: "id",
               labelKey: "name",
             }}
-            label=" "
+            label=" Ledger"
             onChangeData={(data: any) => handleFieldChange("ledger", data.ledger)}
           />
         </div>
@@ -277,117 +400,19 @@ export default function Component() {
         </div>
       </div>
 
-      <div className="flex justify-between items-center">
-        <div className="text-sm">Amount In Words: Zero only</div>
-        <div className="font-bold">TOTAL: 0.00</div>
-      </div>
-
-      <div className="grid grid-cols-3 gap-6">
-        {/* <ERPCheckbox
-            id="printOnSave"
-            label="Print on Save"
-            value={false}
-            data={{}}
-            onChangeData={() => {}}
-          />
-          <ERPCheckbox
-            id="printPreview"
-            label="Print Preview"
-            value={false}
-            data={{}}
-            onChangeData={() => {}}
-          /> */}
-        <ERPInput
-          useMUI
-          variant="outlined"
-          customSize="sm"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="outlined"
-          customSize="md"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="outlined"
-          customSize="lg"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="standard"
-          customSize="sm"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="standard"
-          customSize="md"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="standard"
-          customSize="lg"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="filled"
-          customSize="sm"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="filled"
-          customSize="md"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-        <ERPInput
-          useMUI
-          variant="filled"
-          customSize="lg"
-          id="voucherNo"
-          label="Voucher No."
-          value={asd}
-          //data={formData}
-          onChange={(e) => setAsd(e.target.value)}
-        />
-      </div>
     </div>
+    <ErpDevGrid
+                  columns={columns}
+                  allowFiltering={false}
+                  dataUrl= {Urls.acc_reports_ledger}
+                  hideGridAddButton={true}
+                  hideDefaultExportButton={true}
+                  hideDefaultSearchPanel={true}
+                  hideGridHeader={true}
+                  enablefilter={false}
+                  data={data}
+                  gridId={gridName}
+                ></ErpDevGrid>
+    </>
   )
 }

@@ -246,6 +246,7 @@ const Test: React.FC = () => {
                     id="packDate"
                     type="date"
                     label="packed_date"
+                    jumpTo='packDate2121'
                 />
                 <ERPDateInput
                     useMUI
@@ -259,9 +260,10 @@ const Test: React.FC = () => {
                     useMUI
                     customSize="lg"
                     variant="filled"
-                    id="packDate"
+                    id="packDate2121"
                     type="date"
                     label="packed_date"
+                    jumpTarget='packDate2121'
                 />
             </div>
             <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
@@ -269,14 +271,16 @@ const Test: React.FC = () => {
                     label="inSearch"
                     id="inSearch"
                     customSize='sm'
+                    jumpTo="inSearch21"
                 /><ERPCheckbox
                     label="inSearch"
                     id="inSearch"
                     customSize='md'
                 /><ERPCheckbox
                     label="inSearch"
-                    id="inSearch"
+                    id="inSearch21"
                     customSize='lg'
+                    jumpTarget='inSearch21'
                 />
             </div>
             <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
@@ -286,6 +290,7 @@ const Test: React.FC = () => {
                     value="1"
                     label="Small Option"
                     customSize="sm"
+                    jumpTo='option3'
                 />
 
                 <ERPRadio
@@ -301,6 +306,7 @@ const Test: React.FC = () => {
                     value="3"
                     label="Large Option"
                     customSize="lg"
+                    jumpTarget='option3'
                 />
             </div>
             <div className='flex items-end border-2 rounded-lg p-4 gap-6'>

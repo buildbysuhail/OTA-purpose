@@ -50,10 +50,12 @@ interface ERPDataComboboxProps {
   skip?: boolean;
   jumpTo?: string;     
   jumpTarget?: string; 
+  customSize?: 'sm' | 'md' | 'lg';
 }
 
 interface RowProps {
   data: {
+    customSize: "sm" | "md" | "lg" | undefined;
     items: Option[];
     selectedValue: Option | null;
     handleSelect: (item: Option) => void;
@@ -120,12 +122,38 @@ const truncateText = (
   return text;
 };
 
-const Row = ({ data, index, style }: RowProps) => {
+const getSizeClasses = (customSize?: 'sm' | 'md' | 'lg') => {
+  switch (customSize) {
+    case 'sm':
+      return {
+        input: 'h-7 text-xs px-2',
+        label: 'text-[10px]',
+        options: 'text-xs',
+        icons: 'h-4 w-4'
+      };
+    case 'lg':
+      return {
+        input: 'h-11 text-sm px-4',
+        label: 'text-[14px]',
+        options: 'text-sm',
+        icons: 'h-6 w-6'
+      };
+    default: 
+      return {
+        input: 'h-9 text-xs px-3',
+        label: 'text-[12px]',
+        options: 'text-xs',
+        icons: 'h-5 w-5'
+      };
+  }
+};
 
+const Row = ({ data, index, style }: RowProps & { customSize?: 'sm' | 'md' | 'lg' }) => {
   const { items, selectedValue, handleSelect, activeIndex } = data;
   const item = items[index];
   const isSelected = selectedValue?.value === item.value;
   const isActive = activeIndex === index;
+  const sizeClasses = getSizeClasses(data.customSize);
 
   return (
     <Combobox.Option
@@ -137,7 +165,7 @@ const Row = ({ data, index, style }: RowProps) => {
           : item.is_active === false
             ? "bg-gray-200 text-gray-400"
             : "text-gray-900"
-        }`
+        } ${sizeClasses.options}`
       }
       value={item}
       disabled={!item.is_active}
@@ -151,7 +179,7 @@ const Row = ({ data, index, style }: RowProps) => {
           <div className="flex-shrink-0 w-5">
             {isSelected && (
               <CheckIcon
-                className={`h-5 w-5 ${setFgAccordingToBgPrimary()}`}
+              className={`${sizeClasses.icons} ${setFgAccordingToBgPrimary()}`}
                 aria-hidden="true"
               />
             )}
@@ -175,15 +203,17 @@ const ComboboxList = React.forwardRef<
     selectedValue: Option | null;
     onSelect: (item: Option) => void;
     activeIndex: number;
+    customSize?: 'sm' | 'md' | 'lg';
   }
 >((props, ref) => {
-  const { items, selectedValue, onSelect, activeIndex } = props;
+  const { items, selectedValue, onSelect, activeIndex ,customSize} = props;
 
   const itemData = {
     items,
     selectedValue,
     handleSelect: onSelect,
     activeIndex,
+    customSize,
   };
 
   return (
@@ -232,6 +262,7 @@ export default function ERPDataCombobox({
   jumpTo,      
   jumpTarget, 
   enableClearOption = true,
+  customSize = 'md',
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -486,14 +517,14 @@ export default function ERPDataCombobox({
     }
   };
 
-
+  const sizeClasses = getSizeClasses(customSize);
 
   return (
     <div className="relative" ref={componentRef}>
       {!noLabel && (
         <label
           htmlFor={id}
-          className="block text-[12px] font-medium text-gray-700 mb-1"
+          className={`block ${sizeClasses.label} font-medium text-gray-700 mb-1`}
         >
           {/* {activeIndex}: {initial?.value} : {filteredItems[activeIndex]?.value}: {filteredItems[activeIndex]?.label} */}
           {label || id?.replaceAll("_", " ")}
@@ -510,10 +541,14 @@ export default function ERPDataCombobox({
         className="relative"
       >
         <div className={className}>
-          <Combobox.Input
-            className={`w-full appearance-none rounded border border-gray-300 h-9 ${disabled ? "text-gray-400" : "bg-white text-gray-900"
-              } px-3 py-2 ${enableClearOption ? "pr-16" : "pr-10"
-              } placeholder-gray-400 focus:ring-1 text-xs focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
+        <Combobox.Input
+            className={`w-full appearance-none rounded border border-gray-300 ${
+              sizeClasses.input
+            } ${
+              disabled ? "text-gray-400" : "bg-white text-gray-900"
+            } ${
+              enableClearOption ? "pr-16" : "pr-10"
+            } placeholder-gray-400 focus:ring-1 focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
             displayValue={() => inputValue || initial?.label || ""}
             onChange={handleInputChange}
             onClick={() => !disabled && setIsOpen(!isOpen)}
@@ -521,7 +556,8 @@ export default function ERPDataCombobox({
             placeholder={
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
-            ref={comboboxRef} autoComplete="off"
+            ref={comboboxRef}
+            autoComplete="off"
             spellCheck={false}
             autoFocus={autoFocus}
             title={initial?.label || ""}
@@ -540,7 +576,7 @@ export default function ERPDataCombobox({
                 aria-label="Clear selection"
               >
                 <XMarkIcon
-                  className="h-5 w-5 text-gray-400 hover:text-gray-500"
+                   className={`${sizeClasses.icons} text-gray-400 hover:text-gray-500`}
                   aria-hidden="true"
                 />
               </button>
@@ -550,8 +586,9 @@ export default function ERPDataCombobox({
               onClick={() => !disabled && setIsOpen(!isOpen)}
             >
               <ChevronDownIcon
-                className={`h-5 w-5 text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
-                  }`}
+                className={`${sizeClasses.icons} text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
+                  isOpen ? "transform rotate-180" : ""
+                }`}
                 aria-hidden="true"
               />
             </Combobox.Button>
@@ -572,7 +609,7 @@ export default function ERPDataCombobox({
           }}
         >
           <Combobox.Options
-            className="absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white text-xs shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
+            className={`absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden ${sizeClasses.options}`}
             static
           >
             {loading ? (
@@ -590,6 +627,7 @@ export default function ERPDataCombobox({
                 selectedValue={initial}
                 onSelect={handleItemClick}
                 activeIndex={activeIndex}
+                customSize={customSize}
               />
             )}
           </Combobox.Options>

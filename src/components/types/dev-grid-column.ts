@@ -28,6 +28,7 @@ export interface DevGridColumn {
     showInPdf?: boolean | false;
     allowEditing?: boolean;
     visible?: boolean;
+    customizeText?:(cellElement: any) => string;
     cellRender?: (cellElement: any, cellInfo: any) => React.ReactNode;
   }
   const initialColumnPreference: ColumnPreference = {

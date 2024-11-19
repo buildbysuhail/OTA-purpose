@@ -8,6 +8,9 @@ import Urls from "../../../../../redux/urls";
 import "./Loader.css";
 import LoadingPopup from "./LoadingPopup";
 import { Clock1, FileDown, Forward, Printer, Timer, X } from "lucide-react";
+import ERPModal from "../../../../../components/ERPComponents/erp-modal";
+import { useTranslation } from "react-i18next";
+import BalancesheetDetails from "./balancesheet-details";
 
 const api = new APIClient();
 
@@ -17,7 +20,7 @@ const BalanceSheetRow: React.FC<{ item: any }> = ({ item }) => {
       <td
         className={`py-2`}
         style={{
-          paddingLeft: item.groupID == 0 ? "10px" : "0px",
+          paddingLeft: item.groupID == 0 ? "0px" : "10px",
           fontWeight: item.groupID == 0 ? "bold" : "normal",
         }}
       >
@@ -85,6 +88,8 @@ const BalanceSheet = () => {
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOpenDetails, setIsOpenDetails] = useState<boolean>(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     if (filterShowCount == 0) {
@@ -217,6 +222,19 @@ const BalanceSheet = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p>
       </div>
+
+      <ERPModal
+        isOpen={isOpenDetails}
+        title={t("bank_cards")}
+        width="w-full max-w-[600px]"
+        isForm={true}
+        closeModal={() => {
+          setIsOpenDetails(false);
+        }}
+        content={
+          <BalancesheetDetails key={2}/>
+        }
+      />
     </div>
   );
 };

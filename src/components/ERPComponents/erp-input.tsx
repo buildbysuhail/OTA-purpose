@@ -58,7 +58,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   customSize?: "sm" | "md" | "lg" | "customize";
   useMUI?: boolean;
   // color?: TextFieldProps["color"];
-  
+
   variant?: "filled" | "outlined" | "standard";
 }
 
@@ -103,7 +103,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }: ERPInputProps,
     ref
   ) => {
-    
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
@@ -111,8 +110,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const iPlaceholder = placeholder || label;
     const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
     useEffect(() => {
-      setCustomSize(appState.inputBox.inputSize)
-    },[appState.inputBox.inputSize])
+      if (customSize == undefined || customSize == null) {
+        setCustomSize(appState.inputBox.inputSize);
+      }
+    }, [appState.inputBox.inputSize]);
 
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -133,8 +134,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           fontSize: string;
           padding: string;
           fontWeight?: number;
-          color?:string;
-          borderColor?:string;
+          color?: string;
+          borderColor?: string;
           // borderFocusColor?:string;
         };
       } = {
@@ -146,6 +147,23 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         },
       };
 
+      const commonMuiStyles = {
+        color: `rgb(${appState.inputBox.fontColor})`,
+        "& .MuiOutlinedInput-notchedOutline, & .MuiFilledInput-underline, &:before": {
+          borderColor: `rgb(${appState.inputBox.borderColor})`,
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline, &:hover .MuiFilledInput-underline, &:hover:before": {
+          borderColor: `rgb(${appState.inputBox.borderFocus})`,
+        },
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline, &.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before": {
+          borderColor: `rgb(${appState.inputBox.borderFocus})`,
+        },
+        margin: "0",
+        "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
+          padding: "0 0.75rem",
+        },
+      };
+
       switch (_customSize) {
         case "sm":
           return {
@@ -153,24 +171,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputBase-root": {
                 height: "2rem",
                 fontSize: "12px",
-                color: `rgb(${appState.inputBox.fontColor})`,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `rgb(${appState.inputBox.borderColor})`,
-                },
-                 // Add hover and focused states
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                },
-                margin: "0",
-                "& .MuiOutlinedInput-input": {
-                  padding: "0 0.75rem",
-                },
-                "& .MuiFilledInput-input": {
-                  padding: "0 0.75rem",
-                },
+                ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
                 fontSize: "12px",
@@ -194,9 +195,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               height: "2rem",
               fontSize: "12px",
               color: appState.inputBox.fontColor
-              ? `rgb(${appState.inputBox.fontColor})`
-              : "inherit", 
-              borderColor:`rgb(${appState.inputBox.borderColor})`,
+                ? `rgb(${appState.inputBox.fontColor})`
+                : "inherit",
+              borderColor: `rgb(${appState.inputBox.borderColor})`,
               // padding: "0.25rem 0.75rem"
             },
           };
@@ -207,24 +208,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 // height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
                 height: "2.5rem",
                 fontSize: "14px",
-                color: `rgb(${appState.inputBox.fontColor})`,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `rgb(${appState.inputBox.borderColor})`,
-                },
-                  // Add hover and focused states
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                  },
-                margin: "0",
-                "& .MuiOutlinedInput-input": {
-                  padding: "0 0.75rem",
-                },
-                "& .MuiFilledInput-input": {
-                  padding: "0 0.75rem",
-                },
+                ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
                 fontSize: "12px",
@@ -248,9 +232,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               height: "2.5rem",
               fontSize: "14px",
               color: appState.inputBox.fontColor
-              ? `rgb(${appState.inputBox.fontColor})`
-              : "inherit", 
-              borderColor:`rgb(${appState.inputBox.borderColor})`,
+                ? `rgb(${appState.inputBox.fontColor})`
+                : "inherit",
+              borderColor: `rgb(${appState.inputBox.borderColor})`,
               // padding: "0.5rem 1rem"
             },
           };
@@ -259,26 +243,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             mui: {
               "& .MuiInputBase-root": {
                 // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
-                height: "3rem",
-                fontSize: "16px",
-                color: `rgb(${appState.inputBox.fontColor})`,
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `rgb(${appState.inputBox.borderColor})`,
-                },
-                  // Add hover and focused states
-                  "&:hover .MuiOutlinedInput-notchedOutline": {
-                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                  },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                  },
-                margin: "0",
-                "& .MuiOutlinedInput-input": {
-                  padding: "0 0.75rem",
-                },
-                "& .MuiFilledInput-input": {
-                  padding: "0 0.75rem",
-                },
+               height: "3rem",
+            fontSize: "16px",
+            ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
                 fontSize: "14px",
@@ -302,76 +269,55 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               height: "3rem",
               fontSize: "16px",
               color: appState.inputBox.fontColor
-              ? `rgb(${appState.inputBox.fontColor})`
-              : "inherit", 
-              borderColor:`rgb(${appState.inputBox.borderColor})`,
+                ? `rgb(${appState.inputBox.fontColor})`
+                : "inherit",
+              borderColor: `rgb(${appState.inputBox.borderColor})`,
               // label: "10px",
               // padding: "0.75rem 1.25rem"
             },
           };
-          case "customize":
-            return {
-              mui: {
-                "& .MuiInputBase-root": {
-                  height: `${appState.inputBox.inputHeight??2.5}rem`,
-                  fontSize: `${appState.inputBox.fontSize??15}px`,
-                  borderRadius:`${appState.inputBox.borderRadius??15}px`,
-                  fontWeight:appState.inputBox.fontWeight??500,
-                  color: `rgb(${appState.inputBox.fontColor})`, 
-                  
-                  // border: appState.inputBox.borderColor
-                  // ? `1px solid rgb(${appState.inputBox.borderColor})`
-                  // : "1px solid #ccc",
-                  margin: "0",
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: `rgb(${appState.inputBox.borderColor})`,
-                  },
-                    // Add hover and focused states
-                "&:hover .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                },
-                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: `rgb(${appState.inputBox.borderFocus})`,
-                },
-                  "& .MuiOutlinedInput-input": {
-                    padding: "0 0.75rem",
-                  },
-                  "& .MuiFilledInput-input": {
-                    padding: "0 0.75rem",
-                  },
-                },
-                "& .MuiInputLabel-root": {
-                  fontSize: `${appState.inputBox.labelFontSize??14}px`,
-                 
-                  transform:
-                    variant === "filled"
-                      ? "translate(10px, 15px) scale(1)"
-                      : variant === "standard"
-                      ? "translate(0, 15px) scale(1)"
-                      : "translate(10px, 15px) scale(1)",
-                },
-                "& .MuiInputLabel-shrink": {
-                  transform:
-                    variant === "filled"
-                      ? "translate(8px, -14px) scale(0.88)"
-                      : variant === "standard"
-                      ? "translate(1px,-6px) scale(0.88)"
-                      : "translate(16px, -7px) scale(0.88)",
-                },
-              } as SxProps<Theme>,
-              regular: {
-                height: `${appState.inputBox.inputHeight??2.5}rem`,
-                fontSize: `${appState.inputBox.fontSize??15}px`,
-                fontWeight:appState.inputBox.fontWeight,
-                color: appState.inputBox.fontColor
-                ? `rgb(${appState.inputBox.fontColor})`
-                : "inherit", 
-                borderColor:`rgb(${appState.inputBox.borderColor})`,
-               borderFouc:`rgb(${appState.inputBox.borderColor})`,
-                // label: "10px",
-                // padding: "0.75rem 1.25rem"
+        case "customize":
+          return {
+            mui: {
+              "& .MuiInputBase-root": {
+                height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
+                fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+                fontWeight: appState.inputBox.fontWeight ?? 500,
+                borderRadius: `${appState.inputBox.borderRadius ?? 15}px`,
+                ...commonMuiStyles,
               },
-            };
+              "& .MuiInputLabel-root": {
+                fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
+
+                transform:
+                  variant === "filled"
+                    ? "translate(10px, 15px) scale(1)"
+                    : variant === "standard"
+                    ? "translate(0, 15px) scale(1)"
+                    : "translate(10px, 15px) scale(1)",
+              },
+              "& .MuiInputLabel-shrink": {
+                transform:
+                  variant === "filled"
+                    ? "translate(8px, -14px) scale(0.88)"
+                    : variant === "standard"
+                    ? "translate(1px,-6px) scale(0.88)"
+                    : "translate(16px, -7px) scale(0.88)",
+              },
+            } as SxProps<Theme>,
+            regular: {
+              height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
+              fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+              fontWeight: appState.inputBox.fontWeight,
+              color: appState.inputBox.fontColor
+                ? `rgb(${appState.inputBox.fontColor})`
+                : "inherit",
+              borderColor: `rgb(${appState.inputBox.borderColor})`,
+              borderFouc: `rgb(${appState.inputBox.borderColor})`,
+              // label: "10px",
+              // padding: "0.75rem 1.25rem"
+            },
+          };
         default:
           return styles;
       }
@@ -438,22 +384,23 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       );
     }
 
-    const { height, fontSize , fontWeight,color,borderColor,} = sizeStyles.regular;
+    const { height, fontSize, fontWeight, color, borderColor } =
+      sizeStyles.regular;
     const inputBorderColor = isFocused
-    ? `rgb(${appState.inputBox.borderFocus})`
-    : isHovered
-    ? `rgb(${appState.inputBox.borderFocus})`
-    : `rgb(${appState.inputBox.borderColor})`;
+      ? `rgb(${appState.inputBox.borderFocus})`
+      : isHovered
+      ? `rgb(${appState.inputBox.borderFocus})`
+      : `rgb(${appState.inputBox.borderColor})`;
     return (
       <div className={className}>
         {!noLabel && (
           <label
             className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
             style={{
-              fontSize: customSize
-                ? customSize === "sm"
+              fontSize: _customSize
+                ? _customSize === "sm"
                   ? "12px"
-                  : customSize === "md"
+                  : _customSize === "md"
                   ? "14px"
                   : "16px"
                 : `${appState.inputBox.labelFontSize}px`, // Ensure the fontSize is a string with 'px' suffix
@@ -463,7 +410,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             {required && !noLabel && "*"}
           </label>
         )}
-
+     
         <div className="flex">
           {prefix && (
             <div
@@ -471,7 +418,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               className={`${
                 onClickPrefix && "cursor-pointer"
               } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-              style={{ height, fontSize,fontWeight,color,borderColor}}
+              style={{ height, fontSize, fontWeight, color, borderColor }}
             >
               {prefix}
             </div>
@@ -482,24 +429,34 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               placeholder={iPlaceholder}
               ref={ref}
               autoComplete={autocomplete}
-              style={{
-                height,
-                fontSize,
-                fontWeight,
-                color,
-                border: `1px solid ${inputBorderColor}`,
-                outline: "none",
-                transition: "border-color 0.2s ease-in-out",
-            
-                borderTopLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
-                borderBottomLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
-                borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
-                borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
-                ...(!prefix && !suffix && {
-                  borderRadius: `${appState.inputBox.borderRadius}px`,
-                }), 
-              }as React.CSSProperties}
-                     
+              style={
+                {
+                  height,
+                  fontSize,
+                  fontWeight,
+                  color,
+                  border: `1px solid ${inputBorderColor}`,
+                  outline: "none",
+                  transition: "border-color 0.2s ease-in-out",
+
+                  borderTopLeftRadius: `${
+                    !prefix ? appState.inputBox.borderRadius : 0
+                  }px`,
+                  borderBottomLeftRadius: `${
+                    !prefix ? appState.inputBox.borderRadius : 0
+                  }px`,
+                  borderTopRightRadius: `${
+                    !suffix ? appState.inputBox.borderRadius : 0
+                  }px`,
+                  borderBottomRightRadius: `${
+                    !suffix ? appState.inputBox.borderRadius : 0
+                  }px`,
+                  ...(!prefix &&
+                    !suffix && {
+                      borderRadius: `${appState.inputBox.borderRadius}px`,
+                    }),
+                } as React.CSSProperties
+              }
               className={`
                 border border-gray-400 
                 block w-full 
@@ -511,9 +468,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 placeholder-gray-400 
               
               `}
-              
-              onKeyDown={(e) =>  e.key === "Enter" && e.preventDefault()}
-             
+              onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
               onWheel={(e: any) => {
                 type === "number" && e?.target?.blur();
               }}

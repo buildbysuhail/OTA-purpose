@@ -1,7 +1,9 @@
-import * as React from "react";
-import { forwardRef } from "react";
+
+import { forwardRef, useEffect, useState } from "react";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { handleNavigation } from "../../utilities/shortKeys";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
 
 interface ERPRadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   id: string;
@@ -17,7 +19,7 @@ interface ERPRadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
   inputClassName?: string;
   labelClassName?: string;
   validation?: string;
-  customSize?: "sm" | "md" | "lg";
+  customSize?: "sm" | "md" | "lg"|"customize",
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
@@ -44,9 +46,19 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
   ...props
 }: ERPRadioProps, ref) => {
   const iLabel = label || id?.replaceAll("_", " ");
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
+  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+ useEffect(() => {
+    if (customSize == undefined || customSize == null) {
+      setCustomSize(appState.inputBox.inputSize);
+    }
+  }, [appState.inputBox.inputSize]);
+
 
   const getSizeStyles = () => {
-    switch (customSize) {
+    switch (_customSize) {
       case "sm":
         return {
           radio: {
@@ -58,6 +70,17 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
             lineHeight: "14px"
           }
         };
+        case "md":
+          return {
+            radio: {
+              width: "17px",
+              height: "17px"
+            },
+            label: {
+              fontSize: "14px",
+              lineHeight: "17px"
+            }
+          };
       case "lg":
         return {
           radio: {
@@ -69,6 +92,17 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
             lineHeight: "1.25rem"
           }
         };
+        case "customize":
+          return {
+            radio: {
+              width: "1.25rem",
+              height: "1.25rem"
+            },
+            label: {
+              fontSize: "16px",
+              lineHeight: "1.25rem"
+            }
+          };
       default:
         return {
           radio: {

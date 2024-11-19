@@ -14,6 +14,7 @@ const Test: React.FC = () => {
         supervisorPassword: '',
         supervisorPassword1: '',
         supervisorPassword2: '',
+        date:"",
     });
 
     const handleFieldChange = (field: string, value: any) => {
@@ -31,7 +32,7 @@ const Test: React.FC = () => {
                     id="supervisorPassword1"
                     value={formState.supervisorPassword1}
                     data-jump-to="supervisorPassword2"
-                    jumpTo="supervisorPassword2"
+                    // jumpTo="supervisorPassword2"
                     customSize='sm'
                     data={formState}
                     label="supervisor_password"
@@ -73,7 +74,7 @@ const Test: React.FC = () => {
                 <ERPInput
                     id="supervisorPassword2"
                     value={formState.supervisorPassword2}
-                    jumpTarget="supervisorPassword2"
+                    // jumpTarget="supervisorPassword2"
                     data={formState}
                     customSize='md'
                     label="supervisor_password"
@@ -152,6 +153,38 @@ const Test: React.FC = () => {
                 />
             </div>
             <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
+                
+            
+                <ERPDateInput
+                    data={formState}
+                    customSize="sm"
+                    onChangeData={(data) => handleFieldChange('date', data.date)}
+                    value={formState.date}
+                    id="date"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    data={formState}
+                    customSize="md"
+                    onChangeData={(data) => handleFieldChange('date', data.date)}
+                    value={formState.date}
+                    id="date"
+                    type="date"
+                    label="packed_date"
+                />
+                <ERPDateInput
+                    data={formState}
+                    customSize="lg"
+                    onChangeData={(data) => handleFieldChange('date', data.date)}
+                    value={formState.date}
+                    id="date"
+                    type="date"
+                    label="packed_date"
+                />
+            </div>
+            <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
+                
                 <ERPDateInput
                     useMUI
                     customSize="sm"
@@ -178,6 +211,8 @@ const Test: React.FC = () => {
                 />
             </div>
             <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
+                
+            
                 <ERPDateInput
                     useMUI
                     customSize="sm"

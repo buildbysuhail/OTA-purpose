@@ -82,7 +82,8 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
           React.cloneElement(content as React.ReactElement, {
             getFieldProps,
             handleFieldChange,
-            t
+            t,
+            formState
           })
         }
         footer={

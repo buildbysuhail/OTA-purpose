@@ -136,7 +136,7 @@ const ERPSettingsFormMain = () => {
         type: "main",
         updateList: modifiedSettings,
       })) as any : null;
-      handleResponse(response, () => { setSettingsPrev(settings) }, () => { }, false);
+      handleResponse(response, () => { setSettingsPrev(settings) }, () => { });
 
     } catch (error) {
       console.error("Error saving settings:", error);

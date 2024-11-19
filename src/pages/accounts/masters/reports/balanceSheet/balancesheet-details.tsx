@@ -12,9 +12,9 @@ import LedgerReportFilter, { LedgerReportFilterInitialState } from "../ledger-re
 
 
 interface BalancesheetDetailsProps {
-  key: number;
+  postData: any;
 }
-const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({key}) => {
+const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData}) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -111,7 +111,8 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({key}) => {
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("ledger_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  dataUrl= {Urls.acc_reports_account_ledger_balance_view}
+                  postData={postData}
                   hideGridAddButton={true}
                   enablefilter={false}
                   showFilterInitially={true}

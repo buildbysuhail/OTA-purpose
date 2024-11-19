@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid } from "devextreme-react";
+import { DataGrid } from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -64,6 +64,7 @@ interface ERPDevGridProps {
   filterContent?: React.ReactNode;
   filterWidth?: string;
   data?: any;
+  postData?: any;
   method?: ActionType;
   height?: number | string;
   className?: string;
@@ -153,6 +154,7 @@ const createStore = (
   enablefilter: boolean,
   allowEditing?: boolean,
   method?: ActionType,
+  postData?: any,
   filterData?: any,
   initialFilters?: Array<{ field: string; value: any; operation: FilterOperation }>,
   paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
@@ -197,7 +199,7 @@ const createStore = (
 
 
       try {
-        const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, filterData != undefined && filterData != null ? filterData : {}, queryString) : null;
+        const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, filterData != undefined && filterData != null ? filterData : postData ? postData : {}, queryString) : null;
 
         return result
           ? {
@@ -241,6 +243,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   gridId,
   dataUrl,
   data,
+  postData,
   filterInitialData,
   enablefilter = true,
   filterContent = <></>,
@@ -416,6 +419,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       enablefilter,
       allowEditing,
       method,
+      postData,
       filter,
       initialFilters,
       paramNames,

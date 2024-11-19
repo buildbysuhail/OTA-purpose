@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { MouseEventHandler, useCallback, useEffect, useState } from "react";
 import { APIClient } from "../../../../../helpers/api-client";
 import ErpGridGlobalFilter from "../../../../../components/ERPComponents/erp-grid-global-filter";
 import BalanceSheetFilter, {
@@ -11,35 +11,66 @@ import { Clock1, FileDown, Forward, Printer, Timer, X } from "lucide-react";
 import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
+import { Link } from "react-router-dom";
+// import { MouseEventHandler } from "@types/react";
 
 const api = new APIClient();
 
-const BalanceSheetRow: React.FC<{ item: any }> = ({ item }) => {
+const BalanceSheetRow: React.FC<{ item: any, setIsOpenDetails: any }> = ({ item }) => {
+  const [isOpenDetails, setIsOpenDetails] = useState<boolean>(false);
+  const { t } = useTranslation();
+
+  const handleClick: MouseEventHandler<HTMLAnchorElement> = (event: any) => {
+   
+    console.log('sdsdsdsd');
+    
+    setIsOpenDetails(true);
+  };
   return (
     <tr>
-      <td
+      {/* <td
         className={`py-2`}
         style={{
           paddingLeft: item.groupID == 0 ? "0px" : "10px",
           fontWeight: item.groupID == 0 ? "bold" : "normal",
         }}
       >
-        {/* <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]"> */}
+        <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]">
         {item.groupName}
-        {/* </Link> */}
+        </Link>
+      </td> */}
+
+      <td
+        className={`py-2 ${
+          item.groupID == 0 ? "text-[#03070f] " : "text-[#3b82f6]"
+        }`}
+        style={{
+          paddingLeft: item.groupID == 0 ? "0px" : "10px",
+          fontWeight: item.groupID == 0 ? "bold" : "normal",
+        }}
+      >
+        <a
+          onClick={handleClick}
+          className="hover:text-[#1d4ed8]"
+        >
+          dsd
+          {item.groupName}
+        </a>
       </td>
       {item.total !== undefined && (
         <td className="py-2 text-right">
-          {/* <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]"> */}
-          {item.total}
-          {/* </Link> */}
+          <Link to={item.link} className="text-[#3b82f6] hover:text-[#1d4ed8]">
+            {item.total}
+          </Link>
         </td>
       )}
+
+      
     </tr>
   );
 };
 // Horizontal format component
-const HorizontalBalanceSheet: React.FC<{ data: any }> = ({ data }) => {
+const HorizontalBalanceSheet: React.FC<{ data: any, setIsOpenDetails: any}> = ({ data, setIsOpenDetails }) => {
   const assets = data?.filter((item: any) => item?.transType == "A");
 
   const liabilities = data?.filter((item: any) => item?.transType == "L");
@@ -57,7 +88,7 @@ const HorizontalBalanceSheet: React.FC<{ data: any }> = ({ data }) => {
           </thead>
           <tbody>
             {assets?.map((item: any, index: number) => (
-              <BalanceSheetRow key={`asset-${index}`} item={item} />
+              <BalanceSheetRow key={`asset-${index}`} item={item} setIsOpenDetails={setIsOpenDetails}/>
             ))}
           </tbody>
         </table>
@@ -73,7 +104,7 @@ const HorizontalBalanceSheet: React.FC<{ data: any }> = ({ data }) => {
           </thead>
           <tbody>
             {liabilities?.map((item: any, index: number) => (
-              <BalanceSheetRow key={`liability-${index}`} item={item} />
+              <BalanceSheetRow key={`liability-${index}`} item={item} setIsOpenDetails={setIsOpenDetails}/>
             ))}
           </tbody>
         </table>
@@ -89,7 +120,7 @@ const BalanceSheet = () => {
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [isOpenDetails, setIsOpenDetails] = useState<boolean>(false);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (filterShowCount == 0) {
@@ -124,25 +155,15 @@ const BalanceSheet = () => {
 
   return (
     <div className="p-6">
-      <div className="max-w-5xl mx-auto">
+      {/* <div className="max-w-5xl mx-auto"> */}
+      <div className="max-w-full mx-2">
         <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
-          {/* <div className="flex items-center border border-gray-300 rounded-md p-2">
-            <input
-              type="text"
-              value="Today"
-              className="border-none focus:outline-none"
-              readOnly
-            />
-            <i className="fas fa-calendar-alt ml-2 text-gray-500"></i>
-          </div> */}
-          {/* <div className="flex items-center ml-4 text-blue-500 cursor-pointer">
-            <span>Customise</span>
-            <i className="fas fa-cog ml-1"></i>
-          </div> */}
           {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
           <div className="flex items-center ml-4 text-blue-500 cursor-pointer">
             {/* <span>Customise</span> */}
-            <h6 className="text-center text-lg font-bold  mb-0">Balance Sheet</h6>
+            <h6 className="text-center text-lg font-bold  mb-0">
+              Balance Sheet
+            </h6>
             <i className="fas fa-cog ml-1"></i>
           </div>
 
@@ -200,7 +221,7 @@ const BalanceSheet = () => {
         ) : (
           <>
             {filter.showVertical != true ? (
-              <HorizontalBalanceSheet data={data ?? []} />
+              <HorizontalBalanceSheet data={data ?? []} setIsOpenDetails={setIsOpenDetails}/>
             ) : (
               <table className="w-full text-left border-collapse">
                 <thead>
@@ -211,7 +232,7 @@ const BalanceSheet = () => {
                 </thead>
                 <tbody>
                   {data?.map((item, index) => (
-                    <BalanceSheetRow key={index} item={item ?? []} />
+                    <BalanceSheetRow key={index} item={item ?? []} setIsOpenDetails={setIsOpenDetails} />
                   ))}
                 </tbody>
               </table>
@@ -232,7 +253,12 @@ const BalanceSheet = () => {
           setIsOpenDetails(false);
         }}
         content={
-          <BalancesheetDetails key={2}/>
+          <BalancesheetDetails
+            postData={{
+              accGroupID:  10,
+              asOnDate: filter.asOnDate,
+            }}
+          />
         }
       />
     </div>

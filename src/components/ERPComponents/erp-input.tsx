@@ -113,7 +113,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const [isFocused, setIsFocused] = useState(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
-    const handleFocus = () => setIsFocused(true);
+    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+      setIsFocused(true);
+      if (onFocus) onFocus(e);
+    };
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(false);
       if (onBlur) onBlur(e);
@@ -142,14 +145,23 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
       const commonMuiStyles = {
         color: `rgb(${appState.inputBox.fontColor})`,
-        "& .MuiOutlinedInput-notchedOutline, & .MuiFilledInput-underline, &:before": {
+        "& .MuiOutlinedInput-notchedOutline": {
           borderColor: `rgb(${appState.inputBox.borderColor})`,
         },
-        "&:hover .MuiOutlinedInput-notchedOutline, &:hover .MuiFilledInput-underline, &:hover:before": {
+        "& .MuiFilledInput-underline, &:before": {
+          borderBottomColor: `rgb(${appState.inputBox.borderColor})`,
+        },
+        "&:hover .MuiOutlinedInput-notchedOutline": {
           borderColor: `rgb(${appState.inputBox.borderFocus})`,
         },
-        "&.Mui-focused .MuiOutlinedInput-notchedOutline, &.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before": {
+        "&:hover .MuiFilledInput-underline, &:hover:before": {
+          borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+        },
+        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
           borderColor: `rgb(${appState.inputBox.borderFocus})`,
+        },
+        "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after": {
+          borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
         },
         margin: "0",
         "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
@@ -167,7 +179,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
-                fontSize: "12px",
+                fontSize: "11px",
                 transform:
                   variant === "filled"
                     ? "translate(8px, 10px) scale(0.8)"
@@ -380,12 +392,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         </div>
       );
     }
-    const { height, fontSize, fontWeight, color, borderColor } = sizeStyles.regular;
-    const inputBorderColor = isFocused
+    const { height, fontSize, fontWeight, color } = sizeStyles.regular;
+    const inputBorderColor = isFocused || isHovered
       ? `rgb(${appState.inputBox.borderFocus})`
-      : isHovered
-        ? `rgb(${appState.inputBox.borderFocus})`
-        : `rgb(${appState.inputBox.borderColor})`;
+      : `rgb(${appState.inputBox.borderColor})`;
     return (
       <div className={className}>
         {!noLabel && (
@@ -396,9 +406,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 ? _customSize === "sm"
                   ? "12px"
                   : _customSize === "md"
-                    ? "14px"
-                    : "16px"
-                : `${appState.inputBox.labelFontSize}px`, // Ensure the fontSize is a string with 'px' suffix
+                  ? "14px"
+                  :  _customSize === "lg"
+                  ?"16px": `${appState.inputBox.labelFontSize}px`
+                : `14px`,
             }}>
             {iLabel}
             {required && !noLabel && "*"}
@@ -411,7 +422,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               onClick={onClickPrefix}
               className={`${onClickPrefix && "cursor-pointer"
                 } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-              style={{ height, fontSize, fontWeight, color, borderColor }}>
+                style={{ height, fontSize, fontWeight, color, borderColor: inputBorderColor }}>
               {prefix}
             </div>
           )}
@@ -472,7 +483,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               onClick={onClickSuffix}
               className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"
                 } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
-              style={{ height, fontSize }}>
+                style={{ height, fontSize, borderColor: inputBorderColor }}>
               {suffix}
             </div>
           )}

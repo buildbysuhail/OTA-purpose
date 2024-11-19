@@ -4,7 +4,7 @@ import ERPInput from '../components/ERPComponents/erp-input';
 import Urls from '../redux/urls';
 import { LedgerType } from '../enums/ledger-types';
 import ERPDateInput from '../components/ERPComponents/erp-date-input';
-import MUIERPDataCombobox from '../components/ERPComponents/erp-data-combobox copy';
+import MUIERPDataCombobox from '../components/ERPComponents/erp-data-combobox-mui';
 import ERPCheckbox from '../components/ERPComponents/erp-checkbox';
 import ERPRadio from '../components/ERPComponents/erp-radio';
 

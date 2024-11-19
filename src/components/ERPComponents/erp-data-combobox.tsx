@@ -11,6 +11,15 @@ import { useTranslation } from "react-i18next";
 import { FixedSizeList as List } from "react-window";
 import { APIClient } from "../../helpers/api-client";
 import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
+import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../redux/store";
+import {
+  Autocomplete,
+  CircularProgress,
+  TextField,
+  Theme,
+  SxProps,
+} from "@mui/material";
 
 interface Option {
   value: string;
@@ -31,10 +40,12 @@ interface ERPDataComboboxProps {
   onChangeData?: (data: any) => void;
   onChange?: (value: any) => void;
   onSelectItem?: (item?: any) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   field?: any;
   defaultData?: any;
   data?: any;
-  reload?:boolean;
+  reload?: boolean;
   required?: boolean;
   className?: string;
   noLabel?: boolean;
@@ -48,14 +59,16 @@ interface ERPDataComboboxProps {
   validation?: string;
   enableClearOption?: boolean;
   skip?: boolean;
-  jumpTo?: string;     
-  jumpTarget?: string; 
-  customSize?: 'sm' | 'md' | 'lg';
+  jumpTo?: string;
+  jumpTarget?: string;
+  customSize?: "sm" | "md" | "lg" | "customize";
+  useMUI?: boolean;
+  variant?: "filled" | "outlined" | "standard";
 }
 
 interface RowProps {
   data: {
-    customSize: "sm" | "md" | "lg" | undefined;
+    customSize: "sm" | "md" | "lg" | "customize" | undefined;
     items: Option[];
     selectedValue: Option | null;
     handleSelect: (item: Option) => void;
@@ -122,33 +135,52 @@ const truncateText = (
   return text;
 };
 
-const getSizeClasses = (customSize?: 'sm' | 'md' | 'lg') => {
+const  getSizeClasses = (customSize?: "sm" | "md" | "lg" | "customize",appState?:any) => {
   switch (customSize) {
-    case 'sm':
+    case "sm":
       return {
-        input: 'h-7 text-xs px-2',
-        label: 'text-[10px]',
-        options: 'text-xs',
-        icons: 'h-4 w-4'
+        input: "h-7 text-xs px-2",
+        label: "text-[10px]",
+        options: "text-xs",
+        icons: "h-4 w-4",
       };
-    case 'lg':
+    case "lg":
       return {
-        input: 'h-11 text-sm px-4',
-        label: 'text-[14px]',
-        options: 'text-sm',
-        icons: 'h-6 w-6'
+        input: "h-11 text-sm px-4",
+        label: "text-[14px]",
+        options: "text-sm",
+        icons: "h-6 w-6",
       };
-    default: 
+    case "md":
       return {
-        input: 'h-9 text-xs px-3',
-        label: 'text-[12px]',
-        options: 'text-xs',
-        icons: 'h-5 w-5'
+        input: "h-9 text-xs px-3",
+        label: "text-[12px]",
+        options: "text-xs",
+        icons: "h-5 w-5",
+      };
+
+    case "customize":
+      return {
+        input: "h-9 text-xs px-3",
+        label: "text-[12px]",
+        options: "text-xs",
+        icons: "h-5 w-5",
+      };
+    default:
+      return {
+        input: "h-9 text-xs px-3",
+        label: "text-[12px]",
+        options: "text-xs",
+        icons: "h-5 w-5",
       };
   }
 };
 
-const Row = ({ data, index, style }: RowProps & { customSize?: 'sm' | 'md' | 'lg' }) => {
+const Row = ({
+  data,
+  index,
+  style,
+}: RowProps & { customSize?: "sm" | "md" | "lg" | "customize" }) => {
   const { items, selectedValue, handleSelect, activeIndex } = data;
   const item = items[index];
   const isSelected = selectedValue?.value === item.value;
@@ -160,33 +192,38 @@ const Row = ({ data, index, style }: RowProps & { customSize?: 'sm' | 'md' | 'lg
       style={style}
       key={`${item?.value}-${index}`}
       className={({ active }) =>
-        `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:${setFgAccordingToBgPrimary()} ${active || isActive
-          ? "bg-primary text-white"
-          : item.is_active === false
+        `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:${setFgAccordingToBgPrimary()} ${
+          active || isActive
+            ? "bg-primary text-white"
+            : item.is_active === false
             ? "bg-gray-200 text-gray-400"
             : "text-gray-900"
-        } ${sizeClasses.options}`
+        } ${sizeClasses?.options}`
       }
       value={item}
       disabled={!item.is_active}
     >
       {({ active }) => (
         <div
-          className={`flex items-center px-3 py-2 ${isSelected ? "bg-primary" : ""
-            }`}
+          className={`flex items-center px-3 py-2 ${
+            isSelected ? "bg-primary" : ""
+          }`}
           onClick={() => handleSelect(item)}
         >
           <div className="flex-shrink-0 w-5">
             {isSelected && (
               <CheckIcon
-              className={`${sizeClasses.icons} ${setFgAccordingToBgPrimary()}`}
+                className={`${
+                  sizeClasses?.icons
+                } ${setFgAccordingToBgPrimary()}`}
                 aria-hidden="true"
               />
             )}
           </div>
           <span
-            className={`block truncate flex-grow ${isSelected ? "font-medium" : "font-normal"
-              } ${isSelected ? setFgAccordingToBgPrimary() : ''}`}
+            className={`block truncate flex-grow ${
+              isSelected ? "font-medium" : "font-normal"
+            } ${isSelected ? setFgAccordingToBgPrimary() : ""}`}
           >
             {item.label}
           </span>
@@ -203,10 +240,10 @@ const ComboboxList = React.forwardRef<
     selectedValue: Option | null;
     onSelect: (item: Option) => void;
     activeIndex: number;
-    customSize?: 'sm' | 'md' | 'lg';
+    customSize?: "sm" | "md" | "lg" | "customize";
   }
 >((props, ref) => {
-  const { items, selectedValue, onSelect, activeIndex ,customSize} = props;
+  const { items, selectedValue, onSelect, activeIndex, customSize } = props;
 
   const itemData = {
     items,
@@ -241,6 +278,8 @@ export default function ERPDataCombobox({
   onChange,
   onChangeData,
   onSelectItem,
+  onFocus,
+  onBlur,
   options,
   field,
   defaultData,
@@ -259,10 +298,12 @@ export default function ERPDataCombobox({
   disabledApiCall = false,
   validation,
   skip,
-  jumpTo,      
-  jumpTarget, 
+  jumpTo,
+  jumpTarget,
   enableClearOption = true,
-  customSize = 'md',
+  customSize,
+  useMUI = false,
+  variant = "outlined",
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -278,6 +319,28 @@ export default function ERPDataCombobox({
   const comboboxRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<List>(null);
   const componentRef = useRef<HTMLDivElement>(null);
+
+  const appState = useAppSelector(
+    (state: RootState) => state.AppState.appState
+  );
+  const [_customSize, setCustomSize] = useState(
+    customSize ? customSize : appState.inputBox.inputSize
+  );
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    setIsFocused(false);
+    if (onBlur) onBlur(e);
+  };
+
+  useEffect(() => {
+    if (customSize == undefined || customSize == null) {
+      setCustomSize(appState.inputBox.inputSize);
+    }
+  }, [appState.inputBox.inputSize]);
 
   useEffect(() => {
     if (initial?.label) {
@@ -314,11 +377,11 @@ export default function ERPDataCombobox({
 
   useEffect(() => {
     console.log(`freezeDataLoad${field?.freezeDataLoad}`);
-    console.log(`disabledApiCall${disabledApiCall}`);    
+    console.log(`disabledApiCall${disabledApiCall}`);
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
-  }, [field?.getListUrl, field?.freezeDataLoad,reload,disabledApiCall]);
+  }, [field?.getListUrl, field?.freezeDataLoad, reload, disabledApiCall]);
 
   const loadData = async () => {
     setLoading(true);
@@ -385,7 +448,11 @@ export default function ERPDataCombobox({
     const final = _selected || _default || _exceptional || initialValue || null;
     setInitial(final);
 
-    setActiveIndex(final != null ? filteredItems.findIndex(item => item.value === final.value) : -1);
+    setActiveIndex(
+      final != null
+        ? filteredItems.findIndex((item) => item.value === final.value)
+        : -1
+    );
   }, [items, data, defaultData, field, initialValue, filteredItems]);
 
   const clearSelection = (e?: React.MouseEvent) => {
@@ -434,15 +501,17 @@ export default function ERPDataCombobox({
   const handleKeyDownEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      const inputs = Array.from(document.querySelectorAll('input:not([disabled])'));
+      const inputs = Array.from(
+        document.querySelectorAll("input:not([disabled])")
+      );
       const currentIndex = inputs.indexOf(e.target as HTMLInputElement);
       let nextIndex = currentIndex + 1;
 
       // Skip elements with skip={true}
       while (nextIndex < inputs.length) {
         const nextElement = inputs[nextIndex] as HTMLInputElement;
-        const skipAttr = nextElement.getAttribute('data-skip');
-        if (skipAttr !== 'true') {
+        const skipAttr = nextElement.getAttribute("data-skip");
+        if (skipAttr !== "true") {
           break;
         }
         nextIndex++;
@@ -466,9 +535,9 @@ export default function ERPDataCombobox({
       if (activeIndex >= 0 && activeIndex < filteredItems.length && isOpen) {
         event.preventDefault();
         handleItemClick(filteredItems[activeIndex]);
-        handleKeyDownEnter(event); 
+        handleKeyDownEnter(event);
       } else {
-        handleKeyDownEnter(event); 
+        handleKeyDownEnter(event);
       }
       return;
     }
@@ -517,16 +586,323 @@ export default function ERPDataCombobox({
     }
   };
 
-  const sizeClasses = getSizeClasses(customSize);
+  const sizeClasses = getSizeClasses(_customSize,appState);
 
+  const getSizeStyles = () => {
+    const styles: {
+      mui: SxProps<Theme>;
+      regular: {
+        height: string;
+        fontSize: string;
+        padding: string;
+        fontWeight?: number;
+        color?: string;
+        borderColor?: string;
+        // borderFocusColor?:string;
+      };
+    } = {
+      mui: {},
+      regular: {
+        height: "2.5rem",
+        fontSize: "14px",
+        padding: "0.5rem 1rem",
+      },
+    };
+
+    const commonMuiStyles = {
+      color: `rgb(${appState.inputBox.fontColor})`,
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: `rgb(${appState.inputBox.borderColor})`,
+      },
+      "& .MuiFilledInput-underline, &:before": {
+        borderBottomColor: `rgb(${appState.inputBox.borderColor})`,
+      },
+      "&:hover .MuiOutlinedInput-notchedOutline": {
+        borderColor: `rgb(${appState.inputBox.borderFocus})`,
+      },
+      "&:hover .MuiFilledInput-underline, &:hover:before": {
+        borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+      },
+      "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+        borderColor: `rgb(${appState.inputBox.borderFocus})`,
+      },
+      "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after": {
+        borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+      },
+      margin: "0",
+      "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
+        padding: "0 0.75rem",
+      },
+    };
+
+    switch (_customSize) {
+      case "sm":
+        return {
+          mui: {
+            "& .MuiInputBase-root": {
+              height: "2rem",
+              fontSize: "12px",
+              ...commonMuiStyles,
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "12px",
+              transform:
+                variant === "filled"
+                  ? "translate(8px, 10px) scale(0.8)"
+                  : variant === "standard"
+                    ? "translate(0, 10px) scale(0.8)"
+                    : "translate(8px, 10px) scale(0.8)",
+            },
+            "& .MuiInputLabel-shrink": {
+              transform:
+                variant === "filled"
+                  ? "translate(8px, -10px) scale(0.75)"
+                  : variant === "standard"
+                    ? "translate(0, -6px) scale(0.75)"
+                    : "translate(16px, -6px) scale(0.75)",
+            },
+          } as SxProps<Theme>,
+          regular: {
+            height: "2rem",
+            fontSize: "12px",
+            color: appState.inputBox.fontColor
+              ? `rgb(${appState.inputBox.fontColor})`
+              : "inherit",
+            borderColor: `rgb(${appState.inputBox.borderColor})`,
+            // padding: "0.25rem 0.75rem"
+          },
+        };
+      case "md":
+        return {
+          mui: {
+            "& .MuiInputBase-root": {
+              // height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
+              height: "2.5rem",
+              fontSize: "14px",
+              ...commonMuiStyles,
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "12px",
+              transform:
+                variant === "filled"
+                  ? "translate(10px, 13px) scale(0.9)"
+                  : variant === "standard"
+                    ? "translate(0, 13px) scale(0.9)"
+                    : "translate(10px, 13px) scale(0.9)",
+            },
+            "& .MuiInputLabel-shrink": {
+              transform:
+                variant === "filled"
+                  ? "translate(8px, -12px) scale(0.90)"
+                  : variant === "standard"
+                    ? "translate(0, -6px) scale(0.90)"
+                    : "translate(15px, -7px) scale(0.90)",
+            },
+          } as SxProps<Theme>,
+          regular: {
+            height: "2.5rem",
+            fontSize: "14px",
+            color: appState.inputBox.fontColor
+              ? `rgb(${appState.inputBox.fontColor})`
+              : "inherit",
+            borderColor: `rgb(${appState.inputBox.borderColor})`,
+            // padding: "0.5rem 1rem"
+          },
+        };
+      case "lg":
+        return {
+          mui: {
+            "& .MuiInputBase-root": {
+              // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
+              height: "3rem",
+              fontSize: "16px",
+              ...commonMuiStyles,
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: "14px",
+              transform:
+                variant === "filled"
+                  ? "translate(10px, 15px) scale(1)"
+                  : variant === "standard"
+                    ? "translate(0, 15px) scale(1)"
+                    : "translate(10px, 15px) scale(1)",
+            },
+            "& .MuiInputLabel-shrink": {
+              transform:
+                variant === "filled"
+                  ? "translate(8px, -14px) scale(0.88)"
+                  : variant === "standard"
+                    ? "translate(1px,-6px) scale(0.88)"
+                    : "translate(16px, -7px) scale(0.88)",
+            },
+          } as SxProps<Theme>,
+          regular: {
+            height: "3rem",
+            fontSize: "16px",
+            color: appState.inputBox.fontColor
+              ? `rgb(${appState.inputBox.fontColor})`
+              : "inherit",
+            borderColor: `rgb(${appState.inputBox.borderColor})`,
+            // label: "10px",
+            // padding: "0.75rem 1.25rem"
+          },
+        };
+      case "customize":
+        return {
+          mui: {
+            "& .MuiInputBase-root": {
+              height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
+              fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+              fontWeight: appState.inputBox.fontWeight ?? 500,
+              borderRadius: `${appState.inputBox.borderRadius ?? 15}px`,
+              ...commonMuiStyles,
+            },
+            "& .MuiInputLabel-root": {
+              fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
+
+              transform:
+                variant === "filled"
+                  ? "translate(10px, 15px) scale(1)"
+                  : variant === "standard"
+                    ? "translate(0, 15px) scale(1)"
+                    : "translate(10px, 15px) scale(1)",
+            },
+            "& .MuiInputLabel-shrink": {
+              transform:
+                variant === "filled"
+                  ? "translate(8px, -14px) scale(0.88)"
+                  : variant === "standard"
+                    ? "translate(1px,-6px) scale(0.88)"
+                    : "translate(16px, -7px) scale(0.88)",
+            },
+          } as SxProps<Theme>,
+          regular: {
+            height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
+            fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+            fontWeight: appState.inputBox.fontWeight,
+            color: appState.inputBox.fontColor
+              ? `rgb(${appState.inputBox.fontColor})`
+              : "inherit",
+            borderColor: `rgb(${appState.inputBox.borderColor})`,
+            borderFocus: `rgb(${appState.inputBox.borderColor})`,
+           
+          },
+        };
+      default:
+        return styles;
+    }
+  };
+  const sizeStyles = getSizeStyles();
+
+  if (useMUI) {
+  
+    const getOptionSizeStyles = () => {
+      switch (customSize) {
+        case "sm":
+          return {
+            fontSize: "12px",
+          };
+        case "md":
+          return {
+            fontSize: "14px",
+          };
+        case "lg":
+          return {
+            fontSize: "16px",
+          };
+        case "customize":
+          return {
+            fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+          };
+        default:
+          return {};
+      }
+    };  
+   
+    const handleItemSelect = (event: any, value: Option | null ) => {
+      if (value) {
+        handleItemClick(value); 
+      }
+    };
+    return (
+      <div className={className}>
+        <Autocomplete
+          id={id}
+          options={items}
+          value={initial}
+          onChange={handleItemSelect}
+          getOptionLabel={(option) => option.label || ""}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
+          loading={loading}
+          disabled={disabled}
+          autoHighlight
+          openOnFocus
+          fullWidth
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
+              required={required}
+              variant={variant}
+              // color={color}
+              sx={sizeStyles.mui}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
+              }}
+            />
+          )}
+          renderOption={(props, option) => (
+            <li
+              {...props}
+              style={{
+                ...getOptionSizeStyles(),
+                opacity: option.is_active === false ? 0.5 : 1,
+                backgroundColor:
+                  option.is_active === false ? "#f5f5f5" : undefined,
+              }}
+            >
+              {option.label}
+            </li>
+          )}
+        />
+        {validation && (
+          <div className="mt-1 text-xs text-[#ef4444]">{validation}</div>
+        )}
+      </div>
+    );
+  };
+ const { height, fontSize, fontWeight, color, borderColor } = sizeStyles.regular;
+    const inputBorderColor = isFocused
+      ? `rgb(${appState.inputBox.borderFocus})`
+      : isHovered
+        ? `rgb(${appState.inputBox.borderFocus})`
+        : `rgb(${appState.inputBox.borderColor})`;
   return (
     <div className="relative" ref={componentRef}>
       {!noLabel && (
         <label
           htmlFor={id}
-          className={`block ${sizeClasses.label} font-medium text-gray-700 mb-1`}
+          className={`block ${sizeClasses?.label} font-medium text-gray-700 mb-1`}
+          style={{
+              fontSize: _customSize
+                ? _customSize === "sm"
+                  ? "12px"
+                  : _customSize === "md"
+                  ? "14px"
+                  :  _customSize === "lg"
+                  ?"16px": `${appState.inputBox.labelFontSize}px`
+                : `14px`,
+            }}
         >
-          {/* {activeIndex}: {initial?.value} : {filteredItems[activeIndex]?.value}: {filteredItems[activeIndex]?.label} */}
+         
           {label || id?.replaceAll("_", " ")}
           {required && <span className="text-[#ef4444]"> *</span>}
         </label>
@@ -541,12 +917,23 @@ export default function ERPDataCombobox({
         className="relative"
       >
         <div className={className}>
-        <Combobox.Input
+      
+          <Combobox.Input
+         
+          style={{
+            height,
+            fontSize,
+            fontWeight,
+            color,
+            border: `1px solid ${inputBorderColor}`,
+            outline: "none",
+            transition: "border-color 0.2s ease-in-out",
+            borderRadius: `${appState.inputBox.borderRadius}px`,
+         
+          } as React.CSSProperties}
             className={`w-full appearance-none rounded border border-gray-300 ${
-              sizeClasses.input
-            } ${
-              disabled ? "text-gray-400" : "bg-white text-gray-900"
-            } ${
+              sizeClasses?.input
+            } ${disabled ? "text-gray-400" : "bg-white text-gray-900"} ${
               enableClearOption ? "pr-16" : "pr-10"
             } placeholder-gray-400 focus:ring-1 focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
             displayValue={() => inputValue || initial?.label || ""}
@@ -556,6 +943,11 @@ export default function ERPDataCombobox({
             placeholder={
               t("select") + " " + (label || id?.replaceAll("_", " "))
             }
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+
             ref={comboboxRef}
             autoComplete="off"
             spellCheck={false}
@@ -576,7 +968,7 @@ export default function ERPDataCombobox({
                 aria-label="Clear selection"
               >
                 <XMarkIcon
-                   className={`${sizeClasses.icons} text-gray-400 hover:text-gray-500`}
+                  className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
                   aria-hidden="true"
                 />
               </button>
@@ -586,7 +978,9 @@ export default function ERPDataCombobox({
               onClick={() => !disabled && setIsOpen(!isOpen)}
             >
               <ChevronDownIcon
-                className={`${sizeClasses.icons} text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
+                className={`${
+                  sizeClasses?.icons
+                } text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
                   isOpen ? "transform rotate-180" : ""
                 }`}
                 aria-hidden="true"
@@ -627,7 +1021,7 @@ export default function ERPDataCombobox({
                 selectedValue={initial}
                 onSelect={handleItemClick}
                 activeIndex={activeIndex}
-                customSize={customSize}
+                customSize={_customSize}
               />
             )}
           </Combobox.Options>

@@ -72,11 +72,17 @@ const ERPModal = React.memo(
 
     useEffect(() => {
       if (isOpen) {
-        document.addEventListener(ShortKeyEvents.POPUP_CLOSE_EVENT, handlePopupClose);
+        document.addEventListener(
+          ShortKeyEvents.POPUP_CLOSE_EVENT,
+          handlePopupClose
+        );
       }
 
       return () => {
-        document.removeEventListener(ShortKeyEvents.POPUP_CLOSE_EVENT, handlePopupClose);
+        document.removeEventListener(
+          ShortKeyEvents.POPUP_CLOSE_EVENT,
+          handlePopupClose
+        );
       };
     }, [isOpen]);
 
@@ -86,7 +92,7 @@ const ERPModal = React.memo(
           <Dialog
             as="div"
             className={`relative z-50`}
-            onClose={disableOutsideClickClose ? () => { } : handleClose}
+            onClose={disableOutsideClickClose ? () => {} : handleClose}
           >
             <Transition
               as={Fragment}
@@ -123,7 +129,8 @@ const ERPModal = React.memo(
                       className="place-items-center sticky min-w-full top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
                     >
                       {closeButton === "LeftArrow" && (
-                        <button className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer"
+                        <button
+                          className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer"
                           onClick={handleClose}
                         >
                           <i
@@ -151,7 +158,11 @@ const ERPModal = React.memo(
                           max-h-[calc(100vh-16rem)] 
                          overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-2`}
                       >
-                        {content && cloneElement(content, contentProps ? { contentProps: contentProps } : {})}
+                        {content &&
+                          cloneElement(
+                            content,
+                            contentProps ? { contentProps: contentProps } : {}
+                          )}
                       </div>
 
                       <div>{footer}</div>

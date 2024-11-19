@@ -34,6 +34,7 @@ interface ERPDataComboboxProps {
   field?: any;
   defaultData?: any;
   data?: any;
+  reload?:boolean;
   required?: boolean;
   className?: string;
   noLabel?: boolean;
@@ -222,6 +223,7 @@ export default function ERPDataCombobox({
   multiple,
   autoFocus,
   disabled = false,
+  reload = false,
   initialValue,
   className,
   disabledApiCall = false,
@@ -280,14 +282,18 @@ export default function ERPDataCombobox({
   }, []);
 
   useEffect(() => {
+    console.log(`freezeDataLoad${field?.freezeDataLoad}`);
+    console.log(`disabledApiCall${disabledApiCall}`);    
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
-  }, [field?.getListUrl, field?.freezeDataLoad, disabledApiCall]);
+  }, [field?.getListUrl, field?.freezeDataLoad,reload,disabledApiCall]);
 
   const loadData = async () => {
     setLoading(true);
     try {
+      debugger;
+      console.log(`options${field?.freezeDataLoad}`);
       const _items =
         options || (await api.getAsync(field?.getListUrl, field?.params || ""));
       const labelKey = field?.labelKey ?? "label";

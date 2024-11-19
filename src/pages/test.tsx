@@ -453,6 +453,50 @@ const Test: React.FC = () => {
                     required={true}
                 />
             </div>
+            <div className='flex items-end border-2 rounded-lg p-4 gap-6'>
+                <ERPDataCombobox
+                    id="defaultCashAcc"
+                    data={formState}
+                    label="default_cash_account"
+                    field={{
+                        id: "defaultCashAcc",
+                        //required: true,
+                        getListUrl: Urls.data_CashLedgers,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    customSize='sm'
+                    onChangeData={(data) => handleFieldChange('defaultCashAcc', data.defaultCashAcc)}
+                />
+                <ERPDataCombobox
+                    id="defaultCashAcc"
+                    data={formState}
+                    label="default_cash_account"
+                    field={{
+                        id: "defaultCashAcc",
+                        //required: true,
+                        getListUrl: Urls.data_CashLedgers,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    customSize='md'
+                    onChangeData={(data) => handleFieldChange('defaultCashAcc', data.defaultCashAcc)}
+                />
+                <ERPDataCombobox
+                    id="defaultCashAcc"
+                    data={formState}
+                    label="default_cash_account"
+                    field={{
+                        id: "defaultCashAcc",
+                        //required: true,
+                        getListUrl: Urls.data_CashLedgers,
+                        valueKey: "id",
+                        labelKey: "name",
+                    }}
+                    customSize='lg'
+                    onChangeData={(data) => handleFieldChange('defaultCashAcc', data.defaultCashAcc)}
+                />
+            </div>
         </div>
     );
 };

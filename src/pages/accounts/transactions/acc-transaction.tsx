@@ -11,35 +11,57 @@ import ERPButton from "../../../components/ERPComponents/erp-button"
 import Urls from "../../../redux/urls"
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
 import { useParams } from 'react-router-dom';
+import { AccTransaction, AccTransactionInitialData } from "./acc-transaction-types"
+import { FormField } from "../../../utilities/form-types"
+import { getFieldPropsGlobal, handleFieldChangeGlobal } from "../../../utilities/form-utils"
+import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions"
+import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch"
 
 
 
 
 export default function Component() {
   const { type } = useParams();
+  const [transaction, seTransaction] = useState<AccTransaction>(AccTransactionInitialData);
   const [gridName, setGridName] = useState<string>(`grd_acc_transaction_${type}`)
-  const handleFieldChange = useCallback((field: string, value: any) => {
-    // Implementation for field change
-    console.log(field, value)
-  }, [])
+  const dispatch = useAppDispatch();
+  const {
+    isEdit,
+    handleSubmit,
+    handleFieldChange,
+    handleClear,
+    handleClose,
+    getFieldProps,
+    isLoading,
+    formState,
+    getFieldPropsAdv,
+    t
+  } = useFormManager<AccTransaction>({
+    url: Urls.account_ledger,
+    onSuccess: useCallback(() => { }, [dispatch]),
+    onClose: useCallback(() => { }, [dispatch]),
+    keyField: "accTransactionMasterID",
+    useApiClient: true,
+    initialData: AccTransactionInitialData
+  });
   const columns = [
     {
       dataField: 'siNo',
       caption: 'SI No',
-      width:60,
+      width: 60,
       cellRender: (cellElement: any) => (
-       <div>{cellElement.value}</div>
+        <div>{cellElement.value}</div>
       ),
     },
     {
       dataField: 'ledgerId',
       caption: 'Ledger ID',
-      width:100,
+      width: 100,
     },
     {
       dataField: 'ledgerCode',
       caption: 'Ledger Code',
-      width:100,
+      width: 100,
     },
     {
       dataField: 'ledger',
@@ -50,12 +72,12 @@ export default function Component() {
       caption: 'Amount',
       // alignment: 'right',
       customizeText: (cellInfo: any) => `${parseFloat(cellInfo.value).toFixed(2)}`,
-      width:200,
+      width: 200,
     },
     {
       dataField: 'drCr',
       caption: 'Dr/Cr',
-      width:100,
+      width: 100,
     },
     {
       dataField: 'chequeNo',
@@ -194,203 +216,123 @@ export default function Component() {
   ])
   return (
     <>
-    <div className="p-4 space-y-6 border rounded-lg">
-      <div className="space-y-3">
-        <div className="flex items-center justify-between gap-6">
-          <ERPInput
+      <div className="p-4 space-y-6 border rounded-lg">
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-6">
+            <ERPInput
+              {...getFieldPropsAdv("master.voucherPrefix")}
+            />
+            <ERPInput
+              {...getFieldPropsAdv("voucherNumber")}
+            />
+            <ERPDateInput
+              {...getFieldPropsAdv("transactionDate")}
+            />
+            <ERPInput
+              {...getFieldPropsAdv("referenceNumber")}
+            />
+            <ERPDateInput
+              {...getFieldPropsAdv("referenceDate")}
+            />
 
-            useMUI
-            id="voucherNo"
-            label="Voucher Prefix"
-            disabled={true}
-            // value={formData.voucherNo}
-            //data={formData}
-            onChangeData={(value) => handleFieldChange('voucherNo', value)}
-          />
-          <ERPInput
-
-            useMUI
-            variant="outlined"
-            customSize="sm"
-            id="voucherNo"
-            label="Voucher No."
-          />
-          <ERPDateInput
-            id="date"
-            label="Date"
-            // value={formData.date}
-            //data={formData}
-            onChangeData={(value) => handleFieldChange('date', value)}
-          />
-          <ERPInput
-            id="refNo"
-            label="Ref No."
-            customSize="sm"
-            // value={formData.refNo}
-            //data={formData}
-            onChangeData={(value) => handleFieldChange('refNo', value)}
-          />
-          <ERPDateInput
-            id="refDate"
-            label="Ref Date"
-            // value={formData.refDate}
-            //data={formData}
-            onChangeData={(value) => handleFieldChange('refDate', value)}
-          />
-
-          <div className="w-1/4">
-            <div className="flex justify-between items-center">
-              <label htmlFor="cashAccount" className="text-xs font-medium">Cash Account</label>
-              <span className="text-xs text-gray-500">Bal:</span>
+            <div className="w-1/4">
+              <div className="flex justify-between items-center">
+                <label htmlFor="cashAccount" className="text-xs font-medium">Cash Account</label>
+                <span className="text-xs text-gray-500">Bal:</span>
+              </div>
+              <ERPDataCombobox
+              {...getFieldPropsAdv("referenceDate")}
+                id="cashAccount"
+                label=" "
+                // value={formData.cashAccount}
+                data={[
+                  { id: '1', name: 'CASH A/C (MADEENA VAN)' },
+                  { id: '2', name: 'CASH A/C (MAIN)' }
+                ]}
+                field={{
+                  id: 'cashAccount',
+                  valueKey: 'id',
+                  labelKey: 'name',
+                  required: true,
+                  getListUrl: '/api/cash-accounts'
+                }}
+                onChangeData={(value) => handleFieldChange('cashAccount', value)}
+              />
             </div>
             <ERPDataCombobox
-              id="cashAccount"
-              label=" "
-              // value={formData.cashAccount}
-              data={[
-                { id: '1', name: 'CASH A/C (MADEENA VAN)' },
-                { id: '2', name: 'CASH A/C (MAIN)' }
-              ]}
+              {...getFieldPropsAdv("employeeId")}
               field={{
-                id: 'cashAccount',
+                id: 'employeeId',
                 valueKey: 'id',
                 labelKey: 'name',
-                required: true,
-                getListUrl: '/api/cash-accounts'
+                getListUrl: Urls.data_employees
               }}
-              onChangeData={(value) => handleFieldChange('cashAccount', value)}
             />
           </div>
-          <ERPDataCombobox
-            id="paidBy"
-            label="Paid By"
-            // value={formData.paidBy}
-            data={[
-              { id: '22001', name: '22001 MOHAN' }
-            ]}
-            field={{
-              id: 'paidBy',
-              valueKey: 'id',
-              labelKey: 'name',
-              required: true,
-              getListUrl: '/api/employees'
-            }}
-            onChangeData={(value) => handleFieldChange('paidBy', value)}
-          />
+          <div className="flex align-center gap-6">
+            <div className="w-1/4">
+              <ERPInput
+                prefix="abc"
+                id="remarks"
+                label="Remarks"
+                // value={formData.remarks}
+                // //data={formData}
+                onChangeData={(value) => handleFieldChange('remarks', value)}
+              />
+            </div>
+            <div className="w-1/4">
+              <ERPInput
+                id="notes"
+                label="Notes"
+                value=""
+                //data={formData}
+                onChangeData={(value) => { }}
+              />
+            </div>
+          </div>
         </div>
+
+
         <div className="flex align-center gap-6">
-          <div className="w-1/4">
-            <ERPInput
-              prefix="abc"
-              id="remarks"
-              label="Remarks"
-              // value={formData.remarks}
-              // //data={formData}
-              onChangeData={(value) => handleFieldChange('remarks', value)}
+          <ERPInput
+            id="ledgerCode"
+            label="Ledger Code"
+            value=""
+            //data={formData}
+            onChangeData={(value) => { }}
+          />
+          <div className="w-3/4">
+            <ERPDataCombobox
+              id="ledger"
+              field={{
+                id: "ledger",
+                required: true,
+                getListUrl: Urls.data_acc_ledgers,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              label=" Ledger"
+              onChangeData={(data: any) => handleFieldChange("ledger", data.ledger)}
             />
           </div>
-          <div className="w-1/4">
+          <ERPInput
+            id="amount"
+            label="Amount"
+            value=""
+            //data={formData}
+            onChangeData={(value) => { }}
+          />
+          <div className="w-3/4">
             <ERPInput
-              id="notes"
-              label="Notes"
+              id="narration"
+              label="Narration"
               value=""
               //data={formData}
               onChangeData={(value) => { }}
             />
           </div>
-        </div>
-      </div>
-
-
-      <div className="flex align-center gap-6">
-        <ERPInput
-          id="ledgerCode"
-          label="Ledger Code"
-          value=""
-          //data={formData}
-          onChangeData={(value) => { }}
-        />
-        <div className="w-3/4">
-          <ERPDataCombobox
-            id="ledger"
-            field={{
-              id: "ledger",
-              required: true,
-              getListUrl: Urls.data_acc_ledgers,
-              valueKey: "id",
-              labelKey: "name",
-            }}
-            label=" Ledger"
-            onChangeData={(data: any) => handleFieldChange("ledger", data.ledger)}
-          />
-        </div>
-        <ERPInput
-          id="amount"
-          label="Amount"
-          value=""
-          //data={formData}
-          onChangeData={(value) => { }}
-        />
-        <div className="w-3/4">
-          <ERPInput
-            id="narration"
-            label="Narration"
-            value=""
-            //data={formData}
-            onChangeData={(value) => { }}
-          />
-        </div>
-        <ERPButton
-          title="Add"
-          variant="primary"
-          // disabled={isSaving}
-          // loading={isSaving}
-          type="button"
-        // onClick={handleSubmit}
-        />
-      </div>
-      <div className="flex align-center  gap-6">
-        <div className="flex items-center justify-center">
-          <ERPCheckbox
-            onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)} id={""} />
-          <ERPInput
-            id="discount"
-            label="Discount"
-            value=""
-            //data={formData}
-            onChangeData={(value) => { }}
-          />
-        </div>
-        <ERPDataCombobox
-          id="costCentre"
-          field={{
-            id: "costCentre",
-            required: true,
-            getListUrl: Urls.data_costcentres,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          label="Cost Centre"
-          onChangeData={(data: any) => handleFieldChange("costCentre", data.costCentre)}
-        />
-        <ERPDataCombobox
-          id="project"
-          label="Project"
-          data={[
-            { id: '22001', name: '22001 MOHAN' }
-          ]}
-          field={{
-            id: 'project',
-            valueKey: 'id',
-            labelKey: 'name',
-            required: true,
-            getListUrl: '/api/employees'
-          }}
-          onChangeData={(value) => handleFieldChange('project', value)}
-        />
-        <div className="flex items-center justify-center">
           <ERPButton
-            title="Bill Wise"
+            title="Add"
             variant="primary"
             // disabled={isSaving}
             // loading={isSaving}
@@ -398,21 +340,70 @@ export default function Component() {
           // onClick={handleSubmit}
           />
         </div>
-      </div>
+        <div className="flex align-center  gap-6">
+          <div className="flex items-center justify-center">
+            <ERPCheckbox
+              onChangeData={(data: any) => handleFieldChange('isCommon', data.isCommon)} id={""} />
+            <ERPInput
+              id="discount"
+              label="Discount"
+              value=""
+              //data={formData}
+              onChangeData={(value) => { }}
+            />
+          </div>
+          <ERPDataCombobox
+            id="costCentre"
+            field={{
+              id: "costCentre",
+              required: true,
+              getListUrl: Urls.data_costcentres,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            label="Cost Centre"
+            onChangeData={(data: any) => handleFieldChange("costCentre", data.costCentre)}
+          />
+          <ERPDataCombobox
+            id="project"
+            label="Project"
+            data={[
+              { id: '22001', name: '22001 MOHAN' }
+            ]}
+            field={{
+              id: 'project',
+              valueKey: 'id',
+              labelKey: 'name',
+              required: true,
+              getListUrl: '/api/employees'
+            }}
+            onChangeData={(value) => handleFieldChange('project', value)}
+          />
+          <div className="flex items-center justify-center">
+            <ERPButton
+              title="Bill Wise"
+              variant="primary"
+              // disabled={isSaving}
+              // loading={isSaving}
+              type="button"
+            // onClick={handleSubmit}
+            />
+          </div>
+        </div>
 
-    </div>
-    <ErpDevGrid
-                  columns={columns}
-                  allowFiltering={false}
-                  dataUrl= {Urls.acc_reports_ledger}
-                  hideGridAddButton={true}
-                  hideDefaultExportButton={true}
-                  hideDefaultSearchPanel={true}
-                  hideGridHeader={true}
-                  enablefilter={false}
-                  data={data}
-                  gridId={gridName}
-                ></ErpDevGrid>
+      </div>
+      <ErpDevGrid
+        columns={columns}
+        allowFiltering={false}
+        dataUrl={Urls.acc_reports_ledger}
+        hideGridAddButton={true}
+        hideDefaultExportButton={true}
+        hideDefaultSearchPanel={true}
+        hideGridHeader={true}
+        enablefilter={false}
+        data={data}
+        gridId={gridName}
+      ></ErpDevGrid>
     </>
   )
 }

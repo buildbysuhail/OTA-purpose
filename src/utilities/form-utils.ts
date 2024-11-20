@@ -1,4 +1,5 @@
 import { FormField } from "./form-types";
+import { lowercaseAndAddUnderscore } from "./Utils";
 
 const getNestedValue = (obj: any, path: string) => {
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
@@ -56,3 +57,33 @@ export const getFieldPropsGlobal =
       formState?.data ? formState?.data: formState
     );
   };
+  export const getFieldPropsAdvGlob = (
+    fieldId: string,
+    data: any,
+    handleFieldChange: (fieldId: string, value: any) => void,
+    t: any,
+    options?: { onChangeData?: (data: any) => void; label?: string }
+  ): FormField => {
+    debugger;
+    const __data = data?.data ? data?.data : data;
+    const _value = getNestedValue(__data, fieldId);
+    const value =  _value == undefined || _value == null || _value == "" ? "" : _value == 0 ? '0' : _value|| "";
+    const validation = getNestedValue(data?.validations, fieldId);
+    const checked = getNestedValue(data?.data ? data?.data : data, fieldId) || false;
+    const _label = options?.label || t( lowercaseAndAddUnderscore((fieldId?.split('.').pop()?.replace(/_/g, " ") || "")));
+
+    return {
+      id: fieldId,
+      data: data?.data ? data?.data : data,
+      value,
+      validation,
+      checked,
+      onChangeData: options?.onChangeData
+        ? (event: any) => options.onChangeData?.(event.target.value)
+        : (eventData: any) => {debugger; const nestedValue = getNestedValue(eventData, fieldId);
+          console.log("fieldId:", fieldId);
+          console.log("eventData:", eventData);
+          console.log("nestedValue:", nestedValue);handleFieldChange(fieldId, nestedValue)},
+      label: _label,
+    };
+  }

@@ -1324,5 +1324,12 @@
   "qr_pay_name": "اسم الدفع عبر QR",
   "qr_pay": "دفع QR",
   "filters": "الفلاتر",
-    "apply": "تطبيق"
+  "apply": "تطبيق",
+
+  "liabilities_capital": "الخصوم ورأس المال",
+  "balance_sheet": "الميزانية العمومية",
+  "share": "السهم",
+  "schedule_report": "تقرير مجدول",
+  "assets": "الأصول"
+    
 }

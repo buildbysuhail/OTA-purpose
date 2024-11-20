@@ -12,6 +12,7 @@ import ERPModal from "../../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
 import { Link } from "react-router-dom";
+import { t } from "i18next";
 // import { MouseEventHandler } from "@types/react";
 
 const api = new APIClient();
@@ -24,7 +25,7 @@ const BalanceSheetRow: React.FC<{
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
-    setIsOpenDetails({isOpen: true, key: item.groupID});  
+    setIsOpenDetails({isOpen: true, key: item.groupID , groupName: item.groupName});  
   };
 
   return (
@@ -69,12 +70,12 @@ const HorizontalBalanceSheet: React.FC<{
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
-        <h3 className="text-lg font-bold mb-2">Assets</h3>
+        <h3 className="text-lg font-bold mb-2">{t("assets")}</h3>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
-              <th className="py-2 pl-2">Account</th>
-              <th className="py-2 text-right pr-2">Amount</th>
+              <th className="py-2 pl-2">{t("ledger_name")}</th>
+              <th className="py-2 text-right pr-2">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
@@ -89,12 +90,12 @@ const HorizontalBalanceSheet: React.FC<{
         </table>
       </div>
       <div>
-        <h3 className="text-lg font-bold mb-2">Liabilities & Capital</h3>
+        <h3 className="text-lg font-bold mb-2">{t("liabilities_capital")}</h3>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
-              <th className="py-2 pl-2">Account</th>
-              <th className="py-2 text-right pr-2">Amount</th>
+              <th className="py-2 pl-2">{t("account")}</th>
+              <th className="py-2 text-right pr-2">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
@@ -118,7 +119,8 @@ const BalanceSheet = () => {
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
+  // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
+  const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number; groupName?: string}>({isOpen:false, key:0});
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -161,7 +163,7 @@ const BalanceSheet = () => {
           <div className="flex items-center ml-4 text-blue-500 cursor-pointer">
             {/* <span>Customise</span> */}
             <h6 className="text-center text-lg font-bold  mb-0">
-              Balance Sheet
+            {t("balance_sheet")}
             </h6>
             <i className="fas fa-cog ml-1"></i>
           </div>
@@ -181,7 +183,7 @@ const BalanceSheet = () => {
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-share-alt mr-1"></i> */}
               <Forward className="pr-2" />
-              <span>Share</span>
+              <span>{t("share")}</span>
               <span className="ml-1 bg-[#3b82f6] text-white rounded-full px-2">
                 0
               </span>
@@ -189,17 +191,17 @@ const BalanceSheet = () => {
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-clock mr-1"></i> */}
               <Clock1 className="pr-2" />
-              <span>Schedule Report</span>
+              <span>{t("schedule_report")}</span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-print mr-1"></i> */}
               <Printer className="pr-2" />
-              <span>Print</span>
+              <span>{t("print")}</span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-file-export mr-1"></i> */}
               <FileDown className="pr-2" />
-              <span>Export</span>
+              <span>{t("export")}</span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-times"></i> */}
@@ -228,8 +230,8 @@ const BalanceSheet = () => {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-400">
-                    <th className="py-2 pl-2">Account</th>
-                    <th className="py-2 text-right pr-2">TOTAL</th>
+                    <th className="py-2 pl-2">{t("account")}</th>
+                    <th className="py-2 text-right pr-2">{t("total")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -252,8 +254,9 @@ const BalanceSheet = () => {
 
       <ERPModal
         isOpen={isOpenDetails.isOpen}
-        title={t("bank_cards")}
-        width="w-full max-w-[60%]"
+        // title={t("bank_cards")}
+        title="Balance Sheet"
+        width="w-full max-w-[90%]"
         isForm={true}
         closeModal={() => {
           setIsOpenDetails({isOpen: false, key: 0});  
@@ -264,6 +267,8 @@ const BalanceSheet = () => {
               accGroupID: isOpenDetails.key,
               asOnDate: filter.asOnDate,
             }}
+            groupName={isOpenDetails.groupName}
+            
           />
         }
       />

@@ -18,7 +18,7 @@ const api = new APIClient();
 
 const BalanceSheetRow: React.FC<{
   item: any;
-  setIsOpenDetails: ({isOpen: boolean, key: string}) => void;
+  setIsOpenDetails: (isOpen: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
   const { t } = useTranslation();
 
@@ -118,7 +118,7 @@ const BalanceSheet = () => {
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>(false);
+  const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -251,17 +251,17 @@ const BalanceSheet = () => {
       </div>
 
       <ERPModal
-        isOpen={isOpenDetails}
+        isOpen={isOpenDetails.isOpen}
         title={t("bank_cards")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          setIsOpenDetails(false);
+          setIsOpenDetails({isOpen: true, key: 0});  
         }}
         content={
           <BalancesheetDetails
             postData={{
-              accGroupID: 10,
+              accGroupID: isOpenDetails.key,
               asOnDate: filter.asOnDate,
             }}
           />

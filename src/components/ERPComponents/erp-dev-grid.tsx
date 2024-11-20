@@ -346,7 +346,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [preferences, setPreferences] = useState<GridPreference>();
   const [filter, setFilter] = useState<any>(filterInitialData);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
-  const [isChildOpen, setIsChildOpen] = useState<boolean>(false);
+  const [isChildOpen, setIsChildOpen] = useState<{isOpen: boolean; props: any}>({isOpen: false, props: {}});
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
@@ -480,9 +480,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const trimmedProp = prop.trim();
         updatedBodyProps[trimmedProp] = event.data[trimmedProp];
       });
+      debugger;
       // Update bodyProps state
       setBodyProps(updatedBodyProps);
-      setIsChildOpen(true);
+      setIsChildOpen({isOpen: true, props: updatedBodyProps});
     }
   }, []);
   const onCellPrepared = useCallback((e: any) => {
@@ -674,15 +675,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       </div>
       {childPopupProps &&
         <ERPModal
-          isOpen={isChildOpen}
+          isOpen={isChildOpen.isOpen}
           title={childPopupProps.title}
           width={childPopupProps.width}
           isForm={childPopupProps.isForm}
           closeModal={() => {
-            setIsChildOpen(false);
+            setIsChildOpen({isOpen: false, props: {}});
           }}
           content={childPopupProps.content}
-          contentProps={bodyProps}
+          contentProps={isChildOpen.props}
         />
       }
     </Fragment>

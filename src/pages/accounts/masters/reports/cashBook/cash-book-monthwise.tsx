@@ -7,22 +7,23 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import CashBookDayWise from "./cash-book-daywise";
 
 interface CashBookMonthWiseProps {
   contentProps?: any
   enablefilter?: boolean;
 }
-interface CashBookMonthWiseFilters {
-  from: Date
-}
+// interface CashBookMonthWiseFilters {
+//   from: Date
+// }
 const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
+  // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "SiNo",
+      dataField: "siNo",
       caption: t('si_no'),
       dataType: "number",
       allowSearch: true,
@@ -68,61 +69,7 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
       allowFiltering: true,
       width: 250,
     },
-    // {
-    //   dataField: "year",
-    //   caption: t('year'),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 80,
-    // },
-    // {
-    //   dataField: "month",
-    //   caption: t("month"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    // },
-    // {
-    //   dataField: "ledgerName",
-    //   caption:  t("ledger_name"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "debit",
-    //   caption: t('debit'),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "credit",
-    //   caption: t("credit"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "monthBal",
-    //   caption: t("month_balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "closingBalance",
-    //   caption: t("closing_balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
+    
   ];
   return (
     <Fragment>
@@ -133,12 +80,10 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
               <div className="grid grid-cols-1 gap-3">
                
 
-<ErpDevGrid
-                  filterData = {contentProps}
-                  enablefilter={enablefilter}
+                <ErpDevGrid
                   columns={columns}
                   gridHeader={t("cash_book")}
-                  dataUrl= {Urls.acc_reports_cash_book}
+                  dataUrl= {Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -148,8 +93,8 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
                   reload={true}
                   // CashBookMonthWise
                   childPopupProps={{
-                    content: <CashBookMonthWise />,
-                    title: t("cash_book_monthwise"),
+                    content: <CashBookDayWise />,
+                    title: t("cash_book_daywise"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "SiNo",

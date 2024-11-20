@@ -90,12 +90,13 @@ const CashBookSummary = () => {
                   filterContent={<CashBookReportFilter/>}
                   filterInitialData={CashBookReportFilterInitialState}
                   childPopupProps={{
-                    content: <CashBookDayWise />,
+                    content: <CashBookMonthWise />,
                     title: t("cash_book_monthwise"),
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "ledgerName",
                     bodyProps: "ledgerID"
+                    
                   }}
                 ></ErpDevGrid>
               </div>

@@ -8,14 +8,14 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 
-interface CashBookDetailed {
-
-  from: Date
+interface CashBookDetailedProps {
+  contentProps?: any
+  enablefilter?: boolean;
 }
-const CashBookDetailed = () => {
+const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<CashBookDetailed>({from: new Date()});
+  // const [filter, setFilter] =useState<CashBookDetailed>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -24,7 +24,7 @@ const CashBookDetailed = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 200,
     },
     {
       dataField: "vchNo",
@@ -47,7 +47,6 @@ const CashBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
     },
     {
       dataField: "debit",
@@ -111,6 +110,7 @@ const CashBookDetailed = () => {
                   dataUrl= {Urls.acc_reports_cash_book_transactionwise}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
+                  postData = {contentProps}
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}

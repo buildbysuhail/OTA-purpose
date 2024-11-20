@@ -49,6 +49,30 @@ const TrialBalance = () => {
       ),
     },
     {
+      dataField: "groupNameInArabic",
+      caption: t("arabic_group_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green-500 text-lg' : ''}`}>
+  {cellElement.data.groupNameInArabic}
+</span>
+      ),
+    },
+    {
+      dataField: "ledgerNameInArabic",
+      caption: t("account_name_in_arabic"),
+      dataType: "string", 
+      allowSearch: true,
+      allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green-500 text-lg' : ''}`}>
+  {cellElement.data.ledgerNameInArabic}
+</span>
+      ),
+    },
+    {
       dataField: "debit",
       caption: t('debit'),
       dataType: "string",

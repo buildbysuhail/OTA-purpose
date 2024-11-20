@@ -85,6 +85,7 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
                   gridHeader={t("cash_book")}
                   dataUrl= {Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
+                  postData = {contentProps}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

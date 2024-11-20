@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-report-filter";
+import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
 
 interface CollectionReport {
 
@@ -109,8 +110,8 @@ const CollectionReport = () => {
                   popupAction={toggleCostCentrePopup}
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<PaymentReportFilter/>}
-                  filterInitialData={PaymentReportFilterInitialState}
+                  filterContent={<CollectionReportFilter/>}
+                  filterInitialData={CollectionReportFilterInitialState}
                   hideGridAddButton={true}
                   reload={true}
                 ></ErpDevGrid>

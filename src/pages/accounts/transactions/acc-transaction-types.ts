@@ -1,7 +1,13 @@
 // AccTransaction interface
 export interface AccTransaction {
-  master: AccMasterInput;
+  data: {
+    master: AccMasterInput;
   details: AccDetailInput[];
+  },
+  validations: {
+    master: AccMasterValidations;
+  details: any;
+  }
 }
 
 // AccMasterInput interface
@@ -53,6 +59,103 @@ export interface AccMasterInput {
   manualInvoiceNumber: string;
 }
 
+// AccMasterInput interface
+export interface AccMasterValidations {
+  accTransactionMasterId: string;
+  departmentId: string;
+  costCentreId: string;
+  billwiseMasterId: string;
+  employeeId: string;
+  invTransactionId: string;
+  transactionDate: string;
+
+  prevTransDate: string;
+  bankDate: string;
+  voucherPrefix: string;
+  voucherNumber: string;
+  referenceNumber: string;
+  referenceDate: string;
+  dueDate: string;
+  particulars: string;
+  totalDebit: string;
+  billwiseTotalAdjAmt: string;
+  billwiseAdjAmt: string;
+  totalCredit: string;
+  totDiscount: string;
+  empIncentive: string;
+  commonNarration: string;
+  remarks: string;
+  voucherType: string;
+  formType: string;
+  debitNoteTransId: string;
+  creditNoteTransId: string;
+  currencyId: string;
+  accTransDetailId: string;
+  adjustedTransDetailId: string;
+  currencyRate: string;
+  isPosted: string;
+  randomKey: string;
+  onlineTrans: string;
+  isEdit: string;
+  checkStatus: string;
+  checkBouncedDate: string;
+  drCr: string;
+  isSalesView: string;
+  branchId: string;
+  counterId: string;
+  refBranchId: string;
+  uuid: string;
+  manualInvoiceNumber: string;
+}
+
+// Initial object with default values
+export const initialAccMasterValidations: AccMasterValidations = {
+  accTransactionMasterId: "",
+  departmentId: "",
+  costCentreId: "",
+  billwiseMasterId: "",
+  employeeId: "",
+  invTransactionId: "",
+  transactionDate: "",
+
+  prevTransDate: "",
+  bankDate: "",
+  voucherPrefix: "",
+  voucherNumber: "",
+  referenceNumber: "",
+  referenceDate: "",
+  dueDate: "",
+  particulars: "",
+  totalDebit: "",
+  billwiseTotalAdjAmt: "",
+  billwiseAdjAmt: "",
+  totalCredit: "",
+  totDiscount: "",
+  empIncentive: "",
+  commonNarration: "",
+  remarks: "",
+  voucherType: "",
+  formType: "",
+  debitNoteTransId: "",
+  creditNoteTransId: "",
+  currencyId: "",
+  accTransDetailId: "",
+  adjustedTransDetailId: "",
+  currencyRate: "",
+  isPosted: "",
+  randomKey: "",
+  onlineTrans: "",
+  isEdit: "",
+  checkStatus: "",
+  checkBouncedDate: "",
+  drCr: "",
+  isSalesView: "",
+  branchId: "",
+  counterId: "",
+  refBranchId: "",
+  uuid: "",
+  manualInvoiceNumber: "",
+};
 // AccDetailInput interface
 export interface AccDetailInput {
   accTransactionMasterId: number;
@@ -127,6 +230,7 @@ export const AccDetailInitialData: AccDetailInput = {
   firstDebitLedgerId: undefined,
 }
 export const AccTransactionInitialData: AccTransaction = {
+ data:{
   master: {
     accTransactionMasterId: 0,
     departmentId: 0,
@@ -175,6 +279,10 @@ export const AccTransactionInitialData: AccTransaction = {
     manualInvoiceNumber: "",
   },
   details: [
-    AccDetailInitialData
   ],
+ },
+ validations: {
+  master: initialAccMasterValidations,
+  details:{}
+ }
 };

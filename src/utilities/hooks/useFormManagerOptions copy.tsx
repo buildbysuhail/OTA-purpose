@@ -18,7 +18,7 @@ import ERPAlert from "../../components/ERPComponents/erp-sweet-alert";
 import { RootState } from "../../redux/store";
 import { onCloseWithUnsavedChange } from "../../redux/slices/popup-reducer";
 import { FormField } from "../form-types";
-import { getFieldPropsAdvGlob, getFieldPropsGlobal, handleFieldChangeGlobal } from "../form-utils";
+import { getFieldPropsGlobal, getFieldPropsGlobalAdv, handleFieldChangeGlobal } from "../form-utils";
 import { useTranslation } from "react-i18next";
 
 interface UseFormManagerOptions { 
@@ -32,6 +32,7 @@ interface UseFormManagerOptions {
   loadDataRequired?: boolean;
   useApiClient?: boolean;
   initialData?: any;
+  onChangeData?: any;
 }
 
 
@@ -50,7 +51,6 @@ export function useFormManager<T>({
 }: UseFormManagerOptions) {
   const location = useLocation();
   const appDispatch = useAppDispatch();
-  const {t} = useTranslation();
   const apiClient = new APIClient();
 
 
@@ -67,9 +67,9 @@ export function useFormManager<T>({
   );
   
   // if(localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data ==null )
-  debugger
   const [localFormState, setLocalFormState] = useState<ApiResponse<any>>(initialData);
   const [prevLocalFormState, setPrevLocalFormState] = useState<ApiResponse<any>>(initialData);
+  const {t} = useTranslation();
   const reduxFormState = useAppSelector<ApiResponse<any>>(
     (state: any) => state?.[rName]
   );
@@ -306,30 +306,7 @@ export function useFormManager<T>({
   //   [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]
   // );
 
-  const handleFieldChange = useCallback(
-    (fields: { [fieldId: string]: any } | string, value?: any) => {  
-      debugger;
-      // Update the nested fields for all provided fieldIds
-      const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: (useApiClient ? localFormState : reduxFormState)?.data})
   
-      if (useApiClient) {
-        setLocalFormState((prevState: any) => ({
-          ...prevState,
-          data: updatedData,
-          validations: { ...prevState?.validations },
-        }));
-      } else {
-        reduxManager.setState(rName, {
-          data: updatedData,
-          validations: { ...(useApiClient ? localFormState : reduxFormState)?.validations },
-          loading: false,
-          error: null,
-        });
-      }
-    },
-    [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]
-  );
-
 
   const handleClear = useCallback(() => {
     
@@ -361,6 +338,28 @@ export function useFormManager<T>({
       onClose?.();
     }
   }, [onClose, useApiClient, localFormState, reduxFormState, prevLocalFormState]);
+  const handleFieldChange = useCallback(
+    (fields: { [fieldId: string]: any } | string, value?: any) => {  
+      // Update the nested fields for all provided fieldIds
+      const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: (useApiClient ? localFormState : reduxFormState)?.data})
+  
+      if (useApiClient) { 
+        setLocalFormState((prevState: any) => ({
+          ...prevState,
+          data: updatedData,
+          validations: { ...prevState?.validations },
+        }));
+      } else {
+        reduxManager.setState(rName, {
+          data: updatedData,
+          validations: { ... reduxFormState?.validations },
+          loading: false,
+          error: null,
+        });
+      }
+    },
+    [(useApiClient ? localFormState : reduxFormState)?.data, rName, useApiClient]
+  );
 
 
   const getFieldProps = useCallback(
@@ -370,24 +369,16 @@ export function useFormManager<T>({
     },
     [(useApiClient ? localFormState : reduxFormState)?.data]
   );
-  const getFieldPropsAdv = useCallback(
-    (
-      fieldId: string,
-      options?: { onChangeData?: (data: any) => void; label?: string }
-    ): FormField => {
-      debugger;
-      const formState = useApiClient ? localFormState : reduxFormState;
-  
-      return getFieldPropsAdvGlob(
-        fieldId,
-        formState,
-        handleFieldChange,
-        t,
-        options
-      );
+
+
+  const getFieldPropsAll = useCallback(
+    (fieldId: string, onChangeData?: any, label?: string): FormField => {
+      
+      return getFieldPropsGlobalAdv(fieldId,(useApiClient ? localFormState : reduxFormState));
     },
-    [handleFieldChange, localFormState, reduxFormState, t, useApiClient]
+    [(useApiClient ? localFormState : reduxFormState)?.data]
   );
+
 
     return {
       isEdit,
@@ -398,8 +389,7 @@ export function useFormManager<T>({
       handleClose,
       getFieldProps,
       isLoading,
-      t,
-      getFieldPropsAdv,
+      t
     };
 
 }

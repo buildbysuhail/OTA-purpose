@@ -28,10 +28,19 @@ export const capitalizeAndAddSpace = (input: string): string => {
 
   // Add space before each subsequent capital letter (except the first)
   const result = capitalized.replace(/([A-Z])/g, ' $1').trim();
-
+debugger;
   return result;
 }
+export const lowercaseAndAddUnderscore = (input: string): string => {
+  if (!input) return '';
 
+  // Add underscores before each uppercase letter and convert the entire string to lowercase
+  const result = input.replace(/([A-Z])/g, '_$1').toLowerCase();
+
+  // Remove the leading underscore, if present
+  const ret = result.startsWith('_') ? result.slice(1) : result;
+  return ret;
+};
 /**
  * Removes spaces and capitalizes the first letter of each word (after the first word), converting to camelCase.
  * @param input - The input string to transform.

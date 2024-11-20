@@ -19,7 +19,7 @@ export const AccountLedgerManage = () => {
 
   const {
     isEdit,
-    formState: postData,
+    // formState: postData,
     handleSubmit,
     handleFieldChange,
     handleClear,
@@ -59,7 +59,6 @@ export const AccountLedgerManage = () => {
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps('ledgerCode')}
-          type="string"
           label={t("code")}
           placeholder={t("enter_code")}
           required={true}

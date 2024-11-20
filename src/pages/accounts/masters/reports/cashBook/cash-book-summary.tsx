@@ -9,6 +9,8 @@ import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import CashBookMonthWise from "./cash-book-monthwise";
 import LedgerReportFilter from "../ledger-report-filter";
+import CashBookDayWise from "./cash-book-daywise";
+import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
 
 interface CashBookSummary {
 
@@ -82,16 +84,13 @@ const CashBookSummary = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  enablefilter={true}
-                  showFilterInitially={true}
-                  filterContent={<LedgerReportFilter/>}
-                  // gridAddButtonType="popup"
                   reload={true} 
-                  // CashBookMonthWise
+                  enablefilter={true}
+                  filterContent={<CashBookReportFilter/>}
+                  filterInitialData={CashBookReportFilterInitialState}
                   childPopupProps={{
-                    content: <CashBookMonthWise />,
+                    content: <CashBookDayWise />,
                     title: t("cash_book_monthwise"),
                     isForm: false,
                     width: "mw-100",

@@ -7,16 +7,11 @@ import ErpDevGrid from "../../../../../../components/ERPComponents/erp-dev-grid"
 import Urls from "../../../../../../redux/urls";
 import { ActionType } from "../../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../../redux/slices/popup-reducer";
+import DayBookReportFilter, { DayBookReportFilterInitialState } from "../day-book-report-filter";
 interface DayBookSummary {
-
   from: Date
 }
 const DayBookSummary = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
@@ -52,7 +47,6 @@ const DayBookSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 350,
     },
     // {
     //   dataField: "refNo",
@@ -103,45 +97,6 @@ const DayBookSummary = () => {
       width: 250,
     },
   
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
   ];
   return (
     <Fragment>
@@ -152,22 +107,24 @@ const DayBookSummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  filterWidth="100"
                   gridHeader={t("day_book_summary")}
                   dataUrl= {Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterContent={<DayBookReportFilter/>}
+                  filterInitialData={DayBookReportFilterInitialState}
+                  reload={true} 
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
-                  reload={true}
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

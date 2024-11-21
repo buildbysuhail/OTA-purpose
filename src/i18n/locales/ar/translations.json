@@ -701,10 +701,10 @@
   "use_template_selection_for_printing": "استخدام اختيار القالب للطباعة",
   "apply_TAX_on_purchase_converted_to_BTO": "تطبيق الضريبة على المشتريات المحولة إلى BTO",
   "maintain_counter_wise_prefix_for_transaction": "الحفاظ على بادئة المعاملة حسب العداد",
-  "enable_PPOS_integration":"تمكين تكامل PPOS (مبيعات الشاحنة)",
-  "PPOS_branchid":"معرف فرع PPOS",
-  "PPOS_productSerial":"الرقم التسلسلي لمنتج PPOS",
-  "PPOS_email":"البريد الإلكتروني PPOS",
+  "enable_PPOS_integration": "تمكين تكامل PPOS (مبيعات الشاحنة)",
+  "PPOS_branchid": "معرف فرع PPOS",
+  "PPOS_productSerial": "الرقم التسلسلي لمنتج PPOS",
+  "PPOS_email": "البريد الإلكتروني PPOS",
   "maintain_KSA_eInvoice": "الحفاظ على الفاتورة الإلكترونية السعودية",
   "enable_tax_on_bill_discount": "تمكين الضريبة على خصم الفاتورة",
   "apply_KSA_eInvoice_validation_rules": "تطبيق قواعد التحقق من الفاتورة الإلكترونية السعودية",
@@ -1325,11 +1325,7 @@
   "qr_pay": "دفع QR",
   "filters": "الفلاتر",
   "apply": "تطبيق",
-
-  "liabilities_capital": "الخصوم ورأس المال",
-  "balance_sheet": "الميزانية العمومية",
-  "share": "السهم",
-  "schedule_report": "تقرير مجدول",
-  "assets": "الأصول"
-    
+  "month_num": "رقم الشهر",
+  "arabic_group_name": "اسم المجموعة باللغة العربية",
+  "account_name_in_arabic": "اسم الحساب باللغة العربية"
 }

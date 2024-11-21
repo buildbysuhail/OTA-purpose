@@ -22,17 +22,40 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
   // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
+    // {
+    //   dataField: "siNo",
+    //   caption: t('si_no'),
+    //   dataType: "number",
+    //   allowSearch: true, 
+    //   allowFiltering: true,
+    //   width: 80,
+    // },
     {
-      dataField: "siNo",
-      caption: t('si_no'),
+      dataField: "year",
+      caption: t("year"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 80,
     },
     {
-      dataField: "ledgerName",
-      caption: t("ledger_name"),
+      dataField: "ledgerID",
+      caption: t("ledger_id"),
+      dataType: "number",
+      visible:false,
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "monthNum",
+      caption: t("month_num"),
+      dataType: "number",
+      visible:false,
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "month",
+      caption: t("month"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -54,17 +77,17 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
       width: 200,
     },
     {
-      dataField: "balance",
-      caption: t("balance"),
+      dataField: "monthBal",
+      caption: t("month_balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 200,
     },
     {
-      dataField: "branch",
-      caption:  t("branch"),
-      dataType: "string",
+      dataField: "closingBalance",
+      caption:  t("closing_balance"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 250,
@@ -98,8 +121,8 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
                     title: t("cash_book_daywise"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "SiNo",
-                    bodyProps: "ledgerID"
+                    drillDownCells: "month",
+                    bodyProps: "year,monthNum,ledgerID",
                   }}
                 ></ErpDevGrid>
               </div>

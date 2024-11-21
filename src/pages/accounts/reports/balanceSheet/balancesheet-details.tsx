@@ -13,23 +13,26 @@ import LedgerReportFilter, { LedgerReportFilterInitialState } from "../ledger-re
 
 interface BalancesheetDetailsProps {
   postData: any;
+  groupName?: string;
 }
-const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData}) => {
+const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "accGroupName",
-      caption: "accGroupName",
+      // caption: "accGroupName",
+      caption: t("group_name"),
+
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 120,
+      // width: 120,
     },
     {
       dataField: "balance",
-      caption: t("form"),
+      caption: t("balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -37,7 +40,7 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData}) => {
     },
     {
       dataField: "branch",
-      caption:  "branch",
+      caption:  t("branch"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -53,7 +56,7 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData}) => {
     // },
     {
       dataField: "credit",
-      caption: "credit",
+      caption: t("credit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -61,28 +64,11 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData}) => {
     },
     {
       dataField: "debit",
-      caption: "debit",
+      caption: t("debit"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-    },
-    {
-      dataField: "particulars",
-      caption: t("account"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    
-   
-    {
-      dataField: "debit",
-      caption: t('debit'),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 170,
     },
     // {
     //   dataField: "ledgerID",
@@ -94,11 +80,11 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData}) => {
     // },
     {
       dataField: "ledgerName",
-      caption: "ledgerName",
+      caption: t("ledger_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 170,
+      // width: 170,
     },
   ];
   return (
@@ -110,7 +96,7 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData}) => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("ledger_report")}
+                  gridHeader={groupName}
                   dataUrl= {Urls.acc_reports_account_ledger_balance_view}
                   postData={postData}
                   hideGridAddButton={true}

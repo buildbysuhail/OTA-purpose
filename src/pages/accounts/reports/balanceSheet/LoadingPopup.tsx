@@ -22,7 +22,7 @@ const LoadingPopup: React.FC<{ loading: boolean }> = ({ loading }) => {
       <div className="loader"></div>
       <div>
         <div
-          className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer mt-3 bg-black"
+          className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer mt-3 bg-[#dc2626] hover:bg-[#f87171]"
           onClick={handleClick}
         >
           {/* <ArrowLeft className="w-5 h-5 me-1" /> */}

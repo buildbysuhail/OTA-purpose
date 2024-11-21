@@ -28,6 +28,9 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [formState, setFormState] = useState<any>(initialData);
   const {t} = useTranslation();
+  const [_show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+
 
   // Fetch props for fields dynamically
   const getFieldProps = useCallback(
@@ -93,8 +96,9 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
             </ERPSubmitButton>
             <ERPSubmitButton
               type="button"
-              onClick={onClose}
-              className="w-28 bg-[#e5e7eb] text-[#404040]"
+              // onClick={onClose}
+              onClick={() => setIsOpen(false)}
+              className="w-28 bg-[#e5e7eb] text-[#000000]"
             >
               {t("cancel")}
             </ERPSubmitButton>

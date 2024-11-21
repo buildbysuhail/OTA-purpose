@@ -1326,5 +1326,14 @@
   "apply": "Apply",
   "month_num": "Month Number",
    "arabic_group_name": "Arabic Group Name",
-   "account_name_in_arabic": "Account Name In Arabic"
+   "account_name_in_arabic": "Account Name In Arabic",
+   
+  "liabilities_capital": "Liabilities & Capital",
+  "balance_sheet": "Balance Sheet",
+  "share": "Share",
+  "schedule_report": "Schedule Report",
+  "assets": "Assets",
+  "gstr_report": "GSTR Report",
+  "app_settings_new": "Application Settings new"
+
 }

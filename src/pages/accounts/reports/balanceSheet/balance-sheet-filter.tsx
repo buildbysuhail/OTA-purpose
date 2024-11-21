@@ -39,11 +39,11 @@ const BalanceSheetFilter = ({ getFieldProps, handleFieldChange, t }: any) => (
         />
 
         {/* Show Vertical Checkbox */}
-        <ERPCheckbox
+        {/* <ERPCheckbox
           {...getFieldProps("showVertical")}
           label={t("Show Vertical")}
           onChangeData={(data) => handleFieldChange('showVertical', data.showVertical)}
-        />
+        /> */}
       </div>
 
 

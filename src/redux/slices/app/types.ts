@@ -96,7 +96,11 @@ export const initialThemeData: Theme = {
     borderColor: '128, 128, 128', 
     borderFocus: '128, 128, 128',
     fontColor:'128, 128, 128',
-    borderRadius: 5,      
+    borderRadius: 5, 
+    adjustA:0,
+    adjustB:0,
+    adjustC:0,
+    adjustD:0,     
   },
 };
 export interface Theme {
@@ -129,6 +133,10 @@ export interface inputBox{
   fontColor:string;
   borderFocus: string;
   borderRadius:number;
+  adjustA:number;
+  adjustB:number;
+  adjustC:number;
+  adjustD:number;
 }
 export interface AppInitialState {
   syncing: boolean;

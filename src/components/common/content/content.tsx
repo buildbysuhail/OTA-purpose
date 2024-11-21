@@ -1,6 +1,7 @@
 import { FC, lazy, Suspense, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ApplicationSettings from '../../../pages/settings/system/application-settings';
+import ApplicationSettingsNew from '../../../pages/settings/system/application-settings-new';
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
@@ -104,6 +105,7 @@ import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-sum
 import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
 import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/party-wise-report';
 import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
+import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
 
 interface ContentProps { }
 const loading = (
@@ -146,6 +148,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/reminders" element={<Reminders />} />
         <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
+        <Route path="/system/application-settings-new" element={<ApplicationSettingsNew />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
         <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="/system/counter-settings" element={<CounterSettings />} />
@@ -224,6 +227,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
+        <Route path="/inventory/gstr_report" element={<GstrReport />} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

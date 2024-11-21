@@ -60,6 +60,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_summary_report'},
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_register_report`, type: 'link', active: false, selected: false, title: 'purchase_register_report'},
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_wise_report`, type: 'link', active: false, selected: false, title: 'party_wise_report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr_report`, type: 'link', active: false, selected: false, title: 'gstr_report'},
     ]
   },
 ];

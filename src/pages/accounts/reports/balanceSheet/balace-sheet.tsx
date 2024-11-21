@@ -7,12 +7,22 @@ import BalanceSheetFilter, {
 import Urls from "../../../../redux/urls";
 import "./Loader.css";
 import LoadingPopup from "./LoadingPopup";
-import { Clock1, FileDown, Forward, Printer, Timer, X } from "lucide-react";
+import {
+  Clock1,
+  FileDown,
+  Forward,
+  Printer,
+  RectangleVertical,
+  Timer,
+  X,
+} from "lucide-react";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import BalancesheetDetails from "./balancesheet-details";
 import { Link } from "react-router-dom";
+import { t } from "i18next";
 // import { MouseEventHandler } from "@types/react";
+
 
 const api = new APIClient();
 
@@ -24,7 +34,11 @@ const BalanceSheetRow: React.FC<{
 
   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
     event.preventDefault();
-    setIsOpenDetails({isOpen: true, key: item.groupID});  
+    setIsOpenDetails({
+      isOpen: true,
+      key: item.groupID,
+      groupName: item.groupName,
+    });
   };
 
   return (
@@ -43,7 +57,7 @@ const BalanceSheetRow: React.FC<{
         </a>
       </td>
       {item.total !== undefined && (
-        <td className="py-2 text-right">
+        <td className="py-2 text-end">
           <a
             href="#"
             // onClick={handleClick}
@@ -69,12 +83,12 @@ const HorizontalBalanceSheet: React.FC<{
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
-        <h3 className="text-lg font-bold mb-2">Assets</h3>
+        <h3 className="text-lg font-bold mb-2">{t("assets")}</h3>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
-              <th className="py-2 pl-2">Account</th>
-              <th className="py-2 text-right pr-2">Amount</th>
+              <th className="py-2 ps-2">{t("ledger_name")}</th>
+              <th className="py-2 text-end pe-2">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
@@ -89,12 +103,12 @@ const HorizontalBalanceSheet: React.FC<{
         </table>
       </div>
       <div>
-        <h3 className="text-lg font-bold mb-2">Liabilities & Capital</h3>
+        <h3 className="text-lg font-bold mb-2">{t("liabilities_capital")}</h3>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
-              <th className="py-2 pl-2">Account</th>
-              <th className="py-2 text-right pr-2">Amount</th>
+              <th className="py-2 ps-2">{t("account")}</th>
+              <th className="py-2 text-end pe-2">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
@@ -118,8 +132,14 @@ const BalanceSheet = () => {
   const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
+  // const [isOpenDetails, setIsOpenDetails] = useState<{isOpen: boolean; key: number}>({isOpen:false,key:0});
+  const [isOpenDetails, setIsOpenDetails] = useState<{
+    isOpen: boolean;
+    key: number;
+    groupName?: string;
+  }>({ isOpen: false, key: 0 });
   const { t } = useTranslation();
+  const [isVerticalView, setIsVerticalView] = useState<boolean>(false);
 
   useEffect(() => {
     if (filterShowCount == 0) {
@@ -158,15 +178,55 @@ const BalanceSheet = () => {
       <div className="max-w-full mx-2">
         <div className="flex items-center p-1  border border-gray-300 rounded-md mb-4">
           {/* <h6 className="text-center text-lg mb-4">Balance Sheet</h6> */}
-          <div className="flex items-center ml-4 text-blue-500 cursor-pointer">
+          <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
             {/* <span>Customise</span> */}
             <h6 className="text-center text-lg font-bold  mb-0">
-              Balance Sheet
+              {t("balance_sheet")}
             </h6>
-            <i className="fas fa-cog ml-1"></i>
+            <i className="fas fa-cog ms-1"></i>
           </div>
 
-          <div className="flex items-center ml-auto space-x-4">
+          <div className="flex items-center ms-auto space-x-4">
+            {/* <div className="flex items-center bg-gray-100 p-2 rounded-md ">
+              <RectangleVertical />
+              <p  className="pe-2">Show Vertical</p>
+              <div className="">
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    checked={isVerticalView}
+                    onChange={(e) => setIsVerticalView(e.target.checked)}
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+            </div> */}
+
+            <button
+              className="flex items-center bg-gray-100 p-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
+              onClick={() => setIsVerticalView(!isVerticalView)}
+            >
+              <RectangleVertical className="mr-2" />
+              <span className="mr-2">
+                {isVerticalView ? "Show Horizontal" : "Show Vertical"}
+              </span>
+              <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                <input
+                  type="checkbox"
+                  name="toggle"
+                  id="toggle"
+                  className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                  checked={isVerticalView}
+                  onChange={() => setIsVerticalView(!isVerticalView)}
+                />
+                <label
+                  htmlFor="toggle"
+                  className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"
+                ></label>
+              </div>
+            </button>
+            
             <button className="flex items-center bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width="w-full max-w-[500px]"
@@ -179,27 +239,27 @@ const BalanceSheet = () => {
               />
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-share-alt mr-1"></i> */}
-              <Forward className="pr-2" />
-              <span>Share</span>
-              <span className="ml-1 bg-[#3b82f6] text-white rounded-full px-2">
+              {/* <i className="fas fa-share-alt me-1"></i> */}
+              <Forward className="pe-2" />
+              <span>{t("share")}</span>
+              <span className="ms-1 bg-[#3b82f6] text-white rounded-full px-2">
                 0
               </span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-clock mr-1"></i> */}
-              <Clock1 className="pr-2" />
-              <span>Schedule Report</span>
+              {/* <i className="fas fa-clock me-1"></i> */}
+              <Clock1 className="pe-2" />
+              <span>{t("schedule_report")}</span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-print mr-1"></i> */}
-              <Printer className="pr-2" />
-              <span>Print</span>
+              {/* <i className="fas fa-print me-1"></i> */}
+              <Printer className="pe-2" />
+              <span>{t("print")}</span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
-              {/* <i className="fas fa-file-export mr-1"></i> */}
-              <FileDown className="pr-2" />
-              <span>Export</span>
+              {/* <i className="fas fa-file-export me-1"></i> */}
+              <FileDown className="pe-2" />
+              <span>{t("export")}</span>
             </button>
             <button className="flex items-center bg-gray-100 p-2 rounded-md">
               {/* <i className="fas fa-times"></i> */}
@@ -219,7 +279,13 @@ const BalanceSheet = () => {
           </>
         ) : (
           <>
-            {filter.showVertical != true ? (
+            {/* {filter.showVertical != true ? (
+              <HorizontalBalanceSheet
+                data={data ?? []}
+                setIsOpenDetails={setIsOpenDetails}
+              />
+            ) : ( */}
+            {!isVerticalView ? (
               <HorizontalBalanceSheet
                 data={data ?? []}
                 setIsOpenDetails={setIsOpenDetails}
@@ -228,8 +294,8 @@ const BalanceSheet = () => {
               <table className="w-full text-left border-collapse">
                 <thead>
                   <tr className="bg-gray-400">
-                    <th className="py-2 pl-2">Account</th>
-                    <th className="py-2 text-right pr-2">TOTAL</th>
+                    <th className="py-2 ps-2">{t("account")}</th>
+                    <th className="py-2 text-end pe-2">{t("total")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -252,11 +318,12 @@ const BalanceSheet = () => {
 
       <ERPModal
         isOpen={isOpenDetails.isOpen}
-        title={t("bank_cards")}
-        width="w-full max-w-[60%]"
+        // title={t("bank_cards")}
+        title="Balance Sheet"
+        width="w-full max-w-[90%]"
         isForm={true}
         closeModal={() => {
-          setIsOpenDetails({isOpen: false, key: 0});  
+          setIsOpenDetails({ isOpen: false, key: 0 });
         }}
         content={
           <BalancesheetDetails
@@ -264,6 +331,7 @@ const BalanceSheet = () => {
               accGroupID: isOpenDetails.key,
               asOnDate: filter.asOnDate,
             }}
+            groupName={isOpenDetails.groupName}
           />
         }
       />

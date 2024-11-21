@@ -48,7 +48,11 @@ const initialState: AppInitialState = {
       borderColor: '',
       fontColor:'128, 128, 128', 
       borderFocus: '',          
-      borderRadius: 5,      
+      borderRadius: 5,  
+      adjustA:0,
+      adjustB:0,
+      adjustC:0,
+      adjustD:0,     
     },
    
     //

@@ -1,6 +1,7 @@
 import { FC, lazy, Suspense, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ApplicationSettings from '../../../pages/settings/system/application-settings';
+import ApplicationSettingsNew from '../../../pages/settings/system/application-settings-new';
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
@@ -147,6 +148,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/reminders" element={<Reminders />} />
         <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
+        <Route path="/system/application-settings-new" element={<ApplicationSettingsNew />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
         <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="/system/counter-settings" element={<CounterSettings />} />

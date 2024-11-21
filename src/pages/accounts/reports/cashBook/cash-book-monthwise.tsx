@@ -121,7 +121,7 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "month",
-                    bodyProps: "year,monthNum,ledgerID",
+                    bodyProps: "year,monthNum,ledgerID,asonDate",
                   }}
                 ></ErpDevGrid>
               </div>

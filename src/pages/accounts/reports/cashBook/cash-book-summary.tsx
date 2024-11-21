@@ -89,6 +89,7 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 250,
     },
+   
   ];
   return (
     <Fragment>
@@ -108,6 +109,7 @@ const CashBookSummary = () => {
                   hideGridAddButton={true}
                   reload={true} 
                   enablefilter={true}
+                  filterWidth="100"
                   filterContent={<CashBookReportFilter/>}
                   filterInitialData={CashBookReportFilterInitialState}
                   childPopupProps={{
@@ -116,7 +118,7 @@ const CashBookSummary = () => {
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "ledgerName",
-                    bodyProps: "ledgerID"
+                    bodyProps: "ledgerID,asonDate"
                     
                   }}
                 ></ErpDevGrid>

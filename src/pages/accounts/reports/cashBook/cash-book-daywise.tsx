@@ -32,6 +32,11 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.ledgerName}
+  </span>
+      ),
     },
     {
       dataField: "debit",
@@ -40,6 +45,11 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -48,6 +58,11 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "monthBal",
@@ -73,6 +88,11 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.closingBalance}
+  </span>
+      ),
     },
   ];
   return (
@@ -83,6 +103,7 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 showSerialNo={true}
                   columns={columns}
                   gridHeader={t("cash_book_daywise")}
                   dataUrl= {Urls.acc_reports_cash_book_daywise}

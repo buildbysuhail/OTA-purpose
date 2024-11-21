@@ -190,19 +190,21 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
-            transform: variant === "filled"
-              ? "translate(10px, 15px) scale(1))"
-              : variant === "standard"
-                ? "translate(0, 15px) scale(1)"
-                : "translate(10px, 15px) scale(1)"
+            transform:
+              variant === "filled"
+                ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                : variant === "standard"
+                  ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                  : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`,
           },
           "& .MuiInputLabel-shrink": {
-            transform: variant === "filled"
-              ? "translate(8px, -14px) scale(0.88)"
-              : variant === "standard"
-                ? "translate(1px,-6px) scale(0.88)"
-                : "translate(16px, -7px) scale(0.88)"
-          }
+            transform:
+              variant === "filled"
+                ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -14}px) scale(0.88)`
+                : variant === "standard"
+                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
+                  : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${appState?.inputBox?.adjustD ?? -7}px) scale(0.88)`,
+          },
         };
     }
   };

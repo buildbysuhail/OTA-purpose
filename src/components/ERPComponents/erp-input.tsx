@@ -88,11 +88,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       validation,
       onClickPrefix,
       onClickSuffix,
-      useMUI = false,
+      useMUI,
       skip = false,
       jumpTo,
       jumpTarget,
-      variant = "outlined",
+      variant,
       ...props
     }: ERPInputProps,
     ref
@@ -106,6 +106,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const iLabel = label || id?.replaceAll("_", " ");
     const iPlaceholder = placeholder || label;
     const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+    const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
+    const [_variant, set_variant] = useState(variant);
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
@@ -113,11 +115,31 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     }, [appState.inputBox.inputSize]);
 
-    // const [isHovered, setIsHovered] = useState(false);
+    useEffect(() => {
+console.log(appState.inputBox.inputStyle);
+console.log(useMUI);
+      if(appState.inputBox.inputStyle !== "normal"&& useMUI == undefined)
+      {
+        set_useMUI(true) 
+      }
+      
+    }, [appState.inputBox.inputStyle]);
+    
+    useEffect(() => {
+      console.log(appState.inputBox.inputStyle);
+      console.log(variant);
+            if(appState.inputBox.inputStyle !== "normal"&& (variant == undefined || variant == null))
+            {
+              set_variant(appState.inputBox.inputStyle) 
+            }
+            
+          }, [appState.inputBox.inputStyle]);
+
+    const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
 
-    // const handleMouseEnter = () => setIsHovered(true);
-    // const handleMouseLeave = () => setIsHovered(false);
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsFocused(true);
       if (onFocus) onFocus(e);
@@ -290,6 +312,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           return {
             mui: {
               "& .MuiInputBase-root": {
+               
                 height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
                 fontSize: `${appState.inputBox.fontSize ?? 15}px`,
                 fontWeight: appState.inputBox.fontWeight ?? 500,
@@ -298,22 +321,22 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               },
               "& .MuiInputLabel-root": {
                 fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
-
                 transform:
                   variant === "filled"
-                    ? "translate(10px, 15px) scale(1)"
+                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
                     : variant === "standard"
-                      ? "translate(0, 15px) scale(1)"
-                      : "translate(10px, 15px) scale(1)",
+                      ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                      : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`,
               },
               "& .MuiInputLabel-shrink": {
                 transform:
                   variant === "filled"
-                    ? "translate(8px, -14px) scale(0.88)"
+                    ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -14}px) scale(0.88)`
                     : variant === "standard"
-                      ? "translate(1px,-6px) scale(0.88)"
-                      : "translate(16px, -7px) scale(0.88)",
+                      ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
+                      : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${appState?.inputBox?.adjustD ?? -7}px) scale(0.88)`,
               },
+              
             } as SxProps<Theme>,
             regular: {
               height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
@@ -359,7 +382,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       handleNavigation(e);
     };
 
-    if (useMUI) {
+    if (_useMUI == true) {
       const muiProps: TextFieldProps = {
         ...commonProps,
         label: !noLabel ? iLabel : undefined,
@@ -376,7 +399,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           ) : undefined,
         },
         fullWidth: true,
-        variant: variant,
+        variant: _variant,
         inputProps: {
           maxLength,
           min,
@@ -401,108 +424,121 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }
 
     const { height, fontSize, fontWeight, color } = sizeStyles.regular;
+    const getBorderColor = () => {
+      if (isFocused || isHovered) {
+        return `rgb(${appState.inputBox.borderFocus})`;
+      }
+      return `rgb(${appState.inputBox.borderColor})`;
+    };
+ if (_useMUI == undefined || _useMUI == false){
+  return (
+    <div className={className}>
+      {!noLabel && (
+        <label
+          className={`capitalize block  text-gray-900 text-left rtl:text-right ${labelClassName}`}
+          style={{
+            fontSize: _customSize
+              ? _customSize === "sm"
+                ? "12px"
+                : _customSize === "md"
+                ? "14px"
+                :  _customSize === "lg"
+                ?"16px": `${appState.inputBox.labelFontSize}px`
+              : `14px`,
+           transform: `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+          }}>
+          {iLabel}
+          {required && !noLabel && "*"}
+        </label>
+      )}
 
-      return (
-        <div className={className}>
-          {!noLabel && (
-            <label
-              className={`capitalize mb-1 block text-xs text-gray-900 text-left rtl:text-right ${labelClassName}`}
-              style={{
-                fontSize: _customSize
-                  ? _customSize === "sm"
-                    ? "12px"
-                    : _customSize === "md"
-                    ? "14px"
-                    :  _customSize === "lg"
-                    ?"16px": `${appState.inputBox.labelFontSize}px`
-                  : `14px`,
-              }}>
-              {iLabel}
-              {required && !noLabel && "*"}
-            </label>
-          )}
-  
-          <div className="flex">
-            {prefix && (
-              <div
-                onClick={onClickPrefix}
-                className={`${onClickPrefix && "cursor-pointer"
-                  } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-                  style={{ height, fontSize, fontWeight, color, borderColor: isFocused 
-                    ? `rgb(${appState.inputBox.borderFocus})`
-                    : `rgb(${appState.inputBox.borderColor})` }}>
-                {prefix}
-              </div>
-            )}
-         <div className="flex-1">
-            <input
-              {...commonProps}
-              placeholder={iPlaceholder}
-              ref={ref}
-              autoComplete={autocomplete}
-              style={{
-                height,
-                fontSize,
-                fontWeight,
-                color,
-                border: `1px solid ${isFocused 
-                  ? `rgb(${appState.inputBox.borderFocus})`
-                  : `rgb(${appState.inputBox.borderColor})`}`,
-                outline: "none",
-                transition: "border-color 0.2s ease-in-out",
-                borderTopLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
-                borderBottomLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
-                borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
-                borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
-                ...(!prefix && !suffix && {
-                  borderRadius: `${appState.inputBox.borderRadius}px`,
-                }),
-              } as React.CSSProperties}
-              className={`
-                border border-gray-400 
-                block w-full 
-                ${inputClassName} 
-                border 
-                placeholder:capitalize 
-                border-gray-300 
-                ${disabled ? "text-gray-400" : "bg-white text-gray-900"}
-                placeholder-gray-400 
-                `}
-              // onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-              onWheel={(e: any) => {
-                type === "number" && e?.target?.blur();
-              }}
-              maxLength={maxLength}
-              min={min}
-              max={max}
-              pattern={pattern}
-              step={step}
-              accept={accept}
-              // onMouseEnter={handleMouseEnter}
-              // onMouseLeave={handleMouseLeave}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onKeyDown={handleNavigation}
-              data-skip={skip}
-              data-jump-to={jumpTo}
-              data-jump-target={jumpTarget}
-            />
+      <div className="flex">
+        {prefix && (
+          <div
+            onClick={onClickPrefix}
+            className={`${onClickPrefix && "cursor-pointer"
+              } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
+              style={{ height, fontSize, fontWeight, color, borderColor: isFocused 
+                ? `rgb(${appState.inputBox.borderFocus})`
+                : `rgb(${appState.inputBox.borderColor})` }}>
+            {prefix}
           </div>
-          {suffix && (
-            <div
-              onClick={onClickSuffix}
-              className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"
-                } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
-                style={{ height, fontSize, borderColor: isFocused
-                  ? `rgb(${appState.inputBox.borderFocus})`
-                  : `rgb(${appState.inputBox.borderColor})` }}>
-              {suffix}
-            </div>
-          )}
-        </div>
-        <ERPElementValidationMessage validation={validation} />
+        )}
+     <div className="flex-1">
+        <input
+          {...commonProps}
+          placeholder={iPlaceholder}
+          ref={ref}
+          autoComplete={autocomplete}
+          style={{
+            height,
+            fontSize,
+            fontWeight,
+            color,
+            borderColor: getBorderColor(),
+            borderWidth: "1px",
+            borderStyle: "solid",
+            outline: "none",
+            transition: "all 0.2s ease-in-out",
+            borderTopLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
+            borderBottomLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
+            borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
+            borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
+            ...(!prefix && !suffix && {
+              borderRadius: `${appState.inputBox.borderRadius??5}px`,
+            }),
+          
+          } as React.CSSProperties}
+          className={`
+            border border-gray-400 
+            block w-full 
+            ${inputClassName} 
+            border 
+            placeholder:capitalize 
+            border-gray-300 
+            ${disabled ? "text-gray-400" : "bg-white text-gray-900"}
+            placeholder-gray-400 
+            outline-none
+            ${isFocused ? `border-[rgb(${appState.inputBox.borderFocus})] ring-2 ring-[rgba(${appState.inputBox.borderFocus},0.2)]` : `border-[rgb(${appState.inputBox.borderColor})]`}
+            ${isHovered && !isFocused ? `border-[rgb(${appState.inputBox.borderFocus})]` : ''}
+            `}
+          // onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+          onWheel={(e: any) => {
+            type === "number" && e?.target?.blur();
+          }}
+          maxLength={maxLength}
+          min={min}
+          max={max}
+          pattern={pattern}
+          step={step}
+          accept={accept}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyDown={handleNavigation}
+          data-skip={skip}
+          data-jump-to={jumpTo}
+          data-jump-target={jumpTarget}
+        />
       </div>
-    );
+      {suffix && (
+        <div
+          onClick={onClickSuffix}
+          className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"
+            } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
+            style={{ height, fontSize, borderColor: isFocused
+              ? `rgb(${appState.inputBox.borderFocus})`
+              : `rgb(${appState.inputBox.borderColor})` }}>
+          {suffix}
+        </div>
+      )}
+    </div>
+    <ERPElementValidationMessage validation={validation} />
+  </div>
+);
+ }
+    
   }
 );
 

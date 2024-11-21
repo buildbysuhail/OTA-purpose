@@ -253,10 +253,10 @@ const BalanceSheet = () => {
       <ERPModal
         isOpen={isOpenDetails.isOpen}
         title={t("bank_cards")}
-        width="w-full max-w-[600px]"
+        width="w-full max-w-[60%]"
         isForm={true}
         closeModal={() => {
-          setIsOpenDetails({isOpen: true, key: 0});  
+          setIsOpenDetails({isOpen: false, key: 0});  
         }}
         content={
           <BalancesheetDetails

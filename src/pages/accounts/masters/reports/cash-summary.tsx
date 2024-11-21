@@ -10,6 +10,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "./cash-summary-report-filter";
 
 interface CashSummary {
 
@@ -167,10 +168,13 @@ const CashSummary = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
+                  enablefilter={true}
+                  filterWidth="100"
+                  showFilterInitially={true}
+                  filterContent={<CashSummaryReportFilter/>}
+                  filterInitialData={CashSummaryReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
             </div>

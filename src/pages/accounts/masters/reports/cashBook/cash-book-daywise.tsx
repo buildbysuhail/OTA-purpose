@@ -7,14 +7,15 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
-interface CashBookDayWise {
-
-  from: Date
+import CashBookDetailed from "./cash-book-detailed";
+interface CashBookMonthDayWiseProps {
+  contentProps?: any
+  enablefilter?: boolean;
 }
-const CashBookDayWise = () => {
+const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<CashBookDayWise>({from: new Date()});
+  // const [filter, setFilter] =useState<CashBookDayWise>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -50,7 +51,7 @@ const CashBookDayWise = () => {
     },
     {
       dataField: "monthBal",
-      caption: t("month_balance"),
+      caption: t("balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -86,10 +87,19 @@ const CashBookDayWise = () => {
                   gridHeader={t("cash_book_daywise")}
                   dataUrl= {Urls.acc_reports_cash_book_daywise}
                   method={ActionType.POST}
+                  postData = {contentProps}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true}
+                  childPopupProps={{
+                    content: <CashBookDetailed/>,
+                    title: t("cash_book_detailed"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "transactionDate",
+                    bodyProps: "transactionDate,year,monthNum,ledgerID",
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

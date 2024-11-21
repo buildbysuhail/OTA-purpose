@@ -1332,5 +1332,7 @@
   "balance_sheet": "Balance Sheet",
   "share": "Share",
   "schedule_report": "Schedule Report",
-  "assets": "Assets"
+  "assets": "Assets",
+  "gstr_report": "GSTR Report"
+
 }

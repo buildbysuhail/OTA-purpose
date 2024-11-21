@@ -1333,5 +1333,7 @@
   "balance_sheet": "الميزانية العمومية",
   "share": "السهم",
   "schedule_report": "تقرير مجدول",
-  "assets": "الأصول"
+  "assets": "الأصول",
+  "gstr_report": "تقرير GSTR"
+
 }

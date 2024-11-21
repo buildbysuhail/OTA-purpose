@@ -17,6 +17,7 @@ export type TemplateGroupTypes =
   | "qty_adjustment"
   | "value_adjustment"
   | "credit_note"
+  | "balance_sheet"
   | "barcode";
 
 export const TemplateTypes: {
@@ -33,5 +34,10 @@ export const TemplateTypes: {
     id: 2,
     name: "Barcode",
     template_group_id: "barcode",
+  },
+  {
+    id: 3,
+    name: "balance sheet",
+    template_group_id: "balance_sheet",
   },
 ];

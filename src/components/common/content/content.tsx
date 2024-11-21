@@ -104,6 +104,7 @@ import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-sum
 import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
 import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/party-wise-report';
 import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
+import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
 
 interface ContentProps { }
 const loading = (
@@ -224,6 +225,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
+        <Route path="/inventory/gstr_report" element={<GstrReport />} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

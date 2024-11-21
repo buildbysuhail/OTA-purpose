@@ -1327,5 +1327,13 @@
   "apply": "تطبيق",
   "month_num": "رقم الشهر",
   "arabic_group_name": "اسم المجموعة باللغة العربية",
-  "account_name_in_arabic": "اسم الحساب باللغة العربية"
+  "account_name_in_arabic": "اسم الحساب باللغة العربية",
+
+  "liabilities_capital": "الخصوم ورأس المال",
+  "balance_sheet": "الميزانية العمومية",
+  "share": "السهم",
+  "schedule_report": "تقرير مجدول",
+  "assets": "الأصول",
+  "gstr_report": "تقرير GSTR"
+
 }

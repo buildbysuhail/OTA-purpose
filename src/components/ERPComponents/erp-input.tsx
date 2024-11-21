@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, KeyboardEvent, useEffect, useState } from "react";
 import { TextField, InputAdornment, TextFieldProps, Theme, SxProps } from "@mui/material";
-import { setNestedValue } from "../../utilities/Utils";
+import { setFgAccordingToBgPrimary, setNestedValue } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { handleNavigation } from "../../utilities/shortKeys";
@@ -272,6 +272,8 @@ console.log(useMUI);
           };
         case "lg":
           return {
+            
+            // ${setFgAccordingToBgPrimary()}
             mui: {
               "& .MuiInputBase-root": {
                 // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
@@ -280,13 +282,15 @@ console.log(useMUI);
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
-                fontSize: "14px",
+                fontSize: "20px",
+                color:  "text-white",
+                background: appState.dataPageStyle == "regular" ? "#f0f1f7" : "white",
                 transform:
                   variant === "filled"
                     ? "translate(10px, 15px) scale(1)"
                     : variant === "standard"
                       ? "translate(0, 15px) scale(1)"
-                      : "translate(10px, 15px) scale(1)",
+                      : "translate(10px, 11px) scale(1)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
@@ -294,7 +298,7 @@ console.log(useMUI);
                     ? "translate(8px, -14px) scale(0.88)"
                     : variant === "standard"
                       ? "translate(1px,-6px) scale(0.88)"
-                      : "translate(16px, -7px) scale(0.88)",
+                      : "translate(16px, -10px) scale(0.8)",
               },
             } as SxProps<Theme>,
             regular: {

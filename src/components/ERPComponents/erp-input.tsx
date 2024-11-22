@@ -1,6 +1,22 @@
-import React, { forwardRef, memo, KeyboardEvent, useEffect, useState } from "react";
-import { TextField, InputAdornment, TextFieldProps, Theme, SxProps } from "@mui/material";
-import { setFgAccordingToBgPrimary, setNestedValue } from "../../utilities/Utils";
+import React, {
+  forwardRef,
+  memo,
+  KeyboardEvent,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
+import {
+  TextField,
+  InputAdornment,
+  TextFieldProps,
+  Theme,
+  SxProps,
+} from "@mui/material";
+import {
+  setFgAccordingToBgPrimary,
+  setNestedValue,
+} from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { handleNavigation } from "../../utilities/shortKeys";
@@ -12,7 +28,10 @@ const ERPElementValidationMessage = ({
   validation?: string;
 }) => <div className="text-red text-xs">{validation}</div>;
 
-type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "prefix" | "color">;
+type ERPInputBaseProps = Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "size" | "prefix" | "color"
+>;
 
 interface ERPInputProps extends ERPInputBaseProps {
   id: string;
@@ -51,7 +70,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
-  variant?: "filled" | "outlined" | "standard";
+  variant?: "filled" | "outlined" | "standard" | "normal";
 }
 
 const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
@@ -105,9 +124,20 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
     const iLabel = label || id?.replaceAll("_", " ");
     const iPlaceholder = placeholder || label;
-    const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+    const [_customSize, setCustomSize] = useState(
+      customSize ? customSize : appState.inputBox.inputSize
+    );
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
-    const [_variant, set_variant] = useState(variant);
+    const [_variant, set_variant] = useState<
+      "filled" | "outlined" | "standard" | undefined
+    >(variant === "normal" ? undefined : variant);
+    
+    const [isHovered, setIsHovered] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+    const handleMouseEnter = () => setIsHovered(true);
+    const handleMouseLeave = () => setIsHovered(false);
+    const handleFocus = () => setIsFocused(true);
+    const handleBlur = () => {setIsFocused(false);};
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
@@ -116,38 +146,30 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }, [appState.inputBox.inputSize]);
 
     useEffect(() => {
-console.log(appState.inputBox.inputStyle);
-console.log(useMUI);
-      if(appState.inputBox.inputStyle !== "normal"&& useMUI == undefined)
-      {
-        set_useMUI(true) 
+      if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
+        set_useMUI(true);
+      } else if (
+        appState.inputBox.inputStyle === "normal" &&
+        useMUI === undefined
+      ) {
+        set_useMUI(false);
       }
-      
-    }, [appState.inputBox.inputStyle]);
-    
+    }, [appState.inputBox.inputStyle, useMUI]);
+
     useEffect(() => {
-      console.log(appState.inputBox.inputStyle);
-      console.log(variant);
-            if(appState.inputBox.inputStyle !== "normal"&& (variant == undefined || variant == null))
-            {
-              set_variant(appState.inputBox.inputStyle) 
-            }
-            
-          }, [appState.inputBox.inputStyle]);
-
-    const [isHovered, setIsHovered] = useState(false);
-    const [isFocused, setIsFocused] = useState(false);
-
-    const handleMouseEnter = () => setIsHovered(true);
-    const handleMouseLeave = () => setIsHovered(false);
-    const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-      setIsFocused(true);
-      if (onFocus) onFocus(e);
-    };
-    const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-      setIsFocused(false);
-      if (onBlur) onBlur(e);
-    };
+      if (
+        appState.inputBox.inputStyle !== "normal" &&
+        (variant === undefined || variant === null)
+      ) {
+        set_variant(
+          appState.inputBox.inputStyle as "filled" | "outlined" | "standard"
+        );
+      } else if (appState.inputBox.inputStyle === "normal") {
+        set_variant(undefined);
+      } else {
+        set_variant(variant as "filled" | "outlined" | "standard");
+      }
+    }, [appState.inputBox.inputStyle, variant]);
 
     const getSizeStyles = () => {
       const styles: {
@@ -159,7 +181,7 @@ console.log(useMUI);
           fontWeight?: number;
           color?: string;
           borderColor?: string;
-          // borderFocusColor?:string;
+          borderFocusColor?: string;
         };
       } = {
         mui: {},
@@ -172,6 +194,8 @@ console.log(useMUI);
 
       const commonMuiStyles = {
         color: `rgb(${appState.inputBox.fontColor})`,
+        "--tw-ring-shadow": "none",
+        boxShadow: "none",
         "& .MuiOutlinedInput-notchedOutline": {
           borderColor: `rgb(${appState.inputBox.borderColor})`,
         },
@@ -184,16 +208,19 @@ console.log(useMUI);
         "&:hover .MuiFilledInput-underline, &:hover:before": {
           borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
         },
+      
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
           borderColor: `rgb(${appState.inputBox.borderFocus})`,
         },
-        "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after": {
-          borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
-        },
+        "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
+          {
+            borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+          },
         margin: "0",
-        "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
-          padding: "0 0.75rem",
-        },
+        "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
+          {
+            padding: "0 0.75rem",
+          },
       };
 
       switch (_customSize) {
@@ -208,19 +235,19 @@ console.log(useMUI);
               "& .MuiInputLabel-root": {
                 fontSize: "11px",
                 transform:
-                  variant === "filled"
-                    ? "translate(8px, 10px) scale(0.8)"
-                    : variant === "standard"
-                      ? "translate(0, 10px) scale(0.8)"
-                      : "translate(8px, 10px) scale(0.8)",
+                  _variant === "filled"
+                    ? "translate(8px, 10px) scale(1)"
+                    : _variant === "standard"
+                    ? "translate(0, 10px) scale(0.8)"
+                    : "translate(8px, 10px) scale(0.8)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(8px, -10px) scale(0.75)"
-                    : variant === "standard"
-                      ? "translate(0, -6px) scale(0.75)"
-                      : "translate(16px, -6px) scale(0.75)",
+                    : _variant === "standard"
+                    ? "translate(0, -6px) scale(0.75)"
+                    : "translate(16px, -6px) scale(0.75)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -230,6 +257,7 @@ console.log(useMUI);
                 ? `rgb(${appState.inputBox.fontColor})`
                 : "inherit",
               borderColor: `rgb(${appState.inputBox.borderColor})`,
+              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
               // padding: "0.25rem 0.75rem"
             },
           };
@@ -245,19 +273,19 @@ console.log(useMUI);
               "& .MuiInputLabel-root": {
                 fontSize: "12px",
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(10px, 13px) scale(0.9)"
-                    : variant === "standard"
-                      ? "translate(0, 13px) scale(0.9)"
-                      : "translate(10px, 13px) scale(0.9)",
+                    : _variant === "standard"
+                    ? "translate(0, 13px) scale(0.9)"
+                    : "translate(10px, 13px) scale(0.9)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(8px, -12px) scale(0.90)"
-                    : variant === "standard"
-                      ? "translate(0, -6px) scale(0.90)"
-                      : "translate(15px, -7px) scale(0.90)",
+                    : _variant === "standard"
+                    ? "translate(0, -6px) scale(0.90)"
+                    : "translate(15px, -7px) scale(0.90)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -267,38 +295,38 @@ console.log(useMUI);
                 ? `rgb(${appState.inputBox.fontColor})`
                 : "inherit",
               borderColor: `rgb(${appState.inputBox.borderColor})`,
+              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
               // padding: "0.5rem 1rem"
             },
           };
         case "lg":
           return {
-            
             // ${setFgAccordingToBgPrimary()}
             mui: {
               "& .MuiInputBase-root": {
-                // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
+                // height: _variant === "filled" ? "3rem" : _variant === "standard" ? "2.5rem" : "3rem",
                 height: "3rem",
                 fontSize: "16px",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
-                fontSize: "20px",
-                color:  "text-white",
-                background: appState.dataPageStyle == "regular" ? "#f0f1f7" : "white",
+                fontSize: "14px",
+                color: "inherit",
+                background: "inherit",
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(10px, 15px) scale(1)"
-                    : variant === "standard"
-                      ? "translate(0, 15px) scale(1)"
-                      : "translate(10px, 11px) scale(1)",
+                    : _variant === "standard"
+                    ? "translate(0, 15px) scale(1)"
+                    : "translate(10px, 11px) scale(1)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(8px, -14px) scale(0.88)"
-                    : variant === "standard"
-                      ? "translate(1px,-6px) scale(0.88)"
-                      : "translate(16px, -10px) scale(0.8)",
+                    : _variant === "standard"
+                    ? "translate(1px,-6px) scale(0.88)"
+                    : "translate(16px, -10px) scale(0.8)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -308,6 +336,7 @@ console.log(useMUI);
                 ? `rgb(${appState.inputBox.fontColor})`
                 : "inherit",
               borderColor: `rgb(${appState.inputBox.borderColor})`,
+              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
               // label: "10px",
               // padding: "0.75rem 1.25rem"
             },
@@ -316,7 +345,6 @@ console.log(useMUI);
           return {
             mui: {
               "& .MuiInputBase-root": {
-               
                 height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
                 fontSize: `${appState.inputBox.fontSize ?? 15}px`,
                 fontWeight: appState.inputBox.fontWeight ?? 500,
@@ -326,21 +354,32 @@ console.log(useMUI);
               "& .MuiInputLabel-root": {
                 fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
                 transform:
-                  variant === "filled"
-                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
-                    : variant === "standard"
-                      ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
-                      : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`,
+                  _variant === "filled"
+                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 10
+                      }px) scale(1)`
+                    : _variant === "standard"
+                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 10
+                      }px) scale(1)`
+                    : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 15
+                      }px) scale(1)`,
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
-                    ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -14}px) scale(0.88)`
-                    : variant === "standard"
-                      ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
-                      : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${appState?.inputBox?.adjustD ?? -7}px) scale(0.88)`,
+                  _variant === "filled"
+                    ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${
+                        appState?.inputBox?.adjustD ?? -14
+                      }px) scale(0.88)`
+                    : _variant === "standard"
+                    ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${
+                        appState?.inputBox?.adjustD ?? -6
+                      }px) scale(0.88)`
+                    : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${
+                        appState?.inputBox?.adjustD ?? -7
+                      }px) scale(0.88)`,
               },
-              
             } as SxProps<Theme>,
             regular: {
               height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
@@ -350,7 +389,7 @@ console.log(useMUI);
                 ? `rgb(${appState.inputBox.fontColor})`
                 : "inherit",
               borderColor: `rgb(${appState.inputBox.borderColor})`,
-              borderFouc: `rgb(${appState.inputBox.borderColor})`,
+              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
               // label: "10px",
               // padding: "0.75rem 1.25rem"
             },
@@ -411,12 +450,12 @@ console.log(useMUI);
           pattern,
           step,
           accept,
-          'data-skip': skip,
-          'data-jump-to': jumpTo,
-          'data-jump-target': jumpTarget
+          "data-skip": skip,
+          "data-jump-to": jumpTo,
+          "data-jump-target": jumpTarget,
         },
         sx: sizeStyles.mui,
-        onKeyDown: handleKeyDown 
+        onKeyDown: handleKeyDown,
       };
 
       return (
@@ -427,122 +466,145 @@ console.log(useMUI);
       );
     }
 
-    const { height, fontSize, fontWeight, color } = sizeStyles.regular;
-    const getBorderColor = () => {
-      if (isFocused || isHovered) {
-        return `rgb(${appState.inputBox.borderFocus})`;
-      }
-      return `rgb(${appState.inputBox.borderColor})`;
-    };
- if (_useMUI == undefined || _useMUI == false){
-  return (
-    <div className={className}>
-      {!noLabel && (
-        <label
-          className={`capitalize block  text-gray-900 text-left rtl:text-right ${labelClassName}`}
-          style={{
-            fontSize: _customSize
-              ? _customSize === "sm"
-                ? "12px"
-                : _customSize === "md"
-                ? "14px"
-                :  _customSize === "lg"
-                ?"16px": `${appState.inputBox.labelFontSize}px`
-              : `14px`,
-           transform: `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
-          }}>
-          {iLabel}
-          {required && !noLabel && "*"}
-        </label>
-      )}
+    const {
+      height,
+      fontSize,
+      fontWeight,
+      color,
+      borderColor,
+      borderFocusColor,
+    } = sizeStyles.regular;
 
-      <div className="flex">
-        {prefix && (
-          <div
-            onClick={onClickPrefix}
-            className={`${onClickPrefix && "cursor-pointer"
-              } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-              style={{ height, fontSize, fontWeight, color, borderColor: isFocused 
-                ? `rgb(${appState.inputBox.borderFocus})`
-                : `rgb(${appState.inputBox.borderColor})` }}>
-            {prefix}
+    const inputBorderColor = isFocused
+    ? borderFocusColor
+    : isHovered
+    ? borderFocusColor
+    : borderColor;
+
+    if (_useMUI == undefined || _useMUI == false) {
+      return (
+        <div className={className}>
+          {!noLabel && (
+            <label
+              className={`capitalize block  text-gray-900 text-left rtl:text-right ${labelClassName}`}
+              style={{
+                fontSize: _customSize
+                  ? _customSize === "sm"
+                    ? "12px"
+                    : _customSize === "md"
+                    ? "14px"
+                    : _customSize === "lg"
+                    ? "16px"
+                    : `${appState.inputBox.labelFontSize}px`
+                  : `14px`,
+                transform: `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                  appState?.inputBox?.adjustB ?? 10
+                }px) scale(1)`,
+              }}
+            >
+              {iLabel}
+              {required && !noLabel && "*"}
+            </label>
+          )}
+
+          <div className="flex">
+            {prefix && (
+              <div
+                onClick={onClickPrefix}
+                className={`${
+                  onClickPrefix && "cursor-pointer"
+                } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
+                style={{ height, fontSize, fontWeight, color, borderColor }}
+              >
+                {prefix}
+              </div>
+            )}
+            <div className="flex-1">
+              <input
+                {...commonProps}
+                placeholder={iPlaceholder}
+                ref={ref}
+                autoComplete={autocomplete}  
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                style={
+                  {
+                    height,
+                    fontSize,
+                    fontWeight,
+                    color,
+                    border: `1px solid ${inputBorderColor}`,
+                    '--tw-ring-shadow': 'none',
+                    outline: "none",
+                    transition: "border-color 0.2s ease-in-out",
+                    borderTopLeftRadius: `${
+                      !prefix ? appState.inputBox.borderRadius : 0
+                    }px`,
+                    borderBottomLeftRadius: `${
+                      !prefix ? appState.inputBox.borderRadius : 0
+                    }px`,
+                    borderTopRightRadius: `${
+                      !suffix ? appState.inputBox.borderRadius : 0
+                    }px`,
+                    borderBottomRightRadius: `${
+                      !suffix ? appState.inputBox.borderRadius : 0
+                    }px`,
+                    ...(!prefix &&
+                      !suffix && {
+                        borderRadius: `${
+                          appState.inputBox.borderRadius ?? 5
+                        }px`,
+                      }),
+                   
+                  } as React.CSSProperties
+                }
+                className={`
+                border 
+                block w-full 
+               ${inputClassName} 
+               placeholder:capitalize  
+               ${disabled ? "text-gray-400" : "bg-white text-gray-900"}
+            
+              `}
+        
+                onWheel={(e: any) => {
+                  type === "number" && e?.target?.blur();
+                }}
+                maxLength={maxLength}
+                min={min}
+                max={max}
+                pattern={pattern}
+                step={step}
+                accept={accept}
+                onKeyDown={handleNavigation}
+                data-skip={skip}
+                data-jump-to={jumpTo}
+                data-jump-target={jumpTarget}
+              />
+            </div>
+            {suffix && (
+              <div
+                onClick={onClickSuffix}
+                className={`border border-gray-400 ${
+                  onClickSuffix && "cursor-pointer"
+                } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
+                style={{
+                  height,
+                  fontSize,
+                  borderColor,
+                  color,
+                }}
+              >
+                {suffix}
+              </div>
+            )}
           </div>
-        )}
-     <div className="flex-1">
-        <input
-          {...commonProps}
-          placeholder={iPlaceholder}
-          ref={ref}
-          autoComplete={autocomplete}
-          style={{
-            height,
-            fontSize,
-            fontWeight,
-            color,
-            borderColor: getBorderColor(),
-            borderWidth: "1px",
-            borderStyle: "solid",
-            outline: "none",
-            transition: "all 0.2s ease-in-out",
-            borderTopLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
-            borderBottomLeftRadius: `${!prefix ? appState.inputBox.borderRadius : 0}px`,
-            borderTopRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
-            borderBottomRightRadius: `${!suffix ? appState.inputBox.borderRadius : 0}px`,
-            ...(!prefix && !suffix && {
-              borderRadius: `${appState.inputBox.borderRadius??5}px`,
-            }),
-          
-          } as React.CSSProperties}
-          className={`
-            border border-gray-400 
-            block w-full 
-            ${inputClassName} 
-            border 
-            placeholder:capitalize 
-            border-gray-300 
-            ${disabled ? "text-gray-400" : "bg-white text-gray-900"}
-            placeholder-gray-400 
-            outline-none
-            ${isFocused ? `border-[rgb(${appState.inputBox.borderFocus})] ring-2 ring-[rgba(${appState.inputBox.borderFocus},0.2)]` : `border-[rgb(${appState.inputBox.borderColor})]`}
-            ${isHovered && !isFocused ? `border-[rgb(${appState.inputBox.borderFocus})]` : ''}
-            `}
-          // onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-          onWheel={(e: any) => {
-            type === "number" && e?.target?.blur();
-          }}
-          maxLength={maxLength}
-          min={min}
-          max={max}
-          pattern={pattern}
-          step={step}
-          accept={accept}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          onKeyDown={handleNavigation}
-          data-skip={skip}
-          data-jump-to={jumpTo}
-          data-jump-target={jumpTarget}
-        />
-      </div>
-      {suffix && (
-        <div
-          onClick={onClickSuffix}
-          className={`border border-gray-400 ${onClickSuffix && "cursor-pointer"
-            } flex items-center justify-center text-slate-400 p-2 rounded-r-md border-l-0 border bg-slate-100`}
-            style={{ height, fontSize, borderColor: isFocused
-              ? `rgb(${appState.inputBox.borderFocus})`
-              : `rgb(${appState.inputBox.borderColor})` }}>
-          {suffix}
+          <ERPElementValidationMessage validation={validation} />
         </div>
-      )}
-    </div>
-    <ERPElementValidationMessage validation={validation} />
-  </div>
-);
- }
-    
+      );
+    }
   }
 );
 

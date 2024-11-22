@@ -335,10 +335,7 @@ export default function ERPDataCombobox({
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
   const handleFocus = () => setIsFocused(true);
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    setIsFocused(false);
-    if (onBlur) onBlur(e);
-  };
+  const handleBlur = () => {setIsFocused(false);};
 
   useEffect(() => {
     if (customSize == undefined || customSize == null) {
@@ -907,8 +904,8 @@ export default function ERPDataCombobox({
     const inputBorderColor = isFocused
       ? `rgb(${appState.inputBox.borderFocus})`
       : isHovered
-        ? `rgb(${appState.inputBox.borderFocus})`
-        : `rgb(${appState.inputBox.borderColor})`;
+      ? `rgb(${appState.inputBox.borderFocus})`
+      : `rgb(${appState.inputBox.borderColor})`;
 
 if (_useMUI == undefined || _useMUI == false){      
   return (
@@ -953,6 +950,7 @@ if (_useMUI == undefined || _useMUI == false){
             fontWeight,
             color,
             border: `1px solid ${inputBorderColor}`,
+            '--tw-ring-shadow': 'none',
             outline: "none",
             transition: "border-color 0.2s ease-in-out",
             borderRadius: `${appState.inputBox.borderRadius}px`,

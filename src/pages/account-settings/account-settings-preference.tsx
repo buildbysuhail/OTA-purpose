@@ -1268,7 +1268,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       <div className="">
                         <p className="switcher-style-head ">Input Box Style:</p>
                         <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center mt-5 switcher-style">
-                        <ERPInput
+                             <ERPInput
                               id="inputBox"
                               label="Demo Input"
                               onChange={(e) => {
@@ -1279,7 +1279,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               }}
                               value={demo.inputBox}
                             />
-                          {theme.inputBox?.inputStyle === "normal" ? (
+                        
                             <ERPDateInput
                               id="dateBox"                          
                               label="Date Input"
@@ -1291,23 +1291,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               }}
                               value={demo.dateBox}
                             />
-                          ) : (
-                            <ERPDateInput
-                              useMUI
-                              onChange={(e) => {
-                                setDemo((prevTheme) => ({
-                                  ...prevTheme,             
-                                  dateBox: e.target.value  
-                                }));
-                              }}
-                              value={demo.dateBox}
-                              variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
-                              id="dateBox"
-                              label="Date Input"
-                            />
-                          )}
-
-                            {theme.inputBox?.inputStyle === "normal" ? (
+                         
                             <ERPDataCombobox
                             id="selectBox"
                             data={demo}
@@ -1334,36 +1318,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               { value: 5, label: "5" },
                             ]}
                         />
-                     
-                          ) : (
-                          <ERPDataCombobox
-                          useMUI
-                          id="selectBox"
-                          field={{
-                            id: "selectBox",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={[
-                            { value: 0, label: "0" },
-                            { value: 1, label: "1" },
-                            { value: 2, label: "2" },
-                            { value: 3, label: "3" },
-                            { value: 4, label: "4" },
-                            { value: 5, label: "5" },
-                          ]}
-                          
-                          data={demo}
-                          label="Demo Select Box"
-                          variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
-                          onChange={(e) => {
-                            setDemo((prevTheme) => ({
-                              ...prevTheme,             
-                              selectBox: e?.value ?? null, 
-                            }));
-                          }}
-                          />
-                          )}
                            
                         </div>
                         
@@ -1385,6 +1339,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       inputStyle: "normal",
                                     },
                                   }));
+                                  handleInputBoxStyleChange(
+                                    "inputStyle",
+                                    "normal"
+                                  );
                                 }
                               }}
                             />

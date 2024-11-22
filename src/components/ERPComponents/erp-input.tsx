@@ -51,7 +51,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   skip?: boolean;
   jumpTo?: string;
   jumpTarget?: string;
-  variant?: "filled" | "outlined" | "standard";
+  variant?: "filled" | "outlined" | "standard"|"normal";
 }
 
 const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
@@ -107,7 +107,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const iPlaceholder = placeholder || label;
     const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
     const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
-    const [_variant, set_variant] = useState(variant);
+    const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(
+      variant === "normal" ? undefined : variant
+    );
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
@@ -115,25 +117,24 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     }, [appState.inputBox.inputSize]);
 
-    useEffect(() => {
-console.log(appState.inputBox.inputStyle);
-console.log(useMUI);
-      if(appState.inputBox.inputStyle !== "normal"&& useMUI == undefined)
-      {
-        set_useMUI(true) 
+     useEffect(() => {
+
+      if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
+        set_useMUI(true);
+      } else if (appState.inputBox.inputStyle === "normal" && useMUI === undefined) {
+        set_useMUI(false);
       }
-      
-    }, [appState.inputBox.inputStyle]);
+    }, [appState.inputBox.inputStyle, useMUI]);
     
     useEffect(() => {
-      console.log(appState.inputBox.inputStyle);
-      console.log(variant);
-            if(appState.inputBox.inputStyle !== "normal"&& (variant == undefined || variant == null))
-            {
-              set_variant(appState.inputBox.inputStyle) 
-            }
-            
-          }, [appState.inputBox.inputStyle]);
+      if (appState.inputBox.inputStyle !== "normal" && (variant === undefined || variant === null)) {
+        set_variant(appState.inputBox.inputStyle as "filled" | "outlined" | "standard");
+      } else if (appState.inputBox.inputStyle === "normal") {
+        set_variant(undefined);
+      } else {
+        set_variant(variant as "filled" | "outlined" | "standard");
+      }
+    }, [appState.inputBox.inputStyle, variant]);
 
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
@@ -208,17 +209,17 @@ console.log(useMUI);
               "& .MuiInputLabel-root": {
                 fontSize: "11px",
                 transform:
-                  variant === "filled"
-                    ? "translate(8px, 10px) scale(0.8)"
-                    : variant === "standard"
+                  _variant === "filled"
+                    ? "translate(8px, 10px) scale(1)"
+                    : _variant === "standard"
                       ? "translate(0, 10px) scale(0.8)"
                       : "translate(8px, 10px) scale(0.8)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(8px, -10px) scale(0.75)"
-                    : variant === "standard"
+                    : _variant === "standard"
                       ? "translate(0, -6px) scale(0.75)"
                       : "translate(16px, -6px) scale(0.75)",
               },
@@ -245,17 +246,17 @@ console.log(useMUI);
               "& .MuiInputLabel-root": {
                 fontSize: "12px",
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(10px, 13px) scale(0.9)"
-                    : variant === "standard"
+                    : _variant === "standard"
                       ? "translate(0, 13px) scale(0.9)"
                       : "translate(10px, 13px) scale(0.9)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(8px, -12px) scale(0.90)"
-                    : variant === "standard"
+                    : _variant === "standard"
                       ? "translate(0, -6px) scale(0.90)"
                       : "translate(15px, -7px) scale(0.90)",
               },
@@ -276,27 +277,27 @@ console.log(useMUI);
             // ${setFgAccordingToBgPrimary()}
             mui: {
               "& .MuiInputBase-root": {
-                // height: variant === "filled" ? "3rem" : variant === "standard" ? "2.5rem" : "3rem",
+                // height: _variant === "filled" ? "3rem" : _variant === "standard" ? "2.5rem" : "3rem",
                 height: "3rem",
                 fontSize: "16px",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
-                fontSize: "20px",
-                color:  "text-white",
-                background: appState.dataPageStyle == "regular" ? "#f0f1f7" : "white",
+                fontSize: "14px",
+                color: "inherit",
+                background: "inherit",
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(10px, 15px) scale(1)"
-                    : variant === "standard"
+                    : _variant === "standard"
                       ? "translate(0, 15px) scale(1)"
                       : "translate(10px, 11px) scale(1)",
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? "translate(8px, -14px) scale(0.88)"
-                    : variant === "standard"
+                    : _variant === "standard"
                       ? "translate(1px,-6px) scale(0.88)"
                       : "translate(16px, -10px) scale(0.8)",
               },
@@ -304,7 +305,10 @@ console.log(useMUI);
             regular: {
               height: "3rem",
               fontSize: "16px",
-              color: appState.inputBox.fontColor
+              color:
+              
+              
+              appState.inputBox.fontColor
                 ? `rgb(${appState.inputBox.fontColor})`
                 : "inherit",
               borderColor: `rgb(${appState.inputBox.borderColor})`,
@@ -326,17 +330,17 @@ console.log(useMUI);
               "& .MuiInputLabel-root": {
                 fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
-                    : variant === "standard"
+                    : _variant === "standard"
                       ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
                       : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`,
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  variant === "filled"
+                  _variant === "filled"
                     ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -14}px) scale(0.88)`
-                    : variant === "standard"
+                    : _variant === "standard"
                       ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
                       : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${appState?.inputBox?.adjustD ?? -7}px) scale(0.88)`,
               },

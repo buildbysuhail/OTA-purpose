@@ -7,11 +7,13 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState } from "../transaction-history-report-filter";
+import AccountsHistoryPopup from "./accounts-history-popup";
 
-interface AccountsHistoryReport {
+// interface AccountsHistoryReport {
 
-  from: Date
-}
+//   from: Date
+// }
 const AccountsHistoryReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -20,7 +22,7 @@ const AccountsHistoryReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<AccountsHistoryReport>({from: new Date()});
+  // const [filter, setFilter] =useState<AccountsHistoryReport>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -135,11 +137,24 @@ const AccountsHistoryReport = () => {
                   dataUrl= {Urls.acc_reports_accounts_history}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
+                  // popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterContent={<TransactrionHistoryReportFilter/>}
+                  filterInitialData={TransactrionHistoryReportFilterInitialState}
+                  filterWidth="150"
                   // gridAddButtonType="popup"
                   reload={true}
+                  childPopupProps={{
+                    content: <AccountsHistoryPopup/>,
+                    title: t("accounts_transaction_history_popup"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "vchNo",
+                    bodyProps: "oldAccTransactionMasterID"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

@@ -8,10 +8,10 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "./day-book-report-filter";
-interface DayBookDetailed {
+// interface DayBookDetailed {
 
-  from: Date
-}
+//   from: Date
+// }
 const DayBookDetailed = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -20,7 +20,7 @@ const DayBookDetailed = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DayBookDetailed>({from: new Date()});
+  // const [filter, setFilter] =useState<DayBookDetailed>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -29,7 +29,7 @@ const DayBookDetailed = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "form",
@@ -60,6 +60,11 @@ const DayBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
     {
       dataField: "refNo",
@@ -92,6 +97,11 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -100,6 +110,11 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "balance",
@@ -108,6 +123,11 @@ const DayBookDetailed = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
   
    
@@ -143,7 +163,7 @@ const DayBookDetailed = () => {
                   gridId="grd_cost_centre"
                   enablefilter={true}
                   showFilterInitially={true}
-                  popupAction={toggleCostCentrePopup}
+                  // popupAction={toggleCostCentrePopup}
                   filterWidth="100"
                   filterContent={<DayBookReportFilter/>}
                   filterInitialData={DayBookReportFilterInitialState}

@@ -7,11 +7,9 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState } from "../transaction-history-report-filter";
 
-interface InventoryHistoryReport {
 
-  from: Date
-}
 const InventoryHistoryReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -20,7 +18,6 @@ const InventoryHistoryReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<InventoryHistoryReport>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -117,11 +114,15 @@ const InventoryHistoryReport = () => {
                   dataUrl= {Urls.acc_reports_inventory_history}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  // popupAction={toggleCostCentrePopup}
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterContent={<TransactrionHistoryReportFilter/>}
+                  filterInitialData={TransactrionHistoryReportFilterInitialState}
+                  filterWidth="150"
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
+
                 ></ErpDevGrid>
               </div>
             </div>

@@ -12,13 +12,11 @@ import LedgerReportFilter from "../ledger-report-filter";
 import CashBookDayWise from "./cash-book-daywise";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
 
-interface CashBookSummary {
-  from: Date
-}
+
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<CashBookSummary>({from: new Date()});
+  // const [filter, setFilter] =useState<CashBookSummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     // {
@@ -105,7 +103,7 @@ const CashBookSummary = () => {
                   dataUrl= {Urls.acc_reports_cash_book}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
+                  // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   reload={true} 
                   enablefilter={true}
@@ -118,8 +116,7 @@ const CashBookSummary = () => {
                     isForm: false,
                     width: "mw-100",
                     drillDownCells: "ledgerName",
-                    bodyProps: "ledgerID,asonDate"
-                    
+                    bodyProps: "ledgerID,asonDate" 
                   }}
                 ></ErpDevGrid>
               </div>

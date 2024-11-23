@@ -9938,7 +9938,7 @@ input.gridjs-input {
 [multiple]:focus,
 textarea:focus,
 select:focus {
-  @apply  dark:border-defaultborder/10 ring-0 !important;
+  @apply   ring-0 !important;
 }
 
 [type=checkbox]:checked:hover,
@@ -13530,7 +13530,7 @@ input[type=color i]::-webkit-color-swatch {
 .react-datepicker-time__input [multiple],
 .react-datepicker-time__input textarea,
 .react-datepicker-time__input select {
-  @apply dark:bg-bodybg  dark:border-defaultborder/10 !important;
+  @apply  !important;
 }
 
 #vector-map svg {

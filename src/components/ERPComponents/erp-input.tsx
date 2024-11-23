@@ -140,7 +140,34 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         setCustomSize(appState.inputBox.inputSize);
       }
     }, [appState.inputBox.inputSize]);
+    const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? appState.inputBox.borderFocus : appState.inputBox.borderColor} `);
+    useEffect(() => {
+      console.log(isFocused);
+      
+      console.log(appState.mode);
+      
+      let style;
 
+      if (appState.mode === 'dark') {
+        if (isFocused || isHovered) {
+          style = '#ffffff';
+          console.log('Dark mode, focused or hovered: ', style);
+        } else {
+          style = '#ffffff1a';
+          console.log('Dark mode, not focused or hovered: ', style);
+        }
+      } else {
+        if (isFocused || isHovered) {
+          style = ppState.inputBox.borderFocus;
+          console.log('Light mode, focused or hovered: ', style);
+        } else {
+          style = appState.inputBox.borderColor;
+          console.log('Light mode, not focused or hovered: ', style);
+        }
+      }
+      setBorderStyles(style??"white");
+    },[appState.mode, isFocused, isHovered, appState.inputBox.borderColor, appState.inputBox.borderFocus])
+    
       
     useEffect(() => {
       if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
@@ -471,33 +498,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       borderFocusColor,
     } = sizeStyles.regular;
 
-    const [borderStyles, setBorderStyles] = useState(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? 'red' : '#ffffff1a') : `${isFocused || isHovered ? borderFocusColor : borderColor} `);
-    useEffect(() => {
-      console.log(isFocused);
-      
-      console.log(appState.mode);
-      
-      let style;
-
-      if (appState.mode === 'dark') {
-        if (isFocused || isHovered) {
-          style = 'red';
-          console.log('Dark mode, focused or hovered: ', style);
-        } else {
-          style = '#ffffff1a';
-          console.log('Dark mode, not focused or hovered: ', style);
-        }
-      } else {
-        if (isFocused || isHovered) {
-          style = borderFocusColor;
-          console.log('Light mode, focused or hovered: ', style);
-        } else {
-          style = borderColor;
-          console.log('Light mode, not focused or hovered: ', style);
-        }
-      }
-      setBorderStyles(style);
-    },[appState.mode, isFocused, isHovered, appState.inputBox.borderColor, , appState.inputBox.borderFocus])
     
     if (_useMUI == undefined || _useMUI == false) {
       return (

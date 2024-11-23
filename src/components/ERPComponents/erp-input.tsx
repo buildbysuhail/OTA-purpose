@@ -116,8 +116,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }: ERPInputProps,
     ref
   ) => {
-    console.log("ERPINPUTS");
-
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
@@ -131,13 +129,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const [_variant, set_variant] = useState<
       "filled" | "outlined" | "standard" | undefined
     >(variant === "normal" ? undefined : variant);
-    
+
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
-    const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => {setIsFocused(false);};
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
@@ -145,6 +141,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     }, [appState.inputBox.inputSize]);
 
+      
     useEffect(() => {
       if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
         set_useMUI(true);
@@ -194,8 +191,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
       const commonMuiStyles = {
         color: `rgb(${appState.inputBox.fontColor})`,
-        "--tw-ring-shadow": "none",
-        boxShadow: "none",
         "& .MuiOutlinedInput-notchedOutline": {
           borderColor: `rgb(${appState.inputBox.borderColor})`,
         },
@@ -208,7 +203,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         "&:hover .MuiFilledInput-underline, &:hover:before": {
           borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
         },
-      
+
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
           borderColor: `rgb(${appState.inputBox.borderFocus})`,
         },
@@ -222,7 +217,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             padding: "0 0.75rem",
           },
       };
-
       switch (_customSize) {
         case "sm":
           return {
@@ -230,6 +224,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputBase-root": {
                 height: "2rem",
                 fontSize: "12px",
+
+                boxShadow: "none !important",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
@@ -475,18 +471,40 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       borderFocusColor,
     } = sizeStyles.regular;
 
-    const inputBorderColor = isFocused
-    ? borderFocusColor
-    : isHovered
-    ? borderFocusColor
-    : borderColor;
+    const [borderStyles, setBorderStyles] = useState(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? 'red' : '#ffffff1a') : `${isFocused || isHovered ? borderFocusColor : borderColor} `);
+    useEffect(() => {
+      console.log(isFocused);
+      
+      console.log(appState.mode);
+      
+      let style;
 
+      if (appState.mode === 'dark') {
+        if (isFocused || isHovered) {
+          style = 'red';
+          console.log('Dark mode, focused or hovered: ', style);
+        } else {
+          style = '#ffffff1a';
+          console.log('Dark mode, not focused or hovered: ', style);
+        }
+      } else {
+        if (isFocused || isHovered) {
+          style = borderFocusColor;
+          console.log('Light mode, focused or hovered: ', style);
+        } else {
+          style = borderColor;
+          console.log('Light mode, not focused or hovered: ', style);
+        }
+      }
+      setBorderStyles(style);
+    },[appState.mode, isFocused, isHovered, appState.inputBox.borderColor, , appState.inputBox.borderFocus])
+    
     if (_useMUI == undefined || _useMUI == false) {
       return (
-        <div className={className}>
+         <div className={className}>
           {!noLabel && (
             <label
-              className={`capitalize block  text-gray-900 text-left rtl:text-right ${labelClassName}`}
+              className={`capitalize block  text-gray-900 text-left rtl:text-right form-label ${labelClassName}`}
               style={{
                 fontSize: _customSize
                   ? _customSize === "sm"
@@ -524,20 +542,25 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {...commonProps}
                 placeholder={iPlaceholder}
                 ref={ref}
-                autoComplete={autocomplete}  
+                autoComplete={autocomplete}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
+                onFocus={(e) => {
+                  setIsFocused(true);
+                }}
+                onBlur={(e) => {
+                  setIsFocused(false);
+                }}
                 style={
                   {
                     height,
                     fontSize,
                     fontWeight,
                     color,
-                    border: `1px solid ${inputBorderColor}`,
-                    '--tw-ring-shadow': 'none',
-                    outline: "none",
+                    borderColor: borderStyles,
+                    "--tw-ring-shadow": "none !important", // Force disable ring shadow
+                    "--tw-ring-offset-shadow": "none !important",
+
                     transition: "border-color 0.2s ease-in-out",
                     borderTopLeftRadius: `${
                       !prefix ? appState.inputBox.borderRadius : 0
@@ -557,18 +580,12 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           appState.inputBox.borderRadius ?? 5
                         }px`,
                       }),
-                   
                   } as React.CSSProperties
                 }
-                className={`
-                border 
-                block w-full 
+                className={`form-control
                ${inputClassName} 
                placeholder:capitalize  
-               ${disabled ? "text-gray-400" : "bg-white text-gray-900"}
-            
               `}
-        
                 onWheel={(e: any) => {
                   type === "number" && e?.target?.blur();
                 }}

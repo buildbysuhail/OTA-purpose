@@ -5,6 +5,7 @@ export function Dark(actionfunction: any, appState: any) {
     actionfunction({
         ...appState,
         "class": "dark",
+        "mode": "dark",
         "dataHeaderStyles": "dark",
         "dataMenuStyles": "dark",
         "bodyBg": "",
@@ -23,6 +24,7 @@ export function Light(actionfunction: any, appState: any) {
     actionfunction({
         ...appState,
         "class": "light",
+        "mode": "light",
         "dataHeaderStyles": "light",
         "darkBg": "",
         "bodyBg": "",

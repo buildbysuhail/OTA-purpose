@@ -107,29 +107,33 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   const getSizeStyles = () => {
 
     const commonMuiStyles = {
-      color: `rgb(${appState.inputBox.fontColor})`,
+      color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`,
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: `rgb(${appState.inputBox.borderColor})`,
+        borderColor:appState.mode == 'dark' ?'#ffffff1a':`rgb(${appState.inputBox.borderColor})`,
       },
       "& .MuiFilledInput-underline, &:before": {
-        borderBottomColor: `rgb(${appState.inputBox.borderColor})`,
+        borderBottomColor:appState.mode == 'dark' ?'#ffffff1a':`rgb(${appState.inputBox.borderColor})`,
       },
+      
       "&:hover .MuiOutlinedInput-notchedOutline": {
-        borderColor: `rgb(${appState.inputBox.borderFocus})`,
+        borderColor: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
       },
       "&:hover .MuiFilledInput-underline, &:hover:before": {
-        borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+        borderBottomColor:  appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
       },
+
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-        borderColor: `rgb(${appState.inputBox.borderFocus})`,
+        borderColor:  appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
       },
-      "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after": {
-        borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
-      },
+      "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
+        {
+          borderBottomColor: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
+        },
       margin: "0",
-      "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input": {
-        padding: "0 0.75rem",
-      },
+      "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
+        {
+          padding: "0 0.75rem",
+        },
     };
     switch (_customSize) {
       case "sm":
@@ -140,6 +144,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
+            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             fontSize: "12px",
             transform: _variant === "filled"
               ? "translate(8px, 10px) scale(0.8)"
@@ -163,6 +168,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
+            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             fontSize: "14px",
             transform: _variant === "filled"
               ? "translate(10px, 15px) scale(1)"
@@ -186,6 +192,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
+            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             fontSize: "12px",
             transform: _variant === "filled"
               ? "translate(10px, 13px) scale(0.9)"
@@ -212,6 +219,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
+            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
             transform:
               _variant === "filled"

@@ -46,7 +46,7 @@ import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
-import LedgerReportFilter from "../../pages/accounts/masters/reports/ledger-report-filter";
+import LedgerReportFilter from "../../pages/accounts/reports/ledger-report-filter";
 
 interface ToolbarItem {
   item: React.ReactNode;

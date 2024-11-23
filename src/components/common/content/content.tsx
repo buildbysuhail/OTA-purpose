@@ -1,36 +1,37 @@
 import { FC, lazy, Suspense, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ApplicationSettings from '../../../pages/settings/system/application-settings';
+import ApplicationSettingsNew from '../../../pages/settings/system/application-settings-new';
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
 import ReportList from '../../ERPComponents/reports/reports-list';
-import AccountPayableAgingReport from '../../../pages/accounts/masters/reports/account-payable-aging-report';
-import AccountReceivableAgingReport from '../../../pages/accounts/masters/reports/account-receivable-aging-report';
+import AccountPayableAgingReport from '../../../pages/accounts/reports/account-payable-aging-report';
+import AccountReceivableAgingReport from '../../../pages/accounts/reports/account-receivable-aging-report';
 import TemplateDesignerLayout from '../layout/template-designer-layout';
 
 
-import LedgerReport from '../../../pages/accounts/masters/reports/ledger-report';
-import CashBookSummary from '../../../pages/accounts/masters/reports/cashBook/cash-book-summary';
-import DayBookDetailed from '../../../pages/accounts/masters/reports/dayBook/day-book-detailed';
-import DayBookSummary from '../../../pages/accounts/masters/reports/dayBook/dayBookSummary/day-book-summary';
-import PaymentReport from '../../../pages/accounts/masters/reports/payment-report';
-import CollectionReport from '../../../pages/accounts/masters/reports/collection-report';
-import CashSummary from '../../../pages/accounts/masters/reports/cash-summary';
-import TransactionReport from '../../../pages/accounts/masters/reports/transaction-report';
-import AccountsHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/accountsHistory/accounts-history-report';
-import DailySummary from '../../../pages/accounts/masters/reports/dailySummary/dailySummary/daily-summary';
-import BillwiseProfit from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit';
-import PartySummaryBasicInfo from '../../../pages/accounts/masters/reports/partywise-summary/party-summary-basic-info';
-import OutstandingAccountPayableReport from '../../../pages/accounts/masters/reports/outStandingReports/outstanding-account-payable-report';
-import OutstandingAccountReceivableReport from '../../../pages/accounts/masters/reports/outStandingReports/outstanding-account-receivable-report';
-import OutstandingAccountPayableAgingReport from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
-import OutstandingAccountReceivableAgingReport from '../../../pages/accounts/masters/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
-import ProfitAndLoss from '../../../pages/accounts/masters/reports/profitAndLoss/profit-and-loss';
-import TrialBalance from '../../../pages/accounts/masters/reports/trial-balance';
-import BalanceSheet from '../../../pages/accounts/masters/reports/balanceSheet/balace-sheet';
-import InventoryHistoryReport from '../../../pages/accounts/masters/reports/transactionHistory/InventoryHistory/inventory-history-report';
-import BillwiseProfitGlobal from '../../../pages/accounts/masters/reports/billwise-profit/billwise-profit-global';
+import LedgerReport from '../../../pages/accounts/reports/ledger-report';
+import CashBookSummary from '../../../pages/accounts/reports/cashBook/cash-book-summary';
+import DayBookDetailed from '../../../pages/accounts/reports/dayBook/day-book-detailed';
+import DayBookSummary from '../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary';
+import PaymentReport from '../../../pages/accounts/reports/payment-report';
+import CollectionReport from '../../../pages/accounts/reports/collection-report';
+import CashSummary from '../../../pages/accounts/reports/cash-summary';
+import TransactionReport from '../../../pages/accounts/reports/transaction-report';
+import AccountsHistoryReport from '../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report';
+import DailySummary from '../../../pages/accounts/reports/dailySummary/dailySummary/daily-summary';
+import BillwiseProfit from '../../../pages/accounts/reports/billwise-profit/billwise-profit';
+import PartySummaryBasicInfo from '../../../pages/accounts/reports/partywise-summary/party-summary-basic-info';
+import OutstandingAccountPayableReport from '../../../pages/accounts/reports/outStandingReports/outstanding-account-payable-report';
+import OutstandingAccountReceivableReport from '../../../pages/accounts/reports/outStandingReports/outstanding-account-receivable-report';
+import OutstandingAccountPayableAgingReport from '../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
+import OutstandingAccountReceivableAgingReport from '../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
+import ProfitAndLoss from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss';
+import TrialBalance from '../../../pages/accounts/reports/trial-balance';
+import BalanceSheet from '../../../pages/accounts/reports/balanceSheet/balace-sheet';
+import InventoryHistoryReport from '../../../pages/accounts/reports/transactionHistory/InventoryHistory/inventory-history-report';
+import BillwiseProfitGlobal from '../../../pages/accounts/reports/billwise-profit/billwise-profit-global';
 
 
 const AccountSettingsSecurity = lazy(() => import('../../../pages/account-settings/account-settings-security'));
@@ -104,6 +105,7 @@ import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-sum
 import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
 import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/party-wise-report';
 import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
+import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
 
 interface ContentProps { }
 const loading = (
@@ -146,6 +148,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/reminders" element={<Reminders />} />
         <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
+        <Route path="/system/application-settings-new" element={<ApplicationSettingsNew />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
         <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="/system/counter-settings" element={<CounterSettings />} />
@@ -224,6 +227,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
+        <Route path="/inventory/gstr_report" element={<GstrReport />} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

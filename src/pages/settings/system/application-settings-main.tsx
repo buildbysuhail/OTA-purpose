@@ -7,7 +7,10 @@ import Urls from "../../../redux/urls";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { APIClient } from "../../../helpers/api-client";
 import { handleResponse } from "../../../utilities/HandleResponse";
-import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "./application-settings-types";
+import {
+  ApplicationMainSettings,
+  ApplicationMainSettingsInitialState,
+} from "./application-settings-types";
 // import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { t } from "i18next";
 import { tabClasses } from "@mui/material";
@@ -15,13 +18,15 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 
-
-
 const api = new APIClient();
 const ERPSettingsFormMain = () => {
   const dispatch = useAppDispatch();
-  const [settings, setSettings] = useState<ApplicationMainSettings>(ApplicationMainSettingsInitialState);
-  const [settingsPrev, setSettingsPrev] = useState<Partial<ApplicationMainSettings>>({});
+  const [settings, setSettings] = useState<ApplicationMainSettings>(
+    ApplicationMainSettingsInitialState
+  );
+  const [settingsPrev, setSettingsPrev] = useState<
+    Partial<ApplicationMainSettings>
+  >({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -32,15 +37,17 @@ const ERPSettingsFormMain = () => {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
 
-    const formContainer = document.querySelector('.settings-form-container') as HTMLElement;
+    const formContainer = document.querySelector(
+      ".settings-form-container"
+    ) as HTMLElement;
     if (formContainer) {
-      formContainer.style.overflow = 'auto';
+      formContainer.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, []);
 
@@ -89,14 +96,17 @@ const ERPSettingsFormMain = () => {
       setLoading(false);
     }
   };
-  const handleFieldChange = (settingName: keyof ApplicationMainSettings, value: any) => {
+  const handleFieldChange = (
+    settingName: keyof ApplicationMainSettings,
+    value: any
+  ) => {
     debugger;
     setSettings((prevSettings = {} as ApplicationMainSettings) => {
-      if (settingName === 'allowSalesRouteArea' && value == false) {
+      if (settingName === "allowSalesRouteArea" && value == false) {
         const newSettings = {
           ...prevSettings,
           [settingName]: value,
-          ['maintainSalesRouteCreditLimit']: false
+          ["maintainSalesRouteCreditLimit"]: false,
         };
         return newSettings;
       } else {
@@ -119,25 +129,38 @@ const ERPSettingsFormMain = () => {
         const currentValue = settings?.[key as keyof ApplicationMainSettings];
         const prevValue = settingsPrev[key as keyof ApplicationMainSettings];
 
-        if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
-          (currentValue === true && prevValue === false)) {
-
+        if (
+          currentValue !== prevValue ||
+          (currentValue === false && prevValue === true) ||
+          (currentValue === true && prevValue === false)
+        ) {
           acc.push({
             settingsName: key,
-            settingsValue: currentValue === false ? "false" :
-              currentValue === true ? "true" :
-                (currentValue ?? "").toString(),
+            settingsValue:
+              currentValue === false
+                ? "false"
+                : currentValue === true
+                ? "true"
+                : (currentValue ?? "").toString(),
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
 
-      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
-        type: "main",
-        updateList: modifiedSettings,
-      })) as any : null;
-      handleResponse(response, () => { setSettingsPrev(settings) }, () => { });
-
+      const response =
+        modifiedSettings && modifiedSettings.length > 0
+          ? ((await api.put(Urls.application_settings, {
+              type: "main",
+              updateList: modifiedSettings,
+            })) as any)
+          : null;
+      handleResponse(
+        response,
+        () => {
+          setSettingsPrev(settings);
+        },
+        () => {}
+      );
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -163,7 +186,10 @@ const ERPSettingsFormMain = () => {
               label={t("business_type")}
               data={settings}
               onChangeData={(data) =>
-                handleFieldChange("maintainBusinessType", data.maintainBusinessType)
+                handleFieldChange(
+                  "maintainBusinessType",
+                  data.maintainBusinessType
+                )
               }
               options={[
                 { value: "General", label: "General" },
@@ -185,7 +211,9 @@ const ERPSettingsFormMain = () => {
                 labelKey: "name",
               }}
               data={settings}
-              onChangeData={(data) => handleFieldChange("currency", data.currency)}
+              onChangeData={(data) =>
+                handleFieldChange("currency", data.currency)
+              }
               label={t("currency_main")}
             />
             <ERPDataCombobox
@@ -198,10 +226,7 @@ const ERPSettingsFormMain = () => {
               label={t("currency_format")}
               data={settings}
               onChangeData={(data) =>
-                handleFieldChange(
-                  "showNumberFormat",
-                  data.showNumberFormat
-                )
+                handleFieldChange("showNumberFormat", data.showNumberFormat)
               }
               options={[
                 { value: "Millions", label: "Millions" },
@@ -241,7 +266,10 @@ const ERPSettingsFormMain = () => {
                 label={t("rounding_method_global")}
                 data={settings}
                 onChangeData={(data) =>
-                  handleFieldChange("roundingMethodGLOBAL", data.roundingMethodGLOBAL)
+                  handleFieldChange(
+                    "roundingMethodGLOBAL",
+                    data.roundingMethodGLOBAL
+                  )
                 }
                 options={[
                   { value: "Normal", label: "Normal" },
@@ -251,13 +279,23 @@ const ERPSettingsFormMain = () => {
                   { value: "Round to 0.25", label: "Round to 0.25" },
                   { value: "Round to 0.50", label: "Round to 0.50" },
                   { value: "Round to 0.10", label: "Round to 0.10" },
-                  { value: "Floor Round to 0.50", label: "Floor Round to 0.50" },
-                  { value: "Floor Round to 0.25", label: "Floor Round to 0.25" },
-                  { value: "Floor Round to 0.10", label: "Floor Round to 0.10" },
+                  {
+                    value: "Floor Round to 0.50",
+                    label: "Floor Round to 0.50",
+                  },
+                  {
+                    value: "Floor Round to 0.25",
+                    label: "Floor Round to 0.25",
+                  },
+                  {
+                    value: "Floor Round to 0.10",
+                    label: "Floor Round to 0.10",
+                  },
                   { value: "Not Set", label: "Not Set" },
                   { value: "Round to 0.010", label: "Round to 0.010" },
                 ]}
-              />)}
+              />
+            )}
           </div>
 
           <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
@@ -280,7 +318,8 @@ const ERPSettingsFormMain = () => {
                   { value: "Ceiling", label: "Ceiling" },
                   { value: "Floor", label: "Floor" },
                 ]}
-              />)}
+              />
+            )}
             <ERPDataCombobox
               field={{
                 id: "pOSRoundingMethod",
@@ -357,7 +396,7 @@ const ERPSettingsFormMain = () => {
           </div>
 
           <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
-            {userSession.countryId != Countries.India &&
+            {userSession.countryId != Countries.India && (
               <ERPCheckbox
                 id="autoChangeTransactionDateByMidnight"
                 label={t("auto_change_transaction")}
@@ -370,7 +409,7 @@ const ERPSettingsFormMain = () => {
                   )
                 }
               />
-            }
+            )}
             <ERPInput
               id="autoUpdateReleaseUpTo"
               label={t("auto_update_release_up_to")}
@@ -395,7 +434,9 @@ const ERPSettingsFormMain = () => {
               className="w-1/3"
               value={settings?.oTPEmail}
               data={settings}
-              onChangeData={(data) => handleFieldChange("oTPEmail", data.oTPEmail)}
+              onChangeData={(data) =>
+                handleFieldChange("oTPEmail", data.oTPEmail)
+              }
             />
             <div className="mt-4">
               <ERPButton
@@ -433,7 +474,10 @@ const ERPSettingsFormMain = () => {
                 data={settings}
                 checked={settings?.allowPrivilegeCard}
                 onChangeData={(data) =>
-                  handleFieldChange("allowPrivilegeCard", data.allowPrivilegeCard)
+                  handleFieldChange(
+                    "allowPrivilegeCard",
+                    data.allowPrivilegeCard
+                  )
                 }
               />
               <ERPInput
@@ -447,7 +491,10 @@ const ERPSettingsFormMain = () => {
                 onChangeData={(data) =>
                   handleFieldChange("previlegeCardPerc", data.previlegeCardPerc)
                 }
-              /><label className=" ml-2 mr-2 block form-check-label text-gray-700">%</label>
+              />
+              <label className=" ml-2 mr-2 block form-check-label text-gray-700">
+                %
+              </label>
             </div>
             <div className="flex items-center">
               <ERPCheckbox
@@ -456,7 +503,10 @@ const ERPSettingsFormMain = () => {
                 data={settings}
                 checked={settings?.allowPostdatedTrans}
                 onChangeData={(data) =>
-                  handleFieldChange("allowPostdatedTrans", data.allowPostdatedTrans)
+                  handleFieldChange(
+                    "allowPostdatedTrans",
+                    data.allowPostdatedTrans
+                  )
                 }
               />
               <ERPInput
@@ -473,7 +523,10 @@ const ERPSettingsFormMain = () => {
                     data.postDatedTransInNumbers
                   )
                 }
-              /><label className=" ml-2 mr-2 block form-check-label text-gray-700">Days</label>
+              />
+              <label className=" ml-2 mr-2 block form-check-label text-gray-700">
+                Days
+              </label>
             </div>
             <div className="flex items-center">
               <ERPCheckbox
@@ -482,7 +535,10 @@ const ERPSettingsFormMain = () => {
                 data={settings}
                 checked={settings?.allowPredatedTrans}
                 onChangeData={(data) =>
-                  handleFieldChange("allowPredatedTrans", data.allowPredatedTrans)
+                  handleFieldChange(
+                    "allowPredatedTrans",
+                    data.allowPredatedTrans
+                  )
                 }
               />
               <ERPInput
@@ -499,7 +555,10 @@ const ERPSettingsFormMain = () => {
                     data.preDatedTransInNumbers
                   )
                 }
-              /><label className=" ml-2 mr-2 block form-check-label text-gray-700">Days</label>
+              />
+              <label className=" ml-2 mr-2 block form-check-label text-gray-700">
+                Days
+              </label>
             </div>
           </div>
 
@@ -551,7 +610,10 @@ const ERPSettingsFormMain = () => {
               data={settings}
               checked={settings?.enableSecondDisplay}
               onChangeData={(data) =>
-                handleFieldChange("enableSecondDisplay", data.enableSecondDisplay)
+                handleFieldChange(
+                  "enableSecondDisplay",
+                  data.enableSecondDisplay
+                )
               }
             />
             <ERPCheckbox
@@ -560,7 +622,10 @@ const ERPSettingsFormMain = () => {
               data={settings}
               checked={settings.allowSalesRouteArea}
               onChangeData={(data) =>
-                handleFieldChange("allowSalesRouteArea", data.allowSalesRouteArea)
+                handleFieldChange(
+                  "allowSalesRouteArea",
+                  data.allowSalesRouteArea
+                )
               }
             />
             {userSession.countryId === Countries.India && (
@@ -572,7 +637,8 @@ const ERPSettingsFormMain = () => {
                 onChangeData={(data) =>
                   handleFieldChange("enableDayEnd", data.enableDayEnd)
                 }
-              />)}
+              />
+            )}
             <ERPCheckbox
               id="maintainSalesRouteCreditLimit"
               label={t("maintain_sales")}

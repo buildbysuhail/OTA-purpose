@@ -36,7 +36,7 @@ interface ERPDateInputProps {
   labelClassName?: string;
   inputClassName?: string;
   useMUI?: boolean;
-  variant?: "standard" | "outlined" | "filled";
+  variant?: "standard" | "outlined" | "filled"|"normal";
   customSize?: "sm" | "md" | "lg" | "customize";
   // color?: TextFieldProps['color'];
 }
@@ -62,8 +62,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   className,
   labelClassName,
   inputClassName,
-  useMUI = false,
-  variant = "outlined",
+  useMUI,
+  variant ,
   customSize,
   // color,
   ...props
@@ -76,11 +76,34 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     (state: RootState) => state.AppState.appState
   );
   const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+  const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
+  const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(
+    variant === "normal" ? undefined : variant
+  );
  useEffect(() => {
     if (customSize == undefined || customSize == null) {
       setCustomSize(appState.inputBox.inputSize);
     }
   }, [appState.inputBox.inputSize]);
+
+  useEffect(() => {
+    if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
+      set_useMUI(true);
+    } else if (appState.inputBox.inputStyle === "normal" && useMUI === undefined) {
+      set_useMUI(false);
+    }
+  }, [appState.inputBox.inputStyle, useMUI]);
+  
+  useEffect(() => {
+    if (appState.inputBox.inputStyle !== "normal" && (variant === undefined || variant === null)) {
+      set_variant(appState.inputBox.inputStyle as "filled" | "outlined" | "standard");
+    } else if (appState.inputBox.inputStyle === "normal") {
+      set_variant(undefined);
+    } else {
+      set_variant(variant as "filled" | "outlined" | "standard");
+    }
+  }, [appState.inputBox.inputStyle, variant]);
+
   const getSizeStyles = () => {
 
     const commonMuiStyles = {
@@ -118,16 +141,16 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: "12px",
-            transform: variant === "filled"
+            transform: _variant === "filled"
               ? "translate(8px, 10px) scale(0.8)"
-              : variant === "standard"
+              : _variant === "standard"
                 ? "translate(0, 10px) scale(0.8)"
                 : "translate(8px, 10px) scale(0.8)"
           },
           "& .MuiInputLabel-shrink": {
-            transform: variant === "filled"
+            transform: _variant === "filled"
               ? "translate(8px, -10px) scale(0.75)"
-              : variant === "standard"
+              : _variant === "standard"
                 ? "translate(0px, -6px) scale(0.75)"
                 : "translate(16px, -6px) scale(0.75)"
           }
@@ -141,16 +164,16 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: "14px",
-            transform: variant === "filled"
+            transform: _variant === "filled"
               ? "translate(10px, 15px) scale(1)"
-              : variant === "standard"
+              : _variant === "standard"
                 ? "translate(0, 15px) scale(1)"
                 : "translate(10px, 15px) scale(1)"
           },
           "& .MuiInputLabel-shrink": {
-            transform: variant === "filled"
+            transform: _variant === "filled"
               ? "translate(8px, -14px) scale(0.88)"
-              : variant === "standard"
+              : _variant === "standard"
                 ? "translate(1px,-6px) scale(0.88)"
                 : "translate(16px, -7px) scale(0.88)"
           }
@@ -164,16 +187,16 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: "12px",
-            transform: variant === "filled"
+            transform: _variant === "filled"
               ? "translate(10px, 13px) scale(0.9)"
-              : variant === "standard"
+              : _variant === "standard"
                 ? "translate(0, 13px) scale(0.9)"
                 : "translate(10px, 13px) scale(0.9)"
           },
           "& .MuiInputLabel-shrink": {
-            transform: variant === "filled"
+            transform: _variant === "filled"
               ? "translate(8px, -12px) scale(0.90)"
-              : variant === "standard"
+              : _variant === "standard"
                 ? "translate(0px,-6px) scale(0.90)"
                 : "translate(15px, -7px) scale(0.90)"
           }
@@ -190,19 +213,21 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
-            transform: variant === "filled"
-              ? "translate(10px, 15px) scale(1))"
-              : variant === "standard"
-                ? "translate(0, 15px) scale(1)"
-                : "translate(10px, 15px) scale(1)"
+            transform:
+              _variant === "filled"
+                ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                : _variant === "standard"
+                  ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                  : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`,
           },
           "& .MuiInputLabel-shrink": {
-            transform: variant === "filled"
-              ? "translate(8px, -14px) scale(0.88)"
-              : variant === "standard"
-                ? "translate(1px,-6px) scale(0.88)"
-                : "translate(16px, -7px) scale(0.88)"
-          }
+            transform:
+              _variant === "filled"
+                ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -14}px) scale(0.88)`
+                : _variant === "standard"
+                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
+                  : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${appState?.inputBox?.adjustD ?? -7}px) scale(0.88)`,
+          },
         };
     }
   };
@@ -254,7 +279,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   };
   
 
-  if (useMUI) {
+  if (_useMUI == true) {
     return (
       <div className={className}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -268,7 +293,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             slotProps={{
               textField: {
                 required,
-                variant,
+                variant: _variant,
                 fullWidth: true,
                 sx: sizeStyles,
                 InputLabelProps: {
@@ -284,7 +309,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   }
 
   const displayValue = formatDate(value) || formatDate(defaultValue) || "";
-
+  if (_useMUI == undefined || _useMUI == false){
   return (
     <div className={className}>
       <ERPInput
@@ -308,6 +333,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
       <ERPElementValidationMessage validation={validation} />
     </div>
   );
+}
 });
 
 export default ERPDateInput;

@@ -154,6 +154,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       fontColor:"128, 128, 128", 
       borderFocus: "128, 128, 128",
       borderRadius: 0,
+      adjustA:0,
+      adjustB:0,
+      adjustC:0,
+      adjustD:0, 
     },
   });
 
@@ -1262,10 +1266,9 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                       <div className="">
-                        <p className="switcher-style-head">Input Box Style:</p>
-                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center  switcher-style">
-                          {theme.inputBox?.inputStyle === "normal" ? (
-                            <ERPInput
+                        <p className="switcher-style-head ">Input Box Style:</p>
+                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center mt-5 switcher-style">
+                             <ERPInput
                               id="inputBox"
                               label="Demo Input"
                               onChange={(e) => {
@@ -1276,22 +1279,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               }}
                               value={demo.inputBox}
                             />
-                          ) : (
-                            <ERPInput
-                              useMUI
-                              onChange={(e) => {
-                                setDemo((prevTheme) => ({
-                                  ...prevTheme,             
-                                  inputBox: e.target.value  
-                                }));
-                              }}
-                              value={demo.inputBox}
-                              variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
-                              id="demoInput"
-                              label="Demo Input"
-                            />
-                          )}
-                          {theme.inputBox?.inputStyle === "normal" ? (
+                        
                             <ERPDateInput
                               id="dateBox"                          
                               label="Date Input"
@@ -1303,23 +1291,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               }}
                               value={demo.dateBox}
                             />
-                          ) : (
-                            <ERPDateInput
-                              useMUI
-                              onChange={(e) => {
-                                setDemo((prevTheme) => ({
-                                  ...prevTheme,             
-                                  dateBox: e.target.value  
-                                }));
-                              }}
-                              value={demo.dateBox}
-                              variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
-                              id="dateBox"
-                              label="Date Input"
-                            />
-                          )}
-
-                            {theme.inputBox?.inputStyle === "normal" ? (
+                         
                             <ERPDataCombobox
                             id="selectBox"
                             data={demo}
@@ -1346,36 +1318,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               { value: 5, label: "5" },
                             ]}
                         />
-                     
-                          ) : (
-                          <ERPDataCombobox
-                          useMUI
-                          id="selectBox"
-                          field={{
-                            id: "selectBox",
-                            valueKey: "value",
-                            labelKey: "label",
-                          }}
-                          options={[
-                            { value: 0, label: "0" },
-                            { value: 1, label: "1" },
-                            { value: 2, label: "2" },
-                            { value: 3, label: "3" },
-                            { value: 4, label: "4" },
-                            { value: 5, label: "5" },
-                          ]}
-                          
-                          data={demo}
-                          label="Demo Select Box"
-                          variant={theme.inputBox?.inputStyle =="filled" ? "filled" : theme.inputBox?.inputStyle =="outlined" ? "outlined" : "standard"}
-                          onChange={(e) => {
-                            setDemo((prevTheme) => ({
-                              ...prevTheme,             
-                              selectBox: e?.value ?? null, 
-                            }));
-                          }}
-                          />
-                          )}
                            
                         </div>
                         
@@ -1397,6 +1339,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       inputStyle: "normal",
                                     },
                                   }));
+                                  handleInputBoxStyleChange(
+                                    "inputStyle",
+                                    "normal"
+                                  );
                                 }
                               }}
                             />
@@ -1791,59 +1737,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               />
                             </div>
                           </div>
-
-                          {/* <div className="flex items-center space-x-3">
-                            <div className="basis-2/3 ">
-                              <ERPSlider
-                                id="otherLabelFontSize"
-                                label="Other Label Font Size"
-                                className="bg-slate-300"
-                                value={theme.inputBox?.otherLabelFontSize}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      otherLabelFontSize: newValue, // Update the theme state
-                                    },
-                                  }));
-                                  handleInputBoxStyleChange(
-                                    "otherLabelFontSize",
-                                    newValue
-                                  );
-                                }}
-                                min={5}
-                                max={25}
-                               
-                              />
-                            </div>
-                            <div className="basis-1/3 translate-y-3">
-                              <ERPInput
-                                id="otherLabelFontSize"
-                                type="number"
-                                noLabel={true}
-                                value={theme.inputBox?.otherLabelFontSize}
-                                data={theme.inputBox}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      otherLabelFontSize: newValue, // Update the theme state
-                                    },
-                                  }));
-                                  handleInputBoxStyleChange(
-                                    "otherLabelFontSize",
-                                    newValue
-                                  );
-                                }}
-                                min={5}
-                                max={25}
-                              />
-                            </div>
-                          </div> */}
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider
@@ -1950,6 +1843,118 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               />
                             </div>
                           </div>
+
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-1/2 ">
+                              <ERPSlider
+                                id="adjustA"
+                                label={`AdjustA (${theme.inputBox?.adjustA??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.adjustA}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      adjustA: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "adjustA",
+                                    newValue
+                                  );
+                                }}
+                                min={-25}
+                                max={25}
+                               
+                              />
+                            </div>
+                            <div className="basis-1/2 ">
+                            <ERPSlider
+                                id="adjustB"
+                                label={`AdjustB (${theme.inputBox?.adjustB??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.adjustB}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      adjustB: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "adjustB",
+                                    newValue
+                                  );
+                                }}
+                                min={-25}
+                                max={25}
+                               
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-col space-y-1">
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-1/2 ">
+                            <ERPSlider
+                                id="adjustC"
+                                label={`AdjustC (${theme.inputBox?.adjustC??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.adjustC}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      adjustC: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "adjustC",
+                                    newValue
+                                  );
+                                }}
+                                min={-25}
+                                max={25}
+                               
+                              />
+                            </div>
+                            <div className="basis-1/2 ">
+                            <ERPSlider
+                                id="adjustD"
+                                label={`AdjustD (${theme.inputBox?.adjustD??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.adjustD}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      adjustD: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "adjustD",
+                                    newValue
+                                  );
+                                }}
+                                min={-25}
+                                max={25}
+                               
+                              />
+                            </div>
+                          </div>
+                          <div className="px-4 text-secondary text-xs">
+                            <b className="me-2">Note:</b>This usstyle 
+                            won't work in normal inputbox.
+                          </div>
+                          </div>
+                          
                           </div>
                        )}
                           

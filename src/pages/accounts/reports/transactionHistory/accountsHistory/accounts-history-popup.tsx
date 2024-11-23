@@ -8,14 +8,13 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 
-interface AccountsHistoryPopup {
-
-  from: Date
+interface AccountsHistoryPopupProps {
+  contentProps?: any
+  enablefilter?: boolean;
 }
-const AccountsHistoryPopup = () => {
+const AccountsHistoryPopup = ({contentProps, enablefilter = false}:AccountsHistoryPopupProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<AccountsHistoryPopup>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -117,6 +116,7 @@ const AccountsHistoryPopup = () => {
                   gridHeader={t("accounts_transaction_history_popup")}
                   dataUrl= {Urls.acc_reports_accounts_history_popup}
                   method={ActionType.POST}
+                  postData = {contentProps}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

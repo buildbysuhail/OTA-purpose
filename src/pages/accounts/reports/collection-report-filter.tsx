@@ -5,7 +5,6 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../enums/ledger-types";
 import Urls from "../../../redux/urls";
-
 const CollectionReportFilter = ({ getFieldProps, handleFieldChange, t}: any) => {
     return (
   <div className="grid grid-cols-2 gap-4">
@@ -39,7 +38,6 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange, t}: any) => 
       onChangeData={(data) => { handleFieldChange('voucherType', data.voucherType); 
       }}
     />
-
     <ERPDataCombobox
       {...getFieldProps("accGroupID")}
       label={t("account_group")}
@@ -63,7 +61,6 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange, t}: any) => 
       }}
       onChangeData={(data) => handleFieldChange('accLedgerID', data.accLedgerID)}
     />
-
     <ERPDataCombobox
       {...getFieldProps("salesRouteID")}
       label={t("sales_route")}
@@ -87,15 +84,15 @@ const CollectionReportFilter = ({ getFieldProps, handleFieldChange, t}: any) => 
       onChangeData={(data) => handleFieldChange('employeeID', data.employeeID)}
     />
     <ERPDataCombobox
-      {...getFieldProps("costCentreID")}
+      {...getFieldProps("costCenterID")}
       label={t("Cost Centre")}
       field={{
-        id: "costCentreID",
+        id: "costCenterID",
         getListUrl: Urls.data_costcentres,
         valueKey: "id",
         labelKey: "name",
       }}
-      onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+      onChangeData={(data) => handleFieldChange('costCenterID', data.costCenterID)}
     />
       <ERPCheckbox
       {...getFieldProps("isIncludePI_CP")}

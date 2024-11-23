@@ -8,14 +8,14 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 
-interface DayBookBillWise {
-
-  from: Date
+interface DayBookBillwiseProps {
+  contentProps?: any
+  enablefilter?: boolean;
 }
-const DayBookBillWise = () => {
+const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DayBookBillWise>({from: new Date()});
+  // const [filter, setFilter] =useState<DayBookBillWise>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -24,7 +24,7 @@ const DayBookBillWise = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 300,
     },
     {
       dataField: "form",
@@ -32,6 +32,7 @@ const DayBookBillWise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 300,
     },
     {
       dataField: "vchNo",
@@ -47,7 +48,11 @@ const DayBookBillWise = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
     {
       dataField: "debit",
@@ -56,6 +61,11 @@ const DayBookBillWise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -64,6 +74,11 @@ const DayBookBillWise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "balance",
@@ -72,6 +87,11 @@ const DayBookBillWise = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
   ];
   return (
@@ -83,8 +103,9 @@ const DayBookBillWise = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  postData = {contentProps}
                   gridHeader={t("daybook_billwise")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  dataUrl= {Urls.acc_reports_day_book_billwise}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}

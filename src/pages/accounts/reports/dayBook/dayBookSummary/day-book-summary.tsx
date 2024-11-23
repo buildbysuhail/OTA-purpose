@@ -8,70 +8,44 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "../day-book-report-filter";
-interface DayBookSummary {
-  from: Date
-}
+import DayBookBillWise from "./day-book-billwise";
+// interface DayBookSummary {
+//   from: Date
+// }
 const DayBookSummary = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
+  // const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    {
-      dataField: "date",
-      caption: t('date'),
-      dataType: "date",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 200,
-    },
-    {
+    // {
+    //   dataField: "date",
+    //   caption: t('date'),
+    //   dataType: "date",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 200,
+    // },
+    { 
       dataField: "voucherType",
-      caption:  t("voucher_no"),
+      caption:  t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-    // {
-    //   dataField: "ledger",
-    //   caption: t("account"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
       dataField: "particulars",
       caption: t("account"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
-    // {
-    //   dataField: "refNo",
-    //   caption: t("ref_no"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "refDate",
-    //   caption: t("ref_date"),
-    //   dataType: "date",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "narration",
-    //   caption: t("narration"),
-    //   dataType: "string",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
     {
       dataField: "debit",
       caption: t('debit'),
@@ -79,6 +53,11 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -87,6 +66,11 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "balance",
@@ -95,6 +79,11 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
   
   ];
@@ -117,8 +106,16 @@ const DayBookSummary = () => {
                   filterInitialData={DayBookReportFilterInitialState}
                   reload={true} 
                   gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
+                  // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
+                  childPopupProps={{
+                    content: <DayBookBillWise/>,
+                    title: t("daybook_billwise"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "voucherType",
+                    bodyProps: "dateFrom,dateTo,costCenterID,voucherType"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

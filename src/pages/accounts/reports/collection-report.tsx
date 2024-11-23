@@ -68,6 +68,11 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
     {
       dataField: "refNo",
@@ -92,6 +97,11 @@ const CollectionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 250,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.amount}
+  </span>
+      ),
     },
   ];
   return (

@@ -141,11 +141,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     }, [appState.inputBox.inputSize]);
     const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? appState.inputBox.borderFocus : appState.inputBox.borderColor} `);
-    useEffect(() => {
-      console.log(isFocused);
-      
-      console.log(appState.mode);
-      
+    useEffect(() => {    
       let style;
 
       if (appState.mode === 'dark') {
@@ -158,7 +154,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         }
       } else {
         if (isFocused || isHovered) {
-          style = ppState.inputBox.borderFocus;
+          style = appState.inputBox.borderFocus;
           console.log('Light mode, focused or hovered: ', style);
         } else {
           style = appState.inputBox.borderColor;

@@ -28,7 +28,7 @@ interface ERPDateInputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeData?: (data: any) => void;
   defaultValue?: string;
-  value?: string;
+  value?: any;
   type?: "date" | "datetime";
   data?: any;
   validation?: string;

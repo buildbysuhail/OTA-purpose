@@ -45,6 +45,7 @@ interface ERPDataComboboxProps {
   field?: any;
   defaultData?: any;
   data?: any;
+  value?: any;
   reload?: boolean;
   required?: boolean;
   className?: string;
@@ -284,6 +285,7 @@ export default function ERPDataCombobox({
   field,
   defaultData,
   data,
+  value,
   noLabel,
   noXMarkIcon,
   required,
@@ -440,7 +442,7 @@ export default function ERPDataCombobox({
     );
     const _default = items?.find((option) => option.value === defaultValueKey);
     const _selected = items?.find(
-      (option) => option.value === data?.[field?.id]
+      (option) => option.value === (value ? value : data?.[field?.id])
     );
     const _exceptional =
       (defaultData && fieldKey === "payment_terms" && items[0]) ||
@@ -453,7 +455,7 @@ export default function ERPDataCombobox({
         ? filteredItems.findIndex((item) => item.value === final.value)
         : -1
     );
-  }, [items, data, defaultData, field, initialValue, filteredItems]);
+  }, [items, data, defaultData, field, initialValue, filteredItems, value]);
 
   const clearSelection = (e?: React.MouseEvent) => {
     e?.stopPropagation();

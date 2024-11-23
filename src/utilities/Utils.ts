@@ -640,6 +640,9 @@ export const isFile = (obj: any): obj is File => {
 export function isNullOrUndefinedOrEmpty(value: any): boolean {
   return value === undefined || value === null || value === '';
 }
+export function hasValue(value: any): boolean {
+  return value === undefined || value === null || value === '' || value === 0;
+}
 export const setFgAccordingToBgPrimary = () => {
   // Create a temporary element to determine the color of bgPrimary
   const tempElement = document.createElement('div');

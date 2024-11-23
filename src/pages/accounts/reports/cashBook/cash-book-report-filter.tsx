@@ -11,7 +11,7 @@ const CashBookReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
     <div className="flex items-center gap-4">
       <ERPDateInput
         {...getFieldProps("asonDate")}
-        label={t("To")}
+        
         onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
       />
     </div>

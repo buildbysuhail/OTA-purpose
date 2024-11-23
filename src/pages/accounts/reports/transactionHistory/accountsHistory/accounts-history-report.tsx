@@ -26,6 +26,14 @@ const AccountsHistoryReport = () => {
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
+      dataField: "slNo",
+      caption: t("si_no"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
       dataField: "date",
       caption: t('transaction_date'),
       dataType: "date",

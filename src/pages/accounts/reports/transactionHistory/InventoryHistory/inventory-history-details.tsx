@@ -8,11 +8,11 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 
-interface InventoryHistoryDetails {
-
-  from: Date
+interface InventoryHistoryDetailsProps {
+  contentProps?: any
+  enablefilter?: boolean;
 }
-const InventoryHistoryDetails = () => {
+const InventoryHistoryDetails = ({contentProps}:InventoryHistoryDetailsProps) => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
   //   const payableParam = searchParams.get("payable");
@@ -20,7 +20,6 @@ const InventoryHistoryDetails = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<InventoryHistoryDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -96,6 +95,7 @@ const InventoryHistoryDetails = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  postData ={contentProps}
                   gridHeader={t("inventory_transaction_history_details")}
                   dataUrl= {Urls.acc_reports_inventory_history_details}
                   method={ActionType.POST}

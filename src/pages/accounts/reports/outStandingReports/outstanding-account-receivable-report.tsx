@@ -10,6 +10,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import OutstandingPayableReportFilter, { OutstandingPayableReportFilterInitialState } from "./outstanding-payable-report-filter";
 
 interface OutstandingAccountReceivableReport {
 
@@ -40,6 +41,11 @@ const OutstandingAccountReceivableReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.party}
+  </span>
+      ),
     },
     {
       dataField: "address1",
@@ -64,6 +70,11 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -72,6 +83,11 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "balance",
@@ -80,6 +96,11 @@ const OutstandingAccountReceivableReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
     {
       dataField: "ltDate",
@@ -104,10 +125,13 @@ const OutstandingAccountReceivableReport = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
+                  filterWidth="150"
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterContent={<OutstandingPayableReportFilter/>}
+                  filterInitialData={OutstandingPayableReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
             </div>

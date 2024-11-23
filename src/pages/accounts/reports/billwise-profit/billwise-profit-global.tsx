@@ -7,10 +7,8 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface BillwiseProfitGlobal {
+import BillwiseProfitReportFilter, { BillwiseProfitReportFilterInitialState } from "./billwise-profit-report-filter";
 
-  from: Date
-}
 const BillwiseProfitGlobal = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -19,7 +17,6 @@ const BillwiseProfitGlobal = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<BillwiseProfitGlobal>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -201,10 +198,13 @@ const BillwiseProfitGlobal = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
+                  enablefilter={true}
+                   filterWidth="200"
+                  showFilterInitially={true}
+                  filterContent={<BillwiseProfitReportFilter/>}
+                  filterInitialData={BillwiseProfitReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
             </div>

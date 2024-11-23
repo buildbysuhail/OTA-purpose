@@ -1,32 +1,22 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
-import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import CashBookMonthWise from "./cash-book-monthwise";
-import LedgerReportFilter from "../ledger-report-filter";
-import CashBookDayWise from "./cash-book-daywise";
+import DayBookBillWise from "../dayBook/dayBookSummary/day-book-billwise";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
-
-
+// interface DayBookSummary {
+//   from: Date
+// }
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  // const [filter, setFilter] =useState<CashBookSummary>({from: new Date()});
+  // const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    // {
-    //   dataField: "SiNo",
-    //   caption: t('si_no'),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 80,
-    // },
     {
       dataField: "ledgerName",
       caption: t("ledger_name"),
@@ -87,7 +77,6 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 250,
     },
-   
   ];
   return (
     <Fragment>
@@ -97,26 +86,26 @@ const CashBookSummary = () => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                showSerialNo={true}
                   columns={columns}
-                  gridHeader={t("cash_book")}
-                  dataUrl= {Urls.acc_reports_cash_book}
+                  filterWidth="100"
+                  gridHeader={t("day_book_summary")}
+                 dataUrl= {Urls.acc_reports_cash_book}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
-                  // popupAction={toggleCostCentrePopup}
-                  hideGridAddButton={true}
-                  reload={true} 
                   enablefilter={true}
-                  filterWidth="100"
+                  showFilterInitially={true}
                   filterContent={<CashBookReportFilter/>}
                   filterInitialData={CashBookReportFilterInitialState}
+                  reload={true} 
+                  // popupAction={toggleCostCentrePopup}
+                  hideGridAddButton={true}
                   childPopupProps={{
-                    content: <CashBookMonthWise />,
+                    content: <DayBookBillWise/>,
                     title: t("cash_book_monthwise"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "ledgerName",
-                    bodyProps: "ledgerID,asonDate" 
+                    drillDownCells: "voucherType",
+                    bodyProps: "ledgerID" 
                   }}
                 ></ErpDevGrid>
               </div>

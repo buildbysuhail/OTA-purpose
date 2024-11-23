@@ -1,7 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "../../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
-import { useRootState } from "../../../../../utilities/hooks/useRootState";
+import { Fragment } from "react";
 import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
@@ -12,10 +10,8 @@ interface AccountsHistoryPopupProps {
   contentProps?: any
   enablefilter?: boolean;
 }
-const AccountsHistoryPopup = ({contentProps, enablefilter = false}:AccountsHistoryPopupProps) => {
-  const dispatch = useAppDispatch();
+const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
   const { t } = useTranslation();
-  const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "slNo",
@@ -23,6 +19,7 @@ const AccountsHistoryPopup = ({contentProps, enablefilter = false}:AccountsHisto
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      width: 50,
     },
     {
       dataField: "date",
@@ -30,7 +27,7 @@ const AccountsHistoryPopup = ({contentProps, enablefilter = false}:AccountsHisto
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "form",
@@ -116,13 +113,20 @@ const AccountsHistoryPopup = ({contentProps, enablefilter = false}:AccountsHisto
                   gridHeader={t("accounts_transaction_history_popup")}
                   dataUrl= {Urls.acc_reports_accounts_history_popup}
                   method={ActionType.POST}
-                  postData = {contentProps}
+                  postData ={contentProps.oldAccTransactionMasterID!=0?contentProps:null}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
+                    childPopupProps={{
+
+                      content: <AccountsHistoryPopup/>,
+                      title: t("accounts_transaction_history_popup"),
+                      isForm: false,
+                      width: "mw-100",
+                      drillDownCells: "vchNo",
+                      bodyProps: "oldAccTransactionMasterID"
+                    }}
                 ></ErpDevGrid>
               </div>
             </div>

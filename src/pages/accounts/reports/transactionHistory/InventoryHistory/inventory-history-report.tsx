@@ -8,6 +8,8 @@ import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import TransactrionHistoryReportFilter, { TransactrionHistoryReportFilterInitialState } from "../transaction-history-report-filter";
+import InventoryHistoryPopup from "./inventory-history-popup";
+import InventoryHistoryDetails from "./inventory-history-details";
 
 
 const InventoryHistoryReport = () => {
@@ -20,6 +22,14 @@ const InventoryHistoryReport = () => {
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
+    {
+      dataField: "slNo",
+      caption: t("si_no"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
     {
       dataField: "date",
       caption: t('transaction_date'),
@@ -100,6 +110,22 @@ const InventoryHistoryReport = () => {
       allowFiltering: true,
       width: 200,
     },
+    {
+      dataField: "oldInvTransactionID",
+      caption: t('old_invTransaction_id'),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 200,
+    },
+    {
+      dataField: "details",
+      caption: t("details"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
   ];
   return (
     <Fragment>
@@ -122,7 +148,22 @@ const InventoryHistoryReport = () => {
                   filterWidth="150"
                   hideGridAddButton={true}
                   reload={true}
-
+                  // childPopupProps={{
+                  //   content: <InventoryHistoryPopup/>,
+                  //   title: t("inventory_transaction_history_popup"),
+                  //   isForm: false,
+                  //   width: "mw-100",
+                  //   drillDownCells: "vchNo",
+                  //   bodyProps: "oldInvTransactionID",
+                  // }}
+                  childPopupProps= {{
+                    content: <InventoryHistoryDetails/>,
+                    title: t("inventory_transaction_history_details"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "details",
+                    bodyProps: "invTransactionMasterID"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>

@@ -7,6 +7,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
+import BillwiseProfitReportFilter, { BillwiseProfitReportFilterInitialState } from "./billwise-profit-report-filter";
 interface BillwiseProfit {
 
   from: Date
@@ -162,10 +163,13 @@ const BillwiseProfit = () => {
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterWidth="200"
+                  filterContent={<BillwiseProfitReportFilter/>}
+                  filterInitialData={BillwiseProfitReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
             </div>

@@ -144,7 +144,8 @@ interface ERPDevGridProps {
     content: any,
     drillDownCells: string,
     bodyProps: string,
-    enableFilter?: boolean
+    enableFilter?: boolean,
+    enable?:boolean
   }
 }
 const api = new APIClient();
@@ -316,7 +317,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     content: null,
     drillDownCells: '',
     bodyProps: '',
-    enableFilter: false
+    enableFilter: false,
+    enable:true
   }
 }) => {
   const { t } = useTranslation();

@@ -20,6 +20,7 @@ import PopupDataReducer from "../redux/slices/popup-reducer";
 import TemplateReducer from "../redux/slices/templates/reducer";
 import DeviceStateReducer from "../redux/slices/device/reducer";
 import ApplicationSettingsReducer from "../redux/slices/app/application-settings-reducer";
+import AccTransactionReducer from "../pages/accounts/transactions/reducer";
 
 import { APIClient } from "../helpers/api-client";
 import { reducerNameFromUrl } from "./actions/AppActions";
@@ -203,6 +204,7 @@ class DynamicReduxManager {
       Template: TemplateReducer,
       DeviceInfo: DeviceStateReducer,
       ApplicationSettings: ApplicationSettingsReducer,
+      AccTransaction: AccTransactionReducer,
 
       ...reducerMap,
     };

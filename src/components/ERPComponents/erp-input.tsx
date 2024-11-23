@@ -20,6 +20,7 @@ import {
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { handleNavigation } from "../../utilities/shortKeys";
+import { Background } from "devextreme-react/cjs/range-selector";
 
 // Mocking the ERPElementValidationMessage component
 const ERPElementValidationMessage = ({
@@ -116,8 +117,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     }: ERPInputProps,
     ref
   ) => {
-    console.log("ERPINPUTS");
-
     const appState = useAppSelector(
       (state: RootState) => state.AppState.appState
     );
@@ -131,13 +130,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const [_variant, set_variant] = useState<
       "filled" | "outlined" | "standard" | undefined
     >(variant === "normal" ? undefined : variant);
-    
+
     const [isHovered, setIsHovered] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
     const handleMouseEnter = () => setIsHovered(true);
     const handleMouseLeave = () => setIsHovered(false);
-    const handleFocus = () => setIsFocused(true);
-    const handleBlur = () => {setIsFocused(false);};
 
     useEffect(() => {
       if (customSize == undefined || customSize == null) {
@@ -145,6 +142,32 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     }, [appState.inputBox.inputSize]);
 
+    const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState.inputBox.borderFocus})` :  `rgb(${appState.inputBox.borderColor})`} `);
+    useEffect(() => {
+    
+      let style;
+
+      if (appState.mode === 'dark') {
+        if (isFocused || isHovered) {
+          style = '#ffffff';
+          console.log('Dark mode, focused or hovered: ', style);
+        } else {
+          style = '#ffffff1a';
+          console.log('Dark mode, not focused or hovered: ', style);
+        }
+      } else {
+        if (isFocused || isHovered) {
+          style = `rgb(${appState.inputBox.borderFocus})`;
+          console.log('Light mode, focused or hovered: ', style);
+        } else {
+          style = `rgb(${appState.inputBox.borderColor})`;
+          console.log('Light mode, not focused or hovered: ', style);
+        }
+      }
+      setBorderStyles(style);
+    },[appState.mode, isFocused, isHovered, appState.inputBox.borderColor, appState.inputBox.borderFocus])
+    
+      
     useEffect(() => {
       if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
         set_useMUI(true);
@@ -180,8 +203,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           padding: string;
           fontWeight?: number;
           color?: string;
-          borderColor?: string;
-          borderFocusColor?: string;
         };
       } = {
         mui: {},
@@ -193,28 +214,28 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       };
 
       const commonMuiStyles = {
-        color: `rgb(${appState.inputBox.fontColor})`,
-        "--tw-ring-shadow": "none",
-        boxShadow: "none",
+       
+        color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`,
         "& .MuiOutlinedInput-notchedOutline": {
-          borderColor: `rgb(${appState.inputBox.borderColor})`,
+          borderColor:appState.mode == 'dark' ?'#ffffff1a':`rgb(${appState.inputBox.borderColor})`,
         },
         "& .MuiFilledInput-underline, &:before": {
-          borderBottomColor: `rgb(${appState.inputBox.borderColor})`,
+          borderBottomColor:appState.mode == 'dark' ?'#ffffff1a':`rgb(${appState.inputBox.borderColor})`,
         },
+        
         "&:hover .MuiOutlinedInput-notchedOutline": {
-          borderColor: `rgb(${appState.inputBox.borderFocus})`,
+          borderColor: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
         },
         "&:hover .MuiFilledInput-underline, &:hover:before": {
-          borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+          borderBottomColor:  appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
         },
-      
+
         "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-          borderColor: `rgb(${appState.inputBox.borderFocus})`,
+          borderColor:  appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
         },
         "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
           {
-            borderBottomColor: `rgb(${appState.inputBox.borderFocus})`,
+            borderBottomColor: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
           },
         margin: "0",
         "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
@@ -222,7 +243,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             padding: "0 0.75rem",
           },
       };
-
       switch (_customSize) {
         case "sm":
           return {
@@ -230,10 +250,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputBase-root": {
                 height: "2rem",
                 fontSize: "12px",
+
+                boxShadow: "none !important",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
-                fontSize: "11px",
+                fontSize: "12px",
+                color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
                 transform:
                   _variant === "filled"
                     ? "translate(8px, 10px) scale(1)"
@@ -242,6 +265,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     : "translate(8px, 10px) scale(0.8)",
               },
               "& .MuiInputLabel-shrink": {
+                
                 transform:
                   _variant === "filled"
                     ? "translate(8px, -10px) scale(0.75)"
@@ -253,11 +277,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             regular: {
               height: "2rem",
               fontSize: "12px",
-              color: appState.inputBox.fontColor
-                ? `rgb(${appState.inputBox.fontColor})`
-                : "inherit",
-              borderColor: `rgb(${appState.inputBox.borderColor})`,
-              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
+              color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`
+           
               // padding: "0.25rem 0.75rem"
             },
           };
@@ -271,7 +292,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
-                fontSize: "12px",
+                fontSize: "14px",
+                color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
                 transform:
                   _variant === "filled"
                     ? "translate(10px, 13px) scale(0.9)"
@@ -291,11 +313,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             regular: {
               height: "2.5rem",
               fontSize: "14px",
-              color: appState.inputBox.fontColor
-                ? `rgb(${appState.inputBox.fontColor})`
-                : "inherit",
-              borderColor: `rgb(${appState.inputBox.borderColor})`,
-              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
+             color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`
+         
               // padding: "0.5rem 1rem"
             },
           };
@@ -311,8 +330,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               },
               "& .MuiInputLabel-root": {
                 fontSize: "14px",
-                color: "inherit",
-                background: "inherit",
+                color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
                 transform:
                   _variant === "filled"
                     ? "translate(10px, 15px) scale(1)"
@@ -332,11 +350,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             regular: {
               height: "3rem",
               fontSize: "16px",
-              color: appState.inputBox.fontColor
-                ? `rgb(${appState.inputBox.fontColor})`
-                : "inherit",
-              borderColor: `rgb(${appState.inputBox.borderColor})`,
-              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
+             color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`
+           
               // label: "10px",
               // padding: "0.75rem 1.25rem"
             },
@@ -353,6 +368,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               },
               "& .MuiInputLabel-root": {
                 fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
+                color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
                 transform:
                   _variant === "filled"
                     ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
@@ -385,13 +401,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
               fontSize: `${appState.inputBox.fontSize ?? 15}px`,
               fontWeight: appState.inputBox.fontWeight,
-              color: appState.inputBox.fontColor
-                ? `rgb(${appState.inputBox.fontColor})`
-                : "inherit",
-              borderColor: `rgb(${appState.inputBox.borderColor})`,
-              borderFocusColor: `rgb(${appState.inputBox.borderFocus})`,
-              // label: "10px",
-              // padding: "0.75rem 1.25rem"
+              color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`
             },
           };
         default:
@@ -460,7 +470,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
 
       return (
         <div className={className}>
-          <TextField {...muiProps} />
+          <TextField {...muiProps}
+          className="form-control" />
           <ERPElementValidationMessage validation={validation} />
         </div>
       );
@@ -471,22 +482,15 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       fontSize,
       fontWeight,
       color,
-      borderColor,
-      borderFocusColor,
     } = sizeStyles.regular;
 
-    const inputBorderColor = isFocused
-    ? borderFocusColor
-    : isHovered
-    ? borderFocusColor
-    : borderColor;
-
+    
     if (_useMUI == undefined || _useMUI == false) {
       return (
-        <div className={className}>
+         <div className={className}>
           {!noLabel && (
             <label
-              className={`capitalize block  text-gray-900 text-left rtl:text-right ${labelClassName}`}
+              className={`capitalize block  text-gray-900 text-left rtl:text-right form-label ${labelClassName}`}
               style={{
                 fontSize: _customSize
                   ? _customSize === "sm"
@@ -514,7 +518,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 className={`${
                   onClickPrefix && "cursor-pointer"
                 } flex items-center justify-center text-slate-400 px-2 rounded-l-md font-medium border-r-0 border-gray-300 border bg-slate-100`}
-                style={{ height, fontSize, fontWeight, color, borderColor }}
+                style={{ height, fontSize, fontWeight, color,  borderColor: borderStyles}}
               >
                 {prefix}
               </div>
@@ -524,20 +528,24 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 {...commonProps}
                 placeholder={iPlaceholder}
                 ref={ref}
-                autoComplete={autocomplete}  
+                autoComplete={autocomplete}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
-                onFocus={handleFocus}
-                onBlur={handleBlur}
+                onFocus={(e) => {
+                  setIsFocused(true);
+                }}
+                onBlur={(e) => {
+                  setIsFocused(false);
+                }}
                 style={
                   {
                     height,
                     fontSize,
                     fontWeight,
                     color,
-                    border: `1px solid ${inputBorderColor}`,
-                    '--tw-ring-shadow': 'none',
-                    outline: "none",
+                    borderColor: borderStyles,
+                    "--tw-ring-shadow": "none",
+                    outline:"none",
                     transition: "border-color 0.2s ease-in-out",
                     borderTopLeftRadius: `${
                       !prefix ? appState.inputBox.borderRadius : 0
@@ -557,18 +565,12 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                           appState.inputBox.borderRadius ?? 5
                         }px`,
                       }),
-                   
                   } as React.CSSProperties
                 }
-                className={`
-                border 
-                block w-full 
+                className={`form-control
                ${inputClassName} 
                placeholder:capitalize  
-               ${disabled ? "text-gray-400" : "bg-white text-gray-900"}
-            
               `}
-        
                 onWheel={(e: any) => {
                   type === "number" && e?.target?.blur();
                 }}
@@ -593,7 +595,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 style={{
                   height,
                   fontSize,
-                  borderColor,
+                  borderColor: borderStyles,
                   color,
                 }}
               >

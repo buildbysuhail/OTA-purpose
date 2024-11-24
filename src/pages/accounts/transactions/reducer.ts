@@ -21,6 +21,7 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<{ fields: { [fieldId: string]: any } | string; value?: any }>
     ) => {
+      debugger
       const { fields, value } = action.payload;
       // Check if 'fields' is an object (multiple fields)
       if (typeof fields === 'object' && !Array.isArray(fields)) {

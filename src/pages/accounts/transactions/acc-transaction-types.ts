@@ -6,6 +6,7 @@ export interface AccTransactionProps {
   formType: string;
   title: string;
   drCr: string;
+  voucherNo?: number;
 }
 export interface AccTransactionData {
   master: AccTransactionMaster;
@@ -21,7 +22,7 @@ export interface AccTransactionMaster {
   employeeId: number;
   invTransactionId: number;
   transactionDate: string;
-
+  totalAmount?: number;
   prevTransDate: string;
   bankDate: string;
   voucherPrefix: string;
@@ -251,7 +252,7 @@ export const accTransactionInitialData: AccTransactionData = {
     employeeId: 0,
     invTransactionId: 0,
     transactionDate: new Date().toISOString(),
-
+    totalAmount: 0.00,
     prevTransDate: new Date().toISOString(),
     bankDate: new Date().toISOString(),
     voucherPrefix: "",
@@ -393,10 +394,13 @@ export interface AccTransactionFormState {
   accTransMasterID: number; // AccTransMasterID
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
   billwiseData: BillwiseData[]; 
+  showbillwise: false,
+  showSaveDialog: false,
   accTransDetailsID: number; // AccTransDetailsID
   accTransDetailsIDCr: number; // AccTransDetailsIDCr
   chequeStatus: string; // ChequeStatus
   isInvoker: boolean; // IsInvoker
+  foreignCurrency: boolean; // IsInvoker
   costCenterVisible: boolean; // CostCenterVisible
   blnDetailsNotCleared: boolean; // blnDetailsNotCleared
   dsLedgerDetails: any[]; // dsLedgerDetails (DataSet converted to array)
@@ -407,12 +411,18 @@ export interface AccTransactionFormState {
   firstCreditLedgerID: number; // FirstCreditLedgerid
   title: string;
   masterAccountID: number;
+  masterBalance: number;
   masterAccountName: string;
   row: AccTransactionRow;
   rowProcessing: boolean;
   transactionProcessing: boolean;
   transactionLoading: boolean;
   transaction: AccTransactionData;
+  printOnSave: boolean
+  printPreview: boolean
+  printCheque: boolean
+  keepNarration: boolean
+  amountInWords: string
 }
 export const accTransactionFormStateInitialData: AccTransactionFormState = {
   formCode: "",
@@ -425,10 +435,13 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   accTransMasterID: 0,
   dtLedgerCodes: [],
   billwiseData: [],
+  showbillwise: false,
+  showSaveDialog: false,
   accTransDetailsID: 0,
   accTransDetailsIDCr: 0,
   chequeStatus: "P",
   isInvoker: false,
+  foreignCurrency: false,
   costCenterVisible: false,
   blnDetailsNotCleared: false,
   dsLedgerDetails: [],
@@ -444,5 +457,11 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   transactionLoading: false,
   transaction: accTransactionInitialData,
   masterAccountID: 0,
-  masterAccountName: ""
+  masterBalance: 0,
+  masterAccountName: "",
+  printOnSave: false,
+  printPreview: false,
+  printCheque: false,
+  keepNarration: false,
+  amountInWords: 'Zero Only'
 }

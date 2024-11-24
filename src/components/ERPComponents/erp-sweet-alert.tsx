@@ -10,7 +10,7 @@ const MySwal = withReactContent(Swal)
 
 interface ERPAlertProps {
   title: string
-  text: string
+  text?: string
   width?:number
   showAnimation?:'animate__fadeInDown' | 'animate__bounceIn' | 'animate__fadeIn' | 'animate__backInDown' 
   hideAnimation?:'animate__fadeOutDown' | 'animate__bounceOut' | 'animate__fadeOut' | 'animate__backOutDown'
@@ -24,7 +24,7 @@ interface ERPAlertProps {
 
 export default function ERPAlert({
   title,
-  text,
+  text="",
   width=450,
   showAnimation='animate__fadeInDown',
   hideAnimation='animate__fadeOutDown',

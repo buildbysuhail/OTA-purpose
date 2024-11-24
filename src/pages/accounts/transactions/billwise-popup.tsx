@@ -17,17 +17,13 @@ import store from "devextreme/data/odata/store";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 
-const TestPopup: FC = () => {
+const BillwiswPopup: FC = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
+  const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
     let wh = window.innerHeight;
-    let gridHeightMobile = wh - 200;
-    let gridHeightWindows = wh - 200;
-    setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
+    let gridHeightWindows = wh - 370;
+    setGridHeight(gridHeightWindows);
   }, []);
 
   const handleSelectionChange = (e: any) => {
@@ -55,7 +51,7 @@ const TestPopup: FC = () => {
               <div className="grid grid-cols-1 gap-3">
                 <DataGrid
                   id="TestPopup"
-                  height={gridHeight.windows}
+                  height={gridHeight}
                   dataSource={store}
                   className="custom-data-grid"
                   showBorders={true}
@@ -165,7 +161,6 @@ const TestPopup: FC = () => {
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
-                    width={150}
                   />
                   <Column
                     dataField="RefDate"
@@ -256,7 +251,7 @@ const TestPopup: FC = () => {
               </div>
               <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
                 <strong className="mr-3">Net Adjustment </strong>
-                <span className="">{store.reduce((total, item) => total + (item.AmountToAssign || 0), 0)}</span>
+                <span className="">{formState.billwiseData.reduce((total, item) => total + (item.AmountToAssign || 0), 0)}</span>
               </div>
             </div>
           </div>
@@ -266,4 +261,4 @@ const TestPopup: FC = () => {
   );
 };
 
-export default TestPopup;
+export default BillwiswPopup;

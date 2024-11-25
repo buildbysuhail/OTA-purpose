@@ -106,7 +106,7 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange, t}: any) => {
 );
 }
 export default PaymentReportFilter;
-export const f = {
+export const PaymentReportFilterInitialState = {
   dateFrom: new Date(), 
   dateTo: new Date(), 
   voucherType: "All", 

@@ -26,6 +26,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className='font-bold text-blue text-lg'>
+  {cellElement.data.ledgerName}
+  </span>
+      ),
     },
     {
       dataField: "productName",
@@ -34,6 +39,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 180,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.foo==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.ledgerName}
+  </span>
+      ),
     },
     {
       dataField: "qty",

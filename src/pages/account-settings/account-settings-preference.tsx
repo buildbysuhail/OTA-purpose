@@ -158,6 +158,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       adjustB:0,
       adjustC:0,
       adjustD:0, 
+      marginTop:0,
+      marginBottom:0,   
     },
   });
 
@@ -1865,8 +1867,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     newValue
                                   );
                                 }}
-                                min={-25}
-                                max={25}
+                                min={-30}
+                                max={30}
                                
                               />
                             </div>
@@ -1890,8 +1892,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     newValue
                                   );
                                 }}
-                                min={-25}
-                                max={25}
+                                min={-30}
+                                max={30}
                                
                               />
                             </div>
@@ -1918,8 +1920,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     newValue
                                   );
                                 }}
-                                min={-25}
-                                max={25}
+                                min={-30}
+                                max={30}
                                
                               />
                             </div>
@@ -1943,8 +1945,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     newValue
                                   );
                                 }}
-                                min={-25}
-                                max={25}
+                                min={-30}
+                                max={30}
                                
                               />
                             </div>
@@ -1952,6 +1954,65 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           <div className="px-4 text-secondary text-xs">
                             <b className="me-2">Note:</b>This usstyle 
                             won't work in normal inputbox.
+                          </div>
+                          </div>
+
+                          <div className="flex flex-col space-y-1">
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-1/2 ">
+                            <ERPSlider
+                                id="marginBottom"
+                                label={`Margin Bottom (${theme.inputBox?.marginBottom??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.marginBottom}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      marginBottom: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "marginBottom",
+                                    newValue
+                                  );
+                                }}
+                                min={0}
+                                max={30}
+                               
+                              />
+                            </div>
+                            <div className="basis-1/2 ">
+                            <ERPSlider
+                                id="marginTop"
+                                label={`Margin Top (${theme.inputBox?.marginTop??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.marginTop}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                    marginTop: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "marginTop",
+                                    newValue
+                                  );
+                                }}
+                                min={0}
+                                max={30}
+                               
+                              />
+                            </div>
+                          </div>
+                          <div className="px-4 text-secondary text-xs">
+                            <b className="me-2">Note:</b>if you face any aligment issue adjust margin top & bottom of input box
+                            
                           </div>
                           </div>
                           
@@ -2241,273 +2302,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
             </div>
           </div>
 
-          {/* <div
-            id="inputBox"
-            className={`xxl:col-span-12 xl:col-span-12 ${
-              path === "inputBox" ? "blink" : ""
-            } col-span-12 `}
-          >
-            <div className="box custom-box">
-              <div className="box-header justify-between">
-                <div className="box-title">
-                  Input Box
-                  <p className="box-title-desc mb-0 text-[#8c9097] dark:text-white/50 font-weight:300 text-[0.75rem] opacity-[0.7]">
-                    Set Style here.
-                  </p>
-                </div>
-              </div>
-              <div className="box-body">
-                <div className="grid grid-cols-1 gap-3 ">
-                  <div className="">
-                    <p className="switcher-style-head">Input Box Style:</p>
-                    <div className="grid  grid-cols-2 sm:grid-cols-4 switcher-style">
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-normal"
-                          checked={theme.inputBox?.inputStyle === "normal"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "normal",
-                                },
-                              }));
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="input-normal"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Normal
-                        </label>
-                      </div>
-                      <div className="flex item-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-standard"
-                          checked={theme.inputBox?.inputStyle === "standard"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "standard",
-                                },
-                               
-                              }));
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="input-standard"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Standard
-                        </label>
-                      </div>
-                      <div className="flex item-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-outline"
-                          checked={theme.inputBox?.inputStyle === "outline"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "outline",
-                                },
-                          
-                              }));
-                            }
-                          }}
-                        />
-                        <label
-                          htmlFor="input-outline"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Outline
-                        </label>
-                      </div>
-                      <div className="flex item-center">
-                        <input
-                          type="radio"
-                          name="inputBox"
-                          className="ti-form-radio"
-                          id="input-fill"
-                          checked={theme.inputBox?.inputStyle === "fill"}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  inputStyle: "fill",
-                                },
-                              }));
-                            }
-                          }}
-                          
-                        />
-                        <label
-                          htmlFor="input-fill"
-                          className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                        >
-                          {" "}
-                          Fill
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="">
-                    <p className="switcher-style-head">Input Box Border:</p>
-                    <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style">
-                      <div className="flex items-center space-x-3">
-                        <div className="basis-2/3">
-                        <ERPSlider
-                        id ="borderRadius"
-                        label="Border Radius"
-                        className="bg-slate-300"
-                        value={theme.inputBox?.borderRadius}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              borderRadius: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        min={0}
-                        max={100}
-                      />
-                        </div>
-                        <div className="basis-1/3 translate-y-3">
-                        <ERPInput
-                        id="borderRadius"
-                        noLabel={true}
-                        type="number"
-                        value={theme.inputBox?.borderRadius}
-                        data={theme.inputBox}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              borderRadius: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        />
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <div className="basis-2/3 ">
-                        <ERPSlider
-                        id ="fontSize"
-                        label="Font Size"
-                        className="bg-slate-300"
-                        value={theme.inputBox?.fontSize}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              fontSize: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        min={0}
-                        max={100}
-                      />
-                        </div>
-                        <div className="basis-1/3 translate-y-3">
-                        <ERPInput
-                        id="fontSize"
-                        type="number"
-                        noLabel={true}
-                        value={theme.inputBox?.fontSize}
-                        data={theme.inputBox}
-                        onChange={(e) =>
-                          setTheme((prevTheme) => ({
-                            ...prevTheme,
-                            inputBox: {
-                              ...prevTheme.inputBox,
-                              fontSize: parseInt(e.target.value, 10),
-                            },
-                          }))
-                        }
-                        />
-                        </div>
-                      </div>
-                      <ERPInput
-                            id="borderColor"
-                            label="Border Color"
-                            type="color"
-                            value={theme.inputBox?.borderColor}
-                            data={theme.inputBox}
-                            onChange={(e) =>
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  borderColor:e.target.value,
-                                },
-                              }))
-                            }
-                      />
-                       <ERPInput
-                            id="borderFocus"
-                            label="Border On Focus"
-                            type="color"
-                            value={theme.inputBox?.borderFocus}
-                            data={theme.inputBox}
-                            onChange={(e) =>
-                              setTheme((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: {
-                                  ...prevTheme.inputBox,
-                                  borderFocus:e.target.value,
-                                },
-                              }))
-                            }
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full p-2 flex justify-end items-center">
-                    <ERPButton
-                      title="Reset"
-                      // onClick={restLanguage}
-                      type="reset"
-                    ></ERPButton>
-                    <ERPButton
-                      title="Save Changes"
-                      // onClick={updateLanguage}
-                      variant="primary"
-                      // loading={userLanguage.loading}
-                      // disabled={userLanguage.loading}
-                    ></ERPButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
+         
         </div>
       </div>
     </Fragment>

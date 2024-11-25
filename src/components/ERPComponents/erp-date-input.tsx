@@ -40,7 +40,6 @@ interface ERPDateInputProps {
   customSize?: "sm" | "md" | "lg" | "customize";
   // color?: TextFieldProps['color'];
 }
-
 const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   id,
   label,
@@ -144,69 +143,75 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             fontSize: "12px",
-            transform: _variant === "filled"
-              ? "translate(8px, 10px) scale(0.8)"
-              : _variant === "standard"
-                ? "translate(0, 10px) scale(0.8)"
-                : "translate(8px, 10px) scale(0.8)"
+            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            transform:
+              _variant === "filled"
+                ? "translate(8px, 9px) scale(1)"
+                : _variant === "standard"
+                ? "translate(0, 10px) scale(1)"
+                : "translate(8px, 10px) scale(1)",
           },
           "& .MuiInputLabel-shrink": {
-            transform: _variant === "filled"
-              ? "translate(8px, -10px) scale(0.75)"
-              : _variant === "standard"
-                ? "translate(0px, -6px) scale(0.75)"
-                : "translate(16px, -6px) scale(0.75)"
-          }
+            transform:
+              _variant === "filled"
+                ? "translate(8px, -15px) scale(0.90)"
+                : _variant === "standard"
+                ? "translate(0, -6px) scale(0.90)"
+                : "translate(13px, -6px) scale(0.80)",
+          },
         };
       case "lg":
         return {
-          "& .MuiInputBase-root": {
+          "& .MuiInputBase-root": {       
             height: "3rem",
             fontSize: "16px",
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             fontSize: "14px",
-            transform: _variant === "filled"
-              ? "translate(10px, 15px) scale(1)"
-              : _variant === "standard"
+            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            transform:
+              _variant === "filled"
+                ? "translate(10px, 15px) scale(1)"
+                : _variant === "standard"
                 ? "translate(0, 15px) scale(1)"
-                : "translate(10px, 15px) scale(1)"
+                : "translate(10px, 12px) scale(1)",
           },
           "& .MuiInputLabel-shrink": {
-            transform: _variant === "filled"
-              ? "translate(8px, -14px) scale(0.88)"
-              : _variant === "standard"
-                ? "translate(1px,-6px) scale(0.88)"
-                : "translate(16px, -7px) scale(0.88)"
-          }
+            transform:
+              _variant === "filled"
+                ? "translate(8px, -15px) scale(0.90)"
+                : _variant === "standard"
+                ? "translate(1px,-6px) scale(0.90)"
+                : "translate(15px, -9px) scale(0.90)",
+          },
         };
         case "md": // md
         return {
           "& .MuiInputBase-root": {
             height: "2.5rem",
-            fontSize: "14px",
+            fontSize: "15px",
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
+            fontSize: "13px",
             color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
-            fontSize: "12px",
-            transform: _variant === "filled"
-              ? "translate(10px, 13px) scale(0.9)"
-              : _variant === "standard"
-                ? "translate(0, 13px) scale(0.9)"
-                : "translate(10px, 13px) scale(0.9)"
+            transform:
+              _variant === "filled"
+                ? "translate(10px, 13px) scale(1)"
+                : _variant === "standard"
+                ? "translate(0, 13px) scale(1)"
+                : "translate(10px, 13px) scale(1)",
           },
           "& .MuiInputLabel-shrink": {
-            transform: _variant === "filled"
-              ? "translate(8px, -12px) scale(0.90)"
-              : _variant === "standard"
-                ? "translate(0px,-6px) scale(0.90)"
-                : "translate(15px, -7px) scale(0.90)"
-          }
+            transform:
+              _variant === "filled"
+                ? "translate(8px, -15px) scale(0.90)"
+                : _variant === "standard"
+                ? "translate(0, -6px) scale(0.90)"
+                : "translate(12px, -8px) scale(0.90)",
+          },
         };
 
         case "customize": 
@@ -289,7 +294,12 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
 
   if (_useMUI == true) {
     return (
-      <div className={className}>
+      <div className={className}
+      style={{
+        marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+        marginTop: `${appState.inputBox?.marginTop??0}px`
+      }}
+      >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label={label}

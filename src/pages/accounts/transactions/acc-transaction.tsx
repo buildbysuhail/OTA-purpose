@@ -39,7 +39,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   voucherNo
 }) => {
   const { type } = useParams();
-  const { t } = useTranslation();
+  const { t } = useTranslation(); // Specify the namespace
   const [gridName, setGridName] = useState<string>(`grd_acc_transaction_${type}`)
   const dispatch = useDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -60,7 +60,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
     }
     else {
-      dispatch(accFormStateHandleFieldChange({ fields: "title", value: title + "[" + formType + "]" }));
+      dispatch(accFormStateHandleFieldChangeds({ fields: "title", value: title + "[" + formType + "]" }));
     }
   }, [formType, title]);
   useEffect(() => {

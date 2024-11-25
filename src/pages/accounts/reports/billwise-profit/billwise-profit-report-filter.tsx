@@ -8,7 +8,7 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 const BillwiseProfitReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
     return (
       <div className="grid grid-cols-2 gap-4">
-      {/* Date Range */}
+      {/* Date Range */} 
       <div className="flex gap-4">
         <ERPDateInput
           {...getFieldProps("fromDate")}

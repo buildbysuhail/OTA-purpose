@@ -87,15 +87,15 @@ const PaymentReportFilter = ({ getFieldProps, handleFieldChange, t}: any) => {
       onChangeData={(data) => handleFieldChange('employeeID', data.employeeID)}
     />
     <ERPDataCombobox
-      {...getFieldProps("costCentreID")}
+      {...getFieldProps("costCenterID")}
       label={t("Cost Centre")}
       field={{
-        id: "costCentreID",
+        id: "costCenterID",
         getListUrl: Urls.data_costcentres,
         valueKey: "id",
         labelKey: "name",
       }}
-      onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+      onChangeData={(data) => handleFieldChange('costCenterID', data.costCenterID)}
     />
       <ERPCheckbox
       {...getFieldProps("isIncludePI_CP")}
@@ -110,10 +110,10 @@ export const PaymentReportFilterInitialState = {
   dateFrom: new Date(), 
   dateTo: new Date(), 
   voucherType: "All", 
-  accGroupID: 0, 
-  accLedgerID: 0, 
-  salesRouteID: 0, 
-  employeeID:0,
-  costCentreID: -1, 
+  accGroupID: 22, 
+  accLedgerID: -1, 
+  salesRouteID: -1, 
+  employeeID:-1,
+  costCenterID: -1, 
   isIncludePI_CP:false,
 };

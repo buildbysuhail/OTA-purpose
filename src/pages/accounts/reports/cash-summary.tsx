@@ -64,6 +64,11 @@ const CashSummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
     // {
     //   dataField: "refNo",
@@ -96,6 +101,11 @@ const CashSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -104,6 +114,11 @@ const CashSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "balance",
@@ -112,6 +127,11 @@ const CashSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 300,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
   
    

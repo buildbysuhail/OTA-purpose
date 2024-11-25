@@ -10,11 +10,10 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import OutstandingAgingReportFilter, { OutstandingAgingReportFilterInitialState } from "./outstanding-aging-report-filter";
+import OutstandingAccountAgingAnalysis from "./outstanding-account-aging-analysis";
 
-interface OutstandingAccountReceivableAgingReport {
 
-  from: Date
-}
 const OutstandingAccountReceivableAgingReport = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const [payable, setPayable] = useState<boolean>(() => {
@@ -23,7 +22,7 @@ const OutstandingAccountReceivableAgingReport = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<OutstandingAccountReceivableAgingReport>({from: new Date()});
+  // const [filter, setFilter] = useState<OutstandingAccountReceivableAgingReport>({ from: new Date() });
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -40,23 +39,28 @@ const OutstandingAccountReceivableAgingReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.ledgername}
+  </span>
+      ),
     },
-    {
-      dataField: "debit",
-      caption: t('debit'),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "credit",
-      caption: t("credit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+    // {
+    //   dataField: "debit",
+    //   caption: t('debit'),
+    //   dataType: "string",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
+    // {
+    //   dataField: "credit",
+    //   caption: t("credit"),
+    //   dataType: "number",
+    //   allowSearch: true,
+    //   allowFiltering: true,
+    //   width: 150,
+    // },
     {
       dataField: "balance",
       caption: t("balance"),
@@ -64,30 +68,50 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
     {
       dataField: "period1",
-      caption: 10+ t("days"),
+      caption: 10 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.period1}
+  </span>
+      ),
     },
     {
       dataField: "period2",
-      caption: 20+t("days"),
+      caption: 20 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.period2}
+  </span>
+      ),
     },
     {
       dataField: "period3",
-      caption: 30+t("days"),
+      caption: 30 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.period3}
+  </span>
+      ),
     },
     {
       dataField: "period4",
@@ -96,52 +120,51 @@ const OutstandingAccountReceivableAgingReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-  },
-  {
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.period4}
+  </span>
+      ),
+    },
+    {
       dataField: "period5",
       caption: 90 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-  },
-  {
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.period5}
+  </span>
+      ),
+    },
+    {
       dataField: "period6",
       caption: 120 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-  },
-  {
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.period6}
+  </span>
+      ),
+    },
+    {
       dataField: "period7",
       caption: 150 + t("days"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-  }
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgername==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.period7}
+  </span>
+      ),
+    },
   ];
   return (
     <Fragment>
@@ -150,24 +173,34 @@ const OutstandingAccountReceivableAgingReport = () => {
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-                <ErpDevGrid 
+                <ErpDevGrid
                   columns={columns}
                   gridHeader={t("account_receivable_aging_report")}
-                  dataUrl= {Urls.acc_reports_outstanding_aging_receivable}
+                  dataUrl={Urls.acc_reports_outstanding_aging_receivable}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
+                  filterWidth="100"
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterContent={<OutstandingAgingReportFilter />}
+                  filterInitialData={OutstandingAgingReportFilterInitialState}
+                  childPopupProps={{
+                    content: <OutstandingAccountAgingAnalysis />,
+                    title: t("account_aging_analysis"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "ledgername",
+                    bodyProps: "asonDate,partyType,salesRouteID,p1,p2,p3,p4,p5,p6,p7,ledgerID,costCenterID,"
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

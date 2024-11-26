@@ -26,9 +26,9 @@ const DayBookSummary = () => {
     //   allowFiltering: true,
     //   width: 200,
     // },
-    { 
+    {
       dataField: "voucherType",
-      caption:  t("voucher_type"),
+      caption: t("voucher_type"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -41,9 +41,9 @@ const DayBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.particulars}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
       ),
     },
     {
@@ -54,9 +54,9 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.debit}
+        </span>
       ),
     },
     {
@@ -67,9 +67,9 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.credit}
+        </span>
       ),
     },
     {
@@ -80,12 +80,12 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+          {cellElement.data.balance}
+        </span>
       ),
     },
-  
+
   ];
   return (
     <Fragment>
@@ -96,20 +96,20 @@ const DayBookSummary = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  filterWidth="100"
                   gridHeader={t("day_book_summary")}
-                  dataUrl= {Urls.acc_reports_day_book_summary}
+                  dataUrl={Urls.acc_reports_day_book_summary}
                   method={ActionType.POST}
+                  filterWidth="100"
                   enablefilter={true}
                   showFilterInitially={true}
-                  filterContent={<DayBookReportFilter/>}
+                  filterContent={<DayBookReportFilter />}
                   filterInitialData={DayBookReportFilterInitialState}
-                  reload={true} 
+                  reload={true}
                   gridId="grd_cost_centre"
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <DayBookBillWise/>,
+                    content: <DayBookBillWise />,
                     title: t("daybook_billwise"),
                     isForm: false,
                     width: "mw-100",

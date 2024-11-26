@@ -256,6 +256,9 @@ const Urls = {
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
   acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",
+
+  //Transaction
+  get_last_voucher_no: "",
   // Accounts End
 
 

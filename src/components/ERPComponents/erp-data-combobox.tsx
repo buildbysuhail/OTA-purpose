@@ -866,7 +866,12 @@ export default function ERPDataCombobox({
       }
     };
     return (
-      <div className={className}>
+      <div className={className}
+      style={{
+        marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+        marginTop: `${appState.inputBox?.marginTop??0}px`
+      }}
+      >
         <Autocomplete
           id={id}
           options={items}
@@ -930,7 +935,12 @@ export default function ERPDataCombobox({
 
 if (_useMUI == undefined || _useMUI == false){      
   return (
-    <div className="relative" ref={componentRef}>
+    <div className={`${className} relative ${labelDirection ==="vertical" ? "flex flex-col space-y-1":"flex items-center space-x-2"}`} ref={componentRef}
+    style={{
+      marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+       marginTop: `${appState.inputBox?.marginTop??0}px`,  
+      }}
+    >
       {!noLabel && (
           <label
           className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState.mode == 'dark' ? 'form-label':""} 
@@ -962,7 +972,7 @@ if (_useMUI == undefined || _useMUI == false){
         as="div"
         className="relative"
       >
-        <div className={`${className} flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
+        <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
 
           <Combobox.Input
          
@@ -978,11 +988,6 @@ if (_useMUI == undefined || _useMUI == false){
             borderRadius: `${appState.inputBox.borderRadius}px`,
          
           } as React.CSSProperties}
-            // className={`w-full appearance-none rounded border border-gray-300 ${
-            //   sizeClasses?.input
-            // } ${disabled ? "text-gray-400" : "bg-white text-gray-900"} ${
-            //   enableClearOption ? "pr-16" : "pr-10"
-            // } placeholder-gray-400 focus:ring-1 focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
             className={`form-control ${ sizeClasses?.input } 
               placeholder:capitalize  
              `}

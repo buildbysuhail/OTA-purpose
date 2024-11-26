@@ -88,7 +88,7 @@ export const initialThemeData: Theme = {
     inputStyle: "normal",  
     inputSize:"sm", 
     CheckButtonInputSize:"sm",
-    inputHeight:2,    
+    inputHeight:2.0,    
     fontSize: 13, 
     fontWeight: 400, 
     labelFontSize:13,

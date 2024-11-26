@@ -1583,7 +1583,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           </label>
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2  gap-3 switcher-style">
+                      <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-3 switcher-style">
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider
@@ -1864,7 +1864,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="bg-slate-300"
                                 value={theme.inputBox?.inputHeight}
                                 onChange={(e) => {
-                                  const newValue = parseFloat(e.target.value); // Ensure we parse the value as a number
+                                  const newValue = parseFloat(e.target.value); 
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {

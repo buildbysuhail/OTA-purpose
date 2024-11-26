@@ -477,7 +477,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     const { height, fontSize, fontWeight, color } = sizeStyles.regular;
     if (_useMUI == undefined || _useMUI == false) {
       return (
-         <div className={`${className} ${labelDirection ==="vertical" ? "flex flex-col space-y-1":"flex items-center space-x-2"}`}>
+         <div className={`${className} ${labelDirection ==="vertical" ? "flex flex-col space-y-1":"flex items-center space-x-2"}`}
+         style={{
+          marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+           marginTop: `${appState.inputBox?.marginTop??0}px`,  
+          }}>
           {!noLabel && (
             <label
               className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState.mode == 'dark' ? 'form-label':""} ${labelClassName}
@@ -527,9 +531,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 }}
                 style={
                   {
-                    
-                    marginBottom: `${appState.inputBox?.marginBottom??0}px`,
-                    marginTop: `${appState.inputBox?.marginTop??0}px`,
                     height,
                     fontSize,
                     fontWeight,

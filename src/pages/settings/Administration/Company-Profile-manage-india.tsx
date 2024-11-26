@@ -133,6 +133,7 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
             handleFieldChange("stateName", data.stateName)
           }}
           label={t("state_name")}
+         
         />
         <ERPInput
           {...getFieldProps("stateCode")}

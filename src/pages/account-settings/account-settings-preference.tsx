@@ -42,6 +42,7 @@ interface UserLanguage {
   language?: string | null;
 }
 
+const api = new APIClient();
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let api = new APIClient();
   const [demo, setDemo] = useState({
@@ -190,9 +191,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   };
   const saveThemeChange = async () => {
     debugger;
-    const res = await dispatch(
-      updatedUserThemeAction({ data: JSON.stringify(theme) }) as any
-    ).unwrap();
+    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: JSON.stringify(theme)});
     handleResponse(res, () => {
       userTheme();
     });

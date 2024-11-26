@@ -60,9 +60,12 @@ const TransactionReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      // width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
-    
     {
       dataField: "referenceNumber",
       caption: t("ref_no"),
@@ -94,6 +97,11 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -102,6 +110,11 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
   ];
   return (

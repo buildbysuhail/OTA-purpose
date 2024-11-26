@@ -52,7 +52,9 @@ const initialState: AppInitialState = {
       adjustA:0,
       adjustB:0,
       adjustC:0,
-      adjustD:0,     
+      adjustD:0, 
+      marginTop:0,
+      marginBottom:0,       
     },
    
     //

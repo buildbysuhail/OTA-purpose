@@ -100,7 +100,9 @@ export const initialThemeData: Theme = {
     adjustA:0,
     adjustB:0,
     adjustC:0,
-    adjustD:0,     
+    adjustD:0, 
+    marginTop:0,
+    marginBottom:0,    
   },
 };
 export interface Theme {
@@ -137,6 +139,8 @@ export interface inputBox{
   adjustB:number;
   adjustC:number;
   adjustD:number;
+  marginTop:number;
+  marginBottom:number;
 }
 export interface AppInitialState {
   syncing: boolean;

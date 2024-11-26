@@ -53,7 +53,7 @@ const CompanyProfileManage: React.FC = React.memo(() => {
 
   return (
     <div className=" w-full pt-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-2">
         <ERPInput
           {...getFieldProps("registeredName")}
           label={t("registered_name")}

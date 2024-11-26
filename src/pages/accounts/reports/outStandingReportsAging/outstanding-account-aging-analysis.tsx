@@ -11,18 +11,18 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 
-interface OutstandingAccountAgingAnalysis {
-
-  from: Date
+interface OutstandingAccountAgingAnalysisProps {
+  contentProps?: any
+  enablefilter?: boolean;
 }
-const OutstandingAccountAgingAnalysis = () => {
+const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:OutstandingAccountAgingAnalysisProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<OutstandingAccountAgingAnalysis>({from: new Date()});
+  // const [filter, setFilter] =useState<OutstandingAccountAgingAnalysis>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "sI",
+      dataField: "si",
       caption: t('si_no'),
       dataType: "number",
       allowSearch: true,
@@ -43,6 +43,11 @@ const OutstandingAccountAgingAnalysis = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.form}
+  </span>
+      ),
     },
      {
       dataField: "voucherNumber",
@@ -59,6 +64,11 @@ const OutstandingAccountAgingAnalysis = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.billTotal}
+  </span>
+      ),
     },
     {
       dataField: "period",
@@ -75,6 +85,11 @@ const OutstandingAccountAgingAnalysis = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.form==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
   
   ];
@@ -87,6 +102,7 @@ const OutstandingAccountAgingAnalysis = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
+                  postData = {contentProps}
                   gridHeader={t("account_aging_analysis")}
                   dataUrl= {Urls.acc_reports_aging_analysis}
                   method={ActionType.POST}

@@ -34,6 +34,8 @@ export const initialUserSessionData: UserModel = {
   language: 'en',
   companies: [],
   branches: [],
+  presetCostCenterId: 0,
+  productVersion: ""
 };
 export interface UserModel {
   userId: number;
@@ -57,6 +59,9 @@ export interface UserModel {
   branches: BranchSelectDto[];
   finFrom?: Date | null;
   finTo?: Date | null;
+  presetCostCenterId: number | 0;
+  productVersion: string | "";
+  dbIdValue: string | "";
 
 }
 // export const initialState : login  =  {loading: false, token: ""};
@@ -77,9 +82,13 @@ export const initialState: UserModel = {
   taxDecimalPoint: 0,
   unitPriceDecimalPoint: 0,
   language: '',
-  finFrom: null, finTo:  null,
-  companies: [],  // Initializing as an empty array
-  branches: []    // Initializing as an empty array
+  finFrom: null, finTo: null,
+  companies: [], // Initializing as an empty array
+  branches: [] // Initializing as an empty array
+  ,
+  presetCostCenterId: 0,
+  productVersion: "",
+  dbIdValue: ""
 };
 const userSessionSlice = createSlice({
   name: "userSession",

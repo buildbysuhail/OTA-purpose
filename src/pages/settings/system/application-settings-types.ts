@@ -1,11 +1,11 @@
 import { Countries } from "../../../redux/slices/user-session/reducer";
-import { AccountSettingsState } from "./application-settings-accounts";
+import { ApplicationAccountSettings } from "./application-settings-accounts";
 import { ApplicationInventorySettings } from "./application-settings-inventory";
 import { ApplicationMiscellaneousSettings } from "./application-settings-miscellaneous";
 
 export interface ApplicationSettingsType {
     mainSettings: ApplicationMainSettings;
-    // accountsSettings: AccountsSettings;
+    accountsSettings: ApplicationAccountSettings;
     inventorySettings: ApplicationInventorySettings;
     branchSettings: ApplicationBranchSettings;
     // backUpSettings: BackUpSettings;

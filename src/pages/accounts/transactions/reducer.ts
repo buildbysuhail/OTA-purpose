@@ -19,30 +19,22 @@ const accTransactionSlice = createSlice({
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (
       state,
-      action: PayloadAction<{ fields: { [fieldId: string]: any } | string; value?: any }>
+      action: PayloadAction<{
+        fields: { [fieldId in keyof AccTransactionFormState]?: any };
+      }>
     ) => {
       debugger
-      const { fields, value } = action.payload;
+      const { fields } = action.payload;
       // Check if 'fields' is an object (multiple fields)
-      if (typeof fields === 'object' && !Array.isArray(fields)) {
-        // If it's an object, loop through each field and update them
-        Object.keys(fields).forEach((key) => {
-          // Update the corresponding field in the state
-          const fieldValue = fields[key];
-          const isDateField = (state[key as keyof AccTransactionFormState] as typeof fieldValue) instanceof Date;
-          // Convert Date fields to ISO strings
-          (state[key as keyof AccTransactionFormState] as typeof fieldValue) = isDateField
-            ? new Date(fieldValue).toISOString()
-            : fieldValue;
-        });
-      } else if (typeof fields === 'string' && value !== undefined) {
-        // If it's a single field, update it with the provided value
-        const isDateField = (state[value as keyof AccTransactionFormState] as typeof value) instanceof Date;
+      Object.keys(fields).forEach((key) => {
+        // Update the corresponding field in the state
+        const fieldValue = fields[key as keyof AccTransactionFormState];
+        const isDateField = (state[key as keyof AccTransactionFormState] as typeof fieldValue) instanceof Date;
         // Convert Date fields to ISO strings
-        (state[fields as keyof AccTransactionFormState] as typeof value) = isDateField
-          ? new Date(value).toISOString()
-          : value;
-      }
+        (state[key as keyof AccTransactionFormState] as typeof fieldValue) = isDateField
+          ? new Date(fieldValue).toISOString()
+          : fieldValue;
+      });
     },
 
     // Update a specific field in the transaction object
@@ -63,28 +55,22 @@ const accTransactionSlice = createSlice({
 
     accFormStateTransactionMasterHandleFieldChange: (
       state,
-      action: PayloadAction<{ fields: { [fieldId: string]: any } | string; value?: any }>
+      action: PayloadAction<{
+        fields: { [fieldId in keyof AccTransactionMaster]?: any };
+      }>
     ) => {
-      const { fields, value } = action.payload;
+      const { fields } = action.payload;
 
       // Check if 'fields' is an object (multiple fields)
-      if (typeof fields === 'object' && !Array.isArray(fields)) {
-        // If it's an object, loop through each field and update them
-        Object.keys(fields).forEach((key) => {
-          // Update the corresponding field in the state
-          const fieldValue = fields[key];
-          const isDateField = (state.transaction.master[key as keyof AccTransactionMaster] as typeof fieldValue) instanceof Date;
-          // Convert Date fields to ISO strings
-          (state.transaction.master[key as keyof AccTransactionMaster] as typeof fieldValue) = isDateField
-            ? new Date(fieldValue).toISOString()
-            : fieldValue;
-        });
-      } else if (typeof fields === 'string' && value !== undefined) {
-        const isDateField = (state.transaction.master[fields as keyof AccTransactionMaster] as typeof value) instanceof Date;
-        (state.transaction.master[fields as keyof AccTransactionMaster] as typeof value) = isDateField
-          ? new Date(value).toISOString()
-          : value;
-      }
+      Object.keys(fields).forEach((key) => {
+        // Update the corresponding field in the state
+        const fieldValue = fields[key as keyof AccTransactionMaster];
+        const isDateField = (state.transaction.master[key as keyof AccTransactionMaster] as typeof fieldValue) instanceof Date;
+        // Convert Date fields to ISO strings
+        (state.transaction.master[key as keyof AccTransactionMaster] as typeof fieldValue) = isDateField
+          ? new Date(fieldValue).toISOString()
+          : fieldValue;
+      });
     },
 
     // Add multiple rows to the transaction details
@@ -133,28 +119,24 @@ const accTransactionSlice = createSlice({
     // Handle changes for the "row" property in the state
     accFormStateRowHandleFieldChange: (
       state,
-      action: PayloadAction<{ fields: { [fieldId: string]: any } | string; value?: any }>
+      action: PayloadAction<{
+        fields: { [fieldId in keyof AccTransactionRow]?: any };
+      }>
     ) => {
       debugger;
-      const { fields, value } = action.payload;
-      // Check if 'fields' is an object (multiple fields)
-      if (typeof fields === 'object' && !Array.isArray(fields)) {
-        // If it's an object, loop through each field and update them
-        Object.keys(fields).forEach((key) => {
-          // Update the corresponding field in the state
-          const fieldValue = fields[key];
-          const isDateField = (state.row[key as keyof AccTransactionRow] as typeof fieldValue) instanceof Date;
-          (state.row[key as keyof AccTransactionRow] as typeof fieldValue) = isDateField
+      const { fields } = action.payload;
+    
+      // Use Object.entries to get key-value pairs
+      Object.entries(fields).forEach(([key, fieldValue]) => {
+        // Assert the key as keyof AccTransactionRow
+        const isDateField =
+          (state.row[key as keyof AccTransactionRow] as typeof fieldValue) instanceof Date;
+    
+        // Update the corresponding field in the state
+        (state.row[key as keyof AccTransactionRow] as typeof fieldValue) = isDateField
           ? new Date(fieldValue).toISOString()
           : fieldValue;
-        });
-      } else if (typeof fields === 'string' && value !== undefined) {
-        // If it's a single field, update it with the provided value
-        const isDateField = (state.row[fields as keyof AccTransactionRow] as typeof value) instanceof Date;
-        (state.row[fields as keyof AccTransactionRow] as typeof value) = isDateField
-        ? new Date(value).toISOString()
-        : value;;
-      }
+      });
     },
 
     // Clear the form state to initial values

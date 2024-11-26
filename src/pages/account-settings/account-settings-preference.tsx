@@ -1271,6 +1271,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         <p className="switcher-style-head ">Input Box Style:</p>
                         <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center mt-5 switcher-style">
                              <ERPInput
+                             
                               id="inputBox"
                               label="Demo Input"
                               onChange={(e) => {
@@ -1293,8 +1294,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               }}
                               value={demo.dateBox}
                             />
-                         
-                            <ERPDataCombobox
+                         <div className={`${theme.inputBox?.inputStyle === "normal"?"-translate-y-[3px]":"" }`}>
+                         <ERPDataCombobox
                             id="selectBox"
                             data={demo}
                             label="Demo Select Box"
@@ -1320,6 +1321,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               { value: 5, label: "5" },
                             ]}
                         />
+                         </div>
+                            
                            
                         </div>
                         
@@ -1580,24 +1583,21 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           </label>
                         </div>
                       </div>
-                      </div>
-                      <div className="">
-                       {theme.inputBox.inputSize === "customize" && (
-                        <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
+                      <div className="grid grid-cols-1 md:grid-cols-2  gap-3 switcher-style">
                           <div className="flex items-center space-x-3">
-                            <div className="basis-2/3">
+                            <div className="basis-2/3 ">
                               <ERPSlider
                                 id="borderRadius"
                                 label="Border Radius"
                                 className="bg-slate-300"
                                 value={theme.inputBox?.borderRadius}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                                   setTheme((prevTheme) => ({
                                     ...prevTheme,
                                     inputBox: {
                                       ...prevTheme.inputBox,
-                                      borderRadius: newValue, // Update the theme state
+                                      borderRadius: newValue, 
                                     },
                                   }));
                                   handleInputBoxStyleChange(
@@ -1609,7 +1609,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 max={20}
                               />
                             </div>
-                            <div className="basis-1/3 translate-y-3">
+                            
+                            <div className="basis-1/3">
                               <ERPInput
                                 id="borderRadius"
                                 noLabel={true}
@@ -1635,6 +1636,69 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               />
                             </div>
                           </div>
+                          <div className="flex flex-col space-y-1">
+                          <div className="flex items-center space-x-3">
+                            <div className="basis-1/2 ">
+                            <ERPSlider
+                                id="marginBottom"
+                                label={`Margin Bottom (${theme.inputBox?.marginBottom??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.marginBottom}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                      marginBottom: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "marginBottom",
+                                    newValue
+                                  );
+                                }}
+                                min={0}
+                                max={30}
+                               
+                              />
+                            </div>
+                            <div className="basis-1/2 ">
+                            <ERPSlider
+                                id="marginTop"
+                                label={`Margin Top (${theme.inputBox?.marginTop??0})`}
+                                className="bg-slate-300"
+                                value={theme.inputBox?.marginTop}
+                                onChange={(e) => {
+                                  const newValue = parseInt(e.target.value); 
+                                  setTheme((prevTheme) => ({
+                                    ...prevTheme,
+                                    inputBox: {
+                                      ...prevTheme.inputBox,
+                                    marginTop: newValue, 
+                                    },
+                                  }));
+                                  handleInputBoxStyleChange(
+                                    "marginTop",
+                                    newValue
+                                  );
+                                }}
+                                min={0}
+                                max={30}
+                               
+                              />
+                            </div>
+                          </div>
+                          <div className="px-4 text-secondary text-xs">
+                            <b className="me-2">Note:</b>if you face any aligment issue adjust margin top & bottom of input box
+                            
+                          </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="">
+                       {theme.inputBox.inputSize === "customize" && (
+                        <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
 
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
@@ -1955,67 +2019,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <b className="me-2">Note:</b>This usstyle 
                             won't work in normal inputbox.
                           </div>
-                          </div>
-
-                          <div className="flex flex-col space-y-1">
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-1/2 ">
-                            <ERPSlider
-                                id="marginBottom"
-                                label={`Margin Bottom (${theme.inputBox?.marginBottom??0})`}
-                                className="bg-slate-300"
-                                value={theme.inputBox?.marginBottom}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      marginBottom: newValue, 
-                                    },
-                                  }));
-                                  handleInputBoxStyleChange(
-                                    "marginBottom",
-                                    newValue
-                                  );
-                                }}
-                                min={0}
-                                max={30}
-                               
-                              />
-                            </div>
-                            <div className="basis-1/2 ">
-                            <ERPSlider
-                                id="marginTop"
-                                label={`Margin Top (${theme.inputBox?.marginTop??0})`}
-                                className="bg-slate-300"
-                                value={theme.inputBox?.marginTop}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                    marginTop: newValue, 
-                                    },
-                                  }));
-                                  handleInputBoxStyleChange(
-                                    "marginTop",
-                                    newValue
-                                  );
-                                }}
-                                min={0}
-                                max={30}
-                               
-                              />
-                            </div>
-                          </div>
-                          <div className="px-4 text-secondary text-xs">
-                            <b className="me-2">Note:</b>if you face any aligment issue adjust margin top & bottom of input box
-                            
-                          </div>
-                          </div>
-                          
+                          </div>                          
                           </div>
                        )}
                           

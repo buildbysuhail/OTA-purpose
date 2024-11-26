@@ -16,7 +16,7 @@ import { BusinessType } from '../../../enums/business-types';
 import useApplicationSetting from '../../../utilities/hooks/use-application-settings';
 
 
-export interface AccountSettingsState {
+export interface ApplicationAccountSettings {
   defaultCashAcc: number;
   defaultSuspenseAcc: number;
   defaultServiceAccount: number;
@@ -70,7 +70,7 @@ const api = new APIClient();
 const ApplicationSettingsAccounts = () => {
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const initialState: AccountSettingsState = {
+  const initialState: ApplicationAccountSettings = {
     defaultCashAcc: 1,
     defaultSuspenseAcc: 9,
     defaultServiceAccount: 20,
@@ -119,8 +119,8 @@ const ApplicationSettingsAccounts = () => {
     enableCPEandCRE: false,
   };
   const dispatch = useDispatch();
-  const [formState, setFormState] = useState<AccountSettingsState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<AccountSettingsState>>({});
+  const [formState, setFormState] = useState<ApplicationAccountSettings>(initialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationAccountSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isScrollingDisabled, setIsScrollingDisabled] = useState(false);
@@ -144,7 +144,7 @@ const ApplicationSettingsAccounts = () => {
   };
 
   const handleFieldChange = ((settingName: any, value: any) => {
-    setFormState((prevSettings = {} as AccountSettingsState) => {
+    setFormState((prevSettings = {} as ApplicationAccountSettings) => {
       if (settingName === 'allowSalesCounter' && value == false) {
         const newSettings = {
           ...prevSettings,
@@ -168,8 +168,8 @@ const ApplicationSettingsAccounts = () => {
     try {
  
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof AccountSettingsState];
-        const prevValue = formStatePrev[key as keyof AccountSettingsState];
+        const currentValue = formState?.[key as keyof ApplicationAccountSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationAccountSettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
         (currentValue === true && prevValue === false)) {

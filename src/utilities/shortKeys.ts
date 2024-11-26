@@ -9,6 +9,7 @@ interface ShortcutConfig {
 
 enum ShortKeyEvents {
   POPUP_CLOSE_EVENT = 'popup-close-event',
+  CLOSE_ONE_POPUP = 'close-one-popup',
   GO_TO_PREVIOUS_PAGE = 'go-to-previos-page',
   GO_TO_NEXT_PAGE = 'go-to-next-page',
   GO_TO_HOME = 'go-to-home'
@@ -21,6 +22,15 @@ const shortKeys: ShortcutConfig[] = [
     description: 'Close all popups',
     action: () => {
       const event = new CustomEvent(ShortKeyEvents.POPUP_CLOSE_EVENT);
+      document.dispatchEvent(event);
+    }
+  },
+  {
+    event: ShortKeyEvents.CLOSE_ONE_POPUP,
+    key: 'ctrl+q',
+    description: 'Close one popup',
+    action: () => {
+      const event = new CustomEvent(ShortKeyEvents.CLOSE_ONE_POPUP);
       document.dispatchEvent(event);
     }
   },
@@ -106,12 +116,13 @@ export const getFocusableElements = () => {
   );
 };
 export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
+  const isShiftKey = e.shiftKey;
   if (e.key === "Enter") {
     e.preventDefault();
     const focusableElements = getFocusableElements();
     const currentElement = e.target as HTMLElement;
     const currentIndex = focusableElements.indexOf(currentElement);
-    
+
     const jumpToAttr = currentElement.getAttribute('data-jump-to');
     if (jumpToAttr) {
       const jumpTargetElement = focusableElements.find(
@@ -122,16 +133,19 @@ export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
         return;
       }
     }
-    let nextIndex = currentIndex + 1;
-    while (nextIndex < focusableElements.length) {
+
+    let nextIndex = isShiftKey ? currentIndex - 1 : currentIndex + 1;
+
+    while (nextIndex >= 0 && nextIndex < focusableElements.length) {
       const nextElement = focusableElements[nextIndex] as HTMLElement;
       const skipAttr = nextElement.getAttribute('data-skip');
       if (skipAttr !== 'true') {
         break;
       }
-      nextIndex++;
+      nextIndex = isShiftKey ? nextIndex - 1 : nextIndex + 1;
     }
-    if (nextIndex < focusableElements.length) {
+
+    if (nextIndex >= 0 && nextIndex < focusableElements.length) {
       (focusableElements[nextIndex] as HTMLElement).focus();
     }
   }

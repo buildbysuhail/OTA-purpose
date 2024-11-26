@@ -11,9 +11,9 @@ import { dateTrimmer } from "../../utilities/Utils";
 import ERPElementValidationMessage from "./erp-element-validation-message";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
+import { getFocusableElements, handleNavigation } from "../../utilities/shortKeys";
 
 dayjs.extend(utc);
-
 interface ERPDateInputProps {
   id: string;
   label?: string;
@@ -36,8 +36,11 @@ interface ERPDateInputProps {
   labelClassName?: string;
   inputClassName?: string;
   useMUI?: boolean;
-  variant?: "standard" | "outlined" | "filled"|"normal";
+  variant?: "standard" | "outlined" | "filled" | "normal";
   customSize?: "sm" | "md" | "lg" | "customize";
+  skip?: boolean;
+  jumpTo?: string;
+  jumpTarget?: string;
   // color?: TextFieldProps['color'];
 }
 
@@ -63,8 +66,11 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   labelClassName,
   inputClassName,
   useMUI,
-  variant ,
+  variant,
   customSize,
+  skip = false,
+  jumpTo,
+  jumpTarget,
   // color,
   ...props
 }, ref) => {
@@ -75,12 +81,29 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   const appState = useAppSelector(
     (state: RootState) => state.AppState.appState
   );
+
+  const moveToNextField = () => {
+    const allFocusableElements = getFocusableElements();
+    const currentIndex = allFocusableElements.findIndex(
+      (element) => element === document.activeElement
+    );
+
+    if (currentIndex !== -1 && currentIndex < allFocusableElements.length - 1) {
+      const nextElement = allFocusableElements[currentIndex + 1] as HTMLElement;
+      nextElement.focus();
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    handleNavigation(e);
+  };
+
   const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
   const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
   const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(
     variant === "normal" ? undefined : variant
   );
- useEffect(() => {
+  useEffect(() => {
     if (customSize == undefined || customSize == null) {
       setCustomSize(appState.inputBox.inputSize);
     }
@@ -93,7 +116,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
       set_useMUI(false);
     }
   }, [appState.inputBox.inputStyle, useMUI]);
-  
+
   useEffect(() => {
     if (appState.inputBox.inputStyle !== "normal" && (variant === undefined || variant === null)) {
       set_variant(appState.inputBox.inputStyle as "filled" | "outlined" | "standard");
@@ -107,33 +130,33 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   const getSizeStyles = () => {
 
     const commonMuiStyles = {
-      color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`,
+      color: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.fontColor})`,
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor:appState.mode == 'dark' ?'#ffffff1a':`rgb(${appState.inputBox.borderColor})`,
+        borderColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
       },
       "& .MuiFilledInput-underline, &:before": {
-        borderBottomColor:appState.mode == 'dark' ?'#ffffff1a':`rgb(${appState.inputBox.borderColor})`,
+        borderBottomColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
       },
-      
+
       "&:hover .MuiOutlinedInput-notchedOutline": {
-        borderColor: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
+        borderColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
       },
       "&:hover .MuiFilledInput-underline, &:hover:before": {
-        borderBottomColor:  appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
+        borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
       },
 
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-        borderColor:  appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
+        borderColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
       },
       "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
-        {
-          borderBottomColor: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.borderFocus})`,
-        },
+      {
+        borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+      },
       margin: "0",
       "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
-        {
-          padding: "0 0.75rem",
-        },
+      {
+        padding: "0 0.75rem",
+      },
     };
     switch (_customSize) {
       case "sm":
@@ -144,7 +167,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
             fontSize: "12px",
             transform: _variant === "filled"
               ? "translate(8px, 10px) scale(0.8)"
@@ -168,7 +191,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
             fontSize: "14px",
             transform: _variant === "filled"
               ? "translate(10px, 15px) scale(1)"
@@ -184,7 +207,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                 : "translate(16px, -7px) scale(0.88)"
           }
         };
-        case "md": // md
+      case "md": // md
         return {
           "& .MuiInputBase-root": {
             height: "2.5rem",
@@ -192,7 +215,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
             fontSize: "12px",
             transform: _variant === "filled"
               ? "translate(10px, 13px) scale(0.9)"
@@ -209,7 +232,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           }
         };
 
-        case "customize": 
+      case "customize":
         return {
           "& .MuiInputBase-root": {
             height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
@@ -219,13 +242,13 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
             fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
             transform:
               _variant === "filled"
                 ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
                 : _variant === "standard"
-                  ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
                   : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`,
           },
           "& .MuiInputLabel-shrink": {
@@ -266,26 +289,29 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     if (onChangeData && data) {
       onChangeData({ ...data, [id]: formattedDate });
     }
+    setTimeout(() => {
+      moveToNextField();
+    }, 10);
   };
 
   const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
     let newValue: string | null = null;
-  
+
     if (inputValue !== "") {
       const parsedDate = dayjs(inputValue).utc(true);
       newValue = parsedDate.isValid() ? parsedDate.format() : null; // Validate and format the date
     }
-  
+
     if (onChange) {
       onChange({ ...e, target: { ...e.target, value: newValue ?? "", } }); // Ensure consistent value
     }
-  
+
     if (onChangeData && data) {
       onChangeData({ ...data, [id]: newValue });
     }
   };
-  
+
 
   if (_useMUI == true) {
     return (
@@ -298,14 +324,33 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             onChange={handleChange}
             minDate={minDate ? dayjs(minDate) : minDateKey ? dayjs(data?.[minDateKey]) : undefined}
             maxDate={maxDate ? dayjs(maxDate) : maxDateKey ? dayjs(data?.[maxDateKey]) : undefined}
+            closeOnSelect={true}
+            onClose={() => {
+              if (value) {
+                setTimeout(() => {
+                  moveToNextField();
+                }, 100);
+              }
+            }}
             slotProps={{
               textField: {
                 required,
                 variant: _variant,
                 fullWidth: true,
+                onKeyDown: (e) => {
+                  if (e.key === 'Enter' && value) {
+                    e.preventDefault();
+                    moveToNextField();
+                  } else {
+                    handleNavigation(e);
+                  }
+                },
                 sx: sizeStyles,
-                InputLabelProps: {
-                  shrink: true
+                inputProps: {
+                  shrink: true,
+                  'data-skip': skip,
+                  'data-jump-to': jumpTo,
+                  'data-jump-target': jumpTarget
                 }
               }
             }}
@@ -317,31 +362,33 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   }
 
   const displayValue = formatDate(value) || formatDate(defaultValue) || "";
-  if (_useMUI == undefined || _useMUI == false){
-  return (
-    <div className={className}>
-      <ERPInput
-        ref={ref}
-        id={id}
-        customSize={customSize == undefined || customSize == null ? customSize : appState.inputBox.inputSize}
-        label={label}
-        placeholder={placeholder}
-        disabled={disabled}
-        type={type}
-        onChange={handleChangeNormal}
-        required={required}
-        readOnly={readonly}
-        min={minDate ? dateTrimmer(minDate) : minDateKey ? formatDate(data?.[minDateKey]) : undefined}
-        max={maxDate ? dateTrimmer(maxDate) : maxDateKey ? formatDate(data?.[maxDateKey]) : undefined}
-        value={displayValue}
-        labelClassName={labelClassName}
-        inputClassName={inputClassName}
-        {...props}
-      />
-      <ERPElementValidationMessage validation={validation} />
-    </div>
-  );
-}
+  if (_useMUI == undefined || _useMUI == false) {
+    return (
+      <div className={className}>
+        <ERPInput
+          ref={ref}
+          id={id}
+          customSize={customSize == undefined || customSize == null ? customSize : appState.inputBox.inputSize}
+          label={label}
+          placeholder={placeholder}
+          disabled={disabled}
+          type={type}
+          onChange={handleChangeNormal}
+          required={required}
+          readOnly={readonly}
+          min={minDate ? dateTrimmer(minDate) : minDateKey ? formatDate(data?.[minDateKey]) : undefined}
+          max={maxDate ? dateTrimmer(maxDate) : maxDateKey ? formatDate(data?.[maxDateKey]) : undefined}
+          value={displayValue}
+          labelClassName={labelClassName}
+          inputClassName={inputClassName}
+          data-skip={skip}
+          data-jump-to={jumpTo}
+          data-jump-target={jumpTarget}
+          {...props}
+        />
+        <ERPElementValidationMessage validation={validation} />
+      </div>
+    );
+  }
 });
-
 export default ERPDateInput;

@@ -1,10 +1,4 @@
-import {
-  Dialog,
-  DialogPanel,
-  DialogTitle,
-  Transition,
-  TransitionChild,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@headlessui/react";
 import React, { cloneElement, Fragment, useEffect } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
@@ -71,10 +65,19 @@ const ERPModal = React.memo(
     };
 
     useEffect(() => {
+      const closeOnePopupListener = () => {
+        if (isOpen) {
+          handleClose();
+        }
+      };
       if (isOpen) {
         document.addEventListener(
           ShortKeyEvents.POPUP_CLOSE_EVENT,
           handlePopupClose
+        );
+        document.addEventListener(
+          ShortKeyEvents.CLOSE_ONE_POPUP,
+          closeOnePopupListener
         );
       }
 
@@ -83,17 +86,17 @@ const ERPModal = React.memo(
           ShortKeyEvents.POPUP_CLOSE_EVENT,
           handlePopupClose
         );
+        document.removeEventListener(
+          ShortKeyEvents.CLOSE_ONE_POPUP,
+          closeOnePopupListener
+        );
       };
     }, [isOpen]);
 
     return (
       <div>
         <Transition appear show={isOpen} as={Fragment}>
-          <Dialog
-            as="div"
-            className={`relative z-50`}
-            onClose={disableOutsideClickClose ? () => {} : handleClose}
-          >
+          <Dialog as="div" className={`relative z-50`} onClose={disableOutsideClickClose ? () => { } : handleClose}>
             <Transition
               as={Fragment}
               show={isOpen}
@@ -102,15 +105,12 @@ const ERPModal = React.memo(
               enterTo="opacity-100"
               leave="ease-in duration-200"
               leaveFrom="opacity-100"
-              leaveTo="opacity-0"
-            >
+              leaveTo="opacity-0">
               <div className="fixed inset-0 bg-[#71717a] bg-opacity-50" />
             </Transition>
 
             <div className={`fixed inset-0`}>
-              <div
-                className={`flex min-h-full items-center justify-center text-center p-4`}
-              >
+              <div className={`flex min-h-full items-center justify-center text-center p-4`}>
                 <TransitionChild
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -118,25 +118,18 @@ const ERPModal = React.memo(
                   enterTo="opacity-100 scale-100"
                   leave="ease-in duration-200"
                   leaveFrom="opacity-100 scale-100"
-                  leaveTo="opacity-0 scale-95"
-                >
+                  leaveTo="opacity-0 scale-95">
                   <DialogPanel
                     className={`transform bg-white py-3 text-left align-middle shadow-xl transition-all min-h-full max-h-screen ${width} rounded-md
-                    ${isRemoveSomething ? "px-0" : "px-5"}`}
-                  >
+                    ${isRemoveSomething ? "px-0" : "px-5"}`}>
                     <DialogTitle
                       as="h3"
-                      className="place-items-center sticky min-w-full top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white"
-                    >
+                      className="place-items-center sticky min-w-full top-0 z-10 flex justify-start text-lg border-b py-3 font-medium leading-6 text-gray-900 bg-white">
                       {closeButton === "LeftArrow" && (
                         <button
                           className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer"
-                          onClick={handleClose}
-                        >
-                          <i
-                            className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line"
-                            style={{ fontSize: "23px" }}
-                          ></i>
+                          onClick={handleClose} >
+                          <i className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line" style={{ fontSize: "23px" }} ></i>
                         </button>
                       )}
                       {title}
@@ -153,18 +146,13 @@ const ERPModal = React.memo(
                       )}
                     </DialogTitle>
                     <div className={"max-h-[calc(100vh-8rem)]"}>
-                      <div
-                        className={`
-                          max-h-[calc(100vh-16rem)] 
-                         overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-2`}
-                      >
+                      <div className={`max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-2`}>
                         {content &&
                           cloneElement(
                             content,
                             contentProps ? { contentProps: contentProps } : {}
                           )}
                       </div>
-
                       <div>{footer}</div>
                     </div>
 
@@ -183,8 +171,7 @@ const ERPModal = React.memo(
                         {hasSubmit && (
                           <ERPSubmitButton
                             onClick={handleSubmit}
-                            className="uppercase"
-                          >
+                            className="uppercase">
                             {submitTitle || "Submit"}
                           </ERPSubmitButton>
                         )}
@@ -212,5 +199,4 @@ const ERPModal = React.memo(
     );
   }
 );
-
 export default ERPModal;

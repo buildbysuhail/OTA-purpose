@@ -8,6 +8,7 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import DayBookBillWise from "../dayBook/dayBookSummary/day-book-billwise";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
+import CashBookMonthWise from "./cash-book-monthwise";
 // interface DayBookSummary {
 //   from: Date
 // }
@@ -100,12 +101,12 @@ const CashBookSummary = () => {
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
                   childPopupProps={{
-                    content: <DayBookBillWise/>,
+                    content: <CashBookMonthWise/>,
                     title: t("cash_book_monthwise"),
                     isForm: false,
                     width: "mw-100",
-                    drillDownCells: "voucherType",
-                    bodyProps: "ledgerID" 
+                    drillDownCells: "ledgerName,",
+                    bodyProps: "ledgerID,asonDate" 
                   }}
                 ></ErpDevGrid>
               </div>

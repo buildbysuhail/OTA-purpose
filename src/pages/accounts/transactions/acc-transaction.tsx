@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Card, CardHeader, CardContent } from "@mui/material"
-import { useCallback } from "react"
+import React, { useCallback, useEffect, useState } from 'react'
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input"
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons"
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox"
 import ERPInput from "../../../components/ERPComponents/erp-input"
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox"
@@ -10,20 +7,14 @@ import ERPButton from "../../../components/ERPComponents/erp-button"
 import Urls from "../../../redux/urls"
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid"
 import { useParams } from 'react-router-dom'
-import { AccTransactionData, AccTransactionFormState, AccTransactionProps } from "./acc-transaction-types"
-import { FormField } from "../../../utilities/form-types"
-import { getFieldPropsGlobal, handleFieldChangeGlobal } from "../../../utilities/form-utils"
-import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions"
-import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch"
+import { AccTransactionProps } from "./acc-transaction-types"
+import { useAppSelector } from "../../../utilities/hooks/useAppDispatch"
 import { useTranslation } from "react-i18next"
 import { RootState } from "../../../redux/store"
 import { accFormStateHandleFieldChange, accFormStateRowHandleFieldChange, accFormStateTransactionDetailsRowAdd, accFormStateTransactionMasterHandleFieldChange } from "./reducer"
-import { hasValue, isNullOrUndefinedOrEmpty } from "../../../utilities/Utils"
 import { useDispatch } from "react-redux"
-import ERPModal from "../../../components/ERPComponents/erp-modal"
-import BillwiswPopup from "./billwise-popup"
-import { Field } from "@headlessui/react"
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert"
+import { APIClient } from "../../../helpers/api-client";
 
 interface FormElementState {
   visible: boolean;
@@ -74,6 +65,15 @@ const initialFormElements = {
 type FormElementsState = {
   [key in keyof typeof initialFormElements]: FormElementState
 }
+const api = new APIClient();
+const getNextVoucherNumber = async (formType: string, voucherType: string, prefix: string) => {
+
+  const response = await api.getAsync(Urls.get_last_voucher_no, `formType=${formType}&voucherType= ${voucherType}&prefix=${prefix}`);
+
+  const nextVoucherNumber = response || 1;
+
+  return nextVoucherNumber;
+};
 
 const AccTransactionForm: React.FC<AccTransactionProps> = ({
   voucherType,
@@ -196,14 +196,47 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       const newFormElements = { ...formElements };
       newFormElements.foreignCurrency.visible = applicationSettings.accountsSettings.maintainMultiCurrencyTransactions;
       newFormElements.lblGroupName.label = "";
-
+      if (!formState.isInvoker) {
+        dispatch(accFormStateTransactionMasterHandleFieldChange(
+          {
+            fields:
+            {
+              transactionDate: new Date(),
+              referenceDate: new Date(),
+            }
+          }));
+        fetchVoucherNumber();
+        if (formState.transaction.master.voucherType == "CP" || formState.transaction.master.voucherType == "CR") {
+          dispatch(accFormStateHandleFieldChange(
+            {
+              fields:
+              {
+                masterAccountID: userSession.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings.allowSalesCounter ? userSession.counterwiseCashLedgerId : applicationSettings.accountsSettings.defaultCashAcc
+              }
+            }));
+          if (userSession.counterwiseCashLedgerId > 0 && applicationSettings.accountsSettings.allowSalesCounter && userSession.counterAssignedCashLedgerId > 0) {
+            formElements.masterAccount.disabled = true;
+          }
+        }
+      }
+      dispatch(accFormStateHandleFieldChange({fields:{printOnSave: applicationSettings.accountsSettings.printAccAftersave}}));
 
       let _newFormElements = updateFormElementsBasedOnVoucherType(newFormElements);
       setFormElements(_newFormElements);
     };
-
+    initializeFormElements();
 
   }, [voucherType]);
+  const fetchVoucherNumber = useCallback(async () => {
+    const nextVoucherNumber = await getNextVoucherNumber(formState.transaction.master.formType, formState.transaction.master.voucherType, formState.transaction.master.voucherPrefix);
+    dispatch(accFormStateTransactionMasterHandleFieldChange(
+      {
+        fields:
+        {
+          voucherNumber: nextVoucherNumber,
+        }
+      }));;
+  }, [formState.transaction.master.formType, formState.transaction.master.voucherType, formState.transaction.master.voucherPrefix]);
 
   const columns = [
     {

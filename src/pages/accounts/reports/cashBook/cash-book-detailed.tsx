@@ -47,6 +47,11 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
     {
       dataField: "debit",
@@ -54,10 +59,10 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      width: 500,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
   </span>
       ),
     },
@@ -69,7 +74,7 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {cellElement.data.credit}
   </span>
       ),
@@ -81,6 +86,11 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
     {
       dataField: "narration",

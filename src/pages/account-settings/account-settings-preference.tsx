@@ -191,7 +191,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   const saveThemeChange = async () => {
     debugger;
     const res = await dispatch(
-      updatedUserThemeAction({ data: theme }) as any
+      updatedUserThemeAction({ data: JSON.stringify(theme) }) as any
     ).unwrap();
     handleResponse(res, () => {
       userTheme();

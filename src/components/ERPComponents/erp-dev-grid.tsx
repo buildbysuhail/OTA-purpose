@@ -88,6 +88,7 @@ interface ERPDevGridProps {
   | boolean
   | { filtering?: boolean; sorting?: boolean; paging?: boolean };
   onRowClick?: (e: any) => void;
+  onCellClick?: (e: any) => void;
   onSelectionChanged?: () => void;
   onExporting?: (e: any) => void;
   onContentReady?: (e: any) => void;
@@ -143,7 +144,7 @@ interface ERPDevGridProps {
     isForm: boolean,
     content: any,
     drillDownCells: string,
-    bodyProps: string,
+    bodyProps?: string,
     enableFilter?: boolean,
     enable?:boolean
   }
@@ -270,6 +271,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   allowSearching = true,
   remoteOperations = true,
   onRowClick,
+  onCellClick,
   onSelectionChanged,
   onExporting,
   onContentReady,
@@ -427,7 +429,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       paramNames,
       bodyProps,
     );
-  }, [data, keyExpr, dataUrl, allowEditing, method, filter, reload]);
+  }, [data, keyExpr, dataUrl, allowEditing, method, filter, reload, postData]);
 
   const onExportingHandler = useCallback((e: any) => {
     if (onExporting) {
@@ -484,8 +486,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       });
       debugger;
       // Update bodyProps state
+      onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
-      setIsChildOpen({isOpen: true, props: updatedBodyProps});
+      childPopupProps?.bodyProps && setIsChildOpen({isOpen: true, props: updatedBodyProps});
     }
   }, []);
   const onCellPrepared = useCallback((e: any) => {

@@ -18,15 +18,15 @@ const BalanceSheetFilter = ({ getFieldProps, handleFieldChange, t }: any) => (
 
         {/* Stock Value Dropdown */}
         <ERPDataCombobox
-          {...getFieldProps("stockValue")}
+          {...getFieldProps("valuationUsing")}
           label={t("Stock Value")}
           field={{
-            id: "stockValue",
+            id: "valuationUsing",
             getListUrl: Urls.data_stock_valuation_methods,
             valueKey: "id",
             labelKey: "name",
           }}
-          onChangeData={(data) => handleFieldChange({stockValue: data.stockValue})}
+          onChangeData={(data) => handleFieldChange({valuationUsing: data.valuationUsing})}
         />
 
         {/* Closing Stock Input */}
@@ -51,7 +51,7 @@ const BalanceSheetFilter = ({ getFieldProps, handleFieldChange, t }: any) => (
 export default BalanceSheetFilter;
 export const BalanceSheetFilterInitialState = {
   asOnDate: new Date(), 
-  stockValue:"SPP",
+  valuationUsing:"SPP",
   closingStock: 0,
   showVertical: false, 
 };

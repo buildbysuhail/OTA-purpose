@@ -225,7 +225,7 @@ const Urls = {
   acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts/",
   acc_reports_accounts_history_popup: "/Accounts/RptTransactionHistory/ShowTransHistoryAccountsPopUp/",
   acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport/",
-  acc_reports_daily_summary_detailed: "/Accounts/RptDailySummaryReport/DailySummaryReport/",
+  acc_reports_daily_summary_detailed: "/Accounts/RptDailySummaryReport/DailySummaryDetailedReport/",
   acc_reports_daily_summary_credit_details: "/Accounts/RptDailySummaryReport/CreditSalesReportDaily/",
   acc_reports_daily_summary_receipt_details: "/Accounts/RptDailySummaryReport/SelectCashReceiptReportDaily/",
   acc_reports_billwise_profit: "/Accounts/RptBillWsieProfitReport/BillwiseProfit/",

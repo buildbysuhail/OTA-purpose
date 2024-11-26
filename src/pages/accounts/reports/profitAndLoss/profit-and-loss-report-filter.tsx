@@ -9,24 +9,11 @@ const ProfitAndLossReportFilter = ({ getFieldProps, handleFieldChange, t }: any)
     return (
   <div className="grid grid-cols-1 gap-4">
     {/* Date Range Section */}
-    <ERPDataCombobox
-      {...getFieldProps("accGroupID")}
-      label={t("a/c Group Balance")}
-      field={{
-        id: "accGroupID",
-        getListUrl: Urls.data_acc_groups,
-        valueKey: "id",
-        labelKey: "name",
-      }}
-      onChangeData={(data) => handleFieldChange('accGroupID', data.accGroupID)}
-    />
-
-
     <div className="flex items-center gap-4">
       <ERPDateInput
-        {...getFieldProps("asonDate")}
-        label={t("asonDate")}
-        onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
+        {...getFieldProps("fromDate")}
+        label={t("fromDate")}
+        onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
         autoFocus={true}
       />
       <ERPDateInput
@@ -36,29 +23,27 @@ const ProfitAndLossReportFilter = ({ getFieldProps, handleFieldChange, t }: any)
       />
     </div>
     <ERPDataCombobox
-      {...getFieldProps("costCentreID")}
-      label={t("cost_centre")}
+      {...getFieldProps("valuationUsing")}
+      label={t("stock_value")}
       field={{
-        id: "costCentreID",
-        getListUrl: Urls.data_costcentres,
-        valueKey: "id",
+        id: "valuationUsing",
+        getListUrl: Urls.data_stock_valuation_methods,
+        valueKey: "name",
         labelKey: "name",
       }}
-      onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
+      onChangeData={(data) => handleFieldChange('valuationUsing', data.valuationUsing)}
     />
-    <ERPCheckbox
-      {...getFieldProps("isPeriodWise")}
-      label={t("Period_wise")}
-      onChangeData={(data) => handleFieldChange('isPeriodWise', data.isPeriodWise)}
-    />
+    {/* <ERPCheckbox
+      {...getFieldProps("showDetailed")}
+      label={t("showDetailed")}
+      onChangeData={(data) => handleFieldChange('showDetailed', data.showDetailed)}
+    /> */}
   </div>
 );
 }
 export default ProfitAndLossReportFilter;
 export const ProfitAndLossReportFilterInitialState = {
-  accGroupID: -1, 
-  toDate: new Date(), 
-  asonDate: new Date(),
-  costCentreID: 0, 
-  isPeriodWise: false, 
+  fromDate: new Date(), 
+  toDate: new Date(),
+  valuationUsing: "SPP", 
 };

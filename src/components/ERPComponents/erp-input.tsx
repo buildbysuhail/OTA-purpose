@@ -516,6 +516,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </div>
             )}
             <div className="flex-1">
+            {appState.inputBox.fontSize ?? 16}
+            {_customSize}
               <input
                 {...commonProps}
                 placeholder={iPlaceholder}

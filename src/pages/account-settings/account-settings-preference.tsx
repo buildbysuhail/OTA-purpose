@@ -1697,7 +1697,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                       <div className="">
-                       {theme.inputBox.inputSize === "customize" && (
+                       {theme.inputBox?.inputSize === "customize" && (
                         <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
 
                           <div className="flex items-center space-x-3">

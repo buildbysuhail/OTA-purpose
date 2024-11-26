@@ -239,7 +239,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         {
           borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
         },
-        margin: "0",
+   
         "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
         {
           padding: "0 0.75rem",
@@ -252,7 +252,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputBase-root": {
                 height:  _variant === "filled"?"2.3rem": "2rem",
                 fontSize: "12px",
-                boxShadow: "none !important",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {

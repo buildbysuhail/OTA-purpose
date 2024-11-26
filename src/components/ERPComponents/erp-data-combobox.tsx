@@ -14,6 +14,7 @@ import {
   TextField,
   Theme,
   SxProps,
+  Typography,
 } from "@mui/material";
 
 interface Option {
@@ -278,6 +279,7 @@ export default function ERPDataCombobox({
   disabled = false,
   reload = false,
   labelDirection="vertical",
+  info,
   initialValue,
   className,
   disabledApiCall = false,
@@ -817,6 +819,20 @@ export default function ERPDataCombobox({
         return styles;
     }
   };
+
+  
+  function infoWithLineBreaks(text?: string) {
+    if (!text) return null; 
+    return text.includes('/n')
+      ? text.split('/n').map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))
+      : text;
+  }
+
   const sizeStyles = getSizeStyles();
 
   if (_useMUI == true) {
@@ -1062,6 +1078,9 @@ if (_useMUI == undefined || _useMUI == false){
           </Combobox.Options>
         </Transition>
       </Combobox>
+      <div className="text-[#374151] text-xs font-medium ">
+          {infoWithLineBreaks(info)}
+        </div>
       {validation && (
         <div className="mt-1 text-xs text-[#ef4444]">{validation}</div>
       )}

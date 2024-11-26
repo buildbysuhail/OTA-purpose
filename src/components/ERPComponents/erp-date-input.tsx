@@ -39,6 +39,9 @@ interface ERPDateInputProps {
   useMUI?: boolean;
   variant?: "standard" | "outlined" | "filled" | "normal";
   customSize?: "sm" | "md" | "lg" | "customize";
+  skip?: boolean;
+  jumpTo?: string;
+  jumpTarget?: string;
 }
 
 const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
@@ -178,7 +181,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+     
             fontSize: "12px",
             color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             transform:
@@ -205,7 +208,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+         
             fontSize: "14px",
             color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             transform:

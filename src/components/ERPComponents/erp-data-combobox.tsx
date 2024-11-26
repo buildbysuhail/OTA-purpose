@@ -932,27 +932,26 @@ if (_useMUI == undefined || _useMUI == false){
   return (
     <div className="relative" ref={componentRef}>
       {!noLabel && (
-        <label
-          htmlFor={id}
-          // className={`block ${sizeClasses?.label} font-medium text-gray-700`}
-          className={`capitalize block  text-gray-700  ${appState.mode == 'dark' ? 'form-label':""}  ${sizeClasses?.label}`}
+          <label
+          className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState.mode == 'dark' ? 'form-label':""} 
+          ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
           style={{
-              fontSize: _customSize
-                ? _customSize === "sm"
-                  ? "12px"
-                  : _customSize === "md"
+            fontSize: _customSize
+              ? _customSize === "sm"
+                ? "12px"
+                : _customSize === "md"
                   ? "14px"
-                  :  _customSize === "lg"
-                  ?"16px": `${appState.inputBox.labelFontSize}px`
-                : `14px`,
-                transform: _customSize ==="customize" ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${
-                  appState?.inputBox?.adjustB ?? 10 }px) scale(1)`:``,
-            }}
-        >
-         
-          {label || id?.replaceAll("_", " ")}
+                  : _customSize === "lg"
+                    ? "16px"
+                    : `${appState.inputBox.labelFontSize}px`
+              : `14px`,
+            transform: _customSize ==="customize" ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+              appState?.inputBox?.adjustB ?? 10 }px) scale(1)`:``,
+          }}
+          >
+          {`${label || id?.replaceAll("_", " ")}  ${labelDirection === "horizontal" ? ":" : ""}`}
           {required && <span className="text-[#ef4444]"> *</span>}
-        </label>
+          </label>
       )}
       <Combobox
         onKeyDown={handleKeyDownEnter}
@@ -963,8 +962,8 @@ if (_useMUI == undefined || _useMUI == false){
         as="div"
         className="relative"
       >
-        <div className={className}>
-      
+        <div className={`${className} flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
+
           <Combobox.Input
          
           style={{

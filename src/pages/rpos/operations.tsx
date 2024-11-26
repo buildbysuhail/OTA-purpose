@@ -32,11 +32,18 @@ import {
   Vault,
   BadgeDollarSign,
   Keyboard,
+  ArrowLeft,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { t } from "i18next";
 
 const Operations = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(-1);
+  };
+  
   return (
     <div className="p-0">
       <header className="flex justify-between items-center bg-white p-4 shadow-md border-t-[1px]">
@@ -64,6 +71,13 @@ const Operations = () => {
             <Mail className="w-4 h-4 me-2" />
             <span>{t("send_a_mail")}</span>
             <span className="font-bold">support@polosys.com</span>
+          </div>
+          <div
+            className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer hover:bg-gray-50"
+            onClick={handleClick}
+          >
+            <ArrowLeft className="w-5 h-5 me-1" />
+            <span className="text-black">Back</span>
           </div>
         </div>
       </header>

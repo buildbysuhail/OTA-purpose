@@ -336,7 +336,12 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
 
   if (_useMUI == true) {
     return (
-      <div className={className}>
+      <div className={className}
+      style={{
+        marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+        marginTop: `${appState.inputBox?.marginTop??0}px`
+      }}
+      >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             label={label}

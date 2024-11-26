@@ -8,7 +8,14 @@ import { APIClient } from "../../helpers/api-client";
 import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import { Autocomplete, CircularProgress, TextField, Theme, SxProps } from "@mui/material";
+import {
+  Autocomplete,
+  CircularProgress,
+  TextField,
+  Theme,
+  SxProps,
+  Typography,
+} from "@mui/material";
 
 interface Option {
   value: string;
@@ -22,7 +29,7 @@ interface ERPDataComboboxProps {
   options?: any[];
   excludeOptions?: any[];
   includeOptions?: any[];
-  // value?: any;
+  info?:string;
   defaultValue?: any;
   handleChange?: (id: string, value: any) => void;
   handleChangeData?: (id: string, value: any) => void;
@@ -35,6 +42,7 @@ interface ERPDataComboboxProps {
   defaultData?: any;
   data?: any;
   value?: any;
+  labelDirection?:"horizontal"|"vertical";
   reload?: boolean;
   required?: boolean;
   className?: string;
@@ -270,6 +278,8 @@ export default function ERPDataCombobox({
   autoFocus,
   disabled = false,
   reload = false,
+  labelDirection="vertical",
+  info,
   initialValue,
   className,
   disabledApiCall = false,
@@ -280,7 +290,7 @@ export default function ERPDataCombobox({
   enableClearOption = true,
   customSize,
   useMUI,
-  variant,
+  variant ,
 }: ERPDataComboboxProps) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -611,7 +621,8 @@ export default function ERPDataCombobox({
     }
   };
 
-  const sizeClasses = getSizeClasses(_customSize, appState);
+  const sizeClasses = getSizeClasses(_customSize,appState);
+
   const getSizeStyles = () => {
     const styles: {
       mui: SxProps<Theme>;
@@ -634,8 +645,8 @@ export default function ERPDataCombobox({
     };
 
     const commonMuiStyles = {
-      paddingBottom: _variant === "filled" ? "1rem" : "0",
-      color: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.fontColor})`,
+      paddingBottom: _variant === "filled"? "1rem":"0",
+      color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`,
       "& .MuiOutlinedInput-notchedOutline": {
         borderColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
       },
@@ -668,7 +679,7 @@ export default function ERPDataCombobox({
         return {
           mui: {
             "& .MuiInputBase-root": {
-              height: "2rem",
+              height:  _variant === "filled"?"2.3rem": "2rem",
               fontSize: "12px",
               lineHeight: "2rem",
               ...commonMuiStyles,
@@ -678,7 +689,7 @@ export default function ERPDataCombobox({
               color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
               transform:
                 _variant === "filled"
-                  ? "translate(8px, 10px) scale(1)"
+                  ? "translate(8px, 9px) scale(1)"
                   : _variant === "standard"
                     ? "translate(0, 10px) scale(0.8)"
                     : "translate(8px, 10px) scale(0.8)",
@@ -686,7 +697,7 @@ export default function ERPDataCombobox({
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
-                  ? "translate(8px, -10px) scale(0.75)"
+                  ?  "translate(8px, -15px) scale(0.90)"
                   : _variant === "standard"
                     ? "translate(0, -6px) scale(0.75)"
                     : "translate(16px, -6px) scale(0.75)",
@@ -703,9 +714,8 @@ export default function ERPDataCombobox({
         return {
           mui: {
             "& .MuiInputBase-root": {
-              // height: _variant === "filled" ? "2.5rem" : _variant === "standard" ? "2rem" : "2.5rem",
               height: "2.5rem",
-              fontSize: "14px",
+              fontSize: "15px",
               ...commonMuiStyles,
             },
             "& .MuiInputLabel-root": {
@@ -713,7 +723,7 @@ export default function ERPDataCombobox({
               fontSize: "12px",
               transform:
                 _variant === "filled"
-                  ? "translate(10px, 13px) scale(0.9)"
+                  ? "translate(10px, 13px) scale(1)"
                   : _variant === "standard"
                     ? "translate(0, 13px) scale(0.9)"
                     : "translate(10px, 13px) scale(0.9)",
@@ -721,7 +731,7 @@ export default function ERPDataCombobox({
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
-                  ? "translate(8px, -12px) scale(0.90)"
+                  ? "translate(8px, -15px) scale(0.90)"
                   : _variant === "standard"
                     ? "translate(0, -6px) scale(0.90)"
                     : "translate(15px, -7px) scale(0.90)",
@@ -737,8 +747,7 @@ export default function ERPDataCombobox({
       case "lg":
         return {
           mui: {
-            "& .MuiInputBase-root": {
-              // height: _variant === "filled" ? "3rem" : _variant === "standard" ? "2.5rem" : "3rem",
+            "& .MuiInputBase-root": {  
               height: "3rem",
               fontSize: "16px",
               ...commonMuiStyles,
@@ -748,7 +757,7 @@ export default function ERPDataCombobox({
               fontSize: "14px",
               transform:
                 _variant === "filled"
-                  ? "translate(10px, 15px) scale(1)"
+                  ? "translate(10px, 21px) scale(1)"
                   : _variant === "standard"
                     ? "translate(0, 15px) scale(1)"
                     : "translate(10px, 15px) scale(1)",
@@ -756,7 +765,7 @@ export default function ERPDataCombobox({
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
-                  ? "translate(8px, -14px) scale(0.88)"
+                  ? "translate(8px, -15px) scale(0.90)"
                   : _variant === "standard"
                     ? "translate(1px,-6px) scale(0.88)"
                     : "translate(16px, -7px) scale(0.88)",
@@ -774,10 +783,9 @@ export default function ERPDataCombobox({
         return {
           mui: {
             "& .MuiInputBase-root": {
-              height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
-              fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+              height: `${appState.inputBox.inputHeight ?? 3}rem`,
+              fontSize: `${appState.inputBox.fontSize ?? 16}px`,
               fontWeight: appState.inputBox.fontWeight ?? 500,
-              borderRadius: `${appState.inputBox.borderRadius ?? 15}px`,
               ...commonMuiStyles,
             },
             "& .MuiInputLabel-root": {
@@ -785,18 +793,18 @@ export default function ERPDataCombobox({
               fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
               transform:
                 _variant === "filled"
-                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                  ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 20}px) scale(1)`
                   : _variant === "standard"
-                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
+                    ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
                     : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`,
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
-                  ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -14}px) scale(0.88)`
+                  ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -1}px) scale(0.88)`
                   : _variant === "standard"
                     ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
-                    : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${appState?.inputBox?.adjustD ?? -7}px) scale(0.88)`,
+                    : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${appState?.inputBox?.adjustD ?? -9}px) scale(0.88)`,
             },
           } as SxProps<Theme>,
           regular: {
@@ -811,6 +819,20 @@ export default function ERPDataCombobox({
         return styles;
     }
   };
+
+  
+  function infoWithLineBreaks(text?: string) {
+    if (!text) return null; 
+    return text.includes('/n')
+      ? text.split('/n').map((line, index) => (
+          <React.Fragment key={index}>
+            {line}
+            <br />
+          </React.Fragment>
+        ))
+      : text;
+  }
+
   const sizeStyles = getSizeStyles();
 
   if (_useMUI == true) {
@@ -844,7 +866,12 @@ export default function ERPDataCombobox({
       }
     };
     return (
-      <div className={className}>
+      <div className={className}
+      style={{
+        marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+        marginTop: `${appState.inputBox?.marginTop??0}px`
+      }}
+      >
         <Autocomplete
           id={id}
           options={items}
@@ -894,6 +921,10 @@ export default function ERPDataCombobox({
             </li>
           )}
         />
+         <Typography
+            className="text-[#374151] text-xs font-medium mt-1">
+          {infoWithLineBreaks(info)}
+          </Typography>
         {validation && (
           <div className="mt-1 text-xs text-[#ef4444]">{validation}</div>
         )}
@@ -902,142 +933,162 @@ export default function ERPDataCombobox({
   };
   const { height, fontSize, fontWeight, color, } = sizeStyles.regular;
 
-  if (_useMUI == undefined || _useMUI == false) {
-    return (
-      <div className="relative" ref={componentRef}>
-        {!noLabel && (
+if (_useMUI == undefined || _useMUI == false){      
+  return (
+    <div className={`${className} relative ${labelDirection ==="vertical" ? "flex flex-col space-y-1":"flex items-center space-x-2"}`} ref={componentRef}
+    style={{
+      marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+       marginTop: `${appState.inputBox?.marginTop??0}px`,  
+      }}
+    >
+      {!noLabel && (
           <label
-            htmlFor={id}
-            // className={`block ${sizeClasses?.label} font-medium text-gray-700`}
-            className={`capitalize block  text-gray-700  form-label ${sizeClasses?.label}`}
-            style={{
-              fontSize: _customSize
-                ? _customSize === "sm"
-                  ? "12px"
-                  : _customSize === "md"
-                    ? "14px"
-                    : _customSize === "lg"
-                      ? "16px" : `${appState.inputBox.labelFontSize}px`
-                : `14px`,
-              transform: `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10}px) scale(1)`
-            }}>
-            {label || id?.replaceAll("_", " ")}
-            {required && <span className="text-[#ef4444]"> *</span>}
+          className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState.mode == 'dark' ? 'form-label':""} 
+          ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
+          style={{
+            fontSize: _customSize
+              ? _customSize === "sm"
+                ? "12px"
+                : _customSize === "md"
+                  ? "14px"
+                  : _customSize === "lg"
+                    ? "16px"
+                    : `${appState.inputBox.labelFontSize}px`
+              : `14px`,
+            transform: _customSize ==="customize" ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+              appState?.inputBox?.adjustB ?? 10 }px) scale(1)`:``,
+          }}
+          >
+          {`${label || id?.replaceAll("_", " ")}  ${labelDirection === "horizontal" ? ":" : ""}`}
+          {required && <span className="text-[#ef4444]"> *</span>}
           </label>
-        )}
-        <Combobox
-          onKeyDown={handleKeyDownEnter}
-          data-skip={skip}
-          disabled={disabled}
-          value={initial}
-          // onChange={handleItemClick}
-          as="div"
-          className="relative">
-          <div className={className}>
-            <Combobox.Input
-              style={{
-                height,
-                fontSize,
-                fontWeight,
-                color,
-                borderColor: borderStyles,
-                "--tw-ring-shadow": "none",
-                outline: "none",
-                transition: "border-color 0.2s ease-in-out",
-                borderRadius: `${appState.inputBox.borderRadius}px`,
-              } as React.CSSProperties}
-              // className={`w-full appearance-none rounded border border-gray-300 ${
-              //   sizeClasses?.input
-              // } ${disabled ? "text-gray-400" : "bg-white text-gray-900"} ${
-              //   enableClearOption ? "pr-16" : "pr-10"
-              // } placeholder-gray-400 focus:ring-1 focus:border-[#3b82f6] focus:bg-white focus:outline-none focus:ring-[#3b82f6]`}
-              className={`form-control ${sizeClasses?.input}  placeholder:capitalize`}
-              displayValue={() => inputValue || initial?.label || ""}
-              onChange={handleInputChange}
-              onClick={() => !disabled && setIsOpen(!isOpen)}
-              onKeyDown={handleKeyDown}
-              placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              ref={comboboxRef}
-              autoComplete="off"
-              spellCheck={false}
-              autoFocus={autoFocus}
-              title={initial?.label || ""}
-              value={isOpen ? inputValue : initial?.label || ""}
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-1">
-              {enableClearOption && (initial || inputValue) && !noXMarkIcon && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clearSelection();
-                    setIsOpen(false);
-                  }}
-                  className="p-1 hover:bg-gray-100 rounded-full"
-                  aria-label="Clear selection">
-                  <XMarkIcon
-                    className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
-                    aria-hidden="true"
-                  />
-                </button>
-              )}
-              <Combobox.Button
+      )}
+      <Combobox
+        onKeyDown={handleKeyDownEnter}
+        data-skip={skip}
+        disabled={disabled}
+        value={initial}
+        // onChange={handleItemClick}
+        as="div"
+        className="relative"
+      >
+        <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
+
+          <Combobox.Input
+         
+          style={{
+            height,
+            fontSize,
+            fontWeight,
+            color,
+            borderColor: borderStyles,
+            "--tw-ring-shadow": "none",
+            outline:"none",
+            transition: "border-color 0.2s ease-in-out",
+            borderRadius: `${appState.inputBox.borderRadius}px`,
+         
+          } as React.CSSProperties}
+            className={`form-control ${ sizeClasses?.input } 
+              placeholder:capitalize  
+             `}
+            displayValue={() => inputValue || initial?.label || ""}
+            onChange={handleInputChange}
+            onClick={() => !disabled && setIsOpen(!isOpen)}
+            onKeyDown={handleKeyDown}
+            placeholder={
+              t("select") + " " + (label || id?.replaceAll("_", " "))
+            }
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+
+            ref={comboboxRef}
+            autoComplete="off"
+            spellCheck={false}
+            autoFocus={autoFocus}
+            title={initial?.label || ""}
+            value={isOpen ? inputValue : initial?.label || ""}
+          />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-1">
+            {enableClearOption && (initial || inputValue) && !noXMarkIcon && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  clearSelection();
+                  setIsOpen(false);
+                }}
                 className="p-1 hover:bg-gray-100 rounded-full"
-                onClick={() => !disabled && setIsOpen(!isOpen)}>
-                <ChevronDownIcon
-                  className={`${sizeClasses?.icons
-                    } text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
-                    }`}
+                aria-label="Clear selection"
+              >
+                <XMarkIcon
+                  className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
                   aria-hidden="true"
                 />
-              </Combobox.Button>
-            </div>
+              </button>
+            )}
+            <Combobox.Button
+              className="p-1 hover:bg-gray-100 rounded-full"
+              onClick={() => !disabled && setIsOpen(!isOpen)}
+            >
+              <ChevronDownIcon
+                className={`${
+                  sizeClasses?.icons
+                } text-gray-400 hover:text-gray-500 transition-transform duration-200 ${
+                  isOpen ? "transform rotate-180" : ""
+                }`}
+                aria-hidden="true"
+              />
+            </Combobox.Button>
           </div>
-          <Transition
-            show={isOpen}
-            as={React.Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            afterLeave={() => {
-              if (!initial) {
-                setQuery("");
-                setInputValue("");
-                // setActiveIndex(-1);
-              }
-            }}>
-            <Combobox.Options
-              className={`absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden ${sizeClasses.options}`}
-              static>
-              {loading ? (
-                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                  Loading...
-                </div>
-              ) : filteredItems?.length === 0 ? (
-                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
-                  No data found
-                </div>
-              ) : (
-                <ComboboxList
-                  ref={listRef}
-                  items={filteredItems}
-                  selectedValue={initial}
-                  onSelect={handleItemClick}
-                  activeIndex={activeIndex}
-                  customSize={_customSize}
-                />
-              )}
-            </Combobox.Options>
-          </Transition>
-        </Combobox>
-        {validation && (
-          <div className="mt-1 text-xs text-[#ef4444]">{validation}</div>
-        )}
-      </div>
-    );
-  }
+        </div>
+        <Transition
+          show={isOpen}
+          as={React.Fragment}
+          leave="transition ease-in duration-100"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          afterLeave={() => {
+            if (!initial) {
+              setQuery("");
+              setInputValue("");
+              // setActiveIndex(-1);
+            }
+          }}
+        >
+          <Combobox.Options
+            className={`absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden ${sizeClasses.options}`}
+            static
+          >
+            {loading ? (
+              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                Loading...
+              </div>
+            ) : filteredItems?.length === 0 ? (
+              <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                No data found
+              </div>
+            ) : (
+              <ComboboxList
+                ref={listRef}
+                items={filteredItems}
+                selectedValue={initial}
+                onSelect={handleItemClick}
+                activeIndex={activeIndex}
+                customSize={_customSize}
+              />
+            )}
+          </Combobox.Options>
+        </Transition>
+      </Combobox>
+      <div className="text-[#374151] text-xs font-medium ">
+          {infoWithLineBreaks(info)}
+        </div>
+      {validation && (
+        <div className="mt-1 text-xs text-[#ef4444]">{validation}</div>
+      )}
+    </div>
+  );
+}
 }

@@ -35,7 +35,11 @@ export const initialUserSessionData: UserModel = {
   companies: [],
   branches: [],
   presetCostCenterId: 0,
-  productVersion: ""
+  productVersion: "",
+  dbIdValue: "",
+  counterwiseCashLedgerId: 0, // Adjust the type as per your requirements (e.g., string, number, etc.)
+  counterAssignedCashLedgerId:0,
+  
 };
 export interface UserModel {
   userId: number;
@@ -62,6 +66,8 @@ export interface UserModel {
   presetCostCenterId: number | 0;
   productVersion: string | "";
   dbIdValue: string | "";
+  counterwiseCashLedgerId: number | 0; // Adjust the type as per your requirements (e.g., string, number, etc.)
+  counterAssignedCashLedgerId: number | 0;
 
 }
 // export const initialState : login  =  {loading: false, token: ""};

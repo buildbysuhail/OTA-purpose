@@ -1,6 +1,23 @@
-import React, { forwardRef, memo, KeyboardEvent, useEffect, useState, useRef } from "react";
-import { TextField, InputAdornment, TextFieldProps, Theme, SxProps, } from "@mui/material";
-import { setFgAccordingToBgPrimary, setNestedValue, } from "../../utilities/Utils";
+import React, {
+  forwardRef,
+  memo,
+  KeyboardEvent,
+  useEffect,
+  useState,
+  useRef,
+} from "react";
+import {
+  TextField,
+  InputAdornment,
+  TextFieldProps,
+  Theme,
+  SxProps,
+  Typography,
+} from "@mui/material";
+import {
+  setFgAccordingToBgPrimary,
+  setNestedValue,
+} from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
 import { handleNavigation } from "../../utilities/shortKeys";
@@ -27,6 +44,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   max?: number | string;
   step?: any;
   pattern?: string;
+  info?:string;
   type?: string;
   autocomplete?: string;
   disabled?: boolean;
@@ -34,6 +52,7 @@ interface ERPInputProps extends ERPInputBaseProps {
   className?: string;
   inputClassName?: string;
   noLabel?: boolean;
+  labelDirection?:"horizontal"|"vertical";
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
   onClickPrefix?: () => void;
@@ -76,6 +95,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       max,
       pattern,
       noLabel,
+      labelDirection="vertical",
       prefix,
       suffix,
       step,
@@ -88,6 +108,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       jumpTo,
       jumpTarget,
       variant,
+      info,
       ...props
     }: ERPInputProps,
     ref
@@ -162,6 +183,19 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       }
     }, [appState.inputBox.inputStyle, variant]);
 
+    function infoWithLineBreaks(text?: string) {
+      if (!text) return null; 
+      return text.includes('/n')
+        ? text.split('/n').map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))
+        : text;
+    }
+    
+
     const getSizeStyles = () => {
       const styles: {
         mui: SxProps<Theme>;
@@ -182,7 +216,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       };
 
       const commonMuiStyles = {
-        color: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.fontColor})`,
+        margin: "0",
+        borderRadius: `${appState.inputBox.borderRadius ?? 5}px`,
+        boxShadow: "none !important",
+        color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`,
         "& .MuiOutlinedInput-notchedOutline": {
           borderColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
         },
@@ -202,7 +239,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         {
           borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
         },
-        margin: "0",
+   
         "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
         {
           padding: "0 0.75rem",
@@ -213,9 +250,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           return {
             mui: {
               "& .MuiInputBase-root": {
-                height: "2rem",
+                height:  _variant === "filled"?"2.3rem": "2rem",
                 fontSize: "12px",
-                boxShadow: "none !important",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
@@ -223,7 +259,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
                 transform:
                   _variant === "filled"
-                    ? "translate(8px, 10px) scale(1)"
+                    ? "translate(8px, 14px) scale(1)"
                     : _variant === "standard"
                       ? "translate(0, 10px) scale(0.8)"
                       : "translate(8px, 10px) scale(0.8)",
@@ -231,7 +267,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
-                    ? "translate(8px, -10px) scale(0.75)"
+                    ?  "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
                       ? "translate(0, -6px) scale(0.75)"
                       : "translate(16px, -6px) scale(0.75)",
@@ -248,9 +284,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           return {
             mui: {
               "& .MuiInputBase-root": {
-                // height: variant === "filled" ? "2.5rem" : variant === "standard" ? "2rem" : "2.5rem",
-                height: "2.5rem",
-                fontSize: "14px",
+                height: _variant === "filled"?"2.8rem": "2.5rem",
+                fontSize: "15px",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
@@ -258,7 +293,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
                 transform:
                   _variant === "filled"
-                    ? "translate(10px, 13px) scale(0.9)"
+                    ? "translate(10px, 18px) scale(1)"
                     : _variant === "standard"
                       ? "translate(0, 13px) scale(0.9)"
                       : "translate(10px, 13px) scale(0.9)",
@@ -266,7 +301,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
-                    ? "translate(8px, -12px) scale(0.90)"
+                    ? "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
                       ? "translate(0, -6px) scale(0.90)"
                       : "translate(15px, -7px) scale(0.90)",
@@ -284,8 +319,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             // ${setFgAccordingToBgPrimary()}
             mui: {
               "& .MuiInputBase-root": {
-                // height: _variant === "filled" ? "3rem" : _variant === "standard" ? "2.5rem" : "3rem",
-                height: "3rem",
+             
+                height: _variant === "filled"?"3.3rem": "3rem",
                 fontSize: "16px",
                 ...commonMuiStyles,
               },
@@ -294,7 +329,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
                 transform:
                   _variant === "filled"
-                    ? "translate(10px, 15px) scale(1)"
+                    ? "translate(10px, 21px) scale(1)"
                     : _variant === "standard"
                       ? "translate(0, 15px) scale(1)"
                       : "translate(10px, 11px) scale(1)",
@@ -302,7 +337,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
-                    ? "translate(8px, -14px) scale(0.88)"
+                    ? "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
                       ? "translate(1px,-6px) scale(0.88)"
                       : "translate(16px, -10px) scale(0.8)",
@@ -320,10 +355,10 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           return {
             mui: {
               "& .MuiInputBase-root": {
-                height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
-                fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+
+                height: `${appState.inputBox.inputHeight ?? 3}rem`,
+                fontSize: `${appState.inputBox.fontSize ?? 16}px`,
                 fontWeight: appState.inputBox.fontWeight ?? 500,
-                borderRadius: `${appState.inputBox.borderRadius ?? 15}px`,
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
@@ -331,23 +366,28 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
                 transform:
                   _variant === "filled"
-                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10
-                    }px) scale(1)`
-                    : _variant === "standard"
-                      ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10
+                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 20
                       }px) scale(1)`
-                      : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15
+                    : _variant === "standard"
+                    ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 15
+                      }px) scale(1)`
+                    : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                        appState?.inputBox?.adjustB ?? 12
                       }px) scale(1)`,
               },
               "& .MuiInputLabel-shrink": {
                 transform:
                   _variant === "filled"
-                    ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -14
-                    }px) scale(0.88)`
+                    ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${
+                        appState?.inputBox?.adjustD ?? -1
+                      }px) scale(0.88)`
                     : _variant === "standard"
                       ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6
                       }px) scale(0.88)`
-                      : `translate(${appState?.inputBox?.adjustC ?? 16}px, ${appState?.inputBox?.adjustD ?? -7
+                    : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${
+                        appState?.inputBox?.adjustD ?? -9
                       }px) scale(0.88)`,
               },
             } as SxProps<Theme>,
@@ -419,20 +459,33 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         onKeyDown: handleKeyDown,
       };
       return (
-        <div className={className}>
-          <TextField {...muiProps}
-            className="form-control" />
+        <div className={`${className}`}
+           style={{
+             marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+             marginTop: `${appState.inputBox?.marginTop??0}px`
+           }}
+         >
+          <TextField {...muiProps} className="form-control" />
           <ERPElementValidationMessage validation={validation} />
+          <Typography
+            className="text-[#374151] text-xs font-medium mt-1">
+          {infoWithLineBreaks(info)}
+          </Typography>
         </div>
       );
     }
     const { height, fontSize, fontWeight, color } = sizeStyles.regular;
     if (_useMUI == undefined || _useMUI == false) {
       return (
-        <div className={className}>
+         <div className={`${className} ${labelDirection ==="vertical" ? "flex flex-col space-y-1":"flex items-center space-x-2"}`}
+         style={{
+          marginBottom: `${appState.inputBox?.marginBottom??0}px`,
+           marginTop: `${appState.inputBox?.marginTop??0}px`,  
+          }}>
           {!noLabel && (
             <label
-              className={`capitalize block  text-gray-900 text-left rtl:text-right form-label ${labelClassName}`}
+              className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState.mode == 'dark' ? 'form-label':""} ${labelClassName}
+              ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
               style={{
                 fontSize: _customSize
                   ? _customSize === "sm"
@@ -443,15 +496,16 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                         ? "16px"
                         : `${appState.inputBox.labelFontSize}px`
                   : `14px`,
-                transform: `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 10
-                  }px) scale(1)`,
-              }}>
-              {iLabel}
+                transform: _customSize ==="customize" ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                  appState?.inputBox?.adjustB ?? 10 }px) scale(1)`:``,
+              }}
+            >
+              {`${iLabel}  ${labelDirection === "horizontal" ? ":" : ""}`}
               {required && !noLabel && "*"}
             </label>
           )}
 
-          <div className="flex">
+          <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
             {prefix && (
               <div
                 onClick={onClickPrefix}
@@ -462,6 +516,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </div>
             )}
             <div className="flex-1">
+            {appState.inputBox.fontSize ?? 16}
+            {_customSize}
               <input
                 {...commonProps}
                 placeholder={iPlaceholder}
@@ -525,6 +581,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             )}
           </div>
           <ERPElementValidationMessage validation={validation} />
+          <div className="text-[#374151] text-xs font-medium ">
+          {infoWithLineBreaks(info)}
+          </div>
         </div>
       );
     }

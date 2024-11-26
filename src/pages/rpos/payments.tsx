@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import React, { useState, useEffect, FC } from "react";
 import _ from "lodash";
+import { useNavigate } from "react-router-dom";
 
 interface Payment {
   id: number;
@@ -74,6 +75,12 @@ const Payments: FC = () => {
       .replace(/(\d{3})(?=\d)/, "$1 ");
   };
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="p-0">
       <header className="flex justify-between items-center bg-white p-4 shadow-md border-t border-b">
@@ -93,7 +100,7 @@ const Payments: FC = () => {
             <span>{t("send_a_mail")}</span>
             <span className="font-bold">{supportEmail}</span>
           </div>
-          <div className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer">
+          <div className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer" onClick={handleClick} >
             <ArrowLeft className="w-5 h-5 me-1" />
             <span className="text-black">{t("back")}</span>
           </div>

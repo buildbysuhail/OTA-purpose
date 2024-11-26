@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { ArrowLeft, Mail, Phone } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const DeliveryBoy = () => {
   const [paymentData, setPaymentData] = useState([
@@ -66,6 +67,12 @@ const DeliveryBoy = () => {
       .replace(/(\d{3})(?=\d)/, "$1 ");
   };
 
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="p-0">
       <header className="flex justify-between items-center bg-white p-4 shadow-md border-t border-b">
@@ -85,7 +92,7 @@ const DeliveryBoy = () => {
             <span>Send a mail</span>
             <span className="font-bold">{supportEmail}</span>
           </div>
-          <div className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer hover:bg-gray-50">
+          <div className="flex items-center space-x-1 p-2 border rounded-lg cursor-pointer hover:bg-gray-50" onClick={handleClick}>
             <ArrowLeft className="w-5 h-5 me-1" />
             <span className="text-black">Back</span>
           </div>

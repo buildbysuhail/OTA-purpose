@@ -306,7 +306,7 @@ export default function ERPDataCombobox({
   const listRef = useRef<List>(null);
   const componentRef = useRef<HTMLDivElement>(null);
   const appState = useAppSelector((state: RootState) => state.AppState.appState);
-  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState?.inputBox?.inputSize);
   const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
   const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(variant === "normal" ? undefined : variant);
   const [isHovered, setIsHovered] = useState(false);
@@ -318,75 +318,64 @@ export default function ERPDataCombobox({
 
   useEffect(() => {
     if (customSize == undefined || customSize == null) {
-      setCustomSize(appState.inputBox.inputSize);
+      setCustomSize(appState?.inputBox?.inputSize);
     }
-  }, [appState.inputBox.inputSize]);
+  }, [appState?.inputBox?.inputSize]);
 
   useEffect(() => {
-    if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
+    if (appState?.inputBox?.inputStyle !== "normal" && useMUI === undefined) {
       set_useMUI(true);
-    } else if (appState.inputBox.inputStyle === "normal" && useMUI === undefined) {
+    } else if (appState?.inputBox?.inputStyle === "normal" && useMUI === undefined) {
       set_useMUI(false);
     }
-  }, [appState.inputBox.inputStyle, useMUI]);
+  }, [appState?.inputBox?.inputStyle, useMUI]);
 
   useEffect(() => {
-    if (appState.inputBox.inputStyle !== "normal" && (variant === undefined || variant === null)) {
-      set_variant(appState.inputBox.inputStyle as "filled" | "outlined" | "standard");
-    } else if (appState.inputBox.inputStyle === "normal") {
+    if (appState?.inputBox?.inputStyle !== "normal" && (variant === undefined || variant === null)) {
+      set_variant(appState?.inputBox?.inputStyle as "filled" | "outlined" | "standard");
+    } else if (appState?.inputBox?.inputStyle === "normal") {
       set_variant(undefined);
     } else {
       set_variant(variant as "filled" | "outlined" | "standard");
     }
-  }, [appState.inputBox.inputStyle, variant]);
+  }, [appState?.inputBox?.inputStyle, variant]);
 
   useEffect(() => {
     if (initial?.label) {
-      setDisplayValue(truncateText(initial.label, comboboxRef));
+      setDisplayValue(truncateText(initial?.label, comboboxRef));
     } else {
       setDisplayValue("");
     }
   }, [initial]);
 
-  const [borderStyles, setBorderStyles] = useState<string>(appState.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState.inputBox.borderFocus})` : `rgb(${appState.inputBox.borderColor})`} `);
+  const [borderStyles, setBorderStyles] = useState<string>(appState?.mode == 'dark' ? (isFocused == true || isHovered == true ? '#ffffff' : '#ffffff1a') : `${isFocused || isHovered ? `rgb(${appState?.inputBox?.borderFocus})` : `rgb(${appState?.inputBox?.borderColor})`} `);
   useEffect(() => {
     let style;
-    if (appState.mode === 'dark') {
+    if (appState?.mode === 'dark') {
       if (isFocused || isHovered) {
         style = '#ffffff';
-        console.log('Dark mode, focused or hovered: ', style);
+        console?.log('Dark mode, focused or hovered: ', style);
       } else {
         style = '#ffffff1a';
-        console.log('Dark mode, not focused or hovered: ', style);
+        console?.log('Dark mode, not focused or hovered: ', style);
       }
     } else {
       if (isFocused || isHovered) {
-        style = `rgb(${appState.inputBox.borderFocus})`;
-        console.log('Light mode, focused or hovered: ', style);
+        style = `rgb(${appState?.inputBox?.borderFocus})`;
+        console?.log('Light mode, focused or hovered: ', style);
       } else {
-        style = `rgb(${appState.inputBox.borderColor})`;
-        console.log('Light mode, not focused or hovered: ', style);
+        style = `rgb(${appState?.inputBox?.borderColor})`;
+        console?.log('Light mode, not focused or hovered: ', style);
       }
     }
     setBorderStyles(style);
-  }, [appState.mode, isFocused, isHovered, appState.inputBox.borderColor, appState.inputBox.borderFocus])
-  // useEffect(() => {
-  //   debugger
-  //   if (isOpen == true) {
-  //     setActiveIndex(initial != null ? filteredItems.findIndex(item => item.value === initial.value): -1);
-  //     if (listRef.current) {
-  //       listRef.current.scrollToItem(
-  //         activeIndex + 1,
-  //         activeIndex > filteredItems.length - 5 ? "end" : "center"
-  //       );
-  //     }
-  //   }
-  // }, [isOpen, listRef.current]);
+  }, [appState?.mode, isFocused, isHovered, appState?.inputBox?.borderColor, appState?.inputBox?.borderFocus])
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        componentRef.current &&
-        !componentRef.current.contains(event.target as Node)
+        componentRef?.current &&
+        !componentRef?.current?.contains(event.target as Node)
       ) {
         setIsOpen(false);
         // setActiveIndex(-1);
@@ -646,27 +635,28 @@ export default function ERPDataCombobox({
 
     const commonMuiStyles = {
       paddingBottom: _variant === "filled"? "1rem":"0",
-      borderRadius: `${appState.inputBox.borderRadius ?? 5}px`,
-      color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`,
+      boxShadow: "none !important",
+      borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
+      color: appState?.mode == 'dark' ?'#ffffff':`rgb(${appState?.inputBox?.fontColor})`,
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
+        borderColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})`,
       },
       "& .MuiFilledInput-underline, &:before": {
-        borderBottomColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
+        borderBottomColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})`,
       },
-      "&:hover .MuiOutlinedInput-notchedOutline": {
-        borderColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+      "&:hover ?.MuiOutlinedInput-notchedOutline": {
+        borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       "&:hover .MuiFilledInput-underline, &:hover:before": {
-        borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+        borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
 
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-        borderColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+        borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
       {
-        borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+        borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       margin: "0",
       "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
@@ -682,32 +672,32 @@ export default function ERPDataCombobox({
             "& .MuiInputBase-root": {
               height:  _variant === "filled"?"2.3rem": "2rem",
               fontSize: "12px",
-              lineHeight: "2rem",
               ...commonMuiStyles,
             },
             "& .MuiInputLabel-root": {
+       
               fontSize: "12px",
-              color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+              color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
               transform:
                 _variant === "filled"
-                  ?  "translate(8px, 14px) scale(1)"
+                  ? "translate(8px, 14px) scale(1)"
                   : _variant === "standard"
-                    ? "translate(0, 10px) scale(0.8)"
-                    : "translate(8px, 10px) scale(0.8)",
+                  ? "translate(0, 10px) scale(1)"
+                  : "translate(8px, 10px) scale(1)",
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
-                  ?  "translate(8px, -1px) scale(0.90)"
+                  ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                    ? "translate(0, -6px) scale(0.75)"
-                    : "translate(16px, -6px) scale(0.75)",
+                  ? "translate(0, -6px) scale(0.90)"
+                  : "translate(13px, -6px) scale(0.80)",
             },
           } as SxProps<Theme>,
           regular: {
             height: "2rem",
             fontSize: "12px",
-            color: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.fontColor})`
+            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
             // padding: "0.25rem 0.75rem"
           },
         };
@@ -715,67 +705,69 @@ export default function ERPDataCombobox({
         return {
           mui: {
             "& .MuiInputBase-root": {
-              height: _variant === "filled"?"2.8rem": "2.5rem",
-              fontSize: "15px",
-              ...commonMuiStyles,
-            },
-            "& .MuiInputLabel-root": {
-              color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
-              fontSize: "12px",
-              transform:
-                _variant === "filled"
-                  ? "translate(10px, 18px) scale(1)"
-                  : _variant === "standard"
-                    ? "translate(0, 13px) scale(0.9)"
-                    : "translate(10px, 13px) scale(0.9)",
-            },
-            "& .MuiInputLabel-shrink": {
-              transform:
-                _variant === "filled"
-                  ? "translate(8px, -1px) scale(0.90)"
-                  : _variant === "standard"
-                    ? "translate(0, -6px) scale(0.90)"
-                    : "translate(15px, -7px) scale(0.90)",
-            },
+          height: _variant === "filled"?"2.8rem": "2.5rem",
+          fontSize: "15px",
+          ...commonMuiStyles,
+        },
+        "& .MuiInputLabel-root": {
+          fontSize: "13px",
+          color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+          transform:
+            _variant === "filled"
+              ? "translate(10px, 18px) scale(1)"
+              : _variant === "standard"
+              ? "translate(0, 13px) scale(1)"
+              : "translate(10px, 13px) scale(1)",
+        },
+        "& .MuiInputLabel-shrink": {
+          transform:
+            _variant === "filled"
+              ? "translate(8px, -1px) scale(0.90)"
+              : _variant === "standard"
+              ? "translate(0, -6px) scale(0.90)"
+              : "translate(12px, -8px) scale(0.90)",
+        },
           } as SxProps<Theme>,
           regular: {
             height: "2.5rem",
             fontSize: "14px",
-            color: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.fontColor})`
+            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
             // padding: "0.5rem 1rem"
           },
         };
       case "lg":
         return {
+         
           mui: {
-            "& .MuiInputBase-root": {  
+            "& .MuiInputBase-root": {       
               height: _variant === "filled"?"3.3rem": "3rem",
               fontSize: "16px",
               ...commonMuiStyles,
             },
             "& .MuiInputLabel-root": {
-              color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+           
               fontSize: "14px",
+              color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
               transform:
                 _variant === "filled"
                   ? "translate(10px, 21px) scale(1)"
                   : _variant === "standard"
-                    ? "translate(0, 15px) scale(1)"
-                    : "translate(10px, 15px) scale(1)",
+                  ? "translate(0, 15px) scale(1)"
+                  : "translate(10px, 15px) scale(1)"
             },
             "& .MuiInputLabel-shrink": {
               transform:
                 _variant === "filled"
                   ? "translate(8px, -1px) scale(0.90)"
                   : _variant === "standard"
-                    ? "translate(1px,-6px) scale(0.88)"
-                    : "translate(16px, -7px) scale(0.88)",
+                  ? "translate(1px,-6px) scale(0.90)"
+                  : "translate(15px, -9px) scale(0.90)",
             },
           } as SxProps<Theme>,
           regular: {
             height: "3rem",
             fontSize: "16px",
-            color: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.fontColor})`
+            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
             // label: "10px",
             // padding: "0.75rem 1.25rem"
           },
@@ -785,14 +777,14 @@ export default function ERPDataCombobox({
           mui: {
             "& .MuiInputBase-root": {
 
-              height: `${appState.inputBox.inputHeight ?? 3}rem`,
-              fontSize: `${appState.inputBox.fontSize ?? 16}px`,
-              fontWeight: appState.inputBox.fontWeight ?? 500,
+              height: `${appState?.inputBox?.inputHeight ?? 3}rem`,
+              fontSize: `${appState?.inputBox?.fontSize ?? 16}px`,
+              fontWeight: appState?.inputBox?.fontWeight ?? 500,
               ...commonMuiStyles,
             },
             "& .MuiInputLabel-root": {
-              fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
-              color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+              fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
+              color: appState?.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
               transform:
                 _variant === "filled"
                   ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
@@ -821,11 +813,10 @@ export default function ERPDataCombobox({
             },
           } as SxProps<Theme>,
           regular: {
-            height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
-            fontSize: `${appState.inputBox.fontSize ?? 15}px`,
-            fontWeight: appState.inputBox.fontWeight,
-            color: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.fontColor})`
-
+            height: `${appState?.inputBox?.inputHeight ?? 2.5}rem`,
+            fontSize: `${appState?.inputBox?.fontSize ?? 15}px`,
+            fontWeight: appState?.inputBox?.fontWeight,
+            color: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.fontColor})`
           },
         };
       default:
@@ -866,7 +857,7 @@ export default function ERPDataCombobox({
           };
         case "customize":
           return {
-            fontSize: `${appState.inputBox.fontSize ?? 15}px`,
+            fontSize: `${appState?.inputBox?.fontSize ?? 15}px`,
           };
         default:
           return {};
@@ -881,8 +872,8 @@ export default function ERPDataCombobox({
     return (
       <div className={className}
       style={{
-        marginBottom: `${appState.inputBox?.marginBottom??0}px`,
-        marginTop: `${appState.inputBox?.marginTop??0}px`
+        marginBottom: `${appState?.inputBox?.marginBottom??0}px`,
+        marginTop: `${appState?.inputBox?.marginTop??0}px`
       }}
       >
         <Autocomplete
@@ -950,13 +941,13 @@ if (_useMUI == undefined || _useMUI == false){
   return (
     <div className={`${className} relative ${labelDirection ==="vertical" ? "flex flex-col space-y-1":"flex items-center space-x-2"}`} ref={componentRef}
     style={{
-      marginBottom: `${appState.inputBox?.marginBottom??0}px`,
-       marginTop: `${appState.inputBox?.marginTop??0}px`,  
+      marginBottom: `${appState?.inputBox?.marginBottom??0}px`,
+       marginTop: `${appState?.inputBox?.marginTop??0}px`,  
       }}
     >
       {!noLabel && (
           <label
-          className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState.mode == 'dark' ? 'form-label':""} 
+          className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} 
           ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
           style={{
             fontSize: _customSize
@@ -966,7 +957,7 @@ if (_useMUI == undefined || _useMUI == false){
                   ? "14px"
                   : _customSize === "lg"
                     ? "16px"
-                    : `${appState.inputBox.labelFontSize}px`
+                    : `${appState?.inputBox?.labelFontSize}px`
               : `14px`,
             transform: _customSize ==="customize" ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${
               appState?.inputBox?.adjustB ?? 10 }px) scale(1)`:``,
@@ -998,7 +989,7 @@ if (_useMUI == undefined || _useMUI == false){
             "--tw-ring-shadow": "none",
             outline:"none",
             transition: "border-color 0.2s ease-in-out",
-            borderRadius: `${appState.inputBox.borderRadius}px`,
+            borderRadius: `${appState?.inputBox?.borderRadius}px`,
          
           } as React.CSSProperties}
             className={`form-control ${ sizeClasses?.input } 

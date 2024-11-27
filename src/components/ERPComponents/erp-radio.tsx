@@ -49,12 +49,12 @@ const ERPRadio = forwardRef<HTMLInputElement, ERPRadioProps>(({
   const appState = useAppSelector(
     (state: RootState) => state.AppState.appState
   );
-  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.CheckButtonInputSize);
+  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState?.inputBox?.CheckButtonInputSize);
  useEffect(() => {
     if (customSize == undefined || customSize == null) {
-      setCustomSize(appState.inputBox.CheckButtonInputSize);
+      setCustomSize(appState?.inputBox?.CheckButtonInputSize);
     }
-  }, [appState.inputBox.CheckButtonInputSize]);
+  }, [appState?.inputBox?.CheckButtonInputSize]);
 
 
   const getSizeStyles = () => {

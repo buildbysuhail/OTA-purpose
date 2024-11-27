@@ -72,7 +72,6 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   skip = false,
   jumpTo,
   jumpTarget,
-  // color,
   ...props
 }, ref) => {
   const formatDate = (date: string | undefined) => {
@@ -80,12 +79,12 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     return dayjs(date).format("YYYY-MM-DD");
   };
   const appState = useAppSelector(
-    (state: RootState) => state.AppState.appState
+    (state: RootState) => state?.AppState?.appState
   );
 
   const moveToNextField = () => {
     const allFocusableElements = getFocusableElements();
-    const currentIndex = allFocusableElements.findIndex(
+    const currentIndex = allFocusableElements?.findIndex(
       (element) => element === document.activeElement
     );
 
@@ -99,39 +98,43 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     handleNavigation(e);
   };
 
-  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState.inputBox.inputSize);
+  const [_customSize, setCustomSize] = useState(customSize ? customSize : appState?.inputBox?.inputSize);
   const [_useMUI, set_useMUI] = useState<boolean | undefined>(useMUI);
   const [_variant, set_variant] = useState<"filled" | "outlined" | "standard" | undefined>(
     variant === "normal" ? undefined : variant
   );
+
   useEffect(() => {
     if (customSize == undefined || customSize == null) {
-      setCustomSize(appState.inputBox.inputSize);
+      setCustomSize(appState?.inputBox?.inputSize);
     }
-  }, [appState.inputBox.inputSize]);
+  }, [appState?.inputBox?.inputSize]);
 
   useEffect(() => {
-    if (appState.inputBox.inputStyle !== "normal" && useMUI === undefined) {
+    if (appState?.inputBox?.inputStyle !== "normal" && useMUI === undefined) {
       set_useMUI(true);
-    } else if (appState.inputBox.inputStyle === "normal" && useMUI === undefined) {
+    } else if (
+      appState?.inputBox?.inputStyle === "normal" &&
+      useMUI === undefined
+    ) {
       set_useMUI(false);
     }
-  }, [appState.inputBox.inputStyle, useMUI]);
+  }, [appState?.inputBox?.inputStyle, useMUI]);
 
   useEffect(() => {
-    if (appState.inputBox.inputStyle !== "normal" && (variant === undefined || variant === null)) {
-      set_variant(appState.inputBox.inputStyle as "filled" | "outlined" | "standard");
-    } else if (appState.inputBox.inputStyle === "normal") {
+    if (appState?.inputBox?.inputStyle !== "normal" && (variant === undefined || variant === null)) {
+      set_variant(appState?.inputBox?.inputStyle as "filled" | "outlined" | "standard");
+    } else if (appState?.inputBox?.inputStyle === "normal") {
       set_variant(undefined);
     } else {
       set_variant(variant as "filled" | "outlined" | "standard");
     }
-  }, [appState.inputBox.inputStyle, variant]);
+  }, [appState?.inputBox?.inputStyle, variant]);
   
   function infoWithLineBreaks(text?: string) {
     if (!text) return null; 
-    return text.includes('/n')
-      ? text.split('/n').map((line, index) => (
+    return text?.includes('/n')
+      ? text?.split('/n')?.map((line, index) => (
           <React.Fragment key={index}>
             {line}
             <br />
@@ -142,29 +145,29 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   const getSizeStyles = () => {
 
     const commonMuiStyles = {
-      borderRadius: `${appState.inputBox.borderRadius ?? 5}px`,
+      borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
       boxShadow: "none !important",
-      color: appState.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox.fontColor})`,
+      color: appState?.mode == 'dark' ?'#ffffff':`rgb(${appState?.inputBox?.fontColor})`,
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
+        borderColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})`,
       },
       "& .MuiFilledInput-underline, &:before": {
-        borderBottomColor: appState.mode == 'dark' ? '#ffffff1a' : `rgb(${appState.inputBox.borderColor})`,
+        borderBottomColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})`,
       },
 
       "&:hover .MuiOutlinedInput-notchedOutline": {
-        borderColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+        borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       "&:hover .MuiFilledInput-underline, &:hover:before": {
-        borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+        borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
 
       "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-        borderColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+        borderColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       "&.Mui-focused .MuiFilledInput-underline, &.Mui-focused:before, &.Mui-focused:after":
       {
-        borderBottomColor: appState.mode == 'dark' ? '#ffffff' : `rgb(${appState.inputBox.borderFocus})`,
+        borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
       },
       margin: "0",
       "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
@@ -183,7 +186,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           "& .MuiInputLabel-root": {
      
             fontSize: "12px",
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             transform:
               _variant === "filled"
                 ? "translate(8px, 14px) scale(1)"
@@ -200,34 +203,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                 : "translate(13px, -6px) scale(0.80)",
           },
         };
-      case "lg":
-        return {
-          "& .MuiInputBase-root": {       
-            height: _variant === "filled"?"3.3rem": "3rem",
-            fontSize: "16px",
-            ...commonMuiStyles,
-          },
-          "& .MuiInputLabel-root": {
-         
-            fontSize: "14px",
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
-            transform:
-              _variant === "filled"
-                ? "translate(10px, 21px) scale(1)"
-                : _variant === "standard"
-                ? "translate(0, 15px) scale(1)"
-                : "translate(10px, 15px) scale(1)"
-          },
-          "& .MuiInputLabel-shrink": {
-            transform:
-              _variant === "filled"
-                ? "translate(8px, -1px) scale(0.90)"
-                : _variant === "standard"
-                ? "translate(1px,-6px) scale(0.90)"
-                : "translate(15px, -9px) scale(0.90)",
-          },
-        };
-      case "md": // md
+        case "md": // md
         return {
           "& .MuiInputBase-root": {
             height: _variant === "filled"?"2.8rem": "2.5rem",
@@ -236,7 +212,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: "13px",
-            color:appState.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             transform:
               _variant === "filled"
                 ? "translate(10px, 18px) scale(1)"
@@ -253,32 +229,72 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                 : "translate(12px, -8px) scale(0.90)",
           },
         };
-
-      case "customize":
+      case "lg":
         return {
-          "& .MuiInputBase-root": {
-            height: `${appState.inputBox.inputHeight ?? 2.5}rem`,
-            fontSize: `${appState.inputBox.fontSize ?? 15}px`,
-            fontWeight: appState.inputBox.fontWeight ?? 500,
+          "& .MuiInputBase-root": {       
+            height: _variant === "filled"?"3.3rem": "3rem",
+            fontSize: "16px",
             ...commonMuiStyles,
           },
           "& .MuiInputLabel-root": {
-            color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
-            fontSize: `${appState.inputBox.labelFontSize ?? 14}px`,
+         
+            fontSize: "14px",
+            color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
             transform:
               _variant === "filled"
-                ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 20}px) scale(1)`
+                ? "translate(10px, 21px) scale(1)"
                 : _variant === "standard"
-                  ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 15}px) scale(1)`
-                  : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${appState?.inputBox?.adjustB ?? 12}px) scale(1)`,
+                ? "translate(0, 15px) scale(1)"
+                : "translate(10px, 15px) scale(1)"
           },
           "& .MuiInputLabel-shrink": {
             transform:
               _variant === "filled"
-                ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${appState?.inputBox?.adjustD ?? -1}px) scale(0.88)`
+                ? "translate(8px, -1px) scale(0.90)"
                 : _variant === "standard"
-                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6}px) scale(0.88)`
-                  : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${appState?.inputBox?.adjustD ?? -9}px) scale(0.88)`,
+                ? "translate(1px,-6px) scale(0.90)"
+                : "translate(15px, -9px) scale(0.90)",
+          },
+        };
+   
+
+      case "customize":
+        return {
+          "& .MuiInputBase-root": {
+
+            height: `${appState?.inputBox?.inputHeight ?? 3}rem`,
+            fontSize: `${appState?.inputBox?.fontSize ?? 16}px`,
+            fontWeight: appState?.inputBox?.fontWeight ?? 500,
+            ...commonMuiStyles,
+          },
+          "& .MuiInputLabel-root": {
+            fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
+            color: appState?.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+            transform:
+              _variant === "filled"
+                ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                    appState?.inputBox?.adjustB ?? 20
+                  }px) scale(1)`
+                : _variant === "standard"
+                ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                    appState?.inputBox?.adjustB ?? 15
+                  }px) scale(1)`
+                : `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
+                    appState?.inputBox?.adjustB ?? 12
+                  }px) scale(1)`,
+          },
+          "& .MuiInputLabel-shrink": {
+            transform:
+              _variant === "filled"
+                ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${
+                    appState?.inputBox?.adjustD ?? -1
+                  }px) scale(0.88)`
+                : _variant === "standard"
+                  ? `translate(${appState?.inputBox?.adjustC ?? 1}px, ${appState?.inputBox?.adjustD ?? -6
+                  }px) scale(0.88)`
+                : `translate(${appState?.inputBox?.adjustC ?? 15}px, ${
+                    appState?.inputBox?.adjustD ?? -9
+                  }px) scale(0.88)`,
           },
         };
     }
@@ -298,7 +314,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
       return;
     }
 
-    const formattedDate = newValue.utc(true).format();
+    const formattedDate = newValue?.utc(true)?.format();
 
     if (onChange) {
       const event = {
@@ -316,16 +332,16 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
   };
 
   const handleChangeNormal = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
+    const inputValue = e.target?.value;
     let newValue: string | null = null;
 
     if (inputValue !== "") {
-      const parsedDate = dayjs(inputValue).utc(true);
-      newValue = parsedDate.isValid() ? parsedDate.format() : null; // Validate and format the date
+      const parsedDate = dayjs(inputValue)?.utc(true);
+      newValue = parsedDate?.isValid() ? parsedDate?.format() : null; // Validate and format the date
     }
 
     if (onChange) {
-      onChange({ ...e, target: { ...e.target, value: newValue ?? "", } }); // Ensure consistent value
+      onChange({ ...e, target: { ...e?.target, value: newValue ?? "", } }); // Ensure consistent value
     }
 
     if (onChangeData && data) {
@@ -338,8 +354,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
     return (
       <div className={className}
       style={{
-        marginBottom: `${appState.inputBox?.marginBottom??0}px`,
-        marginTop: `${appState.inputBox?.marginTop??0}px`
+        marginBottom: `${appState?.inputBox?.marginBottom??0}px`,
+        marginTop: `${appState?.inputBox?.marginTop??0}px`
       }}
       >
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -364,8 +380,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
                 variant: _variant,
                 fullWidth: true,
                 onKeyDown: (e) => {
-                  if (e.key === 'Enter' && value) {
-                    e.preventDefault();
+                  if (e?.key === 'Enter' && value) {
+                    e?.preventDefault();
                     moveToNextField();
                   } else {
                     handleNavigation(e);
@@ -398,7 +414,7 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
         <ERPInput
           ref={ref}
           id={id}
-          customSize={customSize == undefined || customSize == null ? customSize : appState.inputBox.inputSize}
+          customSize={customSize == undefined || customSize == null ? customSize : appState?.inputBox?.inputSize}
           label={label}
           placeholder={placeholder}
           disabled={disabled}

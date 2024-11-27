@@ -1,8 +1,8 @@
 
 import { linkClasses } from "@mui/material";
 import * as switcherdata from "../../../src/components/common/switcher/switcherdata/switcherdata";
-import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle, setLocale } from "../../redux/slices/app/reducer";
-import { Locale, Theme } from "../../redux/slices/app/types";
+import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle, setLocale, setAppState } from "../../redux/slices/app/reducer";
+import { AppState, Locale, Theme } from "../../redux/slices/app/types";
 import { UserModel, setUserSession } from "../../redux/slices/user-session/reducer";
 import { AppDispatch } from "../../redux/store";
 export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
@@ -13,7 +13,7 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   localStorage.removeItem(locale.rtl ? "ynexltr" : "ynexrtl");
 
 }
-export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSession: UserModel, locale: Locale) => {
+export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSession: UserModel, locale: Locale) => {
 // debugger;
   // setReloading(true);
   // let res = await api.get(Urls.getUserThemes);
@@ -21,6 +21,8 @@ export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSessi
 
   setLanguage(dispatch, locale);
 
+  
+ dispatch( setAppState(res))
   dispatch(setMode(res.mode ?? "light"));
   if (res.mode == "light") {
     dispatch(setMode(res.mode ?? "light"));
@@ -42,7 +44,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSessi
   localStorage.setItem("primaryRGB1", res.colorPrimaryRgb);
 
 
-  switch (res.menuStyle) {
+  switch (res.dataMenuStyles) {
     case "dark":
       dispatch(setDataMenuStyles("dark"));
       localStorage.setItem("ynexMenu", "dark");
@@ -71,7 +73,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSessi
     default:
       break;
   }
-  switch (res.headerStyle) {
+  switch (res.dataHeaderStyles) {
     case "dark":
       dispatch(setDataHeaderStyles("dark"));
       localStorage.setItem("ynexHeader", "dark");
@@ -100,7 +102,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSessi
     default:
       break;
   }
-  switch (res.pageStyle) {
+  switch (res.dataPageStyle) {
     case "regular":
       dispatch(setDataPageStyle("regular"));
       localStorage.setItem("ynexregular", "Regular");
@@ -123,7 +125,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: Theme, userSessi
       break;
   }
   /////////////////////////////////
-  switch (res.sidemenuLayoutStyles) {
+  switch (res.dataMenuStyles) {
     case "defaultmenu":
       dispatch(setDataVerticalStyle("overlay"));
       dispatch(setDataNavLayout("vertical"));

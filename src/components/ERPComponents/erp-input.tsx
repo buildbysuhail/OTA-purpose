@@ -286,6 +286,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputBase-root": {
                 height: _variant === "filled"?"2.8rem": "2.5rem",
                 fontSize: "15px",
+                lineHeight:"2.5rem",
                 ...commonMuiStyles,
               },
               "& .MuiInputLabel-root": {
@@ -300,11 +301,11 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               },
               "& .MuiInputLabel-shrink": {
                 transform:
-                  _variant === "filled"
+                  _variant === "filled"    
                     ? "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
                       ? "translate(0, -6px) scale(0.90)"
-                      : "translate(15px, -7px) scale(0.90)",
+                      : "translate(12px, -8px) scale(0.90)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -339,8 +340,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                   _variant === "filled"
                     ? "translate(8px, -1px) scale(0.90)"
                     : _variant === "standard"
-                      ? "translate(1px,-6px) scale(0.88)"
-                      : "translate(16px, -10px) scale(0.8)",
+                      ? "translate(1px,-6px) scale(0.90)"
+                      : "translate(14px, -9px) scale(0.90)",
               },
             } as SxProps<Theme>,
             regular: {
@@ -516,8 +517,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </div>
             )}
             <div className="flex-1">
-            {appState.inputBox.fontSize ?? 16}
-            {_customSize}
               <input
                 {...commonProps}
                 placeholder={iPlaceholder}

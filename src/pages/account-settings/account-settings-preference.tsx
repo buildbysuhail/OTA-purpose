@@ -14,6 +14,7 @@ import {
 import * as switcherdata from "../../components/common/switcher/switcherdata/switcherdata";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import {
+  AppState,
   initialThemeData,
   inputBox,
   Theme,
@@ -106,18 +107,18 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   const restLanguage = async () => {
     setLanguage(_language);
   };
-  const [theme, setTheme] = useState<Theme>(initialThemeData);
+  // const [theme, setTheme] = useState<Theme>(initialThemeData);
   const location = useLocation();
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
-  const userTheme = () => {
-    api.get(Urls.getUserThemes).then((theme) => {
-      Cookies.set("ut", modelToBase64(theme), { expires: 30 });
-      setTheme(theme);
-      _setTheme(theme);
-    });
-  };
+  // const userTheme = () => {
+  //   api.get(Urls.getUserThemes).then((theme) => {
+  //     Cookies.set("ut", modelToBase64(theme), { expires: 30 });
+  //     setTheme(theme);
+  //     _setTheme(theme);
+  //   });
+  // };
   useEffect(() => {
-    userTheme();
+    // userTheme();
     api.get(Urls.getPhone_profile).then((phone) => {
       setPhone(phone);
       set_Phone(phone);
@@ -180,6 +181,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     updatedUserThemeRName
   );
   const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {
+    console.log(appState);
+    
     const _appState = {
       ...appState,
       inputBox: {
@@ -189,36 +192,27 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     };
     updateAppState(_appState);
   };
+
+  const handleScrollbarChange = (field: keyof AppState, value: any) => {    
+    const _appState = {
+      ...appState,
+      [field]: value,
+    };
+    updateAppState(_appState);
+  };
+
   const saveThemeChange = async () => {
     debugger;
-    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: JSON.stringify(theme)});
+    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: JSON.stringify(appState)});
     handleResponse(res, () => {
-      userTheme();
+      // userTheme();
     });
-  };
-  const handleThemeChange = (key: string, mode: string) => {
-    setTheme((prevTheme: any) => ({
-      ...prevTheme,
-      [key]: mode,
-    }));
-    console.log(theme);
-  };
-  const handleScrollbarColorChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const rgb = hexToRgb(event.target.value);
-    if (rgb) {
-      setTheme((prevTheme) => ({
-        ...prevTheme,
-        scrollbarColor: `${rgb.r},${rgb.g},${rgb.b}`,
-      }));
-    }
   };
   // const rgbToHex = (r: number, g: number, b: number): string => {
   //   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
   // }
 
-  // const scrollbarColorHex = rgbToHex(...theme.scrollbarColor.split(',').map(Number))
+  // const scrollbarColorHex = rgbToHex(...appState.scrollbarColor.split(',').map(Number))
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 p-3">
@@ -308,17 +302,14 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 name="theme-style"
                                 className="ti-form-radio"
                                 id="switcher-light-theme"
-                                checked={theme.mode === "light"}
+                                checked={appState.mode === "light"}
                                 onChange={(e) => {
                                   if (e.target.checked == true) {
                                     switcherdata.Light(
                                       updateAppState,
                                       appState
                                     );
-                                    setTheme((prevTheme) => ({
-                                      ...prevTheme,
-                                      mode: "light",
-                                    }));
+
                                   }
                                 }}
                                 // onClick={() =>
@@ -338,16 +329,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 name="theme-style"
                                 className="ti-form-radio"
                                 id="switcher-dark-theme"
-                                defaultChecked={theme.mode === "dark"}
+                                defaultChecked={appState.mode === "dark"}
                                 onChange={(e) => {
                                   if (e.target.checked == true) {
                                     switcherdata.Dark(updateAppState, appState);
-                                    setTheme((prevTheme) => ({
-                                      ...prevTheme,
-                                      mode: "dark",
-                                    }));
+                                 
                                   }
-                                  console.log(theme);
+                                 
                                 }}
                                 // onClick={() => { handleThemeChange("mode", "dark")}}
                               />
@@ -369,14 +357,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 name="direction"
                                 className="ti-form-radio"
                                 id="switcher-ltr"
-                                checked={theme.direction != "rtl"}
+                                checked={appState.dir != "rtl"}
                                 onChange={(e) => {}}
                                 onClick={(e) => {
-                                  switcherdata.Ltr(updateAppState, appState);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    direction: "ltr",
-                                  }));
+                                  switcherdata.Ltr(updateAppState, appState);                                 
                                 }}
                               />
                               <label
@@ -392,17 +376,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 name="direction"
                                 className="ti-form-radio"
                                 id="switcher-rtl"
-                                checked={theme.direction == "rtl"}
+                                checked={appState.dir == "rtl"}
                                 onChange={(e) => {}}
                                 onClick={(e) => {
-                                  if (true == true) {
-                                    switcherdata.Rtl(updateAppState, appState);
-                                    setTheme((prevTheme) => ({
-                                      ...prevTheme,
-                                      direction: "rtl",
-                                    }));
-                                  }
-                                  console.log(theme);
+                                switcherdata.Rtl(updateAppState, appState);
+                                    
                                 }}
                               />
                               <label
@@ -427,7 +405,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-default-menu"
                                 checked={
-                                  theme.sidemenuLayoutStyles == "defaultmenu"
+                                  appState.dataMenuStyles == "defaultmenu"
                                 }
                                 onChange={(_e) => {}}
                                 onClick={() => {
@@ -435,10 +413,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     updateAppState,
                                     appState
                                   );
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    sidemenuLayoutStyles: "defaultmenu",
-                                  }));
+                                 
                                 }}
                               />
                               <label
@@ -455,7 +430,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-closed-menu"
                                 checked={
-                                  theme.sidemenuLayoutStyles == "closedmenu"
+                                  appState.dataMenuStyles == "closedmenu"
                                 }
                                 onChange={(_e) => {}}
                                 onClick={() => {
@@ -463,10 +438,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     updateAppState,
                                     appState
                                   );
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    sidemenuLayoutStyles: "closedmenu",
-                                  }));
+                                 
                                 }}
                               />
                               <label
@@ -483,7 +455,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-icontext-menu"
                                 checked={
-                                  theme.sidemenuLayoutStyles == "iconTextfn"
+                                  appState.dataMenuStyles == "iconTextfn"
                                 }
                                 onChange={(_e) => {}}
                                 onClick={() => {
@@ -491,10 +463,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     updateAppState,
                                     appState
                                   );
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    sidemenuLayoutStyles: "iconTextfn",
-                                  }));
+                    
                                 }}
                               />
                               <label
@@ -511,17 +480,14 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-icon-overlay"
                                 checked={
-                                  theme.sidemenuLayoutStyles == "iconOverayFn"
+                                  appState.dataMenuStyles == "iconOverayFn"
                                 }
                                 onClick={() => {
                                   switcherdata.iconOverayFn(
                                     updateAppState,
                                     appState
                                   );
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    sidemenuLayoutStyles: "iconOverayFn",
-                                  }));
+                                 
                                 }}
                               />
                               <label
@@ -538,7 +504,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-detached"
                                 checked={
-                                  theme.sidemenuLayoutStyles == "detachedFn"
+                                  appState.dataMenuStyles == "detachedFn"
                                 }
                                 onChange={(_e) => {}}
                                 onClick={() => {
@@ -546,10 +512,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     updateAppState,
                                     appState
                                   );
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    sidemenuLayoutStyles: "detachedFn",
-                                  }));
+                               
                                 }}
                               />
                               <label
@@ -566,7 +529,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="ti-form-radio"
                                 id="switcher-double-menu"
                                 checked={
-                                  theme.sidemenuLayoutStyles == "doubletFn"
+                                  appState.dataMenuStyles == "doubletFn"
                                 }
                                 onChange={(_e) => {}}
                                 onClick={() => {
@@ -574,10 +537,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     updateAppState,
                                     appState
                                   );
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    sidemenuLayoutStyles: "doubletFn",
-                                  }));
+                                
                                 }}
                               />
                               <label
@@ -602,7 +562,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 name="data-page-styles"
                                 className="ti-form-radio"
                                 id="switcher-regular"
-                                checked={theme.pageStyle == "regular"}
+                                checked={appState.dataPageStyle == "regular"}
                                 onChange={(_e) => {}}
                                 onClick={(e) => {
                                   if (true == true) {
@@ -610,12 +570,9 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                       updateAppState,
                                       appState
                                     );
-                                    setTheme((prevTheme) => ({
-                                      ...prevTheme,
-                                      pageStyle: "regular",
-                                    }));
+                                  
                                   }
-                                  console.log(theme);
+                                 
                                 }}
                               />
                               <label
@@ -631,21 +588,18 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 name="data-page-styles"
                                 className="ti-form-radio"
                                 id="switcher-classic"
-                                checked={theme.pageStyle == "classic"}
+                                checked={appState.dataPageStyle == "classic"}
                                 onChange={(_e) => {}}
                                 onClick={(e) => {
-                                  if (true == true) {
+                              
                                     switcherdata.Classic(
                                       updateAppState,
                                       appState
                                     );
-                                    setTheme((prevTheme) => ({
-                                      ...prevTheme,
-                                      pageStyle: "classic",
-                                    }));
+                                 
                                   }
-                                  console.log(theme);
-                                }}
+                             
+                                }
                               />
                               <label
                                 htmlFor="switcher-classic"
@@ -660,20 +614,15 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 name="data-page-styles"
                                 className="ti-form-radio"
                                 id="switcher-modern"
-                                checked={theme.pageStyle == "modern"}
+                                checked={appState.dataPageStyle == "modern"}
                                 onChange={(_e) => {}}
                                 onClick={(e) => {
-                                  if (true == true) {
+                                
                                     switcherdata.Modern(
                                       updateAppState,
                                       appState
                                     );
-                                    setTheme((prevTheme) => ({
-                                      ...prevTheme,
-                                      pageStyle: "modern",
-                                    }));
-                                  }
-                                  console.log(theme);
+                                  
                                 }}
                               />
                               <label
@@ -698,8 +647,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         title="Save Changes"
                         onClick={saveThemeChange}
                         variant="primary"
-                        loading={updatedUserTheme.loading}
-                        disabled={updatedUserTheme.loading}
+                        // loading={updatedUserappState.loading}
+                        // disabled={updatedUserappState.loading}
                       ></ERPButton>
                     </div>
                   </div>
@@ -742,7 +691,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-white"
                               type="radio"
                               name="menu-colors"
-                              checked={theme.menuStyle == "light"}
+                              checked={appState.dataMenuStyles == "light"}
                               onChange={(_e) => {}}
                               id="switcher-menu-light"
                               onClick={() => {
@@ -750,10 +699,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  menuStyle: "light",
-                                }));
+                               
                               }}
                             />
                             <span
@@ -768,15 +714,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-dark"
                               type="radio"
                               name="menu-colors"
-                              checked={theme.menuStyle == "dark"}
+                              checked={appState.dataMenuStyles == "dark"}
                               onChange={(_e) => {}}
                               id="switcher-menu-dark"
                               onClick={() => {
                                 switcherdata.darkMenu(updateAppState, appState);
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  menuStyle: "dark",
-                                }));
+                              
                               }}
                             />
                             <span
@@ -791,7 +734,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-primary"
                               type="radio"
                               name="menu-colors"
-                              checked={theme.menuStyle == "color"}
+                              checked={appState.dataMenuStyles == "color"}
                               onChange={(_e) => {}}
                               id="switcher-menu-primary"
                               onClick={() => {
@@ -799,10 +742,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  menuStyle: "color",
-                                }));
+                              
                               }}
                             />
                             <span
@@ -817,7 +757,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-gradient"
                               type="radio"
                               name="menu-colors"
-                              checked={theme.menuStyle == "gradient"}
+                              checked={appState.dataMenuStyles == "gradient"}
                               onChange={(_e) => {}}
                               id="switcher-menu-gradient"
                               onClick={() => {
@@ -825,10 +765,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  menuStyle: "gradient",
-                                }));
+                              
                               }}
                             />
                             <span
@@ -843,7 +780,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-transparent"
                               type="radio"
                               name="menu-colors"
-                              checked={theme.menuStyle == "transparent"}
+                              checked={appState.dataMenuStyles == "transparent"}
                               onChange={(_e) => {}}
                               id="switcher-menu-transparent"
                               onClick={() => {
@@ -851,10 +788,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  menuStyle: "transparent",
-                                }));
+                             
                               }}
                             />
                             <span
@@ -879,7 +813,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-white !border"
                               type="radio"
                               name="header-colors"
-                              checked={theme.headerStyle == "light"}
+                              checked={appState.dataHeaderStyles == "light"}
                               onChange={(_e) => {}}
                               id="switcher-header-light"
                               onClick={() => {
@@ -887,10 +821,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  headerStyle: "light",
-                                }));
+                              
                               }}
                             />
                             <span
@@ -905,7 +836,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-dark"
                               type="radio"
                               name="header-colors"
-                              checked={theme.headerStyle == "dark"}
+                              checked={appState.dataHeaderStyles == "dark"}
                               onChange={(_e) => {}}
                               id="switcher-header-dark"
                               onClick={() => {
@@ -913,10 +844,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  headerStyle: "dark",
-                                }));
+                             
                               }}
                             />
                             <span
@@ -931,7 +859,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-primary"
                               type="radio"
                               name="header-colors"
-                              checked={theme.headerStyle == "color"}
+                              checked={appState.dataHeaderStyles == "color"}
                               onChange={(_e) => {}}
                               id="switcher-header-primary"
                               onClick={() => {
@@ -939,10 +867,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  headerStyle: "color",
-                                }));
+                            
                               }}
                             />
                             <span
@@ -957,7 +882,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="hs-tooltip-toggle ti-form-radio color-input color-gradient"
                               type="radio"
                               name="header-colors"
-                              checked={theme.headerStyle == "gradient"}
+                              checked={appState.dataHeaderStyles == "gradient"}
                               onChange={(_e) => {}}
                               id="switcher-header-gradient"
                               onClick={() => {
@@ -965,10 +890,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  headerStyle: "gradient",
-                                }));
+                              
                               }}
                             />
                             <span
@@ -982,7 +904,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <input
                               className="hs-tooltip-toggle ti-form-radio color-input color-transparent"
                               type="radio"
-                              checked={theme.headerStyle == "transparent"}
+                              checked={appState.dataHeaderStyles == "transparent"}
                               onChange={(_e) => {}}
                               name="header-colors"
                               id="switcher-header-transparent"
@@ -991,10 +913,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  headerStyle: "transparent",
-                                }));
+                            
                               }}
                             />
                             <span
@@ -1020,17 +939,14 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="ti-form-radio color-input color-primary-1"
                               type="radio"
                               name="theme-primary"
-                              checked={theme.colorPrimaryRgb == "58, 88, 146"}
+                              checked={appState.colorPrimaryRgb == "58, 88, 146"}
                               id="switcher-primary"
                               onClick={() => {
                                 switcherdata.primaryColor1(
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  colorPrimaryRgb: "58, 88, 146",
-                                }));
+                             
                               }}
                             />
                           </div>
@@ -1039,7 +955,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="ti-form-radio color-input color-primary-2"
                               type="radio"
                               name="theme-primary"
-                              checked={theme.colorPrimaryRgb == "92, 144 ,163"}
+                              checked={appState.colorPrimaryRgb == "92, 144 ,163"}
                               onChange={(_e) => {}}
                               id="switcher-primary1"
                               onClick={() => {
@@ -1047,10 +963,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  colorPrimaryRgb: "92, 144 ,163",
-                                }));
+                               
                               }}
                             />
                           </div>
@@ -1059,7 +972,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="ti-form-radio color-input color-primary-3"
                               type="radio"
                               name="theme-primary"
-                              checked={theme.colorPrimaryRgb == "161, 90 ,223"}
+                              checked={appState.colorPrimaryRgb == "161, 90 ,223"}
                               onChange={(_e) => {}}
                               id="switcher-primary2"
                               onClick={() => {
@@ -1067,10 +980,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  colorPrimaryRgb: "161, 90 ,223",
-                                }));
+                           
                               }}
                             />
                           </div>
@@ -1079,7 +989,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="ti-form-radio color-input color-primary-4"
                               type="radio"
                               name="theme-primary"
-                              checked={theme.colorPrimaryRgb == "78, 172, 76"}
+                              checked={appState.colorPrimaryRgb == "78, 172, 76"}
                               onChange={(_e) => {}}
                               id="switcher-primary3"
                               onClick={() => {
@@ -1087,10 +997,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  colorPrimaryRgb: "78, 172, 76",
-                                }));
+                            
                               }}
                             />
                           </div>
@@ -1099,7 +1006,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="ti-form-radio color-input color-primary-5"
                               type="radio"
                               name="theme-primary"
-                              checked={theme.colorPrimaryRgb == "223, 90, 90"}
+                              checked={appState.colorPrimaryRgb == "223, 90, 90"}
                               onChange={(_e) => {}}
                               id="switcher-primary4"
                               onClick={() => {
@@ -1107,10 +1014,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   updateAppState,
                                   appState
                                 );
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  colorPrimaryRgb: "223, 90, 90",
-                                }));
+                               
                               }}
                             />
                           </div>
@@ -1118,7 +1022,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <div
                               className="theme-container"
                               style={{
-                                backgroundColor: `rgb(${theme.colorPrimaryRgb})`,
+                                backgroundColor: `rgb(${appState.colorPrimaryRgb})`,
                               }}
                             ></div>
                             <div className="pickr-container-primary">
@@ -1143,10 +1047,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                             appState,
                                             `${r},  ${g},  ${b}`
                                           );
-                                          setTheme((prevTheme) => ({
-                                            ...prevTheme,
-                                            colorPrimaryRgb: `${r},  ${g},  ${b}`,
-                                          }));
+                                        
                                           // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
                                         }
                                       }}
@@ -1176,16 +1077,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                     name="data-page-scrollbar"
                                     className="ti-form-radio"
                                     id={`scrollbar-${width}`}
-                                    checked={theme.scrollbarWidth === width}
-                                    onChange={() =>
-                                      setTheme((prevTheme) => ({
-                                        ...prevTheme,
-                                        scrollbarWidth: width as
-                                          | "sm"
-                                          | "md"
-                                          | "lg",
-                                      }))
-                                    }
+                                    checked={appState.scrollbarWidth === width}
+                                    onChange={() => { handleScrollbarChange( "scrollbarWidth",  width)}} 
                                   />
                                   <label
                                     htmlFor={`scrollbar-${width}`}
@@ -1204,17 +1097,24 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               Scrollbar Color:
                             </h6>
                             <div className="ti-form-radio">
+                            
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${theme.scrollbarColor})`,
+                                  backgroundColor:  `rgb(${appState.scrollbarColor})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                                 <input
                                   type="color"
-                                  value={theme.scrollbarColor}
-                                  onChange={handleScrollbarColorChange}
+                                  value={appState.inputBox?.fontColor}
+                                  onChange={(e) => {
+                                    const rgb = hexToRgb(e.target.value); 
+                                    if (rgb) {
+                                      handleScrollbarChange( "scrollbarColor", `${rgb?.r},${rgb?.g},${rgb?.b}`)
+                                    }
+                                  
+                                  }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
                               </div>
@@ -1226,17 +1126,17 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           w-full h-64 border border-gray-300 rounded-md overflow-y-auto
                           scrollbar
                           ${
-                            theme.scrollbarWidth === "lg"
+                            appState.scrollbarWidth === "lg"
                               ? "scrollbar-thick"
-                              : theme.scrollbarWidth === "md"
+                              : appState.scrollbarWidth === "md"
                               ? "scrollbar"
                               : "scrollbar-thin"
                           }
                         `}
                         style={{
-                          "--scrollbar-thumb": `rgb(${theme.scrollbarColor ?? '219,223,225'})`,
+                          "--scrollbar-thumb": `rgb(${appState.scrollbarColor ?? '219,223,225'})`,
                           "--scrollbar-track": "rgb(241,245,249)",
-                          "--tw-scrollbar-thumb": `rgb(${theme.scrollbarColor ?? '219,223,225'})`,
+                          "--tw-scrollbar-thumb": `rgb(${appState.scrollbarColor ?? '219,223,225'})`,
                           "--tw-scrollbar-track": "rgb(241,245,249)",
                         } as React.CSSProperties}
                           >
@@ -1293,7 +1193,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               }}
                               value={demo.dateBox}
                             />
-                         <div className={`${theme.inputBox?.inputStyle === "normal"?"-translate-y-[3px]":"" }`}>
+                         <div className={`${appState.inputBox?.inputStyle === "normal"?"-translate-y-[3px]":"" }`}>
                          <ERPDataCombobox
                             id="selectBox"
                             data={demo}
@@ -1333,16 +1233,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-normal"
-                              checked={theme.inputBox?.inputStyle === "normal"}
+                              checked={appState.inputBox?.inputStyle === "normal"}
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      inputStyle: "normal",
-                                    },
-                                  }));
+                            
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "normal"
@@ -1365,17 +1259,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               className="ti-form-radio"
                               id="input-standard"
                               checked={
-                                theme.inputBox?.inputStyle === "standard"
+                                appState.inputBox?.inputStyle === "standard"
                               }
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      inputStyle: "standard",
-                                    },
-                                  }));
+                           
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "standard"
@@ -1397,16 +1285,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-outline"
-                              checked={theme.inputBox?.inputStyle === "outlined"}
+                              checked={appState.inputBox?.inputStyle === "outlined"}
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      inputStyle: "outlined",
-                                    },
-                                  }));
+                             
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "outlined"
@@ -1428,16 +1310,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-fill"
-                              checked={theme.inputBox?.inputStyle === "filled"}
+                              checked={appState.inputBox?.inputStyle === "filled"}
                               onChange={(e) => {
                                 if (e.target.checked) {
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      inputStyle: "filled",
-                                    },
-                                  }));
+                             
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "filled"
@@ -1461,16 +1337,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             name="inputBoxSize"
                             className="ti-form-radio"
                             id="input-sm"
-                            checked={theme.inputBox?.inputSize === "sm"}
+                            checked={appState.inputBox?.inputSize === "sm"}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  inputBox: {
-                                    ...prevTheme.inputBox,
-                                    inputSize: "sm",
-                                  },
-                                }));
+                            
                                 handleInputBoxStyleChange(
                                   "inputSize",
                                   "sm"
@@ -1493,17 +1363,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="input-md"
                             checked={
-                              theme.inputBox?.inputSize === "md"
+                              appState.inputBox?.inputSize === "md"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  inputBox: {
-                                    ...prevTheme.inputBox,
-                                    inputSize: "md",
-                                  },
-                                }));
+                             
                                 handleInputBoxStyleChange(
                                   "inputSize",
                                   "md"
@@ -1525,16 +1389,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             name="inputBoxSize"
                             className="ti-form-radio"
                             id="input-lg"
-                            checked={theme.inputBox?.inputSize === "lg"}
+                            checked={appState.inputBox?.inputSize === "lg"}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  inputBox: {
-                                    ...prevTheme.inputBox,
-                                    inputSize: "lg",
-                                  },
-                                }));
+                             
                                 handleInputBoxStyleChange(
                                   "inputSize",
                                   "lg"
@@ -1556,16 +1414,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             name="inputBoxSize"
                             className="ti-form-radio"
                             id="input-customize"
-                            checked={theme.inputBox?.inputSize === "customize"}
+                            checked={appState.inputBox?.inputSize === "customize"}
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  inputBox: {
-                                    ...prevTheme.inputBox,
-                                    inputSize: "customize",
-                                  },
-                                }));
+
                                 handleInputBoxStyleChange(
                                   "inputSize",
                                   "customize"
@@ -1582,23 +1434,16 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                           </label>
                         </div>
                       </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-3 switcher-style">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 switcher-style">
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider
                                 id="borderRadius"
                                 label="Border Radius"
                                 className="bg-slate-300"
-                                value={theme.inputBox?.borderRadius}
+                                value={appState.inputBox?.borderRadius}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value, 10); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      borderRadius: newValue, 
-                                    },
-                                  }));
                                   handleInputBoxStyleChange(
                                     "borderRadius",
                                     newValue
@@ -1614,17 +1459,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="borderRadius"
                                 noLabel={true}
                                 type="number"
-                                value={theme.inputBox?.borderRadius}
-                                data={theme.inputBox}
+                                value={appState.inputBox?.borderRadius}
+                                data={appState.inputBox}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value, 10);
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      borderRadius: newValue,
-                                    },
-                                  }));
                                   handleInputBoxStyleChange(
                                     "borderRadius",
                                     newValue
@@ -1635,23 +1473,17 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               />
                             </div>
                           </div>
-                          <div className="flex flex-col space-y-1">
+                          <div className="flex flex-col space-y-1 translate-y-4">
                           <div className="flex items-center space-x-3">
                             <div className="basis-1/2 ">
                             <ERPSlider
                                 id="marginBottom"
-                                label={`Margin Bottom (${theme.inputBox?.marginBottom??0})`}
+                                label={`Margin Bottom (${appState.inputBox?.marginBottom??0})`}
                                 className="bg-slate-300"
-                                value={theme.inputBox?.marginBottom}
+                                value={appState.inputBox?.marginBottom}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      marginBottom: newValue, 
-                                    },
-                                  }));
+                            
                                   handleInputBoxStyleChange(
                                     "marginBottom",
                                     newValue
@@ -1665,18 +1497,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <div className="basis-1/2 ">
                             <ERPSlider
                                 id="marginTop"
-                                label={`Margin Top (${theme.inputBox?.marginTop??0})`}
+                                label={`Margin Top (${appState.inputBox?.marginTop??0})`}
                                 className="bg-slate-300"
-                                value={theme.inputBox?.marginTop}
+                                value={appState.inputBox?.marginTop}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                    marginTop: newValue, 
-                                    },
-                                  }));
+                           
                                   handleInputBoxStyleChange(
                                     "marginTop",
                                     newValue
@@ -1696,7 +1522,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                       <div className="">
-                       {theme.inputBox?.inputSize === "customize" && (
+                       {appState.inputBox?.inputSize === "customize" && (
                         <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
 
                           <div className="flex items-center space-x-3">
@@ -1705,16 +1531,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="fontSize"
                                 label="Font Size"
                                 className="bg-slate-300"
-                                value={theme.inputBox?.fontSize}
+                                value={appState.inputBox?.fontSize}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      fontSize: newValue, // Update the theme state
-                                    },
-                                  }));
+                                  const newValue = parseInt(e.target.value, 10); 
+                              
                                   handleInputBoxStyleChange(
                                     "fontSize",
                                     newValue
@@ -1729,17 +1549,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="fontSize"
                                 type="number"
                                 noLabel={true}
-                                value={theme.inputBox?.fontSize}
-                                data={theme.inputBox}
+                                value={appState.inputBox?.fontSize}
+                                data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      fontSize: newValue, // Update the theme state
-                                    },
-                                  }));
+                                  const newValue = parseInt(e.target.value, 10); 
+                                
                                   handleInputBoxStyleChange(
                                     "fontSize",
                                     newValue
@@ -1757,16 +1571,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="labelFontSize"
                                 label="Label Font Size"
                                 className="bg-slate-300"
-                                value={theme.inputBox?.labelFontSize}
+                                value={appState.inputBox?.labelFontSize}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      labelFontSize: newValue, // Update the theme state
-                                    },
-                                  }));
+                                  const newValue = parseInt(e.target.value, 10); 
+                                 
                                   handleInputBoxStyleChange(
                                     "labelFontSize",
                                     newValue
@@ -1781,17 +1589,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="labelFontSize"
                                 type="number"
                                 noLabel={true}
-                                value={theme.inputBox?.labelFontSize}
-                                data={theme.inputBox}
+                                value={appState.inputBox?.labelFontSize}
+                                data={appState.inputBox}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      labelFontSize: newValue, // Update the theme state
-                                    },
-                                  }));
+                           
                                   handleInputBoxStyleChange(
                                     "labelFontSize",
                                     newValue
@@ -1808,16 +1610,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="fontWeight"
                                 label="Font Weight"
                                 className="bg-slate-300"
-                                value={theme.inputBox?.fontWeight}
+                                value={appState.inputBox?.fontWeight}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      fontWeight: newValue, // Update the theme state
-                                    },
-                                  }));
+                              
                                   handleInputBoxStyleChange(
                                     "fontWeight",
                                     newValue
@@ -1833,17 +1629,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="fontWeight"
                                 type="number"
                                 noLabel={true}
-                                value={theme.inputBox?.fontWeight}
-                                data={theme.inputBox}
+                                value={appState.inputBox?.fontWeight}
+                                data={appState.inputBox}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      fontWeight: newValue, // Update the theme state
-                                    },
-                                  }));
+                          
                                   handleInputBoxStyleChange(
                                     "fontWeight",
                                     newValue
@@ -1861,16 +1651,10 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="inputHeight"
                                 label="Height"
                                 className="bg-slate-300"
-                                value={theme.inputBox?.inputHeight}
+                                value={appState.inputBox?.inputHeight}
                                 onChange={(e) => {
                                   const newValue = parseFloat(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      inputHeight: newValue, // Update the theme state
-                                    },
-                                  }));
+                          
                                   handleInputBoxStyleChange(
                                     "inputHeight",
                                     newValue
@@ -1886,17 +1670,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 id="inputHeight"
                                 type="number"
                                 noLabel={true}
-                                value={theme.inputBox?.inputHeight}
-                                data={theme.inputBox}
+                                value={appState.inputBox?.inputHeight}
+                                data={appState.inputBox}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      inputHeight: newValue, // Update the theme state
-                                    },
-                                  }));
+                       
                                   handleInputBoxStyleChange(
                                     "inputHeight",
                                     newValue
@@ -1913,18 +1691,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <div className="basis-1/2 ">
                               <ERPSlider
                                 id="adjustA"
-                                label={`AdjustA (${theme.inputBox?.adjustA??0})`}
+                                label={`AdjustA (${appState.inputBox?.adjustA??0})`}
                                 className="bg-slate-300"
-                                value={theme.inputBox?.adjustA}
+                                value={appState.inputBox?.adjustA}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      adjustA: newValue, 
-                                    },
-                                  }));
+                           
                                   handleInputBoxStyleChange(
                                     "adjustA",
                                     newValue
@@ -1938,18 +1710,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <div className="basis-1/2 ">
                             <ERPSlider
                                 id="adjustB"
-                                label={`AdjustB (${theme.inputBox?.adjustB??0})`}
+                                label={`AdjustB (${appState.inputBox?.adjustB??0})`}
                                 className="bg-slate-300"
-                                value={theme.inputBox?.adjustB}
+                                value={appState.inputBox?.adjustB}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      adjustB: newValue, 
-                                    },
-                                  }));
+                           
                                   handleInputBoxStyleChange(
                                     "adjustB",
                                     newValue
@@ -1961,23 +1727,17 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               />
                             </div>
                           </div>
-                          <div className="flex flex-col space-y-1">
+                          <div className="flex flex-col space-y-1 translate-y-[10px]">
                           <div className="flex items-center space-x-3">
                             <div className="basis-1/2 ">
                             <ERPSlider
                                 id="adjustC"
-                                label={`AdjustC (${theme.inputBox?.adjustC??0})`}
+                                label={`AdjustC (${appState.inputBox?.adjustC??0})`}
                                 className="bg-slate-300"
-                                value={theme.inputBox?.adjustC}
+                                value={appState.inputBox?.adjustC}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      adjustC: newValue, 
-                                    },
-                                  }));
+                          
                                   handleInputBoxStyleChange(
                                     "adjustC",
                                     newValue
@@ -1991,18 +1751,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             <div className="basis-1/2 ">
                             <ERPSlider
                                 id="adjustD"
-                                label={`AdjustD (${theme.inputBox?.adjustD??0})`}
+                                label={`AdjustD (${appState.inputBox?.adjustD??0})`}
                                 className="bg-slate-300"
-                                value={theme.inputBox?.adjustD}
+                                value={appState.inputBox?.adjustD}
                                 onChange={(e) => {
                                   const newValue = parseInt(e.target.value); 
-                                  setTheme((prevTheme) => ({
-                                    ...prevTheme,
-                                    inputBox: {
-                                      ...prevTheme.inputBox,
-                                      adjustD: newValue, 
-                                    },
-                                  }));
+                         
                                   handleInputBoxStyleChange(
                                     "adjustD",
                                     newValue
@@ -2036,28 +1790,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${theme.inputBox?.borderColor})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.borderColor})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                                 <input
                                   type="color"
-                                  value={theme.inputBox?.borderColor}
+                                  value={appState.inputBox?.borderColor}
                                   onChange={(e) => {
                                     const rgb = hexToRgb(e.target.value); // Use e instead of event
                                     if (rgb) {
-                                      setTheme((prevTheme) => ({
-                                        ...prevTheme,
-                                        inputBox: {
-                                          ...prevTheme.inputBox,
-                                          borderColor: `${rgb.r},${rgb.g},${rgb.b}`,
-                                        },
-                                      }))
+                                      handleInputBoxStyleChange(
+                                        "borderColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
                                     }
-                                    handleInputBoxStyleChange(
-                                      "borderColor",
-                                      `${rgb?.r},${rgb?.g},${rgb?.b}`
-                                    );
+                                   
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
@@ -2077,28 +1825,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${theme.inputBox?.fontColor})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.fontColor})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                                 <input
                                   type="color"
-                                  value={theme.inputBox?.fontColor}
+                                  value={appState.inputBox?.fontColor}
                                   onChange={(e) => {
                                     const rgb = hexToRgb(e.target.value); // Use e instead of event
                                     if (rgb) {
-                                      setTheme((prevTheme) => ({
-                                        ...prevTheme,
-                                        inputBox: {
-                                          ...prevTheme.inputBox,
-                                          fontColor: `${rgb.r},${rgb.g},${rgb.b}`,
-                                        },
-                                      }))
+                                      handleInputBoxStyleChange(
+                                        "fontColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
                                     }
-                                    handleInputBoxStyleChange(
-                                      "fontColor",
-                                      `${rgb?.r},${rgb?.g},${rgb?.b}`
-                                    );
+                                
                                     
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
@@ -2118,28 +1860,22 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${theme.inputBox?.borderFocus})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.borderFocus})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
                                 <input
                                   type="color"
-                                  value={theme.inputBox?.borderFocus}
+                                  value={appState.inputBox?.borderFocus}
                                   onChange={(e) => {
                                     const rgb = hexToRgb(e.target.value); // Use e instead of event
                                     if (rgb) {
-                                      setTheme((prevTheme) => ({
-                                        ...prevTheme,
-                                        inputBox: {
-                                          ...prevTheme.inputBox,
-                                          borderFocus: `${rgb.r},${rgb.g},${rgb.b}`,
-                                        },
-                                      }))
+                                      handleInputBoxStyleChange(
+                                        "borderFocus",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
                                     }
-                                    handleInputBoxStyleChange(
-                                      "borderFocus",
-                                      `${rgb?.r},${rgb?.g},${rgb?.b}`
-                                    );
+                                 
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
@@ -2189,17 +1925,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-sm"
                             checked={
-                              theme.inputBox?.CheckButtonInputSize === "sm"
+                              appState.inputBox?.CheckButtonInputSize === "sm"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  inputBox: {
-                                    ...prevTheme.inputBox,
-                                    CheckButtonInputSize: "sm",
-                                  },
-                                }));
+                          
                                 handleInputBoxStyleChange(
                                   "CheckButtonInputSize",
                                   "sm"
@@ -2222,17 +1952,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-md"
                             checked={
-                              theme.inputBox?.CheckButtonInputSize === "md"
+                              appState.inputBox?.CheckButtonInputSize === "md"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  inputBox: {
-                                    ...prevTheme.inputBox,
-                                    CheckButtonInputSize: "md",
-                                  },
-                                }));
+                          
                                 handleInputBoxStyleChange(
                                   "CheckButtonInputSize",
                                   "md"
@@ -2255,17 +1979,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-lg"
                             checked={
-                              theme.inputBox?.CheckButtonInputSize === "lg"
+                              appState.inputBox?.CheckButtonInputSize === "lg"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
-                                setTheme((prevTheme) => ({
-                                  ...prevTheme,
-                                  inputBox: {
-                                    ...prevTheme.inputBox,
-                                    CheckButtonInputSize: "lg",
-                                  },
-                                }));
+                        
                                 handleInputBoxStyleChange(
                                   "CheckButtonInputSize",
                                   "lg"
@@ -2296,8 +2014,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       title="Save Changes"
                       onClick={saveThemeChange}
                       variant="primary"
-                      loading={updatedUserTheme.loading}
-                      disabled={updatedUserTheme.loading}
+                      // loading={updatedUserappState.loading}
+                      // disabled={updatedUserappState.loading}
                     ></ERPButton>
                   </div>
                 </div>

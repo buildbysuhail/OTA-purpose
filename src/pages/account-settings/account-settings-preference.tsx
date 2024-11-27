@@ -203,8 +203,9 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
   const saveThemeChange = async () => {
     debugger;
-    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: JSON.stringify(appState)});
+    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: btoa(JSON.stringify(appState))});
     handleResponse(res, () => {
+      Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
       // userTheme();
     });
   };
@@ -1101,7 +1102,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor:  `rgb(${appState.scrollbarColor})`,
+                                  backgroundColor:  `rgb(${appState.scrollbarColor??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1790,7 +1791,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.borderColor})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.borderColor??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1825,7 +1826,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.fontColor})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.fontColor??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1860,7 +1861,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.borderFocus})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.borderFocus??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>

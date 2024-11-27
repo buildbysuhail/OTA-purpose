@@ -29,6 +29,7 @@ import {
 import { customJsonParse } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
 import {
+  AppState,
   initialThemeData,
   languagesData,
   Theme,
@@ -48,6 +49,7 @@ import RPosLayout from "./components/common/layout/rpos-layout";
 import PDFBarcodeDesigner from "./pages/LabelDesigner/label_designer";
 import ERPAlert from "./components/ERPComponents/erp-sweet-alert";
 import { onCloseWithUnsavedChange } from "./redux/slices/popup-reducer";
+import { appInitialState } from "./redux/slices/app/reducer";
 
 export const LoadingAnimation = () => {
   return (
@@ -82,7 +84,7 @@ function App() {
 
   let upt = Cookies.get("up");
   let utt = Cookies.get("ut");
-
+debugger;
   let userProfileDetails: UserModel = initialUserSessionData;
   try {
     if (upt != undefined && upt != null && upt != "") {
@@ -90,7 +92,7 @@ function App() {
     }
   } catch (error) { }
 
-  let userThemes: Theme = initialThemeData;
+  let userThemes: AppState = appInitialState;
   try {
     if (utt != undefined && utt != null && utt != "") {
       userThemes = customJsonParse(atob(utt));

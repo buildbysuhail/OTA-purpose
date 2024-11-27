@@ -63,9 +63,7 @@ export interface AppState {
   body: {
     class: string;
   };
-  pdfTemplates: any;
   locale: Locale;
-  tableState?: TableState;
   scrollbarWidth:  "sm"|"md"|"lg";
   scrollbarColor: string;
   inputBox: inputBox;

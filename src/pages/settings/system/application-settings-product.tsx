@@ -10,108 +10,11 @@ import { handleResponse } from "../../../utilities/HandleResponse";
 import { t } from "i18next";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { RootState } from "../../../redux/store";
-
-interface FormState {
-  setDefaultQty1: boolean;
-  allowMultiUnits: boolean;
-  allowMultirate: boolean;
-  batchCriteria: string;
-  loadCustomerLastRate: boolean;
-  loadDummyProducts: boolean;
-  marginRoundTo: number;
-  focusToQtyAfterBarcode: boolean;
-  stockTransferNegativeStock: string;
-  allowMannualProductSelectionInSales: boolean;
-  useProductImages: boolean;
-  productImagePath: string;
-  maintainSchemes: boolean;
-  weighingScaleBarcodeType: string;
-  pPOsPriceCategory: number;
-  showRateBeforeTax: boolean;
-  stopScanningOnWrongBarcode: boolean;
-  allowOnlyScanProductMarkedAsWeighingScaleItems: boolean;
-  loadListedProductPrices: boolean;
-  advancedProductSearching: boolean;
-  blockQtyChangeOptionInPOS: boolean;
-  enableGoogleTranslationOfProductName: boolean;
-  setQty1ForWeighingScaleItem_ValueMode: boolean;
-  allowUpdateSalesPriceFromPurchase: boolean;
-  usePopupWindowForItemSearch: boolean;
-  enableMultiWarehouseBilling: boolean;
-  enableSupplierWiseItemCode: boolean;
-  includeSearchItemAlias_ItemName2: boolean;
-  lastSystemGeneratedBarcode: number;
-  lastSystemGeneratedBarcodetrue: boolean;
-  stopScanningOnWrongBarcodeInSales: boolean;
-  enableOrderMangment: boolean;
-  enableImportPurchase: boolean;
-  excludeSchemeProductAmountFromPrivilegeCard: boolean;
-  showPurchaseCostChangeWarning: boolean;
-  listBarcodeItemsInItemLookup: boolean;
-  showHSNCodeWarning: string;
-  giftOnBilling: boolean;
-  setProductQtyLimitinSales: boolean;
-  enableQtySlabOffer: boolean;
-  giftOnBillingAs: string;
-  enableMultiFOC: boolean;
-  lPPriceLessThanSellingPrice: string;
-  mRPLessThanSalesPrice: string;
-  zeroMultiRateValidate: string;
-  allowUpdateMultiRateinPurchase: boolean;
-}
+import { ApplicationProductsSettings, ApplicationProductsSettingsInitialState } from "./application-settings-types/application-settings-types-products";
 
 const ApplicationSettingsProduct = () => {
-  const initialState: FormState = {
-    setDefaultQty1: true,
-    lastSystemGeneratedBarcodetrue: false,
-    allowMultiUnits: true,
-    allowMultirate: false,
-    batchCriteria: "NB",
-    loadCustomerLastRate: false,
-    loadDummyProducts: false,
-    marginRoundTo: 0,
-    focusToQtyAfterBarcode: true,
-    stockTransferNegativeStock: "Warn",
-    allowMannualProductSelectionInSales: true,
-    useProductImages: false,
-    enableOrderMangment: false,
-    enableImportPurchase: false,
-    productImagePath: " ",
-    maintainSchemes: false,
-    weighingScaleBarcodeType: "Standard. No Check Digit",
-    pPOsPriceCategory: 1,
-    showRateBeforeTax: false,
-    stopScanningOnWrongBarcode: false,
-    allowOnlyScanProductMarkedAsWeighingScaleItems: false,
-    loadListedProductPrices: false,
-    advancedProductSearching: false,
-    blockQtyChangeOptionInPOS: false,
-    enableGoogleTranslationOfProductName: true,
-    setQty1ForWeighingScaleItem_ValueMode: true,
-    allowUpdateSalesPriceFromPurchase: false,
-    usePopupWindowForItemSearch: false,
-    enableMultiWarehouseBilling: false,
-    enableSupplierWiseItemCode: false,
-    includeSearchItemAlias_ItemName2: true,
-    lastSystemGeneratedBarcode: 1000000000001,
-    stopScanningOnWrongBarcodeInSales: false,
-    excludeSchemeProductAmountFromPrivilegeCard: false,
-    showPurchaseCostChangeWarning: false,
-    listBarcodeItemsInItemLookup: false,
-    showHSNCodeWarning: "Warn",
-    giftOnBilling: false,
-    setProductQtyLimitinSales: false,
-    enableQtySlabOffer: false,
-    giftOnBillingAs: "Products",
-    enableMultiFOC: false,
-    lPPriceLessThanSellingPrice: "Warn",
-    mRPLessThanSalesPrice: "Warn",
-    zeroMultiRateValidate: "Warn",
-    allowUpdateMultiRateinPurchase: false,
-  };
-
-  const [formState, setFormState] = useState<FormState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [formState, setFormState] = useState<ApplicationProductsSettings>(ApplicationProductsSettingsInitialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationProductsSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -152,7 +55,7 @@ const ApplicationSettingsProduct = () => {
     }
   };
 
-  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+  const handleFieldChange = (field: keyof typeof ApplicationProductsSettingsInitialState, value: any) => {
     setFormState((prevState) => ({
       ...prevState,
       [field]: value,
@@ -163,8 +66,8 @@ const ApplicationSettingsProduct = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof FormState];
-        const prevValue = formStatePrev[key as keyof FormState];
+        const currentValue = formState?.[key as keyof ApplicationProductsSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationProductsSettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
         (currentValue === true && prevValue === false)) {

@@ -7,24 +7,11 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
 import { t } from "i18next";
-
-interface FormState {
-  backupMethods: string;
-  backUpPath: string;
-  backupDuration: number;
-  compressBackupFile: boolean;
-}
-
-const initialState: FormState = {
-  backupMethods: "",
-  backUpPath: "",
-  backupDuration: 0,
-  compressBackupFile: false,
-};
+import { ApplicationBackupSettings, ApplicationBackupSettingsInitialState } from "./application-settings-types/application-settings-types-backup";
 
 const BackupSettingsForm: React.FC = () => {
-  const [formState, setFormState] = useState<FormState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [formState, setFormState] = useState<ApplicationBackupSettings>(ApplicationBackupSettingsInitialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationBackupSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +36,7 @@ const BackupSettingsForm: React.FC = () => {
     }
   };
 
-  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+  const handleFieldChange = (field: keyof typeof ApplicationBackupSettingsInitialState, value: any) => {
     setFormState((prevState) => ({
       ...prevState,
       [field]: value,
@@ -60,8 +47,8 @@ const BackupSettingsForm: React.FC = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof FormState];
-        const prevValue = formStatePrev[key as keyof FormState];
+        const currentValue = formState?.[key as keyof ApplicationBackupSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationBackupSettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
         (currentValue === true && prevValue === false)) {

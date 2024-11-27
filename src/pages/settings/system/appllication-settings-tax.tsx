@@ -10,32 +10,11 @@ import { APIClient } from "../../../helpers/api-client";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { useTranslation } from "react-i18next";
-
-interface FormState {
-  expensesTaxAccount: string;
-  incomeTaxAccount: string;
-  purchaseCSTAccount: string;
-  purchaseFormType: string;
-  purchaseTaxAccount: string;
-  salesCSTAccount: string;
-  salesFormType: string;
-  salesTaxAccount: string;
-}
-
-const initialState: FormState = {
-  expensesTaxAccount: "",
-  incomeTaxAccount: "",
-  purchaseCSTAccount: "",
-  purchaseFormType: "",
-  purchaseTaxAccount: "",
-  salesCSTAccount: "",
-  salesFormType: "",
-  salesTaxAccount: "",
-};
+import { ApplicationTaxSettings, ApplicationTaxSettingsInitialState } from "./application-settings-types/application-settings-types-tax";
 
 const TaxSettingsForm: React.FC = () => {
-  const [formState, setFormState] = useState<FormState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [formState, setFormState] = useState<ApplicationTaxSettings>(ApplicationTaxSettingsInitialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationTaxSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,7 +54,7 @@ const TaxSettingsForm: React.FC = () => {
     }
   };
 
-  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+  const handleFieldChange = (field: keyof typeof ApplicationTaxSettingsInitialState, value: any) => {
     setFormState((prevState) => ({
       ...prevState,
       [field]: value,
@@ -86,8 +65,8 @@ const TaxSettingsForm: React.FC = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof FormState];
-        const prevValue = formStatePrev[key as keyof FormState];
+        const currentValue = formState?.[key as keyof ApplicationTaxSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationTaxSettings];
 
         if (currentValue !== prevValue) {
 

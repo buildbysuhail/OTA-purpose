@@ -6,6 +6,16 @@ interface ShortcutConfig {
   description: string;
   action: () => void;
 }
+export const popupStack: (() => void)[] = []; 
+export const addPopupToStack = (closeFunction: () => void) => {
+  popupStack.push(closeFunction);
+};
+export const removePopupFromStack = (closeFunction: () => void) => {
+  const index = popupStack.indexOf(closeFunction);
+  if (index > -1) {
+    popupStack.splice(index, 1);
+  }
+};
 
 enum ShortKeyEvents {
   POPUP_CLOSE_EVENT = 'popup-close-event',
@@ -18,21 +28,29 @@ enum ShortKeyEvents {
 const shortKeys: ShortcutConfig[] = [
   {
     event: ShortKeyEvents.POPUP_CLOSE_EVENT,
-    key: 'ctrl+shift+b',
-    description: 'Close all popups',
+    key: "ctrl+shift+b",
+    description: "Close all popups",
     action: () => {
-      const event = new CustomEvent(ShortKeyEvents.POPUP_CLOSE_EVENT);
-      document.dispatchEvent(event);
-    }
+      // const event = new CustomEvent(ShortKeyEvents.POPUP_CLOSE_EVENT);
+      // document.dispatchEvent(event);
+      while (popupStack.length > 0) {
+        const closePopup = popupStack.pop();
+        if (closePopup) closePopup();
+      }
+    },
   },
   {
     event: ShortKeyEvents.CLOSE_ONE_POPUP,
-    key: 'ctrl+q',
-    description: 'Close one popup',
+    key: "ctrl+q",
+    description: "Close the top popup",
     action: () => {
-      const event = new CustomEvent(ShortKeyEvents.CLOSE_ONE_POPUP);
-      document.dispatchEvent(event);
-    }
+      // const event = new CustomEvent(ShortKeyEvents.CLOSE_ONE_POPUP);
+      // document.dispatchEvent(event);
+      if (popupStack.length > 0) {
+        const closeTopPopup = popupStack.pop();
+        if (closeTopPopup) closeTopPopup();
+      }
+    },
   },
   {
     event: ShortKeyEvents.GO_TO_PREVIOUS_PAGE,
@@ -111,7 +129,7 @@ export const cleanupShortKeys = () => {
 export const getFocusableElements = () => {
   return Array.from(
     document.querySelectorAll(
-      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
     )
   );
 };

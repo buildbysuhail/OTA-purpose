@@ -192,7 +192,7 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Masters End */}
 
         {/* Accounts Masters */}
-        <Route path="/accounts/transactions/:type" element={<AccTransaction/>} />
+        <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType='' formCode='' voucherPrefix='' drCr='' formType='' title='' />} />
         {/* Accounts Masters End */}
 
 
@@ -227,7 +227,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
-        <Route path="/inventory/gstr_report" element={<GstrReport />} />
+        <Route path="/inventory/gstr1_report" element={<GstrReport />} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

@@ -35,7 +35,7 @@ const initialState: AppInitialState = {
       class: ""
     },
     scrollbarWidth: "sm",
-    scrollbarColor: '',
+    scrollbarColor: '128, 128, 128',
     inputBox: {
       inputStyle: "normal", 
       inputSize:"sm",
@@ -45,9 +45,9 @@ const initialState: AppInitialState = {
       fontWeight: 400, 
       labelFontSize:13,
       otherLabelFontSize:13,        
-      borderColor: '',
+      borderColor: '128, 128, 128',
       fontColor:'128, 128, 128', 
-      borderFocus: '',          
+      borderFocus: '128, 128, 128',          
       borderRadius: 5,  
       adjustA:0,
       adjustB:0,

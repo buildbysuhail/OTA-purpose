@@ -180,9 +180,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let updatedUserThemeAction = reduxManager.getTypedThunk(
     updatedUserThemeRName
   );
-  const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {
-    console.log(appState);
-    
+  const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {   
     const _appState = {
       ...appState,
       inputBox: {
@@ -206,17 +204,12 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     const res = await api.postAsync(Urls.updateUserThemes, {userThemes: btoa(JSON.stringify(appState))});
     handleResponse(res, () => {
       Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
-      // userTheme();
     });
   };
-  // const rgbToHex = (r: number, g: number, b: number): string => {
-  //   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
-  // }
 
-  // const scrollbarColorHex = rgbToHex(...appState.scrollbarColor.split(',').map(Number))
   return (
     <Fragment>
-      <div className="grid grid-cols-12 gap-x-6 p-3">
+      <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12 ">
           <div className="grid grid-cols-12 gap-x-6">
             <div
@@ -313,9 +306,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
                                   }
                                 }}
-                                // onClick={() =>
-                                //   handleThemeChange("mode", "light")
-                                // }
+                        
                               />
                               <label
                                 htmlFor="switcher-light-theme"
@@ -338,7 +329,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   }
                                  
                                 }}
-                                // onClick={() => { handleThemeChange("mode", "dark")}}
+                  
                               />
                               <label
                                 htmlFor="switcher-dark-theme"
@@ -648,8 +639,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         title="Save Changes"
                         onClick={saveThemeChange}
                         variant="primary"
-                        // loading={updatedUserappState.loading}
-                        // disabled={updatedUserappState.loading}
+                 
                       ></ERPButton>
                     </div>
                   </div>
@@ -1049,7 +1039,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                             `${r},  ${g},  ${b}`
                                           );
                                         
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
                                         }
                                       }}
                                       value={"#FFFFFF"}
@@ -1593,7 +1582,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 value={appState.inputBox?.labelFontSize}
                                 data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                            
                                   handleInputBoxStyleChange(
                                     "labelFontSize",
@@ -1613,7 +1602,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="bg-slate-300"
                                 value={appState.inputBox?.fontWeight}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                               
                                   handleInputBoxStyleChange(
                                     "fontWeight",
@@ -1633,7 +1622,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 value={appState.inputBox?.fontWeight}
                                 data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                           
                                   handleInputBoxStyleChange(
                                     "fontWeight",
@@ -1674,7 +1663,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 value={appState.inputBox?.inputHeight}
                                 data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                        
                                   handleInputBoxStyleChange(
                                     "inputHeight",
@@ -2015,8 +2004,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       title="Save Changes"
                       onClick={saveThemeChange}
                       variant="primary"
-                      // loading={updatedUserappState.loading}
-                      // disabled={updatedUserappState.loading}
                     ></ERPButton>
                   </div>
                 </div>

@@ -694,8 +694,8 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           onMouseEnter={() => Onhover()}
           onMouseLeave={() => Outhover()}
         >
-          <div className="main-sidebar-header">
-            <a href={`${import.meta.env.BASE_URL}`} className="header-logo">
+          <div className="main-sidebar-header"> 
+            <a href={`/`} className="header-logo" >
               <img src={logo1} alt="logo" className="desktop-logo" />
               <img src={logo2} alt="logo" className="toggle-logo" />
               <img src={logo3} alt="logo" className="desktop-dark" />

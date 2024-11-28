@@ -7,26 +7,18 @@ import Urls from "../../../redux/urls";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { APIClient } from "../../../helpers/api-client";
 import { handleResponse } from "../../../utilities/HandleResponse";
-import {
-  ApplicationMainSettings,
-  ApplicationMainSettingsInitialState,
-} from "./application-settings-types";
-// import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { t } from "i18next";
 import { tabClasses } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "./application-settings-types/application-settings-types-main";
 
 const api = new APIClient();
 const ERPSettingsFormMain = () => {
   const dispatch = useAppDispatch();
-  const [settings, setSettings] = useState<ApplicationMainSettings>(
-    ApplicationMainSettingsInitialState
-  );
-  const [settingsPrev, setSettingsPrev] = useState<
-    Partial<ApplicationMainSettings>
-  >({});
+  const [settings, setSettings] = useState<ApplicationMainSettings>(ApplicationMainSettingsInitialState);
+  const [settingsPrev, setSettingsPrev] = useState<Partial<ApplicationMainSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const userSession = useSelector((state: RootState) => state.UserSession);
@@ -140,8 +132,8 @@ const ERPSettingsFormMain = () => {
               currentValue === false
                 ? "false"
                 : currentValue === true
-                ? "true"
-                : (currentValue ?? "").toString(),
+                  ? "true"
+                  : (currentValue ?? "").toString(),
           });
         }
         return acc;
@@ -150,16 +142,16 @@ const ERPSettingsFormMain = () => {
       const response =
         modifiedSettings && modifiedSettings.length > 0
           ? ((await api.put(Urls.application_settings, {
-              type: "main",
-              updateList: modifiedSettings,
-            })) as any)
+            type: "main",
+            updateList: modifiedSettings,
+          })) as any)
           : null;
       handleResponse(
         response,
         () => {
           setSettingsPrev(settings);
         },
-        () => {}
+        () => { }
       );
     } catch (error) {
       console.error("Error saving settings:", error);

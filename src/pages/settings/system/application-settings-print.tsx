@@ -10,25 +10,12 @@ import { APIClient } from "../../../helpers/api-client";
 import { t } from "i18next";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
-
-interface FormState {
-  defaultPrinter: string;
-  printGatePass: boolean;
-  showReprintAuthorization: boolean;
-  showReprintAuthorisation: boolean;
-}
-
-const initialState: FormState = {
-  defaultPrinter: "",
-  printGatePass: false,
-  showReprintAuthorization: false,
-  showReprintAuthorisation: false,
-};
+import { ApplicationPrintSettings, ApplicationPrintSettingsInitialState } from "./application-settings-types/application-settings-types-print";
 
 const PrintSettingForm: React.FC = () => {
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const [formState, setFormState] = useState<FormState>(initialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<FormState>>({});
+  const [formState, setFormState] = useState<ApplicationPrintSettings>(ApplicationPrintSettingsInitialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationPrintSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,7 +55,7 @@ const PrintSettingForm: React.FC = () => {
   };
 
 
-  const handleFieldChange = (field: keyof typeof initialState, value: any) => {
+  const handleFieldChange = (field: keyof typeof ApplicationPrintSettingsInitialState, value: any) => {
     setFormState((prevState) => ({
       ...prevState,
       [field]: value,
@@ -79,8 +66,8 @@ const PrintSettingForm: React.FC = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof FormState];
-        const prevValue = formStatePrev[key as keyof FormState];
+        const currentValue = formState?.[key as keyof ApplicationPrintSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationPrintSettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
         (currentValue === true && prevValue === false)) {

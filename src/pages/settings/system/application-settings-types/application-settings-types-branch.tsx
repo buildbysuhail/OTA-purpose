@@ -1,0 +1,72 @@
+import { Countries } from "../../../../redux/slices/user-session/reducer";
+
+export interface ApplicationBranchSettings {
+    maintainMultilanguage__: any;
+    maintainTax: boolean;
+    showFinancialYearSelector: boolean;
+    countryName: number;
+    maintainSynchronization: boolean;
+    maintainSynchronizationdata: string;
+    autoPostingTransaction: boolean;
+    allowEditPostedTransactions: boolean;
+    maintainMasterEntry: boolean;
+    maintainInventoryTransactionsEntry: boolean;
+    syncMethod: string;
+    syncIntervals: number;
+    reportMode: string;
+    useBranchWiseSalesPrice: boolean;
+    useTemplateSelectionForPrinting: boolean;
+    showBTINotification: boolean;
+    applyVATOnPurchaseToBTO: boolean;
+    maintainCounterWisePrefixForTransaction: boolean;
+    refreshStockAfterSync: boolean;
+    refreshServerStockAfterSync: boolean;
+    maintainKSA_EInvoice: boolean;
+    invoicePrintingStyle: string;
+    enableTaxOnBillDiscount: boolean;
+    apply_KSA_EInvoice_Validation_Rules: boolean;
+    kSA_EInvoice_Sync_SystemCode: string;
+    createCreditNoteAutomaticallyOnSalesEdit: boolean;
+    enableVanSale: boolean;
+    clientPPOSBranchID: string;
+    vanSaleProductSerial: string;
+    pPOSEmail: string;
+    maximum_Allowed_LineItem_Amount: number;
+    fileAttachmentMethod: string;
+    fileAttachmentFolder: string;
+  }
+  export const ApplicationBranchSettingsInitialState: ApplicationBranchSettings = {
+    maintainTax: true,
+    maintainMultilanguage__: false,
+    showFinancialYearSelector: false,
+    countryName: Countries.Saudi,
+    maintainSynchronization: false,
+    autoPostingTransaction: true,
+    allowEditPostedTransactions: true,
+    maintainMasterEntry: true,
+    maintainInventoryTransactionsEntry: true,
+    maintainSynchronizationdata: "",
+    syncMethod: "",
+    syncIntervals: 0,
+    reportMode: "Classic",
+    useBranchWiseSalesPrice: false,
+    useTemplateSelectionForPrinting: false,
+    showBTINotification: false,
+    applyVATOnPurchaseToBTO: true,
+    maintainCounterWisePrefixForTransaction: false,
+    refreshStockAfterSync: true,
+    refreshServerStockAfterSync: true,
+    maintainKSA_EInvoice: false,
+    invoicePrintingStyle: "Default",
+    enableTaxOnBillDiscount: false,
+    apply_KSA_EInvoice_Validation_Rules: false,
+    kSA_EInvoice_Sync_SystemCode: "",
+    createCreditNoteAutomaticallyOnSalesEdit: false,
+    enableVanSale: false,
+    clientPPOSBranchID: "",
+    vanSaleProductSerial: "",
+    pPOSEmail: "",
+    maximum_Allowed_LineItem_Amount: 0.0,
+    fileAttachmentMethod: "No",
+    fileAttachmentFolder: "",
+  };

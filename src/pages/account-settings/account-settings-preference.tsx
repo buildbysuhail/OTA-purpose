@@ -146,7 +146,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     inputBox: {
       inputStyle: "normal",
       inputSize:"sm",
-      CheckButtonInputSize:"sm",
+      checkButtonInputSize:"sm",
       inputHeight:0,
       fontSize: 0,
       fontWeight: 400,
@@ -1158,7 +1158,15 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                       <div className="">
-                        <p className="switcher-style-head ">Input Box Style:</p>
+                     
+                      <p className="switcher-style-head ">Input Box Style:</p>
+                      <ERPButton
+                     variant="secondary"
+                     startIcon="ri-loop-left-line"
+                     className= {`p-[1px] m-[0px] h-7 w-7 `}
+                    ></ERPButton>
+                     
+                        
                         <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center mt-5 switcher-style">
                              <ERPInput
                              
@@ -1953,13 +1961,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-sm"
                             checked={
-                              appState.inputBox?.CheckButtonInputSize === "sm"
+                              appState.inputBox?.checkButtonInputSize === "sm"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
                           
                                 handleInputBoxStyleChange(
-                                  "CheckButtonInputSize",
+                                  "checkButtonInputSize",
                                   "sm"
                                 );
                               }
@@ -1980,13 +1988,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-md"
                             checked={
-                              appState.inputBox?.CheckButtonInputSize === "md"
+                              appState.inputBox?.checkButtonInputSize === "md"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
                           
                                 handleInputBoxStyleChange(
-                                  "CheckButtonInputSize",
+                                  "checkButtonInputSize",
                                   "md"
                                 );
                               }
@@ -2007,13 +2015,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-lg"
                             checked={
-                              appState.inputBox?.CheckButtonInputSize === "lg"
+                              appState.inputBox?.checkButtonInputSize === "lg"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
                         
                                 handleInputBoxStyleChange(
-                                  "CheckButtonInputSize",
+                                  "checkButtonInputSize",
                                   "lg"
                                 );
                               }

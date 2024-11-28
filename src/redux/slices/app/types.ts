@@ -85,7 +85,7 @@ export const initialThemeData: Theme = {
   inputBox: {
     inputStyle: "normal",  
     inputSize:"sm", 
-    CheckButtonInputSize:"sm",
+    checkButtonInputSize:"sm",
     inputHeight:2.0,    
     fontSize: 13, 
     fontWeight: 400, 
@@ -124,7 +124,7 @@ export interface Theme {
 export interface inputBox{
   inputStyle:  "normal"|"filled" | "outlined" | "standard";
   inputSize:"sm"|"md"|"lg"|"customize",
-  CheckButtonInputSize:  "sm" | "md" | "lg" ;
+  checkButtonInputSize:  "sm" | "md" | "lg" ;
   inputHeight:number,
   fontSize:number;
   fontWeight:number;

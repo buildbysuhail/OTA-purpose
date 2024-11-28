@@ -37,7 +37,7 @@ import usFlag from '../../../assets/images/flags/us_flag.png'
    inputBox: {
      inputStyle: "normal",
      inputSize: "sm",
-     CheckButtonInputSize: "sm",
+     checkButtonInputSize: "sm",
      inputHeight: 2.0,
      fontSize: 13,
      fontWeight: 400,
@@ -157,8 +157,6 @@ const appStateSlice = createSlice({
     },
     setLocale: (state, action: PayloadAction<Locale>) => {
       state.appState.locale = action.payload;
-      console.log(`statelocale:${action.payload}`);
-      console.log(`state:${state.appState}`);
       
     },
     setScrollbarWidth: (state, action: PayloadAction<"sm" | "md" | "lg">) => {
@@ -167,13 +165,18 @@ const appStateSlice = createSlice({
     setScrollbarColor: (state, action: PayloadAction<string>) => {
       state.appState.scrollbarColor = action.payload;
     },
-    
+    setInputBox: (state, action: PayloadAction<Partial<inputBox>>) => {
+      state.appState.inputBox = {
+        ...state.appState.inputBox,
+        ...action.payload
+      };
+    }
   },
 });
 
 // Extract the actions
 export const {
-  // setInputBox,
+  setInputBox,
   setScrollbarColor,
   setScrollbarWidth,
   setAppState,

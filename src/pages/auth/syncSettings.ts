@@ -1,7 +1,7 @@
 
 import { linkClasses } from "@mui/material";
 import * as switcherdata from "../../../src/components/common/switcher/switcherdata/switcherdata";
-import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle, setLocale, setAppState } from "../../redux/slices/app/reducer";
+import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle, setLocale, setAppState, setInputBox, setScrollbarWidth, setScrollbarColor } from "../../redux/slices/app/reducer";
 import { AppState, Locale, Theme } from "../../redux/slices/app/types";
 import { UserModel, setUserSession } from "../../redux/slices/user-session/reducer";
 import { AppDispatch } from "../../redux/store";
@@ -15,15 +15,14 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
 
 }
 export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSession: UserModel, locale: Locale) => {
-// debugger;
-  // setReloading(true);
-  // let res = await api.get(Urls.getUserThemes);
+
   dispatch(setUserSession(userSession));
 
   setLanguage(dispatch, locale);
 
-  
- dispatch( setAppState(res))
+  dispatch(setInputBox(res.inputBox));
+  dispatch(setScrollbarWidth(res.scrollbarWidth));
+  dispatch(setScrollbarColor(res.scrollbarColor));
  
   dispatch(setMode(res.mode ?? "light"));
   if (res.mode == "light") {

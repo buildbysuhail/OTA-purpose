@@ -7,6 +7,7 @@ import { UserModel, setUserSession } from "../../redux/slices/user-session/reduc
 import { AppDispatch } from "../../redux/store";
 export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   dispatch(setDirection(locale.rtl ? "rtl" : "ltr"));
+  debugger;
   dispatch(setLocale(locale));
 
   localStorage.setItem("ynexltr", locale.rtl ? "rtl" : "ltr");
@@ -23,6 +24,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSe
 
   
  dispatch( setAppState(res))
+ 
   dispatch(setMode(res.mode ?? "light"));
   if (res.mode == "light") {
     dispatch(setMode(res.mode ?? "light"));

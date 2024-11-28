@@ -94,6 +94,7 @@ export const initialThemeData: Theme = {
     borderColor: '128, 128, 128', 
     borderFocus: '128, 128, 128',
     fontColor:'128, 128, 128',
+    labelColor:'128, 128, 128',
     borderRadius: 5, 
     adjustA:0,
     adjustB:0,
@@ -131,6 +132,7 @@ export interface inputBox{
   otherLabelFontSize:number;
   borderColor: string;
   fontColor:string;
+  labelColor:string;
   borderFocus: string;
   borderRadius:number;
   adjustA:number;

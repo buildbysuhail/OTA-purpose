@@ -45,6 +45,7 @@ import usFlag from '../../../assets/images/flags/us_flag.png'
      otherLabelFontSize: 13,
      borderColor: '128, 128, 128',
      fontColor: '128, 128, 128',
+     labelColor:'128, 128, 128',
      borderFocus: '128, 128, 128',
      borderRadius: 5,
      adjustA: 0,
@@ -156,6 +157,9 @@ const appStateSlice = createSlice({
     },
     setLocale: (state, action: PayloadAction<Locale>) => {
       state.appState.locale = action.payload;
+      console.log(`statelocale:${action.payload}`);
+      console.log(`state:${state.appState}`);
+      
     },
     setScrollbarWidth: (state, action: PayloadAction<"sm" | "md" | "lg">) => {
       state.appState.scrollbarWidth = action.payload;

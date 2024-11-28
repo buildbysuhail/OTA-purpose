@@ -155,6 +155,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       borderColor: "128, 128, 128",
       fontColor:"128, 128, 128", 
       borderFocus: "128, 128, 128",
+      labelColor:'128, 128, 128',
       borderRadius: 0,
       adjustA:0,
       adjustB:0,
@@ -1767,7 +1768,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                        )}
                           
                        
-                       <div className="grid grid-cols-3 switcher-style">
+                       <div className="grid grid-cols-2 sm:grid-cols-4 switcher-style">
                         <div className="flex items-center ">
                         <label
                             htmlFor="borderColor"
@@ -1838,6 +1839,43 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               </div>
                             </div>
                         </div>
+
+                           <div className="flex items-center ">
+                        <label
+                            htmlFor="labelColor"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                          >
+                            {" "}
+                            Label Color 
+                          </label>
+                        <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${appState.inputBox?.labelColor??'128, 128, 128'})`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={appState.inputBox?.labelColor}
+                                  onChange={(e) => {
+                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    if (rgb) {
+                                      handleInputBoxStyleChange(
+                                        "labelColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
+                                    }
+                                
+                                    
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                        </div>        
+
                         <div className="flex items-center ">
                         <label
                             htmlFor="borderFocus"

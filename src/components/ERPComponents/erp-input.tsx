@@ -464,7 +464,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
              marginTop: `${appState?.inputBox?.marginTop??0}px`
            }}
          >
-          <TextField {...muiProps} className= {`${appState.mode == 'dark' ? "form-control" : ``}`} />
+          <TextField {...muiProps}
+          // className= {`${appState.mode == 'dark' ? "form-control" : ``}`} 
+          />
           <ERPElementValidationMessage validation={validation} />
           <Typography
             className="text-[#374151] text-xs font-medium mt-1">

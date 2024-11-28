@@ -1,6 +1,6 @@
 import React, { FC, Fragment, useEffect, useMemo, useState } from "react";
 import { connect, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import store, { RootState } from "../../../redux/store";
 import logo1 from "../../../assets/images/brand-logos/logo_dark.png";
 import logo2 from "../../../assets/images/brand-logos/mini_logo.png";
@@ -79,6 +79,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
 
   // const location = useLocation();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const avatarStyle = useMemo(() => {
     return { width: 40, height: 40 };
@@ -695,14 +696,14 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           onMouseLeave={() => Outhover()}
         >
           <div className="main-sidebar-header"> 
-            <a href={`/`} className="header-logo" >
+          <Link to={import.meta.env.BASE_URL} className="header-logo" >
               <img src={logo1} alt="logo" className="desktop-logo" />
               <img src={logo2} alt="logo" className="toggle-logo" />
               <img src={logo3} alt="logo" className="desktop-dark" />
               <img src={logo4} alt="logo" className="toggle-dark" />
               <img src={logo5} alt="logo" className="desktop-white" />
               <img src={logo6} alt="logo" className="toggle-white" />
-            </a>
+         </Link>
           </div>
           <SimpleBar className="main-sidebar" id="sidebar-scroll">
             <nav className="main-menu-container nav nav-pills flex-column sub-open">

@@ -137,7 +137,7 @@ const Urls = {
   getPreference: "/Core/Preferences/GetPreference/",
   getDateRegion: "/Core/Preferences/GetDateRegion/",
   getUserThemes: "/Core/Preferences/GetUserThemes/",
-
+  getInputBox: "/Core/Preferences/GetInputBox/",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",

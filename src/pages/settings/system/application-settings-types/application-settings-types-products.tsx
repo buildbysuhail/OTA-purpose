@@ -28,7 +28,6 @@ export interface ApplicationProductsSettings {
     enableSupplierWiseItemCode: boolean;
     includeSearchItemAlias_ItemName2: boolean;
     lastSystemGeneratedBarcode: number;
-    lastSystemGeneratedBarcodetrue: boolean;
     stopScanningOnWrongBarcodeInSales: boolean;
     enableOrderMangment: boolean;
     enableImportPurchase: boolean;
@@ -49,7 +48,6 @@ export interface ApplicationProductsSettings {
 
 export  const ApplicationProductsSettingsInitialState: ApplicationProductsSettings = {
     setDefaultQty1: true,
-    lastSystemGeneratedBarcodetrue: false,
     allowMultiUnits: true,
     allowMultirate: false,
     batchCriteria: "NB",

@@ -3603,7 +3603,7 @@ export default function SettingsPage() {
             <section
               key="miscellaneous"
               ref={el => sectionsRef.current['miscellaneous'] = el}
-              className="mb-8 last:mb-0">
+              className="mb-8 last:mb-0 h-screen">
               <h1 className="text-2xl font-bold">  Miscelll  </h1>
               <div className="border p-4 flex flex-col gap-6 rounded-lg">
                 <div className="grid xxl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 gap-6">

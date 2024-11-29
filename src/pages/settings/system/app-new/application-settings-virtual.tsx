@@ -27,16 +27,16 @@ const api = new APIClient()
 export default function SettingsPage() {
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const {dataLoaded,
+  const { dataLoaded,
     systemCode,
     setAddSystemCode,
     addSystemCode,
     SystemCodeAddData,
     setSystemCodeAddData,
     isSavingSystemCode,
-    postSystemCode, loadSystemCode,getSystemCode} = useApplicationMiscSettings() ;
+    postSystemCode, loadSystemCode, getSystemCode } = useApplicationMiscSettings();
   // const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
-  const { t } = useTranslation();
+  const { t } = useTranslation("applicationSettings");
 
   const [isLastSystemGeneratedBarcode, setIsLastSystemGeneratedBarcode] = useState(false);
 
@@ -223,9 +223,6 @@ export default function SettingsPage() {
                     General
                   </h1>
                   <div key="mainGeneral" className="space-y-4">
-                    <div className="px-0 pb-6">
-
-                    </div>
                     <div className="border p-4 flex flex-col gap-6 rounded-lg">
                       <div className="grid xxl:grid-cols-5 lg:grid-cols-3 sm:grid-cols-2 gap-6">
                         <ERPDataCombobox
@@ -364,8 +361,8 @@ export default function SettingsPage() {
                           />
                         )}
                       </div>
-                      <div className="grid xxl:grid-cols- lg:grid-cols-2 sm:grid-cols-2 gap-6">
 
+                      <div className="grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6">
                         <div className="flex items-center">
                           <ERPCheckbox
                             id="allowPostdatedTrans"
@@ -401,13 +398,14 @@ export default function SettingsPage() {
                             data={settings?.mainSettings}
                             className="w-20 ml-6 mt-1"
                             value={settings?.mainSettings?.preDatedTransInNumbers}
-                            disabled={!settings?.mainSettings.allowPredatedTrans}
+                            disabled={!settings?.mainSettings?.allowPredatedTrans}
                             onChangeData={(data) => handleFieldChange("mainSettings", "preDatedTransInNumbers", data.preDatedTransInNumbers)}
                           />
                           <label className=" ml-2 mr-2 block form-check-label text-gray-700">Days</label>
                         </div>
                       </div>
-                      <div className="grid xxl:grid-cols-4 lg:grid-cols-4 sm:grid-cols-4 gap-6">
+
+                      <div className='flex items-center justify-between align-left'>
                         <ERPCheckbox
                           id="showReminders"
                           label={t("show_reminders")}
@@ -442,8 +440,7 @@ export default function SettingsPage() {
                         />
                       </div>
 
-                      <div className="grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
-
+                      <div className='flex items-center justify-between'>
                         <ERPCheckbox
                           data={settings?.branchSettings}
                           id="showFinancialYearSelector"
@@ -490,10 +487,13 @@ export default function SettingsPage() {
                           onChangeData={(data: any) =>
                             handleFieldChange("inventorySettings",
                               "keepUserActionInDays",
+
                               parseInt(data.keepUserActionInDays, 10)
                             )
                           }
                         />
+                      </div>
+                      <div className='flex items-center justify-between'>
                         <ERPCheckbox
                           id="maintainMultilanguage__"
                           label={t("maintain_multilanguage")}
@@ -520,12 +520,11 @@ export default function SettingsPage() {
                           label={t("auto_update_release_up_to")}
                           type="number"
                           data={settings?.mainSettings}
-                          value={settings?.mainSettings.autoUpdateReleaseUpTo}
-
+                          value={settings?.mainSettings?.autoUpdateReleaseUpTo}
                           onChangeData={(data) => handleFieldChange("mainSettings", "autoUpdateReleaseUpTo", data.autoUpdateReleaseUpTo)}
                         />
                       </div>
-                      <div className="grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
+                      <div className='flex items-center justify-between'>
                         <ERPCheckbox
                           id="maintainCostCenter"
                           checked={settings?.accountsSettings?.maintainCostCenter}
@@ -546,9 +545,6 @@ export default function SettingsPage() {
                           }}
                           onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultCostCenterID', data.defaultCostCenterID)}
                         />
-                      </div>
-                      <div className="grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
-
                         <ERPCheckbox
                           id="maintainProjectSite"
                           checked={settings?.accountsSettings?.maintainProjectSite}
@@ -556,10 +552,6 @@ export default function SettingsPage() {
                           label={t("maintain_projects/job")}
                           onChangeData={(data) => handleFieldChange("accountsSettings", 'maintainProjectSite', data.maintainProjectSite)}
                         />
-
-                      </div>
-                      <div className="grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
-
                         <ERPDataCombobox
                           id="reportMode"
                           field={{
@@ -577,6 +569,9 @@ export default function SettingsPage() {
                             { value: "Standard", label: "Standard" },
                           ]}
                         />
+                      </div>
+
+                      <div className='flex items-center justify-between'>
                         <ERPDataCombobox
                           id="fileAttachmentMethod"
                           field={{
@@ -614,7 +609,6 @@ export default function SettingsPage() {
                             }
                           />
                         }
-
                       </div>
                     </div>
                     <div className="border p-4 flex flex-col gap-6 rounded-lg">
@@ -642,7 +636,7 @@ export default function SettingsPage() {
                           id="allowSalesRouteArea"
                           label={t("allow_sales_route/area")}
                           data={settings?.mainSettings}
-                          checked={settings?.mainSettings.allowSalesRouteArea}
+                          checked={settings?.mainSettings?.allowSalesRouteArea}
                           onChangeData={(data) => handleFieldChange("mainSettings", "allowSalesRouteArea", data.allowSalesRouteArea)}
                         />
                         {userSession.countryId === Countries.India && (
@@ -658,8 +652,8 @@ export default function SettingsPage() {
                           id="maintainSalesRouteCreditLimit"
                           label={t("maintain_sales")}
                           data={settings?.mainSettings}
-                          disabled={!settings?.mainSettings.allowSalesRouteArea}
-                          checked={settings?.mainSettings.maintainSalesRouteCreditLimit}
+                          disabled={!settings?.mainSettings?.allowSalesRouteArea}
+                          checked={settings?.mainSettings?.maintainSalesRouteCreditLimit}
                           onChangeData={(data) => handleFieldChange("mainSettings", "maintainSalesRouteCreditLimit", data.maintainSalesRouteCreditLimit)}
                         />
 
@@ -2091,7 +2085,7 @@ export default function SettingsPage() {
                 </div>
 
               </div>
-              {userSession.countryId === Countries.Saudi && (
+              {userSession.countryId !== Countries.India && (
                 <div key="inventoryGSTSettings" ref={el => subItemsRef.current["inventoryGSTSettings"] = el}>
                   <h1 className="text-2xl font-bold">
                     GST Settings
@@ -3252,7 +3246,7 @@ export default function SettingsPage() {
                     }
                   </div>
 
-                  <div key="inventorySalesPOS" ref={el => subItemsRef.current["inventorySalesPOS"] = el}>
+                  <div key="inventorySalesPOS" ref={el => subItemsCatRef.current["inventorySalesPOS"] = el}>
                     <h1 className="text-2xl font-bold">
                       POS
                     </h1>
@@ -3371,7 +3365,7 @@ export default function SettingsPage() {
                       </div>
                     </div>
                   </div>
-                  <div key="inventorySalesCounter" ref={el => subItemsRef.current["inventorySalesCounter"] = el}>
+                  <div key="inventorySalesCounter" ref={el => subItemsCatRef.current["inventorySalesCounter"] = el}>
                     <h1 className="text-2xl font-bold">
                       Counter
                     </h1>
@@ -3447,65 +3441,65 @@ export default function SettingsPage() {
               </div>
               <div key="inventoryPPOS" ref={el => subItemsRef.current["inventoryPPOS"] = el}>
                 <h1 className="text-2xl font-bold">
-                  PPOS 
+                  PPOS
                 </h1>
                 <div key="inventoryPPOS" className="space-y-4">
-                    <div className="rounded-lg border p-4">
-                      <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
-                        <ERPCheckbox
-                          id="enableVanSale"
-                          label={t("enable_PPOS_integration")}
+                  <div className="rounded-lg border p-4">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
+                      <ERPCheckbox
+                        id="enableVanSale"
+                        label={t("enable_PPOS_integration")}
+                        data={settings?.branchSettings}
+                        className="h-9 translate-y-[20px] "
+                        checked={settings?.branchSettings?.enableVanSale}
+                        onChangeData={(data) =>
+                          handleFieldChange("branchSettings", "enableVanSale", data.enableVanSale)
+                        }
+                      />
+                      <div className='flex justify-start space-x-3 align-center'>
+                        <ERPInput
+                          id="clientPPOSBranchID"
+                          label={t("PPOS_branchid")}
+                          disabled={settings?.branchSettings?.enableVanSale === false}
+                          className="w-2/3"
+                          value={settings?.branchSettings?.clientPPOSBranchID}
                           data={settings?.branchSettings}
-                          className="h-9 translate-y-[20px] "
-                          checked={settings?.branchSettings?.enableVanSale}
                           onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "enableVanSale", data.enableVanSale)
+                            handleFieldChange("branchSettings", "clientPPOSBranchID", data.clientPPOSBranchID)
                           }
                         />
-                        <div className='flex justify-start space-x-3 align-center'>
-                          <ERPInput
-                            id="clientPPOSBranchID"
-                            label={t("PPOS_branchid")}
-                            disabled={settings?.branchSettings?.enableVanSale === false}
-                            className="w-2/3"
-                            value={settings?.branchSettings?.clientPPOSBranchID}
-                            data={settings?.branchSettings}
-                            onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "clientPPOSBranchID", data.clientPPOSBranchID)
-                            }
-                          />
-                          <ERPButton
-                            title={t("verify")}
-                            disabled={settings?.branchSettings?.enableVanSale === false}
-                            variant="secondary"
-                            className="h-8 translate-y-[20px] "
-                          // onClick={() => sendOtp()}
-                          />
-                        </div>
-                        <ERPInput
-                          id="vanSaleProductSerial"
-                          label={t("PPOS_productSerial")}
+                        <ERPButton
+                          title={t("verify")}
                           disabled={settings?.branchSettings?.enableVanSale === false}
-                          className="w-full"
-                          value={settings?.branchSettings?.vanSaleProductSerial}
-                          data={settings?.branchSettings}
-                          onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "vanSaleProductSerial", data.vanSaleProductSerial)
-                          }
-                        />
-                        <ERPInput
-                          id="pPOSEmail"
-                          label={t("PPOS_email")}
-                          disabled={settings?.branchSettings?.enableVanSale === false}
-                          className="w-full"
-                          value={settings?.branchSettings?.pPOSEmail}
-                          data={settings?.branchSettings}
-                          onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "pPOSEmail", data.pPOSEmail)
-                          }
+                          variant="secondary"
+                          className="h-8 translate-y-[20px] "
+                        // onClick={() => sendOtp()}
                         />
                       </div>
+                      <ERPInput
+                        id="vanSaleProductSerial"
+                        label={t("PPOS_productSerial")}
+                        disabled={settings?.branchSettings?.enableVanSale === false}
+                        className="w-full"
+                        value={settings?.branchSettings?.vanSaleProductSerial}
+                        data={settings?.branchSettings}
+                        onChangeData={(data) =>
+                          handleFieldChange("branchSettings", "vanSaleProductSerial", data.vanSaleProductSerial)
+                        }
+                      />
+                      <ERPInput
+                        id="pPOSEmail"
+                        label={t("PPOS_email")}
+                        disabled={settings?.branchSettings?.enableVanSale === false}
+                        className="w-full"
+                        value={settings?.branchSettings?.pPOSEmail}
+                        data={settings?.branchSettings}
+                        onChangeData={(data) =>
+                          handleFieldChange("branchSettings", "pPOSEmail", data.pPOSEmail)
+                        }
+                      />
                     </div>
+                  </div>
                 </div>
               </div>
               <div key="inventorySchemesPromotions" ref={el => subItemsRef.current["inventorySchemesPromotions"] = el}>
@@ -3607,50 +3601,41 @@ export default function SettingsPage() {
               </div>
             </section>
             <section
-              key="main"
-              ref={el => sectionsRef.current['main'] = el}
+              key="miscellaneous"
+              ref={el => sectionsRef.current['miscellaneous'] = el}
               className="mb-8 last:mb-0">
-
-              <div className="space-y-6">
-                <div key="mainGeneral" ref={el => subItemsRef.current["mainGeneral"] = el}>
-                  <h1 className="text-2xl font-bold">
-                    Miscelll
-                  </h1>
-                  <div key="mainGeneral" className="space-y-4">
-                    <div className="border p-4 flex flex-col gap-6 rounded-lg">
-                      <div className="grid xxl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 gap-6">
+              <h1 className="text-2xl font-bold">  Miscelll  </h1>
+              <div className="border p-4 flex flex-col gap-6 rounded-lg">
+                <div className="grid xxl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 gap-6">
 
 
-                        <div className="flex items-center  justify-between">
-                          <ERPCheckbox
-                            id="sendSMS"
-                            checked={settings?.miscellaneousSettings?.sendSMS}
-                            data={settings?.miscellaneousSettings}
-                            label={t("send_sms")}
-                            onChangeData={(data) => handleFieldChange("miscellaneousSettings", "sendSMS", data.sendSMS)}
-                          />
-                          <ERPInput
-                            id="sMSURL"
-                            value={settings?.miscellaneousSettings?.sMSURL}
-                            data={settings?.miscellaneousSettings}
-                            label={t("url")}
-                            disabled={!settings?.miscellaneousSettings?.sendSMS}
-                            onChangeData={(data) => handleFieldChange("miscellaneousSettings", "sMSURL", data.sMSURL)}
-                          />
+                  <div className="flex items-center  justify-between">
+                    <ERPCheckbox
+                      id="sendSMS"
+                      checked={settings?.miscellaneousSettings?.sendSMS}
+                      data={settings?.miscellaneousSettings}
+                      label={t("send_sms")}
+                      onChangeData={(data) => handleFieldChange("miscellaneousSettings", "sendSMS", data.sendSMS)}
+                    />
+                    <ERPInput
+                      id="sMSURL"
+                      value={settings?.miscellaneousSettings?.sMSURL}
+                      data={settings?.miscellaneousSettings}
+                      label={t("url")}
+                      disabled={!settings?.miscellaneousSettings?.sendSMS}
+                      onChangeData={(data) => handleFieldChange("miscellaneousSettings", "sMSURL", data.sMSURL)}
+                    />
 
-                        </div>
-                      </div>
-                      <div className='grid grid-cols-4 gap-6 border rounded-lg p-4'>
-                        <ERPInput
-                          id="supervisorPassword"
-                          value={settings?.accountsSettings?.supervisorPassword}
-                          data={settings?.accountsSettings}
-                          label={t("supervisor_password")}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'supervisorPassword', data.supervisorPassword)}
-                        />
-                      </div>
-                    </div>
                   </div>
+                </div>
+                <div className='grid grid-cols-4 gap-6 border rounded-lg p-4'>
+                  <ERPInput
+                    id="supervisorPassword"
+                    value={settings?.accountsSettings?.supervisorPassword}
+                    data={settings?.accountsSettings}
+                    label={t("supervisor_password")}
+                    onChangeData={(data) => handleFieldChange("accountsSettings", 'supervisorPassword', data.supervisorPassword)}
+                  />
                 </div>
 
                 {/* ))} */}

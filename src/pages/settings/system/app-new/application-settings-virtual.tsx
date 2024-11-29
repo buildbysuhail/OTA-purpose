@@ -20,12 +20,21 @@ import { isNullOrUndefinedOrEmpty } from '../../../../utilities/Utils';
 import { useApplicationGstSettings } from '../../../../utilities/hooks/use-application-gst-settings';
 import EInvoiceTaxPro from '../e-invoice-taxpro';
 import EWBTaxPro from '../ewb-taxpro';
+import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '../../../../utilities/hooks/use-application-misc-settings';
 
 
 const api = new APIClient()
 export default function SettingsPage() {
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const {dataLoaded,
+    systemCode,
+    setAddSystemCode,
+    addSystemCode,
+    SystemCodeAddData,
+    setSystemCodeAddData,
+    isSavingSystemCode,
+    postSystemCode, loadSystemCode,getSystemCode} = useApplicationMiscSettings() ;
   // const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
   const { t } = useTranslation();
 
@@ -993,7 +1002,7 @@ export default function SettingsPage() {
                           ) : (
                             <ul className="list-none text-center snap-center">
                               {systemCode && systemCode.length > 0 ? (
-                                systemCode.map((code: systemCode, index: number) => (
+                                systemCode.map((code: systemCodeApplicationMiscSettings, index: number) => (
                                   <li className="p-1 text-xs " key={index}>
                                     {code.systemCode}{" "}
                                   </li>
@@ -3436,11 +3445,11 @@ export default function SettingsPage() {
                   </div>
                 </div>
               </div>
-              <div key="mainGeneral" ref={el => subItemsRef.current["mainGeneral"] = el}>
+              <div key="inventoryPPOS" ref={el => subItemsRef.current["inventoryPPOS"] = el}>
                 <h1 className="text-2xl font-bold">
-                  PPOS
+                  PPOS 
                 </h1>
-                <div key="mainGeneral" className="space-y-4">
+                <div key="inventoryPPOS" className="space-y-4">
                   {Number(settings?.branchSettings?.countryName) === Countries.India && (
                     <div className="rounded-lg border p-4">
                       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
@@ -3501,11 +3510,11 @@ export default function SettingsPage() {
                   )}
                 </div>
               </div>
-              <div key="mainGeneral" ref={el => subItemsRef.current["mainGeneral"] = el}>
+              <div key="inventorySchemesPromotions" ref={el => subItemsRef.current["inventorySchemesPromotions"] = el}>
                 <h1 className="text-2xl font-bold">
                   Schemes & Promotions
                 </h1>
-                <div key="mainGeneral" className="space-y-4">
+                <div key="inventorySchemesPromotions" className="space-y-4">
                   <div className="border p-4 flex flex-col gap-6 rounded-lg">
                     <div className="grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6">
                       <div className="flex items-center justify-between sm:justify-between">

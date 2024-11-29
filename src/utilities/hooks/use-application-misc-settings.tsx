@@ -1,17 +1,21 @@
-import { useState, ReactNode } from 'react'
-import { useAppSelector } from './useAppDispatch';
-import { RootState } from '../../redux/store';
-import { ApplicationSettingsType } from '../../pages/settings/system/application-settings-types/application-settings-types';
-import { APIClient } from '../../helpers/api-client';
-
+import { useState } from 'react'
+import { APIClient } from "../../helpers/api-client";
+import Urls from "../../redux/urls";
+import { handleResponse } from '../HandleResponse';
+export interface systemCodeApplicationMiscSettings {
+  systemCode: string;
+}
+const api = new APIClient();
 export const useApplicationMiscSettings = () => {
 
-    const [systemCode, setSystemCode] = useState<systemCode[]>([]);
+    const [systemCode, setSystemCode] = useState<systemCodeApplicationMiscSettings[]>([]);
     const [loadSystemCode, setLoadSystemCode] = useState(false);
     const [isSavingSystemCode, setIsSavingSystemCode] = useState(false);
     const [dataLoaded, setDataLoaded] = useState(false);
     const [addSystemCode, setAddSystemCode] = useState(false);
-    const [SystemCodeAddData, setSystemCodeAddData] = useState<systemCode>({
+    const [showEInvoicePopup, setShowEInvoicePopup] = useState(false);
+    const [showEWBPopup, setShowEWBPopup] = useState(false);
+    const [SystemCodeAddData, setSystemCodeAddData] = useState<systemCodeApplicationMiscSettings>({
         systemCode: "",
     });
 
@@ -60,12 +64,16 @@ export const useApplicationMiscSettings = () => {
 
     
     return {
-        PopupComponent,
-        showEInvoicePopup,
-        showEWBPopup,
-        setShowEInvoicePopup,
-        setShowEWBPopup,
-        handleShowComponent
+      dataLoaded,
+      systemCode,
+      setAddSystemCode,
+      addSystemCode,
+      SystemCodeAddData,
+      setSystemCodeAddData,
+      isSavingSystemCode,
+      postSystemCode,
+      loadSystemCode   ,
+      getSystemCode  
 
     };
 };

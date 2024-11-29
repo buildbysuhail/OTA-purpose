@@ -11,20 +11,28 @@ import togglelogo from "../../../assets/images/brand-logos/mini_logo.png";
 import desktopdark from "../../../assets/images/brand-logos/desktop-dark.png";
 import toggledark from "../../../assets/images/brand-logos/toggle-dark.png";
 import desktopwhite from "../../../assets/images/brand-logos/desktop-dark.png";
-import togglewhite from "../../../assets/images/brand-logos/toggle-white.png";
+import togglewhite from "../../../assets/images/brand-logos/mini_logo.png";
 import SimpleBar from "simplebar-react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppState } from "../../../utilities/hooks/useAppState";
-import { AppState, languagesData, Locale } from "../../../redux/slices/app/types";
-import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import {
+  AppState,
+  languagesData,
+  Locale,
+} from "../../../redux/slices/app/types";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../utilities/hooks/useAppDispatch";
 import LanguageSwitcher from "./language-switcher";
+import { useSelector } from "react-redux";
 
 interface HeaderProps {}
 
 const Header: FC<HeaderProps> = () => {
-    const [languages, setLanguages] = useState<Locale[]>(languagesData);
-  
+  const [languages, setLanguages] = useState<Locale[]>(languagesData);
+
   const { t } = useTranslation();
   const { appState, updateAppState } = useAppState();
   let dispatch = useAppDispatch();
@@ -372,6 +380,9 @@ const Header: FC<HeaderProps> = () => {
       localStorage.removeItem("ynexHeader");
     }
   };
+
+  const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
+
   return (
     <Fragment>
       <header className="app-header">
@@ -421,7 +432,10 @@ const Header: FC<HeaderProps> = () => {
                 >
                   <span></span>
                 </Link> */}
-                <i className="ri-menu-2-line text-2xl mr-2" onClick={() => toggleSidebar()}></i>
+                <i
+                  className="ri-menu-2-line text-2xl mr-2"
+                  onClick={() => toggleSidebar()}
+                ></i>
               </div>
             </div>
 
@@ -609,8 +623,8 @@ const Header: FC<HeaderProps> = () => {
 
                   </div>
               </div> */}
-             <LanguageSwitcher></LanguageSwitcher>
-              <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown !hidden md:!block [--placement:bottom-right] rtl:[--placement:bottom-left]">
+              <LanguageSwitcher></LanguageSwitcher>
+              <div className="header-element py-[1rem] md:px-[0.65rem] px-2 notifications-dropdown header-notification hs-dropdown ti-dropdown  [--placement:bottom-right] rtl:[--placement:bottom-left]">
                 <button
                   id="dropdown-notification"
                   type="button"
@@ -720,7 +734,7 @@ const Header: FC<HeaderProps> = () => {
                   </div>
                 </div>
               </div>
-              <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">
+              <div className="header-element header-apps  lg:py-[1rem]  dark:text-[#8c9097] dark:text-white/50  md:px-[0.65rem]  px-2 hs-dropdown ti-dropdown  [--placement:bottom-left]">
                 <Link
                   to={"/settings"}
                   className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
@@ -823,7 +837,7 @@ const Header: FC<HeaderProps> = () => {
 
                 </div>
               </div> */}
-              <div className="header-element header-fullscreen py-[1rem] md:px-[0.65rem] px-2">
+              <div className="header-element  py-[1rem] md:px-[0.65rem] px-2">
                 <Link
                   to="#"
                   aria-label="anchor"
@@ -837,66 +851,169 @@ const Header: FC<HeaderProps> = () => {
                   )}
                 </Link>
               </div>
-              
-              <div
-                id="dropdown-profile"
-                className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] min-w-[150px]"
-              >
-                <img
-                  className="inline-block rounded-full "
-                  title={userSession?.userimage}
-                  src={userSession?.userimage}
-                  width="32"
-                  height="32"
-                  alt="Image Description"
-                />
-                <div className="md:block hidden dropdown-profile">
-                  <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
-                    {userSession?.displayName}
-                  </p>
-                  <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
-                    {userSession?.userTypeName}
-                  </span>
-                </div>
 
+              {!deviceInfo?.isMobile && (
                 <div
-                  className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
-                  aria-labelledby="dropdown-profile"
+                  id="dropdown-profile"
+                  className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] min-w-[150px]"
                 >
-                  <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                        to="/account-settings/profile/avatar"
-                      >
-                        <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Account Settings
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
-                        to="/switch-organization"
-                      >
-                        <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Organizations{" "}
-                        <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
-                          25
-                        </span>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
-                        to="/logout"
-                      >
-                        <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
-                        Log Out
-                      </Link>
-                    </li>
-                  </ul>
+                  <img
+                    className="inline-block rounded-full "
+                    title={userSession?.userimage}
+                    src={userSession?.userimage}
+                    width="32"
+                    height="32"
+                    alt="Image Description"
+                  />
+                  <div className="md:block hidden dropdown-profile">
+                    <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
+                      {userSession?.displayName}
+                    </p>
+                    <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
+                      {userSession?.userTypeName}
+                    </span>
+                  </div>
+
+                  <div
+                    className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
+                    aria-labelledby="dropdown-profile"
+                  >
+                    <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
+                      <li>
+                        <Link
+                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
+                          to="/account-settings/profile/avatar"
+                        >
+                          <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
+                          Account Settings
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
+                          to="/switch-organization"
+                        >
+                          <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
+                          Organizations{" "}
+                          <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
+                            {userSession?.branches?.length}
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
+                          to="/logout"
+                        >
+                          <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
+                          Log Out
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {deviceInfo?.isMobile && (
+                <div
+                  id="dropdown-profile"
+                  className="cursor-pointer hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] "
+                >
+                  <img
+                    className="inline-block rounded-full "
+                    title={userSession?.userimage}
+                    src={userSession?.userimage}
+                    width="20"
+                    height="20"
+                    alt="Image Description"
+                  />
+                  <div className="md:block hidden dropdown-profile">
+                    <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
+                      {userSession?.displayName}
+                    </p>
+                    <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
+                      {userSession?.userTypeName}
+                    </span>
+                  </div>
+
+                  <div
+                    className="hs-dropdown-menu ti-dropdown-menu !-mt-3 border-0 w-[11rem] !p-0 border-defaultborder hidden main-header-dropdown  pt-0 overflow-hidden header-profile-dropdown dropdown-menu-end"
+                    aria-labelledby="dropdown-profile"
+                  >
+                    <ul className="text-defaulttextcolor font-medium dark:text-[#8c9097] dark:text-white/50">
+                      <li>
+                        {/* <Link
+                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
+                          to="/account-settings/profile/avatar"
+                        >
+                          <img
+                            className="inline-block rounded-full "
+                            title={userSession?.userimage}
+                            src={userSession?.userimage}
+                            width="32"
+                            height="32"
+                            alt="Image Description"
+                          />
+                          <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
+                          {userSession?.displayName}
+                        </Link> */}
+                        <div
+                          id="dropdown-profile"
+                          className="cursor-pointer  hs-dropdown-toggle ti-dropdown-toggle header-element md:!px-[0.65rem] px-2 hs-dropdown !items-center ti-dropdown [--placement:bottom-left] "
+                        >
+                          <img
+                            className="inline-block rounded-full "
+                            title={userSession?.userimage}
+                            src={userSession?.userimage}
+                            width="32"
+                            height="32"
+                            alt="Image Description"
+                          />
+                          <div className="  ">
+                            <p className="font-semibold mb-0 leading-none text-[#536485] text-[0.813rem] ">
+                              {userSession?.displayName}
+                            </p>
+                            <span className="opacity-[0.7] font-normal text-[#536485] block text-[0.6875rem] ">
+                              {userSession?.userTypeName}
+                            </span>
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <Link
+                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
+                          to="/account-settings/profile/avatar"
+                        >
+                          <i className="ti ti-user-circle text-[1.125rem] me-2 opacity-[0.7]"></i>
+                          Account Settings
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="w-full ti-dropdown-item !text-[0.8125rem] !gap-x-0  !p-[0.65rem] !inline-flex"
+                          to="/switch-organization"
+                        >
+                          <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
+                          Organizations{" "}
+                          <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
+                            {userSession?.branches?.length}
+                          </span>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="w-full ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
+                          to="/logout"
+                        >
+                          <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
+                          Log Out
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+
               {/* <div className="header-element md:px-[0.48rem]">
                 <button aria-label="button" type="button"
                   className="hs-dropdown-toggle switcher-icon inline-flex flex-shrink-0 justify-center items-center gap-2  rounded-full font-medium  align-middle transition-all text-xs dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"

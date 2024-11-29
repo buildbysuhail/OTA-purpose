@@ -1,0 +1,177 @@
+import { useTranslation } from "react-i18next";
+import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
+import { Fragment, useState } from "react";
+import { useRootState } from "../../../../utilities/hooks/useRootState";
+import { DevGridColumn } from "../../../../components/types/dev-grid-column";
+import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
+import Urls from "../../../../redux/urls";
+import { ActionType } from "../../../../redux/types";
+import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
+interface DailySummaryGlobal {
+
+  from: Date
+}
+const DailySummaryGlobal = () => {
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const [payable, setPayable] = useState<boolean>(() => {
+  //   const payableParam = searchParams.get("payable");
+  //   return payableParam === "true"; // Convert the string to boolean
+  // });
+  const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+  const rootState = useRootState();
+  const columns: DevGridColumn[] = [
+    {
+      dataField: "date",
+      caption: t('date'),
+      dataType: "date",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 50,
+    },
+    {
+      dataField: "party",
+      caption: t("party"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+  
+    {
+      dataField: "billed",
+      caption: t("billed"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "received",
+      caption: t("received"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+{
+      dataField: "balance",
+      caption: t("balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    
+    {
+      dataField: "voucherNumber",
+      caption:  t("voucher_no"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "ledgerCode",
+      caption: t("ledger_code"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "ledgerName",
+      caption: t("ledger_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "amount",
+      caption: t("amount"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    
+   
+   
+    {
+      dataField: "balanceAmount",
+      caption: t('balance_amount'),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "balance",
+      caption: t("balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    
+    {
+      dataField: "ledger_Balance",
+      caption: t("ledger_balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "creditLimit",
+      caption: t("credit_limit"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+    {
+      dataField: "userName",
+      caption: t("user_name"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+     {
+      dataField: "signature",
+      caption: t("signature"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 150,
+    },
+  ];
+  return (
+    <Fragment>
+      <div className="grid grid-cols-12 gap-x-6">
+        <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
+          <div className="">
+            <div className="p-4">
+              <div className="grid grid-cols-1 gap-3">
+                <ErpDevGrid
+                  columns={columns}
+                  gridHeader={t("daily_summary_receipt_details")}
+                  dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
+                  method={ActionType.POST}
+                  gridId="grd_cost_centre"
+                  popupAction={toggleCostCentrePopup}
+                  // allowEditing={false}
+                  hideGridAddButton={true}
+                  // gridAddButtonType="popup"
+                  reload={true}
+                ></ErpDevGrid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </Fragment>
+  );
+};
+
+export default DailySummaryGlobal;

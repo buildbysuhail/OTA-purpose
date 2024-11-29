@@ -12,7 +12,6 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 export const CostCentreManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleClear,
@@ -30,16 +29,13 @@ export const CostCentreManage = () => {
         ),
       [dispatch]
     ),
-    onClose:useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null, })), [dispatch]),
     key: rootState.PopupData.costCentre.key,
     keyField: "costCentreID",
     useApiClient: true,
     initialData: initialCostCentre,
   });
-
-
-  const { t } = useTranslation();
-
+  const { t } = useTranslation("masters");
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">

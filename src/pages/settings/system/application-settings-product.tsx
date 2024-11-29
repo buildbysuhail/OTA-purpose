@@ -11,6 +11,7 @@ import { t } from "i18next";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { RootState } from "../../../redux/store";
 import { ApplicationProductsSettings, ApplicationProductsSettingsInitialState } from "./application-settings-types/application-settings-types-products";
+import { useTranslation } from "react-i18next";
 
 const ApplicationSettingsProduct = () => {
   const [formState, setFormState] = useState<ApplicationProductsSettings>(ApplicationProductsSettingsInitialState);
@@ -21,6 +22,8 @@ const ApplicationSettingsProduct = () => {
   const api = new APIClient();
   const dispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const { t } = useTranslation("applicationSettings");
+
   useEffect(() => {
     loadSettings();
   }, []);

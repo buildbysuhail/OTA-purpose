@@ -1,0 +1,40 @@
+{
+    "users": "Users",
+    "si_no": "SiNo",
+    "user": "User",
+    "password": "Password",
+    "counter": "Counter",
+    "usertype": "UserType",
+    "created_user": "Created User",
+    "created_date": "Created Date",
+    "modified_user": "Modified User",
+    "modified_date": "Modified Date",
+    "employee_id": "Employee ID",
+    "employee_name": "Employee Name",
+    "max_dis%": "Maximum Discount %",
+    "passkey": "Passkey",
+    "actions": "Actions",
+
+    "username": "User Name",
+    "confirm_password": "Confirm Password",
+    "email": "Email",
+    "mobile": "Mobile",
+    "name":"Name",
+    "employee": "Employee",
+    
+    "code": "Code",
+    "remarks": "Remarks",
+
+    "user_type_name": "User Type Name",
+    "user_type_code": "UserTypeCode",
+    "is_editable": "Is Editable",
+    "is_deletable": "Is Deletable",
+
+    "user_type": "User Type",
+    "select_all_add": "Select All Add",
+    "select_all_print": "Select All Print",
+    "select_all_edit": "Select All Edit",
+    "select_all_export": "Select All Export",
+    "select_all_delete": "Select All Delete",
+    "inherit_rights_from_usertype": "Inherit Rights From UserType"
+}

@@ -11,12 +11,10 @@ import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
 import { UserManage } from "./user-manage";
 
 const Users = () => {
-
   const MemoizedUsersManage = useMemo(() => React.memo(UserManage), []);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("userManage");
   const rootState = useRootState();
-
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
@@ -145,7 +143,6 @@ const Users = () => {
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => {
-
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
@@ -154,9 +151,7 @@ const Users = () => {
           //   confirmationRequired: true,
           //   confirmationMessage: "Are you sure you want to delete this item?",
           //   url:Urls?.Users,key:cellElement?.data?.user
-
           // }}
-
           //user can't delete
           />
         )
@@ -197,5 +192,4 @@ const Users = () => {
     </Fragment>
   );
 };
-
 export default React.memo(Users);

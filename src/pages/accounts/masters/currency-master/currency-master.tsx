@@ -13,9 +13,8 @@ import { CurrencyMasterManage } from "./currency-master-manage";
 
 const CurrencyMaster = () => {
   const MemoizedCurrencyMasterManage = useMemo(() => React.memo(CurrencyMasterManage), []);
-
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     // {
@@ -146,6 +145,4 @@ const CurrencyMaster = () => {
     </Fragment>
   );
 };
-
 export default React.memo(CurrencyMaster);
-

@@ -16,7 +16,6 @@ const api = new APIClient();
 export const AccountLedgerManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     // formState: postData,
@@ -35,12 +34,7 @@ export const AccountLedgerManage = () => {
     useApiClient: true,
     initialData: initialAccountLedger
   });
-
-
-  useEffect(() => {
-    load();
-  }, []);
-
+  useEffect(() => { load(); }, []);
   const load = async () => {
     try {
       const res = await api.getAsync(Urls.data_getNextLedgerCode);
@@ -52,7 +46,7 @@ export const AccountLedgerManage = () => {
     }
   };
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
 
   return (
     <div className="w-full pt-4">

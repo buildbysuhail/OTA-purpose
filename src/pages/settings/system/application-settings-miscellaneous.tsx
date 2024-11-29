@@ -33,10 +33,8 @@ const MiscellaneousSettingsForm: React.FC = () => {
   const [isSavingSystemCode, setIsSavingSystemCode] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const [addSystemCode, setAddSystemCode] = useState(false);
-  const [SystemCodeAddData, setSystemCodeAddData] = useState<systemCode>({
-    systemCode: "",
-  });
-  const { t } = useTranslation();
+  const [SystemCodeAddData, setSystemCodeAddData] = useState<systemCode>({systemCode: "", });
+  const { t } = useTranslation("applicationSettings");
   const dispatch = useAppDispatch();
   useEffect(() => {
     loadSettings();
@@ -333,7 +331,7 @@ const MiscellaneousSettingsForm: React.FC = () => {
                         systemCode: e.target.value,
                       });
                     }}
-                    placeholder={"enter_new_system_code"}
+                    placeholder={t('enter_new_system_code')}
                   />
 
                 )}

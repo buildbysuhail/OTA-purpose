@@ -13,11 +13,9 @@ import { BranchLedgerManage } from "./branch-ledger-manage";
 const BranchLedger = () => {
 
   const MemoizedBranchLedgerManage = useMemo(() => React.memo(BranchLedgerManage), []);
-
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
-
   const columns: DevGridColumn[] = [
     {
       dataField: "branchLedgerID",
@@ -110,8 +108,8 @@ const BranchLedger = () => {
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-              url:Urls?.branch_ledger,key:cellElement?.data?.branchLedgerID
-              // action: () => handleDelete(cellInfo?.data?.id),
+            url: Urls?.branch_ledger, key: cellElement?.data?.branchLedgerID
+            // action: () => handleDelete(cellInfo?.data?.id),
           }}
         />
       ),
@@ -153,6 +151,4 @@ const BranchLedger = () => {
     </Fragment>
   );
 };
-
 export default React.memo(BranchLedger);
-

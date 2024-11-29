@@ -8,6 +8,7 @@ import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
 import { t } from "i18next";
 import { ApplicationBackupSettings, ApplicationBackupSettingsInitialState } from "./application-settings-types/application-settings-types-backup";
+import { useTranslation } from "react-i18next";
 
 const BackupSettingsForm: React.FC = () => {
   const [formState, setFormState] = useState<ApplicationBackupSettings>(ApplicationBackupSettingsInitialState);
@@ -16,6 +17,7 @@ const BackupSettingsForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const api = new APIClient();
+  const { t } = useTranslation("applicationSettings");
 
   useEffect(() => {
     loadSettings();

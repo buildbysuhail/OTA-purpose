@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { toggleBranchLedgerPopup } from "../../../../redux/slices/popup-reducer";
-import ERPButton from "../../../../components/ERPComponents/erp-button";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
@@ -13,7 +12,6 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 export const BranchLedgerManage = () => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleClear,
@@ -25,16 +23,14 @@ export const BranchLedgerManage = () => {
     handleClose
   } = useFormManager<BranchLedgerData>({
     url: Urls.branch_ledger,
-    onClose:useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.branchLedger.key,
     keyField: "branchLedgerID",
     useApiClient: true,
     initialData: initialBranchLedger
   });
-
-
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
 
   return (
     <div className="w-full pt-4">
@@ -60,8 +56,8 @@ export const BranchLedgerManage = () => {
             required: true,
             freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null ? true : false,
             getListUrl: formState?.data?.refBranchID || formState?.data?.refBranchID == null || formState?.data?.refBranchID == 0
-            ? `${Urls.data_PurchaseAccount}${formState?.data?.refBranchID}`
-            : `${Urls.data_PurchaseAccount}`,
+              ? `${Urls.data_PurchaseAccount}${formState?.data?.refBranchID}`
+              : `${Urls.data_PurchaseAccount}`,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -75,7 +71,7 @@ export const BranchLedgerManage = () => {
           field={{
             id: "receivableLedgerID",
             required: true,
-            getListUrl:`${Urls.data_BranchRecPayAccount}${0}`,
+            getListUrl: `${Urls.data_BranchRecPayAccount}${0}`,
             valueKey: "id",
             labelKey: "name",
           }}
@@ -91,8 +87,8 @@ export const BranchLedgerManage = () => {
             required: true,
             freezeDataLoad: formState?.data?.refBranchID == undefined || formState?.data?.refBranchID == null || formState?.data?.refBranchID == 0 ? true : false,
             getListUrl: formState?.data?.refBranchID || formState?.data?.refBranchID == null || formState?.data?.refBranchID == 0
-            ? `${Urls.data_BranchRecPayAccount}${formState?.data?.refBranchID}`
-            : `${Urls.data_BranchRecPayAccount}`,
+              ? `${Urls.data_BranchRecPayAccount}${formState?.data?.refBranchID}`
+              : `${Urls.data_BranchRecPayAccount}`,
             valueKey: "id",
             labelKey: "name",
           }}

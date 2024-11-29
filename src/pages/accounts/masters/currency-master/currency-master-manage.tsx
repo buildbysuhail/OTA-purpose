@@ -1,8 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
-import {
-  toggleCurrencyMasterPopup,
-} from "../../../../redux/slices/popup-reducer";
+import { toggleCurrencyMasterPopup, } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
@@ -10,27 +8,22 @@ import { ERPFormButtons } from "../../../../components/ERPComponents/erp-form-bu
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
-import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import { CurrencyData, initialCurrency } from "./currency-master-manage-type";
 
 export const CurrencyMasterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
+  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, handleClose } =
     useFormManager<CurrencyData>({
       url: Urls.account_currency_master,
-      onClose:useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,})), [dispatch]),
+      onClose: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, })), [dispatch]),
       onSuccess: useCallback(() => dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
       key: rootState.PopupData.currencyMaster.key,
-      keyField:"currencyId",
+      keyField: "currencyId",
       useApiClient: true,
       initialData: initialCurrency,
     });
-
-
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 xxl:grid-cols-3 gap-3">

@@ -13,9 +13,8 @@ import { PartyCategoryManage } from "./party-category-manage";
 const PartyCategory = () => {
 
   const MemoizedPartyCategoryManage = useMemo(() => React.memo(PartyCategoryManage), []);
-
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -161,6 +160,4 @@ const PartyCategory = () => {
     </Fragment>
   );
 };
-
 export default React.memo(PartyCategory);
-

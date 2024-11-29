@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 export const UserManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const {t} = useTranslation();
+  const {t} = useTranslation("userManage");
   const {
     isEdit,
     handleSubmit,
@@ -93,7 +93,6 @@ export const UserManage: React.FC = React.memo(() => {
             valueKey: "id",
             labelKey: "name",
           }}
-          
           label={t("usertype")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("userTypeCode", data.userTypeCode)}

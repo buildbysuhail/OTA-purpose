@@ -1,9 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
-import {
-  toggleAccountGroupPopup,
-  toggleGroupOrder,
-} from "../../../../redux/slices/popup-reducer";
+import { toggleAccountGroupPopup, toggleGroupOrder, } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
 import { useFormManager } from "../../../../utilities/hooks/useFormManagerOptions";
@@ -20,14 +17,11 @@ import { handleResponse } from "../../../../utilities/HandleResponse";
 import { APIClient } from "../../../../helpers/api-client";
 
 const api = new APIClient();
-
 export const AccountGroupManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   //  =================this for groupOrder ERPModels ============
   const [formData, setFormData] = useState<GroupOrder[]>([]);
-
   const onSubmit = async () => {
     try {
       const response = await api.post(Urls.acc_group_order, formData);
@@ -60,9 +54,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialAccountGroup,
   });
-
-
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
 
   return (
     <div className="w-full pt-4">
@@ -135,7 +127,6 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             }
           />
         }
-
         {1 != 1 &&
           <>
             <ERPCheckbox
@@ -161,10 +152,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             e.preventDefault();
             dispatch(toggleGroupOrder({ isOpen: true }));
           }}
-          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500"
-        >
-          Group Order(in trial balance)
-        </a>
+          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">Group Order(in trial balance)</a>
       </div>
       <ERPFormButtons
         onClear={handleClear}

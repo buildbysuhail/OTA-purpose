@@ -1,19 +1,19 @@
-// import the original type declarations
 import "i18next";
-// import all namespaces (for the default language, only)
-import ns1 from "../i18n/locales/en/translations.json";
-import ns2 from "../i18n/locales/ar/translations.json";
+import mainEn from "./locales/en/main-En.json";
+import mastersEn from "./locales/en/masters-En.json";
+import userManageEn from "./locales/en/userManage-En.json";
+import administrationEn from "./locales/en/administration-En.json";
+import applicationSettingsEn from "./locales/en/applicationSettings-En.json";
 
 declare module "i18next" {
-  // Extend CustomTypeOptions
   interface CustomTypeOptions {
-    // custom namespace type, if you changed it
-    defaultNS: "ns1";
-    // custom resources type
+    defaultNS: "main";
     resources: {
-      ns1: typeof ns1;
-      ns2: typeof ns2;
+      main: typeof mainEn; 
+      masters: typeof mastersEn;
+      userManage: typeof userManageEn;
+      administration: typeof administrationEn;
+      applicationSettings:typeof applicationSettingsEn
     };
-    // other
   }
 }

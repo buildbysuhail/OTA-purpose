@@ -9,8 +9,7 @@ import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-butto
 import React from "react";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import { initialDataUserType } from "./user-manage-types";
-import { t } from "i18next";
-import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { useTranslation } from "react-i18next";
 
 interface UserTypeData {
   userTypeName: string;
@@ -21,7 +20,6 @@ interface UserTypeData {
 export const UserTypeManage : React.FC = React.memo(() =>  {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -39,6 +37,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
     useApiClient: true,
     initialData: initialDataUserType
   });
+  const {t}=useTranslation("userManage");
 
   return (
     <div className="w-full pt-4">
@@ -83,8 +82,6 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
         onCancel={handleClose}
         onSubmit={handleSubmit}
       />
-       
     </div>
   );
 });
-

@@ -13,9 +13,8 @@ import { useTranslation } from "react-i18next";
 const AccountLedgerType = () => {
   const MemoizedAccountLedgerManage = useMemo(() => React.memo(AccountLedgerManage), []);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
-
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
@@ -45,7 +44,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "ledger",
@@ -54,7 +53,7 @@ const AccountLedgerType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth:200
+      minWidth: 200
     },
     {
       dataField: "accountGroup",
@@ -135,7 +134,7 @@ const AccountLedgerType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width:100,
+      width: 100,
     },
     {
       dataField: "accountGroupId",
@@ -145,7 +144,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "isBillwiseApplicable",
@@ -207,7 +206,7 @@ const AccountLedgerType = () => {
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
-            url:Urls?.account_ledger,key:cellElement?.data?.id
+            url: Urls?.account_ledger, key: cellElement?.data?.id
 
           }}
         />

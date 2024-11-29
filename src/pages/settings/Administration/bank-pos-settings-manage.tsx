@@ -17,7 +17,6 @@ export interface BankPoseData {
   geldeaWsPort?: string;
   gediaService?: string;
 }
-
 const initialBankPosData = {
   data: {
     machineBrand: "",
@@ -36,9 +35,8 @@ const initialBankPosData = {
 };
 
 const BankPosSettingsManage: React.FC = React.memo(() => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("administration");
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleClear,
@@ -60,8 +58,6 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
     initialData: initialBankPosData
   });
 
-;
-
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -80,7 +76,6 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
             handleFieldChange("machineBrand", data.machineBrand)
           }
         />
-
         <ERPDataCombobox
           {...getFieldProps("model")}
           id="model"
@@ -94,7 +89,6 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
           label={t("model")}
           onChangeData={(data: any) => handleFieldChange("model", data.model)}
         />
-
         <ERPDataCombobox
           {...getFieldProps("comPort")}
           id="comPort"
@@ -110,7 +104,6 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
             handleFieldChange("comPort", data.comPort)
           }
         />
-
         <ERPInput
           {...getFieldProps("geldeaWsPort")}
           label={t("geldea_ws_port")}

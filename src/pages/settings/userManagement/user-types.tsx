@@ -12,13 +12,11 @@ import { useTranslation } from "react-i18next";
 import React from "react";
 
 const UserTypes = () => {
-
   const MemoizedUserTypeManage = useMemo(() => React.memo(UserTypeManage), []);
   const dispatch = useAppDispatch();
-  const {t}=useTranslation();
+  const { t } = useTranslation("userManage");
   const rootState = useRootState();
-
-  const columns: DevGridColumn[] = useMemo(() =>[
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "userTypeName",
       caption: t("usertype"),
@@ -47,14 +45,13 @@ const UserTypes = () => {
     },
     {
       dataField: "actions",
-      caption: "Actions",
+      caption: t("actions"),
       allowSearch: false,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => {
-        
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode }) }}
@@ -63,31 +60,31 @@ const UserTypes = () => {
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
               // action: () => handleDelete(cellInfo?.data?.id),
-              url:Urls?.UserTypes,key:cellElement?.data?.userTypeCode
+              url: Urls?.UserTypes, key: cellElement?.data?.userTypeCode
             }}
           />
         )
       },
-      }
-  ],[]);
+    }
+  ], []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
             {/* <div className="box-body"> */}
-              <div className="grid grid-cols-1 gap-3">
-                <ERPDevGrid
-                  columns={columns}
-                  gridHeader={t("usertype")}
-                  dataUrl={Urls.UserTypes}
-                  gridId="grd_user_type"
-                  popupAction={toggleUserTypePopup}
-                  gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.userType?.reload}
-                  gridAddButtonIcon="ri-add-line"
-                ></ERPDevGrid>
-              </div>
+            <div className="grid grid-cols-1 gap-3">
+              <ERPDevGrid
+                columns={columns}
+                gridHeader={t("usertype")}
+                dataUrl={Urls.UserTypes}
+                gridId="grd_user_type"
+                popupAction={toggleUserTypePopup}
+                gridAddButtonType="popup"
+                reload={rootState?.PopupData?.userType?.reload}
+                gridAddButtonIcon="ri-add-line"
+              ></ERPDevGrid>
+            </div>
             {/* </div> */}
           </div>
         </div>
@@ -105,5 +102,4 @@ const UserTypes = () => {
     </Fragment>
   );
 };
-
 export default React.memo(UserTypes);

@@ -48,9 +48,8 @@ export interface CompanyProfileData {
 }
 
 const CompanyProfileManageIndia: React.FC = React.memo(() => {
-
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("administration");
   const {
     isEdit,
     handleSubmit,
@@ -65,7 +64,6 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
     onSuccess: useCallback(() => dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true
-
   });
 
   return (
@@ -133,7 +131,6 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
             handleFieldChange("stateName", data.stateName)
           }}
           label={t("state_name")}
-         
         />
         <ERPInput
           {...getFieldProps("stateCode")}
@@ -255,7 +252,6 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
           placeholder={t("ifsc")}
           onChangeData={(data: any) => handleFieldChange("ifsc", data.ifsc)}
         />
-
       </div>
       <ERPFormButtons
         onClear={handleClear}
@@ -267,5 +263,4 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
     </div>
   );
 });
-
 export default CompanyProfileManageIndia;

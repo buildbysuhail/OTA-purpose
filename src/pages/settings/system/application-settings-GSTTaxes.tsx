@@ -12,6 +12,7 @@ import EWBTaxPro from './ewb-taxpro';
 import ERPDisableEnable from '../../../components/ERPComponents/erp-disable-inable';
 import { isNullOrUndefinedOrEmpty } from '../../../utilities/Utils';
 import { ApplicationGstSettings, ApplicationGstSettingsInitialState } from './application-settings-types/application-settings-types-gst';
+import { useTranslation } from 'react-i18next';
 
 const api = new APIClient();
 // const [changedSettings, setChangedSettings] = useState<Partial<TaxSettingsFormState>>({});
@@ -48,6 +49,7 @@ const ERPSettingsFormGSTTaxes = () => {
   const [showEInvoicePopup, setShowEInvoicePopup] = useState<boolean>(false);
   const [showEWBPopup, setShowEWBPopup] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation("applicationSettings");
 
   const handleShowComponent = (component: 'eInvoice' | 'ewb') => {
     if (component === 'eInvoice') {

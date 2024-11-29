@@ -14,99 +14,99 @@ const Upi = () => {
 
   const MemoizedUpiManage = useMemo(() => React.memo(UpiManage), []);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
     {
-        dataField: "paymentTypeID",
-        caption: t("payment_type_ID"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "branchID",
-        caption: t('branch_ID'),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
-      {
-        dataField: "ledgerID",
-        caption: t("ledger_ID"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "paymentType",
-        caption: t("payment_type"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "paymentName",
-        caption: t("payment_name"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "createdUserID",
-        caption: t("created_user_ID"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "createdDate",
-        caption: t("created_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "modifiedUserID",
-        caption: t("modified_user_ID"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "modifiedDate",
-        caption: t("modified_date"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 150,
-      },
-      {
-        dataField: "remark",
-        caption: t("remarks"),
-        dataType: "string",
-        allowSorting: true,
-        allowSearch: true,
-        allowFiltering: true,
-        minWidth: 100,
-      },
+      dataField: "paymentTypeID",
+      caption: t("payment_type_ID"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+    {
+      dataField: "branchID",
+      caption: t('branch_ID'),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
+    {
+      dataField: "ledgerID",
+      caption: t("ledger_ID"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    {
+      dataField: "paymentType",
+      caption: t("payment_type"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    {
+      dataField: "paymentName",
+      caption: t("payment_name"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    {
+      dataField: "createdUserID",
+      caption: t("created_user_ID"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    {
+      dataField: "createdDate",
+      caption: t("created_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    {
+      dataField: "modifiedUserID",
+      caption: t("modified_user_ID"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    {
+      dataField: "modifiedDate",
+      caption: t("modified_date"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 150,
+    },
+    {
+      dataField: "remark",
+      caption: t("remarks"),
+      dataType: "string",
+      allowSorting: true,
+      allowSearch: true,
+      allowFiltering: true,
+      minWidth: 100,
+    },
     {
       dataField: "actions",
       caption: t("actions"),
@@ -116,7 +116,6 @@ const Upi = () => {
       fixedPosition: "right",
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => {
-
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID }) }}
@@ -124,7 +123,7 @@ const Upi = () => {
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
-              url:Urls?.account_group,key:cellElement?.data?.paymentTypeID
+              url: Urls?.account_group, key: cellElement?.data?.paymentTypeID
             }}
           />
         )
@@ -140,7 +139,7 @@ const Upi = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={rootState.UserSession.countryId ==Countries.India ? t("upi") : t("qr_pay")}
+                  gridHeader={rootState.UserSession.countryId == Countries.India ? t("upi") : t("qr_pay")}
                   dataUrl={Urls.upi}
                   gridId="grd_acc_group"
                   popupAction={toggleUpi}
@@ -155,7 +154,7 @@ const Upi = () => {
       </div>
       <ERPModal
         isOpen={rootState.PopupData.upi.isOpen || false}
-        title={rootState.UserSession.countryId ==Countries.India ? t("upi") : t("qr_pay")}                                                                                    
+        title={rootState.UserSession.countryId == Countries.India ? t("upi") : t("qr_pay")}
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
@@ -166,5 +165,4 @@ const Upi = () => {
     </Fragment>
   );
 };
-
 export default React.memo(Upi);

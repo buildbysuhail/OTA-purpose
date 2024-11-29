@@ -13,7 +13,6 @@ import { BankCardsData, initialBankCards } from "./bank-cards-type";
 export const BankCardsManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -25,15 +24,14 @@ export const BankCardsManage: React.FC = React.memo(() => {
   } = useFormManager<BankCardsData>({
     url: Urls.bankCards,
     onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
-    onClose:useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, })), [dispatch]),
     key: rootState.PopupData.bankCard.key,
-    keyField:"paymentTypeID",
+    keyField: "paymentTypeID",
     useApiClient: true,
     loadDataRequired: true,
     initialData: initialBankCards,
   });
-
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
 
   return (
     <div className="w-full pt-4">
@@ -42,13 +40,13 @@ export const BankCardsManage: React.FC = React.memo(() => {
           {...getFieldProps("paymentType")}
           field={{
             id: "paymentType",
-            
+
             valueKey: "value",
             labelKey: "label",
           }}
           onChange={(data: any) => {
             debugger;
-            handleFieldChange({paymentType: data.value, paymentName: data.label})
+            handleFieldChange({ paymentType: data.value, paymentName: data.label })
           }}
           label={t("bank_cards")}
           options={[
@@ -80,7 +78,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
             { value: 'EASYSHOP_CARD', label: 'EASYSHOP CARD' },
             { value: 'PRESTIGE_CARD', label: 'PRESTIGE CARD' }
           ]}
-          
+
         />
         <ERPInput
           {...getFieldProps('paymentName')}
@@ -109,7 +107,6 @@ export const BankCardsManage: React.FC = React.memo(() => {
           placeholder={t("remarks")}
           onChangeData={(data: any) => handleFieldChange('remark', data.remark)}
         />
-
       </div>
       <ERPFormButtons
         onClear={handleClear}

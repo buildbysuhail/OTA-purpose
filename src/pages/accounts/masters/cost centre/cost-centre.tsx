@@ -12,9 +12,8 @@ import { CostCentreManage } from "./cost-centre-manage";
 
 const CostCentre = () => {
   const MemoizedCostCentreManage = useMemo(() => React.memo(CostCentreManage), []);
-
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -106,5 +105,4 @@ const CostCentre = () => {
     </Fragment>
   );
 };
-
 export default React.memo(CostCentre);

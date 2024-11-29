@@ -11,19 +11,17 @@ import ERPDisableEnable from "../../../components/ERPComponents/erp-disable-inab
 import { t } from "i18next";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { ApplicationBranchSettings, ApplicationBranchSettingsInitialState } from "./application-settings-types/application-settings-types-branch";
+import { useTranslation } from "react-i18next";
 
 const BranchSettingsForm: React.FC = () => {
-  const [formState, setFormState] = useState<ApplicationBranchSettings>(
-    ApplicationBranchSettingsInitialState
-  );
-  const [formStatePrev, setFormStatePrev] = useState<
-    Partial<ApplicationBranchSettings>
-  >({});
+  const [formState, setFormState] = useState<ApplicationBranchSettings>(ApplicationBranchSettingsInitialState );
+  const [formStatePrev, setFormStatePrev] = useState<  Partial<ApplicationBranchSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const api = new APIClient();
   const dispatch = useAppDispatch();
+  const { t } = useTranslation("applicationSettings");
 
   useEffect(() => {
     loadSettings();

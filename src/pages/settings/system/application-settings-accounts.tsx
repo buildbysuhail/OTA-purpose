@@ -15,6 +15,7 @@ import { RootState } from '../../../redux/store';
 import { BusinessType } from '../../../enums/business-types';
 import useApplicationSetting from '../../../utilities/hooks/use-application-settings';
 import { ApplicationAccountSettings, ApplicationAccountSettingsInitialState } from './application-settings-types/application-settings-types-accounts';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -22,13 +23,14 @@ const api = new APIClient();
 const ApplicationSettingsAccounts = () => {
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-
   const dispatch = useDispatch();
   const [formState, setFormState] = useState<ApplicationAccountSettings>(ApplicationAccountSettingsInitialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationAccountSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isScrollingDisabled, setIsScrollingDisabled] = useState(false);
+  const { t } = useTranslation("applicationSettings");
+
   useEffect(() => {
     loadSettings();
   }, []);

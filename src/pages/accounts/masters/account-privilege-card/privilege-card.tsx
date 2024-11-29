@@ -7,19 +7,18 @@ import { togglePrivilegeCardPopup } from "../../../../redux/slices/popup-reducer
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
-import { useTranslation } from "react-i18next";
 import { PrivilegeCardManage } from "./privilege-card-manage";
+import { useTranslation } from "react-i18next";
 
 const PrivilegeCard = () => {
   const MemoizedPrivilegeCardrManage = useMemo(() => React.memo(PrivilegeCardManage), []);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
   const rootState = useRootState();
-
+  const { t } = useTranslation("masters");
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "privilegeCardsID",
-      caption: t("privilege_card_ID"),
+      caption: t("privilege_card_id"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -175,7 +174,7 @@ const PrivilegeCard = () => {
         />
       ),
     },
-  ], []);
+  ], [t]);
 
   return (
     <Fragment>
@@ -212,5 +211,4 @@ const PrivilegeCard = () => {
     </Fragment>
   );
 };
-
 export default React.memo(PrivilegeCard);

@@ -10,12 +10,10 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { AccountGroupManage } from "./account-group-manage";
 import { useTranslation } from "react-i18next";
 const AccountGroupType = () => {
-
   const MemoizedAccountGroupManage = useMemo(() => React.memo(AccountGroupManage), []);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
-
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
@@ -35,7 +33,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 50,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "accountGroup",
@@ -44,7 +42,7 @@ const AccountGroupType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth:200
+      minWidth: 200
     },
     {
       dataField: "shortName",
@@ -54,7 +52,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-     
+
     },
     {
       dataField: "parentGroup",
@@ -82,7 +80,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-     
+
     },
     {
       dataField: "isDeletable",
@@ -92,7 +90,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-     
+
     },
     {
       dataField: "isProtected",
@@ -102,7 +100,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-     
+
     },
     {
       dataField: "isCommon",
@@ -112,7 +110,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-     
+
     },
     {
       dataField: "createdUser",
@@ -122,7 +120,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-     
+
     },
     {
       dataField: "createdDate",
@@ -132,7 +130,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-     
+
     },
     {
       dataField: "modifiedUser",
@@ -142,7 +140,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-     
+
     },
     {
       dataField: "modifiedDate",
@@ -170,7 +168,7 @@ const AccountGroupType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible:false
+      visible: false
     },
     {
       dataField: "arabicName",
@@ -203,14 +201,15 @@ const AccountGroupType = () => {
         return (
           <ERPGridActions
             view={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id }) 
-            // , visible:cellElement?.data?.isEditable == true
-          }}
+            edit={{
+              type: "popup", action: () => toggleAccountGroupPopup({ isOpen: true, key: cellElement?.data?.id })
+              // , visible:cellElement?.data?.isEditable == true
+            }}
             delete={{
-              visible:cellElement?.data?.isDeletable == true,
+              visible: cellElement?.data?.isDeletable == true,
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
-              url:Urls?.account_group,key:cellElement?.data?.id
+              url: Urls?.account_group, key: cellElement?.data?.id
             }}
           />
         )

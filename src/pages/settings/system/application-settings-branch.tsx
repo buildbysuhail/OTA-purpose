@@ -384,7 +384,6 @@ const BranchSettingsForm: React.FC = () => {
               </div>
             </div>
           )}
-          {Number(formState?.countryName) === Countries.India && (
             <div className="rounded-lg border p-4">
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
                 <ERPCheckbox
@@ -441,7 +440,6 @@ const BranchSettingsForm: React.FC = () => {
                 />
               </div>
             </div>
-          )}
 
           <div className="rounded-lg border p-4">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">

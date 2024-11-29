@@ -381,7 +381,7 @@ export default function SettingsPage() {
                             data={settings?.mainSettings}
                             className="w-20 ml-6 mt-1"
                             value={settings?.mainSettings?.postDatedTransInNumbers}
-                            disabled={!settings?.mainSettings.allowPostdatedTrans}
+                            disabled={!settings?.mainSettings?.allowPostdatedTrans}
                             onChangeData={(data) => handleFieldChange("mainSettings", "postDatedTransInNumbers", data.postDatedTransInNumbers)}
                           />
                           <label className=" ml-2 mr-2 block form-check-label text-gray-700">Days</label>
@@ -3450,7 +3450,6 @@ export default function SettingsPage() {
                   PPOS 
                 </h1>
                 <div key="inventoryPPOS" className="space-y-4">
-                  {Number(settings?.branchSettings?.countryName) === Countries.India && (
                     <div className="rounded-lg border p-4">
                       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
                         <ERPCheckbox
@@ -3507,7 +3506,6 @@ export default function SettingsPage() {
                         />
                       </div>
                     </div>
-                  )}
                 </div>
               </div>
               <div key="inventorySchemesPromotions" ref={el => subItemsRef.current["inventorySchemesPromotions"] = el}>

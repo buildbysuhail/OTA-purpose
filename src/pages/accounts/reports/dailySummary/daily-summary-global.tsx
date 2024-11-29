@@ -7,24 +7,20 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface DailySummaryCreditDetails {
+interface DailySummaryGlobal {
 
   from: Date
 }
-const DailySummaryCreditDetails = () => {
+const DailySummaryGlobal = () => {
+  // const [searchParams, setSearchParams] = useSearchParams();
+  // const [payable, setPayable] = useState<boolean>(() => {
+  //   const payableParam = searchParams.get("payable");
+  //   return payableParam === "true"; // Convert the string to boolean
+  // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<DailySummaryCreditDetails>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
-    {
-      dataField: "invTransactionMasterID",
-      caption: t("invTransaction_master_id"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
     {
       dataField: "date",
       caption: t('date'),
@@ -34,20 +30,36 @@ const DailySummaryCreditDetails = () => {
       width: 50,
     },
     {
-      dataField: "voucherPrefix",
-      caption: t("voucher_prefix"),
+      dataField: "party",
+      caption: t("party"),
       dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+  
+    {
+      dataField: "billed",
+      caption: t("billed"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "voucherForm",
-      caption: t("form"),
-      dataType: "string",
+      dataField: "received",
+      caption: t("received"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
     },
+{
+      dataField: "balance",
+      caption: t("balance"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    
     {
       dataField: "voucherNumber",
       caption:  t("voucher_no"),
@@ -57,24 +69,24 @@ const DailySummaryCreditDetails = () => {
       width: 150,
     },
     {
-      dataField: "partyCode",
-      caption: t("party_code"),
+      dataField: "ledgerCode",
+      caption: t("ledger_code"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "partyName",
-      caption: t("party_name"),
+      dataField: "ledgerName",
+      caption: t("ledger_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
     {
-      dataField: "total",
-      caption: t("total"),
+      dataField: "amount",
+      caption: t("amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -84,8 +96,8 @@ const DailySummaryCreditDetails = () => {
    
    
     {
-      dataField: "receivedAmount",
-      caption: t('received_amount'),
+      dataField: "balanceAmount",
+      caption: t('balance_amount'),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
@@ -99,19 +111,11 @@ const DailySummaryCreditDetails = () => {
       allowFiltering: true,
       width: 150,
     },
-    {
-      dataField: "ledgerBalance",
-      caption: t("ledger_balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
+    
     {
       dataField: "ledger_Balance",
       caption: t("ledger_balance"),
       dataType: "number",
-      visible:false,
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -140,14 +144,6 @@ const DailySummaryCreditDetails = () => {
       allowFiltering: true,
       width: 150,
     },
-{
-      dataField: "cashDiscount",
-      caption: t("cash_discount"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
   ];
   return (
     <Fragment>
@@ -158,8 +154,8 @@ const DailySummaryCreditDetails = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("daily_summary_sales_credit_details")}
-                  dataUrl= {Urls.acc_reports_daily_summary_credit_details}
+                  gridHeader={t("daily_summary_receipt_details")}
+                  dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
@@ -178,4 +174,4 @@ const DailySummaryCreditDetails = () => {
   );
 };
 
-export default DailySummaryCreditDetails;
+export default DailySummaryGlobal;

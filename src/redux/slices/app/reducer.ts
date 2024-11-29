@@ -3,94 +3,63 @@ import { AppInitialState, AppState, Locale, TableState,inputBox } from './types'
 import { getAppState, uploadAppState } from './thunk';
 import usFlag from '../../../assets/images/flags/us_flag.png'
 
-const initialState: AppInitialState = {
+ export const appInitialState: AppState = {
+   dir: 'ltr',
+   decimals: 2,
+   mode: 'light',
+   class: "light",
+   dataMenuStyles: "dark",
+   dataNavLayout: "vertical",
+   dataHeaderStyles: "color",
+   dataVerticalStyle: "overlay",
+   toggled: "",
+   dataNavStyle: "",
+   horStyle: "",
+   dataPageStyle: "regular",
+   dataWidth: "fullwidth",
+   dataMenuPosition: "fixed",
+   dataHeaderPosition: "fixed",
+   loader: "disable",
+   iconOverlay: "",
+   colorPrimaryRgb: "",
+   colorPrimary: "",
+   bodyBg: "",
+   Light: "",
+   darkBg: "",
+   inputBorder: "",
+   bgImg: "",
+   iconText: "",
+   body: {
+     class: ""
+   },
+   scrollbarWidth: "sm",
+   scrollbarColor: '128, 128, 128',
+   inputBox: {
+     inputStyle: "normal",
+     inputSize: "sm",
+     checkButtonInputSize: "sm",
+     inputHeight: 2.0,
+     fontSize: 13,
+     fontWeight: 400,
+     labelFontSize: 13,
+     otherLabelFontSize: 13,
+     borderColor: '128, 128, 128',
+     fontColor: '128, 128, 128',
+     labelColor:'128, 128, 128',
+     borderFocus: '128, 128, 128',
+     borderRadius: 5,
+     adjustA: 0,
+     adjustB: 0,
+     adjustC: 0,
+     adjustD: 0,
+     marginTop: 0,
+     marginBottom: 0,
+   },
+   locale: { code: 'en', name: 'English', rtl: false, flag:usFlag },
+ }
+ export const initialState: AppInitialState = {
   syncing: false,
-  appState: {
-    dir: 'ltr',
-    decimals: 2,
-    mode: 'light',
-    class: "light",
-    dataMenuStyles: "dark",
-    dataNavLayout: "vertical",
-    dataHeaderStyles: "color",
-    dataVerticalStyle: "overlay",
-    toggled: "",
-    dataNavStyle: "",
-    horStyle: "",
-    dataPageStyle: "regular",
-    dataWidth: "fullwidth",
-    dataMenuPosition: "fixed",
-    dataHeaderPosition: "fixed",
-    loader: "disable",
-    iconOverlay: "",
-    colorPrimaryRgb: "",
-    colorPrimary: "",
-    bodyBg: "",
-    Light: "",
-    darkBg: "",
-    inputBorder: "",
-    bgImg: "",
-    iconText: "",
-    body: {
-      class: ""
-    },
-    scrollbarWidth: "sm",
-    scrollbarColor: '',
-    inputBox: {
-      inputStyle: "normal", 
-      inputSize:"sm",
-      CheckButtonInputSize:"sm",
-      inputHeight:2.0,        
-      fontSize: 13, 
-      fontWeight: 400, 
-      labelFontSize:13,
-      otherLabelFontSize:13,        
-      borderColor: '',
-      fontColor:'128, 128, 128', 
-      borderFocus: '',          
-      borderRadius: 5,  
-      adjustA:0,
-      adjustB:0,
-      adjustC:0,
-      adjustD:0, 
-      marginTop:0,
-      marginBottom:0,       
-    },
-   
-    //
-    pdfTemplates: null,
-    tableState: {
-      _items_items: {
-        sku: false,
-        type: false,
-        available_qty: false,
-        reorder_point: false,
-        default_purchase_price: false,
-        sales_account_name: false,
-        purchase_account_name: false,
-        sales_description: false,
-        purchase_description: false,
-        code: false,
-      },
-      _sales_customers: { email_1: false, first_name: false, last_name: false, payment_terms_name: false, website: false },
-      _sales_estimates: { reference: false, sales_person_name: false, sub_total: false, expected_delivery_date: false },
-      _sales_retainer_invoice: { reference_number: false, estimate: false },
-      _sales_sales_orders: { reference: false, expected_delivery_date: false, is_tax: false },
-      _sales_sales_return: { reference: false, balance_due: false, expected_delivery_date: false },
-      _sales_delivery_challans: { reference_number: false, company_name: false, sales_invoice_status: false },
-      _sales_invoices: { sale_order: false, is_tax: false, reference: false, balance_due: false },
-      _sales_payments_received: { reference_number: false },
-      _sales_recurring_invoices: { end_date: false, sales_person_name: false },
-      _purchase_vendors: { email_1: false, first_name: false, last_name: false, phone_2: false, payment_terms_name: false, website: false },
-      _purchase_expenses: { reference: false },
-      _purchase_purchase_order: { reference: false, expected_delivery_date: false },
-      _purchase_bills: { reference_number: false, expected_delivery_date: false, balance_due: false },
-      _purchase_payments_made: { reference_number: false, invoice_numbers: false, status: false },
-      _purchase_recurring_bills: { last_bill_date: false },
-      _purchase_recurring_expenses: { last_bill_date: false, next_bill_date: false },
-    },
-    locale: { code: 'en', name: 'English', rtl: false, flag:usFlag },
-  },
+  appState: appInitialState,
 };
 
 const appStateSlice = createSlice({
@@ -98,8 +67,6 @@ const appStateSlice = createSlice({
   initialState,
   reducers: {
     setAppState: (state, action: PayloadAction<AppState>) => {
-      console.log(action.payload?.inputBox?.borderRadius);
-      
       state.appState = action.payload;
     },
     setDirection: (state, action: PayloadAction<'ltr' | 'rtl'>) => {
@@ -110,7 +77,6 @@ const appStateSlice = createSlice({
     },
     setMode: (state, action: PayloadAction<'light' | 'dark'>) => {
       state.appState.mode = action.payload;
-
       state.appState.class = action.payload;
       state.appState.dataHeaderStyles = action.payload;
       state.appState.darkBg = "";
@@ -189,14 +155,9 @@ const appStateSlice = createSlice({
     setBodyClass: (state, action: PayloadAction<string>) => {
       state.appState.body.class = action.payload;
     },
-    setPdfTemplates: (state, action: PayloadAction<any>) => {
-      state.appState.pdfTemplates = action.payload;
-    },
     setLocale: (state, action: PayloadAction<Locale>) => {
       state.appState.locale = action.payload;
-    },
-    setTableState: (state, action: PayloadAction<TableState>) => {
-      state.appState.tableState = action.payload;
+      
     },
     setScrollbarWidth: (state, action: PayloadAction<"sm" | "md" | "lg">) => {
       state.appState.scrollbarWidth = action.payload;
@@ -204,13 +165,18 @@ const appStateSlice = createSlice({
     setScrollbarColor: (state, action: PayloadAction<string>) => {
       state.appState.scrollbarColor = action.payload;
     },
-    
+    setInputBox: (state, action: PayloadAction<Partial<inputBox>>) => {
+      state.appState.inputBox = {
+        ...state.appState.inputBox,
+        ...action.payload
+      };
+    }
   },
 });
 
 // Extract the actions
 export const {
-  // setInputBox,
+  setInputBox,
   setScrollbarColor,
   setScrollbarWidth,
   setAppState,
@@ -240,9 +206,7 @@ export const {
   setBgImg,
   setIconText,
   setBodyClass,
-  setPdfTemplates,
   setLocale,
-  setTableState,
 } = appStateSlice.actions;
 
 export default appStateSlice.reducer;

@@ -71,7 +71,7 @@ const setLocaleInStorage = (locale: Locale) => {
     <div  className={`header-element py-[1rem] md:px-[0.65rem] px-2 header-country hs-dropdown ti-dropdown hidden sm:block [--placement:bottom-left] ${className || ''}`}>
     <button id="dropdown-flag" type="button"
       className="hs-dropdown-toggle ti-dropdown-toggle !p-0 flex-shrink-0  !border-0 !rounded-full !shadow-none">
-      <img src={appState?.locale.flag} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
+      <img src={appState?.locale?.flag} alt="flag-img" className="h-[1.25rem] w-[1.25rem] rounded-full" />
     </button>
 
     <div className="hs-dropdown-menu ti-dropdown-menu min-w-[10rem] hidden !-mt-3" aria-labelledby="dropdown-flag">
@@ -81,7 +81,7 @@ const setLocaleInStorage = (locale: Locale) => {
           <div className="ti-dropdown-item !p-[0.65rem] ">
             <a  onClick={() => handleLanguageSelect(language)} className="flex items-center cursor-pointer space-x-2 rtl:space-x-reverse w-full">
               <div className="h-[1.375rem] flex items-center w-[1.375rem] rounded-full">
-                <img src={language.flag} alt="flag-img"
+                <img src={language?.flag} alt="flag-img"
                   className="h-[1rem] w-[1rem] rounded-full" />
               </div>
               <div>

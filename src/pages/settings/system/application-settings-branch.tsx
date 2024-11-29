@@ -7,13 +7,10 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
-import {
-  ApplicationBranchSettings,
-  ApplicationBranchSettingsInitialState,
-} from "./application-settings-types";
 import ERPDisableEnable from "../../../components/ERPComponents/erp-disable-inable";
 import { t } from "i18next";
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import { ApplicationBranchSettings, ApplicationBranchSettingsInitialState } from "./application-settings-types/application-settings-types-branch";
 
 const BranchSettingsForm: React.FC = () => {
   const [formState, setFormState] = useState<ApplicationBranchSettings>(
@@ -387,7 +384,6 @@ const BranchSettingsForm: React.FC = () => {
               </div>
             </div>
           )}
-          {Number(formState?.countryName) === Countries.India && (
             <div className="rounded-lg border p-4">
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
                 <ERPCheckbox
@@ -444,7 +440,6 @@ const BranchSettingsForm: React.FC = () => {
                 />
               </div>
             </div>
-          )}
 
           <div className="rounded-lg border p-4">
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">

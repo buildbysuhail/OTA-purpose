@@ -11,86 +11,9 @@ import EInvoiceTaxPro from './e-invoice-taxpro';
 import EWBTaxPro from './ewb-taxpro';
 import ERPDisableEnable from '../../../components/ERPComponents/erp-disable-inable';
 import { isNullOrUndefinedOrEmpty } from '../../../utilities/Utils';
+import { ApplicationGstSettings, ApplicationGstSettingsInitialState } from './application-settings-types/application-settings-types-gst';
 
-interface TaxSettingsFormState {
-  purchaseNormalType: boolean;
-  purchaseInterstateType: boolean;
-  purchaseForm62: boolean;
-  outputFormType: string;
-  defaultFormTypeForPOS: string;
-  inputCSTAccount: string;
-  defaultPrefixForPOS: string;
-  outputCSTAccount: string;
-  defaultSRFormTypeForPOS: string;
-  inputCessAccount: string;
-  defaultSRPrefixForPOS: string;
-  outputCessAccount: string;
-  inputSGSTAccount:string;
-  outputSGSTAccount:string;
-  inputSGSTLedgerID: string;
-  inputAddCessAccount: string;
-  outputSGSTLedgerID: string;
-  outputAddCessAccount: string;
-  inputCGSTAccount: string;
-  expensesTaxAccount: string;
-  outputCGSTAccount: string;
-  incomeTaxAccount: string;
-  inputIGSTAccount: string;
-  enableEWB: boolean;
-  outputIGSTAccount: string;
-  enableEInvoiceIndia: boolean;
-  outputTCSPaidAccount: string;
-  einvoiceProvider: string;
-  outputTCSPayableAccount: string;
-  eInvoiceAuthToken: string;
-  inputCalamityCessAccount: string;
-  eInvoiceOwnerID: string;
-  outputSalesCalamityCessAccount: string;
-  considerSalesPriceasCalamityIncluded: boolean;
-  enableKarnatakaTaxReportFormat: boolean;
-  showPrevForms: boolean;
-}
 const api = new APIClient();
-
-
-const initialStateTaxsettings: TaxSettingsFormState = {
-  purchaseNormalType: false,
-  purchaseInterstateType: false,
-  purchaseForm62: false,
-  outputFormType: '',
-  defaultFormTypeForPOS: '',
-  inputCSTAccount: '',
-  defaultPrefixForPOS: '',
-  outputCSTAccount: '',
-  defaultSRFormTypeForPOS: '',
-  inputCessAccount: '',
-  defaultSRPrefixForPOS: '',
-  outputCessAccount: '',
-  inputSGSTLedgerID: '',
-  inputAddCessAccount: '',
-  outputSGSTLedgerID: '',
-  inputSGSTAccount:'',
-  outputSGSTAccount:'',
-  outputAddCessAccount: '',
-  inputCGSTAccount: '',
-  expensesTaxAccount: '',
-  outputCGSTAccount: '',
-  incomeTaxAccount: '',
-  inputIGSTAccount: '',
-  enableEWB: false,
-  outputIGSTAccount: '',
-  enableEInvoiceIndia: false,
-  outputTCSPaidAccount: '',
-  einvoiceProvider: '',
-  outputTCSPayableAccount: '',
-  eInvoiceAuthToken: '',
-  inputCalamityCessAccount: '',
-  eInvoiceOwnerID: '',
-  outputSalesCalamityCessAccount: '',
-  considerSalesPriceasCalamityIncluded: false,
-  enableKarnatakaTaxReportFormat: false,
-  showPrevForms: false,
-};
 // const [changedSettings, setChangedSettings] = useState<Partial<TaxSettingsFormState>>({});
 // const [formState, setFormState] = useState<TaxSettingsFormState>(initialState);
 interface PopupComponentProps {
@@ -118,8 +41,8 @@ const PopupComponent: React.FC<PopupComponentProps> = ({ isOpen, onClose, childr
   );
 };
 const ERPSettingsFormGSTTaxes = () => {
-  const [formState, setFormState] = useState<TaxSettingsFormState>(initialStateTaxsettings);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<TaxSettingsFormState>>({});
+  const [formState, setFormState] = useState<ApplicationGstSettings>(ApplicationGstSettingsInitialState);
+  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationGstSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [showEInvoicePopup, setShowEInvoicePopup] = useState<boolean>(false);
@@ -152,7 +75,7 @@ const ERPSettingsFormGSTTaxes = () => {
   };
 
   const handleFieldChange = (
-    field: keyof typeof initialStateTaxsettings,
+    field: keyof typeof ApplicationGstSettingsInitialState,
     value: any
   ) => {
     setFormState((prevState) => ({
@@ -164,8 +87,8 @@ const ERPSettingsFormGSTTaxes = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof TaxSettingsFormState];
-        const prevValue = formStatePrev[key as keyof TaxSettingsFormState];
+        const currentValue = formState?.[key as keyof ApplicationGstSettings];
+        const prevValue = formStatePrev[key as keyof ApplicationGstSettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
         (currentValue === true && prevValue === false)) {

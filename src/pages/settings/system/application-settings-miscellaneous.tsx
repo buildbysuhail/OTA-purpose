@@ -16,38 +16,11 @@ import ApplicationMiscellaneousSettingsPop from "./application-settings-miscella
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ERPDisableEnable from "../../../components/ERPComponents/erp-disable-inable";
-
-export interface ApplicationMiscellaneousSettings {
-  salesmanIncentive: number;
-  defaultIncentiveLedger: number;
-  sendSMS: boolean;
-  sMSURL: string;
-  maintainAllBranchWithCommonInventory: boolean;
-  weighingScalePluFilePath: string;
-  secondDisplayImagesPath: string;
-  autoSyncSIandPI_BT: boolean;
-  allowSalesDetailedEdit: boolean;
-  maintainUntalliedBills: boolean;
-  password: string;
-}
+import { ApplicationMiscellaneousSettings, ApplicationMiscellaneousSettingsInitialState } from "./application-settings-types/application-settings-types-miscellaneous";
 
 interface systemCode {
   systemCode: string;
 }
-
-export const ApplicationMiscellaneousSettingsInitialState: ApplicationMiscellaneousSettings = {
-  salesmanIncentive: 0,
-  defaultIncentiveLedger: 0,
-  sendSMS: false,
-  sMSURL: "",
-  maintainAllBranchWithCommonInventory: false,
-  weighingScalePluFilePath: "",
-  secondDisplayImagesPath: "",
-  autoSyncSIandPI_BT: false,
-  allowSalesDetailedEdit: false,
-  maintainUntalliedBills: false,
-  password: "",
-};
 const api = new APIClient();
 const MiscellaneousSettingsForm: React.FC = () => {
   const rootState = useRootState();

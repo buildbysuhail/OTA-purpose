@@ -63,9 +63,7 @@ export interface AppState {
   body: {
     class: string;
   };
-  pdfTemplates: any;
   locale: Locale;
-  tableState?: TableState;
   scrollbarWidth:  "sm"|"md"|"lg";
   scrollbarColor: string;
   inputBox: inputBox;
@@ -87,7 +85,7 @@ export const initialThemeData: Theme = {
   inputBox: {
     inputStyle: "normal",  
     inputSize:"sm", 
-    CheckButtonInputSize:"sm",
+    checkButtonInputSize:"sm",
     inputHeight:2.0,    
     fontSize: 13, 
     fontWeight: 400, 
@@ -96,6 +94,7 @@ export const initialThemeData: Theme = {
     borderColor: '128, 128, 128', 
     borderFocus: '128, 128, 128',
     fontColor:'128, 128, 128',
+    labelColor:'128, 128, 128',
     borderRadius: 5, 
     adjustA:0,
     adjustB:0,
@@ -125,7 +124,7 @@ export interface Theme {
 export interface inputBox{
   inputStyle:  "normal"|"filled" | "outlined" | "standard";
   inputSize:"sm"|"md"|"lg"|"customize",
-  CheckButtonInputSize:  "sm" | "md" | "lg" ;
+  checkButtonInputSize:  "sm" | "md" | "lg" ;
   inputHeight:number,
   fontSize:number;
   fontWeight:number;
@@ -133,6 +132,7 @@ export interface inputBox{
   otherLabelFontSize:number;
   borderColor: string;
   fontColor:string;
+  labelColor:string;
   borderFocus: string;
   borderRadius:number;
   adjustA:number;

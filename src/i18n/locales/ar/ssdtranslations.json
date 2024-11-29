@@ -425,7 +425,7 @@
   "verify": "تحقق",
   "allow_privilege_card": "السماح ببطاقة الامتياز",
   "allow_postdated_transaction": "السماح بمعاملة مؤجلة التاريخ",
-  "allow_predated_transaction": "السماح بمعاملة سابقة التاريخ",
+  "allow_past_dated_transaction": "السماح بمعاملة سابقة التاريخ",
   "maintain_separate_prefix_for_cash_sales": "الحفاظ على بادئة منفصلة للمبيعات النقدية",
   "save_modified_transaction_summary": "حفظ ملخص المعاملة المعدل",
   "maintain_production": "الحفاظ على الإنتاج",
@@ -694,7 +694,7 @@
   "maintain_tax": "الحفاظ على الضرائب",
   "show_financial_year_selector_on_startup": "عرض محدد السنة المالية عند بدء التشغيل",
   "maintain_auto_posting_transaction": "الحفاظ على نشر المعاملات تلقائيًا",
-  "allow_edit_posted_transactions": "السماح بتعديل المعاملات المنشورة",
+  "allow_posted_transactions_edit": "السماح بتعديل المعاملات المنشورة",
   "maintain_inventory_master_entry": "الحفاظ على إدخال قاعدة بيانات المخزون",
   "maintain_inventory_transactions_entry": "الحفاظ على إدخال معاملات المخزون",
   "use_branch_wise_sales_price": "استخدام أسعار البيع حسب الفرع",
@@ -1334,9 +1334,10 @@
   "share": "السهم",
   "schedule_report": "تقرير مجدول",
   "assets": "الأصول",
-  "gstr_report": "تقرير GSTR",
+  "gstr_report": "تقرير GSTR1",
   "app_settings_new": "إعدادات التطبيق الجديدة",
-  "details":  "تفاصيل"
+  "details":  "تفاصيل",
+  "check_listed_product_prices_in_purchase_invoice": "التحقق من أسعار المنتجات المدرجة في فاتورة الشراء"
 
 
 }

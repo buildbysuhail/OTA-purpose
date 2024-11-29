@@ -13,123 +13,10 @@ import ERPToast from "../../../components/ERPComponents/erp-toast";
 import { t } from "i18next";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
+import { ApplicationInventorySettings, ApplicationInventorySettingsInitialState } from "./application-settings-types/application-settings-types-inventory";
 
-export interface ApplicationInventorySettings {
-  defaultSalesAcc: number;
-  defaultSalesReturnAcc: number;
-  defaultPurchaseAcc: number;
-  defaultWareHouse: number;
-  defaultPurchaseReturnAcc: number;
-  defaultBillDiscGivenLdg: number;
-  defaultBillDiscRecvdLdg: number;
-  defaultCouponSalesAccount: number;
-  defaultRoundOffAccount: number;
-  defaultAdditionalAmountAccount: number;
-  defaultBrand: number;
-  showNegStockWarning: string;
-  maintainWarehouse: boolean;
-  priceCode: string;
-  defaultBarcodeLabel: string;
-  showRateWarning: string;
-  setLastSalesRateAsProctSaleRate: boolean;
-  setLastPurchaseRateAsProctRate: boolean;
-  setAvgPurchaseCostWithStdPurRate: boolean;
-  updatePurhasePriceUpdateOnPurchaseBT: boolean;
-  showCashSalesSeperateMenu: boolean;
-  showNonStockItemsinSales: boolean;
-  defaultBTOAccount: number;
-  defaultBTIAccount: number;
-  serviceWarrantyInvAccounts: boolean;
-  serviceWarrantyInvLedgerID: number;
-  serviceNonWarrantyInvAccounts: boolean;
-  serviceNONWarrantyInvLedgerID: number;
-  defaultServiceSpareWareHouse: number;
-  defaultSalesReturnPayableAcc: number;
-  redeeemValuesSeperatedByComma: string;
-  keepUserActionInDays: number;
-  blockBillDiscount: string;
-  discontAuthorizationIfDiscountAbove: number;
-  setAuthorizationinSales: boolean;
-  enableSalesInvoiceDraftOption: boolean;
-  setProductCostasPurchasePrice: boolean;
-  setProductCostWithVATAmount: boolean;
-  blockNonStockSerialSelling: boolean;
-  showProductDuplicationMessage: boolean;
-  blockHoldItems: boolean;
-  printInvAfterSave: boolean;
-  needPOApprovalForPrintout: boolean;
-  enableAddStockAdjustment: boolean;
-  carryForwardPurchaseOrderQtyToPurchase: boolean;
-  useCostForStockTransferToBranch: boolean;
-  showAccountReceivableInPurchase: boolean;
-  showPrinterSelection: boolean;
-  bTOUsingMSP: boolean;
-  isReferenceNumberMandatoryInPurchase: boolean;
-  showTransitModeStockTransferAlert: boolean;
-  showAccountPayableInSales: boolean;
-  holdSalesMan: boolean;
-  mobileNumberMandotryInSales: boolean;
-}
-export const ApplicationInventorySettingsInitialState: ApplicationInventorySettings = {
-    defaultSalesAcc: 1,
-    defaultSalesReturnAcc: 0,
-    defaultPurchaseAcc: 0,
-    defaultPurchaseReturnAcc: 0,
-    defaultBillDiscGivenLdg: 0,
-    defaultBillDiscRecvdLdg: 0,
-    defaultCouponSalesAccount: 0,
-    defaultRoundOffAccount: 0,
-    defaultAdditionalAmountAccount: 0,
-    defaultBrand: 0,
-    showNegStockWarning: "",
-    defaultWareHouse: 0,
-    maintainWarehouse: false,
-    priceCode: "",
-    defaultBarcodeLabel: "",
-    showRateWarning: "Ignore",
-    setLastSalesRateAsProctSaleRate: false,
-    setLastPurchaseRateAsProctRate: false,
-    setAvgPurchaseCostWithStdPurRate: false,
-    updatePurhasePriceUpdateOnPurchaseBT: false,
-    showCashSalesSeperateMenu: false,
-    showNonStockItemsinSales: false,
-    defaultBTOAccount: 0,
-    defaultBTIAccount: 0,
-    serviceWarrantyInvAccounts: false,
-    serviceWarrantyInvLedgerID: 0,
-    serviceNonWarrantyInvAccounts: false,
-    serviceNONWarrantyInvLedgerID: 0,
-    defaultServiceSpareWareHouse: 0,
-    defaultSalesReturnPayableAcc: 0,
-    redeeemValuesSeperatedByComma: "",
-    keepUserActionInDays: 0,
-    blockBillDiscount: "",
-    discontAuthorizationIfDiscountAbove: 0,
-    setAuthorizationinSales: false,
-    enableSalesInvoiceDraftOption: false,
-    setProductCostasPurchasePrice: false,
-    setProductCostWithVATAmount: false,
-    blockNonStockSerialSelling: false,
-    showProductDuplicationMessage: false,
-    blockHoldItems: false,
-    printInvAfterSave: false,
-    needPOApprovalForPrintout: false,
-    enableAddStockAdjustment: false,
-    carryForwardPurchaseOrderQtyToPurchase: false,
-    useCostForStockTransferToBranch: false,
-    showAccountReceivableInPurchase: false,
-    showPrinterSelection: false,
-    bTOUsingMSP: false,
-    isReferenceNumberMandatoryInPurchase: false,
-    showTransitModeStockTransferAlert: false,
-    showAccountPayableInSales: false,
-    holdSalesMan: false,
-    mobileNumberMandotryInSales: false,
-  };
 const api = new APIClient();
 const InventorySettingsForm = () => {
-  
-
   const dispatch = useAppDispatch();
   const [formState, setFormState] = useState<ApplicationInventorySettings>(ApplicationInventorySettingsInitialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationInventorySettings>>({});
@@ -163,7 +50,7 @@ const InventorySettingsForm = () => {
       [settingName]: value ?? "",
     }));
   };
-  
+
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
@@ -173,13 +60,13 @@ const InventorySettingsForm = () => {
         const prevValue = formStatePrev[key as keyof ApplicationInventorySettings];
 
         if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
-        (currentValue === true && prevValue === false)) {
+          (currentValue === true && prevValue === false)) {
 
           acc.push({
             settingsName: key,
             settingsValue: currentValue === false ? "false" :
-            currentValue === true ? "true" :
-            (currentValue ?? "").toString(),
+              currentValue === true ? "true" :
+                (currentValue ?? "").toString(),
           });
         }
         return acc;
@@ -189,7 +76,7 @@ const InventorySettingsForm = () => {
         type: "inventory",
         updateList: modifiedSettings,
       })) as any : null;
-      handleResponse(response, () => {setFormStatePrev(formState)}, () => { });
+      handleResponse(response, () => { setFormStatePrev(formState) }, () => { });
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {

@@ -209,7 +209,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 
   useEffect(() => {
     if (!voucherType) return;
-    const updateFormElementsBasedOnVoucherType = (newFormElements: any) => {
+    const updateFormElementsBasedOnVoucherType = (newFormElements: FormElementsState) => {
       switch (voucherType) {
         case "CR":
         case "CP":
@@ -252,11 +252,19 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
 
         case "JV":
+          newFormElements.masterAccount.label = "Master Account";
+          newFormElements.employee.label = "Done By";
+          newFormElements.drCr.visible = true;
+          newFormElements.keepNarration.visible = true;
+          newFormElements.discount.visible = false;
+          break;
+
         case "MJV":
           newFormElements.masterAccount.label = "Master Account";
           newFormElements.employee.label = "Done By";
           newFormElements.drCr.visible = true;
           newFormElements.keepNarration.visible = true;
+          newFormElements.discount.visible = false;
           break;
 
         case "OB":
@@ -293,7 +301,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               fields: {
                 masterAccountID:
                   userSession.counterwiseCashLedgerId > 0 &&
-                  applicationSettings.accountsSettings.allowSalesCounter
+                    applicationSettings.accountsSettings.allowSalesCounter
                     ? userSession.counterwiseCashLedgerId
                     : applicationSettings.accountsSettings.defaultCashAcc,
               },
@@ -315,7 +323,25 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           },
         })
       );
-
+      if (userSession.employeeId > 0) {
+        dispatch(
+          accFormStateTransactionMasterHandleFieldChange({
+            fields: {
+              employeeId: userSession.employeeId,
+            },
+          })
+        );
+      }
+      formElements.btnBillWise.visible = applicationSettings.accountsSettings.maintainBillwiseAccount;
+      if (formState.transaction.master.voucherType == "JV") {
+        dispatch(
+          accFormStateHandleFieldChange({
+            fields: {
+              masterAccountID: -1,
+            },
+          })
+        )
+      }
       let _newFormElements =
         updateFormElementsBasedOnVoucherType(newFormElements);
       setFormElements(_newFormElements);
@@ -1537,7 +1563,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ></i>
                   <div
                     className="mr-2 text-amber-700"
-                    // size={16}
+                  // size={16}
                   >
                     {" "}
                     Add Items{" "}
@@ -1803,13 +1829,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                         <ERPButton
                           title="Save & New"
-                          onClick={() => {}}
+                          onClick={() => { }}
                           variant="secondary"
                           className="flex-1 !m-0 !rounded-none"
                         />
                         <ERPButton
                           title="Save"
-                          onClick={() => {}}
+                          onClick={() => { }}
                           variant="primary"
                           className="flex-1 !m-0 !rounded-none"
                         />
@@ -1822,13 +1848,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
                 title="Save & New"
-                onClick={() => {}}
+                onClick={() => { }}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
                 title="Save"
-                onClick={() => {}}
+                onClick={() => { }}
                 variant="primary"
                 className="flex-1 !m-0 !rounded-none"
               />

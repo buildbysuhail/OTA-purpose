@@ -27,7 +27,7 @@ export interface ApplicationProductsSettings {
     enableMultiWarehouseBilling: boolean;
     enableSupplierWiseItemCode: boolean;
     includeSearchItemAlias_ItemName2: boolean;
-    lastSystemGeneratedBarcode: number;
+    lastSystemGeneratedBarcode: string;
     stopScanningOnWrongBarcodeInSales: boolean;
     enableOrderMangment: boolean;
     enableImportPurchase: boolean;

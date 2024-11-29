@@ -21,6 +21,7 @@ import { useApplicationGstSettings } from '../../../../utilities/hooks/use-appli
 import EInvoiceTaxPro from '../e-invoice-taxpro';
 import EWBTaxPro from '../ewb-taxpro';
 import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '../../../../utilities/hooks/use-application-misc-settings';
+import { BusinessType } from '../../../../enums/business-types';
 
 
 const api = new APIClient()
@@ -59,7 +60,9 @@ export default function SettingsPage() {
   const sectionsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({})
-  const { settings, setSettings, verifyOtp, sendOtp } = useApplicationMainSettings();
+  const { settings, setSettings, verifyOtp, sendOtp,
+    otpSending,
+    otpVerifying } = useApplicationMainSettings();
   const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
   const handleFieldChange = useCallback(
     <T extends keyof ApplicationSettingsType>(type: T, settingName: keyof ApplicationSettingsType[T], value: any
@@ -125,7 +128,10 @@ export default function SettingsPage() {
           if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
             setActiveSection(section.id)
             // Check sub-items within the active section
-            for (const setting of section.settings) {
+            for (const setting of section.settings?.filter(x =>
+              (settings?.branchSettings?.countryName === Countries.Saudi && x.key === "accountsEInvoiceGCC") ||
+              (settings?.branchSettings?.countryName === Countries.India && x.key === "inventoryGSTSettings")
+            )) {
               const subElement = subItemsRef.current[setting.key]
               if (subElement) {
                 const subOffsetTop = subElement.offsetTop
@@ -176,7 +182,10 @@ export default function SettingsPage() {
               </button>
               {item.id === activeSection && (
                 <div className="ml-4 mt-1 space-y-1">
-                  {item.settings.map((set) => (
+                  {item.settings?.filter(x =>
+                    (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
+                    (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+                  ).map((set) => (
                     <>
                       <button
                         key={set.key}
@@ -729,6 +738,18 @@ export default function SettingsPage() {
                             { value: "Standard", label: "Standard" },
                           ]}
                         />
+                        <ERPCheckbox
+                          id="useTemplateSelectionForPrinting"
+                          data={settings?.branchSettings}
+                          label={t("use_template_selection_for_printing")}
+                          checked={settings?.branchSettings?.useTemplateSelectionForPrinting}
+                          onChangeData={(data) =>
+                            handleFieldChange("branchSettings",
+                              "useTemplateSelectionForPrinting",
+                              data.useTemplateSelectionForPrinting
+                            )
+                          }
+                        />
                         <ERPDataCombobox
                           id="defaultPrinter"
                           data={settings?.printSettings}
@@ -1033,6 +1054,18 @@ export default function SettingsPage() {
                         }
                       />
                     }
+                    <ERPCheckbox
+                      id="applyVATOnPurchaseToBTO"
+                      label={t("apply_TAX_on_purchase_converted_to_BTO")}
+                      data={settings?.branchSettings}
+                      checked={settings?.branchSettings?.applyVATOnPurchaseToBTO}
+                      onChangeData={(data) =>
+                        handleFieldChange("branchSettings",
+                          "applyVATOnPurchaseToBTO",
+                          data.applyVATOnPurchaseToBTO
+                        )
+                      }
+                    />
                   </div>
                 </div>
 
@@ -1394,6 +1427,113 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </div>
+                {settings?.branchSettings?.countryName == Countries.Saudi &&
+                  <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
+                    <h1 className="text-2xl font-bold">KSA EInvoice</h1>
+                    <div key="accountsEInvoiceGCC" className="space-y-4">
+                      <div className="border p-4 flex flex-col gap-6 rounded-lg">
+                        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xxl:grid-cols-4 gap-6">
+                          <ERPCheckbox
+                            id="maintainKSA_EInvoice"
+                            label={t("maintain_KSA_eInvoice")}
+                            disabled={settings?.branchSettings?.maintainTax === false}
+                            data={settings?.branchSettings}
+                            checked={settings?.branchSettings?.maintainKSA_EInvoice}
+                            onChangeData={(data) =>
+                              handleFieldChange("branchSettings",
+                                "maintainKSA_EInvoice",
+                                data.maintainKSA_EInvoice
+                              )
+                            }
+                          />
+
+                          <ERPCheckbox
+                            id="apply_KSA_EInvoice_Validation_Rules"
+                            label={t("apply_KSA_eInvoice_validation_rules")}
+                            checked={settings?.branchSettings?.apply_KSA_EInvoice_Validation_Rules}
+                            data={settings?.branchSettings}
+                            onChangeData={(data) =>
+                              handleFieldChange("branchSettings",
+                                "apply_KSA_EInvoice_Validation_Rules",
+                                data.apply_KSA_EInvoice_Validation_Rules
+                              )
+                            }
+                          />
+                          <ERPCheckbox
+                            id="createCreditNoteAutomaticallyOnSalesEdit"
+                            label={t("create_credit_note_automatically_on_sales_edit")}
+                            data={settings?.branchSettings}
+                            checked={settings?.branchSettings?.createCreditNoteAutomaticallyOnSalesEdit}
+                            onChangeData={(data) =>
+                              handleFieldChange("branchSettings",
+                                "createCreditNoteAutomaticallyOnSalesEdit",
+                                data.createCreditNoteAutomaticallyOnSalesEdit
+                              )
+                            }
+                          />
+                          <ERPDisableEnable targetCount={5}>
+                            {(hasPermitted) => (
+                              <ERPInput
+                                id="kSA_EInvoice_Sync_SystemCode"
+                                disabled={!hasPermitted}
+                                value={settings?.branchSettings.kSA_EInvoice_Sync_SystemCode}
+                                data={settings?.branchSettings}
+                                label={t("e-Invoice_sync_systemCode")}
+                                onChangeData={(data) =>
+                                  handleFieldChange("branchSettings",
+                                    "kSA_EInvoice_Sync_SystemCode",
+                                    data.kSA_EInvoice_Sync_SystemCode
+                                  )
+                                }
+                              />
+                            )}
+                          </ERPDisableEnable>
+                        </div>
+                        <div className="flex items-center space-x-4 border rounded-lg p-4">
+                          <ERPInput
+                            id="oTPEmail"
+                            label={t("otp_email")}
+                            className="w-1/3"
+                            value={settings?.mainSettings?.oTPEmail}
+                            data={settings?.mainSettings}
+                            onChangeData={(data) =>
+                              handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
+                            }
+                          />
+                          <div className="mt-4">
+                            <ERPButton
+                              title={t("send_otp")}
+                              variant="secondary"
+                              loading={otpSending}
+                              disabled={otpSending}
+                              onClick={() => sendOtp()}
+                            />
+                          </div>
+                          <ERPInput
+                            id="oTPVerification"
+                            label=" "
+                            placeholder="Enter OTP"
+                            data={settings?.mainSettings}
+                            className="w-32 mt-4"
+                            value={settings?.mainSettings?.oTPVerification}
+                            onChangeData={(data) =>
+                              handleFieldChange("mainSettings", "oTPVerification", data.oTPVerification)
+                            }
+                          />
+                          <div className="mt-4">
+                            <ERPButton
+                              title={t("verify")}
+                              variant="primary"
+                              loading={otpVerifying}
+                              disabled={otpVerifying}
+                              onClick={() => verifyOtp()}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
               </div>
             </section>
 
@@ -1978,6 +2118,18 @@ export default function SettingsPage() {
                           handleFieldChange("miscellaneousSettings",
                             "weighingScalePluFilePath",
                             data.weighingScalePluFilePath
+                          )
+                        }
+                      />
+                      <ERPCheckbox
+                        id="enableSupplierWiseItemCode"
+                        label={t("enable_supplier_wise_item_code")}
+                        data={settings?.productsSettings}
+                        checked={settings?.productsSettings?.enableSupplierWiseItemCode}
+                        onChangeData={(data) =>
+                          handleFieldChange("productsSettings",
+                            "enableSupplierWiseItemCode",
+                            data.enableSupplierWiseItemCode
                           )
                         }
                       />
@@ -2673,6 +2825,56 @@ export default function SettingsPage() {
                           )
                         }
                       />
+
+                      <ERPDataCombobox
+                        id="defaultPurchaseAssetsAccount"
+                        field={{
+                          id: "defaultPurchaseAssetsAccount",
+                          valueKey: "value",
+                          labelKey: "label",
+                        }}
+                        data={settings?.accountsSettings}
+                        label={t("default_purchase_assets_account")}
+                        options={[
+                          { value: 'All', label: 'All' },
+                          { value: 'Customer', label: 'Customer' },
+                          { value: 'Supplier', label: 'Supplier' },
+                          { value: 'ReferalAgent', label: 'Referal Agent' },
+                          { value: 'CashInHand', label: 'Cash In Hand' },
+                          { value: 'BankAccount', label: 'Bank Account' },
+                          { value: 'SuspenseAccount', label: 'Suspense Account' },
+                          { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
+                          { value: 'Cash_Bank', label: 'Cash & Bank' },
+                          { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
+                          { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
+                          { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
+                          { value: 'Sales_Account', label: 'Sales Account' },
+                          { value: 'Purchase_Account', label: 'Purchase Account' },
+                          { value: 'Salaries', label: 'Salaries' },
+                          { value: 'Discount_Received', label: 'Discount Received' },
+                          { value: 'Discount_Given', label: 'Discount Given' },
+                          { value: 'Incentive_Given', label: 'Incentive Given' },
+                          { value: 'Salary_Account', label: 'Salary Account' },
+                          { value: 'Job_Works', label: 'Job Works' },
+                          { value: 'Branch_Receivable', label: 'Branch Receivable' },
+                          { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
+                          { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
+                          { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
+                          { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
+                          { value: 'Branch_Payable', label: 'Branch Payable' },
+                          { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
+                          { value: 'Expenses', label: 'Expenses' },
+                          { value: 'Incomes', label: 'Incomes' },
+                          { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
+                          { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
+                          { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
+                          { value: 'Current_Assets', label: 'Current Assets' },
+                          { value: 'Fixed_Assets', label: 'Fixed Assets' },
+                          { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
+                          { value: 'Indirect_Income', label: 'Indirect Income' },
+                        ]}
+                        onChangeData={(data) => handleFieldChange("accountsSettings",'defaultPurchaseAssetsAccount', data.defaultPurchaseAssetsAccount)}
+                      />
                     </div>
                   </div>
                 </div>
@@ -3114,7 +3316,206 @@ export default function SettingsPage() {
                             handleFieldChange("productsSettings", "enableOrderMangment", data.enableOrderMangment)
                           }
                         />
+
                       }
+
+                      <ERPCheckbox
+                        id="enableMultiWarehouseBilling"
+                        label={t("enable_multi_warehouse_billing")}
+                        data={settings?.productsSettings}
+                        checked={settings?.productsSettings?.enableMultiWarehouseBilling}
+                        onChangeData={(data) =>
+                          handleFieldChange("productsSettings",
+                            "enableMultiWarehouseBilling",
+                            data.enableMultiWarehouseBilling
+                          )
+                        }
+                      />
+                      <ERPDisableEnable targetCount={15} >
+                        {(hasPermitted = false) => (
+                          <>
+                            {hasPermitted == true &&
+                              <ERPCheckbox
+                                id="allowSalesDetailedEdit"
+                                checked={settings?.miscellaneousSettings?.allowSalesDetailedEdit}
+                                data={settings?.miscellaneousSettings}
+                                label={t("allow_sales_detailed_edit")}
+                                onChangeData={(data) =>
+                                  handleFieldChange("miscellaneousSettings",
+                                    "allowSalesDetailedEdit",
+                                    data.allowSalesDetailedEdit
+                                  )
+                                }
+                              />
+                            }
+                          </>
+                        )}
+
+                      </ERPDisableEnable>
+                      <ERPDataCombobox
+                        id="defaultSalesReturnPayableAcc"
+                        disabled
+                        data={settings?.inventorySettings}
+                        field={{
+                          id: "defaultSalesReturnPayableAcc",
+                          required: false,
+                          getListUrl: Urls.data_acc_ledgers,
+                          params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        onChangeData={(data: any) =>
+                          handleFieldChange("inventorySettings",
+                            "defaultSalesReturnPayableAcc",
+                            data.defaultSalesReturnPayableAcc
+                          )
+                        }
+                        label={t("default_sales_return_payable_acc")}
+                      />
+                      {userSession.countryId != Countries.India &&
+                        <ERPCheckbox
+                          id="enableSalesInvoiceDraftOption"
+                          checked={settings?.inventorySettings?.enableSalesInvoiceDraftOption}
+                          data={settings?.inventorySettings}
+                          label={t("enable_sales_invoice_draft_option")}
+                          onChangeData={(data: any) =>
+                            handleFieldChange("inventorySettings",
+                              "enableSalesInvoiceDraftOption",
+                              data.enableSalesInvoiceDraftOption
+                            )
+                          }
+                        />
+                      }
+                      {userSession.countryId != Countries.India &&
+                        <ERPCheckbox
+                          id="showCashSalesSeperateMenu"
+                          checked={settings?.inventorySettings?.showCashSalesSeperateMenu}
+                          data={settings?.inventorySettings}
+                          label={t("show_cash_sales_separate_menu")}
+                          onChangeData={(data: any) =>
+                            handleFieldChange("inventorySettings",
+                              "showCashSalesSeperateMenu",
+                              data.showCashSalesSeperateMenu
+                            )
+                          }
+                        />
+                      }
+                      <ERPCheckbox
+                        id="enableTaxOnBillDiscount"
+                        label={t("enable_tax_on_bill_discount")}
+                        data={settings?.branchSettings}
+                        checked={settings?.branchSettings?.enableTaxOnBillDiscount}
+                        onChangeData={(data) =>
+                          handleFieldChange("branchSettings",
+                            "enableTaxOnBillDiscount",
+                            data.enableTaxOnBillDiscount
+                          )
+                        }
+                      />
+                      {applicationSettings != undefined && (applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Hypermarket || applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Supermarket) &&
+                        <ERPCheckbox
+                          id="showPartyBalanceInSales"
+                          checked={settings?.accountsSettings?.showPartyBalanceInSales}
+                          data={settings?.accountsSettings}
+                          label={t("show_party_balance_in_sales")}
+                          onChangeData={(data) => handleFieldChange("accountsSettings", 'showPartyBalanceInSales', data.showPartyBalanceInSales)}
+                        />
+                      }
+                      <ERPDataCombobox
+                        id="defaultBillDiscGivenLdg"
+                        data={settings?.inventorySettings}
+                        field={{
+                          id: "defaultBillDiscGivenLdg",
+                          // required: true,
+                          getListUrl: Urls.data_acc_ledgers,
+                          params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        onChangeData={(data: any) =>
+                          handleFieldChange("inventorySettings",
+                            "defaultBillDiscGivenLdg",
+                            data.defaultBillDiscGivenLdg
+                          )
+                        }
+                        label={t("bill_discount_given_ledger")}
+                      />
+                      <ERPDataCombobox
+                        id="defaultBarcodeLabel"
+                        disabled
+                        data={settings?.inventorySettings}
+                        field={{
+                          id: "defaultBarcodeLabel",
+                          required: false,
+                          valueKey: "id",
+                          labelKey: "label",
+                        }}
+                        options={[
+                          { value: "Default.lba", label: "Default.lba" }
+                        ]}
+                        onChangeData={(data: any) =>
+                          handleFieldChange("inventorySettings",
+                            "defaultBarcodeLabel",
+                            data.defaultBarcodeLabel
+                          )
+                        }
+                        label={t("barcode_label")}
+                      />
+                      {userSession.countryId != Countries.India &&
+                        <ERPCheckbox
+                          id="blockHoldItems"
+                          checked={settings?.inventorySettings?.blockHoldItems}
+                          data={settings?.inventorySettings}
+                          label={t("block_hold_items")}
+                          onChangeData={(data: any) =>
+                            handleFieldChange("inventorySettings", "blockHoldItems", data.blockHoldItems)
+                          }
+                        />
+                      }
+                      <ERPDataCombobox
+                        id="defaultOpeningStockValueAcc"
+                        data={settings?.accountsSettings}
+                        label={t("default_opening_stock_ledger")}
+                        field={{
+                          id: "defaultOpeningStockValueAcc",
+                          //required: true,
+                          getListUrl: Urls.data_acc_ledgers,
+                          params: `ledgerID = 0 & ledgerType=${LedgerType.Current_Assets}`,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
+                      />
+                      <ERPDataCombobox
+                        id="defaultPDCReceivableAccount"
+                        disabled={!settings?.accountsSettings?.allowPostPDC}
+                        data={settings?.accountsSettings}
+                        label={t("default_PDC_receivable_account")}
+                        field={{
+                          id: "defaultPDCReceivableAccount",
+                          //required: true,
+                          getListUrl: Urls.data_acc_ledgers,
+                          params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
+                      />
+                      <ERPDataCombobox
+                        id="defaultPDCPayableAccount"
+                        disabled={!settings?.accountsSettings?.allowPostPDC}
+                        data={settings?.accountsSettings}
+                        label={t("default_PDC_payable_account")}
+                        field={{
+                          id: "defaultPDCPayableAccount",
+                          //required: true,
+                          getListUrl: Urls.data_acc_ledgers,
+                          params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                          valueKey: "id",
+                          labelKey: "name",
+                        }}
+                        onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
+                      />
                     </div>
                   </div>
 

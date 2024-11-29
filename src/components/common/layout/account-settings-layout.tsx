@@ -25,7 +25,7 @@ const AccountSettingsLayout: FC<LayoutProps> = ({setMyClass}) => {
     <Header />
             <Sidebar type='account-settings'/>
             <div className='content main-index'>
-              <div className='main-content'
+              <div className='main-content p-4'
                 onClick={Bodyclickk}
               >
                 <Content />

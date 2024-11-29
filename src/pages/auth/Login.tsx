@@ -13,7 +13,7 @@ import { LoginData, loginUser } from "../../redux/slices/auth/login/thunk";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import { UserModel } from "../../redux/slices/user-session/reducer";
 import { useAppState } from "../../utilities/hooks/useAppState";
-import { languagesData, Locale, Theme } from "../../redux/slices/app/types";
+import { AppState, languagesData, Locale, Theme } from "../../redux/slices/app/types";
 
 import { RootState } from "../../redux/store";
 import { customJsonParse } from "../../utilities/jsonConverter";
@@ -46,7 +46,7 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
 
       setError('');
-
+debugger;
       if (login.isOk == true) {
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
@@ -63,7 +63,7 @@ const Login = () => {
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
         const _userThemes = atob(login.item.userThemes);
-        const userThemes: Theme = customJsonParse(_userThemes);
+        const userThemes: AppState = customJsonParse(_userThemes);
         let locale = (languagesData.find((l) => l.code == userProfileDetails.language)) ?? { code: 'en', name: 'English', flag: usFlag, rtl: false };
         syncAppStates(dispatch, userThemes, userProfileDetails, locale);
       }

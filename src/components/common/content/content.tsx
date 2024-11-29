@@ -2,6 +2,7 @@ import { FC, lazy, Suspense, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ApplicationSettings from '../../../pages/settings/system/application-settings';
 import ApplicationSettingsNew from '../../../pages/settings/system/application-settings-new';
+import ApplicationSettingsVirtual from '../../../pages/settings/system/app-new/application-settings-virtual';
 import Templates from '../../../pages/InvoiceDesigner/Templates';
 import Settings from '../../../pages/settings/AllSettings/Settings';
 import UserActionReport from '../../../pages/settings/system/user-action-report';
@@ -149,6 +150,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/user-actions" element={<UserActionReport />} />
         <Route path="/system/application-settings" element={<ApplicationSettings />} />
         <Route path="/system/application-settings-new" element={<ApplicationSettingsNew />} />
+        <Route path="/system/application-settings-virtual" element={<ApplicationSettingsVirtual />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
         <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="/system/counter-settings" element={<CounterSettings />} />
@@ -192,7 +194,7 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Masters End */}
 
         {/* Accounts Masters */}
-        <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType='' formCode='' voucherPrefix='' drCr='' formType='' title='' />} />
+        <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType={''} formCode={''} voucherPrefix={''} formType={''} title={''} drCr={''} />} />
         {/* Accounts Masters End */}
 
 
@@ -227,7 +229,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
-        <Route path="/inventory/gstr1_report" element={<GstrReport />} />
+        <Route path="/inventory/gstr_report" element={<GstrReport />} />
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

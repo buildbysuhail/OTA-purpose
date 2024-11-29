@@ -146,7 +146,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     inputBox: {
       inputStyle: "normal",
       inputSize:"sm",
-      CheckButtonInputSize:"sm",
+      checkButtonInputSize:"sm",
       inputHeight:0,
       fontSize: 0,
       fontWeight: 400,
@@ -155,6 +155,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       borderColor: "128, 128, 128",
       fontColor:"128, 128, 128", 
       borderFocus: "128, 128, 128",
+      labelColor:'128, 128, 128',
       borderRadius: 0,
       adjustA:0,
       adjustB:0,
@@ -180,9 +181,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let updatedUserThemeAction = reduxManager.getTypedThunk(
     updatedUserThemeRName
   );
-  const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {
-    console.log(appState);
-    
+  const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {   
     const _appState = {
       ...appState,
       inputBox: {
@@ -203,19 +202,15 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
   const saveThemeChange = async () => {
     debugger;
-    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: JSON.stringify(appState)});
+    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: btoa(JSON.stringify(appState))});
     handleResponse(res, () => {
-      // userTheme();
+      Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
     });
   };
-  // const rgbToHex = (r: number, g: number, b: number): string => {
-  //   return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
-  // }
 
-  // const scrollbarColorHex = rgbToHex(...appState.scrollbarColor.split(',').map(Number))
   return (
     <Fragment>
-      <div className="grid grid-cols-12 gap-x-6 p-3">
+      <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-6 xl:col-span-12  col-span-12 ">
           <div className="grid grid-cols-12 gap-x-6">
             <div
@@ -312,9 +307,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
                                   }
                                 }}
-                                // onClick={() =>
-                                //   handleThemeChange("mode", "light")
-                                // }
+                        
                               />
                               <label
                                 htmlFor="switcher-light-theme"
@@ -337,7 +330,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                   }
                                  
                                 }}
-                                // onClick={() => { handleThemeChange("mode", "dark")}}
+                  
                               />
                               <label
                                 htmlFor="switcher-dark-theme"
@@ -647,8 +640,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         title="Save Changes"
                         onClick={saveThemeChange}
                         variant="primary"
-                        // loading={updatedUserappState.loading}
-                        // disabled={updatedUserappState.loading}
+                 
                       ></ERPButton>
                     </div>
                   </div>
@@ -1048,7 +1040,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                             `${r},  ${g},  ${b}`
                                           );
                                         
-                                          // localStorage.setItem("dynamiccolor", `${r}, ${g} ,${b}`);
                                         }
                                       }}
                                       value={"#FFFFFF"}
@@ -1101,7 +1092,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor:  `rgb(${appState.scrollbarColor})`,
+                                  backgroundColor:  `rgb(${appState.scrollbarColor??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1167,7 +1158,15 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                       <div className="">
-                        <p className="switcher-style-head ">Input Box Style:</p>
+                     
+                      <p className="switcher-style-head ">Input Box Style:</p>
+                      <ERPButton
+                     variant="secondary"
+                     startIcon="ri-loop-left-line"
+                     className= {`p-[1px] m-[0px] h-7 w-7 `}
+                    ></ERPButton>
+                     
+                        
                         <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center mt-5 switcher-style">
                              <ERPInput
                              
@@ -1592,7 +1591,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 value={appState.inputBox?.labelFontSize}
                                 data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                            
                                   handleInputBoxStyleChange(
                                     "labelFontSize",
@@ -1612,7 +1611,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 className="bg-slate-300"
                                 value={appState.inputBox?.fontWeight}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                               
                                   handleInputBoxStyleChange(
                                     "fontWeight",
@@ -1632,7 +1631,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 value={appState.inputBox?.fontWeight}
                                 data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                           
                                   handleInputBoxStyleChange(
                                     "fontWeight",
@@ -1673,7 +1672,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                                 value={appState.inputBox?.inputHeight}
                                 data={appState.inputBox}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); // Ensure we parse the value as a number
+                                  const newValue = parseInt(e.target.value, 10); 
                        
                                   handleInputBoxStyleChange(
                                     "inputHeight",
@@ -1777,7 +1776,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                        )}
                           
                        
-                       <div className="grid grid-cols-3 switcher-style">
+                       <div className="grid grid-cols-2 sm:grid-cols-4 switcher-style">
                         <div className="flex items-center ">
                         <label
                             htmlFor="borderColor"
@@ -1790,7 +1789,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.borderColor})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.borderColor??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1825,7 +1824,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.fontColor})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.fontColor??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1848,6 +1847,43 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               </div>
                             </div>
                         </div>
+
+                           <div className="flex items-center ">
+                        <label
+                            htmlFor="labelColor"
+                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                          >
+                            {" "}
+                            Label Color 
+                          </label>
+                        <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${appState.inputBox?.labelColor??'128, 128, 128'})`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={appState.inputBox?.labelColor}
+                                  onChange={(e) => {
+                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    if (rgb) {
+                                      handleInputBoxStyleChange(
+                                        "labelColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
+                                    }
+                                
+                                    
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                        </div>        
+
                         <div className="flex items-center ">
                         <label
                             htmlFor="borderFocus"
@@ -1860,7 +1896,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.borderFocus})`,
+                                  backgroundColor: `rgb(${appState.inputBox?.borderFocus??'128, 128, 128'})`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1925,13 +1961,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-sm"
                             checked={
-                              appState.inputBox?.CheckButtonInputSize === "sm"
+                              appState.inputBox?.checkButtonInputSize === "sm"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
                           
                                 handleInputBoxStyleChange(
-                                  "CheckButtonInputSize",
+                                  "checkButtonInputSize",
                                   "sm"
                                 );
                               }
@@ -1952,13 +1988,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-md"
                             checked={
-                              appState.inputBox?.CheckButtonInputSize === "md"
+                              appState.inputBox?.checkButtonInputSize === "md"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
                           
                                 handleInputBoxStyleChange(
-                                  "CheckButtonInputSize",
+                                  "checkButtonInputSize",
                                   "md"
                                 );
                               }
@@ -1979,13 +2015,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                             className="ti-form-radio"
                             id="inputCheck-lg"
                             checked={
-                              appState.inputBox?.CheckButtonInputSize === "lg"
+                              appState.inputBox?.checkButtonInputSize === "lg"
                             }
                             onChange={(e) => {
                               if (e.target.checked) {
                         
                                 handleInputBoxStyleChange(
-                                  "CheckButtonInputSize",
+                                  "checkButtonInputSize",
                                   "lg"
                                 );
                               }
@@ -2014,8 +2050,6 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       title="Save Changes"
                       onClick={saveThemeChange}
                       variant="primary"
-                      // loading={updatedUserappState.loading}
-                      // disabled={updatedUserappState.loading}
                     ></ERPButton>
                   </div>
                 </div>

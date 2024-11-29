@@ -22,6 +22,7 @@ import EInvoiceTaxPro from '../e-invoice-taxpro';
 import EWBTaxPro from '../ewb-taxpro';
 import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '../../../../utilities/hooks/use-application-misc-settings';
 import { BusinessType } from '../../../../enums/business-types';
+import { useApplicationSetting } from '../../../../utilities/hooks/use-application-settings';
 
 
 const api = new APIClient()
@@ -57,55 +58,21 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState(settingGroups[0]?.id || 0);
   const [activeSubItem, setActiveSubItem] = useState(settingGroups[0]?.settings?.[0]?.key || "");
   const [activeSubCatItem, setActiveSubCatItem] = useState(settingGroups[0]?.settings?.[0]?.subSettings?.[0]?.key || "");
+  const {
+    settings,
+    isSaving,
+    handleSubmit,
+    handleFieldChange,
+  } = useApplicationSetting();
+
   const sectionsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({})
-  const { settings, setSettings, verifyOtp, sendOtp,
+  const { verifyOtp, sendOtp,
     otpSending,
     otpVerifying } = useApplicationMainSettings();
   const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
-  const handleFieldChange = useCallback(
-    <T extends keyof ApplicationSettingsType>(type: T, settingName: keyof ApplicationSettingsType[T], value: any
-    ) => {
-      setSettings((prevSettings = {} as ApplicationSettingsType) => {
-        if (
-          settingName === "allowSalesRouteArea" &&
-          value === false &&
-          type === "mainSettings"
-        ) {
-          return {
-            ...prevSettings,
-            [type]: {
-              ...prevSettings[type],
-              [settingName]: value,
-              maintainSalesRouteCreditLimit: false,
-            },
-          };
-        }
-        else if (settingName === 'allowSalesCounter' && value == false &&
-          type === "mainSettings") {
-          return {
-            ...prevSettings,
-            [type]: {
-              ...prevSettings[type],
-              [settingName]: value,
-              allowUserwiseCounter: false,
-              enableAuthorizationforShiftClose: false
-            },
-          };
-        } else {
-          return {
-            ...prevSettings,
-            [type]: {
-              ...prevSettings[type],
-              [settingName]: value,
-            },
-          };
-        }
-      });
-    },
-    []
-  );
+ 
   const scrollToSection = (sectionId: string, subItemKey?: string, subItemsCatKey?: string) => {
     if (subItemsCatKey) {
       subItemsCatRef.current[subItemsCatKey]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -3905,6 +3872,16 @@ export default function SettingsPage() {
           </div>
         </div >
       </main >
+      <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
+        <ERPButton
+          title={t("save_settings")}
+          variant="primary"
+          type="button"
+          loading={isSaving}
+          disabled={isSaving}
+          onClick={handleSubmit}
+        />
+      </div>
     </div >
   )
 }

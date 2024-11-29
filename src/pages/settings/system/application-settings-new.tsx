@@ -18,7 +18,6 @@ import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsInitialState } from "../../../redux/slices/app/application-settings-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
-import { ApplicationSettingsType } from "./application-settings-types";
 interface SearchCount {
   [key: string]: number;
 }

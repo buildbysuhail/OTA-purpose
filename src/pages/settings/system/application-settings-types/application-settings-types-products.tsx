@@ -77,7 +77,7 @@ export  const ApplicationProductsSettingsInitialState: ApplicationProductsSettin
     enableMultiWarehouseBilling: false,
     enableSupplierWiseItemCode: false,
     includeSearchItemAlias_ItemName2: true,
-    lastSystemGeneratedBarcode: 1000000000001,
+    lastSystemGeneratedBarcode: '1000000000001',
     stopScanningOnWrongBarcodeInSales: false,
     excludeSchemeProductAmountFromPrivilegeCard: false,
     showPurchaseCostChangeWarning: false,

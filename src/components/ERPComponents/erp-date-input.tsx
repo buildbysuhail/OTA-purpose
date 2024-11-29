@@ -146,7 +146,6 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
 
     const commonMuiStyles = {
       borderRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
-      boxShadow: "none !important",
       color: appState?.mode == 'dark' ?'#ffffff':`rgb(${appState?.inputBox?.fontColor})`,
       "& .MuiOutlinedInput-notchedOutline": {
         borderColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})`,
@@ -186,7 +185,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           "& .MuiInputLabel-root": {
      
             fontSize: "12px",
-            color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+            (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? "translate(8px, 14px) scale(1)"
@@ -212,7 +212,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: "13px",
-            color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+            (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? "translate(10px, 18px) scale(1)"
@@ -239,7 +240,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           "& .MuiInputLabel-root": {
          
             fontSize: "14px",
-            color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+            (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? "translate(10px, 21px) scale(1)"
@@ -269,7 +271,8 @@ const ERPDateInput = forwardRef<HTMLInputElement, ERPDateInputProps>(({
           },
           "& .MuiInputLabel-root": {
             fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
-            color: appState?.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+            (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${

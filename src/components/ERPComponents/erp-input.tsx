@@ -198,7 +198,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       const styles: {
         mui: SxProps<Theme>;
         regular: {
-          height: string;
+          height?: string;
           fontSize: string;
           padding: string;
           fontWeight?: number;
@@ -216,7 +216,6 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       const commonMuiStyles = {
         margin: "0",
         borderRadius: `${appState.inputBox?.borderRadius ?? 5}px`,
-        boxShadow: "none !important",
         color: appState?.mode == 'dark' ?'#ffffff':`rgb(${appState.inputBox?.fontColor})`,
         "& .MuiOutlinedInput-notchedOutline": {
           borderColor: appState?.mode == 'dark' ? '#ffffff1a' : `rgb(${appState?.inputBox?.borderColor})`,
@@ -237,6 +236,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
         {
           borderBottomColor: appState?.mode == 'dark' ? '#ffffff' : `rgb(${appState?.inputBox?.borderFocus})`,
         },
+
+   
    
         "& .MuiOutlinedInput-input, & .MuiFilledInput-input, & .MuiInput-input":
         {
@@ -255,7 +256,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputLabel-root": {
          
                 fontSize: "12px",
-                color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+                color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
                 transform:
                   _variant === "filled"
                     ? "translate(8px, 14px) scale(1)"
@@ -289,7 +291,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           },
           "& .MuiInputLabel-root": {
             fontSize: "13px",
-            color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+            color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+            (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform:
               _variant === "filled"
                 ? "translate(10px, 18px) scale(1)"
@@ -298,6 +301,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                 : "translate(10px, 13px) scale(1)",
           },
           "& .MuiInputLabel-shrink": {
+           
             transform:
               _variant === "filled"
                 ? "translate(8px, -1px) scale(0.90)"
@@ -325,7 +329,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               "& .MuiInputLabel-root": {
              
                 fontSize: "14px",
-                color:appState?.mode == 'dark' ?'#ffffff':`#2c2c2c`,
+                color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
                 transform:
                   _variant === "filled"
                     ? "translate(10px, 21px) scale(1)"
@@ -334,6 +339,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                     : "translate(10px, 15px) scale(1)"
               },
               "& .MuiInputLabel-shrink": {
+            
                 transform:
                   _variant === "filled"
                     ? "translate(8px, -1px) scale(0.90)"
@@ -362,7 +368,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               },
               "& .MuiInputLabel-root": {
                 fontSize: `${appState?.inputBox?.labelFontSize ?? 14}px`,
-                color: appState.mode == 'dark' ? '#ffffff' : `#2c2c2c`,
+                color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+                (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
                 transform:
                   _variant === "filled"
                     ? `translate(${appState?.inputBox?.adjustA ?? 10}px, ${
@@ -377,6 +384,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                       }px) scale(1)`,
               },
               "& .MuiInputLabel-shrink": {
+               
                 transform:
                   _variant === "filled"
                     ? `translate(${appState?.inputBox?.adjustC ?? 8}px, ${
@@ -464,7 +472,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
              marginTop: `${appState?.inputBox?.marginTop??0}px`
            }}
          >
-          <TextField {...muiProps} className="form-control" />
+          <TextField {...muiProps}
+          // className= {`${appState.mode == 'dark' ? "form-control" : ``}`} 
+          />
           <ERPElementValidationMessage validation={validation} />
           <Typography
             className="text-[#374151] text-xs font-medium mt-1">

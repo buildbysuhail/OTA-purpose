@@ -20,7 +20,7 @@ import {
   Theme,
 } from "../../redux/slices/app/types";
 import Cookies from "js-cookie";
-import { modelToBase64 } from "../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../utilities/jsonConverter";
 import ERPSelect from "../../components/ERPComponents/erp-select";
 import {
   useAppDynamicSelector,
@@ -32,7 +32,7 @@ import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { RootState } from "../../redux/store";
-import { setAppState } from "../../redux/slices/app/reducer";
+import { setAppState, setInputBox } from "../../redux/slices/app/reducer";
 import ERPRadio from "../../components/ERPComponents/erp-radio";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../components/ERPComponents/erp-date-input";
@@ -207,6 +207,13 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
     });
   };
+
+const resetInputBox = async ()=>{
+  const res = await api.getAsync(Urls.getInputBox)
+  const _inputBox = atob(res);
+  const inputBox : inputBox = customJsonParse(_inputBox);
+    dispatch(setInputBox(inputBox));
+}
 
   return (
     <Fragment>
@@ -1160,11 +1167,19 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                       <div className="">
                      
                       <p className="switcher-style-head ">Input Box Style:</p>
-                      <ERPButton
+                      
+                      <div className="flex justify-end items-center mt-3">
+                    <ERPButton 
                      variant="secondary"
-                     startIcon="ri-loop-left-line"
-                     className= {`p-[1px] m-[0px] h-7 w-7 `}
-                    ></ERPButton>
+                     title="Reset"
+                     onClick={() => {resetInputBox}}
+                     startIcon={ 'ri-refresh-line' }
+                    //  disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
+                    //  loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
+                     >
+                     </ERPButton>
+                      </div>
+                    
                      
                         
                         <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center mt-5 switcher-style">

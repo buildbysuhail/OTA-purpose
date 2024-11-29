@@ -421,7 +421,7 @@
   "verify": "Verify",
   "allow_privilege_card": "Allow Privilege Card",
   "allow_postdated_transaction": "Allow Postdated Transaction",
-  "allow_predated_transaction": "Allow Predated Transaction",
+  "allow_past_dated_transaction": "Allow Predated Transaction",
   "maintain_separate_prefix_for_cash_sales": "Maintain Separate Prefix for Cash Sales",
   "save_modified_transaction_summary": "Save Modified Transaction Summary",
   "maintain_production": "Maintain Production",
@@ -689,7 +689,7 @@
   "maintain_tax": "Maintain Tax",
   "show_financial_year_selector_on_startup": "Show Financial Year Selector On Startup",
   "maintain_auto_posting_transaction": "Maintain Auto Posting Transaction",
-  "allow_edit_posted_transactions": "Allow Edit Posted Transactions",
+  "allow_posted_transactions_edit": "Allow Posted Transactions Edit",
   "maintain_inventory_master_entry": "Maintain Inventory Master Entry",
   "maintain_inventory_transactions_entry": "Maintain Inventory Transactions Entry",
   "use_branch_wise_sales_price": "Use Branch Wise Sales Price",
@@ -1334,5 +1334,6 @@
   "assets": "Assets",
   "gstr_report": "GSTR1 Report",
   "app_settings_new": "Application Settings new",
-  "details": "details"
+  "details": "details",
+  "check_listed_product_prices_in_purchase_invoice": "Check Listed Product Prices in Purchase Invoice"
 }

@@ -129,8 +129,8 @@ export default function SettingsPage() {
             setActiveSection(section.id)
             // Check sub-items within the active section
             for (const setting of section.settings?.filter(x =>
-              (settings?.branchSettings?.countryName === Countries.Saudi && x.key === "accountsEInvoiceGCC") ||
-              (settings?.branchSettings?.countryName === Countries.India && x.key === "inventoryGSTSettings")
+              (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
+              (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key]
               if (subElement) {
@@ -166,9 +166,15 @@ export default function SettingsPage() {
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
+  const [filterText, setFilterSearch] = useState("");
+  const onfilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value??"".toLowerCase();
+    setFilterSearch(searchTerm);
+  }
 
   return (
     <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark">
+     
       <aside className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-10 bg-[#fafafa]">
         <h1 className="font-medium text-xl p-5 mb-5">Settings</h1>
         <div className="flex flex-col overflow-y-auto pb-24 h-full mt-4">
@@ -220,6 +226,7 @@ export default function SettingsPage() {
           <div className="p-6">
             {/* {settingGroups.map((group, index) => ( */}
             <LayoutToggle onToggle={setIsCompactView} />
+            <input type='text' onChange={onfilterChange}></input>
             <section
               key="main"
               ref={el => sectionsRef.current['main'] = el}
@@ -230,7 +237,8 @@ export default function SettingsPage() {
                   <div key="mainGeneral" className="space-y-4">
                     <div className="border p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`  ${isCompactView ? 'grid grid-cols-1 gap-6' : 'grid xxl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-6'}`}>
-                        <ERPDataCombobox
+                        {(filterText === "" || t("business_type").toLowerCase().includes(filterText.toLowerCase())) && (
+                          <ERPDataCombobox
                           field={{
                             id: "maintainBusinessType",
                             valueKey: "value",
@@ -250,6 +258,8 @@ export default function SettingsPage() {
                             { value: "Opticals", label: "Opticals" },
                           ]}
                         />
+                        )
+                      }
                         <ERPDataCombobox
                           id="currency"
                           field={{

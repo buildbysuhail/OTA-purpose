@@ -10,27 +10,31 @@ import administrationEn from "./locales/en/administration-En.json";
 import administrationAr from "./locales/ar/administration-Ar.json";
 import applicationSettingsEn from "./locales/en/applicationSettings-En.json";
 import applicationSettingsAr from "./locales/ar/applicationSettings-Ar.json";
+import systemEn from "./locales/en/system-En.json";
+import systemAr from "./locales/ar/system-Ar.json";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
   lng: "en",
   debug: true,
-  ns: ["main", "masters", "userManage", "administration"], 
-  defaultNS: "main", 
+  ns: ["main", "masters", "userManage", "administration", "applicationSettings", "system"],
+  defaultNS: "main",
   resources: {
     en: {
       main: mainEn,
       masters: mastersEn,
       userManage: userManageEn,
       administration: administrationEn,
-      applicationSettings:applicationSettingsEn
+      applicationSettings: applicationSettingsEn,
+      system: systemEn,
     },
     ar: {
       main: mainAr,
       masters: mastersAr,
       userManage: userManageAr,
       administration: administrationAr,
-      applicationSettings:applicationSettingsAr
+      applicationSettings: applicationSettingsAr,
+      system: systemAr,
     },
   },
 });

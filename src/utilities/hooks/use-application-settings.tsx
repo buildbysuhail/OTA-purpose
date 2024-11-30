@@ -9,15 +9,17 @@ import Urls from "../../redux/urls";
 import { handleResponse } from "../HandleResponse";
 import { ApplicationSettingsType } from "../../pages/settings/system/application-settings-types/application-settings-types";
 import { APIClient } from "../../helpers/api-client";
+import { useTranslation } from "react-i18next";
 
 const api = new APIClient()
-export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
+export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   const appDispatch = useAppDispatch();
-  
+
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
   const [settingsPrev, setSettingsPrev] = useState<ApplicationSettingsType>(applicationSettings);
   const [isSaving, setIsSaving] = useState(false);
+  const { t } = useTranslation();
   const handleFieldChange = useCallback(
     <T extends keyof ApplicationSettingsType>(type: T, settingName: keyof ApplicationSettingsType[T], value: any
     ) => {
@@ -63,7 +65,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
   const handleSubmit = async () => {
     setIsSaving(true);
     console.log("Saving settings initiated.");
-  
+
     try {
       // Compare settings with previous state to find changes (supports nested structures)
       const getDifferences = (
@@ -71,13 +73,13 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
         previous: ApplicationSettingsType
       ): { settingsName: string; settingsValue: string }[] => {
         const differences: { settingsName: string; settingsValue: string; settingsType: string }[] = [];
-  
+
         const compareObjects = (currentObj: any, previousObj: any, parentKey = "") => {
           for (const key in currentObj) {
             const currentValue = currentObj[key];
             const previousValue = previousObj?.[key];
             const settingsName = key;
-  
+
             if (typeof currentValue === "object" && currentValue !== null) {
               compareObjects(currentValue, previousValue, settingsName);
             } else if (currentValue !== previousValue && parentKey != "") {
@@ -88,29 +90,29 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
                 settingsValue: currentValue === true
                   ? "true"
                   : currentValue === false
-                  ? "false"
-                  : currentValue?.toString() ?? "",
+                    ? "false"
+                    : currentValue?.toString() ?? "",
               });
             }
           }
         };
-  
+
         console.log("Comparing current settings with previous settings...");
         compareObjects(current, previous);
         console.log("Differences identified:", differences);
         return differences;
       };
-  
+
       console.log("Calling getDifferences to find modified settings...");
       const modifiedSettings = getDifferences(settings, settingsPrev);
-  
+
       if (modifiedSettings.length > 0) {
         console.log("Modified settings found:", modifiedSettings);
         const response = await api.put(Urls.application_settings, {
           type: "all",
           updateList: modifiedSettings,
         });
-  
+
         console.log("API response received:", response);
         handleResponse(
           response,
@@ -133,13 +135,20 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
       console.log("Saving process completed.");
     }
   };
-  
-  return  {
+  const filterComponent = (translations: string[], filterText: string) => {
+    const filter = translations.filter((translationKey) =>
+      t(translationKey).toLowerCase().includes(filterText.toLowerCase())
+    );
+    return filterText == "" || (filter != null && filter.length > 0);
+  }
+
+  return {
     settings,
     setSettings,
     isSaving,
     handleSubmit,
-    handleFieldChange
+    handleFieldChange,
+    filterComponent
   };
 };
 type UseApplicationSettingReturnType = {
@@ -152,4 +161,5 @@ type UseApplicationSettingReturnType = {
     settingName: keyof ApplicationSettingsType[T],
     value: any
   ) => void;
+  filterComponent: (translations: string[], filterText: string) => boolean;
 };

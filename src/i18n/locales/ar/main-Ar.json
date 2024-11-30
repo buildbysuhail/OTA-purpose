@@ -60,5 +60,7 @@
     "whatsapp_integration": "تكامل الواتساب",
     "email_integration": "تكامل البريد الإلكتروني",
     "test": "اختبار",
-    "test popup": "اختبار النافذة المنبثقة"
+    "test popup": "اختبار النافذة المنبثقة",
+
+    "reset_dataBase": "إعادة تعيين قاعدة البيانات"
 }

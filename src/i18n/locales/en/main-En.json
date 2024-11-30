@@ -60,5 +60,7 @@
     "whatsapp_integration": "Whatsapp Integration",
     "email_integration": "Email Integration",
     "test":"Test",
-    "test popup":"Test Popup"
+    "test popup":"Test Popup",
+
+    "reset_dataBase": "Reset DataBase"
 }

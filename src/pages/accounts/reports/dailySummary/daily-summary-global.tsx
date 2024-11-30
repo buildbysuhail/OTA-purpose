@@ -7,19 +7,10 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-interface DailySummaryGlobal {
+import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../cash-summary-report-filter";
 
-  from: Date
-}
 const DailySummaryGlobal = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -27,7 +18,7 @@ const DailySummaryGlobal = () => {
       dataType: "date",
       allowSearch: true,
       allowFiltering: true,
-      width: 50,
+      width: 150,
     },
     {
       dataField: "party",
@@ -36,7 +27,6 @@ const DailySummaryGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
     },
-  
     {
       dataField: "billed",
       caption: t("billed"),
@@ -52,94 +42,39 @@ const DailySummaryGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
     },
-{
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-    },
-    
-    {
-      dataField: "voucherNumber",
-      caption:  t("voucher_no"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "ledgerCode",
-      caption: t("ledger_code"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "ledgerName",
-      caption: t("ledger_name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "amount",
-      caption: t("amount"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    
-   
-   
-    {
-      dataField: "balanceAmount",
-      caption: t('balance_amount'),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
     {
       dataField: "balance",
       caption: t("balance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
     },
-    
     {
-      dataField: "ledger_Balance",
-      caption: t("ledger_balance"),
+      dataField: "runningBalance",
+      caption: t("runningBalance"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
     },
     {
-      dataField: "creditLimit",
-      caption: t("credit_limit"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      width: 150,
-    },
-    {
-      dataField: "userName",
-      caption: t("user_name"),
+      dataField: "productName",
+      caption: t("product_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
-     {
-      dataField: "signature",
-      caption: t("signature"),
-      dataType: "string",
+    {
+      dataField: "quantity",
+      caption: t("quantity"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "netAmt",
+      caption: t("net_amount"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -154,14 +89,16 @@ const DailySummaryGlobal = () => {
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("daily_summary_receipt_details")}
-                  dataUrl= {Urls.acc_reports_daily_summary_receipt_details}
+                  gridHeader={t("daily_summary_report")}
+                  dataUrl= {Urls.acc_reports_daily_summary_global}
                   method={ActionType.POST}
                   gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  enablefilter={true}
+                  showFilterInitially={true}
+                  filterWidth="100"
+                  filterContent={<CashSummaryReportFilter/>}
+                  filterInitialData={CashSummaryReportFilterInitialState}
                   hideGridAddButton={true}
-                  // gridAddButtonType="popup"
                   reload={true}
                 ></ErpDevGrid>
               </div>
@@ -169,7 +106,6 @@ const DailySummaryGlobal = () => {
           </div>
         </div>
       </div>
-      
     </Fragment>
   );
 };

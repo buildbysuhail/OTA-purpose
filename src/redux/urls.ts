@@ -172,6 +172,7 @@ const Urls = {
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
+  application_settings_virtual: "/Core/ApplicationSettings/Virtual/",
   sql_commands: "/Core/SQLCommand/",
   notification_provider: "/Core/NotificationProvider/",
   notification_transaction: "/Core/TransactionNotification",

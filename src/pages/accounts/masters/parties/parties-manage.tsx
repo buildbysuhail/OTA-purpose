@@ -391,8 +391,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           <Tab label="Bank" value="bank" />
           <Tab label="Details" value="details" />
           <Tab label="More" value="more" />
-          <Tab label="Project/Job" value="project_job" />
-          {userSession.countryId != Countries.India && applicationSettings.branchSettings.maintainKSA_EInvoice == true &&
+          {/* <Tab label="Project/Job" value="project_job" /> */}
+          {userSession.countryId != Countries.India && applicationSettings?.branchSettings?.maintainKSA_EInvoice == true &&
             <Tab label="Other" value="other_details" />
           }
         </Tabs>
@@ -777,7 +777,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 </div>
               </div>
             </div></>}
-          {activeTab === 'project_job' && <div className="grid grid-cols-4 gap-6">
+          {/* {activeTab === 'project_job' && <div className="grid grid-cols-4 gap-6">
             <ERPInput
               {...getFieldProps("projectName")}
               label={t("project_name")}
@@ -806,7 +806,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }
             />
 
-          </div>}
+          </div>} */}
           {activeTab === 'other_details' && (
             <div className="grid grid-cols-4 gap-6">
               <ERPDataCombobox

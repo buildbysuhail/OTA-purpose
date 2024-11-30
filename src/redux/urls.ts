@@ -137,7 +137,7 @@ const Urls = {
   getPreference: "/Core/Preferences/GetPreference/",
   getDateRegion: "/Core/Preferences/GetDateRegion/",
   getUserThemes: "/Core/Preferences/GetUserThemes/",
-  getInputBox: "/Core/Preferences/GetInputBox/",
+  getInputBox: " ",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
@@ -172,6 +172,7 @@ const Urls = {
   authorization_settings: "/Core/Authorization/",
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
+  application_settings_virtual: "/Core/ApplicationSettings/Virtual/",
   sql_commands: "/Core/SQLCommand/",
   notification_provider: "/Core/NotificationProvider/",
   notification_transaction: "/Core/TransactionNotification",
@@ -206,6 +207,7 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
+  acc_user_config:" ",
   //Reports
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
@@ -224,6 +226,7 @@ const Urls = {
   acc_reports_inventory_history_details: "/Accounts/RptTransactionHistory/ShowTransHistoryInventoryDetails/",
   acc_reports_accounts_history: "/Accounts/RptTransactionHistory/TransactionHistoryAccounts/",
   acc_reports_accounts_history_popup: "/Accounts/RptTransactionHistory/ShowTransHistoryAccountsPopUp/",
+  acc_reports_daily_summary_global: "/Accounts/RptDailySummaryReport/DailySummaryReportGlobal/",
   acc_reports_daily_summary: "/Accounts/RptDailySummaryReport/DailySummaryReport/",
   acc_reports_daily_summary_detailed: "/Accounts/RptDailySummaryReport/DailySummaryDetailedReport/",
   acc_reports_daily_summary_credit_details: "/Accounts/RptDailySummaryReport/CreditSalesReportDaily/",
@@ -259,6 +262,7 @@ const Urls = {
 
   //Transaction
   get_last_voucher_no: "",
+
   // Accounts End
 
 

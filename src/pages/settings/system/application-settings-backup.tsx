@@ -7,12 +7,19 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../helpers/api-client";
 import { t } from "i18next";
-import { ApplicationBackupSettings, ApplicationBackupSettingsInitialState } from "./application-settings-types/application-settings-types-backup";
+import {
+  ApplicationBackupSettings,
+  ApplicationBackupSettingsInitialState,
+} from "./application-settings-types/application-settings-types-backup";
 import { useTranslation } from "react-i18next";
 
 const BackupSettingsForm: React.FC = () => {
-  const [formState, setFormState] = useState<ApplicationBackupSettings>(ApplicationBackupSettingsInitialState);
-  const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationBackupSettings>>({});
+  const [formState, setFormState] = useState<ApplicationBackupSettings>(
+    ApplicationBackupSettingsInitialState
+  );
+  const [formStatePrev, setFormStatePrev] = useState<
+    Partial<ApplicationBackupSettings>
+  >({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +45,10 @@ const BackupSettingsForm: React.FC = () => {
     }
   };
 
-  const handleFieldChange = (field: keyof typeof ApplicationBackupSettingsInitialState, value: any) => {
+  const handleFieldChange = (
+    field: keyof typeof ApplicationBackupSettingsInitialState,
+    value: any
+  ) => {
     setFormState((prevState) => ({
       ...prevState,
       [field]: value,
@@ -49,28 +59,43 @@ const BackupSettingsForm: React.FC = () => {
     setIsSaving(true);
     try {
       const modifiedSettings = Object.keys(formState).reduce((acc, key) => {
-        const currentValue = formState?.[key as keyof ApplicationBackupSettings];
+        const currentValue =
+          formState?.[key as keyof ApplicationBackupSettings];
         const prevValue = formStatePrev[key as keyof ApplicationBackupSettings];
 
-        if (currentValue !== prevValue || (currentValue === false && prevValue === true) ||
-        (currentValue === true && prevValue === false)) {
-
+        if (
+          currentValue !== prevValue ||
+          (currentValue === false && prevValue === true) ||
+          (currentValue === true && prevValue === false)
+        ) {
           acc.push({
             settingsName: key,
-            settingsValue: currentValue === false ? "false" :
-            currentValue === true ? "true" :
-            (currentValue ?? "").toString(),
+            settingsValue:
+              currentValue === false
+                ? "false"
+                : currentValue === true
+                ? "true"
+                : (currentValue ?? "").toString(),
           });
         }
         return acc;
       }, [] as { settingsName: string; settingsValue: string }[]);
 
-      const response = modifiedSettings && modifiedSettings.length > 0 ? (await api.put(Urls.application_settings, {
-        type: "backup",
-        updateList: modifiedSettings,
-      })) as any : null;
-      handleResponse(response, () => {setFormStatePrev(formState) }, () => { }, false);
-
+      const response =
+        modifiedSettings && modifiedSettings.length > 0
+          ? ((await api.put(Urls.application_settings, {
+              type: "backup",
+              updateList: modifiedSettings,
+            })) as any)
+          : null;
+      handleResponse(
+        response,
+        () => {
+          setFormStatePrev(formState);
+        },
+        () => {},
+        false
+      );
     } catch (error) {
       console.error("Error saving settings:", error);
     } finally {
@@ -88,17 +113,17 @@ const BackupSettingsForm: React.FC = () => {
   }
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
     return () => {
-      document.body.style.overflow = 'unset';
-      document.documentElement.style.overflow = 'unset';
+      document.body.style.overflow = "unset";
+      document.documentElement.style.overflow = "unset";
     };
   }, []);
 
   return (
-    <div className="h-screen max-h-dvh flex flex-col  overflow-hidden">
+    <div className=" h-screen max-h-dvh flex flex-col  overflow-hidden">
       <form className="overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto h-full">
         <div className="space-y-6 p-6">
           <div className="border p-4 rounded-lg">
@@ -139,7 +164,10 @@ const BackupSettingsForm: React.FC = () => {
                 value={formState.backupDuration}
                 data={formState}
                 label={t("duration")}
-                disabled={formState.backupMethods == "No BackUp" || formState.backupMethods == "BackUp On Close"}
+                disabled={
+                  formState.backupMethods == "No BackUp" ||
+                  formState.backupMethods == "BackUp On Close"
+                }
                 placeholder={t("duration")}
                 type="number"
                 onChangeData={(data: any) =>
@@ -155,7 +183,10 @@ const BackupSettingsForm: React.FC = () => {
                 data={formState}
                 label={t("compress_backup_file")}
                 onChangeData={(data) =>
-                  handleFieldChange("compressBackupFile", data.compressBackupFile)
+                  handleFieldChange(
+                    "compressBackupFile",
+                    data.compressBackupFile
+                  )
                 }
               />
             </div>

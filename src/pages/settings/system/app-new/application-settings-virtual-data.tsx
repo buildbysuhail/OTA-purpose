@@ -30,7 +30,8 @@ export const settingGroups: SettingGroup[] = [
     label: 'Accounts Settings',
     settings: [
       { key: 'accountsGeneral', label: 'General' },
-      { key: 'accountsHR', label: 'HR' }
+      { key: 'accountsHR', label: 'HR' },
+      { key: 'accountsEInvoiceGCC', label: 'KSA Invoice' }
     ]
   },
   {

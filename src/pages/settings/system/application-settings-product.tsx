@@ -21,6 +21,7 @@ const ApplicationSettingsProduct = () => {
   const [error, setError] = useState<string | null>(null);
   const api = new APIClient();
   const dispatch = useAppDispatch();
+  const [isLastSystemGeneratedBarcode, setIsLastSystemGeneratedBarcode] = useState(false);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const { t } = useTranslation("applicationSettings");
 
@@ -341,15 +342,12 @@ const ApplicationSettingsProduct = () => {
               </div>
               <div className="flex items-center justify-between sm:justify-start">
                 <ERPCheckbox
-                  id="lastSystemGeneratedBarcodetrue"
+                  id="isLastSystemGeneratedBarcode"
                   data={formState}
                   label={t("last_generated_barcode")}
-                  checked={formState?.lastSystemGeneratedBarcodetrue}
-                  onChangeData={(data) =>
-                    handleFieldChange(
-                      "lastSystemGeneratedBarcodetrue",
-                      data.lastSystemGeneratedBarcodetrue
-                    )
+                  checked={isLastSystemGeneratedBarcode}
+                  onChange={(data) =>
+                    setIsLastSystemGeneratedBarcode(data.target?.checked)
                   }
                 />
                 <ERPInput
@@ -359,7 +357,7 @@ const ApplicationSettingsProduct = () => {
                   data={formState}
                   noLabel={true}
                   type="text"
-                  disabled={!formState?.lastSystemGeneratedBarcodetrue}
+                  disabled={!isLastSystemGeneratedBarcode}
                   onChangeData={(data: any) =>
                     handleFieldChange(
                       "lastSystemGeneratedBarcode",

@@ -191,7 +191,7 @@ export interface AccTransactionRow {
   voucherType: string;
   checkStatus: string;
   checkBouncedDate: string;
-  billwiseData: BillwiseData[]; 
+  billwiseData: BillwiseData[];
   branchId: number;
   costCentreId: number;
   projectId: number;
@@ -389,34 +389,30 @@ export interface AccUserConfig {
 }
 export interface AccTransactionFormState {
   formCode: string; // FORMCODE
-  voucherType: string; // VOUCHERTYPE
   isCleared: boolean; // IsCleared
   isBounced: boolean; // IsBounced
   isEntryControl: boolean; // IsEntryControl
-  prevTransDate: string; // PrevTransDate
   isRowEdit: boolean; // IsRowEdit
-  accTransMasterID: number; // AccTransMasterID
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
-  billwiseData: BillwiseData[]; 
-  showbillwise: false,
-  showSaveDialog: false,
+  billwiseData: BillwiseData[];
+  showbillwise: false;
+  showSaveDialog: false;
   accTransDetailsID: number; // AccTransDetailsID
   accTransDetailsIDCr: number; // AccTransDetailsIDCr
   chequeStatus: string; // ChequeStatus
   isInvoker: boolean; // IsInvoker
-  foreignCurrency: boolean; // IsInvoker
+  foreignCurrency: boolean; // Foreign currency flag
   costCenterVisible: boolean; // CostCenterVisible
   blnDetailsNotCleared: boolean; // blnDetailsNotCleared
   dsLedgerDetails: any[]; // dsLedgerDetails (DataSet converted to array)
   isLocked: boolean; // isLocked
-  onlineTrans: string; // Online_Trans
   isPDC: boolean; // isPDC
   firstDebitLedgerID: number; // FirstDebitLedgerID
   firstCreditLedgerID: number; // FirstCreditLedgerid
-  title: string;
-  masterAccountID: number;
-  masterBalance: number;
-  masterAccountName: string;
+  title: string; // Form title
+  masterAccountID: number; // Master account ID
+  masterBalance: number; // Master account balance
+  masterAccountName: string; // Master account name
   row: AccTransactionRow;
   rowProcessing: boolean;
   transactionProcessing: boolean;
@@ -431,13 +427,10 @@ export interface AccTransactionFormState {
 }
 export const accTransactionFormStateInitialData: AccTransactionFormState = {
   formCode: "",
-  voucherType: "",
   isCleared: false,
   isBounced: false,
   isEntryControl: false,
-  prevTransDate: new Date().toISOString(),
   isRowEdit: false,
-  accTransMasterID: 0,
   dtLedgerCodes: [],
   billwiseData: [],
   showbillwise: false,
@@ -451,7 +444,6 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   blnDetailsNotCleared: false,
   dsLedgerDetails: [],
   isLocked: false,
-  onlineTrans: "",
   isPDC: false,
   firstDebitLedgerID: 0,
   firstCreditLedgerID: 0,

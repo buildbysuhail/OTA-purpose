@@ -282,36 +282,7 @@ const ApplicationSettingsAccounts = () => {
                 onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
               />
 
-              <ERPDataCombobox
-                id="defaultPDCReceivableAccount"
-                disabled={!formState?.allowPostPDC}
-                data={formState}
-                label={t("default_PDC_receivable_account")}
-                field={{
-                  id: "defaultPDCReceivableAccount",
-                  //required: true,
-                  getListUrl: Urls.data_acc_ledgers,
-                  params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                  valueKey: "id",
-                  labelKey: "name",
-                }}
-                onChangeData={(data) => handleFieldChange('defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
-              />
-              <ERPDataCombobox
-                id="defaultPDCPayableAccount"
-                disabled={!formState?.allowPostPDC}
-                data={formState}
-                label={t("default_PDC_payable_account")}
-                field={{
-                  id: "defaultPDCPayableAccount",
-                  //required: true,
-                  getListUrl: Urls.data_acc_ledgers,
-                  params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                  valueKey: "id",
-                  labelKey: "name",
-                }}
-                onChangeData={(data) => handleFieldChange('defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
-              />
+             
               <ERPDataCombobox
                 id="defaultBankChargeAccount"
                 data={formState}

@@ -20,7 +20,10 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
 import { APIClient } from "../../../helpers/api-client";
-import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "../../settings/system/application-settings-types/application-settings-types-main";
+import {
+  ApplicationMainSettings,
+  ApplicationMainSettingsInitialState,
+} from "../../settings/system/application-settings-types/application-settings-types-main";
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 
@@ -208,8 +211,103 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, []);
 
   useEffect(() => {
+    
+    const initializeFormElements = async () => {
+      const newFormElements = { ...formElements };
+      newFormElements.foreignCurrency.visible =
+        applicationSettings.accountsSettings.maintainMultiCurrencyTransactions;
+      newFormElements.lblGroupName.label = "";
+      if (!formState.isInvoker) {
+        dispatch(
+          accFormStateTransactionMasterHandleFieldChange({
+            fields: {
+              transactionDate: new Date(),
+              referenceDate: new Date(),
+            },
+          })
+        );
+        fetchVoucherNumber();
+        if (
+          formState.transaction.master.voucherType == "CP" ||
+          formState.transaction.master.voucherType == "CR"
+        ) {
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                masterAccountID:
+                  userSession.counterwiseCashLedgerId > 0 &&
+                  applicationSettings.accountsSettings.allowSalesCounter
+                    ? userSession.counterwiseCashLedgerId
+                    : applicationSettings.accountsSettings.defaultCashAcc,
+              },
+            })
+          );
+          if (
+            userSession.counterwiseCashLedgerId > 0 &&
+            applicationSettings.accountsSettings.allowSalesCounter &&
+            userSession.counterAssignedCashLedgerId > 0
+          ) {
+            formElements.masterAccount.disabled = true;
+          }
+        }
+      }
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            printOnSave: applicationSettings.accountsSettings.printAccAftersave,
+          },
+        })
+      );
+      if (userSession.employeeId > 0) {
+        dispatch(
+          accFormStateTransactionMasterHandleFieldChange({
+            fields: {
+              employeeId: userSession.employeeId,
+            },
+          })
+        );
+      }
+      formElements.btnBillWise.visible =
+        applicationSettings.accountsSettings.maintainBillwiseAccount;
+      if (formState.transaction.master.voucherType == "JV") {
+        dispatch(
+          accFormStateHandleFieldChange({
+            fields: {
+              masterAccountID: -1,
+            },
+          })
+        );
+      }
+      if (applicationSettings.accountsSettings.maintainProjectSite) {
+        newFormElements.projectId.visible = true;
+      }
+      if (userSession.dbIdValue == "543140180640") {
+        newFormElements.projectId.visible = true;
+        if (formState.transaction.master.voucherType == "CP" || formState.transaction.master.voucherType == "CR")
+          {
+              let userCashLedgerID = 0;
+             
+              
+              userCashLedgerID = await api.getAsync(`${Urls.get_userLedger_by_user_id}/${userSession.userId}`);
+              if (userCashLedgerID > 0)
+              {
+                  formState.masterAccountID = userCashLedgerID;
+              }
+              else
+              {
+                formState.masterAccountID  = applicationSettings.accountsSettings.defaultCashAcc;
+              }
+          }
+      }
+       
+      setFormElements(newFormElements);
+    };
+    initializeFormElements();
+  }, []);
+  useEffect(() => {
     if (!voucherType) return;
-    const updateFormElementsBasedOnVoucherType = (newFormElements: FormElementsState) => {
+    const updateFormElementsBasedOnVoucherType = () => {
+      const newFormElements = { ...formElements };
       switch (voucherType) {
         case "CR":
         case "CP":
@@ -275,78 +373,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
       }
 
-      return newFormElements;
+       
+      setFormElements(newFormElements);
     };
-    const initializeFormElements = () => {
-      const newFormElements = { ...formElements };
-      newFormElements.foreignCurrency.visible =
-        applicationSettings.accountsSettings.maintainMultiCurrencyTransactions;
-      newFormElements.lblGroupName.label = "";
-      if (!formState.isInvoker) {
-        dispatch(
-          accFormStateTransactionMasterHandleFieldChange({
-            fields: {
-              transactionDate: new Date(),
-              referenceDate: new Date(),
-            },
-          })
-        );
-        fetchVoucherNumber();
-        if (
-          formState.transaction.master.voucherType == "CP" ||
-          formState.transaction.master.voucherType == "CR"
-        ) {
-          dispatch(
-            accFormStateHandleFieldChange({
-              fields: {
-                masterAccountID:
-                  userSession.counterwiseCashLedgerId > 0 &&
-                    applicationSettings.accountsSettings.allowSalesCounter
-                    ? userSession.counterwiseCashLedgerId
-                    : applicationSettings.accountsSettings.defaultCashAcc,
-              },
-            })
-          );
-          if (
-            userSession.counterwiseCashLedgerId > 0 &&
-            applicationSettings.accountsSettings.allowSalesCounter &&
-            userSession.counterAssignedCashLedgerId > 0
-          ) {
-            formElements.masterAccount.disabled = true;
-          }
-        }
-      }
-      dispatch(
-        accFormStateHandleFieldChange({
-          fields: {
-            printOnSave: applicationSettings.accountsSettings.printAccAftersave,
-          },
-        })
-      );
-      if (userSession.employeeId > 0) {
-        dispatch(
-          accFormStateTransactionMasterHandleFieldChange({
-            fields: {
-              employeeId: userSession.employeeId,
-            },
-          })
-        );
-      }
-      formElements.btnBillWise.visible = applicationSettings.accountsSettings.maintainBillwiseAccount;
-      if (formState.transaction.master.voucherType == "JV") {
-        dispatch(
-          accFormStateHandleFieldChange({
-            fields: {
-              masterAccountID: -1,
-            },
-          })
-        )
-      }
-      let _newFormElements =
-        updateFormElementsBasedOnVoucherType(newFormElements);
-      setFormElements(_newFormElements);
-    };
-    initializeFormElements();
+    updateFormElementsBasedOnVoucherType();
   }, [voucherType]);
   const fetchVoucherNumber = useCallback(async () => {
     const nextVoucherNumber = await getNextVoucherNumber(
@@ -1563,7 +1593,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   ></i>
                   <div
                     className="mr-2 text-amber-700"
-                  // size={16}
+                    // size={16}
                   >
                     {" "}
                     Add Items{" "}
@@ -1829,13 +1859,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0 pl-1">
                         <ERPButton
                           title="Save & New"
-                          onClick={() => { }}
+                          onClick={() => {}}
                           variant="secondary"
                           className="flex-1 !m-0 !rounded-none"
                         />
                         <ERPButton
                           title="Save"
-                          onClick={() => { }}
+                          onClick={() => {}}
                           variant="primary"
                           className="flex-1 !m-0 !rounded-none"
                         />
@@ -1848,13 +1878,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
               <ERPButton
                 title="Save & New"
-                onClick={() => { }}
+                onClick={() => {}}
                 variant="secondary"
                 className="flex-1 !m-0 !rounded-none"
               />
               <ERPButton
                 title="Save"
-                onClick={() => { }}
+                onClick={() => {}}
                 variant="primary"
                 className="flex-1 !m-0 !rounded-none"
               />

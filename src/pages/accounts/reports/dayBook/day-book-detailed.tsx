@@ -8,20 +8,9 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "./day-book-report-filter";
-// interface DayBookDetailed {
 
-//   from: Date
-// }
 const DayBookDetailed = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  // const [filter, setFilter] =useState<DayBookDetailed>({from: new Date()});
-  const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -37,6 +26,7 @@ const DayBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 80,
     },
     {
       dataField: "vchNo",
@@ -60,6 +50,7 @@ const DayBookDetailed = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {cellElement.data.particulars}
@@ -129,24 +120,6 @@ const DayBookDetailed = () => {
   </span>
       ),
     },
-  
-   
-    // {
-    //   dataField: "invTransactionID",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
-    // {
-    //   dataField: "isOpening",
-    //   caption: t("balance"),
-    //   dataType: "number",
-    //   allowSearch: true,
-    //   allowFiltering: true,
-    //   width: 150,
-    // },
   ];
   return (
     <Fragment>
@@ -163,7 +136,6 @@ const DayBookDetailed = () => {
                   gridId="grd_cost_centre"
                   enablefilter={true}
                   showFilterInitially={true}
-                  // popupAction={toggleCostCentrePopup}
                   filterWidth="100"
                   filterContent={<DayBookReportFilter/>}
                   filterInitialData={DayBookReportFilterInitialState}

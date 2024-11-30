@@ -20,5 +20,5 @@ export const ApplicationSettingsInitialState: ApplicationSettingsType = {
   printSettings: ApplicationPrintSettingsInitialState,
   productsSettings: ApplicationProductsSettingsInitialState,
   gstSettings: ApplicationGstSettingsInitialState,
-  taxSettings: ApplicationTaxSettingsInitialState
-}
+  taxSettings: ApplicationTaxSettingsInitialState,
+};

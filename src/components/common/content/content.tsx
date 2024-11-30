@@ -107,6 +107,7 @@ import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-re
 import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/party-wise-report';
 import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
 import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
+import DailySummaryGlobal from '../../../pages/accounts/reports/dailySummary/daily-summary-global';
 
 interface ContentProps { }
 const loading = (
@@ -211,7 +212,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/transaction_report" element={<TransactionReport />} />
         <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport />} />
         <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport />} />
-        <Route path="/accounts/daily_summary_report" element={<DailySummary />} />
+        <Route path="/accounts/daily_summary_report" element={0 != 0 ? <DailySummary /> : <DailySummaryGlobal />} />
         <Route path="/accounts/billwise_profit" element={0 != 0 ? <BillwiseProfit /> : <BillwiseProfitGlobal />} />
         <Route path="/accounts/partywise_summary" element={<PartySummaryBasicInfo />} />
         <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport />} />

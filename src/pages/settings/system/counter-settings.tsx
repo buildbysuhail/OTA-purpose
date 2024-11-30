@@ -15,36 +15,34 @@ import ErpInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { APIClient } from "../../../helpers/api-client";
 import { RootState } from "../../../redux/store";
+import { handleResponse } from "../../../utilities/HandleResponse";
 interface CounterData {
-  systemName:string
+  pCname:string
   systemCode:string
-  counter:string
+  counterID:number
 }
 const api = new APIClient();
 const CounterSettings = () => {
   const initData:CounterData = {
-    systemName:"",
+    pCname:"",
     systemCode:"",
-    counter:"",
+    counterID:0,
   }
  const[counterData,setCounterData]=useState<CounterData>(initData)
  const [loading, setLoading] = useState(true);
  const [isSaving, setIsSaving] = useState(false);
  const userSession = useAppSelector((state: RootState) => state.UserSession);
 
- useEffect(() => {
-  counterData.systemCode = userSession.systemCode;
-  counterData.systemName = userSession.systemName;
-}, []);
+
 
  useEffect(() => {
-  // loadCounterData();
+  loadCounterData();
 }, []);
 
  const loadCounterData = async () => {
   setLoading(true);
   try {
-    const response = await api.getAsync(`${Urls}`);  //need a urls 
+    const response = await api.getAsync(Urls.counter_settings_current_data);  
     setCounterData(response);
   } catch (error) {
     console.error("Error loading settings:", error);
@@ -57,12 +55,24 @@ const handleRowClick = (e: any) => {
   const rowData = e.data;
   console.log("Clicked row data:", rowData);
   setCounterData({
-    systemName: rowData.pCname,
+    pCname: rowData.pCname,
     systemCode: rowData.systemCode,
-    counter: rowData.counterName,
+    counterID: rowData.counterID,
   });
 };
 
+
+const handleSubmit = async () => {
+  setIsSaving(true);
+  try {
+    const response = await api.put(Urls.counter_settings_current_data,counterData);  
+    handleResponse(response)
+  } catch (error) {
+    console.error("Error loading settings:", error);
+  } finally {
+    setIsSaving(false);
+  }
+};
   const dispatch = useAppDispatch();
   const { t } = useTranslation("userManage");
   const rootState = useRootState();
@@ -124,11 +134,11 @@ const handleRowClick = (e: any) => {
                   label="System Name"
                   placeholder="System Name"
                   data={counterData}
-                  value={counterData.systemName}
+                  value={counterData.pCname}
                   onChange={(e) => {
                     setCounterData((prevTheme) => ({
                       ...prevTheme,
-                      systemName: e.target.value,
+                      pCname: e.target.value,
                     }));
                   }}
                 />
@@ -149,11 +159,11 @@ const handleRowClick = (e: any) => {
              
                 <ERPDataCombobox
                  labelDirection="horizontal"
-                  id="counter"
+                  id="counterID"
                   data={counterData}
-                  label="Counter"
+                  label="counterID"
                   field={{
-                    id: "counter",
+                    id: "counterID",
                     getListUrl: Urls.data_counters,
                     valueKey: "id",
                     labelKey: "name",
@@ -161,7 +171,7 @@ const handleRowClick = (e: any) => {
                   onChange={(e) => {
                     setCounterData((prevTheme) => ({
                       ...prevTheme,
-                      counter: e?.value ?? null,
+                      counterID: e?.value ?? null,
                     }));
                   }}
                 
@@ -175,6 +185,7 @@ const handleRowClick = (e: any) => {
                     title="Save"
                     variant="primary"
                     type="button"
+                    onClick={handleSubmit}
                     startIcon="ri-save-line"
                   />
                   <ERPButton

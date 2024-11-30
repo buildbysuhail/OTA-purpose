@@ -15,6 +15,7 @@ import { RootState } from '../../../redux/store';
 import { BusinessType } from '../../../enums/business-types';
 import useApplicationSetting from '../../../utilities/hooks/use-application-settings';
 import { ApplicationAccountSettings, ApplicationAccountSettingsInitialState } from './application-settings-types/application-settings-types-accounts';
+import { useTranslation } from 'react-i18next';
 
 
 
@@ -22,13 +23,14 @@ const api = new APIClient();
 const ApplicationSettingsAccounts = () => {
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-
   const dispatch = useDispatch();
   const [formState, setFormState] = useState<ApplicationAccountSettings>(ApplicationAccountSettingsInitialState);
   const [formStatePrev, setFormStatePrev] = useState<Partial<ApplicationAccountSettings>>({});
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isScrollingDisabled, setIsScrollingDisabled] = useState(false);
+  const { t } = useTranslation("applicationSettings");
+
   useEffect(() => {
     loadSettings();
   }, []);
@@ -280,36 +282,7 @@ const ApplicationSettingsAccounts = () => {
                 onChangeData={(data) => handleFieldChange('defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
               />
 
-              <ERPDataCombobox
-                id="defaultPDCReceivableAccount"
-                disabled={!formState?.allowPostPDC}
-                data={formState}
-                label={t("default_PDC_receivable_account")}
-                field={{
-                  id: "defaultPDCReceivableAccount",
-                  //required: true,
-                  getListUrl: Urls.data_acc_ledgers,
-                  params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                  valueKey: "id",
-                  labelKey: "name",
-                }}
-                onChangeData={(data) => handleFieldChange('defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
-              />
-              <ERPDataCombobox
-                id="defaultPDCPayableAccount"
-                disabled={!formState?.allowPostPDC}
-                data={formState}
-                label={t("default_PDC_payable_account")}
-                field={{
-                  id: "defaultPDCPayableAccount",
-                  //required: true,
-                  getListUrl: Urls.data_acc_ledgers,
-                  params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                  valueKey: "id",
-                  labelKey: "name",
-                }}
-                onChangeData={(data) => handleFieldChange('defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
-              />
+             
               <ERPDataCombobox
                 id="defaultBankChargeAccount"
                 data={formState}

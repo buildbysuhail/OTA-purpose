@@ -9,26 +9,14 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { toggleParties } from "../../../../redux/slices/popup-reducer";
 import { PartiesManage } from "./parties-manage";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { handleResponse } from "../../../../utilities/HandleResponse";
 import { APIClient } from "../../../../helpers/api-client";
-import DataGrid, {
-  Toolbar,
-  Item,
-  Editing,
-  Column,
-  Scrolling,
-  RemoteOperations,
-  Paging,
-  KeyboardNavigation,
-} from "devextreme-react/cjs/data-grid";
+import DataGrid, { Column, Scrolling, RemoteOperations, Paging, KeyboardNavigation, } from "devextreme-react/cjs/data-grid";
 import ERPFileUploadButton from "../../../../components/ERPComponents/erp-file-upload-button";
-
 interface PartiesProps {
   type: string;
 }
-
 export const getInitialImportExportData = (type: string) => ({
   data: {
     filePath: "",
@@ -41,7 +29,6 @@ export const getInitialImportExportData = (type: string) => ({
     suppliers: "",
   },
 });
-
 interface PartiesForImport {
   ledgerID: number;
   partyCode: string;
@@ -68,10 +55,7 @@ interface PartiesForImport {
   drCr: string;
   obDate?: Date | null;
 }
-
-
 const api = new APIClient();
-
 const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   const [totalCount, setTotalCount] = useState(0);
@@ -112,10 +96,9 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
       setFormFile(formData);
     }
   };
-  const onCellPrepared= (e: any) => {
+  const onCellPrepared = (e: any) => {
     debugger;
-    if (e.rowType === 'data' && e.column.dataField === "siNo" && (e.data.isValid === false || e.data.IsValid === false))
-    {
+    if (e.rowType === 'data' && e.column.dataField === "siNo" && (e.data.isValid === false || e.data.IsValid === false)) {
       e.cellElement.style.cssText = "background-color:#ffd0d0";
       e.cellElement.title = "Validation failed, Please check entire row.";
       //e.cellElement.style.backgroundColor = 'red';
@@ -124,7 +107,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   const onSubmit = useCallback(async () => {
     try {
       const res = await api.postAsync(Urls.import_parties, store,);
-      handleResponse(res, () => { }, () => {});
+      handleResponse(res, () => { }, () => { });
     } catch (error) {
       console.error(error);
       // setShowValidation(true);
@@ -132,18 +115,16 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
       setLoading(false);
     }
     setLoading(true);
-    
-  },[]);
 
- 
-const onChooseTemplate = async () => {
-  try 
-  {
+  }, []);
+
+  const onChooseTemplate = async () => {
+    try {
       const res = await api.postAsync(Urls.download_party_format, null, {
-          responseType: 'arraybuffer'
+        responseType: 'arraybuffer'
       });
-      const blob = new Blob([res.data], { 
-          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      const blob = new Blob([res.data], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       });
       // Create download link
       const url = window.URL.createObjectURL(blob);
@@ -158,11 +139,11 @@ const onChooseTemplate = async () => {
       // Cleanup
       window.URL.revokeObjectURL(url);
       document.body.removeChild(link);
-  } catch (error) {
+    } catch (error) {
       console.error('Download failed:', error);
       // Handle error appropriately
-  }
-};
+    }
+  };
 
   const onSelectExcel = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -185,11 +166,11 @@ const onChooseTemplate = async () => {
   };
 
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
   const renderCell = (cellData: any, validation: string) => {
     return (
-      <div 
+      <div
         className={validation ? 'grid-error-cell' : ''}
         title={validation ? validation : ''} // Add validation message as tooltip
       >
@@ -656,8 +637,7 @@ const onChooseTemplate = async () => {
                 showBorders={true}
                 showRowLines={true}
                 onCellPrepared={onCellPrepared}
-                onFocusedCellChanging={onFocusedCellChanging}
-              >
+                onFocusedCellChanging={onFocusedCellChanging}>
                 <KeyboardNavigation
                   editOnKeyPress={true}
                   enterKeyAction="startEdit"
@@ -679,7 +659,6 @@ const onChooseTemplate = async () => {
                   allowFiltering={true}
                   allowEditing={true}
                   minWidth={50}
-                  
                 />
                 <Column
                   dataField="ledgerID"
@@ -950,9 +929,7 @@ const onChooseTemplate = async () => {
           </>
         }
       />
-
     </Fragment>
   );
 };
-
 export default Parties;

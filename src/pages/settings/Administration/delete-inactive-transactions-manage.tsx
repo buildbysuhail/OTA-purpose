@@ -12,39 +12,35 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import { useTranslation } from "react-i18next";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 
-interface   DeleteInactiveTransactionManageData {
+interface DeleteInactiveTransactionManageData {
   date: string;
   isAgree: boolean;
 }
 
 const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-
-  const { isEdit, formState, handleSubmit,handleClear,handleFieldChange, getFieldProps, isLoading,handleClose } =
+  const { isEdit, formState, handleSubmit, handleClear, handleFieldChange, getFieldProps, isLoading, handleClose } =
     useFormManager<DeleteInactiveTransactionManageData>({
       url: Urls.deleteInactiveTransactions,
-      onClose:useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null,})), [dispatch]),
+      onClose: useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null, })), [dispatch]),
       onSuccess: useCallback(
         () =>
           dispatch(
-            toggleDeleteInactiveTransactionPopup({ isOpen: false})
+            toggleDeleteInactiveTransactionPopup({ isOpen: false })
           ),
         [dispatch]
       ),
       method: ActionType.POST,
       useApiClient: true,
       loadDataRequired: false,
-      initialData: {data:{date:new Date()}}
+      initialData: { data: { date: new Date() } }
     });
-  
   // const onClose = useCallback(() => {
   //   dispatch(
   //     toggleDeleteInactiveTransactionPopup({ isOpen: false,})
   //   );
   // }, []);
-
-  const { t } = useTranslation();
-
+  const { t } = useTranslation("administration");
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 gap-3">
@@ -56,13 +52,11 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
           label={t("till_date")}
           onChangeData={(data: any) => handleFieldChange("date", data.date)}
         />
- 
         <ERPCheckbox
           {...getFieldProps("isAgree")}
-          label={t("i_agree_to_delete_all_inactive_transactions_till_the_selected_date")}
+          label={t("i_agree_to_delete")}
           onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
-          
       </div>
       {/* <ERPButton
         title={t("delete_all")}
@@ -71,7 +65,7 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
         disabled={formState.data.isAgree != true}
         onClick={handleSubmit}
       /> */}
-        <ERPFormButtons
+      <ERPFormButtons
         submitDisabled={formState.data.isAgree != true}
         title={t("delete_all")}
         isLoading={isLoading}
@@ -82,5 +76,4 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
     </div>
   );
 });
-
 export default DeleteInactiveTransactionManage;

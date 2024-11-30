@@ -41,7 +41,6 @@ import Urls from "../../redux/urls";
 import { RootState } from "../../redux/store";
 import { APIClient } from "../../helpers/api-client";
 import { getTemplates } from "../../redux/slices/templates/thunk";
-import useApplicationSetting from "../../utilities/hooks/use-application-settings";
 
 interface InvoicePreviewProps {
   data?: any;
@@ -82,8 +81,6 @@ const InvoicePreview = ({
   const [searchParams, setSearchParams] = useSearchParams();
 
   const currencySymbol = getCurrentCurrencySymbol();
-
-  const branchSettings = useApplicationSetting("branch");
 
   const userProfile = useAppSelector((state: RootState) => state?.UserSession);
   const hasPermissionToUpdateProfile = true;

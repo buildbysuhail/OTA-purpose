@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { ApplicationMainSettings, ApplicationMainSettingsInitialState } from "./application-settings-types/application-settings-types-main";
+import { useTranslation } from "react-i18next";
 
 const api = new APIClient();
 const ERPSettingsFormMain = () => {
@@ -23,7 +24,7 @@ const ERPSettingsFormMain = () => {
   const [isSaving, setIsSaving] = useState(false);
   const userSession = useSelector((state: RootState) => state.UserSession);
   // const isIndianCompany = userSession.countryId === Countries.India;
-
+  const { t } = useTranslation("applicationSettings");
   useEffect(() => {
     loadSettings();
   }, []);

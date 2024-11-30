@@ -18,7 +18,7 @@ import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { ApplicationSettingsInitialState } from "../../../redux/slices/app/application-settings-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
-import { ApplicationSettingsType } from "./application-settings-types";
+import { useTranslation } from "react-i18next";
 interface SearchCount {
   [key: string]: number;
 }
@@ -33,6 +33,7 @@ const ApplicationSettings: React.FC = () => {
   // const searchInputRef = useRef<HTMLInputElement>(null);
   const userSession = useSelector((state: RootState) => state.UserSession);
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  const { t } = useTranslation("applicationSettings");
 
   // useEffect(() => {
   //   searchInputRef.current?.focus();
@@ -85,7 +86,7 @@ const ApplicationSettings: React.FC = () => {
     <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark">
       {/* Sidebar */}
       <div className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-10 bg-[#fafafa]">
-        <h1 className="font-medium text-xl p-5 mb-5">Application Settings</h1>
+        <h1 className="font-medium text-xl p-5 mb-5">{t("application_settings")}</h1>
         {/* <div className="w-full relative px-4">
           <div className="flex h-10">
             <div className="h-full p-2 bg-slate-50 border border-r-0 rounded-md rounded-r-none">

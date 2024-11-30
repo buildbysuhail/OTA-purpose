@@ -14,6 +14,7 @@ import { t } from "i18next";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { ApplicationInventorySettings, ApplicationInventorySettingsInitialState } from "./application-settings-types/application-settings-types-inventory";
+import { useTranslation } from "react-i18next";
 
 const api = new APIClient();
 const InventorySettingsForm = () => {
@@ -23,6 +24,7 @@ const InventorySettingsForm = () => {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const { t } = useTranslation("applicationSettings");
 
   useEffect(() => {
     loadSettings();

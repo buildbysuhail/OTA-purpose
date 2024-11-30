@@ -13,12 +13,10 @@ import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 
-
 export const UpiManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-
   const {
     isEdit,
     handleSubmit,
@@ -29,33 +27,31 @@ export const UpiManage: React.FC = React.memo(() => {
     handleClose,
   } = useFormManager<UpiData>({
     url: Urls.upi,
-    onClose:useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null, })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.upi.key,
-    keyField:"paymentTypeID",
+    keyField: "paymentTypeID",
     useApiClient: true,
     initialData: initialUpi,
     loadDataRequired: true
   });
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   return (
     <div className="w-full pt-4">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-    
         <ERPDataCombobox
           {...getFieldProps("paymentType")}
           field={{
             id: "paymentType",
-            
             valueKey: "value",
             labelKey: "label"
           }}
           onChange={(data: any) => {
             debugger;
-            handleFieldChange({paymentType: data.value, paymentName: data.label})
+            handleFieldChange({ paymentType: data.value, paymentName: data.label })
           }}
-          label={ userSession.countryId ==Countries.India ? t("upi") : t("qr_pay")}
+          label={userSession.countryId == Countries.India ? t("upi") : t("qr_pay")}
           options={[
             { value: 'AMAZON_PAY', label: 'AMAZON PAY' },
             { value: 'GOOGLE_PAY', label: 'GOOGLE PAY' },
@@ -82,17 +78,14 @@ export const UpiManage: React.FC = React.memo(() => {
             { value: 'YUVAPAY', label: 'YUVAPAY' },
             { value: 'ZOMATO', label: 'ZOMATO' }
           ]}
-          
         />
-        
-         <ERPInput
+        <ERPInput
           {...getFieldProps('paymentName')}
-          label={userSession.countryId ==Countries.India ? t("upi_name") : t("qr_pay_name")}
-          placeholder={userSession.countryId ==Countries.India ? t("upi_name") : t("qr_pay_name")}
-          
+          label={userSession.countryId == Countries.India ? t("upi_name") : t("qr_pay_name")}
+          placeholder={userSession.countryId == Countries.India ? t("upi_name") : t("qr_pay_name")}
           onChangeData={(data: any) => handleFieldChange('paymentName', data.paymentName)}
         />
-          <ERPDataCombobox
+        <ERPDataCombobox
           {...getFieldProps("ledgerID")}
           field={{
             id: "ledgerID",
@@ -113,7 +106,6 @@ export const UpiManage: React.FC = React.memo(() => {
           // required={true}
           onChangeData={(data: any) => handleFieldChange('remark', data.remark)}
         />
-
       </div>
       <ERPFormButtons
         onClear={handleClear}

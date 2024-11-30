@@ -1,0 +1,40 @@
+{
+   "users": "المستخدمون",
+   "si_no": "الرقم التسلسلي",
+   "user": "المستخدم",
+   "password": "كلمة المرور",
+   "counter": "العداد",
+   "usertype": "نوع المستخدم",
+   "created_user": "المستخدم الذي أنشأ",
+   "created_date": "تاريخ الإنشاء",
+   "modified_user": "المستخدم الذي عدّل",
+   "modified_date": "تاريخ التعديل",
+   "employee_id": "معرف الموظف",
+   "employee_name": "اسم الموظف",
+   "max_dis%": "الحد الأقصى للخصم %",
+   "passkey": "رمز المرور",
+   "actions": "الإجراءات",
+
+   "username": "اسم المستخدم",
+   "confirm_password": "تأكيد كلمة المرور",
+   "email": "البريد الإلكتروني",
+   "mobile": "رقم الجوال",
+   "name": "الاسم",
+   "employee": "الموظف",
+   
+   "code": "الرمز",
+   "remarks": "ملاحظات",
+
+   "user_type_name": "اسم نوع المستخدم",
+   "user_type_code": "رمز نوع المستخدم",
+   "is_editable": "قابل للتعديل",
+   "is_deletable": "قابل للحذف",
+
+   "user_type": "نوع المستخدم",
+   "select_all_add": "تحديد الكل للإضافة",
+   "select_all_print": "تحديد الكل للطباعة",
+   "select_all_edit": "تحديد الكل للتعديل",
+   "select_all_export": "تحديد الكل للتصدير",
+   "select_all_delete": "تحديد الكل للحذف",
+   "inherit_rights_from_usertype": "وراثة الحقوق من نوع المستخدم"
+}

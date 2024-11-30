@@ -14,8 +14,7 @@ import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 export const PrivilegeCardManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const { t } = useTranslation();
-
+  const { t } = useTranslation("masters");
   const {
     isEdit,
     handleSubmit,
@@ -31,14 +30,12 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
       () => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
-    onClose:useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, })), [dispatch]),
     key: rootState.PopupData.privilegeCard.key,
-    keyField:"privilegeCardsID",
+    keyField: "privilegeCardsID",
     useApiClient: true,
     initialData: initialPrivilegeCard
   });
-
- 
 
   const handleDateChange = (field: string, value: string | null) => {
     if (value) {

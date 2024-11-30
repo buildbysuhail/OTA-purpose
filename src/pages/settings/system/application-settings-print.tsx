@@ -11,6 +11,7 @@ import { t } from "i18next";
 import { RootState } from "../../../redux/store";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import { ApplicationPrintSettings, ApplicationPrintSettingsInitialState } from "./application-settings-types/application-settings-types-print";
+import { useTranslation } from "react-i18next";
 
 const PrintSettingForm: React.FC = () => {
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -19,6 +20,7 @@ const PrintSettingForm: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation("applicationSettings");
 
   const dispatch = useAppDispatch();
   const api = new APIClient();

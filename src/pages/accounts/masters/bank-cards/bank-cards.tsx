@@ -12,9 +12,8 @@ import { BankCardsManage } from "./bank-cards-manage";
 
 const BankCards = () => {
   const MemoizedBankCardsManage = useMemo(() => React.memo(BankCardsManage), []);
-
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -164,5 +163,4 @@ const BankCards = () => {
     </Fragment>
   );
 };
-
 export default React.memo(BankCards);

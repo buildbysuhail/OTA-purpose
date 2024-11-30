@@ -15,7 +15,8 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
   const appDispatch = useAppDispatch();
   
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-  const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
+
+  debugger;
   const [settingsPrev, setSettingsPrev] = useState<ApplicationSettingsType>(applicationSettings);
   const [isSaving, setIsSaving] = useState(false);
   const handleFieldChange = useCallback(
@@ -103,7 +104,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
       };
   
       console.log("Calling getDifferences to find modified settings...");
-      const modifiedSettings = getDifferences(settings, settingsPrev);
+      const modifiedSettings = getDifferences(applicationSettings, settingsPrev);
   
       if (modifiedSettings.length > 0) {
         console.log("Modified settings found:", modifiedSettings);
@@ -117,7 +118,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
           response,
           () => {
             console.log("Settings updated successfully.");
-            setSettingsPrev(settings);
+            setSettingsPrev(applicationSettings);
           },
           () => {
             console.warn("Failed to update settings.");
@@ -136,8 +137,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
   };
   
   return  {
-    settings,
-    setSettings,
+    settings: applicationSettings,
     isSaving,
     handleSubmit,
     handleFieldChange
@@ -145,7 +145,6 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType  => {
 };
 type UseApplicationSettingReturnType = {
   settings: ApplicationSettingsType;
-  setSettings: React.Dispatch<React.SetStateAction<ApplicationSettingsType>>;
   isSaving: boolean;
   handleSubmit: () => Promise<void>;
   handleFieldChange: <T extends keyof ApplicationSettingsType>(

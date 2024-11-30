@@ -108,7 +108,7 @@ const ResetDbManage: React.FC = React.memo(() => {
     
     setAllTransactions(updatedVouchers);
   };
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   const handleSubmit = useCallback(async () => {
     debugger;

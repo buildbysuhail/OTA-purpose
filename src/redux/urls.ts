@@ -137,7 +137,7 @@ const Urls = {
   getPreference: "/Core/Preferences/GetPreference/",
   getDateRegion: "/Core/Preferences/GetDateRegion/",
   getUserThemes: "/Core/Preferences/GetUserThemes/",
-  getInputBox: "/Core/Preferences/GetInputBox/",
+  getInputBox: " ",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
@@ -206,6 +206,7 @@ const Urls = {
   upi: "/Accounts/UPI/",
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
+  acc_user_config:" ",
   //Reports
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
@@ -259,6 +260,7 @@ const Urls = {
 
   //Transaction
   get_last_voucher_no: "",
+
   // Accounts End
 
 

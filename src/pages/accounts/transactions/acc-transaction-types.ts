@@ -382,7 +382,11 @@ export interface BillwiseData {
   FinancilaYearID: string;
   VoucherPrefix: string;
 }
-
+export interface AccUserConfig {
+  keepNarrationForJV: boolean;
+  clearDetailsAfterSaveAccounts: boolean;
+  mnuShowConfirmationForEditOnAccounts: boolean;
+}
 export interface AccTransactionFormState {
   formCode: string; // FORMCODE
   voucherType: string; // VOUCHERTYPE
@@ -422,7 +426,8 @@ export interface AccTransactionFormState {
   printPreview: boolean
   printCheque: boolean
   keepNarration: boolean
-  amountInWords: string
+  amountInWords: string,
+  userConfig: AccUserConfig;
 }
 export const accTransactionFormStateInitialData: AccTransactionFormState = {
   formCode: "",
@@ -463,5 +468,6 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   printPreview: false,
   printCheque: false,
   keepNarration: false,
-  amountInWords: 'Zero Only'
+  amountInWords: 'Zero Only',
+  userConfig: {clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true}
 }

@@ -65,7 +65,7 @@ const ImportExportManage: React.FC = React.memo(() => {
     }
   };
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   return (
     <div className="w-full pt-4">

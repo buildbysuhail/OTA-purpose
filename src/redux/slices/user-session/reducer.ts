@@ -39,7 +39,9 @@ export const initialUserSessionData: UserModel = {
   dbIdValue: "",
   counterwiseCashLedgerId: 0, // Adjust the type as per your requirements (e.g., string, number, etc.)
   counterAssignedCashLedgerId: 0,
-  employeeId: 0
+  employeeId: 0,
+  systemCode: "",
+  systemName: ""
 };
 export interface UserModel {
   userId: number;
@@ -69,6 +71,8 @@ export interface UserModel {
   dbIdValue: string | "";
   counterwiseCashLedgerId: number | 0; // Adjust the type as per your requirements (e.g., string, number, etc.)
   counterAssignedCashLedgerId: number | 0;
+  systemCode: string |"";
+  systemName: string | "";
 
 }
 // export const initialState : login  =  {loading: false, token: ""};
@@ -94,12 +98,15 @@ export const initialState: UserModel = {
   branches: [] // Initializing as an empty array
   ,
 
+
   presetCostCenterId: 0,
   productVersion: "",
   dbIdValue: "",
   employeeId: 0,
   counterwiseCashLedgerId: 0,
-  counterAssignedCashLedgerId: 0
+  counterAssignedCashLedgerId: 0,
+  systemCode: "",
+  systemName: ""
 };
 const userSessionSlice = createSlice({
   name: "userSession",

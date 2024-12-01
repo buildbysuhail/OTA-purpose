@@ -162,6 +162,7 @@ const Urls = {
   get_userLedger_by_user_id:"/api/Accounts/AccLedger/GetUserLedgerByUserID/",
   
   counter_settings: "/Core/CounterSettings/",
+  counter_settings_current_data: "/Core/CounterSettings/GetCurrentCounter/",
   Counter: "/Core/Counter/",
   Voucher: "/Core/Vouchers/",
   FinancialYear: "/Core/FinancialYear/",

@@ -196,7 +196,9 @@ export interface AccTransactionRow {
   billwiseData: BillwiseData[];
   branchId: number;
   costCentreId: number;
+  costCentreName: number;
   projectId: number;
+  ProjectName: number;
 
   bankName: string;
   nameOnCheque: string;
@@ -243,7 +245,9 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   ledger: "",
   drCr: "",
   ledgerName: "",
-  currencyName: ""
+  currencyName: "",
+  ProjectName: 0,
+  costCentreName: 0
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
@@ -294,77 +298,7 @@ export const accTransactionInitialData: AccTransactionData = {
     manualInvoiceNumber: "",
     isLocked: false
   },
-  details: [
-    {
-      ledgerId: 4343,
-      ledgerCode: 'LC001',
-      ledger: 'Cash Account',
-      amount: 5000.00,
-      drCr: 'Dr',
-      chequeNumber: 'CHQ001',
-      bankDate: new Date('2024-01-19').toISOString(),
-      narration: 'Payment for supplies',
-      billwiseData: [],
-      accTransactionDetailId: 34,
-      discount: 0,
-      costCentreId: 43,
-      checkStatus: 'Cleared',
-      adjAmount: 5000.00,
-      nameOnCheque: 'John Doe',
-      bankName: 'ABC Bank',
-      debit: 5000.00,
-      credit: 0,
-      projectId: 343,
-      accTransMasterID: 0,
-      relatedLedgerId: 0,
-      randomKey: 0,
-      projectSiteId: 0,
-      currencyId: 0,
-      particularsLedgerId: 0,
-      isDr: false,
-      isDisplay: false,
-      voucherType: "",
-      checkBouncedDate: new Date().toISOString(),
-      branchId: 0,
-      ledgerName: "",
-      currencyName: ""
-    },
-    {
-      ledgerId: 4343,
-      ledgerCode: 'LC001',
-      ledger: 'Cash Account',
-      amount: 5000.00,
-      drCr: 'Dr',
-      chequeNumber: 'CHQ001',
-      bankDate: new Date('2024-01-19').toISOString(),
-      narration: 'Payment for supplies',
-      billwiseData: [],
-      accTransactionDetailId: 34,
-      discount: 0,
-      costCentreId: 43,
-      checkStatus: 'Cleared',
-      adjAmount: 5000.00,
-      nameOnCheque: 'John Doe',
-      bankName: 'ABC Bank',
-      debit: 5000.00,
-      credit: 0,
-      projectId: 343,
-      accTransMasterID: 0,
-      relatedLedgerId: 0,
-      randomKey: 0,
-      projectSiteId: 0,
-      currencyId: 0,
-      particularsLedgerId: 0,
-      isDr: false,
-      isDisplay: false,
-      voucherType: "",
-      checkBouncedDate: new Date().toISOString(),
-      branchId: 0,
-      ledgerName: "",
-      currencyName: ""
-    },
-    // Add more sample data here
-  ],
+  details: [],
   attachments: []
 };
 export interface BillwiseData {

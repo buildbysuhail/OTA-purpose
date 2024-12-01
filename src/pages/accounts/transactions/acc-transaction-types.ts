@@ -11,6 +11,7 @@ export interface AccTransactionProps {
 export interface AccTransactionData {
   master: AccTransactionMaster;
   details: AccTransactionRow[];
+  attachments: any[];
 }
 
 // AccTransactionMasterInput interface
@@ -31,6 +32,7 @@ export interface AccTransactionMaster {
   referenceDate: string;
   dueDate: string;
   particulars: string;
+  isLocked: boolean; 
   totalDebit?: number;
   billwiseTotalAdjAmt?: number;
   billwiseAdjAmt?: number;
@@ -202,7 +204,7 @@ export interface AccTransactionRow {
   firstCreditLedgerId?: number;
   firstDebitLedgerId?: number;
 }
-export const accDetailInitialData: AccTransactionRow = {
+export const AccTransactionRowInitialData: AccTransactionRow = {
   accTransMasterID: 0,
   accTransactionDetailId: 0,
   ledgerId: 0,
@@ -290,6 +292,7 @@ export const accTransactionInitialData: AccTransactionData = {
     refBranchId: 0,
     uuid: "",
     manualInvoiceNumber: "",
+    isLocked: false
   },
   details: [
     {
@@ -362,6 +365,7 @@ export const accTransactionInitialData: AccTransactionData = {
     },
     // Add more sample data here
   ],
+  attachments: []
 };
 export interface BillwiseData {
   SiNo: number;
@@ -393,7 +397,7 @@ export interface AccTransactionFormState {
   isCleared: boolean; // IsCleared
   isBounced: boolean; // IsBounced
   isEntryControl: boolean; // IsEntryControl
-  isRowEdit: boolean; // IsRowEdit
+  isEdit: boolean; // isEdit
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
   isBahamdoonPOSReceipt: boolean;
   billwiseData: BillwiseData[];
@@ -407,7 +411,6 @@ export interface AccTransactionFormState {
   costCenterVisible: boolean; // CostCenterVisible
   blnDetailsNotCleared: boolean; // blnDetailsNotCleared
   dsLedgerDetails: any[]; // dsLedgerDetails (DataSet converted to array)
-  isLocked: boolean; // isLocked
   isPDC: boolean; // isPDC
   firstDebitLedgerID: number; // FirstDebitLedgerID
   firstCreditLedgerID: number; // FirstCreditLedgerid
@@ -419,7 +422,9 @@ export interface AccTransactionFormState {
   rowProcessing: boolean;
   transactionProcessing: boolean;
   transactionLoading: boolean;
+  unlocking: boolean;
   transaction: AccTransactionData;
+  total: string;
   printOnSave: boolean
   printPreview: boolean
   printCheque: boolean
@@ -432,7 +437,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   isCleared: false,
   isBounced: false,
   isEntryControl: false,
-  isRowEdit: false,
+  isEdit: false,
   dtLedgerCodes: [],
   billwiseData: [],
   showbillwise: false,
@@ -445,12 +450,11 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   costCenterVisible: false,
   blnDetailsNotCleared: false,
   dsLedgerDetails: [],
-  isLocked: false,
   isPDC: false,
   firstDebitLedgerID: 0,
   firstCreditLedgerID: 0,
   title: "",
-  row: accDetailInitialData,
+  row: AccTransactionRowInitialData,
   rowProcessing: false,
   transactionProcessing: false,
   transactionLoading: false,
@@ -464,5 +468,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   keepNarration: false,
   amountInWords: 'Zero Only',
   userConfig: { clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true, presetCostenterId: 0 },
-  isBahamdoonPOSReceipt: false
+  isBahamdoonPOSReceipt: false,
+  unlocking: false,
+  total: "0"
 }

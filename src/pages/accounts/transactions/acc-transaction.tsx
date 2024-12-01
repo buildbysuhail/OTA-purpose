@@ -8,7 +8,7 @@ import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
-import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
 import {
@@ -26,6 +26,8 @@ import {
 } from "../../settings/system/application-settings-types/application-settings-types-main";
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
+import { useAccTransaction } from "./use-acc-transaction";
+import { unlockAccTransactionMaster } from "./thunk";
 
 interface FormElementState {
   visible: boolean;
@@ -110,20 +112,7 @@ type FormElementsState = {
   [key in keyof typeof initialFormElements]: FormElementState;
 };
 const api = new APIClient();
-const getNextVoucherNumber = async (
-  formType: string,
-  voucherType: string,
-  prefix: string
-) => {
-  const response = await api.getAsync(
-    Urls.get_last_voucher_no,
-    `formType=${formType}&voucherType= ${voucherType}&prefix=${prefix}`
-  );
 
-  const nextVoucherNumber = response || 1;
-
-  return nextVoucherNumber;
-};
 
 const AccTransactionForm: React.FC<AccTransactionProps> = ({
   voucherType,
@@ -132,16 +121,20 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   formCode,
   title,
   drCr,
-  voucherNo,
+  voucherNo
 }) => {
-  const { type } = useParams();
+  const { transactionType } = useParams();
+
   const { t } = useTranslation();
   const [gridCode, setGridCode] = useState<string>(
     `grd_acc_transaction_${voucherType}`
   );
   const dispatch = useDispatch();
+  const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  
+const { getNextVoucherNumber} = useAccTransaction(transactionType??"");
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -159,18 +152,15 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
-        fields: { formType: formType },
+        fields: { voucherType: voucherType, voucherPrefix: voucherPrefix, formType: formType, drCr: drCr},
       })
     );
-    if (formType == undefined || formType.trim() == "") {
-    } else {
-      dispatch(
-        accFormStateHandleFieldChange({
-          fields: { title: title + "[" + formType + "]" },
-        })
-      );
-    }
-  }, [formType, title]);
+    dispatch(
+      accFormStateHandleFieldChange({
+        fields: {formCode:formCode, title: formType == undefined || formType.trim() == "" ? title : title + "[" + formType + "]" },
+      })
+    );
+    }, [dispatch, formType, title, formCode, voucherType, voucherPrefix, formType, drCr]);
 
   useEffect(() => {
     dispatch(
@@ -239,8 +229,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         );
         fetchVoucherNumber();
         if (
-          formState.transaction.master.voucherType == "CP" ||
-          formState.transaction.master.voucherType == "CR"
+          voucherType == "CP" ||
+          voucherType == "CR"
         ) {
           dispatch(
             accFormStateHandleFieldChange({
@@ -280,7 +270,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
       formElements.btnBillWise.visible =
         applicationSettings.accountsSettings.maintainBillwiseAccount;
-      if (formState.transaction.master.voucherType == "JV") {
+      if (voucherType == "JV") {
         dispatch(
           accFormStateHandleFieldChange({
             fields: {
@@ -295,8 +285,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       if (userSession.dbIdValue == "543140180640") {
         newFormElements.projectId.visible = true;
         if (
-          formState.transaction.master.voucherType == "CP" ||
-          formState.transaction.master.voucherType == "CR"
+          voucherType == "CP" ||
+          voucherType == "CR"
         ) {
           let userCashLedgerID = 0;
 
@@ -391,9 +381,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   }, [voucherType]);
   const fetchVoucherNumber = useCallback(async () => {
     const nextVoucherNumber = await getNextVoucherNumber(
-      formState.transaction.master.formType,
-      formState.transaction.master.voucherType,
-      formState.transaction.master.voucherPrefix
+      formType,
+      voucherType,
+      voucherPrefix
     );
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
@@ -403,9 +393,9 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
   }, [
-    formState.transaction.master.formType,
-    formState.transaction.master.voucherType,
-    formState.transaction.master.voucherPrefix,
+    formType,
+    voucherType,
+    voucherPrefix,
   ]);
 
   const columns = [
@@ -658,7 +648,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               )}
             </div>
             <h2 className="text-xl font-bold text-center text-blue-600">
-              {type}
+              {formState.title}
             </h2>
             <div className="w-[100px]"></div>
           </div>
@@ -966,6 +956,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               </div>
             )}
 
+            {(formState.transaction?.master?.isLocked == undefined || formState.transaction?.master?.isLocked == true)
+             && (userSession.userTypeCode == "CA" || userSession.userTypeCode == "BA")}
             <ERPButton
               title="Add"
               variant="primary"
@@ -1289,7 +1281,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             hideGridHeader={true}
             enablefilter={false}
             data={formState.transaction.details}
-            gridId={gridName}
+            gridId={gridCode}
           />
           {formState.showSaveDialog && (
             <ERPAlert

@@ -262,8 +262,9 @@ const Urls = {
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
   acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",
 
-  //Transaction
-  get_last_voucher_no: "",
+  // Transaction
+  
+  acc_transaction_base: "/api/Accounts/",
 
   // Accounts End
 
@@ -296,6 +297,13 @@ const Urls = {
   salesRoute: "/Inventory/SalesRoute/",
   section: "/Inventory/Section/",
   group_category: "/Inventory/GroupCategory/",
+
+  //Transaction
+    // common
+    get_last_voucher_no: "/api/Core/Transaction/GetNextVoucherNumber/",
+    get_ledger_balance: "/api/Core/Transaction/GetLedgerBalance/",
+    upsert_bill_modified_history: "/api/Core/Transaction/UpsertBillModifiedHistory/",
+    unlock_acc_transaction_master: "/api/Core/Transaction/UnlockAccTransactionMaster/",
 
 };
 

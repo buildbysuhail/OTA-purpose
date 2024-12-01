@@ -6,11 +6,21 @@ import { ResponseModel } from '../../../base/response-model';
 import Urls from '../../../redux/urls';
 const api = new APIClient();
 export interface SetBranchInput {
-  companyId: string;
-  branchId: string;
+  transactionType: string;
+  params: any;
 }
-export const setBranch = createAsyncThunk<ResponseModel<any>, SetBranchInput>('setBranch', async (input) => {
-  const response = await api.post(Urls.set_branch, input);
+export const loadAccTransMaster = createAsyncThunk<any, any>('loadAccTransMaster', async (input) => {
+  const response = await await api.getAsync(
+    `${Urls.acc_transaction_base}${input.transactionType}/GetVoucherAsync`,
+    new URLSearchParams(input.params).toString()
+  );
+  return response;
+});
+export const unlockAccTransactionMaster = createAsyncThunk<any, any>('unlockAccTransactionMaster', async (accTransMasterID) => {
+  const response = await await api.postAsync(
+    `${Urls.unlock_acc_transaction_master}`,
+    accTransMasterID 
+  );
   return response;
 });
 

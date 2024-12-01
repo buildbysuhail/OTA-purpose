@@ -99,6 +99,7 @@ const initialFormElements = {
   btnBillWise: { visible: true, disabled: false, label: "Bill Wise" },
   btnAdd: { visible: true, disabled: false, label: "Add" },
   btnEdit: { visible: true, disabled: false, label: "Edit" },
+  btnPrint: { visible: true, disabled: false, label: "Edit" },
   btnRef: { visible: true, disabled: false, label: "..." },
   btnSave: { visible: true, disabled: false, label: "Save" },
   btnPrintCheque: { visible: true, disabled: false, label: "Print Cheque" },
@@ -135,8 +136,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
 }) => {
   const { type } = useParams();
   const { t } = useTranslation();
-  const [gridName, setGridName] = useState<string>(
-    `grd_acc_transaction_${type}`
+  const [gridCode, setGridCode] = useState<string>(
+    `grd_acc_transaction_${voucherType}`
   );
   const dispatch = useDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
@@ -186,10 +187,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   useEffect(() => {
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
-        fields: { voucherPrefix: voucherPrefix },
+        fields: {
+          voucherPrefix: voucherPrefix,
+          voucherNumber:
+            voucherNo != undefined && voucherNo > 0
+              ? voucherNo
+              : getNextVoucherNumber(formType, voucherType, voucherPrefix),
+        },
       })
     );
-  }, [voucherPrefix]);
+  }, []);
 
   useEffect(() => {
     dispatch(
@@ -202,22 +209,26 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       accFormStateRowHandleFieldChange({
         fields: {
           costCentreId:
-            userSession.presetCostCenterId > 0
-              ? userSession.presetCostCenterId
-              : 0,
+            formState.userConfig.presetCostenterId > 0
+              ? formState.userConfig.presetCostenterId
+              : userSession.dbIdValue == "SAMAPLASTICS"
+              ? 0
+              : null,
         },
       })
     );
   }, []);
 
   useEffect(() => {
-    
     const initializeFormElements = async () => {
       const newFormElements = { ...formElements };
+      newFormElements.btnSave.disabled = true;
+      newFormElements.btnEdit.disabled = true;
+      newFormElements.btnPrint.disabled = true;
       newFormElements.foreignCurrency.visible =
         applicationSettings.accountsSettings.maintainMultiCurrencyTransactions;
       newFormElements.lblGroupName.label = "";
-      if (!formState.isInvoker) {
+      if (!formState.isInvoker && (voucherNo == undefined || voucherNo <= 0)) {
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
             fields: {
@@ -283,23 +294,24 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       }
       if (userSession.dbIdValue == "543140180640") {
         newFormElements.projectId.visible = true;
-        if (formState.transaction.master.voucherType == "CP" || formState.transaction.master.voucherType == "CR")
-          {
-              let userCashLedgerID = 0;
-             
-              
-              userCashLedgerID = await api.getAsync(`${Urls.get_userLedger_by_user_id}/${userSession.userId}`);
-              if (userCashLedgerID > 0)
-              {
-                  formState.masterAccountID = userCashLedgerID;
-              }
-              else
-              {
-                formState.masterAccountID  = applicationSettings.accountsSettings.defaultCashAcc;
-              }
+        if (
+          formState.transaction.master.voucherType == "CP" ||
+          formState.transaction.master.voucherType == "CR"
+        ) {
+          let userCashLedgerID = 0;
+
+          userCashLedgerID = await api.getAsync(
+            `${Urls.get_userLedger_by_user_id}/${userSession.userId}`
+          );
+          if (userCashLedgerID > 0) {
+            formState.masterAccountID = userCashLedgerID;
+          } else {
+            formState.masterAccountID =
+              applicationSettings.accountsSettings.defaultCashAcc;
           }
+        }
       }
-       
+
       setFormElements(newFormElements);
     };
     initializeFormElements();
@@ -373,7 +385,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           break;
       }
 
-       
       setFormElements(newFormElements);
     };
     updateFormElementsBasedOnVoucherType();

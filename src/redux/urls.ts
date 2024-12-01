@@ -159,6 +159,7 @@ const Urls = {
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
   //setting/system
+  get_userLedger_by_user_id:"/api/Accounts/AccLedger/GetUserLedgerByUserID/",
   
   counter_settings: "/Core/CounterSettings/",
   Counter: "/Core/Counter/",

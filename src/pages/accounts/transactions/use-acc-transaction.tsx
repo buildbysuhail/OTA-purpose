@@ -38,7 +38,26 @@ export const useAccTransaction = () => {
 //       setIsSavingSystemCode(false);
 //     }
 //   };
+async function updateTransactionEditMode(branchID: number, tType: string, transactionMasterID: number, editRemarks: string) {
+let res = 0;
+  try {
+    const params = {
+      BranchID: branchID,
+      TType: tType,
+      TransactionMasterID: transactionMasterID,
+      Remarks: editRemarks,
+    };
 
+    res = await api.postAsync("", params);
+
+    // // Assuming the API returns the Result as a direct response or within `data`.
+    // const result = response.data?.Result || response.data;
+    return res;
+  } catch (error) {
+    console.error('Error updating transaction edit mode:', error);
+    throw error;
+  }
+}
   return {
     // postUserConfig,
   };

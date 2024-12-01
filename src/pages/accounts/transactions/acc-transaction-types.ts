@@ -15,7 +15,7 @@ export interface AccTransactionData {
 
 // AccTransactionMasterInput interface
 export interface AccTransactionMaster {
-  accTransactionMasterId: number;
+  accTransMasterID: number;
   departmentId: number;
   costCentreId: number;
   billwiseMasterId: number;
@@ -64,7 +64,7 @@ export interface AccTransactionMaster {
 
 // AccTransactionMasterInput interface
 export interface AccTransactionMasterValidations {
-  accTransactionMasterId: string;
+  accTransMasterID: string;
   departmentId: string;
   costCentreId: string;
   billwiseMasterId: string;
@@ -113,7 +113,7 @@ export interface AccTransactionMasterValidations {
 
 // Initial object with default values
 export const initialAccTransactionMasterValidations: AccTransactionMasterValidations = {
-  accTransactionMasterId: "",
+  accTransMasterID: "",
   departmentId: "",
   costCentreId: "",
   billwiseMasterId: "",
@@ -161,7 +161,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
 };
 // AccDetailInput interface
 export interface AccTransactionRow {
-  accTransactionMasterId: number;
+  accTransMasterID: number;
   accTransactionDetailId: number;
   ledgerId: number;
   ledgerCode: string;
@@ -203,7 +203,7 @@ export interface AccTransactionRow {
   firstDebitLedgerId?: number;
 }
 export const accDetailInitialData: AccTransactionRow = {
-  accTransactionMasterId: 0,
+  accTransMasterID: 0,
   accTransactionDetailId: 0,
   ledgerId: 0,
   relatedLedgerId: 0,
@@ -245,7 +245,7 @@ export const accDetailInitialData: AccTransactionRow = {
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
-    accTransactionMasterId: 0,
+    accTransMasterID: 0,
     departmentId: 0,
     costCentreId: 0,
     billwiseMasterId: 0,
@@ -312,7 +312,7 @@ export const accTransactionInitialData: AccTransactionData = {
       debit: 5000.00,
       credit: 0,
       projectId: 343,
-      accTransactionMasterId: 0,
+      accTransMasterID: 0,
       relatedLedgerId: 0,
       randomKey: 0,
       projectSiteId: 0,
@@ -346,7 +346,7 @@ export const accTransactionInitialData: AccTransactionData = {
       debit: 5000.00,
       credit: 0,
       projectId: 343,
-      accTransactionMasterId: 0,
+      accTransMasterID: 0,
       relatedLedgerId: 0,
       randomKey: 0,
       projectSiteId: 0,
@@ -386,6 +386,7 @@ export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
   mnuShowConfirmationForEditOnAccounts: boolean;
+  presetCostenterId: number
 }
 export interface AccTransactionFormState {
   formCode: string; // FORMCODE
@@ -394,6 +395,7 @@ export interface AccTransactionFormState {
   isEntryControl: boolean; // IsEntryControl
   isRowEdit: boolean; // IsRowEdit
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
+  isBahamdoonPOSReceipt: boolean;
   billwiseData: BillwiseData[];
   showbillwise: false;
   showSaveDialog: false;
@@ -461,5 +463,6 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   printCheque: false,
   keepNarration: false,
   amountInWords: 'Zero Only',
-  userConfig: {clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true}
+  userConfig: { clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true, presetCostenterId: 0 },
+  isBahamdoonPOSReceipt: false
 }

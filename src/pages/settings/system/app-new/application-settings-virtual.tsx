@@ -63,13 +63,22 @@ export default function SettingsPage() {
   const { verifyOtp, sendOtp, otpSending, otpVerifying } = useApplicationMainSettings();
   const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
   const scrollToSection = (sectionId: string, subItemKey?: string, subItemsCatKey?: string) => {
+    let targetElement: HTMLElement | null = null;
+
     if (subItemsCatKey) {
-      subItemsCatRef.current[subItemsCatKey]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-    else if (subItemKey) {
-      subItemsRef.current[subItemKey]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      targetElement = subItemsCatRef.current[subItemsCatKey];
+    } else if (subItemKey) {
+      targetElement = subItemsRef.current[subItemKey];
     } else {
-      sectionsRef.current[sectionId]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      targetElement = sectionsRef.current[sectionId];
+    }
+
+    if (targetElement) {
+      const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 150;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
     }
   }
   const searchInputRef = useSearchInputFocus();

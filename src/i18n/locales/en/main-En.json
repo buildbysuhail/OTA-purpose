@@ -62,5 +62,6 @@
     "test":"Test",
     "test popup":"Test Popup",
 
-    "reset_dataBase": "Reset DataBase"
+    "reset_dataBase": "Reset DataBase",
+    "post_dated_cheques" :"Post Dated Cheques"
 }

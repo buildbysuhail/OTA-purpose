@@ -172,6 +172,7 @@ export interface AccTransactionRow {
   drCr: string;
   relatedLedgerId: number;
   amount?: number;
+  AmountFC?: number;
   hasDiscount?: boolean;
   discount?: number;
   debit?: number;

@@ -63,17 +63,59 @@ export default function SettingsPage() {
   const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({})
   const { verifyOtp, sendOtp, otpSending, otpVerifying } = useApplicationMainSettings();
   const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
-  const scrollToSection = (sectionId: string, subItemKey?: string, subItemsCatKey?: string) => {
+  const scrollToSection = (
+    sectionId: string,
+    subItemKey?: string,
+    subItemsCatKey?: string
+  ) => {
     let targetElement: HTMLElement | null = null;
-
     if (subItemsCatKey) {
+      debugger;
       targetElement = subItemsCatRef.current[subItemsCatKey];
+      setActiveSubCatItem(subItemsCatKey);
     } else if (subItemKey) {
-      targetElement = subItemsRef.current[subItemKey];
+      const first = settingGroups.find((x) => x.id == sectionId);
+      const second =
+        first && first.settings != null && first.settings.length > 0
+          ? first.settings.find(x => x.key == subItemKey)
+          : null;
+      const third =
+        second && second.subSettings != null && second.subSettings.length > 0
+          ? second.subSettings[0]
+          : null;
+      const targetKey =
+        third != null ? third.key : second != null ? second.key : sectionId;
+      if (third != null) {
+        targetElement = subItemsCatRef.current[targetKey];
+        setActiveSubCatItem(targetKey);
+      } else if (second != null) {
+        targetElement = subItemsRef.current[targetKey];
+        setActiveSubItem(targetKey);
+      } else {
+        targetElement = sectionsRef.current[targetKey];setActiveSection(targetKey);
+      }
     } else {
-      targetElement = sectionsRef.current[sectionId];
+      console.log("sdsdsdsdsd");
+      const first = settingGroups.find((x) => x.id == sectionId);
+      const second =
+        first && first.settings != null && first.settings.length > 0
+          ? first.settings[0]
+          : null;
+      const third =
+        second && second.subSettings != null && second.subSettings.length > 0
+          ? second.subSettings[0]
+          : null;
+      const targetKey =
+        third != null ? third.key : second != null ? second.key : sectionId;
+      if (third != null) {
+        targetElement = subItemsCatRef.current[targetKey];setActiveSubCatItem(targetKey);
+      } else if (second != null) {
+        targetElement = subItemsRef.current[targetKey];setActiveSubItem(targetKey);
+      } else {
+        targetElement = sectionsRef.current[targetKey];setActiveSection
+      }
+      
     }
-
     if (targetElement) {
       const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 150;
       window.scrollTo({
@@ -81,7 +123,7 @@ export default function SettingsPage() {
         behavior: 'smooth'
       });
     }
-  }
+  };
   const searchInputRef = useSearchInputFocus();
 
   useEffect(() => {
@@ -176,7 +218,7 @@ export default function SettingsPage() {
                               <button
                                 key={subCat.key}
                                 className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${subCat.key === activeSubCatItem ? "bg-gray-300 border-primary text-primary" : "border-transparent hover:bg-gray-200"}  `}
-                                onClick={() => scrollToSection(item.id, undefined, subCat.key)} >
+                                onClick={() => scrollToSection(item.id, set.key, subCat.key)} >
                                 {subCat?.label}
                               </button>
                             ))}

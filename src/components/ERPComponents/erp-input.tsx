@@ -493,7 +493,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           }}>
           {!noLabel && (
             <label
-              className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} ${labelClassName}
+              className={`capitalize block  text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} ${labelClassName}
               ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
               style={{
                 fontSize: _customSize
@@ -505,6 +505,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
                         ? "16px"
                         : `${appState?.inputBox?.labelFontSize}px`
                   : `14px`,
+                  color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+                  (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
                 transform: _customSize ==="customize" ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${
                   appState?.inputBox?.adjustB ?? 10 }px) scale(1)`:``,
               }}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface ShortcutConfig {
   event: string;
@@ -6,7 +6,7 @@ interface ShortcutConfig {
   description: string;
   action: () => void;
 }
-export const popupStack: (() => void)[] = []; 
+export const popupStack: (() => void)[] = [];
 export const addPopupToStack = (closeFunction: () => void) => {
   popupStack.push(closeFunction);
 };
@@ -22,7 +22,8 @@ enum ShortKeyEvents {
   CLOSE_ONE_POPUP = 'close-one-popup',
   GO_TO_PREVIOUS_PAGE = 'go-to-previos-page',
   GO_TO_NEXT_PAGE = 'go-to-next-page',
-  GO_TO_HOME = 'go-to-home'
+  GO_TO_HOME = 'go-to-home',
+  FOCUS_SEARCHBAR = "focus-searchbar"
 }
 
 const shortKeys: ShortcutConfig[] = [
@@ -75,6 +76,32 @@ const shortKeys: ShortcutConfig[] = [
     action: () => {
       window.location.assign('/');
     }
+  },
+  {
+    event: ShortKeyEvents.FOCUS_SEARCHBAR,
+    key: 'ctrl+shift+f',
+    description: 'focus the searchbar',
+    action: () => {
+      const strategies = [
+        () => document.getElementById('search-input'),
+        () => document.querySelector('input[type="search"]'),
+        () => document.querySelector('input[placeholder="Search"]'),
+        () => Array.from(document.querySelectorAll('input'))
+          .find(input =>
+            input.getAttribute('aria-label')?.toLowerCase().includes('search') ||
+            input.name?.toLowerCase().includes('search')
+          )
+      ];
+
+      for (const strategy of strategies) {
+        const searchInput = strategy();
+        if (searchInput instanceof HTMLInputElement) {
+          searchInput.focus();
+          searchInput.select();
+          break;
+        }
+      }
+    },
   }
 ];
 
@@ -167,6 +194,27 @@ export const handleNavigation = (e: React.KeyboardEvent<HTMLElement>) => {
       (focusableElements[nextIndex] as HTMLElement).focus();
     }
   }
+};
+
+export const useSearchInputFocus = () => {
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleShortcut = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'f') {
+        event.preventDefault();
+        searchInputRef.current?.focus();
+        searchInputRef.current?.select();
+      }
+    };
+
+    document.addEventListener('keydown', handleShortcut);
+    return () => {
+      document.removeEventListener('keydown', handleShortcut);
+    };
+  }, []);
+
+  return searchInputRef;
 };
 
 initializeShortKeys();

@@ -232,6 +232,7 @@ const { getNextVoucherNumber} = useAccTransaction(transactionType??"");
           voucherType == "CP" ||
           voucherType == "CR"
         ) {
+          debugger;
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -259,6 +260,8 @@ const { getNextVoucherNumber} = useAccTransaction(transactionType??"");
           },
         })
       );
+      console.log(`userSession.employeeId${userSession.employeeId}`);
+      
       if (userSession.employeeId > 0) {
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({

@@ -2,7 +2,7 @@ import { Dialog, DialogPanel, DialogTitle, Transition, TransitionChild } from "@
 import React, { cloneElement, Fragment, useEffect } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
-import { ShortKeyEvents } from "../../utilities/shortKeys";
+import { ShortKeyEvents, addPopupToStack, removePopupFromStack } from "../../utilities/shortKeys";
 
 type ERPModalProps = {
   title: string;
@@ -79,9 +79,11 @@ const ERPModal = React.memo(
           ShortKeyEvents.CLOSE_ONE_POPUP,
           closeOnePopupListener
         );
+        addPopupToStack(handleClose); 
       }
 
       return () => {
+        removePopupFromStack(handleClose); 
         document.removeEventListener(
           ShortKeyEvents.POPUP_CLOSE_EVENT,
           handlePopupClose
@@ -96,7 +98,7 @@ const ERPModal = React.memo(
     return (
       <div>
         <Transition appear show={isOpen} as={Fragment}>
-          <Dialog as="div" className={`relative z-50`} onClose={disableOutsideClickClose ? () => { } : handleClose}>
+          <Dialog as="div" className={`relative z-50`} onClose={disableOutsideClickClose ? () => {} : handleClose}>
             <Transition
               as={Fragment}
               show={isOpen}
@@ -128,8 +130,8 @@ const ERPModal = React.memo(
                       {closeButton === "LeftArrow" && (
                         <button
                           className="h-10 w-10 rtl:mr-0 rtl:ml-3 mr-3 p-2 bg-gray-200 hover:bg-gray-300 hover:shadow-md transition-shadow rounded-full cursor-pointer"
-                          onClick={handleClose} >
-                          <i className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line" style={{ fontSize: "23px" }} ></i>
+                          onClick={handleClose}>
+                          <i className="ri-arrow-left-line mr-2 rtl:mr-0 rtl:ml-2 rtl:ri-arrow-right-line" style={{ fontSize: "23px" }}></i>
                         </button>
                       )}
                       {title}

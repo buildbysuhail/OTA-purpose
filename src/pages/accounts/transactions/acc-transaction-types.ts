@@ -187,6 +187,7 @@ export interface AccTransactionRow {
   exchangeRate?: number;
   adjAmount?: number;
   bankDate: string;
+  chqDate: string;
   chequeNumber: string;
   particularsLedgerId: number;
   isDr: boolean;
@@ -195,6 +196,7 @@ export interface AccTransactionRow {
   checkStatus: string;
   checkBouncedDate: string;
   billwiseData: BillwiseData[];
+  BillwiseDetails: string;
   branchId: number;
   costCentreId: number;
   costCentreName: number;
@@ -248,7 +250,9 @@ export const AccTransactionRowInitialData: AccTransactionRow = {
   ledgerName: "",
   currencyName: "",
   ProjectName: 0,
-  costCentreName: 0
+  costCentreName: 0,
+  BillwiseDetails: "",
+  chqDate: ""
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
@@ -359,7 +363,7 @@ export interface AccTransactionFormState {
   transactionLoading: boolean;
   unlocking: boolean;
   transaction: AccTransactionData;
-  total: string;
+  total: number;
   printOnSave: boolean
   printPreview: boolean
   printCheque: boolean
@@ -405,5 +409,5 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   userConfig: { clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true, presetCostenterId: 0 },
   isBahamdoonPOSReceipt: false,
   unlocking: false,
-  total: "0"
+  total: 0
 }

@@ -195,7 +195,7 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Masters End */}
 
         {/* Accounts Masters */}
-        <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType={''} formCode={''} voucherPrefix={''} formType={''} title={''} drCr={''} />} />
+        <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType={'CP'} formCode={''} voucherPrefix={''} formType={''} title={''} drCr={''} />} />
         {/* Accounts Masters End */}
 
 

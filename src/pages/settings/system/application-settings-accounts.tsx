@@ -13,7 +13,6 @@ import { Countries } from '../../../redux/slices/user-session/reducer';
 import { useAppSelector } from '../../../utilities/hooks/useAppDispatch';
 import { RootState } from '../../../redux/store';
 import { BusinessType } from '../../../enums/business-types';
-import useApplicationSetting from '../../../utilities/hooks/use-application-settings';
 import { ApplicationAccountSettings, ApplicationAccountSettingsInitialState } from './application-settings-types/application-settings-types-accounts';
 import { useTranslation } from 'react-i18next';
 

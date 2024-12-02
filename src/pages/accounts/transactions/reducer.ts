@@ -168,16 +168,21 @@ const accTransactionSlice = createSlice({
     builder.addCase(loadAccVoucher.fulfilled, (state, action) => {
       if (action.payload != null) {
         state.transaction.master = action.payload?.master;
-        state.transaction.details = action.payload?.details;
+        state.transaction.details = action.payload?.details.map((item: any) => ({
+          ...item,
+          chqDate: item.bankDate,
+        }));
         state.transaction.attachments = action.payload?.attachments;
         if (
           action.payload?.details != null &&
           action.payload?.details.length > 0
         ) {
-          state.total =
-            action.payload?.master.voucherType !== VoucherType.MultiJournal
-              ? action.payload?.details.sum((x: any) => x.Amount)
-              : action.payload?.details.sum((x: any) => x.Debit);
+          state.total = action.payload?.details.reduce((total: number, item: any) => {
+            const amount = action.payload?.master.voucherType !== VoucherType.MultiJournal 
+              ? item.Amount 
+              : item.Debit;
+            return total + (amount || 0);
+          }, 0);
 
           //To select Cash Account in the Combo
           switch (action.payload?.master.voucherType) {
@@ -216,7 +221,7 @@ const accTransactionSlice = createSlice({
           }
           let BillwiseAccTransDetailID: number = 0;
 
-          
+
 
          
         }

@@ -493,8 +493,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           }}>
           {!noLabel && (
             <label
-              className={`capitalize block  text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} ${labelClassName}
-              ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
+              className={`capitalize  text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} ${labelClassName}
+              ${labelDirection ==="vertical" ? "":""}`}
               style={{
                 fontSize: _customSize
                   ? _customSize === "sm"
@@ -516,7 +516,7 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
             </label>
           )}
 
-          <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
+          <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-2/3"}}`}>
             {prefix && (
               <div
                 onClick={onClickPrefix}

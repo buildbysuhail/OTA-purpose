@@ -1184,7 +1184,6 @@ const resetInputBox = async ()=>{
                         
                         <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-center mt-5 switcher-style">
                              <ERPInput
-                             
                               id="inputBox"
                               label="Demo Input"
                               onChange={(e) => {

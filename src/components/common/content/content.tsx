@@ -101,6 +101,9 @@ const GroupCategory = lazy(() => import('../../../pages/inventory/masters/group-
 const SpecialSchemes = lazy(() => import('../../../pages/inventory/masters/special-schemes/special-schemes'));
 const ListedProductPrices = lazy(() => import('../../../pages/inventory/masters/listed-product-prices/listed-product-prices'));
 
+//transaction
+const PostDatedCheques = lazy(() => import('../../../pages/accounts/transactions/acc-post-dated-cheques'));
+
 // Inventory Reports
 import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report';
 import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
@@ -196,6 +199,8 @@ const Content: FC<ContentProps> = () => {
 
         {/* Accounts Masters */}
         <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType={''} formCode={''} voucherPrefix={''} formType={''} title={''} drCr={''} />} />
+        <Route path="accounts/transactions/post-dated-cheques" element={<PostDatedCheques />} />
+        
         {/* Accounts Masters End */}
 
 

@@ -951,7 +951,7 @@ if (_useMUI == undefined || _useMUI == false){
       {!noLabel && (
           <label
           className={`capitalize block   text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} 
-          ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
+          ${labelDirection ==="vertical" ? "":""}`}
           style={{
             fontSize: _customSize
               ? _customSize === "sm"
@@ -981,7 +981,7 @@ if (_useMUI == undefined || _useMUI == false){
         as="div"
         className="relative"
       >
-        <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
+        <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-2/3"}}`}>
 
           <Combobox.Input
          

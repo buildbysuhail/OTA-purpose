@@ -139,8 +139,8 @@ const handleClear = async ()=>{
       <div className="grid grid-cols-12 gap-x-6 ">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
-          <h1 className='text-[30px] font-normal '>Counter Settings</h1>
-          <div className="grid grid-cols-1 space-y-4 md:w-2/4 mb-3">
+          <h1 className='text-2xl font-normal tracking-wide text-#3f3f46 dark:te'>Counter Settings</h1>
+          <div className="grid grid-cols-1 space-y-4 md:w-[550px] mb-3">
                 <ErpInput
                 // labelDirection="horizontal"
                 className=""

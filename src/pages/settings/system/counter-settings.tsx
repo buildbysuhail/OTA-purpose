@@ -16,24 +16,27 @@ import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox
 import { APIClient } from "../../../helpers/api-client";
 import { RootState } from "../../../redux/store";
 import { handleResponse } from "../../../utilities/HandleResponse";
+import { useNavigate } from "react-router-dom";
+
 interface CounterData {
-  pCname:string
+  systemName:string
   systemCode:string
-  counterID:number
+  counterID:number|null
 }
 const api = new APIClient();
 const CounterSettings = () => {
   const initData:CounterData = {
-    pCname:"",
+    systemName:"",
     systemCode:"",
-    counterID:0,
+    counterID:null,
   }
  const[counterData,setCounterData]=useState<CounterData>(initData)
+ const [defaultSystemCode, setDefaultSystemCode] = useState("");
+ const [reload,setReload]=useState(false)
  const [loading, setLoading] = useState(true);
  const [isSaving, setIsSaving] = useState(false);
  const userSession = useAppSelector((state: RootState) => state.UserSession);
-
-
+const navigate = useNavigate()
 
  useEffect(() => {
   loadCounterData();
@@ -42,7 +45,8 @@ const CounterSettings = () => {
  const loadCounterData = async () => {
   setLoading(true);
   try {
-    const response = await api.getAsync(Urls.counter_settings_current_data);  
+    const response = await api.getAsync(Urls.counter_settings_current_data); 
+    setDefaultSystemCode(response.systemCode)
     setCounterData(response);
   } catch (error) {
     console.error("Error loading settings:", error);
@@ -55,7 +59,7 @@ const handleRowClick = (e: any) => {
   const rowData = e.data;
   console.log("Clicked row data:", rowData);
   setCounterData({
-    pCname: rowData.pCname,
+    systemName: rowData.pCname,
     systemCode: rowData.systemCode,
     counterID: rowData.counterID,
   });
@@ -63,16 +67,25 @@ const handleRowClick = (e: any) => {
 
 
 const handleSubmit = async () => {
+  setReload(false)
   setIsSaving(true);
   try {
     const response = await api.put(Urls.counter_settings_current_data,counterData);  
-    handleResponse(response)
+    handleResponse(response,()=>{setReload(true)},() => { })
   } catch (error) {
     console.error("Error loading settings:", error);
   } finally {
     setIsSaving(false);
   }
 };
+
+const handleClear = async ()=>{
+  setCounterData({
+    systemName: "",
+    systemCode: "",
+    counterID: null,
+  }); 
+}
 
   const dispatch = useAppDispatch();
   const { t } = useTranslation("userManage");
@@ -126,25 +139,25 @@ const handleSubmit = async () => {
       <div className="grid grid-cols-12 gap-x-6 ">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
-            
-           <div className="flex justify-start my-3 ">
-           <div className="grid grid-cols-1 gap-3">
+          <h1 className='text-[30px] font-normal '>Counter Settings</h1>
+          <div className="grid grid-cols-1 space-y-4 md:w-2/4 mb-3">
                 <ErpInput
-                labelDirection="horizontal"
+                // labelDirection="horizontal"
+                className=""
                   id="systemName"
                   label="System Name"
                   placeholder="System Name"
                   data={counterData}
-                  value={counterData.pCname}
+                  value={counterData.systemName}
                   onChange={(e) => {
                     setCounterData((prevTheme) => ({
                       ...prevTheme,
-                      pCname: e.target.value,
+                      systemName: e.target.value,
                     }));
                   }}
                 />
                 <ErpInput
-                  labelDirection="horizontal"
+                  // labelDirection="horizontal"
                   id="systemCode"
                   label="System Code"
                   placeholder="System Code"
@@ -157,9 +170,8 @@ const handleSubmit = async () => {
                     }));
                   }}
                 />
-             
                 <ERPDataCombobox
-                 labelDirection="horizontal"
+                //  labelDirection="horizontal"
                   id="counterID"
                   data={counterData}
                   label="counterID"
@@ -177,11 +189,7 @@ const handleSubmit = async () => {
                   }}
                 
                 />
-              </div>
-           </div>
-         
-
-            <div className="flex self-end space-x-5 ">
+              <div className="flex items-center justify-center space-x-4">
                   <ERPButton
                     title="Save"
                     variant="primary"
@@ -195,6 +203,7 @@ const handleSubmit = async () => {
                     customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
                     type="button"
                     startIcon="ri-format-clear"
+                    onClick={handleClear}
                   />
                   <ERPButton
                     title="Close"
@@ -202,8 +211,11 @@ const handleSubmit = async () => {
                     customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
                     type="button"
                     startIcon="ri-file-close-line"
+                    onClick={()=>  navigate("/settings") }
                   />
-                </div> 
+              </div>
+          </div>
+     
          
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
@@ -213,14 +225,14 @@ const handleSubmit = async () => {
                 hideGridAddButton={true}
                 hideDefaultExportButton={true}
                 onRowClick={handleRowClick}
-                heightToAdjustOnWindows = {400}
-                reload={rootState?.PopupData?.user?.reload}    
+                heightToAdjustOnWindows = {500}
+                reload={reload}    
                 pageSize={40}
               ></ErpDevGrid>
             </div>
-            <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
-                <strong className="mr-3">Thi System Code:</strong>
-                {/* <span className="">{store.reduce((total, item) => total + (item.AmountToAssign || 0), 0)}</span> */}
+            <div className="flex justify-center items-center mt-2 space-x-2">
+                <strong className="">This System Code :</strong>
+                <span className="">{defaultSystemCode}</span>
             </div>
           </div>
         </div>

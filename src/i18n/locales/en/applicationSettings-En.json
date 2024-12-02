@@ -248,5 +248,8 @@
     "enable_sales_invoice_draft_option":"Enable Sales Invoice Draft Option",
     "block_hold_items":"Block Hold Items",
     "maintain_separate_prefix_for_cash_sales":"Maintain Separate Prefix For Cash Sales",
-    "send_sms_URL":"Send SMS URL"
+    "send_sms_URL":"Send SMS URL",
+    "otp_email": "OTP Email",
+    "send_otp": "Send OTP",
+    "rounding_method": "Rounding Method"
 }

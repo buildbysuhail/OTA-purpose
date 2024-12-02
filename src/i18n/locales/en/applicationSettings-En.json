@@ -251,5 +251,9 @@
     "send_sms_URL":"Send SMS URL",
     "otp_email": "OTP Email",
     "send_otp": "Send OTP",
-    "rounding_method": "Rounding Method"
+    "rounding_method": "Rounding Method",
+    "cost_center": "Cost Center",
+    "set_system_code":"Set System Code",
+    "shared_folder": "Shared Folder",
+    "enable_supplier_wise_item_code": "Enable Supplier Wise Item Code"
 }

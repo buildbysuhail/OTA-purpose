@@ -17,9 +17,16 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
 
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
+  const [filterText, setFilterSearch] = useState("");
   const [settingsPrev, setSettingsPrev] = useState<ApplicationSettingsType>(applicationSettings);
   const [isSaving, setIsSaving] = useState(false);
   const { t } = useTranslation();
+
+  const onFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value ?? "".toLowerCase();
+    setFilterSearch(searchTerm);
+  }
+
   const handleFieldChange = useCallback(
     <T extends keyof ApplicationSettingsType>(type: T, settingName: keyof ApplicationSettingsType[T], value: any
     ) => {
@@ -148,12 +155,18 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
     isSaving,
     handleSubmit,
     handleFieldChange,
-    filterComponent
+    filterComponent,
+    filterText,
+    setFilterSearch,
+    onFilterChange 
   };
 };
+
 type UseApplicationSettingReturnType = {
   settings: ApplicationSettingsType;
   setSettings: React.Dispatch<React.SetStateAction<ApplicationSettingsType>>;
+  filterText: string;
+  setFilterSearch: React.Dispatch<React.SetStateAction<string>>;
   isSaving: boolean;
   handleSubmit: () => Promise<void>;
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -162,4 +175,5 @@ type UseApplicationSettingReturnType = {
     value: any
   ) => void;
   filterComponent: (translations: string[], filterText: string) => boolean;
+  onFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };

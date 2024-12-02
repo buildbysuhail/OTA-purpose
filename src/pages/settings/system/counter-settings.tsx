@@ -73,6 +73,7 @@ const handleSubmit = async () => {
     setIsSaving(false);
   }
 };
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation("userManage");
   const rootState = useRootState();
@@ -212,7 +213,7 @@ const handleSubmit = async () => {
                 hideGridAddButton={true}
                 hideDefaultExportButton={true}
                 onRowClick={handleRowClick}
-                heightToAdjustOnWindows = {350}
+                heightToAdjustOnWindows = {400}
                 reload={rootState?.PopupData?.user?.reload}    
                 pageSize={40}
               ></ErpDevGrid>

@@ -30,6 +30,7 @@ interface popupData {
   accountGroup: popupDataProps
   accountLedger: popupDataProps
   costCentre: popupDataProps
+  priceList: popupDataProps
   branchLedger: popupDataProps
   authorizationSettings: popupDataProps
   barcodeprint: popupDataProps
@@ -97,6 +98,7 @@ const initialState: popupData = {
   accountGroup: { isOpen: false, key: null, mode: "edit", reload: true },
   accountLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   costCentre: { isOpen: false, key: null, mode: "edit", reload: true },
+  priceList:{ isOpen: false, key: null, mode: "edit", reload: true },
   branchLedger: { isOpen: false, key: null, mode: "edit", reload: true },
   authorizationSettings: { isOpen: false, key: null, mode: "edit", reload: true },
   barcodeprint: { isOpen: false, key: null, mode: "edit", reload: true },
@@ -322,11 +324,15 @@ const popupDataSlice = createSlice({
     toggleTestPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.testPopup = action.payload;
     },
+    togglePriceListPopup: (state, action: PayloadAction<popupDataProps>) => {
+      state.priceList = action.payload;
+    },
   },
 });
 
 // Extract the actions
 export const {
+  togglePriceListPopup,
   onCloseWithUnsavedChange,
   toggleTestPopup,
   toggleGroupOrder,

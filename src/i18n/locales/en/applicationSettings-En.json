@@ -255,5 +255,7 @@
     "cost_center": "Cost Center",
     "set_system_code":"Set System Code",
     "shared_folder": "Shared Folder",
-    "enable_supplier_wise_item_code": "Enable Supplier Wise Item Code"
+    "enable_supplier_wise_item_code": "Enable Supplier Wise Item Code",
+    "show_cash_sales_separate_menu":"Show Cash Sales Separate Menu",
+    "product_image_path":"Product Image Path"
 }

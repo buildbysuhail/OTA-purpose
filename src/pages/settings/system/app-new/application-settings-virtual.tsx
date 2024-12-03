@@ -46,6 +46,7 @@ const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) 
   )
 }
 export default function SettingsPage() {
+  const [blinkSection, setBlinkSection] = useState<string | null>(null);
   const [showSystemCodeBox, setShowSystemCodeBox] = useState(false);
   const [isCompactView, setIsCompactView] = useState(false)
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
@@ -92,7 +93,7 @@ export default function SettingsPage() {
         targetElement = subItemsRef.current[targetKey];
         setActiveSubItem(targetKey);
       } else {
-        targetElement = sectionsRef.current[targetKey];setActiveSection(targetKey);
+        targetElement = sectionsRef.current[targetKey]; setActiveSection(targetKey);
       }
     } else {
       console.log("sdsdsdsdsd");
@@ -108,13 +109,13 @@ export default function SettingsPage() {
       const targetKey =
         third != null ? third.key : second != null ? second.key : sectionId;
       if (third != null) {
-        targetElement = subItemsCatRef.current[targetKey];setActiveSubCatItem(targetKey);
+        targetElement = subItemsCatRef.current[targetKey]; setActiveSubCatItem(targetKey);
       } else if (second != null) {
-        targetElement = subItemsRef.current[targetKey];setActiveSubItem(targetKey);
+        targetElement = subItemsRef.current[targetKey]; setActiveSubItem(targetKey);
       } else {
-        targetElement = sectionsRef.current[targetKey];setActiveSection
+        targetElement = sectionsRef.current[targetKey]; setActiveSection
       }
-      
+
     }
     if (targetElement) {
       const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 150;
@@ -122,6 +123,15 @@ export default function SettingsPage() {
         top: targetPosition,
         behavior: 'smooth'
       });
+    }
+    if (sectionId) {
+      setBlinkSection(subItemsCatKey || subItemKey || sectionId);
+
+      const blinkTimeout = setTimeout(() => {
+        setBlinkSection(null);
+      }, 2000);
+
+      return () => clearTimeout(blinkTimeout);
     }
   };
   const searchInputRef = useSearchInputFocus();
@@ -236,7 +246,15 @@ export default function SettingsPage() {
       <main className="flex-1 ml-[200px] lg:ml-[300px] ">
         <div className="bg-[#fafafa] shadow-md overflow-hidden">
           <div className="p-6">
-
+            <style>{`
+          @keyframes blink {
+            0%, 100% { background-color: #f1f1f1; }
+            50% { background-color: #e0e0e0; }
+          }
+          .blink-animation {
+            animation: blink 2s ease-in-out;
+          }
+        `}</style>
             {/* {settingGroups.map((group, index) => ( */}
             <div className='flex items-center justify-between py-3 px-8 fixed top-0 right-0 left-0 pt-[4.5rem] bg-[#efefef] z-10'>
               <input
@@ -257,7 +275,10 @@ export default function SettingsPage() {
               <div className="space-y-6">
                 <div>
                   <div key="mainGeneral" ref={el => subItemsRef.current["mainGeneral"] = el}>
-                    <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>General</h1>
+                    <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2 
+                      ${blinkSection === 'main' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>
+                      General
+                    </h1>
                     <div key="mainGeneral" className="space-y-4">
                       <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                         <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -697,7 +718,9 @@ export default function SettingsPage() {
                 {/* backup */}
                 <div>
                   <div key="mainBackup" ref={el => subItemsRef.current["mainBackup"] = el}>
-                    <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Backup</h1>
+                    <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>
+                      Backup</h1>
                     <div key="mainBackup" className="space-y-4">
                       <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                         <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -1243,11 +1266,28 @@ export default function SettingsPage() {
                             />
                           )}
 
+                          {filterComponent([t("product_image_path")], filterText) && (
+                            <ERPInput
+                              id="productImagePath"
+                              value={settings?.productsSettings?.productImagePath}
+                              data={settings?.productsSettings}
+                              label={t("product_image_path")}
+                              type="text"
+                              placeholder={t("product_image_path")}
+                              disabled={!settings?.productsSettings?.useProductImages}
+                              onChangeData={(data) =>
+                                handleFieldChange("productsSettings", "productImagePath", data.productImagePath)
+                              }
+                            />
+                          )}
+
+
                           {filterComponent([t("set_gift_shared_path")], filterText) && (
                             <ERPInput
                               id="productImagePath"
                               value={settings?.productsSettings?.productImagePath}
                               data={settings?.productsSettings}
+                              disabled={true}
                               label={t("set_gift_shared_path")}
                               type="text"
                               placeholder={t("set_gift_shared_path")}
@@ -2345,7 +2385,7 @@ export default function SettingsPage() {
                   <div key="inventoryGSTSettings" ref={el => subItemsRef.current["inventoryGSTSettings"] = el}>
                     <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>GST Settings</h1>
                     <div key="inventoryGSTSettings" className="space-y-4">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center mt-4'}`}>
                         <label>{t("default_purchase")}</label>
                         <ERPCheckbox
                           id="purchaseNormalType"
@@ -3301,6 +3341,192 @@ export default function SettingsPage() {
                           />
                         )}
 
+                        {filterComponent([t("credit_limit")], filterText) && (
+                          <ERPDataCombobox
+                            id="blockOnCreditLimit"
+                            data={settings?.accountsSettings}
+                            label={t("credit_limit")}
+                            field={{
+                              id: "blockOnCreditLimit",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={[
+                              { value: 'Block', label: 'Block' },
+                              { value: 'Warn', label: 'Warn' },
+                              { value: 'Ignore', label: 'Ignore' },
+                              { value: 'Allow Cash Sales', label: 'Allow Cash Sales' },
+                            ]}
+                            onChangeData={(data) =>
+                              handleFieldChange("accountsSettings", "blockOnCreditLimit", data.blockOnCreditLimit)
+                            }
+                          />
+                        )}
+
+                        {filterComponent([t("sales_rounding_method")], filterText) && (
+                          <ERPDataCombobox
+                            field={{
+                              id: "pOSRoundingMethod",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            id="pOSRoundingMethod"
+                            label={t("sales_rounding_method")}
+                            data={settings?.mainSettings}
+                            onChangeData={(data) =>
+                              handleFieldChange("mainSettings", "pOSRoundingMethod", data.pOSRoundingMethod)
+                            }
+                            options={[
+                              { value: "Normal", label: "Normal" },
+                              { value: "No Rounding", label: "No Rounding" },
+                              { value: "Ceiling", label: "Ceiling" },
+                              { value: "Floor", label: "Floor" },
+                              { value: "Round to 0.25", label: "Round to 0.25" },
+                              { value: "Round to 0.50", label: "Round to 0.50" },
+                              { value: "Round to 0.10", label: "Round to 0.10" },
+                              { value: "Floor Round to 0.50", label: "Floor Round to 0.50" },
+                              { value: "Floor Round to 0.25", label: "Floor Round to 0.25" },
+                              { value: "Floor Round to 0.10", label: "Floor Round to 0.10" },
+                              { value: "Not Set", label: "Not Set" },
+                              { value: "Round to 0.010", label: "Round to 0.010" },
+                            ]}
+                          />
+                        )}
+
+                        {filterComponent([t("default_sales_return_payable_acc")], filterText) && (
+                          <ERPDataCombobox
+                            id="defaultSalesReturnPayableAcc"
+                            disabled
+                            data={settings?.inventorySettings}
+                            field={{
+                              id: "defaultSalesReturnPayableAcc",
+                              required: false,
+                              getListUrl: Urls.data_acc_ledgers,
+                              params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data: any) =>
+                              handleFieldChange("inventorySettings", "defaultSalesReturnPayableAcc", data.defaultSalesReturnPayableAcc)
+                            }
+                            label={t("default_sales_return_payable_acc")}
+                          />
+                        )}
+
+                        {filterComponent([t("bill_discount_given_ledger")], filterText) && (
+                          <ERPDataCombobox
+                            id="defaultBillDiscGivenLdg"
+                            data={settings?.inventorySettings}
+                            field={{
+                              id: "defaultBillDiscGivenLdg",
+                              getListUrl: Urls.data_acc_ledgers,
+                              params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data: any) =>
+                              handleFieldChange("inventorySettings", "defaultBillDiscGivenLdg", data.defaultBillDiscGivenLdg)
+                            }
+                            label={t("bill_discount_given_ledger")}
+                          />
+                        )}
+
+                        {filterComponent([t("barcode_label")], filterText) && (
+                          <ERPDataCombobox
+                            id="defaultBarcodeLabel"
+                            disabled
+                            data={settings?.inventorySettings}
+                            field={{
+                              id: "defaultBarcodeLabel",
+                              required: false,
+                              valueKey: "id",
+                              labelKey: "label",
+                            }}
+                            options={[{ value: "Default.lba", label: "Default.lba" }]}
+                            onChangeData={(data: any) =>
+                              handleFieldChange("inventorySettings", "defaultBarcodeLabel", data.defaultBarcodeLabel)
+                            }
+                            label={t("barcode_label")}
+                          />
+                        )}
+
+                        {filterComponent([t("default_opening_stock_ledger")], filterText) && (
+                          <ERPDataCombobox
+                            id="defaultOpeningStockValueAcc"
+                            data={settings?.accountsSettings}
+                            label={t("default_opening_stock_ledger")}
+                            field={{
+                              id: "defaultOpeningStockValueAcc",
+                              getListUrl: Urls.data_acc_ledgers,
+                              params: `ledgerID=0&ledgerType=${LedgerType.Current_Assets}`,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
+                          />
+                        )}
+
+                        {filterComponent([t("default_PDC_receivable_account")], filterText) && (
+                          <ERPDataCombobox
+                            id="defaultPDCReceivableAccount"
+                            disabled={!settings?.accountsSettings?.allowPostPDC}
+                            data={settings?.accountsSettings}
+                            label={t("default_PDC_receivable_account")}
+                            field={{
+                              id: "defaultPDCReceivableAccount",
+                              getListUrl: Urls.data_acc_ledgers,
+                              params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
+                          />
+                        )}
+
+                        {filterComponent([t("default_PDC_payable_account")], filterText) && (
+                          <ERPDataCombobox
+                            id="defaultPDCPayableAccount"
+                            disabled={!settings?.accountsSettings?.allowPostPDC}
+                            data={settings?.accountsSettings}
+                            label={t("default_PDC_payable_account")}
+                            field={{
+                              id: "defaultPDCPayableAccount",
+                              getListUrl: Urls.data_acc_ledgers,
+                              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
+                          />
+                        )}
+
+                        {filterComponent([t("default_customer")], filterText) && (
+                          <ERPDataCombobox
+                            id="defaultCustomerLedgerID"
+                            data={settings?.accountsSettings}
+                            label={t("default_customer")}
+                            field={{
+                              id: "defaultCustomerLedgerID",
+                              getListUrl: Urls.data_acc_ledgers,
+                              params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data) => handleFieldChange("accountsSettings", "defaultCustomerLedgerID", data.defaultCustomerLedgerID)}
+                            disabled={!settings?.accountsSettings?.setDefaultCustomerInSales}
+                          />
+                        )}
+
+                        {filterComponent([t("set_default_customer_in_sales")], filterText) && (
+                          <ERPCheckbox
+                            id="setDefaultCustomerInSales"
+                            checked={settings?.accountsSettings?.setDefaultCustomerInSales}
+                            data={settings?.accountsSettings}
+                            label={t("set_default_customer_in_sales")}
+                            onChangeData={(data) => handleFieldChange("accountsSettings", "setDefaultCustomerInSales", data.setDefaultCustomerInSales)}
+                          />
+                        )}
+
                         {filterComponent([t("set_authorization_in_sales")], filterText) && (
                           <ERPCheckbox
                             id="setAuthorizationinSales"
@@ -3411,32 +3637,6 @@ export default function SettingsPage() {
                           />
                         )}
 
-                        {filterComponent([t("set_default_customer_in_sales")], filterText) && (
-                          <ERPCheckbox
-                            id="setDefaultCustomerInSales"
-                            checked={settings?.accountsSettings?.setDefaultCustomerInSales}
-                            data={settings?.accountsSettings}
-                            label={t("set_default_customer_in_sales")}
-                            onChangeData={(data) => handleFieldChange('accountsSettings', 'setDefaultCustomerInSales', data.setDefaultCustomerInSales)}
-                          />
-                        )}
-
-                        {filterComponent([t("default_customer")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultCustomerLedgerID"
-                            data={settings?.accountsSettings}
-                            label={t("default_customer")}
-                            field={{
-                              id: "defaultCustomerLedgerID",
-                              getListUrl: Urls.data_acc_ledgers,
-                              params: `ledgerID=0&ledgerType=${LedgerType.All}`,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data) => handleFieldChange('accountsSettings', 'defaultCustomerLedgerID', data.defaultCustomerLedgerID)}
-                          />
-                        )}
-
                         {filterComponent([t("allow_sales_route/area")], filterText) && (
                           <ERPCheckbox
                             id="allowSalesRouteArea"
@@ -3462,28 +3662,6 @@ export default function SettingsPage() {
                           />
                         )}
 
-                        {filterComponent([t("credit_limit")], filterText) && (
-                          <ERPDataCombobox
-                            id="blockOnCreditLimit"
-                            data={settings?.accountsSettings}
-                            label={t("credit_limit")}
-                            field={{
-                              id: "blockOnCreditLimit",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            options={[
-                              { value: 'Block', label: 'Block' },
-                              { value: 'Warn', label: 'Warn' },
-                              { value: 'Ignore', label: 'Ignore' },
-                              { value: 'Allow Cash Sales', label: 'Allow Cash Sales' },
-                            ]}
-                            onChangeData={(data) =>
-                              handleFieldChange("accountsSettings", "blockOnCreditLimit", data.blockOnCreditLimit)
-                            }
-                          />
-                        )}
-
                         {filterComponent([t("show_employees_in_sales")], filterText) && (
                           <ERPCheckbox
                             id="showEmployeesInSales"
@@ -3491,37 +3669,6 @@ export default function SettingsPage() {
                             data={settings?.accountsSettings}
                             label={t("show_employees_in_sales")}
                             onChangeData={(data) => handleFieldChange('accountsSettings', 'showEmployeesInSales', data.showEmployeesInSales)}
-                          />
-                        )}
-
-
-                        {filterComponent([t("sales_rounding_method")], filterText) && (
-                          <ERPDataCombobox
-                            field={{
-                              id: "pOSRoundingMethod",
-                              valueKey: "value",
-                              labelKey: "label",
-                            }}
-                            id="pOSRoundingMethod"
-                            label={t("sales_rounding_method")}
-                            data={settings?.mainSettings}
-                            onChangeData={(data) =>
-                              handleFieldChange("mainSettings", "pOSRoundingMethod", data.pOSRoundingMethod)
-                            }
-                            options={[
-                              { value: "Normal", label: "Normal" },
-                              { value: "No Rounding", label: "No Rounding" },
-                              { value: "Ceiling", label: "Ceiling" },
-                              { value: "Floor", label: "Floor" },
-                              { value: "Round to 0.25", label: "Round to 0.25" },
-                              { value: "Round to 0.50", label: "Round to 0.50" },
-                              { value: "Round to 0.10", label: "Round to 0.10" },
-                              { value: "Floor Round to 0.50", label: "Floor Round to 0.50" },
-                              { value: "Floor Round to 0.25", label: "Floor Round to 0.25" },
-                              { value: "Floor Round to 0.10", label: "Floor Round to 0.10" },
-                              { value: "Not Set", label: "Not Set" },
-                              { value: "Round to 0.010", label: "Round to 0.010" },
-                            ]}
                           />
                         )}
 
@@ -3618,26 +3765,6 @@ export default function SettingsPage() {
                           )}
                         </ERPDisableEnable>
 
-                        {filterComponent([t("default_sales_return_payable_acc")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultSalesReturnPayableAcc"
-                            disabled
-                            data={settings?.inventorySettings}
-                            field={{
-                              id: "defaultSalesReturnPayableAcc",
-                              required: false,
-                              getListUrl: Urls.data_acc_ledgers,
-                              params: `ledgerID=0&ledgerType=${LedgerType.Customer}`,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "defaultSalesReturnPayableAcc", data.defaultSalesReturnPayableAcc)
-                            }
-                            label={t("default_sales_return_payable_acc")}
-                          />
-                        )}
-
                         {userSession.countryId != Countries.India &&
                           filterComponent([t("enable_sales_invoice_draft_option")], filterText) && (
                             <ERPCheckbox
@@ -3687,43 +3814,6 @@ export default function SettingsPage() {
                             />
                           )}
 
-                        {filterComponent([t("bill_discount_given_ledger")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultBillDiscGivenLdg"
-                            data={settings?.inventorySettings}
-                            field={{
-                              id: "defaultBillDiscGivenLdg",
-                              getListUrl: Urls.data_acc_ledgers,
-                              params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "defaultBillDiscGivenLdg", data.defaultBillDiscGivenLdg)
-                            }
-                            label={t("bill_discount_given_ledger")}
-                          />
-                        )}
-
-                        {filterComponent([t("barcode_label")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultBarcodeLabel"
-                            disabled
-                            data={settings?.inventorySettings}
-                            field={{
-                              id: "defaultBarcodeLabel",
-                              required: false,
-                              valueKey: "id",
-                              labelKey: "label",
-                            }}
-                            options={[{ value: "Default.lba", label: "Default.lba" }]}
-                            onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "defaultBarcodeLabel", data.defaultBarcodeLabel)
-                            }
-                            label={t("barcode_label")}
-                          />
-                        )}
-
                         {userSession.countryId != Countries.India &&
                           filterComponent([t("block_hold_items")], filterText) && (
                             <ERPCheckbox
@@ -3736,59 +3826,8 @@ export default function SettingsPage() {
                               }
                             />
                           )}
-
-                        {filterComponent([t("default_opening_stock_ledger")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultOpeningStockValueAcc"
-                            data={settings?.accountsSettings}
-                            label={t("default_opening_stock_ledger")}
-                            field={{
-                              id: "defaultOpeningStockValueAcc",
-                              getListUrl: Urls.data_acc_ledgers,
-                              params: `ledgerID=0&ledgerType=${LedgerType.Current_Assets}`,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
-                          />
-                        )}
-
-                        {filterComponent([t("default_PDC_receivable_account")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultPDCReceivableAccount"
-                            disabled={!settings?.accountsSettings?.allowPostPDC}
-                            data={settings?.accountsSettings}
-                            label={t("default_PDC_receivable_account")}
-                            field={{
-                              id: "defaultPDCReceivableAccount",
-                              getListUrl: Urls.data_acc_ledgers,
-                              params: `ledgerID=0&ledgerType=${LedgerType.All}`,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
-                          />
-                        )}
-
-                        {filterComponent([t("default_PDC_payable_account")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultPDCPayableAccount"
-                            disabled={!settings?.accountsSettings?.allowPostPDC}
-                            data={settings?.accountsSettings}
-                            label={t("default_PDC_payable_account")}
-                            field={{
-                              id: "defaultPDCPayableAccount",
-                              getListUrl: Urls.data_acc_ledgers,
-                              params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
-                          />
-                        )}
                       </div>
                     </div>
-
                   </div>
                 </div>
               </div>
@@ -4078,7 +4117,7 @@ export default function SettingsPage() {
                   <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Schemes & Promotions</h1>
                   <div key="inventorySchemesPromotions" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
                         <div className="flex items-center gap-6">
                           {filterComponent([t("gift_on_billing")], filterText) && (
                             <>

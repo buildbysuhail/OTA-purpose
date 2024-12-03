@@ -10,7 +10,7 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: 
 
     // const [reload,setReload]= useState(false);
     return (
-  <div className="grid grid-cols-2 gap-4">
+  <div className="grid grid-cols-1 my-4  md:grid-cols-2 gap-4">
     {/* Date Range Section */}
     <div className="flex items-center gap-4">
       <ERPDateInput

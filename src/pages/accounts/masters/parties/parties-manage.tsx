@@ -16,6 +16,7 @@ import { Tab, Tabs } from "@mui/material";
 import { APIClient } from "../../../../helpers/api-client";
 import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
+import { convertFileToBase64 } from "../../../../utilities/file-utils";
 
 interface PartiesManageProps {
   type: string; // Define type as a string prop
@@ -309,7 +310,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     id: "faxNumber",
                     required: true,
                     getListUrl: Urls.data_CustSupp,
-                    valueKey: "id",
+                    valueKey: "name",
                     labelKey: "name",
                   }}
                   onChangeData={(data: any) => {
@@ -577,13 +578,18 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     name="document1"
                     onChange={(e) => {
                       const files = e.target.files;
-                      if (files && files.length > 0) {
-                        handleFieldChange("document1", files[0]);
+                      if (files != undefined && files.length > 0) {
+                        convertFileToBase64(files[0]).then((base64) => {
+                          debugger;
+                          handleFieldChange("document1", base64);
+                        });
                       }
-                    }}
+                    }
+                    }
                     className="border rounded-lg p-2"
                   />
                 </div>
+
                 <div className="flex flex-col gap-2">
                   <label htmlFor="fileInput" className="text-sm text-gray-700">
                     {t("document_2")}
@@ -592,12 +598,13 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     type="file"
                     id="document2"
                     name="document2"
-                    onChange={(e) => {
+                     onChange={(e) => {
                       const files = e.target.files;
-                      if (files && files.length > 0) {
-                        handleFieldChange("document2", files[0]);
+                      if (files != undefined && files.length > 0) {
+                        convertFileToBase64(files[0]).then((base64) => handleFieldChange("document2", base64));
                       }
-                    }}
+                    }
+                    }
                     className="border rounded-lg p-2"
                   />
                 </div>
@@ -729,7 +736,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("formTypeID", data.formTypeID.toString())}
+                  onChangeData={(data: any) => handleFieldChange("formTypeID", data.formTypeID)}
                   label={t("form_type")}
                 />
                 <ERPInput
@@ -763,13 +770,13 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     {t("upload_photo")}
                   </label>
                   <input
-                    type="file"
+                    // type="s"
                     id="partyPhoto"
                     name="partyPhoto"
                     onChange={(e) => {
                       const files = e.target.files;
                       if (files && files.length > 0) {
-                        handleFieldChange("partyPhoto", files[0]);
+                        handleFieldChange("partyPhoto", e.target.value);
                       }
                     }}
                     className="border rounded-lg p-2"

@@ -22,6 +22,8 @@ import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '.
 import { BusinessType } from '../../../../enums/business-types';
 import { useApplicationSetting } from '../../../../utilities/hooks/use-application-settings';
 import { useSearchInputFocus } from '../../../../utilities/shortKeys';
+import { Menu } from 'devextreme-react';
+import { X } from 'lucide-react';
 
 const api = new APIClient()
 const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) => {
@@ -46,6 +48,7 @@ const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) 
   )
 }
 export default function SettingsPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [blinkSection, setBlinkSection] = useState<string | null>(null);
   const [showSystemCodeBox, setShowSystemCodeBox] = useState(false);
   const [isCompactView, setIsCompactView] = useState(false)
@@ -197,8 +200,18 @@ export default function SettingsPage() {
 
   return (
     <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark">
-      <aside className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-20 bg-[#fafafa]">
-        <h1 className="font-medium text-xl p-5 mb-5">Settings</h1>
+      <button className="md:hidden fixed top-4 left-4 z-30 bg-gray-100 p-2 rounded-md" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} >
+        {isMobileMenuOpen ? <i className="ri-close-circle-line"></i> : <i className="ri-menu-line"></i>}
+      </button>
+      <aside className={`fixed z-20 bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ltr:border-r rtl:border-l `}>
+        <div className="md:hidden flex justify-end p-4">
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="p-2 rounded-full hover:bg-gray-200">
+            <i className="ri-close-circle-line"></i>
+          </button>
+        </div>
+        <h1 className="font-medium text-xl p-5 mb-5 sm:hidden lg:block">Settings</h1>
         <div className="flex flex-col overflow-y-auto pb-24 h-full mt-4">
           {settingGroups.map((item) => (
             <div key={item.id}>
@@ -243,10 +256,19 @@ export default function SettingsPage() {
           ))}
         </div>
       </aside>
-      <main className="flex-1 ml-[200px] lg:ml-[300px] relative">
-
-        {/* {settingGroups.map((group, index) => ( */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-10"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300">
         <div className='flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2'>
+          <button
+            className="md:hidden mr-2 p-1"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <i className="ri-menu-line"></i>
+          </button>
           <input
             ref={searchInputRef}
             id="search-input"
@@ -259,6 +281,15 @@ export default function SettingsPage() {
           <LayoutToggle onToggle={setIsCompactView} />
         </div>
         <div className='p-4'>
+          <style>{`
+          @keyframes blink {
+            0%, 100% { background-color: #f1f1f1; }
+            50% { background-color: #e0e0e0; }
+          }
+          .blink-animation {
+            animation: blink 2s ease-in-out;
+          }
+        `}</style>
           <section
             key="main"
             ref={el => sectionsRef.current['main'] = el}
@@ -709,8 +740,7 @@ export default function SettingsPage() {
               <div>
                 <div key="mainBackup" ref={el => subItemsRef.current["mainBackup"] = el}>
                   <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>
-                    Backup</h1>
+                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}> Backup</h1>
                   <div key="mainBackup" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -773,7 +803,8 @@ export default function SettingsPage() {
               {/* printing */}
               <div>
                 <div key="mainPrinting" ref={el => subItemsRef.current["mainPrinting"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Printing</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                  ${blinkSection === 'mainPrinting' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Printing</h1>
                   <div key="mainPrinting" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -863,7 +894,8 @@ export default function SettingsPage() {
               {/* multi branch */}
               <div>
                 <div key="mainMultiBranch" ref={el => subItemsRef.current["mainMultiBranch"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Multi Branch</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'mainMultiBranch' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Multi Branch</h1>
                   <div key="mainMultiBranch" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -1100,90 +1132,100 @@ export default function SettingsPage() {
                           />
                         )}
 
-                        <div>
-                          <button className="text-blue-500 underline" onClick={() => setShowSystemCodeBox(true)}>{t("set_system_code")}</button>
-                          {showSystemCodeBox && (
-                            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                              <div className="max-h-[300px] w-[300px] xxl:w-[250px] xxl:max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm bg-white">
-                                <div className="flex justify-between items-center mb-5">
-                                  <h6 className="text-center font-medium">{t("sync_systemCode")}</h6>
-                                  <button className="text-red-500 font-bold" onClick={() => setShowSystemCodeBox(false)} >  ✕  </button>
-                                </div>
+                        {filterComponent([t("set_system_code")], filterText) && (
+                          <div>
+                            <button className="text-blue-500 underline" onClick={() => setShowSystemCodeBox(true)}>
+                              {t("set_system_code")}
+                            </button>
+                            {showSystemCodeBox && (
+                              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+                                <div className="max-h-[300px] w-[300px] xxl:w-[250px] xxl:max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm bg-white">
+                                  <div className="flex justify-between items-center mb-5">
+                                    <h6 className="text-center font-medium">{t("sync_systemCode")}</h6>
+                                    <button
+                                      className="text-red-500 font-bold"
+                                      onClick={() => setShowSystemCodeBox(false)}
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
 
-                                {/* Content */}
-                                <div className="h-32 xxl:h-40 overflow-y-scroll snap-x mb-2 rounded-sm shadow-sm">
-                                  {!dataLoaded ? (
-                                    <div className="my-5 xxl:my-10">
-                                      <ul className="list-none text-center text-gray-500 snap-center">
-                                        <li className="py-5 xxl:py-10 px-3">
-                                          {t("click_load_to_fetch_system_code")}
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  ) : (
-                                    <ul className="list-none text-center snap-center">
-                                      {systemCode && systemCode.length > 0 ? (
-                                        systemCode.map(
-                                          (code: systemCodeApplicationMiscSettings, index: number) => (
-                                            <li className="p-1 text-xs" key={index}>
-                                              {code.systemCode}
-                                            </li>
+                                  {/* Content */}
+                                  <div className="h-32 xxl:h-40 overflow-y-scroll snap-x mb-2 rounded-sm shadow-sm">
+                                    {!dataLoaded ? (
+                                      <div className="my-5 xxl:my-10">
+                                        <ul className="list-none text-center text-gray-500 snap-center">
+                                          <li className="py-5 xxl:py-10 px-3">
+                                            {t("click_load_to_fetch_system_code")}
+                                          </li>
+                                        </ul>
+                                      </div>
+                                    ) : (
+                                      <ul className="list-none text-center snap-center">
+                                        {systemCode && systemCode.length > 0 ? (
+                                          systemCode.map(
+                                            (code: systemCodeApplicationMiscSettings, index: number) => (
+                                              <li className="p-1 text-xs" key={index}>
+                                                {code.systemCode}
+                                              </li>
+                                            )
                                           )
-                                        )
-                                      ) : (
-                                        <li>{"No data available"}</li>
-                                      )}
-                                    </ul>
-                                  )}
-                                </div>
+                                        ) : (
+                                          <li>{"No data available"}</li>
+                                        )}
+                                      </ul>
+                                    )}
+                                  </div>
 
-                                <li className="flex justify-end mb-2">
-                                  <ERPButton
-                                    className="w-0 h-0 p-0 bg-white"
-                                    type="button"
-                                    onClick={() => setAddSystemCode(!addSystemCode)}
-                                    startIcon="ri-pencil-line"
-                                  />
-                                </li>
-                                {addSystemCode && (
-                                  <ERPInput
-                                    id="newSystemCode"
-                                    noLabel={true}
-                                    data={SystemCodeAddData}
-                                    value={SystemCodeAddData.systemCode}
-                                    onChange={(e) => {
-                                      setSystemCodeAddData({
-                                        ...SystemCodeAddData,
-                                        systemCode: e.target.value,
-                                      });
-                                    }}
-                                    placeholder={"enter_new_system_code"}
-                                  />
-                                )}
-                                <div className="flex justify-end">
-                                  <ERPButton
-                                    startIcon="ri-refresh-line"
-                                    variant="secondary"
-                                    className="h-6 w-8 rounded-[2px]"
-                                    type="button"
-                                    loading={loadSystemCode}
-                                    disabled={loadSystemCode}
-                                    onClick={getSystemCode}
-                                  />
-                                  <ERPButton
-                                    startIcon="ri-save-line"
-                                    className="h-6 w-8 rounded-[2px]"
-                                    variant="primary"
-                                    type="button"
-                                    loading={isSavingSystemCode}
-                                    disabled={isSavingSystemCode}
-                                    onClick={postSystemCode}
-                                  />
+                                  <li className="flex justify-end mb-2">
+                                    <ERPButton
+                                      className="w-0 h-0 p-0 bg-white"
+                                      type="button"
+                                      onClick={() => setAddSystemCode(!addSystemCode)}
+                                      startIcon="ri-pencil-line"
+                                    />
+                                  </li>
+                                  {addSystemCode && (
+                                    <ERPInput
+                                      id="newSystemCode"
+                                      noLabel={true}
+                                      data={SystemCodeAddData}
+                                      value={SystemCodeAddData.systemCode}
+                                      onChange={(e) => {
+                                        setSystemCodeAddData({
+                                          ...SystemCodeAddData,
+                                          systemCode: e.target.value,
+                                        });
+                                      }}
+                                      placeholder={"enter_new_system_code"}
+                                    />
+                                  )}
+                                  <div className="flex justify-end">
+                                    <ERPButton
+                                      startIcon="ri-refresh-line"
+                                      variant="secondary"
+                                      className="h-6 w-8 rounded-[2px]"
+                                      type="button"
+                                      loading={loadSystemCode}
+                                      disabled={loadSystemCode}
+                                      onClick={getSystemCode}
+                                    />
+                                    <ERPButton
+                                      startIcon="ri-save-line"
+                                      className="h-6 w-8 rounded-[2px]"
+                                      variant="primary"
+                                      type="button"
+                                      loading={isSavingSystemCode}
+                                      disabled={isSavingSystemCode}
+                                      onClick={postSystemCode}
+                                    />
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          )}
-                        </div>
+                            )}
+                          </div>
+                        )}
+
                       </div>
                     </div>
                   </div>
@@ -1193,7 +1235,8 @@ export default function SettingsPage() {
               {/* CRM */}
               <div>
                 <div key="mainCRM" ref={el => subItemsRef.current["mainCRM"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>CRM</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'mainCRM' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>CRM</h1>
                   <div key="mainCRM" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -1302,7 +1345,8 @@ export default function SettingsPage() {
             <div className="space-y-6">
               <div>
                 <div key="accountsGeneral" ref={el => subItemsRef.current["accountsGeneral"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>General</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'accountsGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>General</h1>
                   <div key="accountsGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -1528,7 +1572,8 @@ export default function SettingsPage() {
               {/* HR */}
               <div>
                 <div key="accountsHR" ref={el => subItemsRef.current["accountsHR"] = el} >
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>HR</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'accountsHR' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>HR</h1>
                   <div key="accountsHR" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -1623,7 +1668,8 @@ export default function SettingsPage() {
               {settings?.branchSettings?.countryName == Countries.Saudi &&
                 <div>
                   <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
-                    <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>KSA E-Invoice</h1>
+                    <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'accountsEInvoiceGCC' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>KSA E-Invoice</h1>
                     <div key="accountsEInvoiceGCC" className="space-y-4">
                       <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                         <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -1750,7 +1796,8 @@ export default function SettingsPage() {
             {/* General */}
             <div>
               <div key="inventoryGeneral" ref={el => subItemsRef.current["inventoryGeneral"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>General</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>General</h1>
                 <div key="inventoryGeneral" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -2033,7 +2080,8 @@ export default function SettingsPage() {
             {/* products */}
             <div>
               <div key="inventoryProducts" ref={el => subItemsRef.current["inventoryProducts"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Products</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryProducts' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Products</h1>
                 <div key="inventoryProducts" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -2373,369 +2421,391 @@ export default function SettingsPage() {
             {userSession.countryId !== Countries.India && (
               <div>
                 <div key="inventoryGSTSettings" ref={el => subItemsRef.current["inventoryGSTSettings"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>GST Settings</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryGSTSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>GST Settings</h1>
                   <div key="inventoryGSTSettings" className="space-y-4">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
-                      <label>{t("default_purchase")}</label>
-                      <ERPCheckbox
-                        id="purchaseNormalType"
-                        checked={settings?.gstSettings?.purchaseNormalType}
-                        data={settings?.gstSettings}
-                        label={t("normal")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseNormalType", data.purchaseNormalType)}
-                      />
-                      <ERPCheckbox
-                        id="purchaseInterstateType"
-                        checked={settings?.gstSettings?.purchaseInterstateType}
-                        data={settings?.gstSettings}
-                        label={t("inter_state")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseInterstateType", data.purchaseInterstateType)}
-                      />
-                      <ERPCheckbox
-                        id="purchaseForm62"
-                        checked={settings?.gstSettings?.purchaseForm62}
-                        data={settings?.gstSettings}
-                        label={t("form_6(2)")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseForm62", data.purchaseForm62)}
-                      />
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
+                      {filterComponent([t("default_purchase")], filterText) && (
+                        <>
+                          <label>{t("default_purchase")}</label>
+                          <ERPCheckbox
+                            id="purchaseNormalType"
+                            checked={settings?.gstSettings?.purchaseNormalType}
+                            data={settings?.gstSettings}
+                            label={t("normal")}
+                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseNormalType", data.purchaseNormalType)}
+                          />
+                          <ERPCheckbox
+                            id="purchaseInterstateType"
+                            checked={settings?.gstSettings?.purchaseInterstateType}
+                            data={settings?.gstSettings}
+                            label={t("inter_state")}
+                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseInterstateType", data.purchaseInterstateType)}
+                          />
+                          <ERPCheckbox
+                            id="purchaseForm62"
+                            checked={settings?.gstSettings?.purchaseForm62}
+                            data={settings?.gstSettings}
+                            label={t("form_6(2)")}
+                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseForm62", data.purchaseForm62)}
+                          />
+                        </>
+                      )}
                     </div>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
                         <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
-                          <ERPDataCombobox
-                            id="inputCSTAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCSTAccount)}
-                            data={settings?.gstSettings}
-                            label={t("input_cst_account")}
-                            field={{
-                              id: "inputCSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCSTAccount", data.inputCSTAccount)}
-                          />
+                          {filterComponent([t("input_cst_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="inputCSTAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCSTAccount)}
+                              data={settings?.gstSettings}
+                              label={t("input_cst_account")}
+                              field={{
+                                id: "inputCSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCSTAccount", data.inputCSTAccount)}
+                            />
+                          )}
 
-                          <ERPDataCombobox
-                            id="outputCSTAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCSTAccount)}
-                            data={settings?.gstSettings}
-                            label={t("output_cst_account")}
-                            field={{
-                              id: "outputCSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCSTAccount", data.outputCSTAccount)}
-                          />
+                          {filterComponent([t("output_cst_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputCSTAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCSTAccount)}
+                              data={settings?.gstSettings}
+                              label={t("output_cst_account")}
+                              field={{
+                                id: "outputCSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCSTAccount", data.outputCSTAccount)}
+                            />
+                          )}
 
-                          <ERPDataCombobox
-                            id="inputCessAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCessAccount)}
-                            field={{
-                              id: "inputCessAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            data={settings?.gstSettings}
-                            label={t("input_cess_account")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCessAccount", data.inputCessAccount)}
-                          />
+                          {filterComponent([t("input_cess_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="inputCessAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCessAccount)}
+                              field={{
+                                id: "inputCessAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              data={settings?.gstSettings}
+                              label={t("input_cess_account")}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCessAccount", data.inputCessAccount)}
+                            />
+                          )}
 
-                          <ERPDataCombobox
-                            id="outputCessAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCessAccount)}
-                            data={settings?.gstSettings}
-                            label={t("output_cess_account")}
-                            field={{
-                              id: "outputCessAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCessAccount", data.outputCessAccount)}
-                          />
+                          {filterComponent([t("output_cess_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputCessAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCessAccount)}
+                              data={settings?.gstSettings}
+                              label={t("output_cess_account")}
+                              field={{
+                                id: "outputCessAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCessAccount", data.outputCessAccount)}
+                            />
+                          )}
 
-                          <ERPDataCombobox
-                            id="inputAddCessAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputAddCessAccount)}
-                            data={settings?.gstSettings}
-                            label={t("input_add_cess_account")}
-                            field={{
-                              id: "inputAddCessAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "inputAddCessAccount", data.inputAddCessAccount)}
-                          />
+                          {filterComponent([t("input_add_cess_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="inputAddCessAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputAddCessAccount)}
+                              data={settings?.gstSettings}
+                              label={t("input_add_cess_account")}
+                              field={{
+                                id: "inputAddCessAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputAddCessAccount", data.inputAddCessAccount)}
+                            />
+                          )}
 
-                          <ERPDataCombobox
-                            id="outputAddCessAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputAddCessAccount)}
-                            data={settings?.gstSettings}
-                            label={t("output_add_cess_account")}
-                            field={{
-                              id: "outputAddCessAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputAddCessAccount", data.outputAddCessAccount)}
-                          />
+                          {filterComponent([t("output_add_cess_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputAddCessAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputAddCessAccount)}
+                              data={settings?.gstSettings}
+                              label={t("output_add_cess_account")}
+                              field={{
+                                id: "outputAddCessAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputAddCessAccount", data.outputAddCessAccount)}
+                            />
+                          )}
 
-                          <ERPDataCombobox
-                            id="expensesTaxAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.expensesTaxAccount)}
-                            data={settings?.gstSettings}
-                            label={t("expenses_tax_account")}
-                            field={{
-                              id: "expensesTaxAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "expensesTaxAccount", data.expensesTaxAccount)}
-                          />
+                          {filterComponent([t("expenses_tax_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="expensesTaxAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.expensesTaxAccount)}
+                              data={settings?.gstSettings}
+                              label={t("expenses_tax_account")}
+                              field={{
+                                id: "expensesTaxAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "expensesTaxAccount", data.expensesTaxAccount)}
+                            />
+                          )}
 
-                          <ERPDataCombobox
-                            id="incomeTaxAccount"
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.incomeTaxAccount)}
-                            data={settings?.gstSettings}
-                            label={t("income_tax_account")}
-                            field={{
-                              id: "incomeTaxAccount",
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "incomeTaxAccount", data.incomeTaxAccount)}
-                          />
+                          {filterComponent([t("income_tax_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="incomeTaxAccount"
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.incomeTaxAccount)}
+                              data={settings?.gstSettings}
+                              label={t("income_tax_account")}
+                              field={{
+                                id: "incomeTaxAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "incomeTaxAccount", data.incomeTaxAccount)}
+                            />
+                          )}
                         </div>
                       )}
                     </ERPDisableEnable>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
                         <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
-                          <ERPDataCombobox
-                            id="inputSGSTAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputSGSTAccount)}
-                            label={t("input_SGST_account")}
-                            field={{
-                              id: "inputSGSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "inputSGSTAccount", data.inputSGSTAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="outputSGSTAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputSGSTAccount)}
-                            label={t("output_SGST_account")}
-                            field={{
-                              id: "outputSGSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputSGSTAccount", data.outputSGSTAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="inputCGSTAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCGSTAccount)}
-                            label={t("input_CGST_ccount")}
-                            field={{
-                              id: "inputCGSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCGSTAccount", data.inputCGSTAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="outputCGSTAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCGSTAccount)}
-                            label={t("output_CGST_account")}
-                            field={{
-                              id: "outputCGSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCGSTAccount", data.outputCGSTAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="inputIGSTAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputIGSTAccount)}
-                            label={t("input_IGST_account")}
-                            field={{
-                              id: "inputIGSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "inputIGSTAccount", data.inputIGSTAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="outputIGSTAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputIGSTAccount)}
-                            label={t("output_IGST_account")}
-                            field={{
-                              id: "outputIGSTAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputIGSTAccount", data.outputIGSTAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="outputTCSPaidAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputTCSPaidAccount)}
-                            label={t("TCS_paid_account")}
-                            field={{
-                              id: "outputTCSPaidAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputTCSPaidAccount", data.outputTCSPaidAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="outputTCSPayableAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputTCSPayableAccount)}
-                            label={t("TCS_payable_account")}
-                            field={{
-                              id: "outputTCSPayableAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputTCSPayableAccount", data.outputTCSPayableAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="inputCalamityCessAccount"
-                            data={settings?.gstSettings}
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCalamityCessAccount)}
-                            // disabled={true}
-                            label={t("input_calamity_cess_account")}
-                            field={{
-                              id: "inputCalamityCessAccount",
-                              // required: true,
-                              getListUrl: Urls.data_InputCalamity,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCalamityCessAccount", data.inputCalamityCessAccount)}
-                          />
-
-                          <ERPDataCombobox
-                            id="outputSalesCalamityCessAccount"
-                            data={settings?.gstSettings}
-
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputSalesCalamityCessAccount)}
-                            label={t("output_calamity_cess_account")}
-                            field={{
-                              id: "outputSalesCalamityCessAccount",
-                              // required: true,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "outputSalesCalamityCessAccount", data.outputSalesCalamityCessAccount)}
-                          />
-
-                          <ERPCheckbox
-                            id="considerSalesPriceasCalamityIncluded"
-                            checked={settings?.gstSettings?.considerSalesPriceasCalamityIncluded}
-                            data={settings?.gstSettings}
-
-                            disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.considerSalesPriceasCalamityIncluded)}
-                            label={t("consider_sales_price_as_calamity_included")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "considerSalesPriceasCalamityIncluded", data.considerSalesPriceasCalamityIncluded)}
-                          />
-
-                          <ERPCheckbox
-                            id="enableKarnatakaTaxReportFormat"
-                            checked={settings?.gstSettings?.enableKarnatakaTaxReportFormat}
-                            data={settings?.gstSettings}
-                            label={t("enable_karnataka_tax_report_format")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
-                          />
-
-                          <ERPCheckbox
-                            id="showPrevForms"
-                            checked={settings?.gstSettings?.showPrevForms}
-                            data={settings?.gstSettings}
-                            label={t("show_prev._forms")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "showPrevForms", data.showPrevForms)}
-                          />
+                          {filterComponent([t("input_SGST_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="inputSGSTAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputSGSTAccount)}
+                              label={t("input_SGST_account")}
+                              field={{
+                                id: "inputSGSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputSGSTAccount", data.inputSGSTAccount)}
+                            />
+                          )}
+                          {filterComponent([t("output_SGST_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputSGSTAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputSGSTAccount)}
+                              label={t("output_SGST_account")}
+                              field={{
+                                id: "outputSGSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputSGSTAccount", data.outputSGSTAccount)}
+                            />
+                          )}
+                          {filterComponent([t("input_CGST_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="inputCGSTAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCGSTAccount)}
+                              label={t("input_CGST_account")}
+                              field={{
+                                id: "inputCGSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCGSTAccount", data.inputCGSTAccount)}
+                            />
+                          )}
+                          {filterComponent([t("output_CGST_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputCGSTAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCGSTAccount)}
+                              label={t("output_CGST_account")}
+                              field={{
+                                id: "outputCGSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCGSTAccount", data.outputCGSTAccount)}
+                            />
+                          )}
+                          {filterComponent([t("input_IGST_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="inputIGSTAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputIGSTAccount)}
+                              label={t("input_IGST_account")}
+                              field={{
+                                id: "inputIGSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputIGSTAccount", data.inputIGSTAccount)}
+                            />
+                          )}
+                          {filterComponent([t("output_IGST_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputIGSTAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputIGSTAccount)}
+                              label={t("output_IGST_account")}
+                              field={{
+                                id: "outputIGSTAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputIGSTAccount", data.outputIGSTAccount)}
+                            />
+                          )}
+                          {filterComponent([t("TCS_paid_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputTCSPaidAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputTCSPaidAccount)}
+                              label={t("TCS_paid_account")}
+                              field={{
+                                id: "outputTCSPaidAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputTCSPaidAccount", data.outputTCSPaidAccount)}
+                            />
+                          )}
+                          {filterComponent([t("TCS_payable_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputTCSPayableAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputTCSPayableAccount)}
+                              label={t("TCS_payable_account")}
+                              field={{
+                                id: "outputTCSPayableAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputTCSPayableAccount", data.outputTCSPayableAccount)}
+                            />
+                          )}
+                          {filterComponent([t("input_calamity_cess_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="inputCalamityCessAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCalamityCessAccount)}
+                              label={t("input_calamity_cess_account")}
+                              field={{
+                                id: "inputCalamityCessAccount",
+                                getListUrl: Urls.data_InputCalamity,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCalamityCessAccount", data.inputCalamityCessAccount)}
+                            />
+                          )}
+                          {filterComponent([t("output_calamity_cess_account")], filterText) && (
+                            <ERPDataCombobox
+                              id="outputSalesCalamityCessAccount"
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputSalesCalamityCessAccount)}
+                              label={t("output_calamity_cess_account")}
+                              field={{
+                                id: "outputSalesCalamityCessAccount",
+                                getListUrl: Urls.data_duties_taxes,
+                                valueKey: "id",
+                                labelKey: "name",
+                              }}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputSalesCalamityCessAccount", data.outputSalesCalamityCessAccount)}
+                            />
+                          )}
+                          {filterComponent([t("consider_sales_price_as_calamity_included")], filterText) && (
+                            <ERPCheckbox
+                              id="considerSalesPriceasCalamityIncluded"
+                              checked={settings?.gstSettings?.considerSalesPriceasCalamityIncluded}
+                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.considerSalesPriceasCalamityIncluded)}
+                              label={t("consider_sales_price_as_calamity_included")}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "considerSalesPriceasCalamityIncluded", data.considerSalesPriceasCalamityIncluded)}
+                            />
+                          )}
+                          {filterComponent([t("enable_karnataka_tax_report_format")], filterText) && (
+                            <ERPCheckbox
+                              id="enableKarnatakaTaxReportFormat"
+                              checked={settings?.gstSettings?.enableKarnatakaTaxReportFormat}
+                              data={settings?.gstSettings}
+                              label={t("enable_karnataka_tax_report_format")}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
+                            />
+                          )}
+                          {filterComponent([t("show_prev._forms")], filterText) && (
+                            <ERPCheckbox
+                              id="showPrevForms"
+                              checked={settings?.gstSettings?.showPrevForms}
+                              data={settings?.gstSettings}
+                              label={t("show_prev._forms")}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "showPrevForms", data.showPrevForms)}
+                            />
+                          )}
                         </div>
-
                       )}
                     </ERPDisableEnable>
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-2 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
                       <div className='flex justify-between items-center'>
-                        <ERPCheckbox
-                          id="enableEWB"
-                          checked={settings?.gstSettings?.enableEWB}
-                          data={settings?.gstSettings}
-                          label={t("enable_ewb")}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "enableEWB", data.enableEWB)}
-                        />
-                        <ERPButton
-                          title={t("ewb_taxPro")}
-                          onClick={() => handleShowComponent('ewb')}
-                          disabled={!settings?.gstSettings?.enableEWB}
-                        />
+                        {filterComponent([t("enable_ewb")], filterText) && (
+                          <>
+                            <ERPCheckbox
+                              id="enableEWB"
+                              checked={settings?.gstSettings?.enableEWB}
+                              data={settings?.gstSettings}
+                              label={t("enable_ewb")}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "enableEWB", data.enableEWB)}
+                            />
+                            <ERPButton
+                              title={t("ewb_taxPro")}
+                              onClick={() => handleShowComponent('ewb')}
+                              disabled={!settings?.gstSettings?.enableEWB}
+                            />
+                          </>
+                        )}
                       </div>
 
                       <div className='flex justify-between items-center'>
-                        <ERPCheckbox
-                          id="enableEInvoiceIndia"
-                          checked={settings?.gstSettings?.enableEInvoiceIndia}
-                          data={settings?.gstSettings}
-                          label={t("enable_e-invoice")}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "enableEInvoiceIndia", data.enableEInvoiceIndia)}
-                        />
-                        <ERPButton
-                          title={t("EInvoiceTaxPro")}
-                          onClick={() => handleShowComponent('eInvoice')}
-                          disabled={!settings?.gstSettings?.enableEInvoiceIndia}
-                        />
+                        {filterComponent([t("enable_e-invoice")], filterText) && (
+                          <>
+                            <ERPCheckbox
+                              id="enableEInvoiceIndia"
+                              checked={settings?.gstSettings?.enableEInvoiceIndia}
+                              data={settings?.gstSettings}
+                              label={t("enable_e-invoice")}
+                              onChangeData={(data: any) => handleFieldChange("gstSettings", "enableEInvoiceIndia", data.enableEInvoiceIndia)}
+                            />
+                            <ERPButton
+                              title={t("EInvoiceTaxPro")}
+                              onClick={() => handleShowComponent('eInvoice')}
+                              disabled={!settings?.gstSettings?.enableEInvoiceIndia}
+                            />
+                          </>
+                        )}
                       </div>
                     </div>
                     <PopupComponent isOpen={showEInvoicePopup} onClose={() => setShowEInvoicePopup(false)}>
@@ -2745,41 +2815,42 @@ export default function SettingsPage() {
                     <PopupComponent isOpen={showEWBPopup} onClose={() => setShowEWBPopup(false)}>
                       <EWBTaxPro />
                     </PopupComponent>
-                    <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-6 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg'>
-                      <ERPDataCombobox
-                        field={{
-                          id: "einvoiceProvider",
-                          valueKey: "value",
-                          labelKey: "label",
-                        }}
-                        id="einvoiceProvider"
-                        label={t("e-invoice_provider_type")}
-                        data={settings?.gstSettings}
-                        onChangeData={(data) => {
-
-                          handleFieldChange("gstSettings", "einvoiceProvider", data.einvoiceProvider)
-                        }}
-                        options={[
-                          { value: "Clear Tax", label: "Clear Tax" },
-                          { value: "Tax Pro", label: "Tax Pro" },
-                        ]}
-                      />
-
-                      <ERPInput
-                        id="eInvoiceAuthToken"
-                        value={settings?.gstSettings?.eInvoiceAuthToken}
-                        data={settings?.gstSettings}
-                        label={t("clear_tax_token")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "eInvoiceAuthToken", data.eInvoiceAuthToken)}
-                      />
-
-                      <ERPInput
-                        id="eInvoiceOwnerID"
-                        value={settings?.gstSettings?.eInvoiceOwnerID}
-                        data={settings?.gstSettings}
-                        label={t("clear_tax_id")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "eInvoiceOwnerID", data.eInvoiceOwnerID)}
-                      />
+                    <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg'>
+                      {filterComponent([t("e-invoice_provider_type")], filterText) && (
+                        <ERPDataCombobox
+                          field={{
+                            id: "einvoiceProvider",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          id="einvoiceProvider"
+                          label={t("e-invoice_provider_type")}
+                          data={settings?.gstSettings}
+                          onChangeData={(data) => { handleFieldChange("gstSettings", "einvoiceProvider", data.einvoiceProvider) }}
+                          options={[
+                            { value: "Clear Tax", label: "Clear Tax" },
+                            { value: "Tax Pro", label: "Tax Pro" },
+                          ]}
+                        />
+                      )}
+                      {filterComponent([t("clear_tax_token")], filterText) && (
+                        <ERPInput
+                          id="eInvoiceAuthToken"
+                          value={settings?.gstSettings?.eInvoiceAuthToken}
+                          data={settings?.gstSettings}
+                          label={t("clear_tax_token")}
+                          onChangeData={(data: any) => handleFieldChange("gstSettings", "eInvoiceAuthToken", data.eInvoiceAuthToken)}
+                        />
+                      )}
+                      {filterComponent([t("clear_tax_id")], filterText) && (
+                        <ERPInput
+                          id="eInvoiceOwnerID"
+                          value={settings?.gstSettings?.eInvoiceOwnerID}
+                          data={settings?.gstSettings}
+                          label={t("clear_tax_id")}
+                          onChangeData={(data: any) => handleFieldChange("gstSettings", "eInvoiceOwnerID", data.eInvoiceOwnerID)}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -2787,32 +2858,37 @@ export default function SettingsPage() {
             )}
             {userSession.countryId === Countries.Saudi && (
               <div key="inventoryTaxSettings" ref={el => subItemsRef.current["inventoryTaxSettings"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Tax Settings</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryTaxSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Tax Settings</h1>
                 <div className='border border-solid border-[#e3e3e3] p-4 rounded-lg'>
                   <div key="inventoryTaxSettings" className="space-y-4">
-                    <div className='grid xxl:grid-cols-7 xl:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2'>
-                      <label>{t("default_purchase")}</label>
-                      <ERPCheckbox
-                        id="purchaseNormalType"
-                        checked={settings?.gstSettings?.purchaseNormalType}
-                        data={settings?.gstSettings}
-                        label={t("normal")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseNormalType", data.purchaseNormalType)}
-                      />
-                      <ERPCheckbox
-                        id="purchaseInterstateType"
-                        checked={settings?.gstSettings?.purchaseInterstateType}
-                        data={settings?.gstSettings}
-                        label={t("inter_state")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseInterstateType", data.purchaseInterstateType)}
-                      />
-                      <ERPCheckbox
-                        id="purchaseForm62"
-                        checked={settings?.gstSettings?.purchaseForm62}
-                        data={settings?.gstSettings}
-                        label={t("form_6(2)")}
-                        onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseForm62", data.purchaseForm62)}
-                      />
+                    <div className='grid xxl:grid-cols-7 xl:grid-cols-3 lg:grid-cols-4 sm:grid-cols-1'>
+                      {filterComponent([t("default_purchase")], filterText) && (
+                        <>
+                          <label>{t("default_purchase")}</label>
+                          <ERPCheckbox
+                            id="purchaseNormalType"
+                            checked={settings?.gstSettings?.purchaseNormalType}
+                            data={settings?.gstSettings}
+                            label={t("normal")}
+                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseNormalType", data.purchaseNormalType)}
+                          />
+                          <ERPCheckbox
+                            id="purchaseInterstateType"
+                            checked={settings?.gstSettings?.purchaseInterstateType}
+                            data={settings?.gstSettings}
+                            label={t("inter_state")}
+                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseInterstateType", data.purchaseInterstateType)}
+                          />
+                          <ERPCheckbox
+                            id="purchaseForm62"
+                            checked={settings?.gstSettings?.purchaseForm62}
+                            data={settings?.gstSettings}
+                            label={t("form_6(2)")}
+                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseForm62", data.purchaseForm62)}
+                          />
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -2821,7 +2897,8 @@ export default function SettingsPage() {
 
             <div>
               <div key="inventoryPurchase" ref={el => subItemsRef.current["inventoryPurchase"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Purchase</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryPurchase' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Purchase</h1>
                 <div key="inventoryPurchase" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -3113,7 +3190,8 @@ export default function SettingsPage() {
             {/* sales */}
             <div>
               <div key="inventorySales" ref={el => subItemsRef.current["inventorySales"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Sales</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySales' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Sales</h1>
                 <div key="inventorySales" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -3825,7 +3903,8 @@ export default function SettingsPage() {
             {/* POS */}
             <div>
               <div key="inventorySalesPOS" ref={el => subItemsCatRef.current["inventorySalesPOS"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>POS</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySalesPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>POS</h1>
                 <div key="inventorySalesPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -3947,7 +4026,8 @@ export default function SettingsPage() {
             {/* counter */}
             <div>
               <div key="inventorySalesCounter" ref={el => subItemsCatRef.current["inventorySalesCounter"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Counter</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySalesCounter' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Counter</h1>
                 <div key="inventorySalesCounter" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -4027,7 +4107,8 @@ export default function SettingsPage() {
             {/* PPOS */}
             <div>
               <div key="inventoryPPOS" ref={el => subItemsRef.current["inventoryPPOS"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>PPOS</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryPPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>PPOS</h1>
                 <div key="inventoryPPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -4104,7 +4185,8 @@ export default function SettingsPage() {
             {/*Schemes & Promotions*/}
             <div>
               <div key="inventorySchemesPromotions" ref={el => subItemsRef.current["inventorySchemesPromotions"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Schemes & Promotions</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySchemesPromotions' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Schemes & Promotions</h1>
                 <div key="inventorySchemesPromotions" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
@@ -4218,7 +4300,8 @@ export default function SettingsPage() {
               key="miscellaneous"
               ref={el => sectionsRef.current['miscellaneous'] = el}
               className="mb-8 last:mb-0 h-screen">
-              <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>  Miscellaneous  </h1>
+              <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'miscellaneous' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Miscellaneous</h1>
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                 <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxxl:1/3  xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
                   <div>

@@ -1,10 +1,11 @@
 
-import { linkClasses } from "@mui/material";
 import * as switcherdata from "../../../src/components/common/switcher/switcherdata/switcherdata";
-import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle, setLocale, setAppState, setInputBox, setScrollbarWidth, setScrollbarColor } from "../../redux/slices/app/reducer";
-import { AppState, Locale, Theme } from "../../redux/slices/app/types";
+import { setDirection, setMode, setColorPrimaryRgb, setColorPrimary, setDataMenuStyles, setDataHeaderStyles, setDataPageStyle, setDataVerticalStyle, setDataNavLayout, setToggled, setDataNavStyle, setLocale, setInputBox, setScrollbarWidth, setScrollbarColor } from "../../redux/slices/app/reducer";
+import { AppState, Locale } from "../../redux/slices/app/types";
 import { UserModel, setUserSession } from "../../redux/slices/user-session/reducer";
 import { AppDispatch } from "../../redux/store";
+import { UserRight } from "../settings/userManagement/data";
+import { setUserRights, UserTypeRights } from "../../redux/slices/user-rights/reducer";
 export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   dispatch(setDirection(locale.rtl ? "rtl" : "ltr"));
   debugger;
@@ -14,9 +15,10 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   localStorage.removeItem(locale.rtl ? "ynexltr" : "ynexrtl");
 
 }
-export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSession: UserModel, locale: Locale) => {
+export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale) => {
 
   dispatch(setUserSession(userSession));
+  dispatch(setUserRights(userRights));
 
   setLanguage(dispatch, locale);
 

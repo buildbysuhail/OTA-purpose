@@ -265,6 +265,8 @@ const Urls = {
 
 //inventory
 inv_reports_price_list:"",
+inv_reports_stock_ledger:"",
+inv_reports_balance_report:"",
 
 //Report End
 

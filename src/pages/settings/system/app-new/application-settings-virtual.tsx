@@ -22,6 +22,8 @@ import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '.
 import { BusinessType } from '../../../../enums/business-types';
 import { useApplicationSetting } from '../../../../utilities/hooks/use-application-settings';
 import { useSearchInputFocus } from '../../../../utilities/shortKeys';
+import { Menu } from 'devextreme-react';
+import { X } from 'lucide-react';
 
 const api = new APIClient()
 const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) => {
@@ -46,6 +48,7 @@ const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) 
   )
 }
 export default function SettingsPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [blinkSection, setBlinkSection] = useState<string | null>(null);
   const [showSystemCodeBox, setShowSystemCodeBox] = useState(false);
   const [isCompactView, setIsCompactView] = useState(false)
@@ -197,8 +200,18 @@ export default function SettingsPage() {
 
   return (
     <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark">
-      <aside className="md:w-[200px] lg:w-[300px] ltr:border-r rtl:border-l h-screen fixed z-20 bg-[#fafafa]">
-        <h1 className="font-medium text-xl p-5 mb-5">Settings</h1>
+      <button className="md:hidden fixed top-4 left-4 z-30 bg-gray-100 p-2 rounded-md" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} >
+        {isMobileMenuOpen ? <i className="ri-close-circle-line"></i> : <i className="ri-menu-line"></i>}
+      </button>
+      <aside className={`fixed z-20 bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ltr:border-r rtl:border-l `}>
+        <div className="md:hidden flex justify-end p-4">
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="p-2 rounded-full hover:bg-gray-200">
+            <i className="ri-close-circle-line"></i>
+          </button>
+        </div>
+        <h1 className="font-medium text-xl p-5 mb-5 sm:hidden lg:block">Settings</h1>
         <div className="flex flex-col overflow-y-auto pb-24 h-full mt-4">
           {settingGroups.map((item) => (
             <div key={item.id}>
@@ -243,10 +256,19 @@ export default function SettingsPage() {
           ))}
         </div>
       </aside>
-      <main className="flex-1 ml-[200px] lg:ml-[300px] relative">
-
-        {/* {settingGroups.map((group, index) => ( */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/50 z-10"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300">
         <div className='flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2'>
+          <button
+            className="md:hidden mr-2 p-1"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            <i className="ri-menu-line"></i>
+          </button>
           <input
             ref={searchInputRef}
             id="search-input"
@@ -259,6 +281,15 @@ export default function SettingsPage() {
           <LayoutToggle onToggle={setIsCompactView} />
         </div>
         <div className='p-4'>
+          <style>{`
+          @keyframes blink {
+            0%, 100% { background-color: #f1f1f1; }
+            50% { background-color: #e0e0e0; }
+          }
+          .blink-animation {
+            animation: blink 2s ease-in-out;
+          }
+        `}</style>
           <section
             key="main"
             ref={el => sectionsRef.current['main'] = el}
@@ -271,7 +302,7 @@ export default function SettingsPage() {
                   </h1>
                   <div key="mainGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         {filterComponent([t("business_type")], filterText) && (
                           <ERPDataCombobox
                             field={{ id: "maintainBusinessType", valueKey: "value", labelKey: "label" }}
@@ -592,7 +623,7 @@ export default function SettingsPage() {
                         )}
                       </div>
 
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         <div className="flex items-center">
                           {filterComponent([t("allow_postdated_transaction")], filterText) && (
                             <>
@@ -646,7 +677,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         {filterComponent([t("maintain_separate_prefix_for_cash_sales")], filterText) &&
                           userSession.countryId != Countries.India && (
                             <ERPCheckbox
@@ -709,11 +740,10 @@ export default function SettingsPage() {
               <div>
                 <div key="mainBackup" ref={el => subItemsRef.current["mainBackup"] = el}>
                   <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>
-                    Backup</h1>
+                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}> Backup</h1>
                   <div key="mainBackup" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         {filterComponent([t("backup_methods")], filterText) && (
                           <ERPDataCombobox
                             id="backupMethods"
@@ -773,10 +803,11 @@ export default function SettingsPage() {
               {/* printing */}
               <div>
                 <div key="mainPrinting" ref={el => subItemsRef.current["mainPrinting"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Printing</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                  ${blinkSection === 'mainPrinting' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Printing</h1>
                   <div key="mainPrinting" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         {filterComponent([t("default_printer")], filterText) && (
                           <ERPDataCombobox
                             id="defaultPrinter"
@@ -863,10 +894,11 @@ export default function SettingsPage() {
               {/* multi branch */}
               <div>
                 <div key="mainMultiBranch" ref={el => subItemsRef.current["mainMultiBranch"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Multi Branch</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'mainMultiBranch' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Multi Branch</h1>
                   <div key="mainMultiBranch" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         {filterComponent([t("default_BTO_account")], filterText) && (
                           <ERPDataCombobox
                             id="defaultBTOAccount"
@@ -928,7 +960,7 @@ export default function SettingsPage() {
                         )}
                       </div>
 
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         <div>
                           {filterComponent([t("maintain_synchronization")], filterText) && (
                             <>
@@ -1193,10 +1225,11 @@ export default function SettingsPage() {
               {/* CRM */}
               <div>
                 <div key="mainCRM" ref={el => subItemsRef.current["mainCRM"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>CRM</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'mainCRM' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>CRM</h1>
                   <div key="mainCRM" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         <div className="flex items-center">
                           {filterComponent([t("allow_privilege_card")], filterText) && (
                             <>
@@ -1302,10 +1335,11 @@ export default function SettingsPage() {
             <div className="space-y-6">
               <div>
                 <div key="accountsGeneral" ref={el => subItemsRef.current["accountsGeneral"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>General</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'accountsGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>General</h1>
                   <div key="accountsGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         {filterComponent([t("default_cash_account")], filterText) && (
                           <ERPDataCombobox
                             id="defaultCashAcc"
@@ -1528,10 +1562,11 @@ export default function SettingsPage() {
               {/* HR */}
               <div>
                 <div key="accountsHR" ref={el => subItemsRef.current["accountsHR"] = el} >
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>HR</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'accountsHR' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>HR</h1>
                   <div key="accountsHR" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                      <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                         {filterComponent([t("default_incentive_account_1")], filterText) && (
                           <ERPDataCombobox
                             id="defaultIncentiveAcc1"
@@ -1623,10 +1658,11 @@ export default function SettingsPage() {
               {settings?.branchSettings?.countryName == Countries.Saudi &&
                 <div>
                   <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
-                    <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>KSA E-Invoice</h1>
+                    <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'accountsEInvoiceGCC' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>KSA E-Invoice</h1>
                     <div key="accountsEInvoiceGCC" className="space-y-4">
                       <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                        <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                        <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                           {filterComponent([t("e-Invoice_sync_systemCode")], filterText) && (
                             <ERPDisableEnable targetCount={5}>
                               {(hasPermitted) => (
@@ -1750,10 +1786,11 @@ export default function SettingsPage() {
             {/* General */}
             <div>
               <div key="inventoryGeneral" ref={el => subItemsRef.current["inventoryGeneral"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>General</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>General</h1>
                 <div key="inventoryGeneral" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       {filterComponent([t("coupon_card_account")], filterText) && (
                         <ERPDataCombobox
                           id="defaultCouponSalesAccount"
@@ -2033,10 +2070,11 @@ export default function SettingsPage() {
             {/* products */}
             <div>
               <div key="inventoryProducts" ref={el => subItemsRef.current["inventoryProducts"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Products</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryProducts' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Products</h1>
                 <div key="inventoryProducts" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       {filterComponent([t("batch_criteria")], filterText) && (
                         <ERPDataCombobox
                           id="batchCriteria"
@@ -2373,9 +2411,10 @@ export default function SettingsPage() {
             {userSession.countryId !== Countries.India && (
               <div>
                 <div key="inventoryGSTSettings" ref={el => subItemsRef.current["inventoryGSTSettings"] = el}>
-                  <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>GST Settings</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryGSTSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>GST Settings</h1>
                   <div key="inventoryGSTSettings" className="space-y-4">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       <label>{t("default_purchase")}</label>
                       <ERPCheckbox
                         id="purchaseNormalType"
@@ -2401,7 +2440,7 @@ export default function SettingsPage() {
                     </div>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
-                        <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
+                        <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
                           <ERPDataCombobox
                             id="inputCSTAccount"
                             disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCSTAccount)}
@@ -2525,7 +2564,7 @@ export default function SettingsPage() {
                     </ERPDisableEnable>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
-                        <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
+                        <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
                           <ERPDataCombobox
                             id="inputSGSTAccount"
                             data={settings?.gstSettings}
@@ -2707,7 +2746,7 @@ export default function SettingsPage() {
 
                       )}
                     </ERPDisableEnable>
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-2 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-2 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg'}`}>
                       <div className='flex justify-between items-center'>
                         <ERPCheckbox
                           id="enableEWB"
@@ -2745,7 +2784,7 @@ export default function SettingsPage() {
                     <PopupComponent isOpen={showEWBPopup} onClose={() => setShowEWBPopup(false)}>
                       <EWBTaxPro />
                     </PopupComponent>
-                    <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-2 gap-6 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg'>
+                    <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg'>
                       <ERPDataCombobox
                         field={{
                           id: "einvoiceProvider",
@@ -2787,10 +2826,11 @@ export default function SettingsPage() {
             )}
             {userSession.countryId === Countries.Saudi && (
               <div key="inventoryTaxSettings" ref={el => subItemsRef.current["inventoryTaxSettings"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Tax Settings</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryTaxSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Tax Settings</h1>
                 <div className='border border-solid border-[#e3e3e3] p-4 rounded-lg'>
                   <div key="inventoryTaxSettings" className="space-y-4">
-                    <div className='grid xxl:grid-cols-7 xl:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2'>
+                    <div className='grid xxl:grid-cols-7 xl:grid-cols-3 lg:grid-cols-4 sm:grid-cols-1'>
                       <label>{t("default_purchase")}</label>
                       <ERPCheckbox
                         id="purchaseNormalType"
@@ -2821,10 +2861,11 @@ export default function SettingsPage() {
 
             <div>
               <div key="inventoryPurchase" ref={el => subItemsRef.current["inventoryPurchase"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Purchase</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryPurchase' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Purchase</h1>
                 <div key="inventoryPurchase" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       {filterComponent([t("default_purchase_account")], filterText) && (
                         <ERPDataCombobox
                           id="defaultPurchaseAcc"
@@ -3113,10 +3154,11 @@ export default function SettingsPage() {
             {/* sales */}
             <div>
               <div key="inventorySales" ref={el => subItemsRef.current["inventorySales"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Sales</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySales' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Sales</h1>
                 <div key="inventorySales" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       {filterComponent([t("default_sales_account")], filterText) && (
                         <ERPDataCombobox
                           id="defaultSalesAcc"
@@ -3825,10 +3867,11 @@ export default function SettingsPage() {
             {/* POS */}
             <div>
               <div key="inventorySalesPOS" ref={el => subItemsCatRef.current["inventorySalesPOS"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>POS</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySalesPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>POS</h1>
                 <div key="inventorySalesPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       {filterComponent([t("default_SI_form_type_for_POS")], filterText) && (
                         <ERPDataCombobox
                           id="defaultFormTypeForPOS"
@@ -3947,10 +3990,11 @@ export default function SettingsPage() {
             {/* counter */}
             <div>
               <div key="inventorySalesCounter" ref={el => subItemsCatRef.current["inventorySalesCounter"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Counter</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySalesCounter' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Counter</h1>
                 <div key="inventorySalesCounter" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       {filterComponent([t("allow_sales_counter")], filterText) && (
                         <ERPCheckbox
                           id="allowSalesCounter"
@@ -4027,10 +4071,11 @@ export default function SettingsPage() {
             {/* PPOS */}
             <div>
               <div key="inventoryPPOS" ref={el => subItemsRef.current["inventoryPPOS"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>PPOS</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventoryPPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>PPOS</h1>
                 <div key="inventoryPPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       {filterComponent([t("enable_PPOS_integration")], filterText) && (
                         <ERPCheckbox
                           id="enableVanSale"
@@ -4104,10 +4149,11 @@ export default function SettingsPage() {
             {/*Schemes & Promotions*/}
             <div>
               <div key="inventorySchemesPromotions" ref={el => subItemsRef.current["inventorySchemesPromotions"] = el}>
-                <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>Schemes & Promotions</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'inventorySchemesPromotions' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Schemes & Promotions</h1>
                 <div key="inventorySchemesPromotions" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                    <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                       <div className="flex items-center gap-6">
                         {filterComponent([t("gift_on_billing")], filterText) && (
                           <>
@@ -4218,9 +4264,10 @@ export default function SettingsPage() {
               key="miscellaneous"
               ref={el => sectionsRef.current['miscellaneous'] = el}
               className="mb-8 last:mb-0 h-screen">
-              <h1 className='h-[50px] bg-[#f1f1f1] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2'>  Miscellaneous  </h1>
+              <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
+                       ${blinkSection === 'miscellaneous' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Miscellaneous</h1>
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-2 gap-6 items-center justify-center'}`}>
+                <div className={`${isCompactView ? 'grid grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : 'grid xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 sm:grid-cols-1 gap-6 items-center justify-center'}`}>
                   <div>
                     {filterComponent([t("send_sms")], filterText) && (
                       <>

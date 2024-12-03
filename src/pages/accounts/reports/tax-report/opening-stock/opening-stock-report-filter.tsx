@@ -6,7 +6,7 @@ import productCategory from "../../../../inventory/masters/product-category/prod
 
 
 
-const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
+const  OpeningStockReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
         <div className="flex items-center gap-4">
@@ -94,18 +94,32 @@ const  PriceListReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =>
           onChangeData={(data) => handleFieldChange('productCategory', data.productCategory)}
         />
         </div>
+
+        <ERPDateInput
+        {...getFieldProps("fromDate")}
+        label={t("From")}
+        onChangeData={(data: any) => handleFieldChange("fromDate", data.fromDate)}
+        autoFocus={true}
+      />
+      <ERPDateInput
+        {...getFieldProps("toDate")}
+        label={t("To")}
+        onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
+      />
       </div>
 
 );
 }
-export default PriceListReportFilter;
-export const PriceListReportFilterInitialState = {
-isProductGroup:false,
-isBrand:false,
-isProduct:false,
-isProductCategory:false,
- productGroup:"",
- brand:"",
- product:"",
- productCategory:""
+export default OpeningStockReportFilter;
+export const OpeningStockReportFilterInitialState = {
+    isProductGroup:false,
+    isBrand:false,
+    isProduct:false,
+    isProductCategory:false,
+     productGroup:"",
+     brand:"",
+     product:"",
+     productCategory:"",
+     fromDate: new Date(), 
+     toDate: new Date(),
 };

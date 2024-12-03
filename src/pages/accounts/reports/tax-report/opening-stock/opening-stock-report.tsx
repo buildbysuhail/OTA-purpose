@@ -7,52 +7,36 @@ import { DevGridColumn } from "../../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import { ActionType } from "../../../../../redux/types";
 import Urls from "../../../../../redux/urls";
-import {  toggleCostCentrePopup,  } from "../../../../../redux/slices/popup-reducer";
-import PriceListReportFilter, { PriceListReportFilterInitialState } from "./price-list-report-filter";
-import LedgerReportFilter, { LedgerReportFilterInitialState } from "../../ledger-report-filter";
+import OpeningStockReportFilter, { OpeningStockReportFilterInitialState } from "./opening-stock-report-filter";
 
-
-interface CashSummary {
-
-  from: Date
-}
-const PriceList = () => {
-
+const OpeningStock = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
+   
     {
-      dataField: "code",
-      caption: t('code'),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting:true,
-      minWidth: 100,
-    },
-    {
-      dataField: "name",
-      caption: t("name"),
-      dataType: "string",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting:true,
-      minWidth: 200,
-    },
-    {
-      dataField: "group",
-      caption:  t("group"),
-      dataType: "string",
+      dataField: "date",
+      caption: t("date"),
+      dataType: "date",
       allowSearch: true,
       allowFiltering: true,
       allowSorting:true,
       width: 150,
-      visible:false
     },
     {
-      dataField: "groupCode",
-      caption: t("groupCode"),
+      dataField: "voucherNumber",
+      caption:  t("voucherNumber"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting:true,
+      minWidth: 150,
+     
+    },
+    {
+      dataField: "vType",
+      caption: t("vType"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -62,8 +46,18 @@ const PriceList = () => {
     },
  
     {
-      dataField: "category",
-      caption: t("category"),
+      dataField: "barcode",
+      caption: t("barcode"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting:true,
+      minWidth: 150,
+     
+    },
+    {
+      dataField: "productCode",
+      caption: t("productCode"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -72,8 +66,18 @@ const PriceList = () => {
       visible:false
     },
     {
-      dataField: "brand",
-      caption: t("brand"),
+      dataField: "productName",
+      caption: t("productName"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting:true,
+      minWidth: 150,
+    
+    },
+    {
+      dataField: "groupName",
+      caption: t("groupName"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -82,18 +86,18 @@ const PriceList = () => {
       visible:false
     },
     {
-      dataField: "brandNO",
-      caption: t("brandNO"),
-      dataType: "number",
+      dataField: "brandName",
+      caption: t("brandName"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting:true,
-      width: 150,
-      visible:false
+      minWidth: 150,
+     
     },
     {
-      dataField: "taxCategory",
-      caption: t("taxCategory"),
+      dataField: "unitName",
+      caption: t("unitName"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -102,9 +106,37 @@ const PriceList = () => {
       visible:false
     },
     {
-      dataField: "sVAT",
-      caption: t("sVAT"),
+      dataField: "qty",
+      caption: t("qty"),
       dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting:true,
+      minWidth: 150,
+    },
+    {
+      dataField: "cost",
+      caption: t("cost"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+      allowSorting:true,
+      minWidth: 150,
+      visible:false
+    },
+    {
+        dataField: "total",
+        caption: t("total"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting:true,
+        minWidth: 150,
+      },
+    {
+      dataField: "remark",
+      caption: t("remark"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       allowSorting:true,
@@ -112,41 +144,55 @@ const PriceList = () => {
       visible:false
     },
     {
-      dataField: "pVAT",
-      caption: t("pVAT"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting:true,
-      minWidth: 150,
-    },
-    {
-      dataField: "stdSprice",
-      caption: t("stdSprice"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting:true,
-      minWidth: 150,
-    },
-    {
-      dataField: "stdPprice",
-      caption: t("stdPprice"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting:true,
-      minWidth: 150,
-    },
-    {
-      dataField: "mrp",
-      caption: t("mrp"),
-      dataType: "number",
-      allowSearch: true,
-      allowFiltering: true,
-      allowSorting:true,
-      minWidth: 150,
-    },
+        dataField: "fromWarehouse",
+        caption: t("fromWarehouse"),
+        dataType: "date",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting:true,
+        width: 200,
+      
+      },
+      {
+        dataField: "toWarehouse",
+        caption: t("toWarehouse"),
+        dataType: "date",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting:true,
+        width: 150,
+        visible:false
+      },
+      {
+        dataField: "salesPrice",
+        caption: t("salesPrice"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting:true,
+        width: 200,
+       
+      },
+      {
+        dataField: "totalSalesValue",
+        caption: t("totalSalesValue"),
+        dataType: "number",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting:true,
+        width: 200,
+        visible:false
+      },
+      {
+        dataField: "si",
+        caption: t("si"),
+        dataType: "string",
+        allowSearch: true,
+        allowFiltering: true,
+        allowSorting:true,
+        width: 150,
+       
+      },
    
     
     // {
@@ -179,16 +225,17 @@ const PriceList = () => {
               <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("ledger_report")}
-                  dataUrl= {Urls.inv_reports_price_list}
+                  gridHeader={t("opening_stock_report")}
+                  dataUrl= {Urls.acc_reports_cash_summary}
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  filterContent={<PriceListReportFilter/>}
-                  filterInitialData={PriceListReportFilterInitialState}
+                  filterContent={<OpeningStockReportFilter/>}
+                  filterInitialData={OpeningStockReportFilterInitialState}
                   reload={true} 
-                  gridId="grd_cost_centre"
+                  filterWidth="600"
+                  gridId="grd_opening_stock"
                 ></ErpDevGrid>
               </div>
             </div>
@@ -202,4 +249,4 @@ const PriceList = () => {
   );
 };
 
-export default PriceList;
+export default OpeningStock;

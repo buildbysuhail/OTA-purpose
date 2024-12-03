@@ -324,15 +324,15 @@ const popupDataSlice = createSlice({
     toggleTestPopup: (state, action: PayloadAction<popupDataProps>) => {
       state.testPopup = action.payload;
     },
-    togglePriceListPopup: (state, action: PayloadAction<popupDataProps>) => {
-      state.priceList = action.payload;
-    },
+    // togglePriceListPopup: (state, action: PayloadAction<popupDataProps>) => {
+    //   state.priceList = action.payload;
+    // },
   },
 });
 
 // Extract the actions
 export const {
-  togglePriceListPopup,
+  // togglePriceListPopup,
   onCloseWithUnsavedChange,
   toggleTestPopup,
   toggleGroupOrder,

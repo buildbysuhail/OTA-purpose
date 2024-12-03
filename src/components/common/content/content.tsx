@@ -112,7 +112,10 @@ import AccTransaction from '../../../pages/accounts/transactions/acc-transaction
 import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
 import DailySummaryGlobal from '../../../pages/accounts/reports/dailySummary/daily-summary-global';
 const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
-
+const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report'));
+const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
+const OpeningStock = lazy(() => import('../../../pages/accounts/reports/tax-report/opening-stock/opening-stock-report'));
+const StockFlow = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-flow/stock-flow-report'));
 
 interface ContentProps { }
 const loading = (
@@ -238,6 +241,11 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
         <Route path="/inventory/price_list_report" element={<PriceList />} />
+        <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
+        <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
+        <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
+        <Route path="/inventory/stock_flow_report" element={<StockFlow />} />
+
 
         {/* Reports - Tax*/}
         {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}

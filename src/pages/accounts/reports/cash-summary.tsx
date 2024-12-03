@@ -192,7 +192,7 @@ const CashSummary = () => {
                   reload={true}
                   enablefilter={true}
                   filterWidth="100"
-                  showFilterInitially={true}
+                  // showFilterInitially={true}
                   filterContent={<CashSummaryReportFilter/>}
                   filterInitialData={CashSummaryReportFilterInitialState}
                 ></ErpDevGrid>

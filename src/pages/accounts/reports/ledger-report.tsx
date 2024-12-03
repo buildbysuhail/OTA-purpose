@@ -75,9 +75,12 @@ const LedgerReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.particulars}
+  </span>
+      ),
     },
-    
-   
     {
       dataField: "debit",
       caption: t('debit'),
@@ -85,6 +88,11 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -93,6 +101,11 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "balance",
@@ -101,6 +114,11 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
   ];
   return (

@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { exportDataGrid as exportDataGridToPdf } from "devextreme/pdf_exporter";
 import { exportDataGrid as exportDataGridToExcel } from "devextreme/excel_exporter";
-import { DataGrid } from "devextreme-react/data-grid";
+import { DataGrid, Summary, TotalItem } from "devextreme-react/data-grid";
 import {
   FilterRow,
   HeaderFilter,
@@ -47,7 +47,11 @@ import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
 import LedgerReportFilter from "../../pages/accounts/reports/ledger-report-filter";
-
+interface SummaryItem {
+  column: string; // The column for which the summary is applied
+  summaryType: "sum" | "count" | "min" | "max" | "avg"; // Supported summary types
+  valueFormat?: string; // Optional format, e.g., "currency", "decimal", etc.
+}
 interface ToolbarItem {
   item: React.ReactNode;
   location: "before" | "after";
@@ -125,6 +129,7 @@ interface ERPDevGridProps {
   onRowUpdating?: (e: any) => void;
   onRowInserting?: (e: any) => void;
   onRowRemoving?: (e: any) => void;
+  summary?: SummaryItem[];
   rowRender?: (row: any) => React.ReactNode;
   cellRender?: (cell: any) => React.ReactNode;
   locale?: string;
@@ -301,6 +306,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   onRowRemoving,
   rowRender,
   cellRender,
+  summary,
   locale,
   columnRenderingMode = "standard",
   rowRenderingMode = "standard",
@@ -676,6 +682,18 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               visible={column.visible || false}
             />
           ))}
+            {summary && (
+        <Summary>
+          {summary.map((item, index) => (
+            <TotalItem
+              key={index}
+              column={item.column}
+              summaryType={item.summaryType}
+              valueFormat={item.valueFormat}
+            />
+          ))}
+        </Summary>
+      )}
         </DataGrid>
       </div>
       {childPopupProps &&

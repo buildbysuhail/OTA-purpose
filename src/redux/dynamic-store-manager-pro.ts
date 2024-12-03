@@ -16,6 +16,7 @@ import ForgetPasswordReducer from "../redux/slices/auth/forgetpwd/reducer";
 import UserRightsReducer from "../redux/slices/user-rights/reducer";
 import AppStateReducer from "../redux/slices/app/reducer";
 import UserSessionReducer from "../redux/slices/user-session/reducer";
+import ClientSessionReducer from "../redux/slices/client-session/reducer";
 import PopupDataReducer from "../redux/slices/popup-reducer";
 import TemplateReducer from "../redux/slices/templates/reducer";
 import DeviceStateReducer from "../redux/slices/device/reducer";
@@ -198,6 +199,7 @@ class DynamicReduxManager {
       Account: AccountReducer,
       ForgetPassword: ForgetPasswordReducer,
       UserRights: UserRightsReducer,
+      ClientSession: ClientSessionReducer,
       AppState: AppStateReducer,
       UserSession: UserSessionReducer,
       PopupData: PopupDataReducer,

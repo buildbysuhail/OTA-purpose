@@ -78,6 +78,10 @@ const accTransactionSlice = createSlice({
           (state.transaction.master[
             key as keyof AccTransactionMaster
           ] as typeof fieldValue) instanceof Date;
+          if(isDateField) {
+            console.log(`dateField: ${fieldValue}`);
+            
+          }
         // Convert Date fields to ISO strings
         (state.transaction.master[
           key as keyof AccTransactionMaster
@@ -92,7 +96,13 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<AccTransactionRow[]>
     ) => {
-      state.transaction.details.push(...action.payload);
+      
+      const serializedRows = action.payload.map((row) => ({
+        ...row,
+        chqDate: new Date(row.chqDate).toISOString(),
+        bankDate: new Date(row.bankDate).toISOString(),
+      }));
+      state.transaction.details.push(...serializedRows);
     },
 
     // Add single row to the transaction details
@@ -100,7 +110,13 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<AccTransactionRow>
     ) => {
-      state.transaction.details.push(action.payload); // Directly push the single row
+      debugger;
+      const serializedRow = {
+        ...action.payload,
+        chqDate: action.payload.chqDate ? new Date(action.payload.chqDate).toISOString() : '',
+        bankDate: action.payload.bankDate ? new Date(action.payload.bankDate).toISOString() : '',
+      };
+      state.transaction.details.push(serializedRow);
     },
 
     // Update a specific row in the transaction details
@@ -132,7 +148,7 @@ const accTransactionSlice = createSlice({
 
     // Remove a specific row from the transaction details by index
     accFormStateClearRowForNew: (state) => {
-      state.row = AccTransactionRowInitialData;
+      state.row = {...AccTransactionRowInitialData};
     },
 
     // Handle changes for the "row" property in the state
@@ -166,85 +182,103 @@ const accTransactionSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loadAccVoucher.fulfilled, (state, action) => {
-      if (action.payload != null) {
-        state.transaction.master = action.payload?.master;
-        state.transaction.details = action.payload?.details.map((item: any) => ({
-          ...item,
-          chqDate: item.bankDate,
+      const payload = action.payload;
+  
+      if (payload) {
+        // Handle master data
+        state.transaction.master = {
+          ...state.transaction.master, // Retain existing state
+          ...payload.master,
+          transactionDate: new Date(payload.master.transactionDate).toISOString(),
+          prevTransDate: new Date(payload.master.prevTransDate).toISOString(),
+          bankDate: new Date(payload.master.bankDate).toISOString(),
+          referenceDate: new Date(payload.master.referenceDate).toISOString(),
+          dueDate: new Date(payload.master.dueDate).toISOString(),
+          checkBouncedDate: new Date(payload.master.checkBouncedDate).toISOString(),
+        };
+  
+        // Handle details data
+        state.transaction.details = payload.details.map((detail: any) => ({
+          ...detail,
+          bankDate: detail.bankDate ? new Date(detail.bankDate).toISOString() : new Date(2000, 0, 1).toISOString(),
+          chqDate: detail.chqDate ? new Date(detail.chqDate).toISOString() : new Date(2000, 0, 1).toISOString(),
+          checkBouncedDate: detail.checkBouncedDate
+            ? new Date(detail.checkBouncedDate).toISOString()
+            : new Date(2000, 0, 1).toISOString(),
         }));
-        state.transaction.attachments = action.payload?.attachments;
-        if (
-          action.payload?.details != null &&
-          action.payload?.details.length > 0
-        ) {
-          state.total = action.payload?.details.reduce((total: number, item: any) => {
-            const amount = action.payload?.master.voucherType !== VoucherType.MultiJournal 
-              ? item.Amount 
-              : item.Debit;
+  
+        // Handle attachments
+        state.transaction.attachments = payload.attachments || [];
+  
+        // Calculate total amount
+        if (payload.details?.length > 0) {
+          state.total = payload.details.reduce((total: number, detail: AccTransactionRow) => {
+            const amount =
+              payload.master.voucherType !== VoucherType.MultiJournal
+                ? detail.amount
+                : detail.debit;
             return total + (amount || 0);
           }, 0);
-
-          //To select Cash Account in the Combo
-          switch (action.payload?.master.voucherType) {
+  
+          // Determine masterAccountID
+          const firstDetail = payload.details[0];
+          switch (payload.master.voucherType) {
             case "CP":
             case "BP":
             case "CN":
             case "CQP":
             case "SV":
             case "PBP":
-              state.masterAccountID =
-                action.payload?.details[0]?.relatedLedgerId;
+              state.masterAccountID = firstDetail.relatedLedgerId;
               break;
-
+  
             case "CR":
             case "BR":
             case "DN":
             case "CQR":
             case "PV":
             case "PBR":
-              state.masterAccountID = action.payload?.details[0]?.ledgerId;
+              state.masterAccountID = firstDetail.ledgerId;
               break;
-
+  
             case "JV":
-              if (action.payload?.master?.drCr === "Dr") {
-                state.transaction.master.drCr = "Debit";
-                state.masterAccountID = action.payload?.details[0]?.ledgerId;
-              } else {
-                state.transaction.master.drCr = "Credit";
-                state.masterAccountID =
-                  action.payload?.details[0]?.relatedLedgerId;
-              }
+              state.transaction.master.drCr =
+                payload.master.drCr === "Dr" ? "Debit" : "Credit";
+              state.masterAccountID =
+                payload.master.drCr === "Dr"
+                  ? firstDetail.ledgerId
+                  : firstDetail.relatedLedgerId;
               break;
-
+  
             default:
               break;
           }
-          let BillwiseAccTransDetailID: number = 0;
-
-
-
-         
         }
+  
         state.transactionLoading = false;
       }
     });
-    builder.addCase(loadAccVoucher.rejected, (state, action) => {
+  
+    builder.addCase(loadAccVoucher.rejected, (state) => {
       state.transactionLoading = false;
     });
-    builder.addCase(loadAccVoucher.pending, (state, action) => {
+  
+    builder.addCase(loadAccVoucher.pending, (state) => {
       state.transactionLoading = true;
     });
-    /////////////////unlockAccTransactionMaster
+  
     builder.addCase(unlockAccTransactionMaster.fulfilled, (state, action) => {
       if (action.payload > 0) {
         state.transaction.master.isLocked = false;
         state.unlocking = false;
       }
     });
-    builder.addCase(unlockAccTransactionMaster.rejected, (state, action) => {
+  
+    builder.addCase(unlockAccTransactionMaster.rejected, (state) => {
       state.unlocking = false;
     });
-    builder.addCase(unlockAccTransactionMaster.pending, (state, action) => {
+  
+    builder.addCase(unlockAccTransactionMaster.pending, (state) => {
       state.unlocking = true;
     });
   },

@@ -42,6 +42,7 @@ export const initialUserSessionData: UserModel = {
   employeeId: 0,
   systemCode: "",
   systemName: "",
+  financialYearStatus: ""
 };
 export interface UserModel {
   userId: number;
@@ -65,6 +66,7 @@ export interface UserModel {
   branches: BranchSelectDto[];
   finFrom?: Date | null;
   finTo?: Date | null;
+  financialYearStatus:string;
   presetCostCenterId: number | 0;
   employeeId: number | 0;
   productVersion: string | "";
@@ -104,6 +106,7 @@ export const initialState: UserModel = {
   counterAssignedCashLedgerId: 0,
   systemCode: "",
   systemName: "",
+  financialYearStatus: "Closed"
 };
 const userSessionSlice = createSlice({
   name: "userSession",

@@ -122,8 +122,6 @@ const LedgerReport = () => {
                   filterInitialData={LedgerReportFilterInitialState}
                   reload={true} 
                   gridId="grd_cost_centre"
-                  popupAction={toggleCostCentrePopup}
-                  // reload={true}
                 ></ErpDevGrid>
               </div>
             </div>

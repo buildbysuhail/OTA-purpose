@@ -133,7 +133,8 @@ export const MENUITEMS = [
       { path: `${import.meta.env.BASE_URL}bank-reconciliation`, type: 'link', active: false, selected: false, title: 'bank_reconciliation' },
       { path: `${import.meta.env.BASE_URL}closing-balance`, type: 'link', active: false, selected: false, title: 'closing_balance' },
       { path: `${import.meta.env.BASE_URL}multi-journal-entry`, type: 'link', active: false, selected: false, title: 'multi_journal_entry' },
-      { path: `${import.meta.env.BASE_URL}tax-on-expense`, type: 'link', active: false, selected: false, title: 'tax_on_expense' }
+      { path: `${import.meta.env.BASE_URL}tax-on-expense`, type: 'link', active: false, selected: false, title: 'tax_on_expense' },
+      { path: `${import.meta.env.BASE_URL}accounts/transactions/post-dated-cheques`, type: 'link', active: false, selected: false, title: 'post_dated_cheques' }
     ]
   },
   

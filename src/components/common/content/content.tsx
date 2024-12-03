@@ -101,6 +101,9 @@ const GroupCategory = lazy(() => import('../../../pages/inventory/masters/group-
 const SpecialSchemes = lazy(() => import('../../../pages/inventory/masters/special-schemes/special-schemes'));
 const ListedProductPrices = lazy(() => import('../../../pages/inventory/masters/listed-product-prices/listed-product-prices'));
 
+//transaction
+const PostDatedCheques = lazy(() => import('../../../pages/accounts/transactions/acc-post-dated-cheques'));
+
 // Inventory Reports
 import PurchaseSummaryReport from '../../../pages/inventory/reports/purchase-summary-report/purchase-summary-report';
 import PurchaseRegisterReport from '../../../pages/inventory/reports/purchase-register-report/purchase-register-report';
@@ -108,6 +111,9 @@ import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/
 import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
 import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
 import DailySummaryGlobal from '../../../pages/accounts/reports/dailySummary/daily-summary-global';
+const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
+const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report'));
+const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
 
 interface ContentProps { }
 const loading = (
@@ -196,6 +202,8 @@ const Content: FC<ContentProps> = () => {
 
         {/* Accounts Masters */}
         <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType={''} formCode={''} voucherPrefix={''} formType={''} title={''} drCr={''} />} />
+        <Route path="accounts/transactions/post-dated-cheques" element={<PostDatedCheques />} />
+        
         {/* Accounts Masters End */}
 
 
@@ -230,7 +238,13 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
-        <Route path="/inventory/gstr_report" element={<GstrReport />} />
+        <Route path="/inventory/price_list_report" element={<PriceList />} />
+        <Route path="/inventory/stock_ledger_report" element={<StockLedger />} />
+        <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
+
+
+        {/* Reports - Tax*/}
+        {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

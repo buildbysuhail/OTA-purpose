@@ -11,11 +11,12 @@ export interface AccTransactionProps {
 export interface AccTransactionData {
   master: AccTransactionMaster;
   details: AccTransactionRow[];
+  attachments: any[];
 }
 
 // AccTransactionMasterInput interface
 export interface AccTransactionMaster {
-  accTransactionMasterId: number;
+  accTransMasterID: number;
   departmentId: number;
   costCentreId: number;
   billwiseMasterId: number;
@@ -31,6 +32,7 @@ export interface AccTransactionMaster {
   referenceDate: string;
   dueDate: string;
   particulars: string;
+  isLocked: boolean; 
   totalDebit?: number;
   billwiseTotalAdjAmt?: number;
   billwiseAdjAmt?: number;
@@ -64,7 +66,7 @@ export interface AccTransactionMaster {
 
 // AccTransactionMasterInput interface
 export interface AccTransactionMasterValidations {
-  accTransactionMasterId: string;
+  accTransMasterID: string;
   departmentId: string;
   costCentreId: string;
   billwiseMasterId: string;
@@ -113,7 +115,7 @@ export interface AccTransactionMasterValidations {
 
 // Initial object with default values
 export const initialAccTransactionMasterValidations: AccTransactionMasterValidations = {
-  accTransactionMasterId: "",
+  accTransMasterID: "",
   departmentId: "",
   costCentreId: "",
   billwiseMasterId: "",
@@ -161,7 +163,7 @@ export const initialAccTransactionMasterValidations: AccTransactionMasterValidat
 };
 // AccDetailInput interface
 export interface AccTransactionRow {
-  accTransactionMasterId: number;
+  accTransMasterID: number;
   accTransactionDetailId: number;
   ledgerId: number;
   ledgerCode: string;
@@ -170,6 +172,7 @@ export interface AccTransactionRow {
   drCr: string;
   relatedLedgerId: number;
   amount?: number;
+  AmountFC?: number;
   hasDiscount?: boolean;
   discount?: number;
   debit?: number;
@@ -184,6 +187,7 @@ export interface AccTransactionRow {
   exchangeRate?: number;
   adjAmount?: number;
   bankDate: string;
+  chqDate: string;
   chequeNumber: string;
   particularsLedgerId: number;
   isDr: boolean;
@@ -192,9 +196,12 @@ export interface AccTransactionRow {
   checkStatus: string;
   checkBouncedDate: string;
   billwiseData: BillwiseData[];
+  BillwiseDetails: string;
   branchId: number;
   costCentreId: number;
+  costCentreName: number;
   projectId: number;
+  ProjectName: number;
 
   bankName: string;
   nameOnCheque: string;
@@ -202,8 +209,8 @@ export interface AccTransactionRow {
   firstCreditLedgerId?: number;
   firstDebitLedgerId?: number;
 }
-export const accDetailInitialData: AccTransactionRow = {
-  accTransactionMasterId: 0,
+export const AccTransactionRowInitialData: AccTransactionRow = {
+  accTransMasterID: 0,
   accTransactionDetailId: 0,
   ledgerId: 0,
   relatedLedgerId: 0,
@@ -241,11 +248,15 @@ export const accDetailInitialData: AccTransactionRow = {
   ledger: "",
   drCr: "",
   ledgerName: "",
-  currencyName: ""
+  currencyName: "",
+  ProjectName: 0,
+  costCentreName: 0,
+  BillwiseDetails: "",
+  chqDate: ""
 }
 export const accTransactionInitialData: AccTransactionData = {
   master: {
-    accTransactionMasterId: 0,
+    accTransMasterID: 0,
     departmentId: 0,
     costCentreId: 0,
     billwiseMasterId: 0,
@@ -290,78 +301,10 @@ export const accTransactionInitialData: AccTransactionData = {
     refBranchId: 0,
     uuid: "",
     manualInvoiceNumber: "",
+    isLocked: false
   },
-  details: [
-    {
-      ledgerId: 4343,
-      ledgerCode: 'LC001',
-      ledger: 'Cash Account',
-      amount: 5000.00,
-      drCr: 'Dr',
-      chequeNumber: 'CHQ001',
-      bankDate: new Date('2024-01-19').toISOString(),
-      narration: 'Payment for supplies',
-      billwiseData: [],
-      accTransactionDetailId: 34,
-      discount: 0,
-      costCentreId: 43,
-      checkStatus: 'Cleared',
-      adjAmount: 5000.00,
-      nameOnCheque: 'John Doe',
-      bankName: 'ABC Bank',
-      debit: 5000.00,
-      credit: 0,
-      projectId: 343,
-      accTransactionMasterId: 0,
-      relatedLedgerId: 0,
-      randomKey: 0,
-      projectSiteId: 0,
-      currencyId: 0,
-      particularsLedgerId: 0,
-      isDr: false,
-      isDisplay: false,
-      voucherType: "",
-      checkBouncedDate: new Date().toISOString(),
-      branchId: 0,
-      ledgerName: "",
-      currencyName: ""
-    },
-    {
-      ledgerId: 4343,
-      ledgerCode: 'LC001',
-      ledger: 'Cash Account',
-      amount: 5000.00,
-      drCr: 'Dr',
-      chequeNumber: 'CHQ001',
-      bankDate: new Date('2024-01-19').toISOString(),
-      narration: 'Payment for supplies',
-      billwiseData: [],
-      accTransactionDetailId: 34,
-      discount: 0,
-      costCentreId: 43,
-      checkStatus: 'Cleared',
-      adjAmount: 5000.00,
-      nameOnCheque: 'John Doe',
-      bankName: 'ABC Bank',
-      debit: 5000.00,
-      credit: 0,
-      projectId: 343,
-      accTransactionMasterId: 0,
-      relatedLedgerId: 0,
-      randomKey: 0,
-      projectSiteId: 0,
-      currencyId: 0,
-      particularsLedgerId: 0,
-      isDr: false,
-      isDisplay: false,
-      voucherType: "",
-      checkBouncedDate: new Date().toISOString(),
-      branchId: 0,
-      ledgerName: "",
-      currencyName: ""
-    },
-    // Add more sample data here
-  ],
+  details: [],
+  attachments: []
 };
 export interface BillwiseData {
   SiNo: number;
@@ -386,14 +329,16 @@ export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
   mnuShowConfirmationForEditOnAccounts: boolean;
+  presetCostenterId: number
 }
 export interface AccTransactionFormState {
   formCode: string; // FORMCODE
   isCleared: boolean; // IsCleared
   isBounced: boolean; // IsBounced
   isEntryControl: boolean; // IsEntryControl
-  isRowEdit: boolean; // IsRowEdit
+  isEdit: boolean; // isEdit
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
+  isBahamdoonPOSReceipt: boolean;
   billwiseData: BillwiseData[];
   showbillwise: false;
   showSaveDialog: false;
@@ -405,7 +350,6 @@ export interface AccTransactionFormState {
   costCenterVisible: boolean; // CostCenterVisible
   blnDetailsNotCleared: boolean; // blnDetailsNotCleared
   dsLedgerDetails: any[]; // dsLedgerDetails (DataSet converted to array)
-  isLocked: boolean; // isLocked
   isPDC: boolean; // isPDC
   firstDebitLedgerID: number; // FirstDebitLedgerID
   firstCreditLedgerID: number; // FirstCreditLedgerid
@@ -417,7 +361,9 @@ export interface AccTransactionFormState {
   rowProcessing: boolean;
   transactionProcessing: boolean;
   transactionLoading: boolean;
+  unlocking: boolean;
   transaction: AccTransactionData;
+  total: number;
   printOnSave: boolean
   printPreview: boolean
   printCheque: boolean
@@ -430,7 +376,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   isCleared: false,
   isBounced: false,
   isEntryControl: false,
-  isRowEdit: false,
+  isEdit: false,
   dtLedgerCodes: [],
   billwiseData: [],
   showbillwise: false,
@@ -443,12 +389,11 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   costCenterVisible: false,
   blnDetailsNotCleared: false,
   dsLedgerDetails: [],
-  isLocked: false,
   isPDC: false,
   firstDebitLedgerID: 0,
   firstCreditLedgerID: 0,
   title: "",
-  row: accDetailInitialData,
+  row: AccTransactionRowInitialData,
   rowProcessing: false,
   transactionProcessing: false,
   transactionLoading: false,
@@ -461,5 +406,8 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   printCheque: false,
   keepNarration: false,
   amountInWords: 'Zero Only',
-  userConfig: {clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true}
+  userConfig: { clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true, presetCostenterId: 0 },
+  isBahamdoonPOSReceipt: false,
+  unlocking: false,
+  total: 0
 }

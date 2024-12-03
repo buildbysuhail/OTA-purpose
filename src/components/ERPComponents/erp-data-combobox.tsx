@@ -950,8 +950,8 @@ if (_useMUI == undefined || _useMUI == false){
     >
       {!noLabel && (
           <label
-          className={`capitalize block  text-gray-900 text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} 
-          ${labelDirection ==="vertical" ? "":"basis-1/2"}`}
+          className={`capitalize block   text-left rtl:text-right ${appState?.mode == 'dark' ? 'form-label':""} 
+          ${labelDirection ==="vertical" ? "":""}`}
           style={{
             fontSize: _customSize
               ? _customSize === "sm"
@@ -962,6 +962,8 @@ if (_useMUI == undefined || _useMUI == false){
                     ? "16px"
                     : `${appState?.inputBox?.labelFontSize}px`
               : `14px`,
+              color: appState?.mode === 'dark' ? 'rgb(225,224,224)' : 
+              (appState?.inputBox?.labelColor ? `rgb(${appState?.inputBox?.labelColor})` : 'rgb(84,84,84)'),
             transform: _customSize ==="customize" ?`translate(${appState?.inputBox?.adjustA ?? 10}px, ${
               appState?.inputBox?.adjustB ?? 10 }px) scale(1)`:``,
           }}
@@ -979,7 +981,7 @@ if (_useMUI == undefined || _useMUI == false){
         as="div"
         className="relative"
       >
-        <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-1/2"}}`}>
+        <div className={`flex  ${labelDirection ==="vertical" ? "":"basis-2/3"}}`}>
 
           <Combobox.Input
          

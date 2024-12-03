@@ -4,13 +4,29 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { APIClient } from '../../../helpers/api-client';
 import { ResponseModel } from '../../../base/response-model';
 import Urls from '../../../redux/urls';
+import { AccTransactionMaster, AccTransactionRow } from './acc-transaction-types';
 const api = new APIClient();
-export interface SetBranchInput {
-  companyId: string;
-  branchId: string;
+export interface loadAccVoucherInput {
+  transactionType: string;
+  params: any;
 }
-export const setBranch = createAsyncThunk<ResponseModel<any>, SetBranchInput>('setBranch', async (input) => {
-  const response = await api.post(Urls.set_branch, input);
+export interface AccVoucherOutPut {
+  master: AccTransactionMaster;
+  details: AccTransactionRow[];
+  attachments: any[];
+}
+export const loadAccVoucher = createAsyncThunk<AccVoucherOutPut, loadAccVoucherInput>('loadAccTransMaster', async (input) => {
+  const response = await await api.getAsync(
+    `${Urls.acc_transaction_base}${input.transactionType}/GetVoucherAsync`,
+    new URLSearchParams(input.params).toString()
+  );
+  return response;
+});
+export const unlockAccTransactionMaster = createAsyncThunk<any, any>('unlockAccTransactionMaster', async (accTransMasterID) => {
+  const response = await await api.postAsync(
+    `${Urls.unlock_acc_transaction_master}`,
+    accTransMasterID 
+  );
   return response;
 });
 

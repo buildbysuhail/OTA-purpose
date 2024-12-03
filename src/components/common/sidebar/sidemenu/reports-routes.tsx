@@ -14,7 +14,7 @@ export const ReportsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'accounts',
+    title: 'Accounts',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
@@ -51,7 +51,7 @@ export const ReportsMenuItems = [
     Name: '',
     active: false,
     selected: false,
-    title: 'inventory',
+    title: 'Inventory',
     badge: '',
     badgetxt: '',
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
@@ -60,8 +60,26 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_summary_report`, type: 'link', active: false, selected: false, title: 'purchase_summary_report'},
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/purchase_register_report`, type: 'link', active: false, selected: false, title: 'purchase_register_report'},
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/party_wise_report`, type: 'link', active: false, selected: false, title: 'party_wise_report'},
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr1_report`, type: 'link', active: false, selected: false, title: 'gstr1_report'},
-      { path: `${import.meta.env.BASE_URL}reports/_/inventory/gstr3b_report`, type: 'link', active: false, selected: false, title: 'gstr3b_report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/price_list_report`, type: 'link', active: false, selected: false, title: 'price_list_report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_ledger_report`, type: 'link', active: false, selected: false, title: 'stock_ledger_report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report'},
+
+    ]
+  },
+  {
+    icon: (<CheckBadgeIcon className="side-menu__icon" />),
+    type: 'sub',
+    Name: '',
+    active: false,
+    selected: false,
+    title: 'Tax Reports',
+    badge: '',
+    badgetxt: '',
+    class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
+    columns: 1,
+    children: [ 
+      { path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr1_report`, type: 'link', active: false, selected: false, title: 'gstr1_report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/taxReport/gstr3b_report`, type: 'link', active: false, selected: false, title: 'gstr3b_report'},
     ]
   },
 ];

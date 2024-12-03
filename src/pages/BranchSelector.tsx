@@ -13,7 +13,7 @@ import { BranchSelectDto, UserModel } from "../redux/slices/user-session/reducer
 import ErpAvatar from "../components/ERPComponents/erp-avatar";
 import Cookies from "js-cookie";
 import { customJsonParse } from "../utilities/jsonConverter";
-import { languagesData, Theme } from "../redux/slices/app/types";
+import { AppState, languagesData, Theme } from "../redux/slices/app/types";
 import { syncAppStates } from "./auth/syncSettings";
 import { CircularProgress } from "@mui/material";
 
@@ -55,7 +55,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       const _userProfileDetails = atob(response.item.userProfileDetails);
       const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
       const _userThemes = atob(response.item.userThemes);
-      const userThemes: Theme = customJsonParse(_userThemes);
+      const userThemes: AppState = customJsonParse(_userThemes);
       let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
       syncAppStates(dispatch,userThemes, userProfileDetails, locale);          
     }

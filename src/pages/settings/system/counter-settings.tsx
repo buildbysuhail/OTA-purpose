@@ -1,221 +1,86 @@
-// import React, {
-//   Fragment,
-//   useCallback,
-//   useEffect,
-//   useMemo,
-//   useState,
-// } from "react";
-// import Urls from "../../../redux/urls";
 
-// import { DevGridColumn } from "../../../components/types/dev-grid-column";
-// import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-// import {
-//   toggleCurrencyExchangePopup,
-//   toggleCurrencyMasterPopup,
-// } from "../../../redux/slices/popup-reducer";
-// import ERPModal from "../../../components/ERPComponents/erp-modal";
-// import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
-// import { useRootState } from "../../../utilities/hooks/useRootState";
-// import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-// import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-// import ERPButton from "../../../components/ERPComponents/erp-button";
-// // import { CurrencyExchangeManage } from "./exchange-rates-manage";
-// import { useTranslation } from "react-i18next";
-// import { DataGrid, LoadPanel } from "devextreme-react";
-// import {
-//   Toolbar,
-//   Item,
-//   Editing,
-//   Column,
-//   Lookup,
-//   Scrolling,
-//   RemoteOperations,
-//   Paging,
-//   KeyboardNavigation,
-//   DataGridTypes,
-//   FilterRow,
-//   SearchPanel,
-//   ColumnFixing,
-// } from "devextreme-react/cjs/data-grid";
-// import { APIClient } from "../../../helpers/api-client";
-// import CustomStore from "devextreme/data/custom_store";
-// import "./exchange-rates.css";
-// import { handleResponse } from "../../../utilities/HandleResponse";
-// import { CheckBoxTypes } from "devextreme-react/cjs/check-box";
-// import { SelectBoxTypes } from "devextreme-react/cjs/select-box";
-// import { CurrencyMasterManage } from "../../accounts/masters/currency-master/currency-master-manage";
-// import { Link } from "react-router-dom";
-// import ERPInput from "../../../components/ERPComponents/erp-input";
-// import ERPRadio from "../../../components/ERPComponents/erp-radio";
-
-// const api = new APIClient();
-// interface postData {
-//   pCname: string;
-//   systemCode: string;
-//   counterID: number;
-// }
-
-// const CounterSettings = () => {
-//   const initData = {
-//     pCname: "",
-//     systemCode: "",
-//     counterID: 0,
-//   };
-//   const { t } = useTranslation();
-//   const dispatch = useAppDispatch();
-//   const rootState = useRootState();
-//   const [gridHeight, setGridHeight] = useState<{
-//     mobile: number;
-//     windows: number;
-//   }>({ mobile: 500, windows: 500 });
-
-//   const [store, setStore] = useState<any>([]);
-//   const [postData, setPostData] = useState<postData>(initData);
-//   const [postDataLoading, setPostDataLoading] = useState(false);
-
-//   const loadStore = async () => {
-//     const result: any = await api.getAsync(`${Urls.counter_settings}`);
-//     setStore(result);
-//   };
-
-//   //   const handleSubmit = async () => {
-//   //     setPostDataLoading(true);
-//   //     try {
-//   //       const dataToSubmit = store.filter(
-//   //         (row: any) => row.toCurrency !== null && row.rate !== null
-//   //       );
-
-//   //       const result: any = await api.post(`${Urls.currencyExchange}`, {
-//   //         currencyId: postData.baseCurrency,
-
-//   //         data: dataToSubmit,
-//   //       });
-
-//   //       setStore(result?.data);
-//   //       setPostDataLoading(false);
-//   //     } catch (error) {
-//   //       console.error("Error saving settings:", error);
-//   //     } finally {
-//   //       setPostDataLoading(false);
-//   //     }
-//   //   };
-//   useEffect(() => {
-//     let wh = window.innerHeight;
-//     let gridHeightMobile = wh - 200;
-//     let gridHeightWindows = wh - 300;
-//     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
-//   }, []);
-
-//   return (
-//     <Fragment>
-//       <div className="grid grid-cols-12 gap-x-6">
-//         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
-//           <div className="">
-//             <div className="p-4">
-
-//               <div className="grid grid-cols-1 gap-3">
-//                 <DataGrid
-//                   height={gridHeight.windows}
-//                   dataSource={store}
-//                   className="custom-data-grid"
-//                   showBorders={true}
-//                   key="counter_settings"
-//                   columnAutoWidth={true}
-//                   showColumnLines={false}
-//                   showRowLines={true}
-//                   allowColumnResizing={true}
-//                   allowColumnReordering={true}
-//                   // hoverStateEnabled={true}
-//                 >
-//                   <FilterRow visible={true} />
-//                   <SearchPanel visible={false} />
-//                   <ColumnFixing enabled={true} />
-//                   <Scrolling mode="virtual" />
-//                   <Paging defaultPageSize={100} />
-//                   {/* <LoadPanel visible='false' /> */}
-//                   {/* <RemoteOperations
-//                     filtering={false}
-//                     sorting={false}
-//                     paging={false}
-//                   ></RemoteOperations> */}
-                 
-//                   <Column
-//                     dataField="pCname"
-//                     caption="PC Name"
-//                     dataType="string"
-//                     allowSorting={true}
-//                     allowSearch={true}
-//                     allowFiltering={true}
-//                     minWidth={150}
-//                     allowEditing={true}
-//                   />
-//                   <Column
-//                     dataField="systemCode"
-//                     caption="System Code"
-//                     dataType="string"
-//                     allowSorting={true}
-//                     allowSearch={true}
-//                     allowFiltering={true}
-//                     minWidth={150}
-//                     allowEditing={true}
-//                   />
-//                    <Column
-//                     dataField="counterName"
-//                     caption="Counter"
-//                     dataType="string"
-//                     allowSorting={true}
-//                     allowSearch={true}
-//                     allowFiltering={true}
-//                     width={150}
-//                     allowEditing={true}
-//                   />
-
-//                   <Column
-//                     dataField="lastLoggedDate"
-//                     caption="Last Logged Date"
-//                     dataType="date"
-//                     allowSorting={true}
-//                     allowSearch={true}
-//                     allowFiltering={true}
-//                     width={150}
-//                     allowEditing={true}
-//                   />
-
-//                   <Editing
-//                     allowUpdating={true}
-//                     allowAdding={false}
-//                     allowDeleting={false}
-//                     mode="cell"
-//                   />
-             
-//                 </DataGrid>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </Fragment>
-//   );
-// };
-
-
-
-import React, { Fragment, useCallback, useMemo } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import Urls from "../../../redux/urls";
-import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
+import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
-import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
+import ErpInput from "../../../components/ERPComponents/erp-input";
+import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
+import { APIClient } from "../../../helpers/api-client";
+import { RootState } from "../../../redux/store";
+import { handleResponse } from "../../../utilities/HandleResponse";
+import { useNavigate } from "react-router-dom";
 
-
+interface CounterData {
+  systemName:string
+  systemCode:string
+  counterID:number|null
+}
+const api = new APIClient();
 const CounterSettings = () => {
- 
+  const initData:CounterData = {
+    systemName:"",
+    systemCode:"",
+    counterID:null,
+  }
+ const[counterData,setCounterData]=useState<CounterData>(initData)
+ const [defaultSystemCode, setDefaultSystemCode] = useState("");
+ const [reload,setReload]=useState(false)
+//  const [loading, setLoading] = useState(true);
+ const [isSaving, setIsSaving] = useState(false);
+ const userSession = useAppSelector((state: RootState) => state.UserSession);
+const navigate = useNavigate()
+
+ useEffect(() => {
+  loadCounterData();
+}, []);
+
+ const loadCounterData = async () => {
+  try {
+    const response = await api.getAsync(Urls.counter_settings_current_data); 
+    setDefaultSystemCode(response.systemCode)
+    setCounterData(response);
+  } catch (error) {
+    console.error("Error loading settings:", error);
+  } finally {
+
+  }
+};
+
+const handleRowClick = (e: any) => {
+  const rowData = e.data;
+  setCounterData({
+    systemName: rowData.pCname,
+    systemCode: rowData.systemCode,
+    counterID: rowData.counterID,
+  });
+};
+
+
+const handleSubmit = async () => {
+  setReload(false)
+  setIsSaving(true);
+  try {
+    const response = await api.put(Urls.counter_settings_current_data,counterData);  
+    handleResponse(response,()=>{setReload(true)},() => { })
+  } catch (error) {
+    console.error("Error loading settings:", error);
+  } finally {
+    setIsSaving(false);
+  }
+};
+
+const handleClear = async ()=>{
+  setCounterData({
+    systemName: "",
+    systemCode: "",
+    counterID: null,
+  }); 
+}
+
   const dispatch = useAppDispatch();
   const { t } = useTranslation("userManage");
   const rootState = useRootState();
@@ -227,7 +92,7 @@ const CounterSettings = () => {
       allowSorting:true,
       allowSearch:true,
       allowFiltering:true,
-      minWidth:150,
+      minWidth:200,
      
     },
     {
@@ -237,7 +102,7 @@ const CounterSettings = () => {
       allowSorting:true,
       allowSearch:true,
       allowFiltering:true,
-      minWidth:150,
+      minWidth:200,
       allowEditing:true,
     },
     {
@@ -247,7 +112,7 @@ const CounterSettings = () => {
       allowSorting:true,
       allowSearch:true,
       allowFiltering:true,
-      width:150,
+      minWidth:200,
       allowEditing:true,
     },
     {
@@ -262,74 +127,113 @@ const CounterSettings = () => {
       visible:false
     },
   
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 100,
-    //   cellRender: (cellElement: any, cellInfo: any) => {
-    //     return (
-    //       <ERPGridActions
-    //         view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
-    //         edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
-    
-    //       />
-    //     )
-    //   },
-    // }
   ], []);
   return (
     <Fragment>
-      <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
+      <div className="grid grid-cols-12 gap-x-6 bg-[#ffffff]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
-              <div className="flex justify-end items-center mb-5">
-                <div className="flex space-x-5 pr-5">
-                   <ERPRadio
-                    id="customer"
-                    name="customer"
-                    // data={gridType}
-                    // checked={gridType.customer}
-                    // onChange={() => {
-                    //   setGridType({ customer: true, supplier: false });
-                    // }}
-                    label="Customer"
-                  />
-                  <ERPRadio
-                    id="supplier"
-                    name="supplier"
-                    // data={gridType}
-                    // checked={gridType.supplier}
-                    // onChange={() => {
-                    //   setGridType({ customer: false, supplier: true });
-                    // }}
-                    label="supplier"
-                  />
-                </div>
-
-                <ERPButton
-                  title="Show"
-                  variant="primary"
-                //   disabled={loading}
-                //   loading={loading}
-                //   onClick={handleLoad}
-                  type="button"
-                  startIcon="ri-eye-line"
+          <h1 className='text-2xl font-normal tracking-wide text-#3f3f46 dark:te'>Counter Settings</h1>
+          <div className="grid grid-cols-1 space-y-4 md:w-[550px] mb-3">
+                <ErpInput
+                // labelDirection="horizontal"
+                 className="w-full"
+                  id="systemName"
+                  label="System Name"
+                  placeholder="System Name"
+                  data={counterData}
+                  value={counterData.systemName}
+                  onChange={(e) => {
+                    setCounterData((prevTheme) => ({
+                      ...prevTheme,
+                      systemName: e.target.value,
+                    }));
+                  }}
+            
                 />
+                <ErpInput
+                  // labelDirection="horizontal"
+                  id="systemCode"
+                 className="w-full"
+                  label="System Code"
+                  placeholder="System Code"
+                  data={counterData}
+                  value={counterData.systemCode}
+                  onChange={(e) => {
+                    setCounterData((prevTheme) => ({
+                      ...prevTheme,
+                      systemCode: e.target.value,
+                    }));
+                  }}
+                />
+                <ERPDataCombobox
+                //  labelDirection="horizontal"
+                 className="w-full"
+                  id="counterID"
+                  data={counterData}
+                  label="counterID"
+                  field={{
+                    id: "counterID",
+                    getListUrl: Urls.data_counters,
+                    valueKey: "id",
+                    labelKey: "name",
+                  }}
+                  onChange={(e) => {
+                    setCounterData((prevTheme) => ({
+                      ...prevTheme,
+                      counterID: e?.value ?? null,
+                    }));
+                  }}
+                
+                />
+              <div className="flex items-center justify-center space-x-4">
+                  <ERPButton
+                    title="Save"
+                    variant="primary"
+                    loading={isSaving}
+                    disabled={isSaving}
+                    type="button"
+                    onClick={handleSubmit}
+                    startIcon="ri-save-line"
+                  />
+                  <ERPButton
+                    title="Clear"
+                    variant="custom"
+                    customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
+                    type="button"
+                    disabled={isSaving}
+                    startIcon="ri-format-clear"
+                    onClick={handleClear}
+                  />
+                  <ERPButton
+                    title="Close"
+                    variant="custom"
+                    disabled={isSaving}
+                    customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
+                    type="button"
+                    startIcon="ri-file-close-line"
+                    onClick={()=>  navigate("/settings") }
+                  />
               </div>
+          </div>
+     
+         
             <div className="grid grid-cols-1 gap-3">
               <ErpDevGrid
                 columns={columns}
-                dataUrl={Urls.Users}
+                dataUrl={Urls.counter_settings}
                 gridId="grid_counter_settings"
-                // onRowClick={}
-                heightToAdjustOnWindows = {400}
-                reload={rootState?.PopupData?.user?.reload}    
+                hideGridAddButton={true}
+                hideDefaultExportButton={true}
+                onRowClick={handleRowClick}
+                heightToAdjustOnWindows = {500}
+                reload={reload}    
                 pageSize={40}
               ></ErpDevGrid>
+            </div>
+            <div className="flex justify-center items-center mt-2 space-x-2">
+                <strong className="">This System Code :</strong>
+                <span className="">{defaultSystemCode}</span>
             </div>
           </div>
         </div>

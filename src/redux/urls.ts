@@ -159,8 +159,10 @@ const Urls = {
   deleteInactiveTransactions: "/Core/DeleteInActive/",
 
   //setting/system
+  get_userLedger_by_user_id:"/api/Accounts/AccLedger/GetUserLedgerByUserID/",
   
   counter_settings: "/Core/CounterSettings/",
+  counter_settings_current_data: "/Core/CounterSettings/GetCurrentCounter/",
   Counter: "/Core/Counter/",
   Voucher: "/Core/Vouchers/",
   FinancialYear: "/Core/FinancialYear/",
@@ -208,7 +210,8 @@ const Urls = {
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
   acc_user_config:" ",
-  //Reports
+
+  //Reports Start
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
   acc_reports_cash_book_monthwise: "/Accounts/RptCashBook/CashBookMonthwiseSummary/",
@@ -260,8 +263,16 @@ const Urls = {
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
   acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",
 
-  //Transaction
-  get_last_voucher_no: "",
+//inventory
+inv_reports_price_list:"",
+inv_reports_stock_ledger:"",
+inv_reports_balance_report:"",
+
+//Report End
+
+  // Transaction
+  
+  acc_transaction_base: "/api/Accounts/",
 
   // Accounts End
 
@@ -294,6 +305,13 @@ const Urls = {
   salesRoute: "/Inventory/SalesRoute/",
   section: "/Inventory/Section/",
   group_category: "/Inventory/GroupCategory/",
+
+  //Transaction
+    // common
+    get_last_voucher_no: "/api/Core/Transaction/GetNextVoucherNumber/",
+    get_ledger_balance: "/api/Core/Transaction/GetLedgerBalance/",
+    upsert_bill_modified_history: "/api/Core/Transaction/UpsertBillModifiedHistory/",
+    unlock_acc_transaction_master: "/api/Core/Transaction/UnlockAccTransactionMaster/",
 
 };
 

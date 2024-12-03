@@ -210,7 +210,8 @@ const Urls = {
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
   acc_user_config:" ",
-  //Reports
+
+  //Reports Start
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",
   acc_reports_cash_book_monthwise: "/Accounts/RptCashBook/CashBookMonthwiseSummary/",
@@ -261,6 +262,11 @@ const Urls = {
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
   acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",
+
+//inventory
+inv_reports_price_list:"",
+
+//Report End
 
   // Transaction
   

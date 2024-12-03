@@ -111,6 +111,8 @@ import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/
 import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
 import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
 import DailySummaryGlobal from '../../../pages/accounts/reports/dailySummary/daily-summary-global';
+const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
+
 
 interface ContentProps { }
 const loading = (
@@ -235,7 +237,10 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} />
         <Route path="/inventory/purchase_register_report" element={<PurchaseRegisterReport />} />
         <Route path="/inventory/party_wise_report" element={<PartyWiseReport />} />
-        <Route path="/inventory/gstr_report" element={<GstrReport />} />
+        <Route path="/inventory/price_list_report" element={<PriceList />} />
+
+        {/* Reports - Tax*/}
+        {/* <Route path="/inventory/purchase_summary_report" element={<PurchaseSummaryReport />} /> */}
         {/* Reports */}
         {/* <Route path="/*" element={<NotFound />} /> */}
 

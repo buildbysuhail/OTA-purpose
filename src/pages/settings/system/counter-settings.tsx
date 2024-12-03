@@ -2,14 +2,10 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import Urls from "../../../redux/urls";
 import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
-import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ErpInput from "../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
@@ -33,7 +29,7 @@ const CounterSettings = () => {
  const[counterData,setCounterData]=useState<CounterData>(initData)
  const [defaultSystemCode, setDefaultSystemCode] = useState("");
  const [reload,setReload]=useState(false)
- const [loading, setLoading] = useState(true);
+//  const [loading, setLoading] = useState(true);
  const [isSaving, setIsSaving] = useState(false);
  const userSession = useAppSelector((state: RootState) => state.UserSession);
 const navigate = useNavigate()
@@ -43,7 +39,6 @@ const navigate = useNavigate()
 }, []);
 
  const loadCounterData = async () => {
-  setLoading(true);
   try {
     const response = await api.getAsync(Urls.counter_settings_current_data); 
     setDefaultSystemCode(response.systemCode)
@@ -51,13 +46,12 @@ const navigate = useNavigate()
   } catch (error) {
     console.error("Error loading settings:", error);
   } finally {
-    setLoading(false);
+
   }
 };
 
 const handleRowClick = (e: any) => {
   const rowData = e.data;
-  console.log("Clicked row data:", rowData);
   setCounterData({
     systemName: rowData.pCname,
     systemCode: rowData.systemCode,
@@ -136,14 +130,14 @@ const handleClear = async ()=>{
   ], []);
   return (
     <Fragment>
-      <div className="grid grid-cols-12 gap-x-6 ">
+      <div className="grid grid-cols-12 gap-x-6 bg-[#ffffff]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
           <h1 className='text-2xl font-normal tracking-wide text-#3f3f46 dark:te'>Counter Settings</h1>
           <div className="grid grid-cols-1 space-y-4 md:w-[550px] mb-3">
                 <ErpInput
                 // labelDirection="horizontal"
-                className=""
+                 className="w-full"
                   id="systemName"
                   label="System Name"
                   placeholder="System Name"
@@ -155,10 +149,12 @@ const handleClear = async ()=>{
                       systemName: e.target.value,
                     }));
                   }}
+            
                 />
                 <ErpInput
                   // labelDirection="horizontal"
                   id="systemCode"
+                 className="w-full"
                   label="System Code"
                   placeholder="System Code"
                   data={counterData}
@@ -172,6 +168,7 @@ const handleClear = async ()=>{
                 />
                 <ERPDataCombobox
                 //  labelDirection="horizontal"
+                 className="w-full"
                   id="counterID"
                   data={counterData}
                   label="counterID"
@@ -193,6 +190,8 @@ const handleClear = async ()=>{
                   <ERPButton
                     title="Save"
                     variant="primary"
+                    loading={isSaving}
+                    disabled={isSaving}
                     type="button"
                     onClick={handleSubmit}
                     startIcon="ri-save-line"
@@ -202,12 +201,14 @@ const handleClear = async ()=>{
                     variant="custom"
                     customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
                     type="button"
+                    disabled={isSaving}
                     startIcon="ri-format-clear"
                     onClick={handleClear}
                   />
                   <ERPButton
                     title="Close"
                     variant="custom"
+                    disabled={isSaving}
                     customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
                     type="button"
                     startIcon="ri-file-close-line"

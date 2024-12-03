@@ -19,6 +19,7 @@ import { RootState } from "../../redux/store";
 import { customJsonParse } from "../../utilities/jsonConverter";
 import { syncAppStates } from "./syncSettings";
 import LanguageSwitcher from "../../components/common/header/language-switcher";
+import { UserTypeRights } from "../../redux/slices/user-rights/reducer";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -59,13 +60,16 @@ debugger;
         Cookies.set("token", login.item.token, { expires: 30 });
         Cookies.set("up", login.item.userProfileDetails, { expires: 30 });
         Cookies.set("ut", login.item.userThemes, { expires: 30 });
+        Cookies.set("ur", login.item.userThemes, { expires: 30 });
         debugger;
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
+        const _userRights = atob(login.item.userRights);
+        const userRights: UserTypeRights[] = customJsonParse(_userRights);
         const _userThemes = atob(login.item.userThemes);
         const userThemes: AppState = customJsonParse(_userThemes);
         let locale = (languagesData.find((l) => l.code == userProfileDetails.language)) ?? { code: 'en', name: 'English', flag: usFlag, rtl: false };
-        syncAppStates(dispatch, userThemes, userProfileDetails, locale);
+        syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
       }
       else { setError(login.message) }
     } else {

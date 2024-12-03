@@ -28,12 +28,7 @@ import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
 import { unlockAccTransactionMaster } from "./thunk";
-
-interface FormElementState {
-  visible: boolean;
-  disabled: boolean;
-  label: string;
-}
+import { useUserRights } from "../../../helpers/user-right-helper";
 
 interface BilledItem {
   id?: number;
@@ -54,63 +49,6 @@ interface FormData {
   taxOption: "Without Tax" | "With Tax";
 }
 
-const initialFormElements = {
-  foreignCurrency: {
-    visible: true,
-    disabled: false,
-    label: "Foreign Currency",
-  },
-  voucherPrefix: { visible: true, disabled: false, label: "Prefix" },
-  voucherNumber: { visible: true, disabled: false, label: "Voucher Number" },
-  transactionDate: {
-    visible: true,
-    disabled: false,
-    label: "Transaction Date",
-  },
-  referenceNumber: {
-    visible: true,
-    disabled: false,
-    label: "Reference Number",
-  },
-  referenceDate: { visible: true, disabled: false, label: "Reference Date" },
-  masterAccount: { visible: true, disabled: false, label: "Default Account" },
-  jvDrCr: { visible: false, disabled: false, label: "Dr/Cr" },
-  employee: { visible: true, disabled: false, label: "Employee" },
-  remarks: { visible: true, disabled: false, label: "Remarks" },
-  commonNarration: { visible: true, disabled: false, label: "Notes" },
-  ledgerCode: { visible: true, disabled: false, label: "Ledger Code" },
-  ledgerId: { visible: true, disabled: false, label: "Ledger" },
-  amount: { visible: true, disabled: false, label: "Amount" },
-  drCr: { visible: false, disabled: false, label: "Amount" },
-  narration: { visible: true, disabled: false, label: "Narration" },
-  currencyID: { visible: true, disabled: false, label: "Currency" },
-  exchangeRate: { visible: true, disabled: false, label: "Exchange Rate" },
-  hasDiscount: { visible: true, disabled: false, label: "Has Discount" },
-  discount: { visible: true, disabled: false, label: "Discount" },
-  chequeNumber: { visible: true, disabled: false, label: "Cheque Number" },
-  bankDate: { visible: false, disabled: false, label: "Bank Date" },
-  nameOnCheque: { visible: true, disabled: false, label: "Name on Cheque" },
-  bankName: { visible: true, disabled: false, label: "Bank Name" },
-  projectId: { visible: false, disabled: false, label: "Project" },
-  costCentreId: { visible: false, disabled: false, label: "Cost Centre" },
-  lblGroupName: { visible: true, disabled: false, label: "Group Name" },
-  printOnSave: { visible: true, disabled: false, label: "Print on Save" },
-  printPreview: { visible: true, disabled: false, label: "Print Preview" },
-  printCheque: { visible: true, disabled: false, label: "Print Cheque" },
-  keepNarration: { visible: false, disabled: false, label: "Keep Narration" },
-  btnBillWise: { visible: true, disabled: false, label: "Bill Wise" },
-  btnAdd: { visible: true, disabled: false, label: "Add" },
-  btnEdit: { visible: true, disabled: false, label: "Edit" },
-  btnPrint: { visible: true, disabled: false, label: "Edit" },
-  btnRef: { visible: true, disabled: false, label: "..." },
-  btnSave: { visible: true, disabled: false, label: "Save" },
-  btnPrintCheque: { visible: true, disabled: false, label: "Print Cheque" },
-  btnAttachment: { visible: true, disabled: false, label: "Attachments" },
-};
-
-type FormElementsState = {
-  [key in keyof typeof initialFormElements]: FormElementState;
-};
 const api = new APIClient();
 
 
@@ -133,15 +71,12 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  
-const { getNextVoucherNumber} = useAccTransaction(transactionType??"");
+const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(transactionType??"");
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
   const [gridHeight, setGridHeight] = useState(200);
 
-  const [formElements, setFormElements] =
-    useState<FormElementsState>(initialFormElements);
 
   useEffect(() => {
     let wh = window.innerHeight;

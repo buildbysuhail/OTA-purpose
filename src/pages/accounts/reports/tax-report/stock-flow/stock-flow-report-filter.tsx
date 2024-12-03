@@ -9,7 +9,7 @@ import warehouse from "../../../../inventory/masters/warehouse/warehouse";
 
 
 
-const  StockLedgerFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
+const  StockFlowFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
     return (
         <div className="grid grid-cols-1 space-y-4 my-3">
          <ERPDataCombobox
@@ -94,8 +94,8 @@ const  StockLedgerFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
 
 );
 }
-export default StockLedgerFilter;
-export const StockLedgerFilterInitialState = {
+export default StockFlowFilter;
+export const StockFlowFilterInitialState = {
 isWarehouse:false,
 isBatchWiseBarcode:false,
 showOpeningStock: true,

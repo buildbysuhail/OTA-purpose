@@ -50,6 +50,8 @@ import PDFBarcodeDesigner from "./pages/LabelDesigner/label_designer";
 import ERPAlert from "./components/ERPComponents/erp-sweet-alert";
 import { onCloseWithUnsavedChange } from "./redux/slices/popup-reducer";
 import { appInitialState } from "./redux/slices/app/reducer";
+import { UserRight } from "./pages/settings/userManagement/data";
+import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 
 export const LoadingAnimation = () => {
   return (
@@ -84,6 +86,15 @@ function App() {
 
   let upt = Cookies.get("up");
   let utt = Cookies.get("ut");
+  let urr = Cookies.get("ur");
+debugger;
+  let userRights: UserTypeRights[] = [];
+  try {
+    if (urr != undefined && urr != null && urr != "") {
+      userRights = customJsonParse(atob(urr));
+    }
+  } catch (error) { }
+
 debugger;
   let userProfileDetails: UserModel = initialUserSessionData;
   try {
@@ -103,7 +114,7 @@ debugger;
   let locale = languagesData.find(
     (l) => l.code == userProfileDetails.language
   ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
-  syncAppStates(dispatch, userThemes, userProfileDetails, locale);
+  syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
   const language = userProfileDetails?.language;
 
   useEffect(() => {

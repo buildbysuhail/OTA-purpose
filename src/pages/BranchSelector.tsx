@@ -16,6 +16,7 @@ import { customJsonParse } from "../utilities/jsonConverter";
 import { AppState, languagesData, Theme } from "../redux/slices/app/types";
 import { syncAppStates } from "./auth/syncSettings";
 import { CircularProgress } from "@mui/material";
+import { UserTypeRights } from "../redux/slices/user-rights/reducer";
 
 interface ChildComponentProps {
   onLoadingChange: (isLoading: boolean) => void;
@@ -52,12 +53,15 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       Cookies.set("token", response.item.token, { expires: 30 }); 
       Cookies.set("up", response.item.userProfileDetails, { expires: 30 }); 
       Cookies.set("ut", response.item.userThemes, { expires: 30 }); 
+      Cookies.set("ur", response.item.userThemes, { expires: 30 });
+      const _userRights = atob(response.item.userRights);
+      const userRights: UserTypeRights[] = customJsonParse(_userRights);
       const _userProfileDetails = atob(response.item.userProfileDetails);
       const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
       const _userThemes = atob(response.item.userThemes);
       const userThemes: AppState = customJsonParse(_userThemes);
       let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
-      syncAppStates(dispatch,userThemes, userProfileDetails, locale);          
+      syncAppStates(dispatch,userThemes, userProfileDetails,userRights, locale);          
     }
     handleResponse(response, () => {
       // navigate("/")

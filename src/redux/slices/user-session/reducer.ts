@@ -17,21 +17,21 @@ export enum Countries {
 }
 export const initialUserSessionData: UserModel = {
   userId: 0,
-  displayName: '',
-  userimage: '',
+  displayName: "",
+  userimage: "",
   userTypeCode: "",
-  userTypeName: '',
-  email: '',
+  userTypeName: "",
+  email: "",
   currentClientId: 0,
-  currentClientName: '',
+  currentClientName: "",
   currentBranchAddress: [],
   currentBranchId: 0,
-  currentBranchName: '',
+  currentBranchName: "",
   currency: null,
   currencySymbol: null,
   taxDecimalPoint: 0,
   unitPriceDecimalPoint: 0,
-  language: 'en',
+  language: "en",
   companies: [],
   branches: [],
   presetCostCenterId: 0,
@@ -41,7 +41,7 @@ export const initialUserSessionData: UserModel = {
   counterAssignedCashLedgerId: 0,
   employeeId: 0,
   systemCode: "",
-  systemName: ""
+  systemName: "",
 };
 export interface UserModel {
   userId: number;
@@ -71,34 +71,31 @@ export interface UserModel {
   dbIdValue: string | "";
   counterwiseCashLedgerId: number | 0; // Adjust the type as per your requirements (e.g., string, number, etc.)
   counterAssignedCashLedgerId: number | 0;
-  systemCode: string |"";
+  systemCode: string | "";
   systemName: string | "";
-
 }
 // export const initialState : login  =  {loading: false, token: ""};
 export const initialState: UserModel = {
   userId: 0,
-  displayName: '',
-  userTypeCode: '',
-  userTypeName: '',
-  userimage: '',
-  email: '',
+  displayName: "",
+  userTypeCode: "",
+  userTypeName: "",
+  userimage: "",
+  email: "",
   currentClientId: 0,
-  currentClientName: '',
+  currentClientName: "",
   currentBranchId: 0,
   currentBranchAddress: [],
-  currentBranchName: '',
+  currentBranchName: "",
   currency: null,
   currencySymbol: null,
   taxDecimalPoint: 0,
   unitPriceDecimalPoint: 0,
-  language: '',
-  finFrom: null, finTo: null,
+  language: "",
+  finFrom: null,
+  finTo: null,
   companies: [], // Initializing as an empty array
-  branches: [] // Initializing as an empty array
-  ,
-
-
+  branches: [], // Initializing as an empty array
   presetCostCenterId: 0,
   productVersion: "",
   dbIdValue: "",
@@ -106,16 +103,15 @@ export const initialState: UserModel = {
   counterwiseCashLedgerId: 0,
   counterAssignedCashLedgerId: 0,
   systemCode: "",
-  systemName: ""
+  systemName: "",
 };
 const userSessionSlice = createSlice({
   name: "userSession",
   initialState,
   reducers: {
     setUserSession: (state, action: PayloadAction<UserModel>) => {
-
       return action.payload;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(userSession?.fulfilled, (state, action) => {
@@ -127,16 +123,13 @@ const userSessionSlice = createSlice({
     });
     builder.addCase(setBranch.fulfilled, (state, action) => {
       if (action.payload.isOk) {
-        // Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 }); 
-        // return  action.payload.item;        
+        // Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 });
+        // return  action.payload.item;
       }
     });
   },
 });
 
-export const {
-  setUserSession,
-
-} = userSessionSlice.actions
+export const { setUserSession } = userSessionSlice.actions;
 
 export default userSessionSlice.reducer;

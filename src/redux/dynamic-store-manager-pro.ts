@@ -13,7 +13,7 @@ import {
 import LoginReducer from "../redux/slices/auth/login/reducer";
 import AccountReducer from "../redux/slices/auth/register/reducer";
 import ForgetPasswordReducer from "../redux/slices/auth/forgetpwd/reducer";
-import UserRightsReducer from "../redux/slices/auth/UserRights/reducer";
+import UserRightsReducer from "../redux/slices/user-rights/reducer";
 import AppStateReducer from "../redux/slices/app/reducer";
 import UserSessionReducer from "../redux/slices/user-session/reducer";
 import PopupDataReducer from "../redux/slices/popup-reducer";

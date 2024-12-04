@@ -146,7 +146,11 @@ export default function SettingsPage() {
   };
 
   const handleUpdateGridClass = () => {
-    if (inputValue.startsWith("grid-cols-")) {
+    if (inputValue.includes('xl:grid-cols-') &&
+      inputValue.includes('lg:grid-cols-') &&
+      inputValue.includes('md:grid-cols-') &&
+      inputValue.includes('sm:grid-cols-') &&
+      inputValue.includes('gap-')) {
       setGridClass(inputValue);
     }
   };
@@ -233,7 +237,7 @@ export default function SettingsPage() {
             <i className="ri-close-circle-line"></i>
           </button>
         </div>
-        <h1 className="font-medium text-xl p-5 mb-5 sm:hidden lg:block">Settings</h1>
+        <h1 className="font-medium text-xl p-5 mb-5 sm:hidden lg:block">{t("settings")}</h1>
         <div className="flex flex-col overflow-y-auto pb-24 h-full mt-4">
           {settingGroups.map((item) => (
             <div key={item.id}>
@@ -323,22 +327,22 @@ export default function SettingsPage() {
                     type="text"
                     value={inputValue}
                     onChange={handleInputChange}
-                    placeholder="Enter grid class (e.g., grid-cols-4)"
-                    className="border px-2 py-1 mr-2"
+                    placeholder="Enter grid classes (e.g., xl:grid-cols-4 lg:grid-cols-2)"
+                    className="border px-2 py-1 mr-2 w-1/3"
                   />
                   <button
                     onClick={handleUpdateGridClass}
                     className="bg-blue text-white px-4 py-1 rounded"
                   >
-                    Apply
+                    {t("apply")}
                   </button>
-                  <p className='text-danger mt-2'>For Example : grid-cols-4 gap-4</p>
+                  <p className='text-danger mt-2'>For Example : xl:grid-cols- lg:grid-cols- md:grid-cols- sm:grid-cols- gap-</p>
                 </div>
               )}
               <div>
                 <div key="mainGeneral" ref={el => subItemsRef.current["mainGeneral"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2 ${blinkSection === 'mainGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`} onClick={handleGeneralHeaderClick}  >
-                    General
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === 'mainGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`} onClick={handleGeneralHeaderClick}  >
+                    {t("general")}
                   </h1>
                   <div key="mainGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
@@ -684,7 +688,7 @@ export default function SettingsPage() {
                                 disabled={!settings?.mainSettings?.allowPostdatedTrans}
                                 onChangeData={(data) => handleFieldChange("mainSettings", "postDatedTransInNumbers", data.postDatedTransInNumbers)}
                               />
-                              <label className=" ml-2 mr-2 block form-check-label text-gray-700">Days</label>
+                              <label className=" ml-2 mr-2 block form-check-label text-gray-700">{t("days")}</label>
                             </>
                           )}
                         </div>
@@ -779,8 +783,8 @@ export default function SettingsPage() {
               {/* backup */}
               <div>
                 <div key="mainBackup" ref={el => subItemsRef.current["mainBackup"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}> Backup</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}> {t("backup")}</h1>
                   <div key="mainBackup" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -843,8 +847,8 @@ export default function SettingsPage() {
               {/* printing */}
               <div>
                 <div key="mainPrinting" ref={el => subItemsRef.current["mainPrinting"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                  ${blinkSection === 'mainPrinting' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Printing</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                  ${blinkSection === 'mainPrinting' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("printing")}</h1>
                   <div key="mainPrinting" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -934,8 +938,8 @@ export default function SettingsPage() {
               {/* multi branch */}
               <div>
                 <div key="mainMultiBranch" ref={el => subItemsRef.current["mainMultiBranch"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'mainMultiBranch' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Multi Branch</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'mainMultiBranch' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("multi_branch")}</h1>
                   <div key="mainMultiBranch" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -1275,8 +1279,8 @@ export default function SettingsPage() {
               {/* CRM */}
               <div>
                 <div key="mainCRM" ref={el => subItemsRef.current["mainCRM"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'mainCRM' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>CRM</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'mainCRM' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("crm")}</h1>
                   <div key="mainCRM" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -1385,8 +1389,8 @@ export default function SettingsPage() {
             <div className="space-y-6">
               <div>
                 <div key="accountsGeneral" ref={el => subItemsRef.current["accountsGeneral"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'accountsGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>General</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'accountsGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("general")}</h1>
                   <div key="accountsGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -1612,8 +1616,8 @@ export default function SettingsPage() {
               {/* HR */}
               <div>
                 <div key="accountsHR" ref={el => subItemsRef.current["accountsHR"] = el} >
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'accountsHR' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>HR</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'accountsHR' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("hr")}</h1>
                   <div key="accountsHR" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                       <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -1708,8 +1712,8 @@ export default function SettingsPage() {
               {settings?.branchSettings?.countryName == Countries.Saudi &&
                 <div>
                   <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
-                    <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'accountsEInvoiceGCC' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>KSA E-Invoice</h1>
+                    <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'accountsEInvoiceGCC' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("ksa_e-invoice")}</h1>
                     <div key="accountsEInvoiceGCC" className="space-y-4">
                       <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                         <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -1836,8 +1840,8 @@ export default function SettingsPage() {
             {/* General */}
             <div>
               <div key="inventoryGeneral" ref={el => subItemsRef.current["inventoryGeneral"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventoryGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>General</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventoryGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("general")}</h1>
                 <div key="inventoryGeneral" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -2120,8 +2124,8 @@ export default function SettingsPage() {
             {/* products */}
             <div>
               <div key="inventoryProducts" ref={el => subItemsRef.current["inventoryProducts"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventoryProducts' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Products</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventoryProducts' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("products")}</h1>
                 <div key="inventoryProducts" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -2461,8 +2465,8 @@ export default function SettingsPage() {
             {userSession.countryId !== Countries.India && (
               <div>
                 <div key="inventoryGSTSettings" ref={el => subItemsRef.current["inventoryGSTSettings"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventoryGSTSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>GST Settings</h1>
+                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventoryGSTSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("gst_settings")}</h1>
                   <div key="inventoryGSTSettings" className="space-y-4">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
                       {filterComponent([t("default_purchase")], filterText) && (
@@ -2898,8 +2902,8 @@ export default function SettingsPage() {
             )}
             {userSession.countryId === Countries.Saudi && (
               <div key="inventoryTaxSettings" ref={el => subItemsRef.current["inventoryTaxSettings"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventoryTaxSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Tax Settings</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventoryTaxSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("tax_settings")}</h1>
                 <div className='border border-solid border-[#e3e3e3] p-4 rounded-lg'>
                   <div key="inventoryTaxSettings" className="space-y-4">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2`}`}>
@@ -2937,8 +2941,8 @@ export default function SettingsPage() {
 
             <div>
               <div key="inventoryPurchase" ref={el => subItemsRef.current["inventoryPurchase"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventoryPurchase' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Purchase</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventoryPurchase' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("purchase")}</h1>
                 <div key="inventoryPurchase" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -3230,8 +3234,8 @@ export default function SettingsPage() {
             {/* sales */}
             <div>
               <div key="inventorySales" ref={el => subItemsRef.current["inventorySales"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventorySales' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Sales</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventorySales' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("sales")}</h1>
                 <div key="inventorySales" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -3943,8 +3947,8 @@ export default function SettingsPage() {
             {/* POS */}
             <div>
               <div key="inventorySalesPOS" ref={el => subItemsCatRef.current["inventorySalesPOS"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventorySalesPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>POS</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventorySalesPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("pos")}</h1>
                 <div key="inventorySalesPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -4066,8 +4070,8 @@ export default function SettingsPage() {
             {/* counter */}
             <div>
               <div key="inventorySalesCounter" ref={el => subItemsCatRef.current["inventorySalesCounter"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventorySalesCounter' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Counter</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventorySalesCounter' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("Counter")}</h1>
                 <div key="inventorySalesCounter" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -4147,8 +4151,8 @@ export default function SettingsPage() {
             {/* PPOS */}
             <div>
               <div key="inventoryPPOS" ref={el => subItemsRef.current["inventoryPPOS"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventoryPPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>PPOS</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventoryPPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("ppos")}</h1>
                 <div key="inventoryPPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -4225,8 +4229,8 @@ export default function SettingsPage() {
             {/*Schemes & Promotions*/}
             <div>
               <div key="inventorySchemesPromotions" ref={el => subItemsRef.current["inventorySchemesPromotions"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'inventorySchemesPromotions' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Schemes & Promotions</h1>
+                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'inventorySchemesPromotions' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("schemes_&_promotions")}</h1>
                 <div key="inventorySchemesPromotions" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
@@ -4340,8 +4344,8 @@ export default function SettingsPage() {
               key="miscellaneous"
               ref={el => sectionsRef.current['miscellaneous'] = el}
               className="mb-8 last:mb-0 h-screen">
-              <h1 className={`h-[50px] text-[20px] font-normal flex items-center mt-2 rounded-tl-[10px] rounded-tr-[10px] px-2
-                       ${blinkSection === 'miscellaneous' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>Miscellaneous</h1>
+              <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${blinkSection === 'miscellaneous' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("miscellaneous")}</h1>
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                 <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-2 items-center justify-center`}`}>
                   <div>

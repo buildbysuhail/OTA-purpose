@@ -13,7 +13,7 @@ const FinancialYear = () => {
 
   const MemoizedFinancialYearManage = useMemo(() => React.memo(FinancialYearManage), []);
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const rootState = useRootState();
 
   const columns: DevGridColumn[] = useMemo(() => [

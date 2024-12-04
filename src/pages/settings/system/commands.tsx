@@ -45,7 +45,7 @@ const api = new APIClient();
 const CommandsManage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   const onClose = useCallback(async () => {
     dispatch(toggleCommandsPopup({ isOpen: false }));

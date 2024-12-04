@@ -156,5 +156,14 @@
    "card_name": "اسم البطاقة",
 
    "upi": "UPI (واجهة المدفوعات الموحدة)",
-   "upi_name": "اسم UPI"
+   "upi_name": "اسم UPI",
+   "qr_pay": "الدفع باستخدام QR",
+   "qr_pay_name": "اسم الدفع باستخدام QR",
+
+   "user_type_code": "رمز نوع المستخدم",
+   "account_group": "مجموعة الحسابات",
+   "hideLedgerID": "إخفاء معرف السجل",
+   "particulars": "تفاصيل",
+   "is_group": "هل هو مجموعة",
+   "add": "إضافة"
 }

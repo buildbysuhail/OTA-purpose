@@ -13,10 +13,10 @@ import { useTranslation } from "react-i18next";
 
 const Remainders = () => {
   const MemoizedRemainderManage = useMemo(() => React.memo(RemainderManage), []);
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] =useMemo( () => [
+  const { t } = useTranslation("system");
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "remaindersID",
       caption: t("remainder_id"),
@@ -24,7 +24,7 @@ const Remainders = () => {
       allowSorting: true,
       allowFiltering: true,
       width: 150,
-      visible:false,
+      visible: false,
     },
     {
       dataField: "remainderName",
@@ -62,7 +62,6 @@ const Remainders = () => {
       allowFiltering: true,
       width: 150,
     },
-
     {
       dataField: "actions",
       caption: t("actions"),
@@ -74,18 +73,18 @@ const Remainders = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID }) }}
-            edit={{ type:"popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID }) }}
+            view={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID }) }}
+            edit={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
-              url:Urls?.Remainder,key:cellElement?.data?.remaindersID 
+              url: Urls?.Remainder, key: cellElement?.data?.remaindersID
             }}
           />
         )
       },
     },
-  ],[]);
+  ], []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -113,13 +112,10 @@ const Remainders = () => {
         title={t("remainders")}
         width="w-full max-w-[600px]"
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleRemainderPopup({ isOpen: false }));
-        }}
-        content={<MemoizedRemainderManage/>}
+        closeModal={() => { dispatch(toggleRemainderPopup({ isOpen: false })); }}
+        content={<MemoizedRemainderManage />}
       />
     </Fragment>
   );
 };
-
 export default React.memo(Remainders);

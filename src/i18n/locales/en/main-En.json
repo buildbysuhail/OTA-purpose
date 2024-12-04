@@ -63,5 +63,10 @@
     "test popup":"Test Popup",
 
     "reset_dataBase": "Reset DataBase",
-    "post_dated_cheques" :"Post Dated Cheques"
+    "post_dated_cheques" :"Post Dated Cheques",
+    "sql_commands": "Sql Commands",
+    "headers_footers": "Headers and Footers",
+    "qr_pay": "QR Pay",
+    "hide_account_ledger": "Hide Account Ledger",
+    "company_profile_others": "Company Profile"
 }

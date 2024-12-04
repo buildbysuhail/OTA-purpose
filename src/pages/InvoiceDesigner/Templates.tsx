@@ -3,7 +3,6 @@ import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
-
 import stdTempImage from "../../assets/images/templates/Invoice_std.png";
 import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
 import { TemplateState } from "./Designer/interfaces";
@@ -23,7 +22,6 @@ import { setTemplate } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import { t } from "i18next";
 import { Url } from "devextreme-react/cjs/chart";
-import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 
 interface previewState {
   show: boolean;
@@ -34,14 +32,11 @@ const api = new APIClient();
 const Templates = ({ }) => {
   const navigate = useNavigate();
   const appDispatch = useAppDispatch();
-
   const [searchParams, setSearchParams] = useSearchParams();
   const currencySymbol = getCurrentCurrencySymbol();
-
   const [loading, setLoading] = useState(false);
   const [tempData, setTempData] = useState([]);
   const [tempCrmData, setTempCRMData] = useState([]);
-
   const [showPreview, setShowPreview] = useState<previewState>({ show: false });
   const [showTemplateListing, setShowTemplateListing] = useState<boolean>(true);
   const [templateGroup, setTemplateGroup] = useState<TemplateGroupTypes>(
@@ -127,7 +122,7 @@ const Templates = ({ }) => {
   // console.log("Template_data", tempData, templateGroup);
 
   /* ########################################################################################### */
-
+  const { t } = useTranslation("system");
   return (
     <>
       {showTemplateListing ? (

@@ -58,7 +58,7 @@ export const initialFinancialYearData = {
 export const FinancialYearManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   const {
     isEdit,

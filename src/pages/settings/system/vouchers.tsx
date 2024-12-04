@@ -13,13 +13,13 @@ import { VoucherManage } from "./voucher-manage";
 
 const SystemVoucher = () => {
   const MemoizedVoucherManage = useMemo(() => React.memo(VoucherManage), []);
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
-  const columns: DevGridColumn[] = useMemo( () => [
+  const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
-      caption:  t("si_no"),
+      caption: t("si_no"),
       dataType: "number",
       allowSorting: true,
       allowSearch: true,
@@ -78,14 +78,14 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      visible:false,
+      visible: false,
       minWidth: 100,
     },
     {
       dataField: "printDesignFileName",
       caption: t("printDesign_fileName"),
       dataType: "string",
-      visible:false,
+      visible: false,
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -99,7 +99,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "createdDate",
@@ -109,7 +109,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      visible:false
+      visible: false
     },
     {
       dataField: "modifiedUser",
@@ -119,7 +119,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      visible:false
+      visible: false
     },
     {
       dataField: "modifiedDate",
@@ -129,7 +129,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
-      visible:false
+      visible: false
     },
 
     {
@@ -154,16 +154,16 @@ const SystemVoucher = () => {
           <ERPGridActions
             view={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id }) }}
             edit={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            // delete={{
-            //   confirmationRequired: true,
-            //   confirmationMessage: "Are you sure you want to delete this item?",
-            //   // url:Urls?.UserTypes,key:cellElement?.data?.id   (voucher have no delete)
-            // }}
+          // delete={{
+          //   confirmationRequired: true,
+          //   confirmationMessage: "Are you sure you want to delete this item?",
+          //   // url:Urls?.UserTypes,key:cellElement?.data?.id   (voucher have no delete)
+          // }}
           />
         )
       },
     },
-  ],[]);
+  ], []);
 
   return (
     <Fragment>
@@ -192,14 +192,10 @@ const SystemVoucher = () => {
         title={t("voucher")}
         isForm={true}
         width="w-full max-w-[600px]"
-        closeModal={() => {
-          dispatch(toggleVoucherPopup({ isOpen: false, key: null }));
-        }}
-        content={<MemoizedVoucherManage/>}
+        closeModal={() => { dispatch(toggleVoucherPopup({ isOpen: false, key: null })); }}
+        content={<MemoizedVoucherManage />}
       />
     </Fragment>
   );
 };
-
 export default React.memo(SystemVoucher);
-

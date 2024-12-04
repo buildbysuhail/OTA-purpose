@@ -20,7 +20,7 @@ interface information {
 const EmailIntegration = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("integration");
 
   const EmailTwilioConnectPopup: React.FC = () => {
     const initialState: information = {

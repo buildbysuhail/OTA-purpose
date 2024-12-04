@@ -444,7 +444,7 @@ const ApplicationSettingsAccounts = () => {
                   disabled={!formState?.allowMinimumShiftDuration}
                   onChangeData={(data) => handleFieldChange('minimumShiftDuration', data.minimumShiftDuration)}
                 />
-                &nbsp;Hours
+                &nbsp;{t("hours")}
               </div>
             </div>
           </div>

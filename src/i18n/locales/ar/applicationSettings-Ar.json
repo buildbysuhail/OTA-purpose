@@ -256,5 +256,32 @@
     "cost_center": "مركز التكلفة",
     "set_system_code": "تعيين رمز النظام",
     "shared_folder": "المجلد المشترك",
-    "enable_supplier_wise_item_code": "تمكين رمز الصنف حسب المورد"
+    "show_cash_sales_separate_menu": "عرض قائمة منفصلة لمبيعات النقد",
+    "product_image_path": "مسار صورة المنتج",
+
+    "hours": "ساعات",
+    "sales_form_type": "نوع نموذج المبيعات الافتراضي",
+    "purchase_tax_ledger": "دفتر ضرائب الشراء",
+    "sales_tax_ledger": "دفتر ضرائب المبيعات",
+    "days":"أيام",
+    "settings": "الإعدادات",
+    "apply": "تطبيق",
+
+    "general": "عام",
+    "backup": "نسخ احتياطي",
+    "printing": "طباعة",
+    "multi_branch": "فروع متعددة",
+    "crm": "إدارة علاقات العملاء",
+    "hr": "الموارد البشرية",
+    "ksa_e-invoice": "فاتورة إلكترونية السعودية",
+    "products": "المنتجات",
+    "gst_settings": "إعدادات ضريبة السلع والخدمات",
+    "tax_settings": "إعدادات الضرائب",
+    "purchase": "المشتريات",
+    "sales": "المبيعات",
+    "pos": "نقطة البيع",
+    "counter": "العداد",
+    "ppos": "نقطة بيع متنقلة",
+    "schemes_&_promotions": "الخطط والعروض الترويجية",
+    "miscellaneous": "متنوع"
 }

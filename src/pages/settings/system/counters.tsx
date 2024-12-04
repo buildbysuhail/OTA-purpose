@@ -15,7 +15,7 @@ import { CounterManage } from "./counters-manage";
 const Counters = () => {
   
 const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo( () => [
@@ -96,7 +96,7 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
       },
       {
         dataField: "cashLedgerID",
-        caption: "Cash Ledger ID",
+        caption: t("cash_ledger_id"),
         dataType: "number",
         allowSorting: true,
         allowSearch: true,

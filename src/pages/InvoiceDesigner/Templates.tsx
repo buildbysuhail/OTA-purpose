@@ -22,6 +22,8 @@ import { setTemplate } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import { t } from "i18next";
 import { Url } from "devextreme-react/cjs/chart";
+import { useTranslation } from "react-i18next";
+import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 
 interface previewState {
   show: boolean;

@@ -1,9 +1,9 @@
 import { StyleSheet } from "@react-pdf/renderer";
-import { StandardPreviewProps } from ".";
 import { dateTrimmer } from "../../../../utilities/Utils";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
+import { AccountPreviewProps } from "./index";
 
-const ItemTable = ({ template, data, templateGroupId, currency }: StandardPreviewProps) => {
+const ItemTable = ({ template, data, templateGroupId, currency }: AccountPreviewProps) => {
   
   //   /// Font
   //   const fontSize = template?.itemTableState?.headerFontSize || 12;
@@ -222,7 +222,7 @@ const ItemTable = ({ template, data, templateGroupId, currency }: StandardPrevie
 
 export default ItemTable;
 
-const StatementTableView = ({ template, data, templateGroupId, currency }: StandardPreviewProps) => {
+const StatementTableView = ({ template, data, templateGroupId, currency }: AccountPreviewProps) => {
   const itemTableState = template?.itemTableState;
 
   const headerFontSize = itemTableState?.headerFontSize || "#fff";

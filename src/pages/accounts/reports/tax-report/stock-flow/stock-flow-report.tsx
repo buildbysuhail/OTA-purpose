@@ -254,7 +254,7 @@ const StockFlow = () => {
   ];
   return (
     <Fragment>
-     <div className="grid grid-cols-12 gap-x-6">
+     <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">

@@ -62,6 +62,8 @@ export enum DesignerElementType {
   text = 1,
   barcode = 2,
   field = 3,
+  table= 4,
+  line = 5
 }
 
 export interface PlacedComponent {
@@ -89,6 +91,15 @@ export interface PlacedComponent {
     font: string;
     fontSize: number;
     textMargin: number;
+    fontStyle: "normal" | "bold" | "italic";
+  };
+ tableProps?: {
+    caption: string;
+    field: number;
+    columnWidth: number;
+    textAlign: "left" | "center" | "right";
+    font: string;
+    fontSize: number;
     fontStyle: "normal" | "bold" | "italic";
   };
 }

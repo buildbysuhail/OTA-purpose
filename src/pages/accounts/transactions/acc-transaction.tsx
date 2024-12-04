@@ -33,6 +33,7 @@ import { useAccTransaction } from "./use-acc-transaction";
 import { unlockAccTransactionMaster } from "./thunk";
 import { useUserRights } from "../../../helpers/user-right-helper";
 import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
+import { AccTransactionUserConfig } from "./acc-transaction-user-config";
 
 interface BilledItem {
   id?: number;
@@ -596,6 +597,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         <div className="space-y-6 p-4">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
+            <AccTransactionUserConfig/>
               {formElements.foreignCurrency.visible && (
                 <ERPCheckbox
                   id="foreignCurrency"

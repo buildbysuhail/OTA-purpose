@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { StandardPreviewProps } from ".";
+import { AccountPreviewProps } from "./index";
 
-const Footer = ({ template, data, templateGroupId }: StandardPreviewProps) => {
+const Footer = ({ template, data, templateGroupId }: AccountPreviewProps) => {
   /// font size and color
   const fontSize = template?.propertiesState?.font_size || 12;
   const color = template?.propertiesState?.font_color || "#000";

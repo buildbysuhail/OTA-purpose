@@ -4,12 +4,10 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { PlusIcon, TrashIcon, PencilIcon, SparklesIcon } from "@heroicons/react/24/outline";
 
-
 import stdTempImage from "../../assets/images/templates/Invoice_std.png";
 import retailStdTempImage from "../../assets/images/templates/Retail_stadard.png";
-
 import { TemplateState } from "./Designer/interfaces";
-import { DummyInvoiceData } from "./constants/DummyData";
+import { DummyInvoiceData, DummyVoucherData } from "./constants/DummyData";
 import StandardPreviewWrapper from "./DesignPreview/StandardPreview";
 import RetailPreviewWrapper from "./DesignPreview/RetailPreview/PreviewWrapper";
 import { TemplateGroupTypes, TemplateTypes } from "./constants/TemplateCategories";
@@ -25,6 +23,7 @@ import { setTemplate } from "../../redux/slices/templates/reducer";
 import { APIClient } from "../../helpers/api-client";
 import { t } from "i18next";
 import { Url } from "devextreme-react/cjs/chart";
+import AccountPreviewWrapper from "./DesignPreview/AccountPreview";
 
 interface previewState {
   show: boolean;
@@ -48,7 +47,7 @@ const Templates = ({ }) => {
   const [templateGroup, setTemplateGroup] = useState<TemplateGroupTypes>(
     (searchParams?.get("template_group")! as TemplateGroupTypes) ?? "sales_invoice"
   );
-
+  const [accountVoucher,setAccountVoucher]=useState(DummyVoucherData)
   /* ########################################################################################### */
 
   let paperWidth;
@@ -204,6 +203,7 @@ const Templates = ({ }) => {
                       <div className="px-2 py-3">
                         <h1 className="font-medium text-xs capitalize break-words truncate" title={temp?.templateName}>
                           {temp?.templateName}
+                          
                         </h1>
                         <div className="flex text-xs justify-between mt-1">
                           {temp?.isCurrent ? (
@@ -263,21 +263,36 @@ const Templates = ({ }) => {
                         }}
                         className={`flex  flex-col gap-4 relative  ${paperWidth} shadow-md print:m-0 print:w-full print:shadow-none`}
                       >
-                        {paperSize === "3Inch" || paperSize === "4Inch" ? (
-                          <RetailPreviewWrapper
-                            data={DummyInvoiceData}
-                            template={showPreview.template}
-                            currency={currencySymbol || undefined}
-                            templateGroupId={templateGroup}
-                          />
-                        ) : (
-                          <StandardPreviewWrapper
-                            data={DummyInvoiceData}
-                            template={showPreview.template}
-                            currency={currencySymbol || undefined}
-                            templateGroupId={templateGroup}
-                          />
+                        
+                        {TemplateTypes.map((type) =>
+                          type.id >= 4 ? (
+                            <AccountPreviewWrapper
+                              key={type.id}
+                              data={accountVoucher}
+                              template={showPreview.template}
+                              currency={currencySymbol || undefined}
+                              templateGroupId={templateGroup}
+                              docTitle={type.name}
+                            />
+                          ) : paperSize === "3Inch" || paperSize === "4Inch" ? (
+                            <RetailPreviewWrapper
+                              key={type.id}
+                              data={DummyInvoiceData}
+                              template={showPreview.template}
+                              currency={currencySymbol || undefined}
+                              templateGroupId={templateGroup}
+                            />
+                          ) : (
+                            <StandardPreviewWrapper
+                              key={type.id}
+                              data={DummyInvoiceData}
+                              template={showPreview.template}
+                              currency={currencySymbol || undefined}
+                              templateGroupId={templateGroup}
+                            />
+                          )
                         )}
+
                       </div>
                     </div>
                   </div>
@@ -331,7 +346,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
       ));
-    templateGroup == "barcode" ? navigate(`/label-designer/new`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
   };
 
   return (
@@ -381,7 +396,6 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
               );
             })}
         </div>
-        <div></div>
       </div>
     </div>
   );

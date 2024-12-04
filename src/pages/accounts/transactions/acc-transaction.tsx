@@ -33,6 +33,7 @@ import { useAccTransaction } from "./use-acc-transaction";
 import { unlockAccTransactionMaster } from "./thunk";
 import { useUserRights } from "../../../helpers/user-right-helper";
 import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
 
 interface BilledItem {
   id?: number;
@@ -363,7 +364,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     );
   }, [formType, voucherType, voucherPrefix]);
 
-  const columns = [
+  const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
       caption: "SI No",
@@ -386,6 +387,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     },
     {
       dataField: "amount",
+      dataType: "number",
       caption: "Amount",
       customizeText: (cellInfo: any) =>
         `${parseFloat(cellInfo.value).toFixed(2)}`,
@@ -1253,10 +1255,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             data={formState.transaction.details}
             gridId={gridCode}
             
-            summary={[
-              { column: "amount", summaryType: "sum" }, // Count the total number of rows
-              // { column: "party", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
-            ]}
+            // summary={[
+            //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
+            //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
+            // ]}
           />
           {formState.showSaveDialog && (
             <ERPAlert

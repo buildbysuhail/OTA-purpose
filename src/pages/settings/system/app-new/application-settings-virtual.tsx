@@ -332,7 +332,7 @@ export default function SettingsPage() {
                   >
                     Apply
                   </button>
-                  <p className='text-danger mt-2'>For Example : grid-cols-4 gap-4</p>
+                  <p className='text-danger mt-2'>For Example : xl:grid-cols-4 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-2</p>
                 </div>
               )}
               <div>

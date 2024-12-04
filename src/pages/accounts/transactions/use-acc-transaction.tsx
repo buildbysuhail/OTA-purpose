@@ -278,87 +278,87 @@ export const useAccTransaction = (transactionType: string) => {
     }
 
     // Handle "MJV" voucher type logic
-    if (formState.transaction.master.voucherType === "MJV") {
-        dgvAccounts.calculateAutoSummary();
+    // if (formState.transaction.master.voucherType === "MJV") {
+    //     dgvAccounts.calculateAutoSummary();
 
-        for (let i = 0; i < dgvAccounts.firstFreeRow; i++) {
-            const debitValue = PolosysFrameWork.General.Val(dgvAccounts.rows[i]?.cells["Debit"].formattedValue);
-            const ledgerID = parseInt(dgvAccounts.rows[i]?.cells["LedgerIDCol"].formattedValue || "0");
+    //     for (let i = 0; i < dgvAccounts.firstFreeRow; i++) {
+    //         const debitValue = PolosysFrameWork.General.Val(dgvAccounts.rows[i]?.cells["Debit"].formattedValue);
+    //         const ledgerID = parseInt(dgvAccounts.rows[i]?.cells["LedgerIDCol"].formattedValue || "0");
 
-            if (debitValue > 0 && !FirstDebitLedgerID) {
-                FirstDebitLedgerID = ledgerID;
-            } else if (debitValue <= 0 && !FirstCreditLedgerid) {
-                FirstCreditLedgerid = ledgerID;
-            }
+    //         if (debitValue > 0 && !FirstDebitLedgerID) {
+    //             FirstDebitLedgerID = ledgerID;
+    //         } else if (debitValue <= 0 && !FirstCreditLedgerid) {
+    //             FirstCreditLedgerid = ledgerID;
+    //         }
 
-            if (FirstDebitLedgerID > 0 && FirstCreditLedgerid > 0) break;
-        }
-    }
+    //         if (FirstDebitLedgerID > 0 && FirstCreditLedgerid > 0) break;
+    //     }
+    // }
 
-    // Confirmation for editing
-    if (isEdit && mnuShowConfirmationForEdit.checked) {
-        const confirmation = PolosysFrameWork.General.ShowMessageBox("Are you sure to modify this transaction?", "Edit", "YesNo");
-        if (confirmation === "No") {
-            return false;
-        }
-    }
+    // // Confirmation for editing
+    // if (isEdit && mnuShowConfirmationForEdit.checked) {
+    //     const confirmation = PolosysFrameWork.General.ShowMessageBox("Are you sure to modify this transaction?", "Edit", "YesNo");
+    //     if (confirmation === "No") {
+    //         return false;
+    //     }
+    // }
 
-    // Validate transaction date
-    const transactionValidation = PolosysFrameWork.General.ValiddateTransactionDate(dtpTransDate);
-    if (transactionValidation === 0) {
-        PolosysFrameWork.General.ShowMessageBox("Transaction Date validation failed (Check Financial Year period)", "Invalid Transaction Date");
-        return false;
-    } else if (transactionValidation === 2) {
-        return false;
-    }
+    // // Validate transaction date
+    // const transactionValidation = PolosysFrameWork.General.ValiddateTransactionDate(dtpTransDate);
+    // if (transactionValidation === 0) {
+    //     PolosysFrameWork.General.ShowMessageBox("Transaction Date validation failed (Check Financial Year period)", "Invalid Transaction Date");
+    //     return false;
+    // } else if (transactionValidation === 2) {
+    //     return false;
+    // }
 
-    // Check if day is closed
-    const closedDate = new PolosysERPInventoryClass.Transaction.InvAccTransactions().GetClosedDate("Accounts");
-    if (new Date(closedDate) >= new Date(dtpTransDate)) {
-        PolosysFrameWork.General.ShowMessageBox("Day Closed", "Invalid Transaction Date");
-        return false;
-    }
+    // // Check if day is closed
+    // const closedDate = new PolosysERPInventoryClass.Transaction.InvAccTransactions().GetClosedDate("Accounts");
+    // if (new Date(closedDate) >= new Date(dtpTransDate)) {
+    //     PolosysFrameWork.General.ShowMessageBox("Day Closed", "Invalid Transaction Date");
+    //     return false;
+    // }
 
-    // Check for editing restriction
-    if (isEdit && new Date(closedDate) >= new Date(PrevTransDate)) {
-        PolosysFrameWork.General.ShowMessageBox("Cannot be edited. Day is Closed", "Invalid Transaction Date");
-        return false;
-    }
+    // // Check for editing restriction
+    // if (isEdit && new Date(closedDate) >= new Date(PrevTransDate)) {
+    //     PolosysFrameWork.General.ShowMessageBox("Cannot be edited. Day is Closed", "Invalid Transaction Date");
+    //     return false;
+    // }
 
-    // Validate transaction amount
-    const totalAmount = PolosysFrameWork.General.Val(txtTotAmount.text);
-    if (totalAmount === 0) {
-        PolosysFrameWork.General.ShowMessageBox("Zero transaction amount not allowed", "Invalid Transaction Amount");
-        return false;
-    }
+    // // Validate transaction amount
+    // const totalAmount = PolosysFrameWork.General.Val(txtTotAmount.text);
+    // if (totalAmount === 0) {
+    //     PolosysFrameWork.General.ShowMessageBox("Zero transaction amount not allowed", "Invalid Transaction Amount");
+    //     return false;
+    // }
 
-    // Validate master ledger existence
-    if (VOUCHERTYPE !== "OB" && VOUCHERTYPE !== "MJV") {
-        for (let i = 0; i < dgvAccounts.rows.length; i++) {
-            const ledgerID = dgvAccounts.rows[i]?.cells["LedgerIDCol"].formattedValue;
-            if (cbMasterAccount.selectedValue === ledgerID) {
-                PolosysFrameWork.General.ShowMessageBox(`Master Ledger Exists in Row ${i + 1}`, "Duplicate Ledger");
-                return false;
-            }
-        }
-    }
+    // // Validate master ledger existence
+    // if (VOUCHERTYPE !== "OB" && VOUCHERTYPE !== "MJV") {
+    //     for (let i = 0; i < dgvAccounts.rows.length; i++) {
+    //         const ledgerID = dgvAccounts.rows[i]?.cells["LedgerIDCol"].formattedValue;
+    //         if (cbMasterAccount.selectedValue === ledgerID) {
+    //             PolosysFrameWork.General.ShowMessageBox(`Master Ledger Exists in Row ${i + 1}`, "Duplicate Ledger");
+    //             return false;
+    //         }
+    //     }
+    // }
 
-    // "JV" specific validation
-    if (VOUCHERTYPE === "JV" && !cbJVDebitCredit.text) {
-        PolosysFrameWork.General.ShowMessageBox("Please Select Debit/Credit in Master Ledger", "Debit/Credit");
-        return false;
-    }
+    // // "JV" specific validation
+    // if (VOUCHERTYPE === "JV" && !cbJVDebitCredit.text) {
+    //     PolosysFrameWork.General.ShowMessageBox("Please Select Debit/Credit in Master Ledger", "Debit/Credit");
+    //     return false;
+    // }
 
-    // "MJV" specific validation
-    if (VOUCHERTYPE === "MJV") {
-        const totalDebit = Math.round(dgvAccounts.calculateColumnSum("Debit"), PolosysFrameWork.Settings.MainSettings.decimalPoints);
-        const totalCredit = Math.round(dgvAccounts.calculateColumnSum("Credit"), PolosysFrameWork.Settings.MainSettings.decimalPoints);
+    // // "MJV" specific validation
+    // if (VOUCHERTYPE === "MJV") {
+    //     const totalDebit = Math.round(dgvAccounts.calculateColumnSum("Debit"), PolosysFrameWork.Settings.MainSettings.decimalPoints);
+    //     const totalCredit = Math.round(dgvAccounts.calculateColumnSum("Credit"), PolosysFrameWork.Settings.MainSettings.decimalPoints);
 
-        if (totalDebit !== totalCredit) {
-            PolosysFrameWork.General.ShowMessageBox("Total Debit and Credit amount should be the same", "Debit/Credit");
-            return false;
-        }
-    }
+    //     if (totalDebit !== totalCredit) {
+    //         PolosysFrameWork.General.ShowMessageBox("Total Debit and Credit amount should be the same", "Debit/Credit");
+    //         return false;
+    //     }
+    // }
 console.log(formState.transaction.master.transactionDate);
 
     return true;

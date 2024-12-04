@@ -53,25 +53,7 @@ export default function ERPAlert({
       hideClass: {
         popup: `animate__animated ${hideAnimation} animate__faster`
       },
-      //if want any custome style use customClass  now it just a demo class 
-      customClass: {
-        container: 'erp-alert-container',
-        popup: 'erp-alert-popup',
-        title: 'erp-alert-title',
-        closeButton: 'erp-alert-close',
-        icon: 'erp-alert-icon',
-        image: 'erp-alert-image',
-        htmlContainer: 'erp-alert-content',
-        input: 'erp-alert-input',
-        inputLabel: 'erp-alert-input-label',
-        validationMessage: 'erp-alert-validation',
-        actions: 'erp-alert-actions',
-        confirmButton: 'erp-alert-confirm',
-        denyButton: 'erp-alert-deny',
-        cancelButton: 'erp-alert-cancel',
-        loader: 'erp-alert-loader',
-        footer: 'erp-alert-footer'
-      }
+
     }).then((result) => {
       if (result.isConfirmed) {
         onConfirm()
@@ -82,4 +64,32 @@ export default function ERPAlert({
   }, [title, text, icon, confirmButtonText, cancelButtonText, onConfirm, onCancel])
 
   return null
+}
+
+// Utility function for showing alerts
+ERPAlert.show = (options: ERPAlertProps) => {
+  return MySwal.fire({
+    title: options.title,
+    text: options.text,
+    width: options.width || 450,
+    icon: options.icon || 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: options.confirmButtonText || 'Confirm',
+    cancelButtonText: options.cancelButtonText || 'Cancel',
+    position: options.position || 'center',
+    showClass: {
+      popup: `animate__animated ${options.showAnimation || 'animate__fadeInDown'} animate__faster`
+    },
+    hideClass: {
+      popup: `animate__animated ${options.hideAnimation || 'animate__fadeOutDown'} animate__faster`
+    },
+  }).then((result) => {
+    if (result.isConfirmed) {
+      options.onConfirm()
+    } else if (result.dismiss === Swal.DismissReason.cancel) {
+      options.onCancel && options.onCancel()
+    }
+  })
 }

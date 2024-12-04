@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { toggleResetBranchDataForSync } from "../../../redux/slices/popup-reducer";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import Urls from "../../../redux/urls";
@@ -14,7 +13,6 @@ export interface BranchResetData {
   date: string;
  isAgree: boolean;
 }
-
 export const initialBranchResetData = {
   data: {
     date: "",
@@ -25,13 +23,17 @@ export const initialBranchResetData = {
    isAgree: "",
   },
 };
-
 export const BranchDataReset: React.FC = React.memo(() => {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
-
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
-    useFormManager<BranchResetData>({
+  const { t } = useTranslation("system");
+  const { isEdit,
+     handleClear, 
+     handleSubmit, 
+     handleFieldChange, 
+     getFieldProps, 
+     isLoading,
+     handleClose 
+    } =useFormManager<BranchResetData>({
       url: Urls.branchDataReset,
       onClose:useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false, key: null,})), [dispatch]),
       onSuccess: useCallback(() => dispatch(toggleResetBranchDataForSync({ isOpen: false })), [dispatch]),
@@ -39,7 +41,6 @@ export const BranchDataReset: React.FC = React.memo(() => {
       useApiClient: true,
       loadDataRequired: false
     });
-
   const onClose = useCallback(() => {
     dispatch(toggleResetBranchDataForSync({ isOpen: false }));
   }, [dispatch]);
@@ -54,28 +55,23 @@ export const BranchDataReset: React.FC = React.memo(() => {
           onChangeData={(data:any) => handleFieldChange("date",data.date)}
         />
       </div>
-
       <div className="flex items-center justify-between my-4">
         <ERPCheckbox
           {...getFieldProps("isAgree")}
           label={t("recover_until_sync")}
           onChangeData={(data: any) => handleFieldChange("isAgree", data.isAgree)}
         />
-        
-        
         <div>
           <ERPButton
             title={t("reset")}
             variant="primary"
             className="h-10 w-24"
             loading={isLoading}
-            onClick={handleSubmit}
-          ></ERPButton>
-          
+            onClick={handleSubmit}>
+          </ERPButton>
         </div>
       </div>
     </div>
   );
 });
-
 export default BranchDataReset;

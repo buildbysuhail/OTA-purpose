@@ -19,7 +19,7 @@ interface information {
 const SMSIntegration: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("integration");
 
   const SMSTwilioConnectPopup: React.FC = () => {
     const initialState: information = {

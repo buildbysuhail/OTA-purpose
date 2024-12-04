@@ -595,6 +595,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         <div className="space-y-6 p-4">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
+            <AccTransactionUserConfig/>
               {formElements.foreignCurrency.visible && (
                 <ERPCheckbox
                   id="foreignCurrency"

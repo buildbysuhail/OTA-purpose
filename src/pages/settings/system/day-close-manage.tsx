@@ -67,7 +67,7 @@ const DayCloseManage = () => {
 
 
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   return (
     <div className="w-full pt-4">

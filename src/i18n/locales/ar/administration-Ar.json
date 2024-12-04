@@ -52,5 +52,15 @@
    "model": "الطراز",
    "com_port": "منفذ COM",
    "geldea_ws_port": "منفذ خدمة Geldea",
-   "gedia_service": "خدمة Gedia"
+   "gedia_service": "خدمة Gedia",
+
+   "registered_name": "الاسم المسجل",
+   "tax_registration_number": "رقم التسجيل الضريبي",
+   "cr_number": "رقم السجل التجاري",
+   "building_number": "رقم المبنى",
+   "street": "الشارع",
+   "postal_code": "الرمز البريدي",
+   "additional_number": "رقم إضافي",
+   "region_country_sub_entity": "المنطقة/البلد الكيان الفرعي",
+   "telephone": "الهاتف"
 }

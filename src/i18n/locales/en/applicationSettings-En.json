@@ -257,5 +257,31 @@
     "shared_folder": "Shared Folder",
     "enable_supplier_wise_item_code": "Enable Supplier Wise Item Code",
     "show_cash_sales_separate_menu":"Show Cash Sales Separate Menu",
-    "product_image_path":"Product Image Path"
+    "product_image_path":"Product Image Path",
+
+    "hours":"Hours",
+    "sales_form_type": "Default Sales Form Type",
+    "purchase_tax_ledger": "Purchase Tax Ledger",
+    "sales_tax_ledger": "Sales Tax Ledger",
+    "days":"Days",
+    "settings": "Settings",
+    "apply": "Apply",
+
+    "general":"General",
+    "backup":"Backup",
+    "printing":"Printing",
+    "multi_branch":"Multi Branch",
+    "crm":"CRM",
+    "hr":"HR",
+    "ksa_e-invoice":"KSA E-Invoice",
+    "products":"Products",
+    "gst_settings":"GST Settings",
+    "tax_settings":"Tax Settings",
+    "purchase":"Purchase",
+    "sales":"Sales",
+    "pos":"POS",
+    "counter":"Counter",
+    "ppos":"PPOS",
+    "schemes_&_promotions":"Schemes & Promotions",
+    "miscellaneous":"Miscellaneous"
 }

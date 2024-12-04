@@ -16,6 +16,7 @@ import { RootState } from "../../../redux/store";
 export const CounterManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
+  const { t } = useTranslation("system");
 
   const {
     isEdit,
@@ -41,7 +42,6 @@ export const CounterManage: React.FC = React.memo(() => {
     dispatch(toggleCounterPopup({ isOpen: false, key: null }));
   }, []);
 
-  const { t } = useTranslation();
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
 
   return (

@@ -19,7 +19,7 @@ interface information {
 const WhatsappIntegration = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("integration");
 
   const WhatsappTwilioConnectPopup: React.FC = () => {
     const initialState: information = {

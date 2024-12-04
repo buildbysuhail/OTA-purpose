@@ -156,5 +156,14 @@
     "card_name": "Card Name",
 
     "upi": "UPI (Unified Payments Interface)",
-    "upi_name": "UPI Name"
+    "upi_name": "UPI Name",
+    "qr_pay": "QR Pay",
+    "qr_pay_name": "QR Pay Name",
+
+    "user_type_code": "UserTypeCode",
+    "account_group": "Account Group",
+    "hideLedgerID": "Hide Ledger ID",
+    "particulars": "Particulars",
+    "is_group": "Is Group",
+    "add": "Add"
 }

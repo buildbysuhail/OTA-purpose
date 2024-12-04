@@ -12,12 +12,14 @@ import applicationSettingsEn from "./locales/en/applicationSettings-En.json";
 import applicationSettingsAr from "./locales/ar/applicationSettings-Ar.json";
 import systemEn from "./locales/en/system-En.json";
 import systemAr from "./locales/ar/system-Ar.json";
+import integrationEn from "./locales/en/integration-En.json";
+import integrationAr from "./locales/ar/integration-Ar.json";
 
 i18n.use(initReactI18next).init({
   fallbackLng: "en",
   lng: "en",
   debug: true,
-  ns: ["main", "masters", "userManage", "administration", "applicationSettings", "system"],
+  ns: ["main", "masters", "userManage", "administration", "applicationSettings", "system", "integration"],
   defaultNS: "main",
   resources: {
     en: {
@@ -27,6 +29,7 @@ i18n.use(initReactI18next).init({
       administration: administrationEn,
       applicationSettings: applicationSettingsEn,
       system: systemEn,
+      integration: integrationEn
     },
     ar: {
       main: mainAr,
@@ -35,6 +38,7 @@ i18n.use(initReactI18next).init({
       administration: administrationAr,
       applicationSettings: applicationSettingsAr,
       system: systemAr,
+      integration: integrationAr
     },
   },
 });

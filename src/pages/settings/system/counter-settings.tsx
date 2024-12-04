@@ -82,12 +82,12 @@ const handleClear = async ()=>{
 }
 
   const dispatch = useAppDispatch();
-  const { t } = useTranslation("userManage");
+  const { t } = useTranslation("system");
   const rootState = useRootState();
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField:"pCname",
-      caption:"PC Name",
+      caption:t("pc_name"),
       dataType:"string",
       allowSorting:true,
       allowSearch:true,
@@ -97,7 +97,7 @@ const handleClear = async ()=>{
     },
     {
       dataField:"systemCode",
-      caption:"System Code",
+      caption:t("system_code"),
       dataType:"string",
       allowSorting:true,
       allowSearch:true,
@@ -107,7 +107,7 @@ const handleClear = async ()=>{
     },
     {
       dataField:"counterName",
-      caption:"Counter",
+      caption:t("counter"),
       dataType:"string",
       allowSorting:true,
       allowSearch:true,
@@ -117,7 +117,7 @@ const handleClear = async ()=>{
     },
     {
       dataField:"lastLoggedDate",
-      caption:"Last Logged Date",
+      caption:t("last_logged_date"),
       dataType:"date",
       allowSorting:true,
       allowSearch:true,
@@ -133,14 +133,14 @@ const handleClear = async ()=>{
       <div className="grid grid-cols-12 gap-x-6 bg-[#ffffff]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
-          <h1 className='text-2xl font-normal tracking-wide text-#3f3f46 dark:te'>Counter Settings</h1>
+          <h1 className='text-2xl font-normal tracking-wide text-#3f3f46 dark:te'>{t("counter_settings")}</h1>
           <div className="grid grid-cols-1 space-y-4 md:w-[550px] mb-3">
                 <ErpInput
                 // labelDirection="horizontal"
                  className="w-full"
                   id="systemName"
-                  label="System Name"
-                  placeholder="System Name"
+                  label={t("system_name")}
+                  placeholder={t("system_name")}
                   data={counterData}
                   value={counterData.systemName}
                   onChange={(e) => {
@@ -155,8 +155,8 @@ const handleClear = async ()=>{
                   // labelDirection="horizontal"
                   id="systemCode"
                  className="w-full"
-                  label="System Code"
-                  placeholder="System Code"
+                  label={t("system_code")}
+                  placeholder={t("system_code")}
                   data={counterData}
                   value={counterData.systemCode}
                   onChange={(e) => {
@@ -171,7 +171,7 @@ const handleClear = async ()=>{
                  className="w-full"
                   id="counterID"
                   data={counterData}
-                  label="counterID"
+                  label={t("counterID")}
                   field={{
                     id: "counterID",
                     getListUrl: Urls.data_counters,
@@ -188,7 +188,7 @@ const handleClear = async ()=>{
                 />
               <div className="flex items-center justify-center space-x-4">
                   <ERPButton
-                    title="Save"
+                    title={t("save")}
                     variant="primary"
                     loading={isSaving}
                     disabled={isSaving}
@@ -197,7 +197,7 @@ const handleClear = async ()=>{
                     startIcon="ri-save-line"
                   />
                   <ERPButton
-                    title="Clear"
+                    title={t("clear")}
                     variant="custom"
                     customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
                     type="button"
@@ -206,7 +206,7 @@ const handleClear = async ()=>{
                     onClick={handleClear}
                   />
                   <ERPButton
-                    title="Close"
+                    title={t("close")}
                     variant="custom"
                     disabled={isSaving}
                     customVariant="bg-[#64748b] hover:bg-[#475569] text-white"
@@ -232,8 +232,8 @@ const handleClear = async ()=>{
               ></ErpDevGrid>
             </div>
             <div className="flex justify-center items-center mt-2 space-x-2">
-                <strong className="">This System Code :</strong>
-                <span className="">{defaultSystemCode}</span>
+                <strong>{t("this_system_code")}</strong>
+                <span>{defaultSystemCode}</span>
             </div>
           </div>
         </div>

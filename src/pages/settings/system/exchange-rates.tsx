@@ -1,53 +1,26 @@
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, {  Fragment,  useCallback,  useEffect,  useMemo,  useState,} from "react";
 import Urls from "../../../redux/urls";
-
-import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import {
-  toggleCurrencyExchangePopup,
-  toggleCurrencyMasterPopup,
-} from "../../../redux/slices/popup-reducer";
+import {  toggleCurrencyMasterPopup,} from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 // import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "devextreme-react";
-import {
-  Toolbar,
-  Item,
-  Editing,
-  Column,
-  Lookup,
-  Scrolling,
-  RemoteOperations,
-  Paging,
-  KeyboardNavigation,
-  DataGridTypes,
-} from "devextreme-react/cjs/data-grid";
+import { Toolbar, Item, Editing, Column, Lookup, Scrolling, RemoteOperations, Paging, KeyboardNavigation, DataGridTypes} from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../../helpers/api-client";
-import CustomStore from "devextreme/data/custom_store";
 import "./exchange-rates.css";
 import { handleResponse } from "../../../utilities/HandleResponse";
-import { CheckBoxTypes } from "devextreme-react/cjs/check-box";
 import { SelectBoxTypes } from "devextreme-react/cjs/select-box";
 import { CurrencyMasterManage } from "../../accounts/masters/currency-master/currency-master-manage";
-import { Link } from "react-router-dom";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
 
 const ExchangeRates = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const [gridHeight, setGridHeight] = useState<{
@@ -319,7 +292,7 @@ const ExchangeRates = () => {
                         }}
                         className="text-[#27272a] text-sm  font-semibold  hover:underline   hover:decoration-[#3b82f6]"
                       >
-                         {t("add_currency")} 
+                        {t("add_currency")}
                       </a>
                     </Item>
                   </Toolbar>

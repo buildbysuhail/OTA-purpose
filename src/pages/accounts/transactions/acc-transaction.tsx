@@ -30,9 +30,6 @@ import {
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
-import { unlockAccTransactionMaster } from "./thunk";
-import { useUserRights } from "../../../helpers/user-right-helper";
-import { Summary, TotalItem } from "devextreme-react/cjs/data-grid";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 
 interface BilledItem {

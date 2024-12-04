@@ -278,22 +278,7 @@ export const useAccTransaction = (transactionType: string) => {
     }
 
     // Handle "MJV" voucher type logic
-    // if (formState.transaction.master.voucherType === "MJV") {
-    //     dgvAccounts.calculateAutoSummary();
-
-    //     for (let i = 0; i < dgvAccounts.firstFreeRow; i++) {
-    //         const debitValue = PolosysFrameWork.General.Val(dgvAccounts.rows[i]?.cells["Debit"].formattedValue);
-    //         const ledgerID = parseInt(dgvAccounts.rows[i]?.cells["LedgerIDCol"].formattedValue || "0");
-
-    //         if (debitValue > 0 && !FirstDebitLedgerID) {
-    //             FirstDebitLedgerID = ledgerID;
-    //         } else if (debitValue <= 0 && !FirstCreditLedgerid) {
-    //             FirstCreditLedgerid = ledgerID;
-    //         }
-
-    //         if (FirstDebitLedgerID > 0 && FirstCreditLedgerid > 0) break;
-    //     }
-    // }
+    
 
     // // Confirmation for editing
     // if (isEdit && mnuShowConfirmationForEdit.checked) {

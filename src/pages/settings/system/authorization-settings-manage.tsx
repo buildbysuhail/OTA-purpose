@@ -1,31 +1,23 @@
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import Urls from "../../../redux/urls";
-
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
-import { toggleCurrencyExchangePopup } from "../../../redux/slices/popup-reducer";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 // import { CurrencyExchangeManage } from "./exchange-rates-manage";
 import { useTranslation } from "react-i18next";
 import { DataGrid } from "devextreme-react";
-import { Toolbar, Item, Editing, DataGridTypes } from "devextreme-react/cjs/data-grid";
 import { APIClient } from "../../../helpers/api-client";
-import CustomStore from "devextreme/data/custom_store";
 import "./exchange-rates.css";
 import ERPInput from "../../../components/ERPComponents/erp-input";
-import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import { handleResponse } from "../../../utilities/HandleResponse";
 const isNotEmpty = (value: any) =>
   value !== undefined && value !== null && value !== "";
 const api = new APIClient();
 
 const AuthorizationSettings = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const initial = {
@@ -58,7 +50,7 @@ const AuthorizationSettings = () => {
     const result: any = await api.getAsync(
       `${Urls.authorization_settings}${baseCurrency ? baseCurrency : ""}`
     );
-    
+
     setStore(result?.data);
   };
   const handleSubmit = async () => {
@@ -67,20 +59,21 @@ const AuthorizationSettings = () => {
       `${Urls.authorization_settings}`,
       postData
     );
-    
-    handleResponse(result, 
-      () =>{ load();
-      onClear();
-      
-    }
-    , () => {
-      setPostData((previous: any) => ({
-        
-        ...previous, // Use the spread operator with three dots
-        validations: result.validations,
-    }))
-  });
-}
+
+    handleResponse(result,
+      () => {
+        load();
+        onClear();
+
+      }
+      , () => {
+        setPostData((previous: any) => ({
+
+          ...previous, // Use the spread operator with three dots
+          validations: result.validations,
+        }))
+      });
+  }
   const onSelectionChanged = useCallback((e: any) => {
     console.log(e);
 
@@ -116,7 +109,7 @@ const AuthorizationSettings = () => {
   const columns: DevGridColumn[] = [
     {
       dataField: "employeeID",
-      // caption: t("employeeId"),
+      caption: t("employee_id"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -179,9 +172,9 @@ const AuthorizationSettings = () => {
                     valueKey: "id",
                     labelKey: "name",
                   }}
-                  validation ={postData.validations.employeeID}
+                  validation={postData.validations.employeeID}
                   onChangeData={(data: any) => {
-                    
+
                     setPostData((previous: any) => ({
                       ...previous, // Use the spread operator with three dots
                       employeeID: data.employeeID,

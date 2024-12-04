@@ -12,7 +12,6 @@ import {
   Printer,
   Download,
   X,
-  Table,
 } from "lucide-react";
 import JsBarcode from "jsbarcode";
 // import { ReactBarcode, Renderer } from 'react-jsbarcode';
@@ -142,7 +141,6 @@ const printers = [
   "Zebra ZD420",
 ];
 
-
 const pageSizeOptions = [
   { label: "A5", value: "A5" },
   { label: "A4", value: "A4" },
@@ -254,9 +252,11 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [zoom, setZoom] = useState(100);
   const [searchParams] = useSearchParams();
   const templateGroup = searchParams?.get("template_group")! as TemplateGroupTypes;
-  const [selectedComponent, setSelectedComponent] =useState<PlacedComponent | null>(null);
+  const [selectedComponent, setSelectedComponent] =
+    useState<PlacedComponent | null>(null);
   const [nextId, setNextId] = useState(1);
-  const [draggingComponent, setDraggingComponent] = useState<PlacedComponent | null>(null);
+  const [draggingComponent, setDraggingComponent] =
+    useState<PlacedComponent | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isSaveDialogOpen, setIsSaveDialogOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -299,30 +299,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     initialBacodeTemplateState.data
   );
   const pxToPoint = (px: number) => px * (72 / 96);
-
-  let paperWidth;
-  const paperSize = templateData?.propertiesState?.pageSize || "A4";
-  
-  switch (paperSize) {
-    case "A5":
-      paperWidth = "w-[450px]";
-      break;
-    case "A4":
-      paperWidth = "w-[500px]";
-      break;
-    case "LETTER":
-      paperWidth = "w-[600px]";
-      break;
-    case "3Inch":
-      paperWidth = "w-[210px]";
-      break;
-    case "4Inch":
-      paperWidth = "w-[260px]";
-      break;
-    default:
-      paperWidth = "w-[500px]";
-  }
-
   const components = [
     {
       id: DesignerElementType.text,
@@ -342,19 +318,6 @@ export default function ExtendedPDFBarcodeDesigner() {
       icon: <Menu className="w-4 h-4" />,
       defaultContent: "Select",
     },
-    {
-      id: DesignerElementType.table,
-      label: "Table",
-      icon: <Table className="w-4 h-4" />,
-      defaultContent: "Table",
-    },
-    {
-      id: DesignerElementType.line,
-      label: "line",
-      icon: <Minus className="w-4 h-4" />,
-      defaultContent: "Line",
-    },
-
   ];
 
   const handleDragStart = (
@@ -371,7 +334,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     const componentType = parseInt(
       e.dataTransfer.getData("componentType")
     ) as DesignerElementType;
-
     const canvasRect = canvasRef.current?.getBoundingClientRect();
 
     if (canvasRect) {
@@ -681,7 +643,6 @@ export default function ExtendedPDFBarcodeDesigner() {
     }));
     setSelectedComponent(null);
   };
-
   const renderComponent = (component: PlacedComponent) => {
     const isSelected = selectedComponent?.id === component.id;
     const style: React.CSSProperties = {
@@ -769,38 +730,6 @@ export default function ExtendedPDFBarcodeDesigner() {
             ></DeleteButton>
           </div>
         );
-        case DesignerElementType.table:
-          return (
-            <div
-              key={component.id}
-              style={style}
-              onClick={() => handleComponentClick(component)}
-              onMouseDown={(e) => handleMouseDown(e, component)}
-            >
-              {component.content}
-              <DeleteButton
-                id={component.id}
-                isSelected={isSelected}
-                handleDelete={handleDelete}
-              ></DeleteButton>
-            </div>
-          );
-          case DesignerElementType.line:
-            return (
-              <div
-                key={component.id}
-                style={style}
-                onClick={() => handleComponentClick(component)}
-                onMouseDown={(e) => handleMouseDown(e, component)}
-              >
-                {component.content}
-                <DeleteButton
-                  id={component.id}
-                  isSelected={isSelected}
-                  handleDelete={handleDelete}
-                ></DeleteButton>
-              </div>
-            );
     }
   };
 
@@ -853,8 +782,30 @@ export default function ExtendedPDFBarcodeDesigner() {
               {/* <ERPPreviousUrlButton></ERPPreviousUrlButton> */}
               <ERPPreviousUrlButton size="37px" />
             </div>
+
+            {/* <button className="p-1 hover:bg-gray-100 rounded">
+              <Menu className="w-4 h-4" />
+            </button> */}
+            {/* <div className="flex items-center space-x-1">
+              <button
+                onClick={() => setZoom(zoom - 10)}
+                className="p-1 hover:bg-gray-100 rounded"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <span className="text-sm">{zoom}%</span>
+              <button
+                onClick={() => setZoom(zoom + 10)}
+                className="p-1 hover:bg-gray-100 rounded"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
+            </div> */}
           </div>
           <div className="flex items-center space-x-2">
+            {/* <button onClick={() => setIsPreviewOpen(true)} className='bg-primary'>
+                            Preview
+                        </button> */}
             <ERPButton
               startIcon="ri-arrow-go-back-line"
               title="Clear"

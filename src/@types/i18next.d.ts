@@ -5,6 +5,7 @@ import userManageEn from "./locales/en/userManage-En.json";
 import administrationEn from "./locales/en/administration-En.json";
 import applicationSettingsEn from "./locales/en/applicationSettings-En.json";
 import systemEn from "./locales/en/system-En.json";
+import integrationEn from "./locales/en/integration-En.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -16,6 +17,7 @@ declare module "i18next" {
       administration: typeof administrationEn;
       applicationSettings: typeof applicationSettingsEn;
       system: typeof systemEn;
+      integration: typeof integrationEn;
     };
   }
 }

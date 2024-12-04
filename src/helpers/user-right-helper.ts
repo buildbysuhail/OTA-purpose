@@ -12,14 +12,11 @@ export enum UserAction {
   Print = "P",
 }
 export const useUserRights = () => {
-  const hasShowRight = async (
-    formCode: string,
-    action: UserAction
-  ): Promise<boolean> => {
+  const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const userRights = useAppSelector((state: RootState) => state.UserRights);
+  const hasRight = (formCode: string, action: UserAction): boolean => {
     let result = false;
 
-    const userSession = useAppSelector((state: RootState) => state.UserSession);
-    const userRights = useAppSelector((state: RootState) => state.UserRights);
     const userTypeCode = userSession.userTypeCode;
     const branchId = userSession.currentBranchId;
     const userId = userSession.userId;
@@ -50,5 +47,5 @@ export const useUserRights = () => {
 
     return result;
   };
-  return { hasShowRight };
+  return { hasRight };
 };

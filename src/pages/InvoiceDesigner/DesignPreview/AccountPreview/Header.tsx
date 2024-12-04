@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { StandardPreviewProps } from ".";
 import { dateTrimmer, getAmountInWords } from "../../../../utilities/Utils";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
 import useCurrentBranch from "../../../../utilities/hooks/use-current-branch";
+import { AccountPreviewProps } from "./index";
 
-const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}: StandardPreviewProps) => {
+const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}: AccountPreviewProps) => {
   const logoWidthRatio = template?.headerState?.logoSize ? template.headerState?.logoSize / 100 : 0.5;
   const headerState = template?.headerState;
 
@@ -44,15 +44,14 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
 
 
   /* ######################################################################################### */
-
+  
   const [generalHeaderBGStyle, setGeneralHeaderBGStyle] = useState<any>({ height: paddingTop, backgroundColor, backgroundPosition: 'top left' });
 
-  useEffect(() => {
-    
+  useEffect(() => { 
     setGeneralHeaderBGStyle((previous: any) => ({
-        ...previous,
-        backgroundColor:backgroundColor,
-        height: paddingTop,
+      ...previous,
+      backgroundColor:backgroundColor,
+      height: paddingTop,
       backgroundImage: `url(${template?.background_image_header})`,
       backgroundRepeat: "no-repeat",
       backgroundPosition: template?.headerState?.bg_image_header_position ?? "top left",
@@ -60,7 +59,6 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
       }));
     
   }, [template, template?.headerState?.bg_image_header_position])
-
   /* ######################################################################################### */
 
   const styles = {
@@ -71,8 +69,6 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
     },
     fontStyles: { color, fontSize, fontWeight }
   }
-
-
 
   /* ######################################################################################### */
 
@@ -258,7 +254,7 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
 
 export default Header;
 
-const RecieptTablePreview = ({ data, template, currency }: StandardPreviewProps) => {
+const RecieptTablePreview = ({ data, template, currency }: AccountPreviewProps) => {
   const headerState = template?.headerState;
   // const currencySymbol = getCurrentCurrencySymbol();
 
@@ -342,7 +338,7 @@ const RecieptTablePreview = ({ data, template, currency }: StandardPreviewProps)
   );
 };
 
-export const AccountSummaryPreview = ({ data, template, currency }: StandardPreviewProps) => {
+export const AccountSummaryPreview = ({ data, template, currency }: AccountPreviewProps) => {
   const headerState = template?.headerState;
 
   /// Padings

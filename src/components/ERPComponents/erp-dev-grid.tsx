@@ -24,7 +24,7 @@ import {
   Editing,
   StateStoring,
   Column,
-} from "devextreme-react/cjs/data-grid";
+} from 'devextreme-react/data-grid';
 
 import CustomStore from "devextreme/data/custom_store";
 import { jsPDF } from "jspdf";

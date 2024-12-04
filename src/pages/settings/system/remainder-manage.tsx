@@ -13,7 +13,6 @@ import { useTranslation } from "react-i18next";
 export const RemainderManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
-
   const {
     isEdit,
     handleSubmit,
@@ -31,9 +30,7 @@ export const RemainderManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialDataRemainder
   });
-
-
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   return (
     <div className="w-full pt-4">
@@ -43,9 +40,7 @@ export const RemainderManage: React.FC = React.memo(() => {
           label={t("remainder_name")}
           placeholder={t("remainder_name")}
           required={true}
-          onChangeData={(data: any) => {
-            handleFieldChange("remainderName", data.remainderName);
-          }}
+          onChangeData={(data: any) => {  handleFieldChange("remainderName", data.remainderName);  }}
         />
         <ERPInput
           {...getFieldProps("descriptions")}
@@ -60,7 +55,6 @@ export const RemainderManage: React.FC = React.memo(() => {
           label={t("date_of_reminds")}
           onChangeData={(data: any) => handleFieldChange("remaindingDate", data.remaindingDate)}
         /> 
-
         <ERPInput
           {...getFieldProps("numberOfDays")}
           type="number"
@@ -68,7 +62,6 @@ export const RemainderManage: React.FC = React.memo(() => {
           placeholder={t("number_of_days")}
           onChangeData={(data: any) => handleFieldChange("numberOfDays", data.numberOfDays)}
         />
-
       </div>
       <ERPFormButtons
         onClear={handleClear}

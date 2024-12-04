@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 
-// import { handleResponse } from '../HandleResponse';
 import { customJsonParse } from "../../../utilities/jsonConverter";
 import { APIClient } from "../../../helpers/api-client";
 import Urls from "../../../redux/urls";
@@ -17,7 +16,7 @@ import ERPModal from "../../../components/ERPComponents/erp-modal";
 const api = new APIClient();
 export const AccTransactionUserConfig = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
-const[isOpen,setIsOpen]= useState<boolean>(false)
+  const[isOpen,setIsOpen]= useState<boolean>(false)
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -65,7 +64,7 @@ const[isOpen,setIsOpen]= useState<boolean>(false)
       variant="primary"
       onClick={()=>setIsOpen(true)}  
     />
-    <ERPModal
+   <ERPModal
     isOpen={isOpen}
     title="User Config"
     width="w-full max-w-[600px]"

@@ -10,9 +10,6 @@ const applicationSettingsSlice = createSlice({
   extraReducers: (builder) => {
     
     builder.addCase(getApplicationSettings.fulfilled, (state, action: PayloadAction<any>) => {
-      debugger;
-      console.log(`getApplicationSettings: ${JSON.stringify(action.payload)}`);
-      console.log(`action.payload.mainSettings: ${JSON.stringify(action.payload.mainSettings)}`);
       
       state.mainSettings = action.payload.mainSettings;
     });

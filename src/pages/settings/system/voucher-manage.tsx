@@ -14,23 +14,26 @@ import { useTranslation } from "react-i18next";
 export const VoucherManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
+  const { isEdit,
+    handleClear,
+    handleSubmit,
+    handleFieldChange,
+    getFieldProps,
+    isLoading,
+    handleClose
+  } = useFormManager<VoucherData>({
+    url: Urls.Voucher,
+    onClose: useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null, })), [dispatch]),
+    onSuccess: useCallback(
+      () => dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: true })),
+      [dispatch]
+    ),
+    key: rootState.PopupData.voucher.key,
+    useApiClient: true,
+    initialData: initialDataVoucher
+  });
 
-  const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
-    useFormManager<VoucherData>({
-      url: Urls.Voucher,
-      onClose:useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null,})), [dispatch]),
-      onSuccess: useCallback(
-        () => dispatch(toggleVoucherPopup({ isOpen: false, key: null ,reload:true})),
-        [dispatch]
-      ),
-      key: rootState.PopupData.voucher.key,
-      useApiClient: true,
-      initialData: initialDataVoucher
-    });
-
- 
-
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
 
   return (
     <div className="w-full pt-4">
@@ -49,7 +52,7 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("voucherType", data.voucherType)}
         />
-         <ERPInput
+        <ERPInput
           {...getFieldProps("formType")}
           label={t("form_type")}
           placeholder={t("form_type")}
@@ -76,7 +79,6 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data.lastVoucherNumber)}
         />
-
         <ERPCheckbox
           {...getFieldProps('isDefault')}
           label={t("is_default")}

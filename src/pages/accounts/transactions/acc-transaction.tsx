@@ -8,7 +8,10 @@ import Urls from "../../../redux/urls";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import { useParams } from "react-router-dom";
 import { AccTransactionProps } from "./acc-transaction-types";
-import { useAppDispatch, useAppSelector } from "../../../utilities/hooks/useAppDispatch";
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../utilities/hooks/useAppDispatch";
 import { useTranslation } from "react-i18next";
 import { RootState } from "../../../redux/store";
 import {
@@ -27,8 +30,7 @@ import {
 import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous-uirl-button";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
-import { unlockAccTransactionMaster } from "./thunk";
-import { useUserRights } from "../../../helpers/user-right-helper";
+import { DevGridColumn } from "../../../components/types/dev-grid-column";
 
 interface BilledItem {
   id?: number;
@@ -51,7 +53,6 @@ interface FormData {
 
 const api = new APIClient();
 
-
 const AccTransactionForm: React.FC<AccTransactionProps> = ({
   voucherType,
   voucherPrefix,
@@ -59,7 +60,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   formCode,
   title,
   drCr,
-  voucherNo
+  voucherNo,
 }) => {
   const { transactionType } = useParams();
 
@@ -71,12 +72,23 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
   const appDispatch = useAppDispatch();
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(transactionType??"");
+  const {
+    undoEditMode,
+    getNextVoucherNumber,
+    loadAccTransVoucher,
+    clearControlForNew,
+    formElements,
+    setFormElements,
+    setUserRight,
+    enableControls,
+    disableControls,
+    disableCombo,
+    validate
+  } = useAccTransaction(transactionType ?? "");
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
   const [gridHeight, setGridHeight] = useState(200);
-
 
   useEffect(() => {
     let wh = window.innerHeight;
@@ -87,15 +99,35 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
   useEffect(() => {
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
-        fields: { voucherType: voucherType, voucherPrefix: voucherPrefix, formType: formType, drCr: drCr},
+        fields: {
+          voucherType: voucherType,
+          voucherPrefix: voucherPrefix,
+          formType: formType,
+          drCr: drCr,
+        },
       })
     );
     dispatch(
       accFormStateHandleFieldChange({
-        fields: {formCode:formCode, title: formType == undefined || formType.trim() == "" ? title : title + "[" + formType + "]" },
+        fields: {
+          formCode: formCode,
+          title:
+            formType == undefined || formType.trim() == ""
+              ? title
+              : title + "[" + formType + "]",
+        },
       })
     );
-    }, [dispatch, formType, title, formCode, voucherType, voucherPrefix, formType, drCr]);
+  }, [
+    dispatch,
+    formType,
+    title,
+    formCode,
+    voucherType,
+    voucherPrefix,
+    formType,
+    drCr,
+  ]);
 
   useEffect(() => {
     dispatch(
@@ -157,16 +189,13 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
             fields: {
-              transactionDate: new Date(),
-              referenceDate: new Date(),
+              transactionDate: new Date().toISOString(),
+              referenceDate: new Date().toISOString(),
             },
           })
         );
         fetchVoucherNumber();
-        if (
-          voucherType == "CP" ||
-          voucherType == "CR"
-        ) {
+        if (voucherType == "CP" || voucherType == "CR") {
           debugger;
           dispatch(
             accFormStateHandleFieldChange({
@@ -196,7 +225,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
         })
       );
       console.log(`userSession.employeeId${userSession.employeeId}`);
-      
+
       if (userSession.employeeId > 0) {
         dispatch(
           accFormStateTransactionMasterHandleFieldChange({
@@ -222,10 +251,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
       }
       if (userSession.dbIdValue == "543140180640") {
         newFormElements.projectId.visible = true;
-        if (
-          voucherType == "CP" ||
-          voucherType == "CR"
-        ) {
+        if (voucherType == "CP" || voucherType == "CR") {
           let userCashLedgerID = 0;
 
           userCashLedgerID = await api.getAsync(
@@ -243,6 +269,8 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
       setFormElements(newFormElements);
     };
     initializeFormElements();
+    loadAccTransVoucher();
+    setUserRight();
   }, []);
   useEffect(() => {
     if (!voucherType) return;
@@ -323,6 +351,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
       voucherType,
       voucherPrefix
     );
+    debugger;
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
         fields: {
@@ -330,13 +359,9 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
         },
       })
     );
-  }, [
-    formType,
-    voucherType,
-    voucherPrefix,
-  ]);
+  }, [formType, voucherType, voucherPrefix]);
 
-  const columns = [
+  const columns: DevGridColumn[] = [
     {
       dataField: "siNo",
       caption: "SI No",
@@ -359,6 +384,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
     },
     {
       dataField: "amount",
+      dataType: "number",
       caption: "Amount",
       customizeText: (cellInfo: any) =>
         `${parseFloat(cellInfo.value).toFixed(2)}`,
@@ -569,6 +595,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
         <div className="space-y-6 p-4">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
+            <AccTransactionUserConfig/>
               {formElements.foreignCurrency.visible && (
                 <ERPCheckbox
                   id="foreignCurrency"
@@ -581,7 +608,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                       })
                     )
                   }
-                  disabled={formElements.foreignCurrency.disabled}
+                  disabled={formElements.foreignCurrency?.disabled || formElements.pnlMasters?.disabled}
                 />
               )}
             </div>
@@ -605,7 +632,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.voucherPrefix.disabled}
+                disabled={formElements.voucherPrefix?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -622,7 +649,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.voucherNumber.disabled}
+                disabled={formElements.voucherNumber?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -639,7 +666,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.transactionDate.disabled}
+                disabled={formElements.transactionDate?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -656,7 +683,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.referenceNumber.disabled}
+                disabled={formElements.referenceNumber?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -673,7 +700,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.referenceDate.disabled}
+                disabled={formElements.referenceDate?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -703,7 +730,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     required: true,
                     getListUrl: Urls.data_acc_ledgers,
                   }}
-                  disabled={formElements.masterAccount.disabled}
+                  disabled={formElements.masterAccount?.disabled || formElements.pnlMasters?.disabled}
                 />
               </div>
             )}
@@ -729,7 +756,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                   { value: "debit", label: "Dr" },
                   { value: "credit", label: "Cr" },
                 ]}
-                disabled={formElements.drCr.disabled}
+                disabled={formElements.drCr?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -752,7 +779,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                   required: true,
                   getListUrl: Urls.data_employees,
                 }}
-                disabled={formElements.employee.disabled}
+                disabled={formElements.employee?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -769,7 +796,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.remarks.disabled}
+                disabled={formElements.remarks?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -786,7 +813,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.commonNarration.disabled}
+                disabled={formElements.commonNarration?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
           </div>
@@ -805,7 +832,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.ledgerCode.disabled}
+                disabled={formElements.ledgerCode?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -828,7 +855,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                   required: true,
                   getListUrl: Urls.data_acc_ledgers,
                 }}
-                disabled={formElements.ledgerId.disabled}
+                disabled={formElements.ledgerId?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -846,7 +873,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.amount.disabled}
+                disabled={formElements.amount?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -871,7 +898,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                   { value: "debit", label: "Dr" },
                   { value: "credit", label: "Cr" },
                 ]}
-                disabled={formElements.drCr.disabled}
+                disabled={formElements.drCr?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
 
@@ -889,13 +916,15 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                       })
                     )
                   }
-                  disabled={formElements.narration.disabled}
+                  disabled={formElements.narration?.disabled || formElements.pnlMasters?.disabled}
                 />
               </div>
             )}
 
-            {(formState.transaction?.master?.isLocked == undefined || formState.transaction?.master?.isLocked == true)
-             && (userSession.userTypeCode == "CA" || userSession.userTypeCode == "BA")}
+            {(formState.transaction?.master?.isLocked == undefined ||
+              formState.transaction?.master?.isLocked == true) &&
+              (userSession.userTypeCode == "CA" ||
+                userSession.userTypeCode == "BA")}
             <ERPButton
               title="Add"
               variant="primary"
@@ -903,7 +932,10 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
               loading={formState.rowProcessing}
               type="button"
               onClick={() =>
+              {
+                // validate()
                 dispatch(accFormStateTransactionDetailsRowAdd(formState.row))
+              }
               }
             />
           </div>
@@ -929,7 +961,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.currencyID.disabled}
+                disabled={formElements.currencyID?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
             {formElements.exchangeRate.visible && (
@@ -946,7 +978,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.exchangeRate.disabled}
+                disabled={formElements.exchangeRate?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
             <div className="flex items-center">
@@ -963,7 +995,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                       })
                     )
                   }
-                  disabled={formElements.hasDiscount.disabled}
+                  disabled={formElements.hasDiscount?.disabled || formElements.pnlMasters?.disabled}
                 />
               )}
               {formElements.discount.visible && (
@@ -979,7 +1011,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                       })
                     )
                   }
-                  disabled={formElements.discount.disabled}
+                  disabled={formElements.discount?.disabled || formElements.pnlMasters?.disabled}
                 />
               )}
             </div>
@@ -996,7 +1028,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.chequeNumber.disabled}
+                disabled={formElements.chequeNumber?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
             {formElements.bankDate.visible && (
@@ -1012,7 +1044,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.bankDate.disabled}
+                disabled={formElements.bankDate?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
           </div>
@@ -1033,7 +1065,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                         })
                       )
                     }
-                    disabled={formElements.nameOnCheque.disabled}
+                    disabled={formElements.nameOnCheque?.disabled || formElements.pnlMasters?.disabled}
                   />
                 )}
                 {formElements.bankName.visible && (
@@ -1054,7 +1086,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                         })
                       )
                     }
-                    disabled={formElements.bankName.disabled}
+                    disabled={formElements.bankName?.disabled || formElements.pnlMasters?.disabled}
                   />
                 )}
               </>
@@ -1076,7 +1108,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.projectId.disabled}
+                disabled={formElements.projectId?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
             {formElements.costCentreId.visible && (
@@ -1138,7 +1170,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.printOnSave.disabled}
+                disabled={formElements.printOnSave?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
             {formElements.printPreview.visible && (
@@ -1153,7 +1185,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.printPreview.disabled}
+                disabled={formElements.printPreview?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
             {(voucherType == "BP" || voucherType == "CQP") &&
@@ -1169,7 +1201,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                       })
                     )
                   }
-                  disabled={formElements.printCheque.disabled}
+                  disabled={formElements.printCheque?.disabled || formElements.pnlMasters?.disabled}
                 />
               )}
             {formElements.keepNarration.visible && (
@@ -1184,7 +1216,7 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
                     })
                   )
                 }
-                disabled={formElements.keepNarration.disabled}
+                disabled={formElements.keepNarration?.disabled || formElements.pnlMasters?.disabled}
               />
             )}
             {(voucherType == "BP" || voucherType == "CQP") && (
@@ -1220,6 +1252,11 @@ const { getNextVoucherNumber, formElements,setFormElements} = useAccTransaction(
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
+            
+            // summary={[
+            //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
+            //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
+            // ]}
           />
           {formState.showSaveDialog && (
             <ERPAlert

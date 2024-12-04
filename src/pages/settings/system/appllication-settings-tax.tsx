@@ -19,7 +19,7 @@ const TaxSettingsForm: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { t } = useTranslation();
+  const { t } = useTranslation("applicationSettings");
   const dispatch = useAppDispatch();
   const api = new APIClient();
   useEffect(() => {

@@ -1,0 +1,28 @@
+{
+    "SMS_integrations": "تكاملات الرسائل النصية القصيرة",
+    "twilio": "تويلو",
+    "set_up_twilio": "قم بإعداد تويلو لإرسال إشعارات SMS آلية إلى عملائك حول المعاملات والمدفوعات والتذكيرات.",
+    "benefits": "المزايا",
+    "notify_customers": "أخطر عملائك فورًا بالمعاملات والمدفوعات والتذكيرات عبر الرسائل النصية القصيرة.",
+    "configure_SMS": "قم بتكوين إعدادات إرسال الرسائل النصية القصيرة على مستوى العميل وشخص الاتصال.",
+    "before_you_can": "قبل أن تتمكن من ربط تويلو مع Polosys Books، يجب عليك",
+    "create_a_twilio_account": "إنشاء حساب تويلو.",
+    "sign_up_now": "سجل الآن",
+    "go_to_console": "انتقل إلى لوحة التحكم في تويلو واحصل على معرّف الحساب ورمز المصادقة.",
+    "have_an_active_phone_number": "امتلاك رقم هاتف نشط يعمل مع تويلو.",
+    "read_more": "اقرأ المزيد",
+    "connect": "اتصل",
+    "don't_have_an_account?": "ليس لديك حساب؟",
+    "create_an_account": "أنشئ حسابًا الآن لربط Polosys Books مع تويلو.",
+    "go_to_twilio": "انتقل إلى تويلو",
+    "or": "أو",
+    "have_an_account_already?": "هل لديك حساب بالفعل؟",
+    "enter_the_following_details": "أدخل التفاصيل التالية لربط Polosys Books بحساب تويلو الخاص بك.",
+    "account_SID": "معرّف الحساب",
+    "auth_token": "رمز المصادقة",
+    "from_phone": "رقم الهاتف المرسل منه",
+    "connect_with_twilio": "اتصل بتويلو",
+
+    "whatsapp_integrations": "تكاملات واتساب",
+    "email_integrations": "تكاملات البريد الإلكتروني"
+}

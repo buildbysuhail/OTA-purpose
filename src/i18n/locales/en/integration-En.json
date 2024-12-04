@@ -1,0 +1,28 @@
+{
+    "SMS_integrations": "SMS Integrations",
+    "twilio": "Twilio",
+    "set_up_twilio": "Set up Twilio and send automated SMS notifications to your customers about transactions, payments and reminders.",
+    "benefits": "Benefits",
+    "notify_customers": "Notify customers instantly about transactions, payments and reminders via SMS.",
+    "configure_SMS": "Configure SMS notifications at customer and contact person level.",
+    "before_you_can": "Before you can connect Twilio with Polosys Books, you must",
+    "create_a_twilio_account": "Create a Twilio Account.",
+    "sign_up_now": "Sign Up Now",
+    "go_to_console": "Go to Console in Twilio and get your Account SID and Auth Token.",
+    "have_an_active_phone_number": "Have an active phone number that works with Twilio.",
+    "read_more": "Read More",
+    "connect": "Connect",
+    "don't_have_an_account?": "Don't have an Account ?",
+    "create_an_account": "Create an account now to connect Polosys Books with Twilio.",
+    "go_to_twilio": "Go To Twilio",
+    "or": "Or",
+    "have_an_account_already?": "Have An Account Already?",
+    "enter_the_following_details": "Enter the following details to connect Polosys Books with your Twilio account.",
+    "account_SID": "Account SID",
+    "auth_token": "Auth Token",
+    "from_phone": "From Phone",
+    "connect_with_twilio": "Connect With Twilio",
+
+    "whatsapp_integrations": "Whatsapp Integrations",
+    "email_integrations": "Email Integrations"
+}

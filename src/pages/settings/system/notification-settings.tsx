@@ -7,12 +7,11 @@ import { NotificationsChannel } from "../../../enums/notification-chanal";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import SmsWhatsappTemplate from "./notification-settings-template-SmsWhatsapp";
 import EmailTemplate from "./notification-settings-template-email";
-import { t } from "i18next";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { useTranslation } from "react-i18next";
 
 const api = new APIClient();
-
 interface NotificationSettings {
   transactionCode: string;
   transactionName: string;
@@ -24,17 +23,15 @@ interface NotificationSettings {
 // const location = useLocation();
 // const path = location.pathname.split("/").pop();
 const NotificationSettings = () => {
-  const [gridHeight, setGridHeight] = useState<{
-    mobile: number;
-    windows: number;
-  }>({ mobile: 500, windows: 500 });
+  const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number }>
+    ({ mobile: 500, windows: 500 });
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - 200;
     let gridHeightWindows = wh - 300;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
-
+  const { t } = useTranslation("system");
   const T_Head = [
     t("transaction"),
     t("email"),
@@ -44,24 +41,17 @@ const NotificationSettings = () => {
   ];
   const [TableBody, setTableBody] = useState<NotificationSettings[]>([]);
   const [loading, setLoading] = useState(false);
-  const [tooltip, setTooltip] = useState({
-    isOpen: false,
-    transactionCode: "",
-    channel: "",
-  });
+  const [tooltip, setTooltip] = useState({ isOpen: false, transactionCode: "", channel: "" });
   const [searchCols, setSearchCols] = useState<String>("");
   /////////// for Search
-
   /////////////
   useEffect(() => {
     loadNotification();
   }, []);
-
   const loadNotification = async () => {
     setLoading(true);
     try {
       const response = await api.getAsync(`${Urls.notification_transaction}`);
-
       setTableBody(response);
     } catch (error) {
       console.error("Error loading settings:", error);
@@ -69,7 +59,6 @@ const NotificationSettings = () => {
       setLoading(false);
     }
   };
-
   // Handler for toggling the email switch
   const handleSwitchChange = async (
     transactionCode: string,
@@ -93,13 +82,11 @@ const NotificationSettings = () => {
         inAppNotification: NotificationsChannel.InAppNotification,
       };
       const channel = fieldToChannelMap[field];
-
       const requestBody = {
         transactionCode: transactionCode,
         channel: channel,
         isEnabled: value,
       };
-
       // Send PATCH request to the server
       const response = await api.patch(
         `${Urls.notification_transaction}`,
@@ -110,7 +97,6 @@ const NotificationSettings = () => {
       console.error("Error saving settings:", error);
     }
   };
-
   const toggleTooltip = (transactionCode: string, channel: string) => {
     setTooltip((prevTooltip) => ({
       ...prevTooltip,
@@ -119,7 +105,6 @@ const NotificationSettings = () => {
       channel: channel,
     }));
   };
-
   return (
     <>
       <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa] h-full">
@@ -128,17 +113,10 @@ const NotificationSettings = () => {
             {/* <div className="flex justify-start m-3"> */}
             <div className="box-header justify-between">
               <div className="box-title">
-                <h5 className="font-semibold text-center text-[1.25rem] ">
-                  {" "}
-                  {t("notification_settings")}
-                </h5>
-
-                <p className="text-[#8c9097] dark:text-white/50 text-center mb-6 text-[0.813rem]">
-                  {t("customize_your_notifications")}
-                </p>
+                <h5 className="font-semibold text-center text-[1.25rem] ">{" "}{t("notification_settings")}</h5>
+                <p className="text-[#8c9097] dark:text-white/50 text-center mb-6 text-[0.813rem]">{t("customize_your_notifications")}</p>
               </div>
             </div>
-
             <div className="box-body flex flex-col gap-1">
               <ERPInput
                 noLabel
@@ -156,7 +134,7 @@ const NotificationSettings = () => {
                   </>
                 ) : (
                   // <div className="table-responsive max-h-[60vh] xxl:max-h-[70vh] shadow-sm m-0 p-0">
-                      <div className={`table-responsive overflow-auto shadow-sm`} style={{ maxHeight: `${gridHeight.windows}px` }}>
+                  <div className={`table-responsive overflow-auto shadow-sm`} style={{ maxHeight: `${gridHeight.windows}px` }}>
                     <table className="min-w-full relative table table-bordered rounded-t-sm dark:border-defaultborder/10 ">
                       <thead className="bg-[#f3f4f6] sticky top-[-1px] z-40">
                         <tr>
@@ -169,19 +147,17 @@ const NotificationSettings = () => {
                           ))}
                         </tr>
                       </thead>
-
                       <tbody className=" bg-[#fafafa]">
                         {TableBody.length > 0 ? (
-                          TableBody?.filter((item)=>
-                          item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())
-                          )?.map((item, index) => (                         
+                          TableBody?.filter((item) =>
+                            item.transactionName?.toLowerCase().includes(searchCols.toLowerCase())
+                          )?.map((item, index) => (
                             <tr key={index} className="hover:bg-gray-100">
                               <td>
                                 <span className="font-light text-[.875rem]">
                                   {item.transactionName}
                                 </span>
                               </td>
-
                               {/* Email Switch */}
                               <td className="py-2 px-4">
                                 <div className="flex justify-start items-center space-x-4">
@@ -215,7 +191,6 @@ const NotificationSettings = () => {
                                   )}
                                 </div>
                               </td>
-
                               {/* WhatsApp Switch */}
                               <td className="py-2 px-4">
                                 <div className="flex justify-start items-center space-x-4 ">

@@ -1,20 +1,10 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { DataGrid, RemoteOperations } from "devextreme-react/data-grid";
-import {
-  Column,
-  FilterRow,
-  Paging,
-  Scrolling,
-  SearchPanel,
-  Toolbar,
-  Item,
-} from "devextreme-react/data-grid";
-
+import {Column,  FilterRow,  Paging,  Scrolling,  SearchPanel,  Toolbar,  Item,} from "devextreme-react/data-grid";
 //   import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
 import { useNavigate } from "react-router-dom";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { APIClient } from "../../../../helpers/api-client";
-
 import Urls from "../../../../redux/urls";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPToast from "../../../../components/ERPComponents/erp-toast";
@@ -57,7 +47,7 @@ const HideAccountLedger = () => {
     let gridHeightWindows = wh - 300;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
-  const { t } = useTranslation();
+  const { t } = useTranslation("masters");
   const handleSubmit = async () => {
     setIsSaving(true);
     try {
@@ -250,7 +240,7 @@ const HideAccountLedger = () => {
                 />
                 <Column
                   dataField={t("isGroup")}
-                  caption="Is Group"
+                  caption={t("is_group")}
                   dataType="boolean"
                   width={100}
                   cellRender={(cellData) => (

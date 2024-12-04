@@ -6,17 +6,13 @@ import { toggleCounterPopup } from "../../../redux/slices/popup-reducer";
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
 import { useTranslation } from "react-i18next";
-import { CounterManage } from "./counters-manage";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../components/ERPComponents/erp-button";
 import ERPRadio from "../../../components/ERPComponents/erp-radio";
 import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import { ResponseModelWithValidation } from "../../../base/response-model";
-import { handleResponse } from "../../../utilities/HandleResponse";
 import SystemSettingsApi from "./system-apis";
 import DownloadPreview from "../../LabelDesigner/download-preview";
 import { APIClient } from "../../../helpers/api-client";
@@ -127,7 +123,7 @@ const initialStandardBarcodeData = {
 
 const api = new APIClient();
 const BarcodePrint: React.FC = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
 
@@ -390,7 +386,7 @@ const BarcodePrint: React.FC = () => {
                       autoFocus={true}
                       variant="outlined"
                       id="formBcode"
-                      label={t("barcode_form")}
+                      label={t("barcode_from")}
                       type="text"
                       customSize="sm"
                       className="w-full"
@@ -404,7 +400,7 @@ const BarcodePrint: React.FC = () => {
                           data: data,
                         }));
                       }}
-                      placeholder={t("form")}
+                      placeholder={t("from")}
                     />
                     <ERPInput
                       useMUI

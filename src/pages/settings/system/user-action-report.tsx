@@ -7,9 +7,8 @@ import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 
-
 const UserActionReport: React.FC = React.memo(() => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
   const rootState = useRootState();
   const columns: DevGridColumn[] =useMemo( () => [
@@ -84,9 +83,7 @@ const UserActionReport: React.FC = React.memo(() => {
       allowFiltering: true,
       minWidth: 150,
       isLocked: false,
-    },
-
-  ],[]);
+    },],[]);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -113,5 +110,4 @@ const UserActionReport: React.FC = React.memo(() => {
     </Fragment>
   );
 });
-
 export default UserActionReport;

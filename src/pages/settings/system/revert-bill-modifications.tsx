@@ -35,11 +35,9 @@ export const initialRevertBillModificationData = {
 const api = new APIClient();
 const RevertBillModifications: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("system");
   const rootState = useRootState();
-
   const handleDelete = async (data: any) => {
-    
     const res = await api.post(Urls.revertBillModifications, {
       invTransactionMasterID: data.data.invTransactionMasterID,
       remarks: '',
@@ -51,7 +49,7 @@ const RevertBillModifications: React.FC = () => {
     () => [
       {
         dataField: "invTransactionMasterID",
-        caption: "Transaction Master ID",
+        caption: t("transaction_master_ID"),
         dataType: "number",
         allowSorting: true,
         allowFiltering: true,
@@ -59,7 +57,7 @@ const RevertBillModifications: React.FC = () => {
       },
       {
         dataField: "transactionDate",
-        caption: "Transaction Date",
+        caption: t("transaction_date"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -68,7 +66,7 @@ const RevertBillModifications: React.FC = () => {
       },
       {
         dataField: "VchNo",
-        caption: "Voucher Number",
+        caption: t("voucher_number"),
         dataType: "string",
         allowSearch: true,
         allowFiltering: true,
@@ -76,7 +74,7 @@ const RevertBillModifications: React.FC = () => {
       },
       {
         dataField: "voucherType",
-        caption: "Voucher Type",
+        caption: t("voucher_type"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -85,7 +83,7 @@ const RevertBillModifications: React.FC = () => {
       },
       {
         dataField: "voucherForm",
-        caption: "Voucher Form",
+        caption: t("voucher_form"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -94,7 +92,7 @@ const RevertBillModifications: React.FC = () => {
       },
       {
         dataField: "remarks",
-        caption: "Remarks",
+        caption: t("remarks"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -103,7 +101,7 @@ const RevertBillModifications: React.FC = () => {
       },
       {
         dataField: "tType",
-        caption: "Transaction Type",
+        caption: t("transaction_type"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -112,7 +110,7 @@ const RevertBillModifications: React.FC = () => {
       },
       {
         dataField: "description",
-        caption: "Description",
+        caption: t("description"),
         dataType: "string",
         allowSorting: true,
         allowSearch: true,
@@ -130,10 +128,7 @@ const RevertBillModifications: React.FC = () => {
         cellRender: (cellElement: any) => {
           return (
             <div className="chart-cell">
-              <i
-                className="ri-delete-bin-5-line delete-icon cursor-pointer"
-                onClick={() => handleDelete(cellElement)}
-              ></i>
+              <i className="ri-delete-bin-5-line delete-icon cursor-pointer" onClick={() => handleDelete(cellElement)}></i>
             </div>
           );
         },
@@ -176,5 +171,4 @@ const RevertBillModifications: React.FC = () => {
     </Fragment>
   );
 };
-
 export default React.memo(RevertBillModifications);

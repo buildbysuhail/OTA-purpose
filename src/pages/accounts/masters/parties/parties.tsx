@@ -150,8 +150,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
       });
       setStore(res.items);
       setTotalCount(res.items.length);
-      setFailedCount(res.items?.rows?.filter((row: any) => row.isValid != true).length || 0);
-      setSucceededCount(res.items?.rows?.filter((row: any) => row.isValid === true).length || 0);
+      setFailedCount(res.items?.filter((row: any) => row.isValid != true).length || 0);
+      setSucceededCount(res.items?.filter((row: any) => row.isValid === true).length || 0);
       setLoading(false);
       handleResponse(res, () => { }, () => { })
     };

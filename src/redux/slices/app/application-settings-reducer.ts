@@ -11,7 +11,7 @@ const applicationSettingsSlice = createSlice({
     
     builder.addCase(getApplicationSettings.fulfilled, (state, action: PayloadAction<any>) => {
       
-      state = action.payload;
+      return action.payload;
     });
   },
 });

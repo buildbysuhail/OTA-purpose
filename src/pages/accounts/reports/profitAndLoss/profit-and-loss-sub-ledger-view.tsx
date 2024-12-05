@@ -66,6 +66,11 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.ledgerName}
+  </span>
+      ),
     },
     {
       dataField: "debit",
@@ -74,6 +79,11 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.debit}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -82,6 +92,11 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.credit}
+  </span>
+      ),
     },
     {
       dataField: "balance",
@@ -90,6 +105,11 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.balance}
+  </span>
+      ),
     },
   ];
   return (

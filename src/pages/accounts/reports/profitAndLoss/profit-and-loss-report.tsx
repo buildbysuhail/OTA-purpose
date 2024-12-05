@@ -21,6 +21,7 @@ import { t } from "i18next";
 import ProfitAndLossReportFilter, { ProfitAndLossReportFilterInitialState } from "./profit-and-loss-report-filter";
 import LoadingPopup from "../balanceSheet/LoadingPopup";
 import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
+import ProfitAndLossClosingStockDetails from "./profit-and-loss-closing-stock-details";
 // import { MouseEventHandler } from "@types/react";
 
 
@@ -315,8 +316,9 @@ const ProfitAndLossReport = () => {
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
         </p>
       </div>
+      {(isOpenDetails.key!==0&&isOpenDetails.key!==-400&&
 
-      <ERPModal
+<ERPModal
         isOpen={isOpenDetails.isOpen}
         // title={t("bank_cards")}
         title="Account Report"
@@ -326,18 +328,33 @@ const ProfitAndLossReport = () => {
           setIsOpenDetails({ isOpen: false, key: 0 });
         }}
         content={
-          <ProfitAndLossSubledgerwiseView
+         isOpenDetails.key==-500?
+          <ProfitAndLossClosingStockDetails
             postData={{
-              accGroupID: isOpenDetails.key,
-              expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
-              dateFrom: filter.fromDate,
-              asOnDate: filter.toDate,
-              isDateForm:true,
+              fromDate: filter.fromDate,
+              toDate: filter.toDate,
+              valuationUsing: filter.valuationUsing,
             }}
             groupName={isOpenDetails.groupName}
-          />
+          />: 
+          <ProfitAndLossSubledgerwiseView
+          postData={{
+            accGroupID: isOpenDetails.key,
+            expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
+            dateFrom: filter.fromDate,
+            asOnDate: filter.toDate,
+            isDateForm:true,
+          }}
+          groupName={isOpenDetails.groupName}
+        />
         }
       />
+
+      )}
+
+      
+      
+      
     </div>
   );
 };

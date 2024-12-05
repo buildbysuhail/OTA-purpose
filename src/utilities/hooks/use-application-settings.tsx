@@ -235,6 +235,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   };
 
   return {
+    settings: applicationSettings,
     isSaving,
     handleSubmit,
     handleFieldChange,
@@ -246,6 +247,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
 };
 
 type UseApplicationSettingReturnType = {
+  settings:ApplicationSettingsType
   filterText: string;
   setFilterSearch: React.Dispatch<React.SetStateAction<string>>;
   isSaving: boolean;

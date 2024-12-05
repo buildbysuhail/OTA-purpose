@@ -206,6 +206,8 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       userThemes: btoa(JSON.stringify(appState)),
     });
     handleResponse(res, () => {
+      console.log(' Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });');
+      
       Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
     });
   };
@@ -223,6 +225,7 @@ const resetInputBox = async ()=>{
     console.error("Error getInputBox data:", error);
   }
 }
+
 
   return (
     <Fragment>

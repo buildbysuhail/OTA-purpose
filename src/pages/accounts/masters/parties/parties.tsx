@@ -596,11 +596,11 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   <span className="text-sm font-medium text-gray">Total Count</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
-                  <div className="text-2xl font-bold text-green">{totalCount}</div>
+                  <div className="text-2xl font-bold text-green">{succeededCount}</div>
                   <span className="text-sm font-medium text-gray">Succeed</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
-                  <div className="text-2xl font-bold text-red">{totalCount}</div>
+                  <div className="text-2xl font-bold text-red">{failedCount}</div>
                   <span className="text-sm font-medium text-gray">Failure</span>
                 </div>
                 <ERPButton

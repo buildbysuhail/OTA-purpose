@@ -389,7 +389,6 @@ export default function ERPDataCombobox({
   const loadData = async () => {
     setLoading(true);
     try {
-      debugger;
       console.log(`options${field?.freezeDataLoad}`);
       const _items =
         options || (await api.getAsync(field?.getListUrl, field?.params || ""));

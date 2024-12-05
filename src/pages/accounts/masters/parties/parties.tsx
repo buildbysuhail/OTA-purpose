@@ -68,14 +68,6 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   const [gridHeight, setGridHeight] = useState(500);
 
   useEffect(() => {
-    const initialData = Array.from({ length: 30 }, () => ({
-      a: null,
-      b: null,
-      c: null,
-      d: null,
-      e: null,
-    }));
-    setStore(initialData);
 
     const wh = window.innerHeight;
     setGridHeight(wh - 400);
@@ -106,7 +98,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   }
   const onSubmit = useCallback(async () => {
     try {
-      const res = await api.postAsync(Urls.import_parties, store,);
+      const res = await api.postAsync(Urls.import_parties, store);
       handleResponse(res, () => { }, () => { });
     } catch (error) {
       console.error(error);

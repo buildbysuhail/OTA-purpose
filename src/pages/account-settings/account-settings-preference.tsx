@@ -209,13 +209,20 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
     });
   };
-
-  const resetInputBox = async () => {
-    const res = await api.getAsync(Urls.getInputBox);
+  
+const resetInputBox = async ()=>{
+  debugger;
+  try{
+    const res = await api.getAsync(Urls.getInputBox)
     const _inputBox = atob(res);
-    const inputBox: inputBox = customJsonParse(_inputBox);
-    dispatch(setInputBox(inputBox));
-  };
+    // dispatch(setInputBox(res.inputBox));
+    const inputBox:AppState  = customJsonParse(_inputBox);
+    console.log("inputget",inputBox);
+    dispatch(setInputBox(inputBox?.inputBox));
+  }catch (error) {
+    console.error("Error getInputBox data:", error);
+  }
+}
 
   return (
     <Fragment>
@@ -1151,72 +1158,77 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
                         </div>
                       </div>
                       <div className="">
-                        <p className="switcher-style-head ">Input Box Style:</p>
-
-                        <div className="flex justify-end items-center mt-3">
-                          <ERPButton
-                            variant="secondary"
-                            title="Reset"
-                            onClick={() => {
-                              resetInputBox;
-                            }}
-                            startIcon={"ri-refresh-line"}
-                            //  disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
-                            //  loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
-                          ></ERPButton>
-                        </div>
-
-                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 mt-5 switcher-style">
-                          <ERPInput
-                            id="inputBox"
-                            label="Demo Input"
-                            onChange={(e) => {
-                              setDemo((prevTheme) => ({
-                                ...prevTheme,
-                                inputBox: e.target.value,
-                              }));
-                            }}
-                            value={demo.inputBox}
-                          />
-
-                          <ERPDateInput
-                            id="dateBox"
-                            label="Date Input"
-                            onChange={(e) => {
-                              setDemo((prevTheme) => ({
-                                ...prevTheme,
-                                dateBox: e.target.value,
-                              }));
-                            }}
-                            value={demo.dateBox}
-                          />
-                          <div>
-                            <ERPDataCombobox
-                              id="selectBox"
-                              data={demo}
-                              label="Demo Select Box"
-                              field={{
-                                id: "selectBox",
-                                valueKey: "value",
-                                labelKey: "label",
-                              }}
-                              // customSize='sm'
+                     
+                      <p className="switcher-style-head ">Input Box Style:</p>
+                      
+                      <div className="flex justify-end items-center mt-3">
+                    <ERPButton 
+                     variant="secondary"
+                     title="Reset"
+                     onClick={resetInputBox}
+                     startIcon={ 'ri-refresh-line' }
+                    //  disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
+                    //  loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
+                     >
+                     </ERPButton>
+                      </div>
+                    
+                     
+                        
+                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3  mt-5 switcher-style">
+                             <ERPInput
+                              id="inputBox"
+                              label="Demo Input"
                               onChange={(e) => {
                                 setDemo((prevTheme) => ({
-                                  ...prevTheme,
-                                  selectBox: e?.value ?? null,
+                                  ...prevTheme,             
+                                  inputBox: e.target.value  
                                 }));
                               }}
-                              options={[
-                                { value: 0, label: "0" },
-                                { value: 1, label: "1" },
-                                { value: 2, label: "2" },
-                                { value: 3, label: "3" },
-                                { value: 4, label: "4" },
-                                { value: 5, label: "5" },
-                              ]}
+                              value={demo.inputBox}
                             />
-                          </div>
+                        
+                            <ERPDateInput
+                              id="dateBox"                          
+                              label="Date Input"
+                              onChange={(e) => {
+                                setDemo((prevTheme) => ({
+                                  ...prevTheme,             
+                                  dateBox: e.target.value  
+                                }));
+                              }}
+                              value={demo.dateBox}
+                            />
+                         <div className={`${appState.inputBox?.inputStyle === "normal"?"-translate-y-[3px]":"" }`}>
+                         <ERPDataCombobox
+                            id="selectBox"
+                            data={demo}
+                            label="Demo Select Box"
+                            field={{
+                              id: "selectBox",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            
+                            // customSize='sm'
+                            onChange={(e) => {
+                              setDemo((prevTheme) => ({
+                                ...prevTheme,             
+                                selectBox: e?.value ?? null,
+                              }));
+                            }}
+                            options={[
+                              { value: 0, label: "0" },
+                              { value: 1, label: "1" },
+                              { value: 2, label: "2" },
+                              { value: 3, label: "3" },
+                              { value: 4, label: "4" },
+                              { value: 5, label: "5" },
+                            ]}
+                        />
+                         </div>
+                            
+                           
                         </div>
 
                         <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">

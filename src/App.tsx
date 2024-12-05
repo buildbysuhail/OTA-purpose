@@ -125,7 +125,11 @@ debugger;
   const load = async() => {
     debugger;
     const settings = await api.getAsync(Urls.application_setting);
-    dispatch(setApplicationSettings(settings));
+    dispatch(setApplicationSettings(
+      {
+        ...settings,
+        apiLoaded: true
+    }));
   }
   useEffect(() => {
     if (locale && i18n && typeof i18n.changeLanguage === "function") {

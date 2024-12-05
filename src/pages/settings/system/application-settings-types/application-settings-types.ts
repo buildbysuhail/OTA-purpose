@@ -20,4 +20,5 @@ export interface ApplicationSettingsType {
   gstSettings: ApplicationGstSettings;
   taxSettings: ApplicationTaxSettings;
   miscellaneousSettings: ApplicationMiscellaneousSettings;
+  apiLoaded: boolean
 }

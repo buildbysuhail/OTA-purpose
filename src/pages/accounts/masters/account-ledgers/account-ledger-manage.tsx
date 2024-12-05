@@ -34,7 +34,11 @@ export const AccountLedgerManage = () => {
     useApiClient: true,
     initialData: initialAccountLedger
   });
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    if(rootState.PopupData.accountLedger.key === undefined || rootState.PopupData.accountLedger.key === null ) {
+      load();
+    }
+     }, []);
   const load = async () => {
     try {
       const res = await api.getAsync(Urls.data_getNextLedgerCode);

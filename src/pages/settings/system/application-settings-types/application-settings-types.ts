@@ -15,7 +15,7 @@ export interface ApplicationSettingsType {
   inventorySettings: ApplicationInventorySettings;
   branchSettings: ApplicationBranchSettings;
   backUpSettings: ApplicationBackupSettings;
-  printSettings: ApplicationPrintSettings;
+  printerSettings: ApplicationPrintSettings;
   productsSettings: ApplicationProductsSettings;
   gstSettings: ApplicationGstSettings;
   taxSettings: ApplicationTaxSettings;

@@ -161,7 +161,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
                     ? "Branch"
                     : _paretnt == "backUpSettings"
                     ? "BackUP"
-                    : _paretnt == "printSettings"
+                    : _paretnt == "printerSettings"
                     ? "Printer"
                     : _paretnt == "productsSettings"
                     ? "Products"

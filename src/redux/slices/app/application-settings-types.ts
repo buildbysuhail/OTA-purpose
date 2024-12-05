@@ -17,7 +17,7 @@ export const ApplicationSettingsInitialState: ApplicationSettingsType = {
   miscellaneousSettings: ApplicationMiscellaneousSettingsInitialState,
   accountsSettings: ApplicationAccountSettingsInitialState,
   backUpSettings: ApplicationBackupSettingsInitialState,
-  printSettings: ApplicationPrintSettingsInitialState,
+  printerSettings: ApplicationPrintSettingsInitialState,
   productsSettings: ApplicationProductsSettingsInitialState,
   gstSettings: ApplicationGstSettingsInitialState,
   taxSettings: ApplicationTaxSettingsInitialState,

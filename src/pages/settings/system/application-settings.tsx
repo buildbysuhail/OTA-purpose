@@ -75,7 +75,7 @@ const ApplicationSettings: React.FC = () => {
       case "inventorySettings": return <InventorySettingsForm />;
       case "gstSettings": return <ERPSettingsFormGSTTaxes />;
       case "branchSettings": return <BranchSettingsForm />;
-      case "printSettings": return <PrintSettingForm />;
+      case "printerSettings": return <PrintSettingForm />;
       case "backUpSettings": return <BackupSettingsForm />;
       case "taxSettings": return <TaxSettingsForm />;
       default: return null;

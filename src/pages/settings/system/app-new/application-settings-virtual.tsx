@@ -862,7 +862,7 @@ export default function SettingsPage() {
                             disabled={settings.backUpSettings?.backupMethods == "No BackUp" || true}
                             label={t("backup_path")}
                             placeholder={t("backup_path")}
-                            onChangeData={(data: any) => handleFieldChange("backUpSettings", "backUpPath", parseFloat(data.backUpPath))}
+                            onChangeData={(data: any) => handleFieldChange("backUpSettings", "backUpPath", data.backUpPath)}
                           />
                         )}
                         {filterComponent([t("duration")], filterText) && (
@@ -911,7 +911,7 @@ export default function SettingsPage() {
                         {filterComponent([t("default_printer")], filterText) && (
                           <ERPDataCombobox
                             id="defaultPrinter"
-                            data={settings?.printSettings}
+                            data={settings?.printerSettings}
                             field={{
                               id: "defaultPrinter",
                               valueKey: "value",
@@ -919,7 +919,7 @@ export default function SettingsPage() {
                             }}
                             disabled
                             onChangeData={(data: any) =>
-                              handleFieldChange("printSettings", "defaultPrinter", data.defaultPrinter)
+                              handleFieldChange("printerSettings", "defaultPrinter", data.defaultPrinter)
                             }
                             label={t("default_printer")}
                             options={[
@@ -934,11 +934,11 @@ export default function SettingsPage() {
                         {userSession.countryId == Countries.India && filterComponent([t("print_gatePass")], filterText) && (
                           <ERPCheckbox
                             id="printGatePass"
-                            checked={settings?.printSettings?.printGatePass}
-                            data={settings?.printSettings}
+                            checked={settings?.printerSettings?.printGatePass}
+                            data={settings?.printerSettings}
                             label={t("print_gatePass")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("printSettings", "printGatePass", data.printGatePass)
+                              handleFieldChange("printerSettings", "printGatePass", data.printGatePass)
                             }
                           />
                         )}
@@ -966,11 +966,11 @@ export default function SettingsPage() {
                         {filterComponent([t("show_reprint_authorisation")], filterText) && (
                           <ERPCheckbox
                             id="showReprintAuthorisation"
-                            checked={settings?.printSettings?.showReprintAuthorisation}
-                            data={settings?.printSettings}
+                            checked={settings?.printerSettings?.showReprintAuthorisation}
+                            data={settings?.printerSettings}
                             label={t("show_reprint_authorisation")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("printSettings", "showReprintAuthorisation", data.showReprintAuthorisation)
+                              handleFieldChange("printerSettings", "showReprintAuthorisation", data.showReprintAuthorisation)
                             }
                           />
                         )}

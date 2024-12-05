@@ -5,7 +5,7 @@ export type ApplicationSettingsIds =
   | "inventorySettings"
   | "branchSettings"
   | "backUpSettings"
-  | "printSettings"
+  | "printerSettings"
   | "productsSettings"
   | "gstSettings"
   | "taxSettings"
@@ -45,7 +45,7 @@ export const ApplicationSettingsTypes: {
   {
     id: 6,
     name: "Print",
-    settings_group_id: "printSettings",
+    settings_group_id: "printerSettings",
   },
   {
     id: 7,

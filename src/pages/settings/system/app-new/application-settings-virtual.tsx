@@ -22,6 +22,7 @@ import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '.
 import { BusinessType } from '../../../../enums/business-types';
 import { useApplicationSetting } from '../../../../utilities/hooks/use-application-settings';
 import { useSearchInputFocus } from '../../../../utilities/shortKeys';
+import { handleResponse } from '../../../../utilities/HandleResponse';
 
 const api = new APIClient()
 const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) => {
@@ -146,17 +147,60 @@ export default function SettingsPage() {
     setInputValue(e.target.value);
   };
 
-  const handleUpdateGridClass = () => {
+  // const handleUpdateGridClass = async () => {
+  //   const gridClassParts = inputValue.split(' ');
+  //   const screenSizes = ['sm', 'md', 'lg', 'xl', 'xxl'];
+  //   const finalGridClass = screenSizes.map(size => {
+  //     const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
+  //     return existingClass || '';
+  //   }).filter(Boolean).join(' ');
+  //   setGridClass(finalGridClass);
+  //   try {
+  //     const response: any = await api.post( `${Urls.application_settings_UpdateSettingsScreen}`,gridClass);
+  //     handleResponse(response);
+  //   } catch (error) {
+  //     console.error("Error submitting data:", error);
+  //   }
+  // };
+
+  const handleUpdateGridClass = async () => {
     const gridClassParts = inputValue.split(' ');
-
     const screenSizes = ['sm', 'md', 'lg', 'xl', 'xxl'];
-    const finalGridClass = screenSizes.map(size => {
-      const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
-      return existingClass || '';
-    }).filter(Boolean).join(' ');
-
+    const finalGridClass = screenSizes
+      .map(size => {
+        const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
+        return existingClass || '';
+      })
+      .filter(Boolean)
+      .join(' ');
+  
     setGridClass(finalGridClass);
+  
+    try {
+      // Wrap gridClass in an object before sending
+      const payload = { gridClass:finalGridClass };
+      const response: any = await api.post(`${Urls.application_settings_UpdateSettingsScreen}`, payload);
+      handleResponse(response);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
   };
+  
+
+
+  const loadGridClass = async()=>{
+    try {
+      const response = await api.getAsync(Urls.application_settings_GetSettingsScreen);
+      setGridClass(response);
+    } catch (error) {
+      console.error("Error loading settings:", error);
+    }
+  }
+  useEffect(() => {
+    if(gridClass == null || gridClass == '' || gridClass == undefined){
+      loadGridClass();
+    }
+  }, []); 
 
   const handleGeneralHeaderClick = () => {
     const newClickCount = clickCount + 1;

@@ -137,7 +137,7 @@ const Urls = {
   getPreference: "/Core/Preferences/GetPreference/",
   getDateRegion: "/Core/Preferences/GetDateRegion/",
   getUserThemes: "/Core/Preferences/GetUserThemes/",
-  getInputBox: " ",
+  getInputBox: "/Core/Preferences/ResetTheme",
   // AccountSettings/UserBranches
   userBranches: "/Core/UserBranches/",
   deleteUserBranches: "/Core/UserBranches/{Id}/",
@@ -175,6 +175,8 @@ const Urls = {
   reset_data_base: "/Core/ResetDataBase/",
   application_settings: "/Core/ApplicationSettings/",
   application_settings_virtual: "/Core/ApplicationSettings/Virtual/",
+  application_settings_GetSettingsScreen:'/Core/Preferences/GetSettingsScreen',
+  application_settings_UpdateSettingsScreen:'/Core/Preferences/UpdateSettingsScreen',
   sql_commands: "/Core/SQLCommand/",
   notification_provider: "/Core/NotificationProvider/",
   notification_transaction: "/Core/TransactionNotification",

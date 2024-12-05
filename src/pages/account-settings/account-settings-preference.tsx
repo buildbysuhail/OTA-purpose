@@ -207,12 +207,19 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
     });
   };
-
+  
 const resetInputBox = async ()=>{
-  const res = await api.getAsync(Urls.getInputBox)
-  const _inputBox = atob(res);
-  const inputBox : inputBox = customJsonParse(_inputBox);
-    dispatch(setInputBox(inputBox));
+  debugger;
+  try{
+    const res = await api.getAsync(Urls.getInputBox)
+    const _inputBox = atob(res);
+    // dispatch(setInputBox(res.inputBox));
+    const inputBox:AppState  = customJsonParse(_inputBox);
+    console.log("inputget",inputBox);
+    dispatch(setInputBox(inputBox?.inputBox));
+  }catch (error) {
+    console.error("Error getInputBox data:", error);
+  }
 }
 
   return (
@@ -1170,9 +1177,9 @@ const resetInputBox = async ()=>{
                       
                       <div className="flex justify-end items-center mt-3">
                     <ERPButton 
-                     variant="secondary"
+                     type="reset"
                      title="Reset"
-                     onClick={() => {resetInputBox}}
+                     onClick={resetInputBox}
                      startIcon={ 'ri-refresh-line' }
                     //  disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
                     //  loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}

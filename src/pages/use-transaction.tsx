@@ -5,7 +5,11 @@ import { RootState } from "../redux/store";
 import ERPToast from "../components/ERPComponents/erp-toast";
 import moment from "moment";
 import { UserAction, useUserRights } from "../helpers/user-right-helper";
+import ERPAlert from "../components/ERPComponents/erp-sweet-alert";
+import { APIClient } from "../helpers/api-client";
+import Urls from "../redux/urls";
 
+const api = new APIClient();
 export const useTransaction = (transactionType: string) => {
   const userSession = useAppSelector((state: RootState) => state.UserSession);
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
@@ -50,15 +54,11 @@ const {hasRight} = useUserRights();
           
 
           if (transDate > maxPostDate) {
-            PolosysFrameWork.General.ShowMessageBox(
-              "Post Dated Transaction Not Allowed"
-            );
+            ERPAlert({icon:"warning", title: "Post Dated Transaction Not Allowed" });
             result = 0;
           }
         } else {
-          PolosysFrameWork.General.ShowMessageBox(
-            "User privilege not assigned. Please contact admin"
-          );
+          ERPAlert({icon:"warning", title: "User privilege not assigned. Please contact admin" });
           result = 0;
         }
       }
@@ -68,22 +68,16 @@ const {hasRight} = useUserRights();
         transDate.toDatePartString() !== softwareDate.toDatePartString()
       ) {
         if (!hasRight("PRE_POST", UserAction.Blocked)) {
-          const minPreDate = new Date();
+          let minPreDate = new Date();
           minPreDate.setHours(0, 0, 0, 0);
-          minPreDate.setDate(
-            minPreDate.getDate() - Settings.MainSettings.NumberofPreDatedTrans
-          );
-
+          minPreDate = moment(minPreDate).add(applicationSettings.mainSettings.preDatedTransInNumbers,"days").toDate();
+         
           if (transDate < minPreDate) {
-            PolosysFrameWork.General.ShowMessageBox(
-              "Pre Dated Transaction Not Allowed"
-            );
+            ERPAlert({title:"Warning", text: "Pre Dated Transaction Not Allowed" });
             result = 0;
           }
         } else {
-          PolosysFrameWork.General.ShowMessageBox(
-            "User privilege not assigned. Please contact admin"
-          );
+          ERPAlert({title:"Warning", text: "User privilege not assigned. Please contact admin" });
           result = 0;
         }
       }
@@ -91,8 +85,22 @@ const {hasRight} = useUserRights();
 
     return result;
   };
+  const printVoucher = async (
+    accTransMasterID: number,
+    voucherType: string,
+    formType: string,
+    vrPrefix: string,
+    vrNumber: string,
+    printPreview: boolean,
+    isReprint: boolean = false,
+    data?: any
+  ) => {
+    const _data = data != undefined ? data : await api.getAsync(`Urls.acc_transaction_base${transactionType}`)
 
+   
+  };
   return {
     validateTransactionDate,
+    printVoucher
   };
 };

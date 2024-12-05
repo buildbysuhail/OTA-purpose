@@ -11,10 +11,19 @@ import {
 import { RootState } from "../../../redux/store";
 import { updateTransactionEditMode } from "./acc-transaction-functions";
 import { useDispatch } from "react-redux";
-import { accFormStateClearRowForNew } from "./reducer";
+import {
+  accFormStateClearRowForNew,
+  accFormStateHandleFieldChange,
+  accFormStateRowHandleFieldChange,
+  accFormStateTransactionMasterHandleFieldChange,
+  accFormStateTransactionUpdate,
+} from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { loadAccVoucher } from "./thunk";
 import ERPToast from "../../../components/ERPComponents/erp-toast";
+import ERPAlert from "../../../components/ERPComponents/erp-sweet-alert";
+import { useTransaction } from "../../use-transaction";
+import { AccTransactionMaster } from "./acc-transaction-types";
 export interface AccUserConfig {
   keepNarrationForJV: boolean;
   clearDetailsAfterSaveAccounts: boolean;
@@ -32,7 +41,12 @@ export const useAccTransaction = (transactionType: string) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const clientSession = useAppSelector((state: RootState) => state.ClientSession);
+  const applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
+  const clientSession = useAppSelector(
+    (state: RootState) => state.ClientSession
+  );
   const clearControlForNew = async () => {
     undoEditMode();
     dispatch(accFormStateClearRowForNew);
@@ -105,8 +119,7 @@ export const useAccTransaction = (transactionType: string) => {
     clearControlForNew();
     try {
       const params = {
-        VoucherNumber:
-          formState.transaction?.master?.voucherNumber,
+        VoucherNumber: formState.transaction?.master?.voucherNumber,
         VoucherPrefix: formState.transaction?.master?.voucherPrefix || "",
         VoucherType: formState.transaction?.master?.voucherType || "",
         FormType: formState.transaction?.master?.formType || "",
@@ -121,6 +134,7 @@ export const useAccTransaction = (transactionType: string) => {
       return null;
     }
   };
+  const { validateTransactionDate } = useTransaction(transactionType);
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   async function undoEditMode() {
     if (formState.isEdit) {
@@ -145,7 +159,9 @@ export const useAccTransaction = (transactionType: string) => {
   ) => {
     const response = await api.getAsync(
       Urls.get_last_voucher_no,
-      `formType=${formType? formType : "null"}&voucherType= ${(voucherType? voucherType : "null")}&prefix=${prefix? prefix : "null"}`
+      `formType=${formType ? formType : "null"}&voucherType= ${
+        voucherType ? voucherType : "null"
+      }&prefix=${prefix ? prefix : "null"}`
     );
 
     const nextVoucherNumber = response || 1;
@@ -188,166 +204,250 @@ export const useAccTransaction = (transactionType: string) => {
     hasRight;
   };
   const enableControls = () => {
-    setFormElements((prev) =>({
+    setFormElements((prev) => ({
       ...prev,
       pnlMasters: {
         ...prev.pnlMasters,
-        disabled: false
+        disabled: false,
       },
       dxGrid: {
         ...prev.dxGrid,
-        disabled: false
+        disabled: false,
       },
-
-    }))
+    }));
   };
   const disableControls = () => {
-    setFormElements((prev) =>({
+    setFormElements((prev) => ({
       ...prev,
       pnlMasters: {
         ...prev.pnlMasters,
-        disabled: true
+        disabled: true,
       },
       dxGrid: {
         ...prev.dxGrid,
-        disabled: true
+        disabled: true,
       },
-
-    }))
+    }));
   };
   const disableCombo = () => {
-    setFormElements((prev) =>({
+    setFormElements((prev) => ({
       ...prev,
       employee: {
         ...prev.employee,
-        disabled: true
+        disabled: true,
       },
       jvDrCr: {
         ...prev.jvDrCr,
-        disabled: true
+        disabled: true,
       },
       masterAccount: {
         ...prev.masterAccount,
-        disabled: true
+        disabled: true,
       },
       referenceDate: {
         ...prev.referenceDate,
-        disabled: true
+        disabled: true,
       },
       transactionDate: {
         ...prev.transactionDate,
-        disabled: true
+        disabled: true,
       },
       btnEdit: {
         ...prev.btnEdit,
-        disabled: true
+        disabled: true,
       },
-
-    }))
+    }));
   };
   const validate = (): boolean => {
     // Check if demo version is expired
     if (clientSession.isDemoVersion) {
-        const demoExpiryDate = new Date(clientSession.demoExpiryDate);
-        const transactionDate = new Date(formState.transaction.master.transactionDate); // Assuming `dtpTransDate` is a Date object
-        const softwareDate = new Date(clientSession.softwareDate);
+      const demoExpiryDate = new Date(clientSession.demoExpiryDate);
+      const transactionDate = new Date(
+        formState.transaction.master.transactionDate
+      ); // Assuming `dtpTransDate` is a Date object
+      const softwareDate = new Date(clientSession.softwareDate);
 
-        const daysUntilExpiry = Math.floor((demoExpiryDate.getTime() - transactionDate.getTime()) / (1000 * 60 * 60 * 24));
-        const daysSinceSoftwareDate = Math.floor((transactionDate.getTime() - softwareDate.getTime()) / (1000 * 60 * 60 * 24));
+      const daysUntilExpiry = Math.floor(
+        (demoExpiryDate.getTime() - transactionDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
+      const daysSinceSoftwareDate = Math.floor(
+        (transactionDate.getTime() - softwareDate.getTime()) /
+          (1000 * 60 * 60 * 24)
+      );
 
-        if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
-          setFormElements((prev) =>({
-            ...prev,
-            transactionDate: {
-              ...prev.transactionDate,
-              disabled: true
-            },
-            btnSave: {
-              ...prev.btnSave,
-              disabled: true
-            },
-            btnAdd: {
-              ...prev.btnAdd,
-              disabled: true
-            },
-      
-          }));
-          ERPToast.showWith("Demo expired. Please activate.", "warning");
-            return false;
-        }
+      if (daysUntilExpiry < 0 || daysSinceSoftwareDate > 30) {
+        setFormElements((prev) => ({
+          ...prev,
+          transactionDate: {
+            ...prev.transactionDate,
+            disabled: true,
+          },
+          btnSave: {
+            ...prev.btnSave,
+            disabled: true,
+          },
+          btnAdd: {
+            ...prev.btnAdd,
+            disabled: true,
+          },
+        }));
+        ERPAlert.show({
+          icon: "warning",
+          title: "Demo expired. Please activate.",
+        });
+        return false;
+      }
+    }
+    if (
+      formState.isEdit &&
+      formState.userConfig.mnuShowConfirmationForEditOnAccounts == true
+    ) {
+      ERPAlert.show({
+        icon: "info",
+        title: "Are you sure to modify this transaction.",
+      });
+      return false;
+    }
+    const validateTransDate = validateTransactionDate(
+      new Date(formState.transaction.master.transactionDate)
+    );
+    if (validateTransDate == 0) {
+      ERPAlert.show({
+        icon: "warning",
+        title:
+          "Transaction Date validation failed(Check Financial Year period)",
+      });
+      return false;
+    } else if (validateTransDate == 2) {
+      return false;
     }
 
-    // Handle "MJV" voucher type logic
-    
+    // Validate transaction amount
+    if (formState.total === null || formState.total == 0) {
+      ERPAlert.show({
+        icon: "warning",
+        title: "Invalid Transaction Amount",
+        text: "Zero transaction amount not allowed",
+      });
+      return false;
+    }
+    if (
+      formState.transaction.master.voucherType == "JV" &&
+      (formState.transaction.master.drCr == "" ||
+        formState.transaction.master.drCr == null)
+    ) {
+      ERPAlert.show({
+        icon: "warning",
+        title: "Please Select Debit/Credit in Master Ledger",
+      });
+      return false;
+    }
+    // Validate master ledger existence
+    if (
+      formState.transaction.master.voucherType !== "OB" &&
+      formState.transaction.master.voucherType !== "MJV"
+    ) {
+      const isExist =
+        formState.transaction?.details?.find(
+          (x) => x.ledgerId == formState.masterAccountID
+        ) != undefined;
+      ERPAlert.show({
+        icon: "warning",
+        title: "Duplicate Ledger",
+        text: "Master Ledger Exists in Row",
+      });
+      return isExist ? false : true;
+    }
 
-    // // Confirmation for editing
-    // if (isEdit && mnuShowConfirmationForEdit.checked) {
-    //     const confirmation = PolosysFrameWork.General.ShowMessageBox("Are you sure to modify this transaction?", "Edit", "YesNo");
-    //     if (confirmation === "No") {
-    //         return false;
-    //     }
-    // }
-
-    // // Validate transaction date
-    // const transactionValidation = PolosysFrameWork.General.ValiddateTransactionDate(dtpTransDate);
-    // if (transactionValidation === 0) {
-    //     PolosysFrameWork.General.ShowMessageBox("Transaction Date validation failed (Check Financial Year period)", "Invalid Transaction Date");
-    //     return false;
-    // } else if (transactionValidation === 2) {
-    //     return false;
-    // }
-
-    // // Check if day is closed
-    // const closedDate = new PolosysERPInventoryClass.Transaction.InvAccTransactions().GetClosedDate("Accounts");
-    // if (new Date(closedDate) >= new Date(dtpTransDate)) {
-    //     PolosysFrameWork.General.ShowMessageBox("Day Closed", "Invalid Transaction Date");
-    //     return false;
-    // }
-
-    // // Check for editing restriction
-    // if (isEdit && new Date(closedDate) >= new Date(PrevTransDate)) {
-    //     PolosysFrameWork.General.ShowMessageBox("Cannot be edited. Day is Closed", "Invalid Transaction Date");
-    //     return false;
-    // }
-
-    // // Validate transaction amount
-    // const totalAmount = PolosysFrameWork.General.Val(txtTotAmount.text);
-    // if (totalAmount === 0) {
-    //     PolosysFrameWork.General.ShowMessageBox("Zero transaction amount not allowed", "Invalid Transaction Amount");
-    //     return false;
-    // }
-
-    // // Validate master ledger existence
-    // if (VOUCHERTYPE !== "OB" && VOUCHERTYPE !== "MJV") {
-    //     for (let i = 0; i < dgvAccounts.rows.length; i++) {
-    //         const ledgerID = dgvAccounts.rows[i]?.cells["LedgerIDCol"].formattedValue;
-    //         if (cbMasterAccount.selectedValue === ledgerID) {
-    //             PolosysFrameWork.General.ShowMessageBox(`Master Ledger Exists in Row ${i + 1}`, "Duplicate Ledger");
-    //             return false;
-    //         }
-    //     }
-    // }
-
-    // // "JV" specific validation
-    // if (VOUCHERTYPE === "JV" && !cbJVDebitCredit.text) {
-    //     PolosysFrameWork.General.ShowMessageBox("Please Select Debit/Credit in Master Ledger", "Debit/Credit");
-    //     return false;
-    // }
-
-    // // "MJV" specific validation
-    // if (VOUCHERTYPE === "MJV") {
-    //     const totalDebit = Math.round(dgvAccounts.calculateColumnSum("Debit"), PolosysFrameWork.Settings.MainSettings.decimalPoints);
-    //     const totalCredit = Math.round(dgvAccounts.calculateColumnSum("Credit"), PolosysFrameWork.Settings.MainSettings.decimalPoints);
-
-    //     if (totalDebit !== totalCredit) {
-    //         PolosysFrameWork.General.ShowMessageBox("Total Debit and Credit amount should be the same", "Debit/Credit");
-    //         return false;
-    //     }
-    // }
-console.log(formState.transaction.master.transactionDate);
+    if (formState.transaction.master.voucherType == "MJV") {
+      const totalDebit = formState.transaction.details
+        .reduce((sum, x) => sum + (x.debit || 0), 0)
+        .toFixed(applicationSettings.mainSettings.decimalPoints);
+      const totalCredit = formState.transaction.details
+        .reduce((sum, x) => sum + (x.credit || 0), 0)
+        .toFixed(applicationSettings.mainSettings.decimalPoints);
+      if (totalDebit !== totalCredit) {
+        ERPAlert.show({
+          icon: "warning",
+          title: "Total Debit and Credit amount should be Same",
+        });
+        return false;
+      }
+    }
 
     return true;
-};
+  };
+  const attachMaster = (): AccTransactionMaster | undefined => {
+    try {
+      const master = { ...formState.transaction.master };
+
+      master.accTransMasterID = formState.isEdit ? master.accTransMasterID : 0;
+      master.bankDate = new Date().toISOString();
+      master.checkBouncedDate = new Date().toISOString();
+      master.dueDate = master.transactionDate;
+      const totalAmount = formState.total || 0;
+      if (master.drCr === "Cr") {
+        master.totalCredit = totalAmount;
+        master.totalDebit = 0;
+      } else if (master.drCr === "Dr") {
+        master.totalDebit = totalAmount;
+        master.totalCredit = 0;
+      } else {
+        master.totalDebit = master.totalCredit = totalAmount;
+      }
+
+      if (master.voucherType === "JV" || master.voucherType === "MJV") {
+        master.totalDebit = master.totalCredit = totalAmount;
+      }
+      dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
+      return master;
+    } catch (error) {
+      console.error("Error saving transaction:", error);
+      return undefined;
+    }
+  };
+  const setupBahamdoonPOSReceipts = () => {
+    let master = { ...formState.transaction.master };
+    let row = { ...formState.row };
+    dispatch(
+      accFormStateRowHandleFieldChange({
+        fields: { ledgerCode: "2768", ledgerId: 3107 },
+      })
+    );
+
+    master.commonNarration = `Counter: ${userSession.counterName}, User: ${userSession.userName}`;
+
+    // Handle master account selection based on voucher type
+    if (master.voucherType === "BR" || master.voucherType === "PBR") {
+      const defaultAccID =
+        applicationSettings.accountsSettings.defaultCreditCardAcc > 0
+          ? applicationSettings.accountsSettings.defaultCreditCardAcc
+          : applicationSettings.accountsSettings.defaultBankAcc;
+    } else if (master.voucherType === "CR") {
+      const cashLedgerID =
+        userSession.counterwiseCashLedgerId > 0 &&
+        applicationSettings.accountsSettings.allowSalesCounter
+          ? userSession.counterwiseCashLedgerId
+          : applicationSettings.accountsSettings.defaultCashAcc;
+    }
+    dispatch(
+      accFormStateHandleFieldChange({ fields: { isBahamdoonPOSReceipt: true } })
+    );
+    dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
+  };
+  const save = async () => {
+    if (validate() == true) {
+      const params = {
+        master: attachMaster(),
+        details: [...formState.transaction.details],
+      };
+      await api.postAsync(
+        `Urls.acc_transaction_base${transactionType}`,
+        params
+      );
+    }
+  };
 
   return {
     undoEditMode,
@@ -360,6 +460,8 @@ console.log(formState.transaction.master.transactionDate);
     enableControls,
     disableControls,
     disableCombo,
-    validate
+    validate,
+    setupBahamdoonPOSReceipts,
+    save,
   };
 };

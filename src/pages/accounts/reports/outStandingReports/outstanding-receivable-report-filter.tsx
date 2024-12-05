@@ -3,7 +3,7 @@ import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combo
 import Urls from "../../../../redux/urls";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
-const OutstandingPayableReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
+const OutstandingReceivableReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
     return (
       <div className="grid grid-cols-1 gap-4">
       {/* As On Date */}
@@ -81,12 +81,12 @@ const OutstandingPayableReportFilter = ({ getFieldProps, handleFieldChange, t }:
 
 );
 }
-export default OutstandingPayableReportFilter;
-export const OutstandingPayableReportFilterInitialState = {
+export default OutstandingReceivableReportFilter;
+export const OutstandingReceivableReportFilterInitialState = {
   asonDate: new Date(), 
   routeID: 0,
   costCentreID: 0, 
   showZeroBalance: false, 
-  payable:true,
-  receivable:false,
+  payable:false,
+  receivable:true,
 };

@@ -69,6 +69,7 @@ const OutstandingAccountPayableReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
@@ -82,6 +83,7 @@ const OutstandingAccountPayableReport = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      visible:false,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>

@@ -28,7 +28,6 @@ import OutstandingAccountPayableReport from '../../../pages/accounts/reports/out
 import OutstandingAccountReceivableReport from '../../../pages/accounts/reports/outStandingReports/outstanding-account-receivable-report';
 import OutstandingAccountPayableAgingReport from '../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
 import OutstandingAccountReceivableAgingReport from '../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
-import ProfitAndLoss from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss';
 import TrialBalance from '../../../pages/accounts/reports/trial-balance';
 import BalanceSheet from '../../../pages/accounts/reports/balanceSheet/balace-sheet';
 import InventoryHistoryReport from '../../../pages/accounts/reports/transactionHistory/InventoryHistory/inventory-history-report';
@@ -83,6 +82,7 @@ const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sm
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
 const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
 const Test = lazy(() => import('../../../pages/test'));
+const TotalSummary = lazy(() => import('../../../pages/total-summary'));
 
 // Inventory Masters
 const ProductGroup = lazy(() => import('../../../pages/inventory/masters/product-group/product-group'));
@@ -111,6 +111,10 @@ import PartyWiseReport from '../../../pages/inventory/reports/party-wise-report/
 import AccTransaction from '../../../pages/accounts/transactions/acc-transaction';
 import GstrReport from '../../../pages/inventory/reports/GSTR1Filter/gstr-report';
 import DailySummaryGlobal from '../../../pages/accounts/reports/dailySummary/daily-summary-global';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../redux/store';
+import { Countries } from '../../../redux/slices/user-session/reducer';
+import ProfitAndLossReport from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report';
 const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
 const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report'));
 const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
@@ -126,6 +130,7 @@ const loading = (
 const Content: FC<ContentProps> = () => {
 
   const [myClass, setMyClass] = useState("");
+  const userSession = useSelector((state: RootState) => state.UserSession);
   return (
     <Suspense fallback={loading}>
       <Routes>
@@ -171,6 +176,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/whatsapp" element={<WhatsappIntegration />} />
         <Route path="/integration/email" element={<EmailIntegration />} />
         <Route path="/integration/test" element={<Test />} />
+        <Route path="/integration/total-summary" element={<TotalSummary />} />
         {/* Integration End */}
 
         {/* Templates starts */}
@@ -205,7 +211,7 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Masters */}
         <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType={''} formCode={''} voucherPrefix={''} formType={''} title={''} drCr={''} />} />
         <Route path="accounts/transactions/post-dated-cheques" element={<PostDatedCheques />} />
-        
+
         {/* Accounts Masters End */}
 
 
@@ -222,15 +228,15 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/transaction_report" element={<TransactionReport />} />
         <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport />} />
         <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport />} />
-        <Route path="/accounts/daily_summary_report" element={0 != 0 ? <DailySummary /> : <DailySummaryGlobal />} />
-        <Route path="/accounts/billwise_profit" element={0 != 0 ? <BillwiseProfit /> : <BillwiseProfitGlobal />} />
+        <Route path="/accounts/daily_summary_report" element={userSession.countryId === Countries.India ? <DailySummaryGlobal /> : <DailySummary />} />
+        <Route path="/accounts/billwise_profit" element={userSession.countryId === Countries.India ? <BillwiseProfitGlobal /> : <BillwiseProfit />} />
         <Route path="/accounts/partywise_summary" element={<PartySummaryBasicInfo />} />
         <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport />} />
         <Route path="/accounts/outstanding_receivable" element={<OutstandingAccountReceivableReport />} />
         <Route path="/accounts/outstanding_aging_payable" element={<OutstandingAccountPayableAgingReport />} />
         <Route path="/accounts/outstanding_aging_receivable" element={<OutstandingAccountReceivableAgingReport />} />
         <Route path="/accounts/trial_balance" element={<TrialBalance />} />
-        <Route path="/accounts/profit_and_loss" element={<ProfitAndLoss />} />
+        <Route path="/accounts/profit_and_loss" element={<ProfitAndLossReport />} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
         <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
         <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />

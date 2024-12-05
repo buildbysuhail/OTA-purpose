@@ -29,7 +29,12 @@ const BillwiseProfit = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 240,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={'font-bold text-blue'}>
+  {cellElement.data.description}
+  </span>
+      ),
     },
     {
       dataField: "productName",
@@ -37,7 +42,11 @@ const BillwiseProfit = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.productName}
+  </span>
+      ),
     },
     {
       dataField: "qty",
@@ -96,6 +105,11 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.salesPrice}
+  </span>
+      ),
     },
     {
       dataField: "totCost",
@@ -104,6 +118,11 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.totCost}
+  </span>
+      ),
     },
     {
       dataField: "netAmount",
@@ -112,9 +131,12 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.netAmount}
+  </span>
+      ),
     },
-  
-   
     {
       dataField: "profit",
       caption: t("profit"),
@@ -122,6 +144,11 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 110,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.profit}
+  </span>
+      ),
     },
     {
       dataField: "markupPerc",
@@ -130,6 +157,11 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.markupPerc}
+  </span>
+      ),
     },
  {
       dataField: "marginPerc",
@@ -138,7 +170,12 @@ const BillwiseProfit = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
-    }, 
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.marginPerc}
+  </span>
+      ),
+    },
     {
       dataField: "vat",
       caption: t("vat"),
@@ -147,6 +184,11 @@ const BillwiseProfit = () => {
       visible: false,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.vat}
+  </span>
+      ),
     },
   ];
   return (

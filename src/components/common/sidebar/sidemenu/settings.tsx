@@ -45,7 +45,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/party-category`, type: 'link', active: false, selected: false, title: 'party_category' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customers`, type: 'link', active: false, selected: false, title: 'customers' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/suppliers`, type: 'link', active: false, selected: false, title: 'suppliers' },
-      { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cash-bank-master`, type: 'link', active: false, selected: false, title: 'cash_bank_master' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/account-masters/cash-bank-master`, type: 'link', active: false, selected: false, title: 'cash_bank_master' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/privilege-cards`, type: 'link', active: false, selected: false, title: 'privilege_cards' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/customer-supplier-ledger`, type: 'link', active: false, selected: false, title: 'cust_supp_ledger' },
       { path: `${import.meta.env.BASE_URL}settings/_/account-masters/bank-cards`, type: 'link', active: false, selected: false, title: 'bank_card' },
@@ -170,6 +170,7 @@ export const SettingsMenuItems = [
       { path: `${import.meta.env.BASE_URL}settings/_/integration/whatsapp`, type: 'link', active: false, selected: false, title: 'whatsapp_integration' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/email`, type: 'link', active: false, selected: false, title: 'email_integration' },
       { path: `${import.meta.env.BASE_URL}settings/_/integration/test`, type: 'link', active: false, selected: false, title: 'test' },
+      { path: `${import.meta.env.BASE_URL}settings/_/integration/total-summary`, type: 'link', active: false, selected: false, title: 'total_summary' },
       { action: toggleTestPopup, type: 'popup', active: false, selected: false, title: 'test popup' },
 
     ]

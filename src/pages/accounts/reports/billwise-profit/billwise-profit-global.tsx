@@ -25,10 +25,10 @@ const BillwiseProfitGlobal = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
+      width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className='font-bold text-blue text-lg'>
-  {cellElement.data.ledgerName}
+        <span className={'font-bold text-blue'}>
+  {cellElement.data.description}
   </span>
       ),
     },
@@ -38,10 +38,9 @@ const BillwiseProfitGlobal = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 180,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.foo==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.ledgerName}
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.productName}
   </span>
       ),
     },
@@ -102,22 +101,37 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.salesPrice}
+  </span>
+      ),
     },
     {
-      dataField: "totCost",
+      dataField: "cost",
       caption: t("tot_cost"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.cost}
+  </span>
+      ),
     },
     {
-      dataField: "netAmount",
+      dataField: "netAmt",
       caption: t("net_amount"),
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.netAmt}
+  </span>
+      ),
     },
   
    
@@ -128,6 +142,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 110,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.profit}
+  </span>
+      ),
     },
     {
       dataField: "markupPerc",
@@ -136,6 +155,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.markupPerc}
+  </span>
+      ),
     },
  {
       dataField: "marginPerc",
@@ -144,6 +168,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.marginPerc}
+  </span>
+      ),
     },
     {
       dataField: "sgst",
@@ -152,6 +181,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.sgst}
+  </span>
+      ),
     },
     {
       dataField: "cgst",
@@ -160,7 +194,12 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-    }, 
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.cgst}
+  </span>
+      ),
+    },
     {
       dataField: "igst",
       caption: t("igst"),
@@ -168,7 +207,12 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-    }, 
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.igst}
+  </span>
+      ),
+    },
     {
       dataField: "cess",
       caption: t("cess"),
@@ -176,7 +220,12 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-    }, 
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.cess}
+  </span>
+      ),
+    },
     {
       dataField: "addCess",
       caption: t("add_cess"),
@@ -184,7 +233,12 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-    }, 
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.addCess}
+  </span>
+      ),
+    },
     {
       dataField: "calmityCess",
       caption: t("calamity_cess"),
@@ -192,6 +246,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
+  {cellElement.data.calmityCess}
+  </span>
+      ),
     },
   ];
   return (

@@ -28,7 +28,7 @@ const ProfitAndLossReportFilter = ({ getFieldProps, handleFieldChange, t }: any)
       field={{
         id: "valuationUsing",
         getListUrl: Urls.data_stock_valuation_methods,
-        valueKey: "name",
+        valueKey: "id",
         labelKey: "name",
       }}
       onChangeData={(data) => handleFieldChange('valuationUsing', data.valuationUsing)}

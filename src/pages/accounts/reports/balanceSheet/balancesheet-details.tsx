@@ -103,7 +103,7 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
                   enablefilter={false}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  gridId="grd_balancesheet_detals"
+                  gridId="grd_balancesheet_details"
                   // reload={true}
                 ></ErpDevGrid>
               </div>

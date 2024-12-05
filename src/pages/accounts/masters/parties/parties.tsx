@@ -608,7 +608,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   variant="primary"
                   disabled={succeededCount == 0}
                   onClick={onSubmit}
-                  title={succeededCount == totalCount ? "Ignore and Save" : "Save"}
+                  title={succeededCount == totalCount ? "Save": "Ignore and Save" }
                 />
               </div>
               {/* Buttons Section */}

@@ -10,17 +10,29 @@ import { handleResponse } from "../HandleResponse";
 import { ApplicationSettingsType } from "../../pages/settings/system/application-settings-types/application-settings-types";
 import { APIClient } from "../../helpers/api-client";
 import { useTranslation } from "react-i18next";
-import { setApplicationMainSettings, setApplicationSettingsWithType } from "../../redux/slices/app/application-settings-reducer";
+import {
+  setApplicationMainSettings,
+  setApplicationSettingsWithType,
+} from "../../redux/slices/app/application-settings-reducer";
+import { ApplicationSettingsInitialState } from "../../redux/slices/app/application-settings-types";
 
-const api = new APIClient()
+const api = new APIClient();
 export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   const appDispatch = useAppDispatch();
 
-  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-  const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
+  const applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const [filterText, setFilterSearch] = useState("");
   debugger;
-  let settingsPrev = applicationSettings;
+  const [settingsPrev, setSettingsPrev] = useState();
+  useEffect(() => {
+    if(applicationSettings.apiLoaded)
+    {
+      setSettingsPrev(JSON.parse(JSON.stringify(applicationSettings)));
+    }
+  }, [applicationSettings.apiLoaded]);
+  debugger;
   const [isSaving, setIsSaving] = useState(false);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -28,67 +40,72 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   const onFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value ?? "".toLowerCase();
     setFilterSearch(searchTerm);
-  }
+  };
 
   const handleFieldChange = useCallback(
-    <T extends keyof ApplicationSettingsType>(type: T, settingName: keyof ApplicationSettingsType[T], value: any
+    <T extends keyof ApplicationSettingsType>(
+      type: T,
+      settingName: keyof ApplicationSettingsType[T],
+      value: any
     ) => {
-      
-        if (
-          settingName === "allowSalesRouteArea" &&
-          value === false &&
-          type === "mainSettings"
-        ) {
-          dispatch(
-            setApplicationSettingsWithType({
-              type,
-              settingName: settingName as never,
-              value,
-            })
-          );
-    
-          // Dispatch the second dependent setting change
-          dispatch(
-            setApplicationSettingsWithType({
-              type,
-              settingName: "maintainSalesRouteCreditLimit" as never,
-              value: false,
-            }));
-        }
-        else if (settingName === 'allowSalesCounter' && value == false &&
-          type === "mainSettings") {
+      if (
+        settingName === "allowSalesRouteArea" &&
+        value === false &&
+        type === "mainSettings"
+      ) {
+        dispatch(
+          setApplicationSettingsWithType({
+            type,
+            settingName: settingName as never,
+            value,
+          })
+        );
 
-            dispatch(
-              setApplicationSettingsWithType({
-                type,
-                settingName: settingName as never,
-                value,
-              })
-            );
-      
-            // Dispatch the second dependent setting change
-            dispatch(
-              setApplicationSettingsWithType({
-                type,
-                settingName: "allowUserwiseCounter" as never,
-                value: false,
-              }))
-              dispatch(
-                setApplicationSettingsWithType({
-                  type,
-                  settingName: "enableAuthorizationforShiftClose" as never,
-                  value: false,
-                }));
-        } else {
-          
-          dispatch(
-            setApplicationSettingsWithType({
-              type,
-              settingName: settingName as never,
-              value,
-            })
-          );
-        }
+        // Dispatch the second dependent setting change
+        dispatch(
+          setApplicationSettingsWithType({
+            type,
+            settingName: "maintainSalesRouteCreditLimit" as never,
+            value: false,
+          })
+        );
+      } else if (
+        settingName === "allowSalesCounter" &&
+        value == false &&
+        type === "mainSettings"
+      ) {
+        dispatch(
+          setApplicationSettingsWithType({
+            type,
+            settingName: settingName as never,
+            value,
+          })
+        );
+
+        // Dispatch the second dependent setting change
+        dispatch(
+          setApplicationSettingsWithType({
+            type,
+            settingName: "allowUserwiseCounter" as never,
+            value: false,
+          })
+        );
+        dispatch(
+          setApplicationSettingsWithType({
+            type,
+            settingName: "enableAuthorizationforShiftClose" as never,
+            value: false,
+          })
+        );
+      } else {
+        dispatch(
+          setApplicationSettingsWithType({
+            type,
+            settingName: settingName as never,
+            value,
+          })
+        );
+      }
     },
     []
   );
@@ -104,9 +121,17 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
         current: ApplicationSettingsType,
         previous: ApplicationSettingsType
       ): { settingsName: string; settingsValue: string }[] => {
-        const differences: { settingsName: string; settingsValue: string; settingsType: string }[] = [];
+        const differences: {
+          settingsName: string;
+          settingsValue: string;
+          settingsType: string;
+        }[] = [];
 
-        const compareObjects = (currentObj: any, previousObj: any, parentKey = "") => {
+        const compareObjects = (
+          currentObj: any,
+          previousObj: any,
+          parentKey = ""
+        ) => {
           for (const key in currentObj) {
             const currentValue = currentObj[key];
             const previousValue = previousObj?.[key];
@@ -115,17 +140,43 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
             if (typeof currentValue === "object" && currentValue !== null) {
               compareObjects(currentValue, previousValue, settingsName);
             } else if (currentValue !== previousValue && parentKey != "") {
-              const _paretnt: keyof(ApplicationSettingsType) = parentKey as keyof(ApplicationSettingsType);
-           
-              console.log(`Difference found: ${settingsName} = ${currentValue}`);
+              debugger;
+              const _paretnt: keyof ApplicationSettingsType =
+                parentKey as keyof ApplicationSettingsType;
+
+              console.log(
+                `Difference found: ${settingsName} = ${currentValue} = ${previousValue}`
+              );
               differences.push({
                 settingsName,
-               
-                settingsType: _paretnt == "mainSettings" ? "Main" : _paretnt == "accountsSettings" ? "Accounts" : _paretnt == "inventorySettings" ? "Inventory" : _paretnt == "branchSettings" ? "Branch":_paretnt == "backUpSettings" ? "BackUP":_paretnt == "printSettings" ? "Printer":_paretnt == "productsSettings" ? "Products":_paretnt == "gstSettings" ? "GSTTaxes":_paretnt == "taxSettings" ? "Taxes":_paretnt == "miscellaneousSettings" ? "Miscellaneous":"",
-             
-                settingsValue: currentValue === true
-                  ? "true"
-                  : currentValue === false
+
+                settingsType:
+                  _paretnt == "mainSettings"
+                    ? "Main"
+                    : _paretnt == "accountsSettings"
+                    ? "Accounts"
+                    : _paretnt == "inventorySettings"
+                    ? "Inventory"
+                    : _paretnt == "branchSettings"
+                    ? "Branch"
+                    : _paretnt == "backUpSettings"
+                    ? "BackUP"
+                    : _paretnt == "printSettings"
+                    ? "Printer"
+                    : _paretnt == "productsSettings"
+                    ? "Products"
+                    : _paretnt == "gstSettings"
+                    ? "GSTTaxes"
+                    : _paretnt == "taxSettings"
+                    ? "Taxes"
+                    : _paretnt == "miscellaneousSettings"
+                    ? "Miscellaneous"
+                    : "",
+
+                settingsValue:
+                  currentValue === true
+                    ? "true"
+                    : currentValue === false
                     ? "false"
                     : currentValue?.toString() ?? "",
               });
@@ -134,13 +185,16 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
         };
 
         console.log("Comparing current settings with previous settings...");
-        compareObjects(current, previous);
+        compareObjects({...current}, {...previous});
         console.log("Differences identified:", differences);
         return differences;
       };
 
       console.log("Calling getDifferences to find modified settings...");
-      const modifiedSettings = getDifferences(settings, settingsPrev);
+      const modifiedSettings = getDifferences(
+        applicationSettings,
+        settingsPrev ?? ApplicationSettingsInitialState
+      );
 
       if (modifiedSettings.length > 0) {
         console.log("Modified settings found:", modifiedSettings);
@@ -152,12 +206,11 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
         console.log("API response received:", response);
         debugger;
         handleResponse(
-          
           response,
           () => {
             debugger;
             console.log("Settings updated successfully.");
-           settingsPrev = settings;
+            setSettingsPrev(JSON.parse(JSON.stringify(applicationSettings)));
           },
           () => {
             console.warn("Failed to update settings.");
@@ -179,24 +232,20 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
       t(translationKey).toLowerCase().includes(filterText.toLowerCase())
     );
     return filterText == "" || (filter != null && filter.length > 0);
-  }
+  };
 
   return {
-    settings,
-    setSettings,
     isSaving,
     handleSubmit,
     handleFieldChange,
     filterComponent,
     filterText,
     setFilterSearch,
-    onFilterChange 
+    onFilterChange,
   };
 };
 
 type UseApplicationSettingReturnType = {
-  settings: ApplicationSettingsType;
-  setSettings: React.Dispatch<React.SetStateAction<ApplicationSettingsType>>;
   filterText: string;
   setFilterSearch: React.Dispatch<React.SetStateAction<string>>;
   isSaving: boolean;

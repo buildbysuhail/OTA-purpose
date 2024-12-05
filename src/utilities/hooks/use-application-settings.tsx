@@ -18,6 +18,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
   const [filterText, setFilterSearch] = useState("");
+  debugger;
   const [settingsPrev, setSettingsPrev] = useState<ApplicationSettingsType>(applicationSettings);
   const [isSaving, setIsSaving] = useState(false);
   const { t } = useTranslation();

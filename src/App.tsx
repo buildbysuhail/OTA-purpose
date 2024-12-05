@@ -52,6 +52,8 @@ import { onCloseWithUnsavedChange } from "./redux/slices/popup-reducer";
 import { appInitialState } from "./redux/slices/app/reducer";
 import { UserRight } from "./pages/settings/userManagement/data";
 import { UserTypeRights } from "./redux/slices/user-rights/reducer";
+import Urls from "./redux/urls";
+import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
 
 export const LoadingAnimation = () => {
   return (
@@ -118,8 +120,13 @@ debugger;
   const language = userProfileDetails?.language;
 
   useEffect(() => {
-    dispatch(getApplicationSettings());
-  }, [dispatch]);
+    load();
+  }, []);
+  const load = async() => {
+    debugger;
+    const settings = await api.getAsync(Urls.application_setting);
+    dispatch(setApplicationSettings(settings));
+  }
   useEffect(() => {
     if (locale && i18n && typeof i18n.changeLanguage === "function") {
       i18n.changeLanguage(language);

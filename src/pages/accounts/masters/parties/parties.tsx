@@ -59,6 +59,8 @@ const api = new APIClient();
 const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   const [totalCount, setTotalCount] = useState(0);
+  const [failedCount, setFailedCount] = useState(0);
+  const [succeededCount, setSucceededCount] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [formFile, setFormFile] = useState<FormData>();
   const [importExport, setImportExport] = useState<any>(() => getInitialImportExportData(type));
@@ -98,7 +100,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   }
   const onSubmit = useCallback(async () => {
     try {
-      const res = await api.postAsync(Urls.import_parties, store);
+      const res = await api.postAsync(Urls.import_parties, failedCount > 0 && succeededCount > 0 ? store.filter((row: any) => row.isValid === true) : store);
       handleResponse(res, () => { }, () => { });
     } catch (error) {
       console.error(error);
@@ -148,6 +150,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
       });
       setStore(res.items);
       setTotalCount(res.items.length);
+      setFailedCount(res.items?.filter((row: any) => row.isValid != true).length || 0);
+      setSucceededCount(res.items?.filter((row: any) => row.isValid === true).length || 0);
       setLoading(false);
       handleResponse(res, () => { }, () => { })
     };
@@ -592,18 +596,19 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   <span className="text-sm font-medium text-gray">Total Count</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
-                  <div className="text-2xl font-bold text-green">{totalCount}</div>
+                  <div className="text-2xl font-bold text-green">{succeededCount}</div>
                   <span className="text-sm font-medium text-gray">Succeed</span>
                 </div>
                 <div className="flex flex-col items-center p-3 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow w-28">
-                  <div className="text-2xl font-bold text-red">{totalCount}</div>
+                  <div className="text-2xl font-bold text-red">{failedCount}</div>
                   <span className="text-sm font-medium text-gray">Failure</span>
                 </div>
                 <ERPButton
                   type="button"
                   variant="primary"
+                  disabled={succeededCount == 0}
                   onClick={onSubmit}
-                  title="Ignore and Save"
+                  title={succeededCount == totalCount ? "Save": "Ignore and Save" }
                 />
               </div>
               {/* Buttons Section */}

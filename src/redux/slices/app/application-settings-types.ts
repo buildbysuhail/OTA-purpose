@@ -21,4 +21,5 @@ export const ApplicationSettingsInitialState: ApplicationSettingsType = {
   productsSettings: ApplicationProductsSettingsInitialState,
   gstSettings: ApplicationGstSettingsInitialState,
   taxSettings: ApplicationTaxSettingsInitialState,
+  apiLoaded: false
 };

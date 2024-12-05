@@ -21,7 +21,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSe
   dispatch(setUserRights(userRights));
 
   setLanguage(dispatch, locale);
-
+debugger;
   dispatch(setInputBox(res.inputBox));
   dispatch(setScrollbarWidth(res.scrollbarWidth));
   dispatch(setScrollbarColor(res.scrollbarColor));

@@ -42,10 +42,14 @@ export const initialUserSessionData: UserModel = {
   employeeId: 0,
   systemCode: "",
   systemName: "",
-  financialYearStatus: ""
+  financialYearStatus: "",
+  userName: "",
+  counterName: ""
 };
 export interface UserModel {
   userId: number;
+  userName: string;
+  counterName: string;
   displayName: string;
   userimage: string;
   userTypeCode: string;
@@ -106,7 +110,9 @@ export const initialState: UserModel = {
   counterAssignedCashLedgerId: 0,
   systemCode: "",
   systemName: "",
-  financialYearStatus: "Closed"
+  financialYearStatus: "Closed",
+  userName: "",
+  counterName: ""
 };
 const userSessionSlice = createSlice({
   name: "userSession",

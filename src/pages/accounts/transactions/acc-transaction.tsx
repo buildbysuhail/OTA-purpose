@@ -31,6 +31,8 @@ import ERPPreviousUrlButton from "../../../components/ERPComponents/erp-previous
 import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useAccTransaction } from "./use-acc-transaction";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
+import { useTransaction } from "../../use-transaction";
+import { AccTransactionUserConfig } from "./acc-transaction-user-config";
 
 interface BilledItem {
   id?: number;
@@ -85,6 +87,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     disableCombo,
     validate
   } = useAccTransaction(transactionType ?? "");
+  
+  const {validateTransactionDate} = useTransaction(transactionType ?? "");
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -257,12 +261,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           userCashLedgerID = await api.getAsync(
             `${Urls.get_userLedger_by_user_id}/${userSession.userId}`
           );
-          if (userCashLedgerID > 0) {
-            formState.masterAccountID = userCashLedgerID;
-          } else {
-            formState.masterAccountID =
-              applicationSettings.accountsSettings.defaultCashAcc;
-          }
+          dispatch(
+            accFormStateHandleFieldChange({
+              fields: {
+                masterAccountID: userCashLedgerID > 0 ? userCashLedgerID : applicationSettings.accountsSettings.defaultCashAcc,
+              },
+            })
+          );
         }
       }
 
@@ -753,8 +758,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   labelKey: "label",
                 }}
                 options={[
-                  { value: "debit", label: "Dr" },
-                  { value: "credit", label: "Cr" },
+                  { value: "Dr", label: "Debit" },
+                  { value: "Cr", label: "Credit" },
                 ]}
                 disabled={formElements.drCr?.disabled || formElements.pnlMasters?.disabled}
               />
@@ -895,8 +900,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   labelKey: "label",
                 }}
                 options={[
-                  { value: "debit", label: "Dr" },
-                  { value: "credit", label: "Cr" },
+                  { value: "Dr", label: "Debit" },
+                  { value: "Cr", label: "Credit" },
                 ]}
                 disabled={formElements.drCr?.disabled || formElements.pnlMasters?.disabled}
               />

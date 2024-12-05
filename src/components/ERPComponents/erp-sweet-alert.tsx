@@ -6,11 +6,11 @@ import withReactContent from 'sweetalert2-react-content'
 import 'animate.css'
 
 // Initialize SweetAlert with React content
-const MySwal = withReactContent(Swal)
 
 interface ERPAlertProps {
   title: string
   text?: string
+  type?: string
   width?:number
   showAnimation?:'animate__fadeInDown' | 'animate__bounceIn' | 'animate__fadeIn' | 'animate__backInDown' 
   hideAnimation?:'animate__fadeOutDown' | 'animate__bounceOut' | 'animate__fadeOut' | 'animate__backOutDown'
@@ -18,7 +18,7 @@ interface ERPAlertProps {
   position?: 'center'|'center-end'|'center-start' | 'top' | 'top-start' | 'top-end' | 'bottom'   
   confirmButtonText?: string
   cancelButtonText?: string
-  onConfirm: () => void
+  onConfirm?: () => void
   onCancel?: () => void
 }
 
@@ -36,7 +36,7 @@ export default function ERPAlert({
   onCancel
 }: ERPAlertProps) {
   useEffect(() => {
-    MySwal.fire({
+    Swal.fire({
       title: title,
       text: text,
       width:width,
@@ -56,7 +56,7 @@ export default function ERPAlert({
 
     }).then((result) => {
       if (result.isConfirmed) {
-        onConfirm()
+        onConfirm && onConfirm()
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         onCancel && onCancel()
       }
@@ -68,7 +68,7 @@ export default function ERPAlert({
 
 // Utility function for showing alerts
 ERPAlert.show = (options: ERPAlertProps) => {
-  return MySwal.fire({
+  return Swal.fire({
     title: options.title,
     text: options.text,
     width: options.width || 450,
@@ -87,7 +87,7 @@ ERPAlert.show = (options: ERPAlertProps) => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      options.onConfirm()
+      options.onConfirm && options.onConfirm()
     } else if (result.dismiss === Swal.DismissReason.cancel) {
       options.onCancel && options.onCancel()
     }

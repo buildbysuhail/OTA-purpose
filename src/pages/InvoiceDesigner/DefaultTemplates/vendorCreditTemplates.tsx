@@ -111,7 +111,7 @@ const DefaultVCTemplates: DeafultTemplateProps[] = [
     },
     is_default: true,
     is_primary: true,
-    voucher_type: "vendor_credit",
+    voucher_type: "cash_payment",
   },
 ];
 

@@ -491,7 +491,7 @@ export default function SettingsPage() {
                           <ERPInput
                             id="autoUpdateReleaseUpTo"
                             label={t("auto_update_release_up_to")}
-                            type="number"
+                            // type="number"
                             data={settings?.mainSettings}
                             value={settings?.mainSettings?.autoUpdateReleaseUpTo}
                             onChangeData={(data) => handleFieldChange("mainSettings", "autoUpdateReleaseUpTo", data.autoUpdateReleaseUpTo)}
@@ -808,12 +808,13 @@ export default function SettingsPage() {
                         )}
                         {filterComponent([t("backup_path")], filterText) && (
                           <ERPInput
+                          
                             id="backUpPath"
                             value={settings.backUpSettings?.backUpPath}
                             data={settings.backUpSettings}
                             disabled={settings.backUpSettings?.backupMethods == "No BackUp" || true}
                             label={t("backup_path")}
-                            placeholder={t("enter_discount_threshold")}
+                            placeholder={t("backup_path")}
                             onChangeData={(data: any) => handleFieldChange("backUpSettings", "backUpPath", parseFloat(data.backUpPath))}
                           />
                         )}
@@ -834,9 +835,13 @@ export default function SettingsPage() {
                         {filterComponent([t("compress_backup_file")], filterText) && (
                           <ERPCheckbox
                             id="compressBackupFile"
-                            checked={settings.backUpSettings?.compressBackupFile}
-                            data={settings.backUpSettings}
                             label={t("compress_backup_file")}
+                            // data={settings?.mainSettings}
+                            // checked={settings?.mainSettings?.showReminders}
+                            // onChangeData={(data) => handleFieldChange("mainSettings", "showReminders", data.showReminders)}
+                            data={settings?.backUpSettings}
+                            checked={settings?.backUpSettings?.compressBackupFile}
+                      
                             onChangeData={(data) =>
                               handleFieldChange("backUpSettings", "compressBackupFile", data.compressBackupFile)
                             }

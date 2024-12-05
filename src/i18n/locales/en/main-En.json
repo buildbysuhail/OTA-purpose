@@ -68,5 +68,10 @@
     "headers_footers": "Headers and Footers",
     "qr_pay": "QR Pay",
     "hide_account_ledger": "Hide Account Ledger",
-    "company_profile_others": "Company Profile"
+    "company_profile_others": "Company Profile",
+
+    "add":"Add",
+    "clear":"Clear",
+    "cancel":"Cancel",
+    "submit":"Submit"
 }

@@ -283,5 +283,7 @@
     "counter":"Counter",
     "ppos":"PPOS",
     "schemes_&_promotions":"Schemes & Promotions",
-    "miscellaneous":"Miscellaneous"
+    "miscellaneous":"Miscellaneous",
+
+    "save_settings":"Save Settings"
 }

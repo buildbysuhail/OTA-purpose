@@ -101,13 +101,17 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("account_ledger_report")}
+                  gridHeader={groupName}
                   dataUrl= {Urls.acc_reports_account_ledger_balance_view_sub_group_inc}
-                  method={ActionType.POST}
-                  gridId="grd_profit_and_loss_detailed"
-                  popupAction={toggleCostCentrePopup}
-                  // allowEditing={false}
+                  postData={postData}
                   hideGridAddButton={true}
+                  enablefilter={false}
+                  showFilterInitially={true}
+                  method={ActionType.POST}
+   
+                  gridId="grd_profit_and_loss_detailed"
+                  // popupAction={toggleCostCentrePopup}
+                  // allowEditing={false}
                   // gridAddButtonType="popup"
                   reload={true}
                 ></ErpDevGrid>

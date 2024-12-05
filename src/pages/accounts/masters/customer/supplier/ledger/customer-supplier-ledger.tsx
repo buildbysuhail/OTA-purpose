@@ -40,7 +40,7 @@ const CustomerSupplierLedger = () => {
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - 200;
-    let gridHeightWindows = wh - 260;
+    let gridHeightWindows = wh - 235;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
   const [gridType, setGridType] = useState<LedgerInf>(initialState);
@@ -103,7 +103,7 @@ const CustomerSupplierLedger = () => {
   }; 
   return (
     <Fragment>
-      <div className="grid grid-cols-12 gap-x-6">
+      <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
@@ -211,7 +211,7 @@ const CustomerSupplierLedger = () => {
 
                   <Toolbar></Toolbar>
                 </DataGrid>
-                <div className="flex justify-end items-center m-3">
+                <div className="flex justify-end items-center space-x-4 m-3">
                   <ERPButton
                     title="Close"
                     variant="secondary"

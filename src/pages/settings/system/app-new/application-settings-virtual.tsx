@@ -22,6 +22,7 @@ import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '.
 import { BusinessType } from '../../../../enums/business-types';
 import { useApplicationSetting } from '../../../../utilities/hooks/use-application-settings';
 import { useSearchInputFocus } from '../../../../utilities/shortKeys';
+import { handleResponse } from '../../../../utilities/HandleResponse';
 
 const api = new APIClient()
 const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) => {
@@ -31,7 +32,6 @@ const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) 
     setIsCompactView(newViewState)
     onToggle(newViewState)
   }
-
   return (
     <div className="flex items-center justify-end">
       <label className="inline-flex items-center cursor-pointer">
@@ -146,17 +146,62 @@ export default function SettingsPage() {
     setInputValue(e.target.value);
   };
 
-  const handleUpdateGridClass = () => {
+  // const handleUpdateGridClass = async () => {
+  //   const gridClassParts = inputValue.split(' ');
+  //   const screenSizes = ['sm', 'md', 'lg', 'xl', 'xxl'];
+  //   const finalGridClass = screenSizes.map(size => {
+  //     const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
+  //     return existingClass || '';
+  //   }).filter(Boolean).join(' ');
+  //   setGridClass(finalGridClass);
+  //   try {
+  //     const response: any = await api.post( `${Urls.application_settings_UpdateSettingsScreen}`,gridClass);
+  //     handleResponse(response);
+  //   } catch (error) {
+  //     console.error("Error submitting data:", error);
+  //   }
+  // };
+
+  const handleUpdateGridClass = async () => {
     const gridClassParts = inputValue.split(' ');
-
     const screenSizes = ['sm', 'md', 'lg', 'xl', 'xxl'];
-    const finalGridClass = screenSizes.map(size => {
-      const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
-      return existingClass || '';
-    }).filter(Boolean).join(' ');
-
+    const finalGridClass = screenSizes
+      .map(size => {
+        const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
+        return existingClass || '';
+      })
+      .filter(Boolean)
+      .join(' ');
+  
     setGridClass(finalGridClass);
+  
+    try {
+    
+      const payload = {
+        settingsScreen: finalGridClass, 
+      };
+      const response: any = await api.post(`${Urls.application_settings_UpdateSettingsScreen}`, payload);
+      handleResponse(response);
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
   };
+  
+
+
+  const loadGridClass = async()=>{
+    try {
+      const response = await api.getAsync(Urls.application_settings_GetSettingsScreen);
+      setGridClass(response);
+    } catch (error) {
+      console.error("Error loading settings:", error);
+    }
+  }
+  useEffect(() => {
+    if(gridClass == null || gridClass == '' || gridClass == undefined){
+      loadGridClass();
+    }
+  }, []); 
 
   const handleGeneralHeaderClick = () => {
     const newClickCount = clickCount + 1;
@@ -293,7 +338,8 @@ export default function SettingsPage() {
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
-      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300">
+      {/* main */}
+      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto h-screen scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
         <div className='flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2'>
           <button
             className="md:hidden mr-2 p-1"

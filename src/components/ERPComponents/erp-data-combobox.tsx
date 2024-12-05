@@ -179,7 +179,7 @@ const Row = ({
       style={style}
       key={`${item?.value}-${index}`}
       className={({ active }) =>
-        `relative cursor-pointer select-none w-full rounded-sm hover:bg-primary hover:${setFgAccordingToBgPrimary()} ${active || isActive
+        `relative cursor-pointer select-none w-full rounded-sm hover:bg-gray-300 hover:${setFgAccordingToBgPrimary()} ${active || isActive
           ? "bg-primary text-white"
           : item.is_active === false
             ? "bg-gray-200 text-gray-400"
@@ -951,9 +951,9 @@ export default function ERPDataCombobox({
               title={initial?.label || ""}
               value={isOpen ? inputValue : truncateValue(initial?.label || "")}
             />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-1 m-[1px]"
+            <div className={`absolute inset-y-0 right-0 flex items-center pr-1 m-[1px] ${initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? 'bg-primary' : 'bg-white'}`}
               style={{
-                background: initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? '#f7f7f7' : '#f9f9f9',
+                // background: initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? '#f7f7f7' : '#f9f9f9',
                 borderTopRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
                 borderBottomRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
               }}>

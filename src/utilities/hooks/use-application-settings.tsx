@@ -48,6 +48,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
       settingName: keyof ApplicationSettingsType[T],
       value: any
     ) => {
+      debugger;
       if (
         settingName === "allowSalesRouteArea" &&
         value === false &&

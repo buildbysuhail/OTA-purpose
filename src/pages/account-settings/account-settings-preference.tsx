@@ -205,6 +205,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     const res = await api.postAsync(Urls.updateUserThemes, {
       userThemes: btoa(JSON.stringify(appState)),
     });
+    Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
     handleResponse(res, () => {
       console.log(' Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });');
       

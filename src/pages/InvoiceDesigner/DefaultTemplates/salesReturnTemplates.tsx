@@ -111,7 +111,7 @@ const DefaultSRTemplates: DeafultTemplateProps[] = [
     },
     is_default: true,
     is_primary: true,
-    voucher_type: "sales_return",
+    voucher_type: "sales_invoice",
   },
 ];
 

@@ -36,8 +36,8 @@ const setAuthorization = () => {
   const token = Cookies.get("token");
   if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
-  axios.defaults.headers.post["X-Software-Date"] = new Date().toDateString();
-  axios.defaults.headers.post["X-Client-Date"] = new Date().toISOString();
+  axios.defaults.headers.common["X-Software-Date"] = new Date().toDateString();
+  axios.defaults.headers.common["X-Client-Date"] = new Date().toISOString();
 };
 
 class APIClient {

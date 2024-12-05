@@ -62,7 +62,7 @@ const BottomPreview = ({ template, data, templateGroupId }: DownloadPreviewProps
             </Text>
 
             <Text style={{ fontSize: noteFontSize }}>
-              {templateGroupId === "qty_adjustment" || templateGroupId === "value_adjustment"
+              {templateGroupId === "bank_payment"
                 ? data?.description : data?.notes}
             </Text>
           </View>

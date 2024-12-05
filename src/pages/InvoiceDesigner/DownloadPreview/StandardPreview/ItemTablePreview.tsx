@@ -332,7 +332,7 @@ const ItemTablePreview = ({ template, data, templateGroupId }: DownloadPreviewPr
                     padding: "5pt",
                   }}
                 >
-                  <Text>{templateGroupId === "retainer_invoice" ? val?.amount : val?.total_price}</Text>
+                  <Text>{templateGroupId === "balance_sheet" ? val?.amount : val?.total_price}</Text>
                 </View>
               )}
               {itemTableState?.showContactDetails && (

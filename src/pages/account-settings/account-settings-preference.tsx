@@ -47,11 +47,11 @@ const api = new APIClient();
 const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let api = new APIClient();
   const [demo, setDemo] = useState({
-    inputBox:"",
-    dateBox:"",
-    selectBox:"",
-    radioButton:false,
-    checkBox:false,
+    inputBox: "",
+    dateBox: "",
+    selectBox: "",
+    radioButton: false,
+    checkBox: false,
   });
   const [language, setLanguage] = useState<string>("en");
   const [_language, _setLanguage] = useState<string>("en");
@@ -145,24 +145,24 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     scrollbarColor: "219,223,225",
     inputBox: {
       inputStyle: "normal",
-      inputSize:"sm",
-      checkButtonInputSize:"sm",
-      inputHeight:0,
+      inputSize: "sm",
+      checkButtonInputSize: "sm",
+      inputHeight: 0,
       fontSize: 0,
       fontWeight: 400,
       labelFontSize: 0,
       otherLabelFontSize: 0,
       borderColor: "128, 128, 128",
-      fontColor:"128, 128, 128", 
+      fontColor: "128, 128, 128",
       borderFocus: "128, 128, 128",
-      labelColor:'128, 128, 128',
+      labelColor: "128, 128, 128",
       borderRadius: 0,
-      adjustA:0,
-      adjustB:0,
-      adjustC:0,
-      adjustD:0, 
-      marginTop:0,
-      marginBottom:0,   
+      adjustA: 0,
+      adjustB: 0,
+      adjustC: 0,
+      adjustD: 0,
+      marginTop: 0,
+      marginBottom: 0,
     },
   });
 
@@ -181,7 +181,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let updatedUserThemeAction = reduxManager.getTypedThunk(
     updatedUserThemeRName
   );
-  const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {   
+  const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {
     const _appState = {
       ...appState,
       inputBox: {
@@ -192,7 +192,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     updateAppState(_appState);
   };
 
-  const handleScrollbarChange = (field: keyof AppState, value: any) => {    
+  const handleScrollbarChange = (field: keyof AppState, value: any) => {
     const _appState = {
       ...appState,
       [field]: value,
@@ -202,7 +202,9 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
 
   const saveThemeChange = async () => {
     debugger;
-    const res = await api.postAsync(Urls.updateUserThemes, {userThemes: btoa(JSON.stringify(appState))});
+    const res = await api.postAsync(Urls.updateUserThemes, {
+      userThemes: btoa(JSON.stringify(appState)),
+    });
     handleResponse(res, () => {
       Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
     });
@@ -318,10 +320,8 @@ const resetInputBox = async ()=>{
                                       updateAppState,
                                       appState
                                     );
-
                                   }
                                 }}
-                        
                               />
                               <label
                                 htmlFor="switcher-light-theme"
@@ -340,11 +340,8 @@ const resetInputBox = async ()=>{
                                 onChange={(e) => {
                                   if (e.target.checked == true) {
                                     switcherdata.Dark(updateAppState, appState);
-                                 
                                   }
-                                 
                                 }}
-                  
                               />
                               <label
                                 htmlFor="switcher-dark-theme"
@@ -367,7 +364,7 @@ const resetInputBox = async ()=>{
                                 checked={appState.dir != "rtl"}
                                 onChange={(e) => {}}
                                 onClick={(e) => {
-                                  switcherdata.Ltr(updateAppState, appState);                                 
+                                  switcherdata.Ltr(updateAppState, appState);
                                 }}
                               />
                               <label
@@ -386,8 +383,7 @@ const resetInputBox = async ()=>{
                                 checked={appState.dir == "rtl"}
                                 onChange={(e) => {}}
                                 onClick={(e) => {
-                                switcherdata.Rtl(updateAppState, appState);
-                                    
+                                  switcherdata.Rtl(updateAppState, appState);
                                 }}
                               />
                               <label
@@ -420,7 +416,6 @@ const resetInputBox = async ()=>{
                                     updateAppState,
                                     appState
                                   );
-                                 
                                 }}
                               />
                               <label
@@ -445,7 +440,6 @@ const resetInputBox = async ()=>{
                                     updateAppState,
                                     appState
                                   );
-                                 
                                 }}
                               />
                               <label
@@ -470,7 +464,6 @@ const resetInputBox = async ()=>{
                                     updateAppState,
                                     appState
                                   );
-                    
                                 }}
                               />
                               <label
@@ -494,7 +487,6 @@ const resetInputBox = async ()=>{
                                     updateAppState,
                                     appState
                                   );
-                                 
                                 }}
                               />
                               <label
@@ -519,7 +511,6 @@ const resetInputBox = async ()=>{
                                     updateAppState,
                                     appState
                                   );
-                               
                                 }}
                               />
                               <label
@@ -535,16 +526,13 @@ const resetInputBox = async ()=>{
                                 name="sidemenu-layout-styles"
                                 className="ti-form-radio"
                                 id="switcher-double-menu"
-                                checked={
-                                  appState.dataMenuStyles == "doubletFn"
-                                }
+                                checked={appState.dataMenuStyles == "doubletFn"}
                                 onChange={(_e) => {}}
                                 onClick={() => {
                                   switcherdata.DoubletFn(
                                     updateAppState,
                                     appState
                                   );
-                                
                                 }}
                               />
                               <label
@@ -577,9 +565,7 @@ const resetInputBox = async ()=>{
                                       updateAppState,
                                       appState
                                     );
-                                  
                                   }
-                                 
                                 }}
                               />
                               <label
@@ -598,15 +584,11 @@ const resetInputBox = async ()=>{
                                 checked={appState.dataPageStyle == "classic"}
                                 onChange={(_e) => {}}
                                 onClick={(e) => {
-                              
-                                    switcherdata.Classic(
-                                      updateAppState,
-                                      appState
-                                    );
-                                 
-                                  }
-                             
-                                }
+                                  switcherdata.Classic(
+                                    updateAppState,
+                                    appState
+                                  );
+                                }}
                               />
                               <label
                                 htmlFor="switcher-classic"
@@ -624,12 +606,7 @@ const resetInputBox = async ()=>{
                                 checked={appState.dataPageStyle == "modern"}
                                 onChange={(_e) => {}}
                                 onClick={(e) => {
-                                
-                                    switcherdata.Modern(
-                                      updateAppState,
-                                      appState
-                                    );
-                                  
+                                  switcherdata.Modern(updateAppState, appState);
                                 }}
                               />
                               <label
@@ -654,7 +631,6 @@ const resetInputBox = async ()=>{
                         title="Save Changes"
                         onClick={saveThemeChange}
                         variant="primary"
-                 
                       ></ERPButton>
                     </div>
                   </div>
@@ -705,7 +681,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                               
                               }}
                             />
                             <span
@@ -725,7 +700,6 @@ const resetInputBox = async ()=>{
                               id="switcher-menu-dark"
                               onClick={() => {
                                 switcherdata.darkMenu(updateAppState, appState);
-                              
                               }}
                             />
                             <span
@@ -748,7 +722,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                              
                               }}
                             />
                             <span
@@ -771,7 +744,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                              
                               }}
                             />
                             <span
@@ -794,7 +766,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                             
                               }}
                             />
                             <span
@@ -827,7 +798,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                              
                               }}
                             />
                             <span
@@ -850,7 +820,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                             
                               }}
                             />
                             <span
@@ -873,7 +842,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                            
                               }}
                             />
                             <span
@@ -896,7 +864,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                              
                               }}
                             />
                             <span
@@ -910,7 +877,9 @@ const resetInputBox = async ()=>{
                             <input
                               className="hs-tooltip-toggle ti-form-radio color-input color-transparent"
                               type="radio"
-                              checked={appState.dataHeaderStyles == "transparent"}
+                              checked={
+                                appState.dataHeaderStyles == "transparent"
+                              }
                               onChange={(_e) => {}}
                               name="header-colors"
                               id="switcher-header-transparent"
@@ -919,7 +888,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                            
                               }}
                             />
                             <span
@@ -945,14 +913,15 @@ const resetInputBox = async ()=>{
                               className="ti-form-radio color-input color-primary-1"
                               type="radio"
                               name="theme-primary"
-                              checked={appState.colorPrimaryRgb == "58, 88, 146"}
+                              checked={
+                                appState.colorPrimaryRgb == "58, 88, 146"
+                              }
                               id="switcher-primary"
                               onClick={() => {
                                 switcherdata.primaryColor1(
                                   updateAppState,
                                   appState
                                 );
-                             
                               }}
                             />
                           </div>
@@ -961,7 +930,9 @@ const resetInputBox = async ()=>{
                               className="ti-form-radio color-input color-primary-2"
                               type="radio"
                               name="theme-primary"
-                              checked={appState.colorPrimaryRgb == "92, 144 ,163"}
+                              checked={
+                                appState.colorPrimaryRgb == "92, 144 ,163"
+                              }
                               onChange={(_e) => {}}
                               id="switcher-primary1"
                               onClick={() => {
@@ -969,7 +940,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                               
                               }}
                             />
                           </div>
@@ -978,7 +948,9 @@ const resetInputBox = async ()=>{
                               className="ti-form-radio color-input color-primary-3"
                               type="radio"
                               name="theme-primary"
-                              checked={appState.colorPrimaryRgb == "161, 90 ,223"}
+                              checked={
+                                appState.colorPrimaryRgb == "161, 90 ,223"
+                              }
                               onChange={(_e) => {}}
                               id="switcher-primary2"
                               onClick={() => {
@@ -986,7 +958,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                           
                               }}
                             />
                           </div>
@@ -995,7 +966,9 @@ const resetInputBox = async ()=>{
                               className="ti-form-radio color-input color-primary-4"
                               type="radio"
                               name="theme-primary"
-                              checked={appState.colorPrimaryRgb == "78, 172, 76"}
+                              checked={
+                                appState.colorPrimaryRgb == "78, 172, 76"
+                              }
                               onChange={(_e) => {}}
                               id="switcher-primary3"
                               onClick={() => {
@@ -1003,7 +976,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                            
                               }}
                             />
                           </div>
@@ -1012,7 +984,9 @@ const resetInputBox = async ()=>{
                               className="ti-form-radio color-input color-primary-5"
                               type="radio"
                               name="theme-primary"
-                              checked={appState.colorPrimaryRgb == "223, 90, 90"}
+                              checked={
+                                appState.colorPrimaryRgb == "223, 90, 90"
+                              }
                               onChange={(_e) => {}}
                               id="switcher-primary4"
                               onClick={() => {
@@ -1020,7 +994,6 @@ const resetInputBox = async ()=>{
                                   updateAppState,
                                   appState
                                 );
-                               
                               }}
                             />
                           </div>
@@ -1053,7 +1026,6 @@ const resetInputBox = async ()=>{
                                             appState,
                                             `${r},  ${g},  ${b}`
                                           );
-                                        
                                         }
                                       }}
                                       value={"#FFFFFF"}
@@ -1083,7 +1055,12 @@ const resetInputBox = async ()=>{
                                     className="ti-form-radio"
                                     id={`scrollbar-${width}`}
                                     checked={appState.scrollbarWidth === width}
-                                    onChange={() => { handleScrollbarChange( "scrollbarWidth",  width)}} 
+                                    onChange={() => {
+                                      handleScrollbarChange(
+                                        "scrollbarWidth",
+                                        width
+                                      );
+                                    }}
                                   />
                                   <label
                                     htmlFor={`scrollbar-${width}`}
@@ -1102,11 +1079,12 @@ const resetInputBox = async ()=>{
                               Scrollbar Color:
                             </h6>
                             <div className="ti-form-radio">
-                            
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor:  `rgb(${appState.scrollbarColor??'128, 128, 128'})`,
+                                  backgroundColor: `rgb(${
+                                    appState.scrollbarColor ?? "128, 128, 128"
+                                  })`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1114,11 +1092,13 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.inputBox?.fontColor}
                                   onChange={(e) => {
-                                    const rgb = hexToRgb(e.target.value); 
+                                    const rgb = hexToRgb(e.target.value);
                                     if (rgb) {
-                                      handleScrollbarChange( "scrollbarColor", `${rgb?.r},${rgb?.g},${rgb?.b}`)
+                                      handleScrollbarChange(
+                                        "scrollbarColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
                                     }
-                                  
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
@@ -1127,7 +1107,7 @@ const resetInputBox = async ()=>{
                           </div>
                           {/* Preview Section */}
                           <div
-                         className={`
+                            className={`
                           w-full h-64 border border-gray-300 rounded-md overflow-y-auto
                           scrollbar
                           ${
@@ -1138,12 +1118,18 @@ const resetInputBox = async ()=>{
                               : "scrollbar-thin"
                           }
                         `}
-                        style={{
-                          "--scrollbar-thumb": `rgb(${appState.scrollbarColor ?? '219,223,225'})`,
-                          "--scrollbar-track": "rgb(241,245,249)",
-                          "--tw-scrollbar-thumb": `rgb(${appState.scrollbarColor ?? '219,223,225'})`,
-                          "--tw-scrollbar-track": "rgb(241,245,249)",
-                        } as React.CSSProperties}
+                            style={
+                              {
+                                "--scrollbar-thumb": `rgb(${
+                                  appState.scrollbarColor ?? "219,223,225"
+                                })`,
+                                "--scrollbar-track": "rgb(241,245,249)",
+                                "--tw-scrollbar-thumb": `rgb(${
+                                  appState.scrollbarColor ?? "219,223,225"
+                                })`,
+                                "--tw-scrollbar-track": "rgb(241,245,249)",
+                              } as React.CSSProperties
+                            }
                           >
                             {/* Content to showcase scrollbar */}
                             <div className="h-96 p-2">
@@ -1177,9 +1163,9 @@ const resetInputBox = async ()=>{
                       
                       <div className="flex justify-end items-center mt-3">
                     <ERPButton 
-                     type="reset"
+                     variant="secondary"
                      title="Reset"
-                     onClick={resetInputBox}
+                     onClick={() => {resetInputBox}}
                      startIcon={ 'ri-refresh-line' }
                     //  disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
                     //  loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}
@@ -1244,8 +1230,7 @@ const resetInputBox = async ()=>{
                             
                            
                         </div>
-                        
-                      
+
                         <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
                           <div className="flex items-center">
                             <input
@@ -1253,10 +1238,11 @@ const resetInputBox = async ()=>{
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-normal"
-                              checked={appState.inputBox?.inputStyle === "normal"}
+                              checked={
+                                appState.inputBox?.inputStyle === "normal"
+                              }
                               onChange={(e) => {
                                 if (e.target.checked) {
-                            
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "normal"
@@ -1283,7 +1269,6 @@ const resetInputBox = async ()=>{
                               }
                               onChange={(e) => {
                                 if (e.target.checked) {
-                           
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "standard"
@@ -1305,10 +1290,11 @@ const resetInputBox = async ()=>{
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-outline"
-                              checked={appState.inputBox?.inputStyle === "outlined"}
+                              checked={
+                                appState.inputBox?.inputStyle === "outlined"
+                              }
                               onChange={(e) => {
                                 if (e.target.checked) {
-                             
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "outlined"
@@ -1330,10 +1316,11 @@ const resetInputBox = async ()=>{
                               name="inputBox"
                               className="ti-form-radio"
                               id="input-fill"
-                              checked={appState.inputBox?.inputStyle === "filled"}
+                              checked={
+                                appState.inputBox?.inputStyle === "filled"
+                              }
                               onChange={(e) => {
                                 if (e.target.checked) {
-                             
                                   handleInputBoxStyleChange(
                                     "inputStyle",
                                     "filled"
@@ -1351,110 +1338,97 @@ const resetInputBox = async ()=>{
                           </div>
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            name="inputBoxSize"
-                            className="ti-form-radio"
-                            id="input-sm"
-                            checked={appState.inputBox?.inputSize === "sm"}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                            
-                                handleInputBoxStyleChange(
-                                  "inputSize",
-                                  "sm"
-                                );
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              name="inputBoxSize"
+                              className="ti-form-radio"
+                              id="input-sm"
+                              checked={appState.inputBox?.inputSize === "sm"}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  handleInputBoxStyleChange("inputSize", "sm");
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-sm"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              sm
+                            </label>
+                          </div>
+                          <div className="flex item-center">
+                            <input
+                              type="radio"
+                              name="inputBoxSize"
+                              className="ti-form-radio"
+                              id="input-md"
+                              checked={appState.inputBox?.inputSize === "md"}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  handleInputBoxStyleChange("inputSize", "md");
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-md"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              md
+                            </label>
+                          </div>
+                          <div className="flex item-center">
+                            <input
+                              type="radio"
+                              name="inputBoxSize"
+                              className="ti-form-radio"
+                              id="input-lg"
+                              checked={appState.inputBox?.inputSize === "lg"}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  handleInputBoxStyleChange("inputSize", "lg");
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-lg"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              lg
+                            </label>
+                          </div>
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              name="inputBoxSize"
+                              className="ti-form-radio"
+                              id="input-customize"
+                              checked={
+                                appState.inputBox?.inputSize === "customize"
                               }
-                            }}
-                          />
-                          <label
-                            htmlFor="input-sm"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                          >
-                            {" "}
-                            sm
-                          </label>
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  handleInputBoxStyleChange(
+                                    "inputSize",
+                                    "customize"
+                                  );
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-customize"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              customize
+                            </label>
+                          </div>
                         </div>
-                        <div className="flex item-center">
-                          <input
-                            type="radio"
-                            name="inputBoxSize"
-                            className="ti-form-radio"
-                            id="input-md"
-                            checked={
-                              appState.inputBox?.inputSize === "md"
-                            }
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                             
-                                handleInputBoxStyleChange(
-                                  "inputSize",
-                                  "md"
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor="input-md"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                          >
-                            {" "}
-                            md
-                          </label>
-                        </div>
-                        <div className="flex item-center">
-                          <input
-                            type="radio"
-                            name="inputBoxSize"
-                            className="ti-form-radio"
-                            id="input-lg"
-                            checked={appState.inputBox?.inputSize === "lg"}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                             
-                                handleInputBoxStyleChange(
-                                  "inputSize",
-                                  "lg"
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor="input-lg"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                          >
-                            {" "}
-                            lg
-                          </label>
-                        </div>
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            name="inputBoxSize"
-                            className="ti-form-radio"
-                            id="input-customize"
-                            checked={appState.inputBox?.inputSize === "customize"}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-
-                                handleInputBoxStyleChange(
-                                  "inputSize",
-                                  "customize"
-                                );
-                              }
-                            }}
-                          />
-                          <label
-                            htmlFor="input-customize"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                          >
-                            {" "}
-                            customize
-                          </label>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 switcher-style">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 switcher-style">
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider
@@ -1463,7 +1437,7 @@ const resetInputBox = async ()=>{
                                 className="bg-slate-300"
                                 value={appState.inputBox?.borderRadius}
                                 onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
+                                  const newValue = parseInt(e.target.value, 10);
                                   handleInputBoxStyleChange(
                                     "borderRadius",
                                     newValue
@@ -1473,7 +1447,7 @@ const resetInputBox = async ()=>{
                                 max={20}
                               />
                             </div>
-                            
+
                             <div className="basis-1/3">
                               <ERPInput
                                 id="borderRadius"
@@ -1494,323 +1468,352 @@ const resetInputBox = async ()=>{
                             </div>
                           </div>
                           <div className="flex flex-col space-y-1 translate-y-4">
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-1/2 ">
-                            <ERPSlider
-                                id="marginBottom"
-                                label={`Margin Bottom (${appState.inputBox?.marginBottom??0})`}
-                                className="bg-slate-300"
-                                value={appState.inputBox?.marginBottom}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                            
-                                  handleInputBoxStyleChange(
-                                    "marginBottom",
-                                    newValue
-                                  );
-                                }}
-                                min={0}
-                                max={30}
-                               
-                              />
+                            <div className="flex items-center space-x-3">
+                              <div className="basis-1/2 ">
+                                <ERPSlider
+                                  id="marginBottom"
+                                  label={`Margin Bottom (${
+                                    appState.inputBox?.marginBottom ?? 0
+                                  })`}
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.marginBottom}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(e.target.value);
+
+                                    handleInputBoxStyleChange(
+                                      "marginBottom",
+                                      newValue
+                                    );
+                                  }}
+                                  min={0}
+                                  max={30}
+                                />
+                              </div>
+                              <div className="basis-1/2 ">
+                                <ERPSlider
+                                  id="marginTop"
+                                  label={`Margin Top (${
+                                    appState.inputBox?.marginTop ?? 0
+                                  })`}
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.marginTop}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(e.target.value);
+
+                                    handleInputBoxStyleChange(
+                                      "marginTop",
+                                      newValue
+                                    );
+                                  }}
+                                  min={0}
+                                  max={30}
+                                />
+                              </div>
                             </div>
-                            <div className="basis-1/2 ">
-                            <ERPSlider
-                                id="marginTop"
-                                label={`Margin Top (${appState.inputBox?.marginTop??0})`}
-                                className="bg-slate-300"
-                                value={appState.inputBox?.marginTop}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                           
-                                  handleInputBoxStyleChange(
-                                    "marginTop",
-                                    newValue
-                                  );
-                                }}
-                                min={0}
-                                max={30}
-                               
-                              />
+                            <div className="px-4 text-secondary text-xs">
+                              <b className="me-2">Note:</b>if you face any
+                              aligment issue adjust margin top & bottom of input
+                              box
                             </div>
-                          </div>
-                          <div className="px-4 text-secondary text-xs">
-                            <b className="me-2">Note:</b>if you face any aligment issue adjust margin top & bottom of input box
-                            
-                          </div>
                           </div>
                         </div>
                       </div>
                       <div className="">
-                       {appState.inputBox?.inputSize === "customize" && (
-                        <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
+                        {appState.inputBox?.inputSize === "customize" && (
+                          <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
+                            <div className="flex items-center space-x-3">
+                              <div className="basis-2/3 ">
+                                <ERPSlider
+                                  id="fontSize"
+                                  label="Font Size"
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.fontSize}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
 
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-2/3 ">
-                              <ERPSlider
-                                id="fontSize"
-                                label="Font Size"
-                                className="bg-slate-300"
-                                value={appState.inputBox?.fontSize}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
-                              
-                                  handleInputBoxStyleChange(
-                                    "fontSize",
-                                    newValue
-                                  );
-                                }}
-                                min={5}
-                                max={25}
-                              />
-                            </div>
-                            <div className="basis-1/3 translate-y-3">
-                              <ERPInput
-                                id="fontSize"
-                                type="number"
-                                noLabel={true}
-                                value={appState.inputBox?.fontSize}
-                                data={appState.inputBox}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
-                                
-                                  handleInputBoxStyleChange(
-                                    "fontSize",
-                                    newValue
-                                  );
-                                }}
-                                min={5}
-                                max={25}
-                              />
-                            </div>
-                          </div>
+                                    handleInputBoxStyleChange(
+                                      "fontSize",
+                                      newValue
+                                    );
+                                  }}
+                                  min={5}
+                                  max={25}
+                                />
+                              </div>
+                              <div className="basis-1/3 translate-y-3">
+                                <ERPInput
+                                  id="fontSize"
+                                  type="number"
+                                  noLabel={true}
+                                  value={appState.inputBox?.fontSize}
+                                  data={appState.inputBox}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
 
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-2/3 ">
-                              <ERPSlider
-                                id="labelFontSize"
-                                label="Label Font Size"
-                                className="bg-slate-300"
-                                value={appState.inputBox?.labelFontSize}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
-                                 
-                                  handleInputBoxStyleChange(
-                                    "labelFontSize",
-                                    newValue
-                                  );
-                                }}
-                                min={5}
-                                max={25}
-                              />
+                                    handleInputBoxStyleChange(
+                                      "fontSize",
+                                      newValue
+                                    );
+                                  }}
+                                  min={5}
+                                  max={25}
+                                />
+                              </div>
                             </div>
-                            <div className="basis-1/3 translate-y-3">
-                              <ERPInput
-                                id="labelFontSize"
-                                type="number"
-                                noLabel={true}
-                                value={appState.inputBox?.labelFontSize}
-                                data={appState.inputBox}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
-                           
-                                  handleInputBoxStyleChange(
-                                    "labelFontSize",
-                                    newValue
-                                  );
-                                }}
-                                min={5}
-                                max={25}
-                              />
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-2/3 ">
-                              <ERPSlider
-                                id="fontWeight"
-                                label="Font Weight"
-                                className="bg-slate-300"
-                                value={appState.inputBox?.fontWeight}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
-                              
-                                  handleInputBoxStyleChange(
-                                    "fontWeight",
-                                    newValue
-                                  );
-                                }}
-                                min={300}
-                                max={700}
-                                step={100}
-                              />
-                            </div>
-                            <div className="basis-1/3 translate-y-3">
-                              <ERPInput
-                                id="fontWeight"
-                                type="number"
-                                noLabel={true}
-                                value={appState.inputBox?.fontWeight}
-                                data={appState.inputBox}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
-                          
-                                  handleInputBoxStyleChange(
-                                    "fontWeight",
-                                    newValue
-                                  );
-                                }}
-                                min={300}
-                                max={700}
-                                step={100}
-                              />
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-2/3 ">
-                              <ERPSlider
-                                id="inputHeight"
-                                label="Height"
-                                className="bg-slate-300"
-                                value={appState.inputBox?.inputHeight}
-                                onChange={(e) => {
-                                  const newValue = parseFloat(e.target.value); 
-                          
-                                  handleInputBoxStyleChange(
-                                    "inputHeight",
-                                    newValue
-                                  );
-                                }}
-                                min={0}
-                                max={5}
-                                step={0.1}
-                              />
-                            </div>
-                            <div className="basis-1/3 translate-y-3">
-                              <ERPInput
-                                id="inputHeight"
-                                type="number"
-                                noLabel={true}
-                                value={appState.inputBox?.inputHeight}
-                                data={appState.inputBox}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value, 10); 
-                       
-                                  handleInputBoxStyleChange(
-                                    "inputHeight",
-                                    newValue
-                                  );
-                                }}
-                                min={0}
-                                max={5}
-                                step={0.1}
-                              />
-                            </div>
-                          </div>
 
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-1/2 ">
-                              <ERPSlider
-                                id="adjustA"
-                                label={`AdjustA (${appState.inputBox?.adjustA??0})`}
-                                className="bg-slate-300"
-                                value={appState.inputBox?.adjustA}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                           
-                                  handleInputBoxStyleChange(
-                                    "adjustA",
-                                    newValue
-                                  );
-                                }}
-                                min={-30}
-                                max={30}
-                               
-                              />
+                            <div className="flex items-center space-x-3">
+                              <div className="basis-2/3 ">
+                                <ERPSlider
+                                  id="labelFontSize"
+                                  label="Label Font Size"
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.labelFontSize}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
+
+                                    handleInputBoxStyleChange(
+                                      "labelFontSize",
+                                      newValue
+                                    );
+                                  }}
+                                  min={5}
+                                  max={25}
+                                />
+                              </div>
+                              <div className="basis-1/3 translate-y-3">
+                                <ERPInput
+                                  id="labelFontSize"
+                                  type="number"
+                                  noLabel={true}
+                                  value={appState.inputBox?.labelFontSize}
+                                  data={appState.inputBox}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
+
+                                    handleInputBoxStyleChange(
+                                      "labelFontSize",
+                                      newValue
+                                    );
+                                  }}
+                                  min={5}
+                                  max={25}
+                                />
+                              </div>
                             </div>
-                            <div className="basis-1/2 ">
-                            <ERPSlider
-                                id="adjustB"
-                                label={`AdjustB (${appState.inputBox?.adjustB??0})`}
-                                className="bg-slate-300"
-                                value={appState.inputBox?.adjustB}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                           
-                                  handleInputBoxStyleChange(
-                                    "adjustB",
-                                    newValue
-                                  );
-                                }}
-                                min={-30}
-                                max={30}
-                               
-                              />
+                            <div className="flex items-center space-x-3">
+                              <div className="basis-2/3 ">
+                                <ERPSlider
+                                  id="fontWeight"
+                                  label="Font Weight"
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.fontWeight}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
+
+                                    handleInputBoxStyleChange(
+                                      "fontWeight",
+                                      newValue
+                                    );
+                                  }}
+                                  min={300}
+                                  max={700}
+                                  step={100}
+                                />
+                              </div>
+                              <div className="basis-1/3 translate-y-3">
+                                <ERPInput
+                                  id="fontWeight"
+                                  type="number"
+                                  noLabel={true}
+                                  value={appState.inputBox?.fontWeight}
+                                  data={appState.inputBox}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
+
+                                    handleInputBoxStyleChange(
+                                      "fontWeight",
+                                      newValue
+                                    );
+                                  }}
+                                  min={300}
+                                  max={700}
+                                  step={100}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                              <div className="basis-2/3 ">
+                                <ERPSlider
+                                  id="inputHeight"
+                                  label="Height"
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.inputHeight}
+                                  onChange={(e) => {
+                                    const newValue = parseFloat(e.target.value);
+
+                                    handleInputBoxStyleChange(
+                                      "inputHeight",
+                                      newValue
+                                    );
+                                  }}
+                                  min={0}
+                                  max={5}
+                                  step={0.1}
+                                />
+                              </div>
+                              <div className="basis-1/3 translate-y-3">
+                                <ERPInput
+                                  id="inputHeight"
+                                  type="number"
+                                  noLabel={true}
+                                  value={appState.inputBox?.inputHeight}
+                                  data={appState.inputBox}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
+
+                                    handleInputBoxStyleChange(
+                                      "inputHeight",
+                                      newValue
+                                    );
+                                  }}
+                                  min={0}
+                                  max={5}
+                                  step={0.1}
+                                />
+                              </div>
+                            </div>
+
+                            <div className="flex items-center space-x-3">
+                              <div className="basis-1/2 ">
+                                <ERPSlider
+                                  id="adjustA"
+                                  label={`AdjustA (${
+                                    appState.inputBox?.adjustA ?? 0
+                                  })`}
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.adjustA}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(e.target.value);
+
+                                    handleInputBoxStyleChange(
+                                      "adjustA",
+                                      newValue
+                                    );
+                                  }}
+                                  min={-30}
+                                  max={30}
+                                />
+                              </div>
+                              <div className="basis-1/2 ">
+                                <ERPSlider
+                                  id="adjustB"
+                                  label={`AdjustB (${
+                                    appState.inputBox?.adjustB ?? 0
+                                  })`}
+                                  className="bg-slate-300"
+                                  value={appState.inputBox?.adjustB}
+                                  onChange={(e) => {
+                                    const newValue = parseInt(e.target.value);
+
+                                    handleInputBoxStyleChange(
+                                      "adjustB",
+                                      newValue
+                                    );
+                                  }}
+                                  min={-30}
+                                  max={30}
+                                />
+                              </div>
+                            </div>
+                            <div className="flex flex-col space-y-1 translate-y-[10px]">
+                              <div className="flex items-center space-x-3">
+                                <div className="basis-1/2 ">
+                                  <ERPSlider
+                                    id="adjustC"
+                                    label={`AdjustC (${
+                                      appState.inputBox?.adjustC ?? 0
+                                    })`}
+                                    className="bg-slate-300"
+                                    value={appState.inputBox?.adjustC}
+                                    onChange={(e) => {
+                                      const newValue = parseInt(e.target.value);
+
+                                      handleInputBoxStyleChange(
+                                        "adjustC",
+                                        newValue
+                                      );
+                                    }}
+                                    min={-30}
+                                    max={30}
+                                  />
+                                </div>
+                                <div className="basis-1/2 ">
+                                  <ERPSlider
+                                    id="adjustD"
+                                    label={`AdjustD (${
+                                      appState.inputBox?.adjustD ?? 0
+                                    })`}
+                                    className="bg-slate-300"
+                                    value={appState.inputBox?.adjustD}
+                                    onChange={(e) => {
+                                      const newValue = parseInt(e.target.value);
+
+                                      handleInputBoxStyleChange(
+                                        "adjustD",
+                                        newValue
+                                      );
+                                    }}
+                                    min={-30}
+                                    max={30}
+                                  />
+                                </div>
+                              </div>
+                              <div className="px-4 text-secondary text-xs">
+                                <b className="me-2">Note:</b>This usstyle won't
+                                work in normal inputbox.
+                              </div>
                             </div>
                           </div>
-                          <div className="flex flex-col space-y-1 translate-y-[10px]">
-                          <div className="flex items-center space-x-3">
-                            <div className="basis-1/2 ">
-                            <ERPSlider
-                                id="adjustC"
-                                label={`AdjustC (${appState.inputBox?.adjustC??0})`}
-                                className="bg-slate-300"
-                                value={appState.inputBox?.adjustC}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                          
-                                  handleInputBoxStyleChange(
-                                    "adjustC",
-                                    newValue
-                                  );
-                                }}
-                                min={-30}
-                                max={30}
-                               
-                              />
-                            </div>
-                            <div className="basis-1/2 ">
-                            <ERPSlider
-                                id="adjustD"
-                                label={`AdjustD (${appState.inputBox?.adjustD??0})`}
-                                className="bg-slate-300"
-                                value={appState.inputBox?.adjustD}
-                                onChange={(e) => {
-                                  const newValue = parseInt(e.target.value); 
-                         
-                                  handleInputBoxStyleChange(
-                                    "adjustD",
-                                    newValue
-                                  );
-                                }}
-                                min={-30}
-                                max={30}
-                               
-                              />
-                            </div>
-                          </div>
-                          <div className="px-4 text-secondary text-xs">
-                            <b className="me-2">Note:</b>This usstyle 
-                            won't work in normal inputbox.
-                          </div>
-                          </div>                          
-                          </div>
-                       )}
-                          
-                       
-                       <div className="grid grid-cols-2 sm:grid-cols-4 switcher-style">
-                        <div className="flex items-center ">
-                        <label
-                            htmlFor="borderColor"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
-                          >
-                            {" "}
-                            Border Color
-                          </label>
-                        <div className="ti-form-radio">
+                        )}
+
+                        <div className="grid grid-cols-2 sm:grid-cols-4 switcher-style">
+                          <div className="flex items-center ">
+                            <label
+                              htmlFor="borderColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                              Border Color
+                            </label>
+                            <div className="ti-form-radio">
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.borderColor??'128, 128, 128'})`,
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.borderColor ??
+                                    "128, 128, 128"
+                                  })`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1825,27 +1828,29 @@ const resetInputBox = async ()=>{
                                         `${rgb?.r},${rgb?.g},${rgb?.b}`
                                       );
                                     }
-                                   
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
                               </div>
                             </div>
-                        </div>
-                        
-                        <div className="flex items-center ">
-                        <label
-                            htmlFor="fontColor"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
-                          >
-                            {" "}
-                            Font Color 
-                          </label>
-                        <div className="ti-form-radio">
+                          </div>
+
+                          <div className="flex items-center ">
+                            <label
+                              htmlFor="fontColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                              Font Color
+                            </label>
+                            <div className="ti-form-radio">
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.fontColor??'128, 128, 128'})`,
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.fontColor ??
+                                    "128, 128, 128"
+                                  })`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1860,28 +1865,29 @@ const resetInputBox = async ()=>{
                                         `${rgb?.r},${rgb?.g},${rgb?.b}`
                                       );
                                     }
-                                
-                                    
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
                               </div>
                             </div>
-                        </div>
+                          </div>
 
-                           <div className="flex items-center ">
-                        <label
-                            htmlFor="labelColor"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
-                          >
-                            {" "}
-                            Label Color 
-                          </label>
-                        <div className="ti-form-radio">
+                          <div className="flex items-center ">
+                            <label
+                              htmlFor="labelColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                              Label Color
+                            </label>
+                            <div className="ti-form-radio">
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.labelColor??'128, 128, 128'})`,
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.labelColor ??
+                                    "128, 128, 128"
+                                  })`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1896,28 +1902,29 @@ const resetInputBox = async ()=>{
                                         `${rgb?.r},${rgb?.g},${rgb?.b}`
                                       );
                                     }
-                                
-                                    
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
                               </div>
                             </div>
-                        </div>        
+                          </div>
 
-                        <div className="flex items-center ">
-                        <label
-                            htmlFor="borderFocus"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
-                          >
-                            {" "}
-                            Border Focus
-                          </label>
-                        <div className="ti-form-radio">
+                          <div className="flex items-center ">
+                            <label
+                              htmlFor="borderFocus"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                              Border Focus
+                            </label>
+                            <div className="ti-form-radio">
                               <div
                                 className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
-                                  backgroundColor: `rgb(${appState.inputBox?.borderFocus??'128, 128, 128'})`,
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.borderFocus ??
+                                    "128, 128, 128"
+                                  })`,
                                 }}
                               >
                                 <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
@@ -1932,30 +1939,29 @@ const resetInputBox = async ()=>{
                                         `${rgb?.r},${rgb?.g},${rgb?.b}`
                                       );
                                     }
-                                 
                                   }}
                                   className="opacity-0 w-full h-full cursor-pointer "
                                 />
                               </div>
                             </div>
+                          </div>
                         </div>
-                       </div>
-                         
                       </div>
 
                       <div className="">
-                      <p className="switcher-style-head">Radio & Check Box:</p>
-                      <div className="grid  grid-cols-2 gap-3 items-center  switcher-style">
-                         
-                            <ERPRadio
+                        <p className="switcher-style-head">
+                          Radio & Check Box:
+                        </p>
+                        <div className="grid  grid-cols-2 gap-3 items-center  switcher-style">
+                          <ERPRadio
                             id="radioButton"
                             name="radioButton"
                             data={demo}
                             checked={demo.radioButton}
                             onChange={(e) => {
                               setDemo((prevTheme) => ({
-                                ...prevTheme,             
-                                radioButton: !demo.radioButton 
+                                ...prevTheme,
+                                radioButton: !demo.radioButton,
                               }));
                             }}
                             label="Demo Radio Button"
@@ -1967,97 +1973,93 @@ const resetInputBox = async ()=>{
                             checked={demo.checkBox}
                             onChange={(e) => {
                               setDemo((prevTheme) => ({
-                                ...prevTheme,             
-                                checkBox: !demo.checkBox 
+                                ...prevTheme,
+                                checkBox: !demo.checkBox,
                               }));
                             }}
                             label="Demo checkBox"
                           />
                         </div>
                         <div className="grid grid-cols-2 md:grid-cols-4  switcher-style">
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            name="inputCheckBoxSize"
-                            className="ti-form-radio"
-                            id="inputCheck-sm"
-                            checked={
-                              appState.inputBox?.checkButtonInputSize === "sm"
-                            }
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                          
-                                handleInputBoxStyleChange(
-                                  "checkButtonInputSize",
-                                  "sm"
-                                );
+                          <div className="flex items-center">
+                            <input
+                              type="radio"
+                              name="inputCheckBoxSize"
+                              className="ti-form-radio"
+                              id="inputCheck-sm"
+                              checked={
+                                appState.inputBox?.checkButtonInputSize === "sm"
                               }
-                            }}
-                          />
-                          <label
-                            htmlFor="input-sm"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                          >
-                            {" "}
-                            sm
-                          </label>
-                        </div>
-                        <div className="flex item-center">
-                          <input
-                            type="radio"
-                            name="inputCheckBoxSize"
-                            className="ti-form-radio"
-                            id="inputCheck-md"
-                            checked={
-                              appState.inputBox?.checkButtonInputSize === "md"
-                            }
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                          
-                                handleInputBoxStyleChange(
-                                  "checkButtonInputSize",
-                                  "md"
-                                );
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  handleInputBoxStyleChange(
+                                    "checkButtonInputSize",
+                                    "sm"
+                                  );
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-sm"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              sm
+                            </label>
+                          </div>
+                          <div className="flex item-center">
+                            <input
+                              type="radio"
+                              name="inputCheckBoxSize"
+                              className="ti-form-radio"
+                              id="inputCheck-md"
+                              checked={
+                                appState.inputBox?.checkButtonInputSize === "md"
                               }
-                            }}
-                          />
-                          <label
-                            htmlFor="input-md"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                          >
-                            {" "}
-                            md
-                          </label>
-                        </div>
-                        <div className="flex item-center">
-                          <input
-                            type="radio"
-                            name="inputCheckBoxSize"
-                            className="ti-form-radio"
-                            id="inputCheck-lg"
-                            checked={
-                              appState.inputBox?.checkButtonInputSize === "lg"
-                            }
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                        
-                                handleInputBoxStyleChange(
-                                  "checkButtonInputSize",
-                                  "lg"
-                                );
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  handleInputBoxStyleChange(
+                                    "checkButtonInputSize",
+                                    "md"
+                                  );
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-md"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              md
+                            </label>
+                          </div>
+                          <div className="flex item-center">
+                            <input
+                              type="radio"
+                              name="inputCheckBoxSize"
+                              className="ti-form-radio"
+                              id="inputCheck-lg"
+                              checked={
+                                appState.inputBox?.checkButtonInputSize === "lg"
                               }
-                            }}
-                          />
-                          <label
-                            htmlFor="input-lg"
-                            className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
-                          >
-                            {" "}
-                            lg
-                          </label>
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  handleInputBoxStyleChange(
+                                    "checkButtonInputSize",
+                                    "lg"
+                                  );
+                                }
+                              }}
+                            />
+                            <label
+                              htmlFor="input-lg"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
+                            >
+                              {" "}
+                              lg
+                            </label>
+                          </div>
                         </div>
-                      
-                      </div>
                       </div>
                     </div>
                   </div>
@@ -2077,8 +2079,6 @@ const resetInputBox = async ()=>{
               </div>
             </div>
           </div>
-
-         
         </div>
       </div>
     </Fragment>

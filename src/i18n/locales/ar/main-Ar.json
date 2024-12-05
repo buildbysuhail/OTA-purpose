@@ -68,5 +68,10 @@
    "headers_footers": "الرؤوس والتذييلات",
    "qr_pay": "الدفع باستخدام QR",
    "hide_account_ledger": "إخفاء دفتر الحسابات",
-   "company_profile_others": "ملف الشركة"
+   "company_profile_others": "ملف الشركة",
+
+   "add": "إضافة",
+   "clear": "مسح",
+   "cancel": "إلغاء",
+   "submit": "إرسال"
 }

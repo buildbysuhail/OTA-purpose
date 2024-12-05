@@ -32,7 +32,6 @@ const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) 
     setIsCompactView(newViewState)
     onToggle(newViewState)
   }
-
   return (
     <div className="flex items-center justify-end">
       <label className="inline-flex items-center cursor-pointer">
@@ -337,7 +336,8 @@ export default function SettingsPage() {
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
-      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300">
+      {/* main */}
+      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto h-screen scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800">
         <div className='flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2'>
           <button
             className="md:hidden mr-2 p-1"

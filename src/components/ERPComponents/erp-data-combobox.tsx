@@ -996,7 +996,7 @@ export default function ERPDataCombobox({
               }
             }}>
 
-            <Combobox.Options className={`absolute z-50 mt-2 w-full min-w-[200px] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden ${sizeClasses.options}`} static>
+            <Combobox.Options className={`absolute z-50 mt-1 w-full min-w-[50px] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden ${sizeClasses.options}`} static>
 
               {loading ? (
                 <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Loading...</div>

@@ -293,7 +293,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     enable: true
   }
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("main");
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number }>({ mobile: 500, windows: 500 });
   const [addButtonText, setAddButtonText] = useState<string>(gridAddButtonText == "Add" ? t("add") : gridAddButtonText);

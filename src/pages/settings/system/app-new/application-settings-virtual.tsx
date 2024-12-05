@@ -180,8 +180,9 @@ export default function SettingsPage() {
             setActiveSection(section.id)
             // Check sub-items within the active section
             for (const setting of section.settings?.filter(x =>
-              (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-              (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+              (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+              (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+              (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key]
               if (subElement) {
@@ -253,8 +254,9 @@ export default function SettingsPage() {
               {item.id === activeSection && (
                 <div className="ml-4 mt-1 space-y-1">
                   {item.settings?.filter(x =>
-                    (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-                    (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+                    (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+                    (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+                    (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
                   ).map((set) => (
                     <>
                       <button
@@ -1712,7 +1714,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {settings?.branchSettings?.countryName == Countries.Saudi &&
+              {userSession.countryId === Countries.Saudi &&
                 <div>
                   <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
                     <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
@@ -1785,33 +1787,34 @@ export default function SettingsPage() {
                             />
                           )}
                         </div>
-                        <div className="flex items-center space-x-4 border rounded-lg p-4">
+                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-2 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
                           {filterComponent([t("otp_email")], filterText) && (
                             <>
-                              <ERPInput
-                                id="oTPEmail"
-                                label={t("otp_email")}
-                                className="w-1/3"
-                                value={settings?.mainSettings?.oTPEmail}
-                                data={settings?.mainSettings}
-                                onChangeData={(data) =>
-                                  handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
-                                }
-                              />
-                              <div className='flex items-center gap-4 mt-4'>
+                              <div className='flex gap-4 items-center'>
+                                <ERPInput
+                                  id="oTPEmail"
+                                  label={t("otp_email")}
+                                  value={settings?.mainSettings?.oTPEmail}
+                                  data={settings?.mainSettings}
+                                  onChangeData={(data) =>
+                                    handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
+                                  }
+                                />
                                 <ERPButton
                                   title={t("send_otp")}
                                   variant="secondary"
                                   loading={otpSending}
+                                  className='mt-4'
                                   disabled={otpSending}
                                   onClick={() => sendOtp()}
                                 />
+                              </div>
+                              <div className='flex gap-4 items-center xxl:mt-4'>
                                 <ERPInput
                                   id="oTPVerification"
                                   label=" "
                                   placeholder="Enter OTP"
                                   data={settings?.mainSettings}
-                                  className="w-32 mt-4"
                                   value={settings?.mainSettings?.oTPVerification}
                                   onChangeData={(data) =>
                                     handleFieldChange("mainSettings", "oTPVerification", data.oTPVerification)
@@ -2921,7 +2924,7 @@ export default function SettingsPage() {
                               labelKey: "FormType",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","purchaseFormType", data.purchaseFormType)
+                              handleFieldChange("taxSettings", "purchaseFormType", data.purchaseFormType)
                             }
                             label={t("default_purchase")}
                           />
@@ -2937,7 +2940,7 @@ export default function SettingsPage() {
                               labelKey: "FormType",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","salesFormType", data.salesFormType)
+                              handleFieldChange("taxSettings", "salesFormType", data.salesFormType)
                             }
                             label={t("sales_form_type")}
                           />
@@ -2952,7 +2955,7 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","purchaseTaxAccount", data.purchaseTaxAccount)
+                              handleFieldChange("taxSettings", "purchaseTaxAccount", data.purchaseTaxAccount)
                             }
                             label={t("purchase_tax_ledger")}
                           />
@@ -2967,7 +2970,7 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","salesTaxAccount", data.salesTaxAccount)
+                              handleFieldChange("taxSettings", "salesTaxAccount", data.salesTaxAccount)
                             }
                             label={t("sales_tax_ledger")}
                           />
@@ -2985,7 +2988,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","purchaseCSTAccount", data.purchaseCSTAccount)
+                                  handleFieldChange("taxSettings", "purchaseCSTAccount", data.purchaseCSTAccount)
                                 }
                                 label={t("purchase_cst_account")}
                               />
@@ -3001,7 +3004,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","salesCSTAccount", data.salesCSTAccount)
+                                  handleFieldChange("taxSettings", "salesCSTAccount", data.salesCSTAccount)
                                 }
                                 label={t("sales_cst_account")}
                               />
@@ -3017,7 +3020,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","expensesTaxAccount", data.expensesTaxAccount)
+                                  handleFieldChange("taxSettings", "expensesTaxAccount", data.expensesTaxAccount)
                                 }
                                 label={t("expenses_tax_account")}
                               />
@@ -3033,7 +3036,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","incomeTaxAccount", data.incomeTaxAccount)
+                                  handleFieldChange("taxSettings", "incomeTaxAccount", data.incomeTaxAccount)
                                 }
                                 label={t("income_tax_account")}
                               />
@@ -4227,9 +4230,11 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      <div className='flex items-center'>
-                        {filterComponent([t("minimum_shift_duration")], filterText) && (
-                          <>
+                    </div>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      {filterComponent([t("minimum_shift_duration")], filterText) && (
+                        <>
+                          <div className='flex items-center gap-1'>
                             <ERPCheckbox
                               id="allowMinimumShiftDuration"
                               checked={settings?.accountsSettings?.allowMinimumShiftDuration}
@@ -4243,14 +4248,13 @@ export default function SettingsPage() {
                               label=' '
                               data={settings?.accountsSettings}
                               type="number"
-                              className='mx-2'
                               disabled={!settings?.accountsSettings?.allowMinimumShiftDuration}
                               onChangeData={(data) => handleFieldChange("accountsSettings", 'minimumShiftDuration', data.minimumShiftDuration)}
                             />
                             &nbsp;Hours
-                          </>
-                        )}
-                      </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

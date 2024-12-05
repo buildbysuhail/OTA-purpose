@@ -329,9 +329,10 @@ const ProfitAndLossReport = () => {
           <ProfitAndLossSubledgerwiseView
             postData={{
               accGroupID: isOpenDetails.key,
-              expAccGroupID:0,
+              expAccGroupID:isOpenDetails.key===19?23:isOpenDetails.key===10?26:0,
               dateFrom: filter.fromDate,
               asOnDate: filter.toDate,
+              isDateForm:true,
             }}
             groupName={isOpenDetails.groupName}
           />

@@ -953,7 +953,7 @@ export default function ERPDataCombobox({
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-1 m-[1px]"
               style={{
-                background: initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? '#f7f7f7' : '',
+                background: initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? '#f7f7f7' : '#f9f9f9',
                 borderTopRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
                 borderBottomRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
               }}>

@@ -146,24 +146,15 @@ export default function SettingsPage() {
   };
 
   const handleUpdateGridClass = () => {
-    const requiredClasses = [
-      'xl:grid-cols-',
-      'lg:grid-cols-',
-      'md:grid-cols-',
-      'sm:grid-cols-',
-      'gap-',
-    ];
+    const gridClassParts = inputValue.split(' ');
 
-    const missingClasses = requiredClasses.filter(
-      (requiredClass) => !inputValue.includes(requiredClass)
-    );
+    const screenSizes = ['sm', 'md', 'lg', 'xl', '2xl'];
+    const finalGridClass = screenSizes.map(size => {
+      const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
+      return existingClass || '';
+    }).filter(Boolean).join(' ');
 
-    if (missingClasses.length > 0) {
-      const updatedValue = inputValue + ' ' + missingClasses.join(' ');
-      setGridClass(updatedValue.trim());
-    } else {
-      setGridClass(inputValue.trim());
-    }
+    setGridClass(finalGridClass);
   };
 
   const handleGeneralHeaderClick = () => {
@@ -357,7 +348,7 @@ export default function SettingsPage() {
                   </h1>
                   <div key="mainGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         {filterComponent([t("business_type")], filterText) && (
                           <ERPDataCombobox
                             field={{ id: "maintainBusinessType", valueKey: "value", labelKey: "label" }}
@@ -732,7 +723,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         {filterComponent([t("maintain_separate_prefix_for_cash_sales")], filterText) &&
                           userSession.countryId != Countries.India && (
                             <ERPCheckbox
@@ -798,7 +789,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}> {t("backup")}</h1>
                   <div key="mainBackup" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         {filterComponent([t("backup_methods")], filterText) && (
                           <ERPDataCombobox
                             id="backupMethods"
@@ -862,7 +853,7 @@ export default function SettingsPage() {
                   ${blinkSection === 'mainPrinting' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("printing")}</h1>
                   <div key="mainPrinting" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         {filterComponent([t("default_printer")], filterText) && (
                           <ERPDataCombobox
                             id="defaultPrinter"
@@ -953,7 +944,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'mainMultiBranch' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("multi_branch")}</h1>
                   <div key="mainMultiBranch" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         {filterComponent([t("default_BTO_account")], filterText) && (
                           <ERPDataCombobox
                             id="defaultBTOAccount"
@@ -1015,7 +1006,7 @@ export default function SettingsPage() {
                         )}
                       </div>
 
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         <div>
                           {filterComponent([t("maintain_synchronization")], filterText) && (
                             <>
@@ -1294,7 +1285,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'mainCRM' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("crm")}</h1>
                   <div key="mainCRM" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         <div className="flex items-center">
                           {filterComponent([t("allow_privilege_card")], filterText) && (
                             <>
@@ -1404,7 +1395,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'accountsGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("general")}</h1>
                   <div key="accountsGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         {filterComponent([t("default_cash_account")], filterText) && (
                           <ERPDataCombobox
                             id="defaultCashAcc"
@@ -1631,7 +1622,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'accountsHR' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("hr")}</h1>
                   <div key="accountsHR" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                         {filterComponent([t("default_incentive_account_1")], filterText) && (
                           <ERPDataCombobox
                             id="defaultIncentiveAcc1"
@@ -1727,7 +1718,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'accountsEInvoiceGCC' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("ksa_e-invoice")}</h1>
                     <div key="accountsEInvoiceGCC" className="space-y-4">
                       <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                           {filterComponent([t("e-Invoice_sync_systemCode")], filterText) && (
                             <ERPDisableEnable targetCount={5}>
                               {(hasPermitted) => (
@@ -1853,7 +1844,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventoryGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("general")}</h1>
                 <div key="inventoryGeneral" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("coupon_card_account")], filterText) && (
                         <ERPDataCombobox
                           id="defaultCouponSalesAccount"
@@ -2137,7 +2128,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventoryProducts' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("products")}</h1>
                 <div key="inventoryProducts" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("batch_criteria")], filterText) && (
                         <ERPDataCombobox
                           id="batchCriteria"
@@ -2477,7 +2468,7 @@ export default function SettingsPage() {
                   <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
                        ${blinkSection === 'inventoryGSTSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("gst_settings")}</h1>
                   <div key="inventoryGSTSettings" className="space-y-4">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("default_purchase")], filterText) && (
                         <>
                           <label>{t("default_purchase")}</label>
@@ -2507,7 +2498,7 @@ export default function SettingsPage() {
                     </div>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
-                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
+                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
                           {filterComponent([t("input_cst_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputCSTAccount"
@@ -2640,7 +2631,7 @@ export default function SettingsPage() {
                     </ERPDisableEnable>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
-                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
+                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
                           {filterComponent([t("input_SGST_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputSGSTAccount"
@@ -2822,7 +2813,7 @@ export default function SettingsPage() {
                         </div>
                       )}
                     </ERPDisableEnable>
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
                       <div className='flex gap-4 items-center'>
                         {filterComponent([t("enable_ewb")], filterText) && (
                           <>
@@ -2868,7 +2859,7 @@ export default function SettingsPage() {
                     <PopupComponent isOpen={showEWBPopup} onClose={() => setShowEWBPopup(false)}>
                       <EWBTaxPro />
                     </PopupComponent>
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
                       {filterComponent([t("e-invoice_provider_type")], filterText) && (
                         <ERPDataCombobox
                           field={{
@@ -2915,7 +2906,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventoryTaxSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("tax_settings")}</h1>
                 <div className='border border-solid border-[#e3e3e3] p-4 rounded-lg'>
                   <div key="inventoryTaxSettings" className="space-y-4">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4`}`}>
                       {filterComponent([t("default_purchase")], filterText) && (
                         <>
                           <ERPDataCombobox
@@ -3061,7 +3052,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventoryPurchase' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("purchase")}</h1>
                 <div key="inventoryPurchase" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("default_purchase_account")], filterText) && (
                         <ERPDataCombobox
                           id="defaultPurchaseAcc"
@@ -3354,7 +3345,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventorySales' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("sales")}</h1>
                 <div key="inventorySales" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("default_sales_account")], filterText) && (
                         <ERPDataCombobox
                           id="defaultSalesAcc"
@@ -4067,7 +4058,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventorySalesPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("pos")}</h1>
                 <div key="inventorySalesPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("default_SI_form_type_for_POS")], filterText) && (
                         <ERPDataCombobox
                           id="defaultFormTypeForPOS"
@@ -4190,7 +4181,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventorySalesCounter' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("Counter")}</h1>
                 <div key="inventorySalesCounter" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("allow_sales_counter")], filterText) && (
                         <ERPCheckbox
                           id="allowSalesCounter"
@@ -4251,6 +4242,7 @@ export default function SettingsPage() {
                               label=' '
                               data={settings?.accountsSettings}
                               type="number"
+                              className='mx-2'
                               disabled={!settings?.accountsSettings?.allowMinimumShiftDuration}
                               onChangeData={(data) => handleFieldChange("accountsSettings", 'minimumShiftDuration', data.minimumShiftDuration)}
                             />
@@ -4271,7 +4263,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventoryPPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("ppos")}</h1>
                 <div key="inventoryPPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       {filterComponent([t("enable_PPOS_integration")], filterText) && (
                         <ERPCheckbox
                           id="enableVanSale"
@@ -4349,7 +4341,7 @@ export default function SettingsPage() {
                        ${blinkSection === 'inventorySchemesPromotions' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("schemes_&_promotions")}</h1>
                 <div key="inventorySchemesPromotions" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                       <div className="flex items-center gap-6">
                         {filterComponent([t("gift_on_billing")], filterText) && (
                           <>
@@ -4463,7 +4455,7 @@ export default function SettingsPage() {
               <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
                        ${blinkSection === 'miscellaneous' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("miscellaneous")}</h1>
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
                   <div>
                     {filterComponent([t("send_sms")], filterText) && (
                       <>

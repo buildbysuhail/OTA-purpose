@@ -179,8 +179,9 @@ export default function SettingsPage() {
             setActiveSection(section.id)
             // Check sub-items within the active section
             for (const setting of section.settings?.filter(x =>
-              (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-              (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+              (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+              (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+              (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key]
               if (subElement) {
@@ -252,8 +253,9 @@ export default function SettingsPage() {
               {item.id === activeSection && (
                 <div className="ml-4 mt-1 space-y-1">
                   {item.settings?.filter(x =>
-                    (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-                    (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+                    (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+                    (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+                    (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
                   ).map((set) => (
                     <>
                       <button
@@ -1711,7 +1713,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {settings?.branchSettings?.countryName == Countries.Saudi &&
+              {userSession.countryId === Countries.Saudi &&
                 <div>
                   <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
                     <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2

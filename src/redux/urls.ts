@@ -261,6 +261,8 @@ const Urls = {
   acc_reports_account_ledger_balance_view: "/Accounts/RptReports/AccountLedgerBalanceView/",
   acc_reports_profit_and_loss: "/Accounts/RptReports/ProfitAndLoss/",
   acc_reports_account_ledger_balance_view_sub_group_inc: "/Accounts/RptReports/AccountLedgerBalanceViewSubGroupIncluded/",
+  acc_reports_closing_stock_details: "/Accounts/RptReports/ClosingStockDetails/",
+
 
   acc_reports_outstanding_aging_receivable: "/Accounts/RptAging/OutstandingAgingReceivable/",
   acc_reports_outstanding_aging_payable: "/Accounts/RptAging/OutstandingAgingPayable/",

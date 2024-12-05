@@ -4,10 +4,10 @@ export type ApplicationSettingsIds =
   | "accountsSettings"
   | "inventorySettings"
   | "branchSettings"
-  | "backUpSettings"
+  | "backUPSettings"
   | "printerSettings"
   | "productsSettings"
-  | "gstSettings"
+  | "gSTTaxesSettings"
   | "taxSettings"
   | "miscellaneousSettings";
 
@@ -40,7 +40,7 @@ export const ApplicationSettingsTypes: {
   {
     id: 5,
     name: "Backup",
-    settings_group_id: "backUpSettings",
+    settings_group_id: "backUPSettings",
   },
   {
     id: 6,
@@ -55,7 +55,7 @@ export const ApplicationSettingsTypes: {
   {
     id: 8,
     name: "GST",
-    settings_group_id: "gstSettings",
+    settings_group_id: "gSTTaxesSettings",
   },
   {
     id: 9,

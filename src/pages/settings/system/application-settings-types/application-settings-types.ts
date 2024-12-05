@@ -14,10 +14,10 @@ export interface ApplicationSettingsType {
   accountsSettings: ApplicationAccountSettings;
   inventorySettings: ApplicationInventorySettings;
   branchSettings: ApplicationBranchSettings;
-  backUpSettings: ApplicationBackupSettings;
+  backUPSettings: ApplicationBackupSettings;
   printerSettings: ApplicationPrintSettings;
   productsSettings: ApplicationProductsSettings;
-  gstSettings: ApplicationGstSettings;
+  gSTTaxesSettings: ApplicationGstSettings;
   taxSettings: ApplicationTaxSettings;
   miscellaneousSettings: ApplicationMiscellaneousSettings;
   apiLoaded: boolean

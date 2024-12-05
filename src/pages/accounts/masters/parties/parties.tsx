@@ -59,6 +59,8 @@ const api = new APIClient();
 const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   const [totalCount, setTotalCount] = useState(0);
+  const [failedCount, setFailedCount] = useState(0);
+  const [succeededCount, setSucceededCount] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const [formFile, setFormFile] = useState<FormData>();
   const [importExport, setImportExport] = useState<any>(() => getInitialImportExportData(type));
@@ -148,6 +150,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
       });
       setStore(res.items);
       setTotalCount(res.items.length);
+      setFailedCount(res.items?.rows?.filter((row: any) => row.isValid != true).length || 0);
+      setSucceededCount(res.items?.rows?.filter((row: any) => row.isValid === true).length || 0);
       setLoading(false);
       handleResponse(res, () => { }, () => { })
     };

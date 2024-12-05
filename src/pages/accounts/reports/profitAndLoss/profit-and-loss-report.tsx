@@ -20,12 +20,13 @@ import { Link } from "react-router-dom";
 import { t } from "i18next";
 import ProfitAndLossReportFilter, { ProfitAndLossReportFilterInitialState } from "./profit-and-loss-report-filter";
 import LoadingPopup from "../balanceSheet/LoadingPopup";
+import ProfitAndLossSubledgerwiseView from "./profit-and-loss-sub-ledger-view";
 // import { MouseEventHandler } from "@types/react";
 
 
 const api = new APIClient();
 
-const BalanceSheetRow: React.FC<{
+const ProfitAndLossRow: React.FC<{
   item: any;
   setIsOpenDetails: (isOpen: any) => void;
 }> = ({ item, setIsOpenDetails }) => {
@@ -71,28 +72,28 @@ const BalanceSheetRow: React.FC<{
 };
 
 // Horizontal format component
-const HorizontalBalanceSheet: React.FC<{
+const HorizontalProfitAndLoss: React.FC<{
   data: any;
   setIsOpenDetails: any;
 }> = ({ data, setIsOpenDetails }) => {
-  const assets = data?.filter((item: any) => item?.transType == "A");
+  const expense = data?.filter((item: any) => item?.transType == "E");
 
-  const liabilities = data?.filter((item: any) => item?.transType == "L");
+  const income = data?.filter((item: any) => item?.transType == "I");
 
   return (
     <div className="grid grid-cols-2 gap-4">
       <div>
-        <h3 className="text-lg font-bold mb-2">{t("assets")}</h3>
+        <h3 className="text-lg font-bold mb-2">{t("expense")}</h3>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
-              <th className="py-2 ps-2">{t("ledger_name")}</th>
+              <th className="py-2 ps-2">{t("expense")}</th>
               <th className="py-2 text-end pe-2">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
-            {assets?.map((item: any, index: number) => (
-              <BalanceSheetRow
+            {expense?.map((item: any, index: number) => (
+              <ProfitAndLossRow
                 key={`asset-${index}`}
                 item={item}
                 setIsOpenDetails={setIsOpenDetails}
@@ -102,17 +103,17 @@ const HorizontalBalanceSheet: React.FC<{
         </table>
       </div>
       <div>
-        <h3 className="text-lg font-bold mb-2">{t("liabilities_capital")}</h3>
+        <h3 className="text-lg font-bold mb-2">{t("income")}</h3>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-gray-400">
-              <th className="py-2 ps-2">{t("account")}</th>
+              <th className="py-2 ps-2">{t("income")}</th>
               <th className="py-2 text-end pe-2">{t("amount")}</th>
             </tr>
           </thead>
           <tbody>
-            {liabilities?.map((item: any, index: number) => (
-              <BalanceSheetRow
+            {income?.map((item: any, index: number) => (
+              <ProfitAndLossRow
                 key={`liability-${index}`}
                 item={item}
                 setIsOpenDetails={setIsOpenDetails}
@@ -180,7 +181,7 @@ const ProfitAndLossReport = () => {
           <div className="flex items-center ms-4 text-blue-500 cursor-pointer">
             {/* <span>Customise</span> */}
             <h6 className="text-center text-lg font-bold  mb-0">
-              {t("profit_and_loss_report")}
+              {t("profit_and_loss_account")}
             </h6>
             <i className="fas fa-cog ms-1"></i>
           </div>
@@ -229,7 +230,7 @@ const ProfitAndLossReport = () => {
             <button className="flex items-center bg-gray-100 p-0 rounded-md">
               <ErpGridGlobalFilter
                 width="w-full max-w-[500px]"
-                gridId="gridBalanceSheet"
+                gridId="gridPandL"
                 initialData={ProfitAndLossReportFilterInitialState}
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}
@@ -285,7 +286,7 @@ const ProfitAndLossReport = () => {
               />
             ) : ( */}
             {!isVerticalView ? (
-              <HorizontalBalanceSheet
+              <HorizontalProfitAndLoss
                 data={data ?? []}
                 setIsOpenDetails={setIsOpenDetails}
               />
@@ -299,7 +300,7 @@ const ProfitAndLossReport = () => {
                 </thead>
                 <tbody>
                   {data?.map((item, index) => (
-                    <BalanceSheetRow
+                    <ProfitAndLossRow
                       key={index}
                       item={item ?? []}
                       setIsOpenDetails={setIsOpenDetails}
@@ -318,21 +319,23 @@ const ProfitAndLossReport = () => {
       <ERPModal
         isOpen={isOpenDetails.isOpen}
         // title={t("bank_cards")}
-        title="Balance Sheet"
+        title="Account Report"
         width="w-full max-w-[90%]"
         isForm={true}
         closeModal={() => {
           setIsOpenDetails({ isOpen: false, key: 0 });
         }}
-        // content={
-        //   <BalancesheetDetails
-        //     postData={{
-        //       accGroupID: isOpenDetails.key,
-        //       asOnDate: filter.asOnDate,
-        //     }}
-        //     groupName={isOpenDetails.groupName}
-        //   />
-        // }
+        content={
+          <ProfitAndLossSubledgerwiseView
+            postData={{
+              accGroupID: isOpenDetails.key,
+              expAccGroupID:0,
+              dateFrom: filter.fromDate,
+              asOnDate: filter.toDate,
+            }}
+            groupName={isOpenDetails.groupName}
+          />
+        }
       />
     </div>
   );

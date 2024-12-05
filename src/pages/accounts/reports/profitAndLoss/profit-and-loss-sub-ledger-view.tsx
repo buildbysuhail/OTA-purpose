@@ -1,4 +1,5 @@
-import { Fragment, useState } from "react";
+import { FC,   useState } from "react";
+import { Fragment } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,19 +12,20 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 
-interface ProfitAndLossSubledgerwiseView {
 
-  from: Date
+interface ProfitAndLossSubledgerwiseViewProps {
+  postData: any;
+  // accGroupID: isOpenDetails.key,
+  //             expAccGroupID:0,
+  //             dateFrom: filter.fromDate,
+  //             asOnDate: filter.toDate,
+  groupName?: string;
 }
-const ProfitAndLossSubledgerwiseView = () => {
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // const [payable, setPayable] = useState<boolean>(() => {
-  //   const payableParam = searchParams.get("payable");
-  //   return payableParam === "true"; // Convert the string to boolean
-  // });
+
+
+const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = ({postData , groupName }) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
-  const [filter, setFilter] =useState<ProfitAndLossSubledgerwiseView>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -102,7 +104,7 @@ const ProfitAndLossSubledgerwiseView = () => {
                   gridHeader={t("account_ledger_report")}
                   dataUrl= {Urls.acc_reports_account_ledger_balance_view_sub_group_inc}
                   method={ActionType.POST}
-                  gridId="grd_cost_centre"
+                  gridId="grd_profit_and_loss_detailed"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}
                   hideGridAddButton={true}

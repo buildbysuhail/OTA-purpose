@@ -82,6 +82,7 @@ const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sm
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
 const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
 const Test = lazy(() => import('../../../pages/test'));
+const TotalSummary = lazy(() => import('../../../pages/total-summary'));
 
 // Inventory Masters
 const ProductGroup = lazy(() => import('../../../pages/inventory/masters/product-group/product-group'));
@@ -175,6 +176,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/whatsapp" element={<WhatsappIntegration />} />
         <Route path="/integration/email" element={<EmailIntegration />} />
         <Route path="/integration/test" element={<Test />} />
+        <Route path="/integration/total-summary" element={<TotalSummary />} />
         {/* Integration End */}
 
         {/* Templates starts */}
@@ -209,7 +211,7 @@ const Content: FC<ContentProps> = () => {
         {/* Accounts Masters */}
         <Route path="/accounts/transactions/:type" element={<AccTransaction voucherType={''} formCode={''} voucherPrefix={''} formType={''} title={''} drCr={''} />} />
         <Route path="accounts/transactions/post-dated-cheques" element={<PostDatedCheques />} />
-        
+
         {/* Accounts Masters End */}
 
 
@@ -226,8 +228,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/transaction_report" element={<TransactionReport />} />
         <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport />} />
         <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport />} />
-        <Route path="/accounts/daily_summary_report" element={userSession.countryId === Countries.India?<DailySummaryGlobal /> :<DailySummary />  } />
-        <Route path="/accounts/billwise_profit" element={userSession.countryId === Countries.India? <BillwiseProfitGlobal /> :<BillwiseProfit /> } />
+        <Route path="/accounts/daily_summary_report" element={userSession.countryId === Countries.India ? <DailySummaryGlobal /> : <DailySummary />} />
+        <Route path="/accounts/billwise_profit" element={userSession.countryId === Countries.India ? <BillwiseProfitGlobal /> : <BillwiseProfit />} />
         <Route path="/accounts/partywise_summary" element={<PartySummaryBasicInfo />} />
         <Route path="/accounts/outstanding_payable" element={<OutstandingAccountPayableReport />} />
         <Route path="/accounts/outstanding_receivable" element={<OutstandingAccountReceivableReport />} />

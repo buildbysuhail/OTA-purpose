@@ -100,7 +100,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   }
   const onSubmit = useCallback(async () => {
     try {
-      const res = await api.postAsync(Urls.import_parties, store);
+      const res = await api.postAsync(Urls.import_parties, failedCount > 0 && succeededCount > 0 ? store.filter((row: any) => row.isValid === true) : store);
       handleResponse(res, () => { }, () => { });
     } catch (error) {
       console.error(error);
@@ -606,8 +606,9 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                 <ERPButton
                   type="button"
                   variant="primary"
+                  disabled={succeededCount == 0}
                   onClick={onSubmit}
-                  title="Ignore and Save"
+                  title={succeededCount == totalCount ? "Ignore and Save" : "Save"}
                 />
               </div>
               {/* Buttons Section */}

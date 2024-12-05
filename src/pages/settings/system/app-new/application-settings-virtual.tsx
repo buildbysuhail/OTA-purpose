@@ -842,9 +842,9 @@ export default function SettingsPage() {
                         {filterComponent([t("backup_methods")], filterText) && (
                           <ERPDataCombobox
                             id="backupMethods"
-                            data={settings.backUpSettings}
+                            data={settings.backUPSettings}
                             field={{ id: "backupMethods", valueKey: "value", labelKey: "label" }}
-                            onChangeData={(data: any) => handleFieldChange("backUpSettings", "backupMethods", data.backupMethods)}
+                            onChangeData={(data: any) => handleFieldChange("backUPSettings", "backupMethods", data.backupMethods)}
                             label={t("backup_methods")}
                             options={[
                               { value: "No BackUp", label: "No BackUp" },
@@ -857,25 +857,25 @@ export default function SettingsPage() {
                           <ERPInput
                           
                             id="backUpPath"
-                            value={settings.backUpSettings?.backUpPath}
-                            data={settings.backUpSettings}
-                            disabled={settings.backUpSettings?.backupMethods == "No BackUp" || true}
+                            value={settings.backUPSettings?.backUpPath}
+                            data={settings.backUPSettings}
+                            disabled={settings.backUPSettings?.backupMethods == "No BackUp" || true}
                             label={t("backup_path")}
                             placeholder={t("backup_path")}
-                            onChangeData={(data: any) => handleFieldChange("backUpSettings", "backUpPath", parseFloat(data.backUpPath))}
+                            onChangeData={(data: any) => handleFieldChange("backUPSettings", "backUpPath", data.backUpPath)}
                           />
                         )}
                         {filterComponent([t("duration")], filterText) && (
                           <ERPInput
                             id="backupDuration"
-                            value={settings.backUpSettings?.backupDuration}
-                            data={settings.backUpSettings}
+                            value={settings.backUPSettings?.backupDuration}
+                            data={settings.backUPSettings}
                             label={t("duration")}
-                            disabled={settings.backUpSettings?.backupMethods == "No BackUp" || settings.backUpSettings?.backupMethods == "BackUp On Close"}
+                            disabled={settings.backUPSettings?.backupMethods == "No BackUp" || settings.backUPSettings?.backupMethods == "BackUp On Close"}
                             placeholder={t("duration")}
                             type="number"
                             onChangeData={(data: any) =>
-                              handleFieldChange("backUpSettings", "backupDuration", parseFloat(data.backupDuration))
+                              handleFieldChange("backUPSettings", "backupDuration", parseFloat(data.backupDuration))
                             }
                           />
                         )}
@@ -886,11 +886,11 @@ export default function SettingsPage() {
                             // data={settings?.mainSettings}
                             // checked={settings?.mainSettings?.showReminders}
                             // onChangeData={(data) => handleFieldChange("mainSettings", "showReminders", data.showReminders)}
-                            data={settings?.backUpSettings}
-                            checked={settings?.backUpSettings?.compressBackupFile}
+                            data={settings?.backUPSettings}
+                            checked={settings?.backUPSettings?.compressBackupFile}
                       
                             onChangeData={(data) =>
-                              handleFieldChange("backUpSettings", "compressBackupFile", data.compressBackupFile)
+                              handleFieldChange("backUPSettings", "compressBackupFile", data.compressBackupFile)
                             }
                           />
                         )}
@@ -911,7 +911,7 @@ export default function SettingsPage() {
                         {filterComponent([t("default_printer")], filterText) && (
                           <ERPDataCombobox
                             id="defaultPrinter"
-                            data={settings?.printSettings}
+                            data={settings?.printerSettings}
                             field={{
                               id: "defaultPrinter",
                               valueKey: "value",
@@ -919,7 +919,7 @@ export default function SettingsPage() {
                             }}
                             disabled
                             onChangeData={(data: any) =>
-                              handleFieldChange("printSettings", "defaultPrinter", data.defaultPrinter)
+                              handleFieldChange("printerSettings", "defaultPrinter", data.defaultPrinter)
                             }
                             label={t("default_printer")}
                             options={[
@@ -934,11 +934,11 @@ export default function SettingsPage() {
                         {userSession.countryId == Countries.India && filterComponent([t("print_gatePass")], filterText) && (
                           <ERPCheckbox
                             id="printGatePass"
-                            checked={settings?.printSettings?.printGatePass}
-                            data={settings?.printSettings}
+                            checked={settings?.printerSettings?.printGatePass}
+                            data={settings?.printerSettings}
                             label={t("print_gatePass")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("printSettings", "printGatePass", data.printGatePass)
+                              handleFieldChange("printerSettings", "printGatePass", data.printGatePass)
                             }
                           />
                         )}
@@ -966,11 +966,11 @@ export default function SettingsPage() {
                         {filterComponent([t("show_reprint_authorisation")], filterText) && (
                           <ERPCheckbox
                             id="showReprintAuthorisation"
-                            checked={settings?.printSettings?.showReprintAuthorisation}
-                            data={settings?.printSettings}
+                            checked={settings?.printerSettings?.showReprintAuthorisation}
+                            data={settings?.printerSettings}
                             label={t("show_reprint_authorisation")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("printSettings", "showReprintAuthorisation", data.showReprintAuthorisation)
+                              handleFieldChange("printerSettings", "showReprintAuthorisation", data.showReprintAuthorisation)
                             }
                           />
                         )}
@@ -2529,24 +2529,24 @@ export default function SettingsPage() {
                           <label>{t("default_purchase")}</label>
                           <ERPCheckbox
                             id="purchaseNormalType"
-                            checked={settings?.gstSettings?.purchaseNormalType}
-                            data={settings?.gstSettings}
+                            checked={settings?.gSTTaxesSettings?.purchaseNormalType}
+                            data={settings?.gSTTaxesSettings}
                             label={t("normal")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseNormalType", data.purchaseNormalType)}
+                            onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "purchaseNormalType", data.purchaseNormalType)}
                           />
                           <ERPCheckbox
                             id="purchaseInterstateType"
-                            checked={settings?.gstSettings?.purchaseInterstateType}
-                            data={settings?.gstSettings}
+                            checked={settings?.gSTTaxesSettings?.purchaseInterstateType}
+                            data={settings?.gSTTaxesSettings}
                             label={t("inter_state")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseInterstateType", data.purchaseInterstateType)}
+                            onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "purchaseInterstateType", data.purchaseInterstateType)}
                           />
                           <ERPCheckbox
                             id="purchaseForm62"
-                            checked={settings?.gstSettings?.purchaseForm62}
-                            data={settings?.gstSettings}
+                            checked={settings?.gSTTaxesSettings?.purchaseForm62}
+                            data={settings?.gSTTaxesSettings}
                             label={t("form_6(2)")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseForm62", data.purchaseForm62)}
+                            onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "purchaseForm62", data.purchaseForm62)}
                           />
                         </>
                       )}
@@ -2557,8 +2557,8 @@ export default function SettingsPage() {
                           {filterComponent([t("input_cst_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputCSTAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCSTAccount)}
-                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCSTAccount)}
+                              data={settings?.gSTTaxesSettings}
                               label={t("input_cst_account")}
                               field={{
                                 id: "inputCSTAccount",
@@ -2566,15 +2566,15 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCSTAccount", data.inputCSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCSTAccount", data.inputCSTAccount)}
                             />
                           )}
 
                           {filterComponent([t("output_cst_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputCSTAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCSTAccount)}
-                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputCSTAccount)}
+                              data={settings?.gSTTaxesSettings}
                               label={t("output_cst_account")}
                               field={{
                                 id: "outputCSTAccount",
@@ -2582,31 +2582,31 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCSTAccount", data.outputCSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputCSTAccount", data.outputCSTAccount)}
                             />
                           )}
 
                           {filterComponent([t("input_cess_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCessAccount)}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCessAccount)}
                               field={{
                                 id: "inputCessAccount",
                                 getListUrl: Urls.data_duties_taxes,
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              data={settings?.gstSettings}
+                              data={settings?.gSTTaxesSettings}
                               label={t("input_cess_account")}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCessAccount", data.inputCessAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCessAccount", data.inputCessAccount)}
                             />
                           )}
 
                           {filterComponent([t("output_cess_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCessAccount)}
-                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputCessAccount)}
+                              data={settings?.gSTTaxesSettings}
                               label={t("output_cess_account")}
                               field={{
                                 id: "outputCessAccount",
@@ -2614,15 +2614,15 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCessAccount", data.outputCessAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputCessAccount", data.outputCessAccount)}
                             />
                           )}
 
                           {filterComponent([t("input_add_cess_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputAddCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputAddCessAccount)}
-                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputAddCessAccount)}
+                              data={settings?.gSTTaxesSettings}
                               label={t("input_add_cess_account")}
                               field={{
                                 id: "inputAddCessAccount",
@@ -2630,15 +2630,15 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputAddCessAccount", data.inputAddCessAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputAddCessAccount", data.inputAddCessAccount)}
                             />
                           )}
 
                           {filterComponent([t("output_add_cess_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputAddCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputAddCessAccount)}
-                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputAddCessAccount)}
+                              data={settings?.gSTTaxesSettings}
                               label={t("output_add_cess_account")}
                               field={{
                                 id: "outputAddCessAccount",
@@ -2646,15 +2646,15 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputAddCessAccount", data.outputAddCessAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputAddCessAccount", data.outputAddCessAccount)}
                             />
                           )}
 
                           {filterComponent([t("expenses_tax_account")], filterText) && (
                             <ERPDataCombobox
                               id="expensesTaxAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.expensesTaxAccount)}
-                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.expensesTaxAccount)}
+                              data={settings?.gSTTaxesSettings}
                               label={t("expenses_tax_account")}
                               field={{
                                 id: "expensesTaxAccount",
@@ -2662,15 +2662,15 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "expensesTaxAccount", data.expensesTaxAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "expensesTaxAccount", data.expensesTaxAccount)}
                             />
                           )}
 
                           {filterComponent([t("income_tax_account")], filterText) && (
                             <ERPDataCombobox
                               id="incomeTaxAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.incomeTaxAccount)}
-                              data={settings?.gstSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.incomeTaxAccount)}
+                              data={settings?.gSTTaxesSettings}
                               label={t("income_tax_account")}
                               field={{
                                 id: "incomeTaxAccount",
@@ -2678,7 +2678,7 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "incomeTaxAccount", data.incomeTaxAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "incomeTaxAccount", data.incomeTaxAccount)}
                             />
                           )}
                         </div>
@@ -2690,8 +2690,8 @@ export default function SettingsPage() {
                           {filterComponent([t("input_SGST_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputSGSTAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputSGSTAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputSGSTAccount)}
                               label={t("input_SGST_account")}
                               field={{
                                 id: "inputSGSTAccount",
@@ -2699,14 +2699,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputSGSTAccount", data.inputSGSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputSGSTAccount", data.inputSGSTAccount)}
                             />
                           )}
                           {filterComponent([t("output_SGST_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputSGSTAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputSGSTAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputSGSTAccount)}
                               label={t("output_SGST_account")}
                               field={{
                                 id: "outputSGSTAccount",
@@ -2714,14 +2714,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputSGSTAccount", data.outputSGSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputSGSTAccount", data.outputSGSTAccount)}
                             />
                           )}
                           {filterComponent([t("input_CGST_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputCGSTAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCGSTAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCGSTAccount)}
                               label={t("input_CGST_account")}
                               field={{
                                 id: "inputCGSTAccount",
@@ -2729,14 +2729,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCGSTAccount", data.inputCGSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCGSTAccount", data.inputCGSTAccount)}
                             />
                           )}
                           {filterComponent([t("output_CGST_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputCGSTAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputCGSTAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputCGSTAccount)}
                               label={t("output_CGST_account")}
                               field={{
                                 id: "outputCGSTAccount",
@@ -2744,14 +2744,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputCGSTAccount", data.outputCGSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputCGSTAccount", data.outputCGSTAccount)}
                             />
                           )}
                           {filterComponent([t("input_IGST_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputIGSTAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputIGSTAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputIGSTAccount)}
                               label={t("input_IGST_account")}
                               field={{
                                 id: "inputIGSTAccount",
@@ -2759,14 +2759,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputIGSTAccount", data.inputIGSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputIGSTAccount", data.inputIGSTAccount)}
                             />
                           )}
                           {filterComponent([t("output_IGST_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputIGSTAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputIGSTAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputIGSTAccount)}
                               label={t("output_IGST_account")}
                               field={{
                                 id: "outputIGSTAccount",
@@ -2774,14 +2774,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputIGSTAccount", data.outputIGSTAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputIGSTAccount", data.outputIGSTAccount)}
                             />
                           )}
                           {filterComponent([t("TCS_paid_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputTCSPaidAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputTCSPaidAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputTCSPaidAccount)}
                               label={t("TCS_paid_account")}
                               field={{
                                 id: "outputTCSPaidAccount",
@@ -2789,14 +2789,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputTCSPaidAccount", data.outputTCSPaidAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputTCSPaidAccount", data.outputTCSPaidAccount)}
                             />
                           )}
                           {filterComponent([t("TCS_payable_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputTCSPayableAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputTCSPayableAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputTCSPayableAccount)}
                               label={t("TCS_payable_account")}
                               field={{
                                 id: "outputTCSPayableAccount",
@@ -2804,14 +2804,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputTCSPayableAccount", data.outputTCSPayableAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputTCSPayableAccount", data.outputTCSPayableAccount)}
                             />
                           )}
                           {filterComponent([t("input_calamity_cess_account")], filterText) && (
                             <ERPDataCombobox
                               id="inputCalamityCessAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.inputCalamityCessAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCalamityCessAccount)}
                               label={t("input_calamity_cess_account")}
                               field={{
                                 id: "inputCalamityCessAccount",
@@ -2819,14 +2819,14 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "inputCalamityCessAccount", data.inputCalamityCessAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCalamityCessAccount", data.inputCalamityCessAccount)}
                             />
                           )}
                           {filterComponent([t("output_calamity_cess_account")], filterText) && (
                             <ERPDataCombobox
                               id="outputSalesCalamityCessAccount"
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.outputSalesCalamityCessAccount)}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputSalesCalamityCessAccount)}
                               label={t("output_calamity_cess_account")}
                               field={{
                                 id: "outputSalesCalamityCessAccount",
@@ -2834,35 +2834,35 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "outputSalesCalamityCessAccount", data.outputSalesCalamityCessAccount)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputSalesCalamityCessAccount", data.outputSalesCalamityCessAccount)}
                             />
                           )}
                           {filterComponent([t("consider_sales_price_as_calamity_included")], filterText) && (
                             <ERPCheckbox
                               id="considerSalesPriceasCalamityIncluded"
-                              checked={settings?.gstSettings?.considerSalesPriceasCalamityIncluded}
-                              data={settings?.gstSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gstSettings?.considerSalesPriceasCalamityIncluded)}
+                              checked={settings?.gSTTaxesSettings?.considerSalesPriceasCalamityIncluded}
+                              data={settings?.gSTTaxesSettings}
+                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.considerSalesPriceasCalamityIncluded)}
                               label={t("consider_sales_price_as_calamity_included")}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "considerSalesPriceasCalamityIncluded", data.considerSalesPriceasCalamityIncluded)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "considerSalesPriceasCalamityIncluded", data.considerSalesPriceasCalamityIncluded)}
                             />
                           )}
                           {filterComponent([t("enable_karnataka_tax_report_format")], filterText) && (
                             <ERPCheckbox
                               id="enableKarnatakaTaxReportFormat"
-                              checked={settings?.gstSettings?.enableKarnatakaTaxReportFormat}
-                              data={settings?.gstSettings}
+                              checked={settings?.gSTTaxesSettings?.enableKarnatakaTaxReportFormat}
+                              data={settings?.gSTTaxesSettings}
                               label={t("enable_karnataka_tax_report_format")}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
                             />
                           )}
                           {filterComponent([t("show_prev._forms")], filterText) && (
                             <ERPCheckbox
                               id="showPrevForms"
-                              checked={settings?.gstSettings?.showPrevForms}
-                              data={settings?.gstSettings}
+                              checked={settings?.gSTTaxesSettings?.showPrevForms}
+                              data={settings?.gSTTaxesSettings}
                               label={t("show_prev._forms")}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "showPrevForms", data.showPrevForms)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "showPrevForms", data.showPrevForms)}
                             />
                           )}
                         </div>
@@ -2874,15 +2874,15 @@ export default function SettingsPage() {
                           <>
                             <ERPCheckbox
                               id="enableEWB"
-                              checked={settings?.gstSettings?.enableEWB}
-                              data={settings?.gstSettings}
+                              checked={settings?.gSTTaxesSettings?.enableEWB}
+                              data={settings?.gSTTaxesSettings}
                               label={t("enable_ewb")}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "enableEWB", data.enableEWB)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "enableEWB", data.enableEWB)}
                             />
                             <ERPButton
                               title={t("ewb_taxPro")}
                               onClick={() => handleShowComponent('ewb')}
-                              disabled={!settings?.gstSettings?.enableEWB}
+                              disabled={!settings?.gSTTaxesSettings?.enableEWB}
                             />
                           </>
                         )}
@@ -2893,15 +2893,15 @@ export default function SettingsPage() {
                           <>
                             <ERPCheckbox
                               id="enableEInvoiceIndia"
-                              checked={settings?.gstSettings?.enableEInvoiceIndia}
-                              data={settings?.gstSettings}
+                              checked={settings?.gSTTaxesSettings?.enableEInvoiceIndia}
+                              data={settings?.gSTTaxesSettings}
                               label={t("enable_e-invoice")}
-                              onChangeData={(data: any) => handleFieldChange("gstSettings", "enableEInvoiceIndia", data.enableEInvoiceIndia)}
+                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "enableEInvoiceIndia", data.enableEInvoiceIndia)}
                             />
                             <ERPButton
                               title={t("EInvoiceTaxPro")}
                               onClick={() => handleShowComponent('eInvoice')}
-                              disabled={!settings?.gstSettings?.enableEInvoiceIndia}
+                              disabled={!settings?.gSTTaxesSettings?.enableEInvoiceIndia}
                             />
                           </>
                         )}
@@ -2924,8 +2924,8 @@ export default function SettingsPage() {
                           }}
                           id="einvoiceProvider"
                           label={t("e-invoice_provider_type")}
-                          data={settings?.gstSettings}
-                          onChangeData={(data) => { handleFieldChange("gstSettings", "einvoiceProvider", data.einvoiceProvider) }}
+                          data={settings?.gSTTaxesSettings}
+                          onChangeData={(data) => { handleFieldChange("gSTTaxesSettings", "einvoiceProvider", data.einvoiceProvider) }}
                           options={[
                             { value: "Clear Tax", label: "Clear Tax" },
                             { value: "Tax Pro", label: "Tax Pro" },
@@ -2935,19 +2935,19 @@ export default function SettingsPage() {
                       {filterComponent([t("clear_tax_token")], filterText) && (
                         <ERPInput
                           id="eInvoiceAuthToken"
-                          value={settings?.gstSettings?.eInvoiceAuthToken}
-                          data={settings?.gstSettings}
+                          value={settings?.gSTTaxesSettings?.eInvoiceAuthToken}
+                          data={settings?.gSTTaxesSettings}
                           label={t("clear_tax_token")}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "eInvoiceAuthToken", data.eInvoiceAuthToken)}
+                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "eInvoiceAuthToken", data.eInvoiceAuthToken)}
                         />
                       )}
                       {filterComponent([t("clear_tax_id")], filterText) && (
                         <ERPInput
                           id="eInvoiceOwnerID"
-                          value={settings?.gstSettings?.eInvoiceOwnerID}
-                          data={settings?.gstSettings}
+                          value={settings?.gSTTaxesSettings?.eInvoiceOwnerID}
+                          data={settings?.gSTTaxesSettings}
                           label={t("clear_tax_id")}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "eInvoiceOwnerID", data.eInvoiceOwnerID)}
+                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "eInvoiceOwnerID", data.eInvoiceOwnerID)}
                         />
                       )}
                     </div>
@@ -4123,8 +4123,8 @@ export default function SettingsPage() {
                             valueKey: "FormType",
                             labelKey: "FormType",
                           }}
-                          data={settings?.gstSettings}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "defaultFormTypeForPOS", data.defaultFormTypeForPOS)}
+                          data={settings?.gSTTaxesSettings}
+                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultFormTypeForPOS", data.defaultFormTypeForPOS)}
                           label={t("default_SI_form_type_for_POS")}
                         />
                       )}
@@ -4138,8 +4138,8 @@ export default function SettingsPage() {
                             valueKey: "LastVoucherPrefix",
                             labelKey: "LastVoucherPrefix",
                           }}
-                          data={settings?.gstSettings}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "defaultPrefixForPOS", data.defaultPrefixForPOS)}
+                          data={settings?.gSTTaxesSettings}
+                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultPrefixForPOS", data.defaultPrefixForPOS)}
                           label={t("default_SI_prefix_for_POS")}
                         />
                       )}
@@ -4147,7 +4147,7 @@ export default function SettingsPage() {
                       {filterComponent([t("default_SR_form_type_for_POS")], filterText) && (
                         <ERPDataCombobox
                           id="defaultSRFormTypeForPOS"
-                          data={settings?.gstSettings}
+                          data={settings?.gSTTaxesSettings}
                           label={t("default_SR_form_type_for_POS")}
                           field={{
                             id: "defaultSRFormTypeForPOS",
@@ -4155,14 +4155,14 @@ export default function SettingsPage() {
                             valueKey: "FormType",
                             labelKey: "FormType",
                           }}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "defaultSRFormTypeForPOS", data.defaultSRFormTypeForPOS)}
+                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultSRFormTypeForPOS", data.defaultSRFormTypeForPOS)}
                         />
                       )}
 
                       {filterComponent([t("default_SR_prefix_for_POS")], filterText) && (
                         <ERPDataCombobox
                           id="defaultSRPrefixForPOS"
-                          data={settings?.gstSettings}
+                          data={settings?.gSTTaxesSettings}
                           label={t("default_SR_prefix_for_POS")}
                           field={{
                             id: "defaultSRPrefixForPOS",
@@ -4170,7 +4170,7 @@ export default function SettingsPage() {
                             valueKey: "LastVoucherPrefix",
                             labelKey: "LastVoucherPrefix",
                           }}
-                          onChangeData={(data: any) => handleFieldChange("gstSettings", "defaultSRPrefixForPOS", data.defaultSRPrefixForPOS)}
+                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultSRPrefixForPOS", data.defaultSRPrefixForPOS)}
                         />
                       )}
 

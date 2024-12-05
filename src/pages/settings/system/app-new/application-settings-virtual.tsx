@@ -178,9 +178,7 @@ export default function SettingsPage() {
     try {
     
       const payload = {
-        settingScreen: {
-          gridClass: finalGridClass, 
-        },
+        settingsScreen: finalGridClass, 
       };
       const response: any = await api.post(`${Urls.application_settings_UpdateSettingsScreen}`, payload);
       handleResponse(response);

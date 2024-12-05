@@ -87,8 +87,8 @@ function App() {
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
 
   let upt = Cookies.get("up");
-  let utt = Cookies.get("ut");
   let urr = Cookies.get("ur");
+  let utt = localStorage.getItem("ut");
 debugger;
   let userRights: UserTypeRights[] = [];
   try {
@@ -107,12 +107,14 @@ debugger;
 
   let userThemes: AppState = appInitialState;
   try {
+  console.log("utt:", utt);
     if (utt != undefined && utt != null && utt != "") {
       userThemes = customJsonParse(atob(utt));
+  console.log("Base64 Encoded userThemes:", utt);
+  console.log("Decoded userThemes:", customJsonParse(atob(utt)));
     }
   } catch (error) { }
   const { i18n } = useTranslation();
-
   let locale = languagesData.find(
     (l) => l.code == userProfileDetails.language
   ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };

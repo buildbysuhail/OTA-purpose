@@ -1806,7 +1806,7 @@ export default function SettingsPage() {
                                   handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
                                 }
                               />
-                              <div className="mt-4">
+                              <div className='flex items-center gap-4 mt-4'>
                                 <ERPButton
                                   title={t("send_otp")}
                                   variant="secondary"
@@ -1814,19 +1814,17 @@ export default function SettingsPage() {
                                   disabled={otpSending}
                                   onClick={() => sendOtp()}
                                 />
-                              </div>
-                              <ERPInput
-                                id="oTPVerification"
-                                label=" "
-                                placeholder="Enter OTP"
-                                data={settings?.mainSettings}
-                                className="w-32 mt-4"
-                                value={settings?.mainSettings?.oTPVerification}
-                                onChangeData={(data) =>
-                                  handleFieldChange("mainSettings", "oTPVerification", data.oTPVerification)
-                                }
-                              />
-                              <div className="mt-4">
+                                <ERPInput
+                                  id="oTPVerification"
+                                  label=" "
+                                  placeholder="Enter OTP"
+                                  data={settings?.mainSettings}
+                                  className="w-32 mt-4"
+                                  value={settings?.mainSettings?.oTPVerification}
+                                  onChangeData={(data) =>
+                                    handleFieldChange("mainSettings", "oTPVerification", data.oTPVerification)
+                                  }
+                                />
                                 <ERPButton
                                   title={t("verify")}
                                   variant="primary"

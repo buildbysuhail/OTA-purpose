@@ -2921,7 +2921,7 @@ export default function SettingsPage() {
                               labelKey: "FormType",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","purchaseFormType", data.purchaseFormType)
+                              handleFieldChange("taxSettings", "purchaseFormType", data.purchaseFormType)
                             }
                             label={t("default_purchase")}
                           />
@@ -2937,7 +2937,7 @@ export default function SettingsPage() {
                               labelKey: "FormType",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","salesFormType", data.salesFormType)
+                              handleFieldChange("taxSettings", "salesFormType", data.salesFormType)
                             }
                             label={t("sales_form_type")}
                           />
@@ -2952,7 +2952,7 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","purchaseTaxAccount", data.purchaseTaxAccount)
+                              handleFieldChange("taxSettings", "purchaseTaxAccount", data.purchaseTaxAccount)
                             }
                             label={t("purchase_tax_ledger")}
                           />
@@ -2967,7 +2967,7 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings","salesTaxAccount", data.salesTaxAccount)
+                              handleFieldChange("taxSettings", "salesTaxAccount", data.salesTaxAccount)
                             }
                             label={t("sales_tax_ledger")}
                           />
@@ -2985,7 +2985,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","purchaseCSTAccount", data.purchaseCSTAccount)
+                                  handleFieldChange("taxSettings", "purchaseCSTAccount", data.purchaseCSTAccount)
                                 }
                                 label={t("purchase_cst_account")}
                               />
@@ -3001,7 +3001,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","salesCSTAccount", data.salesCSTAccount)
+                                  handleFieldChange("taxSettings", "salesCSTAccount", data.salesCSTAccount)
                                 }
                                 label={t("sales_cst_account")}
                               />
@@ -3017,7 +3017,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","expensesTaxAccount", data.expensesTaxAccount)
+                                  handleFieldChange("taxSettings", "expensesTaxAccount", data.expensesTaxAccount)
                                 }
                                 label={t("expenses_tax_account")}
                               />
@@ -3033,7 +3033,7 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings","incomeTaxAccount", data.incomeTaxAccount)
+                                  handleFieldChange("taxSettings", "incomeTaxAccount", data.incomeTaxAccount)
                                 }
                                 label={t("income_tax_account")}
                               />
@@ -4227,9 +4227,11 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      <div className='flex items-center'>
-                        {filterComponent([t("minimum_shift_duration")], filterText) && (
-                          <>
+                    </div>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      {filterComponent([t("minimum_shift_duration")], filterText) && (
+                        <>
+                          <div className='flex items-center gap-1'>
                             <ERPCheckbox
                               id="allowMinimumShiftDuration"
                               checked={settings?.accountsSettings?.allowMinimumShiftDuration}
@@ -4243,14 +4245,13 @@ export default function SettingsPage() {
                               label=' '
                               data={settings?.accountsSettings}
                               type="number"
-                              className='mx-2'
                               disabled={!settings?.accountsSettings?.allowMinimumShiftDuration}
                               onChangeData={(data) => handleFieldChange("accountsSettings", 'minimumShiftDuration', data.minimumShiftDuration)}
                             />
                             &nbsp;Hours
-                          </>
-                        )}
-                      </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

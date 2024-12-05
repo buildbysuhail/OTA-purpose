@@ -152,7 +152,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             e.preventDefault();
             dispatch(toggleGroupOrder({ isOpen: true }));
           }}
-          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">Group Order(in trial balance)</a>
+          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">{t("group_order")}</a>
       </div>
       <ERPFormButtons
         onClear={handleClear}

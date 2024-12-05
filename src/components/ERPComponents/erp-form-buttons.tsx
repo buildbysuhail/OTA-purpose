@@ -1,5 +1,7 @@
 import React from "react";
 import ERPButton from "./erp-button";
+import { useTranslation } from "react-i18next";
+
 
 interface ERPFormButtonsProps {
   isEdit?: boolean;
@@ -26,7 +28,6 @@ interface ERPFormButtonsProps {
 export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
   isEdit = false,
   isLoading = false,
-  title = "Submit",
   submitDisabled = false,
   onCancel,
   onSubmit,
@@ -44,11 +45,12 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
   onCancelEnterPress,
   onSubmitEnterPress,
 }) => {
+  const { t } = useTranslation('main');
   return (
     <div className="flex gap-2 justify-end mt-4">
       {onClear && (
         <ERPButton
-          title="Clear"
+          title={t("clear")}
           onClick={onClear}
           skip={skipClear}
           jumpTo={jumpToClear}
@@ -60,7 +62,7 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
 
       {onCancel && (
         <ERPButton
-          title="Cancel"
+          title={t("cancel")}
           onClick={onCancel}
           skip={skipCancel}
           jumpTo={jumpToCancel}
@@ -72,7 +74,7 @@ export const ERPFormButtons: React.FC<ERPFormButtonsProps> = ({
 
       {onSubmit && (
         <ERPButton
-          title={title}
+          title={t("submit")}
           onClick={onSubmit}
           loading={isLoading}
           disabled={submitDisabled}

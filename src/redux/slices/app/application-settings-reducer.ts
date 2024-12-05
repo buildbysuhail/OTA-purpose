@@ -10,8 +10,8 @@ const applicationSettingsSlice = createSlice({
   extraReducers: (builder) => {
     
     builder.addCase(getApplicationSettings.fulfilled, (state, action: PayloadAction<any>) => {
-      
-      state.mainSettings = action.payload.mainSettings;
+      debugger;
+      state =  action.payload;
     });
   },
 });

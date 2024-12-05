@@ -90,10 +90,14 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
             if (typeof currentValue === "object" && currentValue !== null) {
               compareObjects(currentValue, previousValue, settingsName);
             } else if (currentValue !== previousValue && parentKey != "") {
+              const _paretnt: keyof(ApplicationSettingsType) = parentKey as keyof(ApplicationSettingsType);
+           
               console.log(`Difference found: ${settingsName} = ${currentValue}`);
               differences.push({
                 settingsName,
-                settingsType: parentKey,
+               
+                settingsType: _paretnt == "mainSettings" ? "Main" : _paretnt == "accountsSettings" ? "Accounts" : _paretnt == "inventorySettings" ? "Inventory" : _paretnt == "branchSettings" ? "Branch":_paretnt == "backUpSettings" ? "BackUP":_paretnt == "printSettings" ? "Printer":_paretnt == "productsSettings" ? "Products":_paretnt == "gstSettings" ? "GSTTaxes":_paretnt == "taxSettings" ? "Taxes":_paretnt == "miscellaneousSettings" ? "Miscellaneous":"",
+             
                 settingsValue: currentValue === true
                   ? "true"
                   : currentValue === false

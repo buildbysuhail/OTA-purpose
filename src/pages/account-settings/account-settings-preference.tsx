@@ -1165,7 +1165,7 @@ const resetInputBox = async ()=>{
                     <ERPButton 
                      variant="secondary"
                      title="Reset"
-                     onClick={() => {resetInputBox}}
+                     onClick={resetInputBox}
                      startIcon={ 'ri-refresh-line' }
                     //  disabled={(loadingLogout.loading && loadingLogout.deviceId === data.deviceId) || data.isActive === false}
                     //  loading={loadingLogout.loading && loadingLogout.deviceId == data.deviceId}

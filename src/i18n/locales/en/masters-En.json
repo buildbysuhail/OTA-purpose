@@ -165,5 +165,10 @@
     "hideLedgerID": "Hide Ledger ID",
     "particulars": "Particulars",
     "is_group": "Is Group",
-    "add": "Add"
+    "add": "Add",
+    
+    "group_order":"Group Order(in trial balance)",
+    "print_label":"Print Label",
+    "address_2_city": "Address 2/City",
+    "address3_district": "Address 3/District"
 }

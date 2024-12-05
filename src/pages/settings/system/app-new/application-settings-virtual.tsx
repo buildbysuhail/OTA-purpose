@@ -1784,33 +1784,34 @@ export default function SettingsPage() {
                             />
                           )}
                         </div>
-                        <div className="flex items-center space-x-4 border rounded-lg p-4">
+                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-2 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
                           {filterComponent([t("otp_email")], filterText) && (
                             <>
-                              <ERPInput
-                                id="oTPEmail"
-                                label={t("otp_email")}
-                                className="w-1/3"
-                                value={settings?.mainSettings?.oTPEmail}
-                                data={settings?.mainSettings}
-                                onChangeData={(data) =>
-                                  handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
-                                }
-                              />
-                              <div className='flex items-center gap-4 mt-4'>
+                              <div className='flex gap-4 items-center'>
+                                <ERPInput
+                                  id="oTPEmail"
+                                  label={t("otp_email")}
+                                  value={settings?.mainSettings?.oTPEmail}
+                                  data={settings?.mainSettings}
+                                  onChangeData={(data) =>
+                                    handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
+                                  }
+                                />
                                 <ERPButton
                                   title={t("send_otp")}
                                   variant="secondary"
                                   loading={otpSending}
+                                  className='mt-4'
                                   disabled={otpSending}
                                   onClick={() => sendOtp()}
                                 />
+                              </div>
+                              <div className='flex gap-4 items-center xxl:mt-4'>
                                 <ERPInput
                                   id="oTPVerification"
                                   label=" "
                                   placeholder="Enter OTP"
                                   data={settings?.mainSettings}
-                                  className="w-32 mt-4"
                                   value={settings?.mainSettings?.oTPVerification}
                                   onChangeData={(data) =>
                                     handleFieldChange("mainSettings", "oTPVerification", data.oTPVerification)

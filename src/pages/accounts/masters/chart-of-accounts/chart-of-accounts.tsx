@@ -48,7 +48,7 @@ const ChartOfAccounts: React.FC = React.memo(() => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="box custom-box">
             <div className="box-body">
-              <div className="w-full flex justify-start items-center">
+              <div className="w-full flex justify-start items-center gap-3 mb-3">
                 <ERPCheckbox
                   id="showBalace"
                   checked={showbalance}

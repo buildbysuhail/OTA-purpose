@@ -176,8 +176,12 @@ export default function SettingsPage() {
     setGridClass(finalGridClass);
   
     try {
-      // Wrap gridClass in an object before sending
-      const payload = { gridClass:finalGridClass };
+    
+      const payload = {
+        settingScreen: {
+          gridClass: finalGridClass, 
+        },
+      };
       const response: any = await api.post(`${Urls.application_settings_UpdateSettingsScreen}`, payload);
       handleResponse(response);
     } catch (error) {

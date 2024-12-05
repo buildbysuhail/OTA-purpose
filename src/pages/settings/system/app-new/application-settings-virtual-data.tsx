@@ -31,7 +31,7 @@ export const settingGroups: SettingGroup[] = [
     settings: [
       { key: 'accountsGeneral', label: 'General' },
       { key: 'accountsHR', label: 'HR' },
-      { key: 'accountsEInvoiceGCC', label: 'KSA Invoice' }
+      { key: 'accountsEInvoiceGCC', label: 'KSA E-Invoice' }
     ]
   },
   {
@@ -40,7 +40,8 @@ export const settingGroups: SettingGroup[] = [
     settings: [
       { key: 'inventoryGeneral', label: 'General' },
       { key: 'inventoryProducts', label: 'Products' },
-      { key: 'inventoryGSTSettings', label: 'GST Settings' },
+      { key: 'inventoryGSTSettings', label: 'GST Settings' }, 
+      { key: 'inventoryTAXSettings', label: 'Taxes' },
       { key: 'inventoryPurchase', label: 'Purchase' },
       {
         key: 'inventorySales',

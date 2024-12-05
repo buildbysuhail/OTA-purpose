@@ -60,5 +60,5 @@ export const ApplicationMainSettingsInitialState: ApplicationMainSettings = {
   maintainSalesRouteCreditLimit: false,
   maintainMultilanguage__: false,
   showUserMessages: false,
-  maintainBusinessType: "General",
+  maintainBusinessType: "",
 };

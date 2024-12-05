@@ -63,12 +63,13 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState(settingGroups[0]?.id || 0);
   const [activeSubItem, setActiveSubItem] = useState(settingGroups[0]?.settings?.[0]?.key || "");
   const [activeSubCatItem, setActiveSubCatItem] = useState(settingGroups[0]?.settings?.[0]?.subSettings?.[0]?.key || "");
-  const { settings, isSaving, handleSubmit, handleFieldChange, filterComponent, filterText, onFilterChange } = useApplicationSetting();
+  const { isSaving, handleSubmit, handleFieldChange, filterComponent, filterText, onFilterChange } = useApplicationSetting();
   const sectionsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({})
   const { verifyOtp, sendOtp, otpSending, otpVerifying } = useApplicationMainSettings();
   const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
+  const settings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const scrollToSection = (
     sectionId: string,
     subItemKey?: string,

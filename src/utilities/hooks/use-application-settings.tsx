@@ -10,6 +10,7 @@ import { handleResponse } from "../HandleResponse";
 import { ApplicationSettingsType } from "../../pages/settings/system/application-settings-types/application-settings-types";
 import { APIClient } from "../../helpers/api-client";
 import { useTranslation } from "react-i18next";
+import { setApplicationMainSettings, setApplicationSettingsWithType } from "../../redux/slices/app/application-settings-reducer";
 
 const api = new APIClient()
 export const useApplicationSetting = (): UseApplicationSettingReturnType => {
@@ -19,9 +20,10 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
   const [filterText, setFilterSearch] = useState("");
   debugger;
-  const [settingsPrev, setSettingsPrev] = useState<ApplicationSettingsType>(applicationSettings);
+  let settingsPrev = applicationSettings;
   const [isSaving, setIsSaving] = useState(false);
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const onFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value ?? "".toLowerCase();
@@ -31,48 +33,70 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   const handleFieldChange = useCallback(
     <T extends keyof ApplicationSettingsType>(type: T, settingName: keyof ApplicationSettingsType[T], value: any
     ) => {
-      setSettings((prevSettings = {} as ApplicationSettingsType) => {
+      
         if (
           settingName === "allowSalesRouteArea" &&
           value === false &&
           type === "mainSettings"
         ) {
-          return {
-            ...prevSettings,
-            [type]: {
-              ...prevSettings[type],
-              [settingName]: value,
-              maintainSalesRouteCreditLimit: false,
-            },
-          };
+          dispatch(
+            setApplicationSettingsWithType({
+              type,
+              settingName: settingName as never,
+              value,
+            })
+          );
+    
+          // Dispatch the second dependent setting change
+          dispatch(
+            setApplicationSettingsWithType({
+              type,
+              settingName: "maintainSalesRouteCreditLimit" as never,
+              value: false,
+            }));
         }
         else if (settingName === 'allowSalesCounter' && value == false &&
           type === "mainSettings") {
-          return {
-            ...prevSettings,
-            [type]: {
-              ...prevSettings[type],
-              [settingName]: value,
-              allowUserwiseCounter: false,
-              enableAuthorizationforShiftClose: false
-            },
-          };
+
+            dispatch(
+              setApplicationSettingsWithType({
+                type,
+                settingName: settingName as never,
+                value,
+              })
+            );
+      
+            // Dispatch the second dependent setting change
+            dispatch(
+              setApplicationSettingsWithType({
+                type,
+                settingName: "allowUserwiseCounter" as never,
+                value: false,
+              }))
+              dispatch(
+                setApplicationSettingsWithType({
+                  type,
+                  settingName: "enableAuthorizationforShiftClose" as never,
+                  value: false,
+                }));
         } else {
-          return {
-            ...prevSettings,
-            [type]: {
-              ...prevSettings[type],
-              [settingName]: value,
-            },
-          };
+          
+          dispatch(
+            setApplicationSettingsWithType({
+              type,
+              settingName: settingName as never,
+              value,
+            })
+          );
         }
-      });
     },
     []
   );
   const handleSubmit = async () => {
+    debugger;
     setIsSaving(true);
     console.log("Saving settings initiated.");
+    debugger;
 
     try {
       // Compare settings with previous state to find changes (supports nested structures)
@@ -126,16 +150,19 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
         });
 
         console.log("API response received:", response);
+        debugger;
         handleResponse(
+          
           response,
           () => {
+            debugger;
             console.log("Settings updated successfully.");
-            setSettingsPrev(settings);
+           settingsPrev = settings;
           },
           () => {
             console.warn("Failed to update settings.");
           },
-          false
+          true
         );
       } else {
         console.log("No modifications detected. Skipping API call.");

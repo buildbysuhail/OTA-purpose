@@ -63,12 +63,13 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState(settingGroups[0]?.id || 0);
   const [activeSubItem, setActiveSubItem] = useState(settingGroups[0]?.settings?.[0]?.key || "");
   const [activeSubCatItem, setActiveSubCatItem] = useState(settingGroups[0]?.settings?.[0]?.subSettings?.[0]?.key || "");
-  const { settings, isSaving, handleSubmit, handleFieldChange, filterComponent, filterText, onFilterChange } = useApplicationSetting();
+  const { isSaving, handleSubmit, handleFieldChange, filterComponent, filterText, onFilterChange } = useApplicationSetting();
   const sectionsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({})
   const { verifyOtp, sendOtp, otpSending, otpVerifying } = useApplicationMainSettings();
   const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
+  const settings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const scrollToSection = (
     sectionId: string,
     subItemKey?: string,
@@ -179,8 +180,9 @@ export default function SettingsPage() {
             setActiveSection(section.id)
             // Check sub-items within the active section
             for (const setting of section.settings?.filter(x =>
-              (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-              (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+              (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+              (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+              (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key]
               if (subElement) {
@@ -252,8 +254,9 @@ export default function SettingsPage() {
               {item.id === activeSection && (
                 <div className="ml-4 mt-1 space-y-1">
                   {item.settings?.filter(x =>
-                    (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-                    (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+                    (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+                    (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+                    (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
                   ).map((set) => (
                     <>
                       <button
@@ -489,7 +492,7 @@ export default function SettingsPage() {
                           <ERPInput
                             id="autoUpdateReleaseUpTo"
                             label={t("auto_update_release_up_to")}
-                            type="number"
+                            // type="number"
                             data={settings?.mainSettings}
                             value={settings?.mainSettings?.autoUpdateReleaseUpTo}
                             onChangeData={(data) => handleFieldChange("mainSettings", "autoUpdateReleaseUpTo", data.autoUpdateReleaseUpTo)}
@@ -806,12 +809,13 @@ export default function SettingsPage() {
                         )}
                         {filterComponent([t("backup_path")], filterText) && (
                           <ERPInput
+                          
                             id="backUpPath"
                             value={settings.backUpSettings?.backUpPath}
                             data={settings.backUpSettings}
                             disabled={settings.backUpSettings?.backupMethods == "No BackUp" || true}
                             label={t("backup_path")}
-                            placeholder={t("enter_discount_threshold")}
+                            placeholder={t("backup_path")}
                             onChangeData={(data: any) => handleFieldChange("backUpSettings", "backUpPath", parseFloat(data.backUpPath))}
                           />
                         )}
@@ -832,9 +836,13 @@ export default function SettingsPage() {
                         {filterComponent([t("compress_backup_file")], filterText) && (
                           <ERPCheckbox
                             id="compressBackupFile"
-                            checked={settings.backUpSettings?.compressBackupFile}
-                            data={settings.backUpSettings}
                             label={t("compress_backup_file")}
+                            // data={settings?.mainSettings}
+                            // checked={settings?.mainSettings?.showReminders}
+                            // onChangeData={(data) => handleFieldChange("mainSettings", "showReminders", data.showReminders)}
+                            data={settings?.backUpSettings}
+                            checked={settings?.backUpSettings?.compressBackupFile}
+                      
                             onChangeData={(data) =>
                               handleFieldChange("backUpSettings", "compressBackupFile", data.compressBackupFile)
                             }
@@ -1711,7 +1719,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {settings?.branchSettings?.countryName == Countries.Saudi &&
+              {userSession.countryId === Countries.Saudi &&
                 <div>
                   <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
                     <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
@@ -1784,33 +1792,34 @@ export default function SettingsPage() {
                             />
                           )}
                         </div>
-                        <div className="flex items-center space-x-4 border rounded-lg p-4">
+                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-2 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
                           {filterComponent([t("otp_email")], filterText) && (
                             <>
-                              <ERPInput
-                                id="oTPEmail"
-                                label={t("otp_email")}
-                                className="w-1/3"
-                                value={settings?.mainSettings?.oTPEmail}
-                                data={settings?.mainSettings}
-                                onChangeData={(data) =>
-                                  handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
-                                }
-                              />
-                              <div className='flex items-center gap-4 mt-4'>
+                              <div className='flex gap-4 items-center'>
+                                <ERPInput
+                                  id="oTPEmail"
+                                  label={t("otp_email")}
+                                  value={settings?.mainSettings?.oTPEmail}
+                                  data={settings?.mainSettings}
+                                  onChangeData={(data) =>
+                                    handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
+                                  }
+                                />
                                 <ERPButton
                                   title={t("send_otp")}
                                   variant="secondary"
                                   loading={otpSending}
+                                  className='mt-4'
                                   disabled={otpSending}
                                   onClick={() => sendOtp()}
                                 />
+                              </div>
+                              <div className='flex gap-4 items-center xxl:mt-4'>
                                 <ERPInput
                                   id="oTPVerification"
                                   label=" "
                                   placeholder="Enter OTP"
                                   data={settings?.mainSettings}
-                                  className="w-32 mt-4"
                                   value={settings?.mainSettings?.oTPVerification}
                                   onChangeData={(data) =>
                                     handleFieldChange("mainSettings", "oTPVerification", data.oTPVerification)
@@ -2462,7 +2471,7 @@ export default function SettingsPage() {
             </div>
 
             {/* GST settings */}
-            {userSession.countryId !== Countries.India && (
+            {userSession.countryId === Countries.India && (
               <div>
                 <div key="inventoryGSTSettings" ref={el => subItemsRef.current["inventoryGSTSettings"] = el}>
                   <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
@@ -2909,28 +2918,135 @@ export default function SettingsPage() {
                     <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4`}`}>
                       {filterComponent([t("default_purchase")], filterText) && (
                         <>
-                          <label>{t("default_purchase")}</label>
-                          <ERPCheckbox
-                            id="purchaseNormalType"
-                            checked={settings?.gstSettings?.purchaseNormalType}
-                            data={settings?.gstSettings}
-                            label={t("normal")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseNormalType", data.purchaseNormalType)}
+                          <ERPDataCombobox
+                            id="purchaseFormType"
+                            data={settings?.taxSettings}
+                            field={{
+                              id: "purchaseFormType",
+
+                              getListUrl: Urls.data_FormTypeByPI,
+                              valueKey: "FormType",
+                              labelKey: "FormType",
+                            }}
+                            onChangeData={(data: any) =>
+                              handleFieldChange("taxSettings", "purchaseFormType", data.purchaseFormType)
+                            }
+                            label={t("default_purchase")}
                           />
-                          <ERPCheckbox
-                            id="purchaseInterstateType"
-                            checked={settings?.gstSettings?.purchaseInterstateType}
-                            data={settings?.gstSettings}
-                            label={t("inter_state")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseInterstateType", data.purchaseInterstateType)}
+
+                          <ERPDataCombobox
+                            id="salesFormType"
+                            data={settings?.taxSettings}
+                            field={{
+                              id: "salesFormType",
+
+                              getListUrl: Urls.data_FormTypeBySI,
+                              valueKey: "FormType",
+                              labelKey: "FormType",
+                            }}
+                            onChangeData={(data: any) =>
+                              handleFieldChange("taxSettings", "salesFormType", data.salesFormType)
+                            }
+                            label={t("sales_form_type")}
                           />
-                          <ERPCheckbox
-                            id="purchaseForm62"
-                            checked={settings?.gstSettings?.purchaseForm62}
-                            data={settings?.gstSettings}
-                            label={t("form_6(2)")}
-                            onChangeData={(data: any) => handleFieldChange("gstSettings", "purchaseForm62", data.purchaseForm62)}
+                          <ERPDataCombobox
+                            id="purchaseTaxAccount"
+                            data={settings?.taxSettings}
+                            field={{
+                              id: "purchaseTaxAccount",
+                              required: false,
+                              getListUrl: Urls.data_duties_taxes,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data: any) =>
+                              handleFieldChange("taxSettings", "purchaseTaxAccount", data.purchaseTaxAccount)
+                            }
+                            label={t("purchase_tax_ledger")}
                           />
+                          <ERPDataCombobox
+                            id="salesTaxAccount"
+                            data={settings?.taxSettings}
+                            field={{
+                              id: "salesTaxAccount",
+                              required: false,
+                              getListUrl: Urls.data_duties_taxes,
+                              valueKey: "id",
+                              labelKey: "name",
+                            }}
+                            onChangeData={(data: any) =>
+                              handleFieldChange("taxSettings", "salesTaxAccount", data.salesTaxAccount)
+                            }
+                            label={t("sales_tax_ledger")}
+                          />
+                          {1 != 1 &&
+                            <>
+                              <ERPDataCombobox
+                                id="purchaseCSTAccount"
+                                data={settings?.taxSettings}
+                                disabled
+                                field={{
+                                  id: "purchaseCSTAccount",
+                                  required: false,
+                                  getListUrl: Urls.data_duties_taxes,
+                                  valueKey: "id",
+                                  labelKey: "name",
+                                }}
+                                onChangeData={(data: any) =>
+                                  handleFieldChange("taxSettings", "purchaseCSTAccount", data.purchaseCSTAccount)
+                                }
+                                label={t("purchase_cst_account")}
+                              />
+                              <ERPDataCombobox
+                                id="salesCSTAccount"
+                                disabled
+                                data={settings?.taxSettings}
+                                field={{
+                                  id: "salesCSTAccount",
+                                  required: false,
+                                  getListUrl: Urls.data_duties_taxes,
+                                  valueKey: "id",
+                                  labelKey: "name",
+                                }}
+                                onChangeData={(data: any) =>
+                                  handleFieldChange("taxSettings", "salesCSTAccount", data.salesCSTAccount)
+                                }
+                                label={t("sales_cst_account")}
+                              />
+                              <ERPDataCombobox
+                                id="expensesTaxAccount"
+                                disabled
+                                data={settings?.taxSettings}
+                                field={{
+                                  id: "expensesTaxAccount",
+                                  required: false,
+                                  getListUrl: Urls.data_duties_taxes,
+                                  valueKey: "id",
+                                  labelKey: "name",
+                                }}
+                                onChangeData={(data: any) =>
+                                  handleFieldChange("taxSettings", "expensesTaxAccount", data.expensesTaxAccount)
+                                }
+                                label={t("expenses_tax_account")}
+                              />
+                              <ERPDataCombobox
+                                id="incomeTaxAccount"
+                                disabled
+                                data={settings?.taxSettings}
+                                field={{
+                                  id: "incomeTaxAccount",
+                                  required: false,
+                                  getListUrl: Urls.data_duties_taxes,
+                                  valueKey: "id",
+                                  labelKey: "name",
+                                }}
+                                onChangeData={(data: any) =>
+                                  handleFieldChange("taxSettings", "incomeTaxAccount", data.incomeTaxAccount)
+                                }
+                                label={t("income_tax_account")}
+                              />
+                            </>
+                          }
                         </>
                       )}
                     </div>
@@ -4119,9 +4235,11 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      <div className='flex items-center'>
-                        {filterComponent([t("minimum_shift_duration")], filterText) && (
-                          <>
+                    </div>
+                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      {filterComponent([t("minimum_shift_duration")], filterText) && (
+                        <>
+                          <div className='flex items-center gap-1'>
                             <ERPCheckbox
                               id="allowMinimumShiftDuration"
                               checked={settings?.accountsSettings?.allowMinimumShiftDuration}
@@ -4135,14 +4253,13 @@ export default function SettingsPage() {
                               label=' '
                               data={settings?.accountsSettings}
                               type="number"
-                              className='mx-2'
                               disabled={!settings?.accountsSettings?.allowMinimumShiftDuration}
                               onChangeData={(data) => handleFieldChange("accountsSettings", 'minimumShiftDuration', data.minimumShiftDuration)}
                             />
                             &nbsp;Hours
-                          </>
-                        )}
-                      </div>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

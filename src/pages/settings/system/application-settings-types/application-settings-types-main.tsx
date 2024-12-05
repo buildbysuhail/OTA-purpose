@@ -9,7 +9,7 @@ export interface ApplicationMainSettings {
   tax_DecimalPoint: string;
   roundingMethodGLOBAL: string;
   autoChangeTransactionDateByMidnight: boolean;
-  autoUpdateReleaseUpTo: number;
+  autoUpdateReleaseUpTo: string;
   oTPEmail: string;
   oTPVerification: string;
   allowPrivilegeCard: boolean;
@@ -41,7 +41,7 @@ export const ApplicationMainSettingsInitialState: ApplicationMainSettings = {
   tax_DecimalPoint: "2",
   roundingMethodGLOBAL: "Normal",
   autoChangeTransactionDateByMidnight: false,
-  autoUpdateReleaseUpTo: 0,
+  autoUpdateReleaseUpTo: "",
   oTPEmail: "",
   oTPVerification: "",
   allowPrivilegeCard: false,
@@ -60,5 +60,5 @@ export const ApplicationMainSettingsInitialState: ApplicationMainSettings = {
   maintainSalesRouteCreditLimit: false,
   maintainMultilanguage__: false,
   showUserMessages: false,
-  maintainBusinessType: "General",
+  maintainBusinessType: "",
 };

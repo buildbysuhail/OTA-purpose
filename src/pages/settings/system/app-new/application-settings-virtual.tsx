@@ -62,12 +62,13 @@ export default function SettingsPage() {
   const [activeSection, setActiveSection] = useState(settingGroups[0]?.id || 0);
   const [activeSubItem, setActiveSubItem] = useState(settingGroups[0]?.settings?.[0]?.key || "");
   const [activeSubCatItem, setActiveSubCatItem] = useState(settingGroups[0]?.settings?.[0]?.subSettings?.[0]?.key || "");
-  const { settings, isSaving, handleSubmit, handleFieldChange, filterComponent, filterText, onFilterChange } = useApplicationSetting();
+  const { isSaving, handleSubmit, handleFieldChange, filterComponent, filterText, onFilterChange } = useApplicationSetting();
   const sectionsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsRef = useRef<Record<string, HTMLElement | null>>({})
   const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({})
   const { verifyOtp, sendOtp, otpSending, otpVerifying } = useApplicationMainSettings();
   const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
+  const settings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const scrollToSection = (
     sectionId: string,
     subItemKey?: string,
@@ -147,7 +148,7 @@ export default function SettingsPage() {
   const handleUpdateGridClass = () => {
     const gridClassParts = inputValue.split(' ');
 
-    const screenSizes = ['sm', 'md', 'lg', 'xl', '2xl'];
+    const screenSizes = ['sm', 'md', 'lg', 'xl', 'xxl'];
     const finalGridClass = screenSizes.map(size => {
       const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
       return existingClass || '';
@@ -178,8 +179,9 @@ export default function SettingsPage() {
             setActiveSection(section.id)
             // Check sub-items within the active section
             for (const setting of section.settings?.filter(x =>
-              (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-              (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+              (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+              (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+              (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key]
               if (subElement) {
@@ -251,8 +253,9 @@ export default function SettingsPage() {
               {item.id === activeSection && (
                 <div className="ml-4 mt-1 space-y-1">
                   {item.settings?.filter(x =>
-                    (x.key !== "accountsEInvoiceGCC" || settings?.branchSettings?.countryName === Countries.Saudi) &&
-                    (x.key !== "inventoryGSTSettings" || settings?.branchSettings?.countryName === Countries.India)
+                    (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
+                    (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
+                    (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
                   ).map((set) => (
                     <>
                       <button
@@ -338,7 +341,7 @@ export default function SettingsPage() {
                   >
                     {t("apply")}
                   </button>
-                  <p className='text-danger mt-2'>For Example : xl:grid-cols- lg:grid-cols- md:grid-cols- sm:grid-cols- gap-</p>
+                  <p className='text-danger mt-2'>For Example : xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-3</p>
                 </div>
               )}
               <div>
@@ -489,7 +492,7 @@ export default function SettingsPage() {
                           <ERPInput
                             id="autoUpdateReleaseUpTo"
                             label={t("auto_update_release_up_to")}
-                            type="number"
+                            // type="number"
                             data={settings?.mainSettings}
                             value={settings?.mainSettings?.autoUpdateReleaseUpTo}
                             onChangeData={(data) => handleFieldChange("mainSettings", "autoUpdateReleaseUpTo", data.autoUpdateReleaseUpTo)}
@@ -806,12 +809,13 @@ export default function SettingsPage() {
                         )}
                         {filterComponent([t("backup_path")], filterText) && (
                           <ERPInput
+                          
                             id="backUpPath"
                             value={settings.backUpSettings?.backUpPath}
                             data={settings.backUpSettings}
                             disabled={settings.backUpSettings?.backupMethods == "No BackUp" || true}
                             label={t("backup_path")}
-                            placeholder={t("enter_discount_threshold")}
+                            placeholder={t("backup_path")}
                             onChangeData={(data: any) => handleFieldChange("backUpSettings", "backUpPath", parseFloat(data.backUpPath))}
                           />
                         )}
@@ -832,9 +836,13 @@ export default function SettingsPage() {
                         {filterComponent([t("compress_backup_file")], filterText) && (
                           <ERPCheckbox
                             id="compressBackupFile"
-                            checked={settings.backUpSettings?.compressBackupFile}
-                            data={settings.backUpSettings}
                             label={t("compress_backup_file")}
+                            // data={settings?.mainSettings}
+                            // checked={settings?.mainSettings?.showReminders}
+                            // onChangeData={(data) => handleFieldChange("mainSettings", "showReminders", data.showReminders)}
+                            data={settings?.backUpSettings}
+                            checked={settings?.backUpSettings?.compressBackupFile}
+                      
                             onChangeData={(data) =>
                               handleFieldChange("backUpSettings", "compressBackupFile", data.compressBackupFile)
                             }
@@ -1711,7 +1719,7 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {settings?.branchSettings?.countryName == Countries.Saudi &&
+              {userSession.countryId === Countries.Saudi &&
                 <div>
                   <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
                     <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2

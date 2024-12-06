@@ -10,6 +10,7 @@ import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../../redux/store";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -626,7 +627,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             type="number"
             label=" "
             data={settings?.mainSettings}
-            className="w-20 ml-6 mt-1"
+            className="min-w-20 ml-2 mt-1"
             value={settings?.mainSettings?.postDatedTransInNumbers}
             disabled={!settings?.mainSettings?.allowPostdatedTrans}
             onChangeData={(data) =>
@@ -668,7 +669,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             label=" "
             type="number"
             data={settings?.mainSettings}
-            className="w-20 ml-6 mt-1"
+            className="min-w-20 ml-2 mt-1"
             value={settings?.mainSettings?.preDatedTransInNumbers}
             disabled={!settings?.mainSettings?.allowPredatedTrans}
             onChangeData={(data) =>
@@ -784,6 +785,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
     const hasMatchingItems = items.some((component) => component.condition);
     setHasMatchedItems(hasMatchingItems);
   }, [filterText])
+
 
   return (
     <>

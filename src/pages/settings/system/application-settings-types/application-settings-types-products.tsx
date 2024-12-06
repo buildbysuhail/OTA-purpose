@@ -31,6 +31,7 @@ export interface ApplicationProductsSettings {
     stopScanningOnWrongBarcodeInSales: boolean;
     enableOrderMangment: boolean;
     enableImportPurchase: boolean;
+    sharedGiftPath:string;
     excludeSchemeProductAmountFromPrivilegeCard: boolean;
     showPurchaseCostChangeWarning: boolean;
     listBarcodeItemsInItemLookup: boolean;
@@ -54,6 +55,7 @@ export  const ApplicationProductsSettingsInitialState: ApplicationProductsSettin
     loadCustomerLastRate: false,
     loadDummyProducts: false,
     marginRoundTo: 0,
+    sharedGiftPath:"",
     focusToQtyAfterBarcode: true,
     stockTransferNegativeStock: "Warn",
     allowMannualProductSelectionInSales: true,

@@ -82,7 +82,7 @@ const SmsIntegration = lazy(() => import('../../../pages/settings/Integration/sm
 const EmailIntegration = lazy(() => import('../../../pages/settings/Integration/email-integration'));
 const WhatsappIntegration = lazy(() => import('../../../pages/settings/Integration/whatsapp-integration'));
 const Test = lazy(() => import('../../../pages/test'));
-const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
+// const AccountGroupTypeTest = lazy(() => import('../../../pages/accountgrouptest'));
 const TotalSummary = lazy(() => import('../../../pages/total-summary'));
 
 // Inventory Masters

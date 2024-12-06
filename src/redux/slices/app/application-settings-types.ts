@@ -16,10 +16,10 @@ export const ApplicationSettingsInitialState: ApplicationSettingsType = {
   inventorySettings: ApplicationInventorySettingsInitialState,
   miscellaneousSettings: ApplicationMiscellaneousSettingsInitialState,
   accountsSettings: ApplicationAccountSettingsInitialState,
-  backUpSettings: ApplicationBackupSettingsInitialState,
-  printSettings: ApplicationPrintSettingsInitialState,
+  backUPSettings: ApplicationBackupSettingsInitialState,
+  printerSettings: ApplicationPrintSettingsInitialState,
   productsSettings: ApplicationProductsSettingsInitialState,
-  gstSettings: ApplicationGstSettingsInitialState,
+  gSTTaxesSettings: ApplicationGstSettingsInitialState,
   taxSettings: ApplicationTaxSettingsInitialState,
   apiLoaded: false
 };

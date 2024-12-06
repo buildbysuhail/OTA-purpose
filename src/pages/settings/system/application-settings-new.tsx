@@ -71,10 +71,10 @@ const ApplicationSettingsNew: React.FC = () => {
       case "productsSettings": return <ApplicationSettingsProduct />;
       case "miscellaneousSettings": return <MiscellaneousSettingsForm />;
       case "inventorySettings": return <InventorySettingsForm />;
-      case "gstSettings": return <ERPSettingsFormGSTTaxes />;
+      case "gSTTaxesSettings": return <ERPSettingsFormGSTTaxes />;
       case "branchSettings": return <BranchSettingsForm />;
-      case "printSettings": return <PrintSettingForm />;
-      case "backUpSettings": return <BackupSettingsForm />;
+      case "printerSettings": return <PrintSettingForm />;
+      case "backUPSettings": return <BackupSettingsForm />;
       case "taxSettings": return <TaxSettingsForm />;
       default: return null;
     }
@@ -107,7 +107,7 @@ const ApplicationSettingsNew: React.FC = () => {
         </div> */}
         <div className="flex flex-col overflow-y-auto pb-24 h-full mt-4">
           {ApplicationSettingsTypes.filter(x => 
-            userSession.countryId === Countries.India ? x.settings_group_id !== "taxSettings" : x.settings_group_id !== "gstSettings"
+            userSession.countryId === Countries.India ? x.settings_group_id !== "taxSettings" : x.settings_group_id !== "gSTTaxesSettings"
           ).map((settings) => (
             <button
               key={settings.settings_group_id}

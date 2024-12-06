@@ -59,7 +59,7 @@ debugger;
         }
         Cookies.set("token", login.item.token, { expires: 30 });
         Cookies.set("up", login.item.userProfileDetails, { expires: 30 });
-        Cookies.set("ut", login.item.userThemes, { expires: 30 });
+        localStorage.setItem("ut", login.item.userThemes);
         Cookies.set("ur", login.item.useRights, { expires: 30 });
         debugger;
         const _userProfileDetails = atob(login.item.userProfileDetails);

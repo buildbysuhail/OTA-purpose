@@ -112,7 +112,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   const path = location.pathname.split("/").pop(); // Extract the last part of the route
   // const userTheme = () => {
   //   api.get(Urls.getUserThemes).then((theme) => {
-  //     Cookies.set("ut", modelToBase64(theme), { expires: 30 });
+  //     localStorage.setItem("ut", modelToBase64(theme), { expires: 30 });
   //     setTheme(theme);
   //     _setTheme(theme);
   //   });
@@ -205,10 +205,11 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     const res = await api.postAsync(Urls.updateUserThemes, {
       userThemes: btoa(JSON.stringify(appState)),
     });
+    localStorage.setItem("ut", btoa(JSON.stringify(appState)));
     handleResponse(res, () => {
-      console.log(' Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });');
+      console.log(' localStorage.setItem("ut", btoa(JSON.stringify(appState)), { expires: 30 });');
       
-      Cookies.set("ut", btoa(JSON.stringify(appState)), { expires: 30 });
+      localStorage.setItem("ut", btoa(JSON.stringify(appState)));
     });
   };
   
@@ -1824,6 +1825,7 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.inputBox?.borderColor}
                                   onChange={(e) => {
+                                    debugger;
                                     const rgb = hexToRgb(e.target.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(

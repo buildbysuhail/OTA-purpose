@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAppDispatch, useAppSelector } from "./useAppDispatch";
 import { getAction } from "../../redux/slices/app-thunks";
@@ -48,6 +48,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
       settingName: keyof ApplicationSettingsType[T],
       value: any
     ) => {
+      debugger;
       if (
         settingName === "allowSalesRouteArea" &&
         value === false &&
@@ -107,9 +108,9 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
         );
       }
     },
-    []
+    [dispatch]
   );
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     debugger;
     setIsSaving(true);
     console.log("Saving settings initiated.");
@@ -159,13 +160,13 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
                     ? "Inventory"
                     : _paretnt == "branchSettings"
                     ? "Branch"
-                    : _paretnt == "backUpSettings"
+                    : _paretnt == "backUPSettings"
                     ? "BackUP"
-                    : _paretnt == "printSettings"
+                    : _paretnt == "printerSettings"
                     ? "Printer"
                     : _paretnt == "productsSettings"
                     ? "Products"
-                    : _paretnt == "gstSettings"
+                    : _paretnt == "gSTTaxesSettings"
                     ? "GSTTaxes"
                     : _paretnt == "taxSettings"
                     ? "Taxes"
@@ -226,13 +227,15 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
       setIsSaving(false);
       console.log("Saving process completed.");
     }
-  };
-  const filterComponent = (translations: string[], filterText: string) => {
-    const filter = translations.filter((translationKey) =>
-      t(translationKey).toLowerCase().includes(filterText.toLowerCase())
-    );
-    return filterText == "" || (filter != null && filter.length > 0);
-  };
+  }, [applicationSettings, settingsPrev]);
+  const filterComponent = useMemo(
+    () => (translations: string[], filterText: string) =>
+      filterText === "" ||
+      translations.some((translationKey) =>
+        t(translationKey).toLowerCase().includes(filterText.toLowerCase())
+      ),
+    [t]
+  );
 
   return {
     settings: applicationSettings,

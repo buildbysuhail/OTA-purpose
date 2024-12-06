@@ -52,7 +52,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     if (response.isOk == true) {   
       Cookies.set("token", response.item.token, { expires: 30 }); 
       Cookies.set("up", response.item.userProfileDetails, { expires: 30 }); 
-      Cookies.set("ut", response.item.userThemes, { expires: 30 }); 
+      localStorage.setItem("ut", response.item.userThemes); 
       Cookies.set("ur", response.item.userRights, { expires: 30 });
       const _userRights = atob(response.item.userRights);
       const userRights: UserTypeRights[] = customJsonParse(_userRights);

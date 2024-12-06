@@ -1,15 +1,12 @@
 import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { useApplicationSetting } from "../../../../utilities/hooks/use-application-settings";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import ERPDisableEnable from "../../../../components/ERPComponents/erp-disable-inable";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import Urls from "../../../../redux/urls";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { RootState } from "../../../../redux/store";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useApplicationMiscSettings } from "../../../../utilities/hooks/use-application-misc-settings";
@@ -497,19 +494,15 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
     <>
      {items.filter((component) => component.condition == true).length > 0 && (
       <div>
-        <div
-          key={key}
-          ref={(el) => (subItemsRef.current["mainMultiBranch"] = el)}
-        >
+        <div  key={key}  ref={(el) => (subItemsRef.current["mainMultiBranch"] = el)}>
           <h1
             className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${
               blinkSection === "mainMultiBranch"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
             }`}
-            onClick={handleGeneralHeaderClick}
-          >
-            {t("general")}
+            onClick={handleGeneralHeaderClick}>
+            {t("multi_branch")}
           </h1>
           <div key="mainMultiBranch" className="space-y-4">
             <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
@@ -521,8 +514,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
                         gridClass ||
                         "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
                       } gap-4 items-center justify-center`
-                }`}
-              >
+                }`}>
                 {items?.map(
                   (component: any, index: number) =>
                     component.condition && (

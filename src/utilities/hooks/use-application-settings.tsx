@@ -27,8 +27,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   debugger;
   const [settingsPrev, setSettingsPrev] = useState();
   useEffect(() => {
-    if(applicationSettings.apiLoaded)
-    {
+    if (applicationSettings.apiLoaded) {
       setSettingsPrev(JSON.parse(JSON.stringify(applicationSettings)));
     }
   }, [applicationSettings.apiLoaded]);
@@ -155,38 +154,38 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
                   _paretnt == "mainSettings"
                     ? "Main"
                     : _paretnt == "accountsSettings"
-                    ? "Accounts"
-                    : _paretnt == "inventorySettings"
-                    ? "Inventory"
-                    : _paretnt == "branchSettings"
-                    ? "Branch"
-                    : _paretnt == "backUPSettings"
-                    ? "BackUP"
-                    : _paretnt == "printerSettings"
-                    ? "Printer"
-                    : _paretnt == "productsSettings"
-                    ? "Products"
-                    : _paretnt == "gSTTaxesSettings"
-                    ? "GSTTaxes"
-                    : _paretnt == "taxSettings"
-                    ? "Taxes"
-                    : _paretnt == "miscellaneousSettings"
-                    ? "Miscellaneous"
-                    : "",
+                      ? "Accounts"
+                      : _paretnt == "inventorySettings"
+                        ? "Inventory"
+                        : _paretnt == "branchSettings"
+                          ? "Branch"
+                          : _paretnt == "backUPSettings"
+                            ? "BackUP"
+                            : _paretnt == "printerSettings"
+                              ? "Printer"
+                              : _paretnt == "productsSettings"
+                                ? "Products"
+                                : _paretnt == "gSTTaxesSettings"
+                                  ? "GSTTaxes"
+                                  : _paretnt == "taxSettings"
+                                    ? "Taxes"
+                                    : _paretnt == "miscellaneousSettings"
+                                      ? "Miscellaneous"
+                                      : "",
 
                 settingsValue:
                   currentValue === true
                     ? "true"
                     : currentValue === false
-                    ? "false"
-                    : currentValue?.toString() ?? "",
+                      ? "false"
+                      : currentValue?.toString() ?? "",
               });
             }
           }
         };
 
         console.log("Comparing current settings with previous settings...");
-        compareObjects({...current}, {...previous});
+        compareObjects({ ...current }, { ...previous });
         console.log("Differences identified:", differences);
         return differences;
       };
@@ -230,7 +229,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
   }, [applicationSettings, settingsPrev]);
   const filterComponent = useMemo(
     () => (translations: string[], filterText: string) =>
-      filterText === "" ||
+      filterText === undefined || filterText === "" ||
       translations.some((translationKey) =>
         t(translationKey).toLowerCase().includes(filterText.toLowerCase())
       ),
@@ -250,7 +249,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
 };
 
 type UseApplicationSettingReturnType = {
-  settings:ApplicationSettingsType
+  settings: ApplicationSettingsType
   filterText: string;
   setFilterSearch: React.Dispatch<React.SetStateAction<string>>;
   isSaving: boolean;

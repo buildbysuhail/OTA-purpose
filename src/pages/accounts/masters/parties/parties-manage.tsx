@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import Urls from "../../../../redux/urls";
@@ -17,23 +17,23 @@ import { APIClient } from "../../../../helpers/api-client";
 import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { convertFileToBase64 } from "../../../../utilities/file-utils";
+import ErpCropper from "../../../../components/ERPComponents/erp-cropper";
 
 interface PartiesManageProps {
   type: string; // Define type as a string prop
 }
 const api = new APIClient();
-export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
-  ({ type = "Cust" }) => {
+export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = "Cust" }) => {
     const [activeTab, setActiveTab] = useState("address");
     const rootState = useRootState();
     const dispatch = useDispatch();
     const userSession = useSelector((state: RootState) => state.UserSession);
-    const applicationSettings = useSelector(
-      (state: RootState) => state.ApplicationSettings
-    );
+    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
     const isIndianCompany = userSession.countryId === Countries.India;
     const [isTCSApplicable, setIsTCSApplicable] = useState(false);
     const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(initialProjectOrJobData.data);
+    const [image, setImage] = useState<string>("#");
+
     const {
       isEdit,
       handleClear,
@@ -72,7 +72,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
 
     const [fileLoading,setFileLoading]=useState(false)
     const { t } = useTranslation("masters");
-
     const handleFileChange = (e: { target: { files: any[] } }) => {
       const file = e.target.files[0];
       if (file) {
@@ -92,6 +91,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
       setActiveTab(newValue);
     };
+    const onImageSuccess = useMemo(() => {
+      return (url: string) => {
+        setImage(url);
+      };
+    }, []);
 
 
     const handleFileUpload = async (key: any, value: any) => {
@@ -113,9 +117,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     return (
       <div className="w-full bordered-tab relative pb-16">
         <div className="mt-[1.5rem]">
-          <div className="grid grid-cols-5 gap-3">
+          <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
             <ERPInput
-
               {...getFieldProps("partyCode")}
               label={t("code")}
               placeholder={t("code")}
@@ -267,23 +270,20 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }
             />
 
-            <div className="flex  space-x-3">
-              <div className="basis-2/3">
-                <ERPInput
-                  {...getFieldProps("opBalance")}
-                  disabled={isEdit}
-                  label={t("op_balance")}
-                  type="number"
-                  placeholder={t("op_balance")}
-                  required={false}
-                  onChangeData={(data: any) =>
-                    handleFieldChange("opBalance", data.opBalance)
-                  }
-                />
-              </div>
-              <div className="basis-1/3 translate-y-[17px]">
+            <div className="flex items-center gap-4">
+              <ERPInput
+                {...getFieldProps("opBalance")}
+                disabled={isEdit}
+                label={t("op_balance")}
+                type="number"
+                placeholder={t("op_balance")}
+                required={false}
+                onChangeData={(data: any) =>
+                  handleFieldChange("opBalance", data.opBalance)
+                }
+              />
+              <div className="mt-4">
                 <ERPDataCombobox
-
                   {...getFieldProps("drCr")}
                   field={{
                     id: "drCr",
@@ -311,16 +311,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               label={t("is_active")}
               onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
             />
-            <div className="mt-3">
-              <ERPCheckbox
-                {...getFieldProps("isCommon")}
-                label={t("is_common")}
-                onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
-              />
-            </div>
+            <ERPCheckbox
+              {...getFieldProps("isCommon")}
+              label={t("is_common")}
+              onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
+            />
           </div>
 
-          <div className="grid grid-cols-5 gap-3 mt-3">
+          <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center mt-3">
             {isIndianCompany && (
               <>
                 <ERPDataCombobox
@@ -396,7 +394,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               </>
             )}
           </div>
-
           <div className="flex align-center justify-end mt-3">
             <ERPButton
               type="reset"
@@ -418,7 +415,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         </Tabs>
         <div className="pt-4">
           {activeTab === 'address' &&
-            <div className="grid grid-cols-5 gap-6">
+            <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
               <ERPInput
                 {...getFieldProps("address2")}
                 label={userSession.countryId == Countries.India ? t("address_2_city_district") : t("address_2_city")}
@@ -446,7 +443,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) => handleFieldChange("address3", data.address3)}
                 />
               }
-
               {userSession.countryId != Countries.India &&
                 <ERPInput
                   {...getFieldProps("address4")}
@@ -595,7 +591,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   <div className="flex gap-2 ">
                   <input
                     type="file"
-                    id="document1String"
+                     id="document1String"
                     name="document1String"
                     onChange={(e) => {
                       const files = e.target.files;
@@ -639,7 +635,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   </label>
                   <input
                     type="file"
-                    id="document2String"
+                     id="document2String"
                     name="document2String"
                     onChange={(e) => {
                       const files = e.target.files;
@@ -680,7 +676,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         setIsTCSApplicable(data.isTCSApplicable);
                       }}
                     />
-
                     <ERPDataCombobox
                       {...getFieldProps("tcsCategoryID")}
                       field={{
@@ -696,7 +691,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       label={t("tcs_category")}
                       disabled={!isTCSApplicable}
                     />
-
                     <ERPDataCombobox
                       {...getFieldProps("stateCode")}
                       field={{
@@ -771,7 +765,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       </div>
     </div> */}
             <div className="border p-4 rounded-lg mt-5">
-              <div className="grid grid-cols-4 gap-6">
+              <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
                 <ERPDataCombobox
                   {...getFieldProps("priceCategoryID")}
                   field={{
@@ -822,22 +816,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     />
                   </>
                 )}
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="fileInput" className="text-[12px] text-gray-700">
-                    {t("upload_photo")}
-                  </label>
-                  <input
-                    // type="s"
-                    id="partyPhotoString"
-                    name="partyPhotoString"
-                    onChange={(e) => {
-                      const files = e.target.files;
-                      if (files && files.length > 0) {
-                        handleFieldChange("partyPhotoString", e.target.value);
-                      }
-                    }}
-                    className="border rounded-lg p-2"
-                  />
+                <div className="md:mt-2">
+                  <ErpCropper
+                    apiUrl="/Subscription/Profile/UploadUserImage"
+                    onImageSuccess={onImageSuccess}
+                    useCircle>
+                  </ErpCropper>
                 </div>
               </div>
             </div></>}
@@ -895,7 +879,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   { value: "OTH", label: "OTH" },
                 ]}
               />
-
               <ERPInput
                 {...getFieldProps("buildingNumber")}
                 label={t("building_number")}
@@ -905,7 +888,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("buildingNumber", data.buildingNumber)
                 }
               />
-
               <ERPInput
                 {...getFieldProps("additionalNumber")}
                 label={t("additional_number")}
@@ -915,7 +897,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("additionalNumber", data.additionalNumber)
                 }
               />
-
               <ERPInput
                 {...getFieldProps("citySubDivision")}
                 label={t("city_sub_division")}
@@ -925,7 +906,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("citySubDivision", data.citySubDivision)
                 }
               />
-
               <ERPInput
                 {...getFieldProps("postalCode")}
                 label={t("postal_code")}
@@ -935,7 +915,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("postalCode", data.postalCode)
                 }
               />
-
               <ERPDataCombobox
                 {...getFieldProps("country")}
                 onChangeData={(data) =>

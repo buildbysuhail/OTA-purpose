@@ -179,7 +179,7 @@ const Row = ({
       style={style}
       key={`${item?.value}-${index}`}
       className={({ active }) =>
-        `relative cursor-pointer select-none w-full rounded-sm hover:bg-gray-300 hover:${setFgAccordingToBgPrimary()} ${active || isActive
+        `relative cursor-pointer select-none w-full rounded-sm hover:bg-gray-300 hover:text-dark hover:${setFgAccordingToBgPrimary()} ${active || isActive
           ? "bg-primary text-white"
           : item.is_active === false
             ? "bg-gray-200 text-gray-400"

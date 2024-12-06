@@ -784,7 +784,6 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
     const hasMatchingItems = items.some((component) => component.condition);
     setHasMatchedItems(hasMatchingItems);
   }, [filterText])
-  const hasMatchingItems = items.filter((component) => component.condition == true).length > 0;
 
   return (
     <>

@@ -7,6 +7,7 @@ import { ApplicationSettingsType } from "../application-settings-types/applicati
 import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
+import { useTranslation } from "react-i18next";
 
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -43,6 +44,7 @@ const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProp
   handleGeneralHeaderClick,
   key,
 }) => {
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("coupon_card_account")], filterText),

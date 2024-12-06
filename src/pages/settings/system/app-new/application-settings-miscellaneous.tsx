@@ -3,6 +3,7 @@ import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 interface ApplicationMiscellaneousProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -38,6 +39,7 @@ const ApplicationMiscellaneousComponents: React.FC<ApplicationMiscellaneousProps
   handleGeneralHeaderClick,
   key,
 }) => {
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("send_sms")], filterText),

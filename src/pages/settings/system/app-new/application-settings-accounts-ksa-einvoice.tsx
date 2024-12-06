@@ -6,6 +6,7 @@ import { ApplicationSettingsType } from "../application-settings-types/applicati
 import { MutableRefObject, useEffect, useState } from "react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { useApplicationMainSettings } from "../../../../utilities/hooks/use-application-main-settings";
+import { useTranslation } from "react-i18next";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -41,8 +42,8 @@ const AccountsEinvoiceFilterableComponents: React.FC<ApplicationSettingsProps> =
   handleGeneralHeaderClick,
   key,
 }) => {
-  const { verifyOtp, sendOtp, otpSending, otpVerifying } =
-    useApplicationMainSettings();
+  const { verifyOtp, sendOtp, otpSending, otpVerifying } =useApplicationMainSettings();
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("e-Invoice_sync_systemCode")], filterText),

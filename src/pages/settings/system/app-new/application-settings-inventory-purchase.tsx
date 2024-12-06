@@ -5,6 +5,7 @@ import { ApplicationSettingsType } from "../application-settings-types/applicati
 import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 import Urls from "../../../../redux/urls";
+import { useTranslation } from "react-i18next";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -40,6 +41,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
   handleGeneralHeaderClick,
   key,
 }) => {
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("default_purchase_account")], filterText),

@@ -9,6 +9,7 @@ import Urls from "../../../../redux/urls";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import ERPDisableEnable from "../../../../components/ERPComponents/erp-disable-inable";
 import { BusinessType } from "../../../../enums/business-types";
+import { useTranslation } from "react-i18next";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -44,6 +45,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
   handleGeneralHeaderClick,
   key,
 }) => {
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("default_sales_account")], filterText),

@@ -6,6 +6,7 @@ import Urls from "../../../../redux/urls";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
+import { useTranslation } from "react-i18next";
 
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -44,6 +45,7 @@ const InventoryProducts: React.FC<ApplicationSettingsProps> = ({
   key,
 }) => {
   const [isLastSystemGeneratedBarcode, setIsLastSystemGeneratedBarcode] = useState(false);
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("batch_criteria")], filterText),

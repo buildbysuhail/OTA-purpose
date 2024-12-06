@@ -452,6 +452,8 @@ export default function SettingsPage() {
               )}
             </div>
             <div>
+              {/* Main Settings */}
+              {/* General */}
               <MainGeneralFilterableComponents
                 key="mainGeneral"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -459,7 +461,7 @@ export default function SettingsPage() {
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></MainGeneralFilterableComponents>
 
-              {/* backup */}
+              {/* Backup */}
               <MainBackupFilterableComponents
                 key="mainBackup"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -467,7 +469,7 @@ export default function SettingsPage() {
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></MainBackupFilterableComponents>
 
-              {/* printing */}
+              {/* Printing */}
               <MainPrintingFilterableComponents
                 key="mainPrinting"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -477,7 +479,7 @@ export default function SettingsPage() {
               </MainPrintingFilterableComponents>
 
 
-              {/* multi branch */}
+              {/* Multi Branch */}
               <MainMultiBranchFilterableComponents
                 key="inventorySalesPOS"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -497,58 +499,39 @@ export default function SettingsPage() {
             </div>
           </section>
 
-          {/* general */}
-          <section key="accounts" ref={(el) => (sectionsRef.current["accounts"] = el)} className="mb-8 last:mb-0">
-            <div className="space-y-6">
-              <div>
-                <div key="accountsGeneral" ref={(el) => (subItemsRef.current["accountsGeneral"] = el)}>
-                  <h1
-                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === "accountsGeneral"
-                        ? "blink-animation bg-[#f1f1f1]"
-                        : "bg-[#f1f1f1]"
-                      }`}>
-                    {t("account_settings")}
-                  </h1>
-                  <div key="accountsGeneral" className="space-y-4">
-                    <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <AccountsGeneralFilterableComponents
-                        key="accountsGeneral"
-                        subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-                        handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-                        blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-                        sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-                      </AccountsGeneralFilterableComponents>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          {/* Accounts Settings */}
+          {/* General */}
+          <section>
+            <AccountsGeneralFilterableComponents
+              key="accountsGeneral"
+              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+            </AccountsGeneralFilterableComponents>
 
-              {/* HR */}
-              <AccountsHrFilterableComponents
-                key="accountsHR"
+            {/* HR */}
+            <AccountsHrFilterableComponents
+              key="accountsHR"
+              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></AccountsHrFilterableComponents>
+
+            {/* KSA E-invoice  */}
+            {userSession.countryId === Countries.Saudi && (
+              <AccountsEinvoiceFilterableComponents
+                key="accountsEInvoiceGCC"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></AccountsHrFilterableComponents>
-
-              {/* KSA E-invoice  */}
-              {userSession.countryId === Countries.Saudi && (
-                <AccountsEinvoiceFilterableComponents
-                  key="accountsEInvoiceGCC"
-                  subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-                  handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-                  blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-                  sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-                </AccountsEinvoiceFilterableComponents>
-              )}
-            </div>
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </AccountsEinvoiceFilterableComponents>
+            )}
           </section>
 
-          <section
-            key="inventory"
-            ref={(el) => (sectionsRef.current["inventory"] = el)}
-            className="mb-8 last:mb-0 space-y-6">
+          {/* Inventory Settings */}
+          <section>
             {/* General */}
             <MainInventoryGeneralFilterableComponents
               key="inventoryGeneral"
@@ -642,15 +625,17 @@ export default function SettingsPage() {
               sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
             </InventorySchemeAndPromotionFilterableComponents>
           </section>
-          
+
           {/*miscellaneous*/}
-          <ApplicationMiscellaneousComponents
-            key="miscellaneous"
-            subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-            handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-            blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-            sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-          </ApplicationMiscellaneousComponents>
+          <div className="h-screen">
+            <ApplicationMiscellaneousComponents
+              key="miscellaneous"
+              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+            </ApplicationMiscellaneousComponents>
+          </div>
         </div>
       </main>
       <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">

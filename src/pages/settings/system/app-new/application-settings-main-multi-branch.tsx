@@ -10,6 +10,7 @@ import { MutableRefObject, useEffect, useState } from "react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { LedgerType } from "../../../../enums/ledger-types";
 import { useApplicationMiscSettings } from "../../../../utilities/hooks/use-application-misc-settings";
+import { useTranslation } from "react-i18next";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -58,6 +59,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
     getSystemCode,
   } = useApplicationMiscSettings();
   const [showSystemCodeBox, setShowSystemCodeBox] = useState(false);
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("default_BTO_account")], filterText),

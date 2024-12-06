@@ -13,6 +13,7 @@ import ERPButton from "../../../../components/ERPComponents/erp-button";
 import { useApplicationGstSettings } from "../../../../utilities/hooks/use-application-gst-settings";
 import EWBTaxPro from "../ewb-taxpro";
 import EInvoiceTaxPro from "../e-invoice-taxpro";
+import { useTranslation } from "react-i18next";
 
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -49,7 +50,7 @@ const InventoryGSTSettings: React.FC<ApplicationSettingsProps> = ({
   handleGeneralHeaderClick,
   key,
 }) => {
-
+  const { t } = useTranslation("applicationSettings")
   const { handleShowComponent, PopupComponent, setShowEWBPopup, showEWBPopup, setShowEInvoicePopup, showEInvoicePopup } = useApplicationGstSettings();
 
   const items = [

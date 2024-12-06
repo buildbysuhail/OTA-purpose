@@ -11,6 +11,7 @@ import { RootState } from "../../../../redux/store";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
+import { useTranslation } from "react-i18next";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -46,6 +47,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
   handleGeneralHeaderClick,
   key,
 }) => {
+  const { t } = useTranslation("applicationSettings")
   const items = [
     {
       condition: filterComponent([t("default_cash_account")], filterText),

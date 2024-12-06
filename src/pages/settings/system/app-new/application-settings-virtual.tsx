@@ -1,50 +1,74 @@
-"use client"
-import { useState, useRef, useEffect, SetStateAction } from 'react'
-import { settingGroups } from './application-settings-virtual-data'
-import ERPDataCombobox from '../../../../components/ERPComponents/erp-data-combobox'
-import ERPInput from '../../../../components/ERPComponents/erp-input';
-import { useTranslation } from 'react-i18next'
-import Urls from '../../../../redux/urls'
-import ERPCheckbox from '../../../../components/ERPComponents/erp-checkbox'
-import { useAppSelector } from '../../../../utilities/hooks/useAppDispatch'
-import { RootState } from '../../../../redux/store'
-import ERPButton from '../../../../components/ERPComponents/erp-button'
-import { Countries } from '../../../../redux/slices/user-session/reducer'
-import { APIClient } from '../../../../helpers/api-client'
-import { useApplicationMainSettings } from '../../../../utilities/hooks/use-application-main-settings'
-import ERPDisableEnable from '../../../../components/ERPComponents/erp-disable-inable';
-import { LedgerType } from '../../../../enums/ledger-types';
-import { isNullOrUndefinedOrEmpty } from '../../../../utilities/Utils';
-import { useApplicationGstSettings } from '../../../../utilities/hooks/use-application-gst-settings';
-import EInvoiceTaxPro from '../e-invoice-taxpro';
-import EWBTaxPro from '../ewb-taxpro';
-import { systemCodeApplicationMiscSettings, useApplicationMiscSettings } from '../../../../utilities/hooks/use-application-misc-settings';
-import { BusinessType } from '../../../../enums/business-types';
-import { useApplicationSetting } from '../../../../utilities/hooks/use-application-settings';
-import { useSearchInputFocus } from '../../../../utilities/shortKeys';
-import { handleResponse } from '../../../../utilities/HandleResponse';
+"use client";
+import { useState, useRef, useEffect, SetStateAction } from "react";
+import { settingGroups } from "./application-settings-virtual-data";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import ERPInput from "../../../../components/ERPComponents/erp-input";
+import { useTranslation } from "react-i18next";
+import Urls from "../../../../redux/urls";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
+import { RootState } from "../../../../redux/store";
+import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { Countries } from "../../../../redux/slices/user-session/reducer";
+import { APIClient } from "../../../../helpers/api-client";
+import { useApplicationMainSettings } from "../../../../utilities/hooks/use-application-main-settings";
+import ERPDisableEnable from "../../../../components/ERPComponents/erp-disable-inable";
+import { LedgerType } from "../../../../enums/ledger-types";
+import { isNullOrUndefinedOrEmpty } from "../../../../utilities/Utils";
+import { useApplicationGstSettings } from "../../../../utilities/hooks/use-application-gst-settings";
+import EInvoiceTaxPro from "../e-invoice-taxpro";
+import EWBTaxPro from "../ewb-taxpro";
+import {
+  systemCodeApplicationMiscSettings,
+  useApplicationMiscSettings,
+} from "../../../../utilities/hooks/use-application-misc-settings";
+import { BusinessType } from "../../../../enums/business-types";
+import { useApplicationSetting } from "../../../../utilities/hooks/use-application-settings";
+import { useSearchInputFocus } from "../../../../utilities/shortKeys";
+import { handleResponse } from "../../../../utilities/HandleResponse";
+import MainGeneralFilterableComponents from "./application-settings-accounts-main-general";
 
-const api = new APIClient()
-const LayoutToggle = ({ onToggle }: { onToggle: (isCompact: boolean) => void }) => {
-  const [isCompactView, setIsCompactView] = useState(false)
+const api = new APIClient();
+const LayoutToggle = ({
+  onToggle,
+}: {
+  onToggle: (isCompact: boolean) => void;
+}) => {
+  const [isCompactView, setIsCompactView] = useState(false);
   const handleToggle = () => {
-    const newViewState = !isCompactView
-    setIsCompactView(newViewState)
-    onToggle(newViewState)
-  }
+    const newViewState = !isCompactView;
+    setIsCompactView(newViewState);
+    onToggle(newViewState);
+  };
   return (
     <div className="flex items-center justify-end">
       <label className="inline-flex items-center cursor-pointer">
-        <span className="mr-2 text-sm">  {isCompactView ? 'Compact View' : 'Expanded View'}  </span>
+        <span className="mr-2 text-sm">
+          {" "}
+          {isCompactView ? "Compact View" : "Expanded View"}{" "}
+        </span>
         <div className="relative">
-          <input type="checkbox" className="sr-only" checked={isCompactView} onChange={handleToggle} />
-          <div className={`w-10 h-4 rounded-full shadow-inner transition-colors ${isCompactView ? 'bg-blue-500' : 'bg-gray-300'}`}></div>
-          <div className={`dot absolute -left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full shadow transition-transform ${isCompactView ? 'translate-x-full' : ''}`}></div>
+          <input
+            type="checkbox"
+            className="sr-only"
+            checked={isCompactView}
+            onChange={handleToggle}
+          />
+          <div
+            className={`w-10 h-4 rounded-full shadow-inner transition-colors ${
+              isCompactView ? "bg-blue-500" : "bg-gray-300"
+            }`}
+          ></div>
+          <div
+            className={`dot absolute -left-1 top-1/2 -translate-y-1/2 w-6 h-6 bg-white rounded-full shadow transition-transform ${
+              isCompactView ? "translate-x-full" : ""
+            }`}
+          ></div>
         </div>
       </label>
     </div>
-  )
-}
+  );
+};
 export default function SettingsPage() {
   const [inputValueVisibility, setInputValueVisibility] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -53,23 +77,58 @@ export default function SettingsPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [blinkSection, setBlinkSection] = useState<string | null>(null);
   const [showSystemCodeBox, setShowSystemCodeBox] = useState(false);
-  const [isCompactView, setIsCompactView] = useState(false)
-  const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  const [isCompactView, setIsCompactView] = useState(false);
+  const applicationSettings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  const { dataLoaded, systemCode, setAddSystemCode, addSystemCode, SystemCodeAddData, setSystemCodeAddData, isSavingSystemCode, postSystemCode, loadSystemCode, getSystemCode } = useApplicationMiscSettings();
+  const {
+    dataLoaded,
+    systemCode,
+    setAddSystemCode,
+    addSystemCode,
+    SystemCodeAddData,
+    setSystemCodeAddData,
+    isSavingSystemCode,
+    postSystemCode,
+    loadSystemCode,
+    getSystemCode,
+  } = useApplicationMiscSettings();
   // const [settings, setSettings] = useState<ApplicationSettingsType>(applicationSettings);
   const { t } = useTranslation("applicationSettings");
-  const [isLastSystemGeneratedBarcode, setIsLastSystemGeneratedBarcode] = useState(false);
+  const [isLastSystemGeneratedBarcode, setIsLastSystemGeneratedBarcode] =
+    useState(false);
   const [activeSection, setActiveSection] = useState(settingGroups[0]?.id || 0);
-  const [activeSubItem, setActiveSubItem] = useState(settingGroups[0]?.settings?.[0]?.key || "");
-  const [activeSubCatItem, setActiveSubCatItem] = useState(settingGroups[0]?.settings?.[0]?.subSettings?.[0]?.key || "");
-  const { isSaving, handleSubmit, handleFieldChange, filterComponent, filterText, onFilterChange } = useApplicationSetting();
-  const sectionsRef = useRef<Record<string, HTMLElement | null>>({})
-  const subItemsRef = useRef<Record<string, HTMLElement | null>>({})
-  const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({})
-  const { verifyOtp, sendOtp, otpSending, otpVerifying } = useApplicationMainSettings();
-  const { PopupComponent, showEInvoicePopup, setShowEInvoicePopup, setShowEWBPopup, handleShowComponent, showEWBPopup } = useApplicationGstSettings();
-  const settings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  const [activeSubItem, setActiveSubItem] = useState(
+    settingGroups[0]?.settings?.[0]?.key || ""
+  );
+  const [activeSubCatItem, setActiveSubCatItem] = useState(
+    settingGroups[0]?.settings?.[0]?.subSettings?.[0]?.key || ""
+  );
+  const {
+    isSaving,
+    handleSubmit,
+    handleFieldChange,
+    filterComponent,
+    filterText,
+    onFilterChange,
+  } = useApplicationSetting();
+  const sectionsRef = useRef<Record<string, HTMLElement | null>>({});
+  const subItemsRef = useRef<Record<string, HTMLElement | null>>({});
+  const subItemsCatRef = useRef<Record<string, HTMLElement | null>>({});
+  const { verifyOtp, sendOtp, otpSending, otpVerifying } =
+    useApplicationMainSettings();
+  const {
+    PopupComponent,
+    showEInvoicePopup,
+    setShowEInvoicePopup,
+    setShowEWBPopup,
+    handleShowComponent,
+    showEWBPopup,
+  } = useApplicationGstSettings();
+  const settings = useAppSelector(
+    (state: RootState) => state.ApplicationSettings
+  );
   const scrollToSection = (
     sectionId: string,
     subItemKey?: string,
@@ -84,7 +143,7 @@ export default function SettingsPage() {
       const first = settingGroups.find((x) => x.id == sectionId);
       const second =
         first && first.settings != null && first.settings.length > 0
-          ? first.settings.find(x => x.key == subItemKey)
+          ? first.settings.find((x) => x.key == subItemKey)
           : null;
       const third =
         second && second.subSettings != null && second.subSettings.length > 0
@@ -99,7 +158,8 @@ export default function SettingsPage() {
         targetElement = subItemsRef.current[targetKey];
         setActiveSubItem(targetKey);
       } else {
-        targetElement = sectionsRef.current[targetKey]; setActiveSection(targetKey);
+        targetElement = sectionsRef.current[targetKey];
+        setActiveSection(targetKey);
       }
     } else {
       console.log("sdsdsdsdsd");
@@ -115,19 +175,22 @@ export default function SettingsPage() {
       const targetKey =
         third != null ? third.key : second != null ? second.key : sectionId;
       if (third != null) {
-        targetElement = subItemsCatRef.current[targetKey]; setActiveSubCatItem(targetKey);
+        targetElement = subItemsCatRef.current[targetKey];
+        setActiveSubCatItem(targetKey);
       } else if (second != null) {
-        targetElement = subItemsRef.current[targetKey]; setActiveSubItem(targetKey);
+        targetElement = subItemsRef.current[targetKey];
+        setActiveSubItem(targetKey);
       } else {
-        targetElement = sectionsRef.current[targetKey]; setActiveSection
+        targetElement = sectionsRef.current[targetKey];
+        setActiveSection;
       }
-
     }
     if (targetElement) {
-      const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - 150;
+      const targetPosition =
+        targetElement.getBoundingClientRect().top + window.pageYOffset - 150;
       window.scrollTo({
         top: targetPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
     if (sectionId) {
@@ -142,7 +205,9 @@ export default function SettingsPage() {
   };
   const searchInputRef = useSearchInputFocus();
 
-  const handleInputChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+  const handleInputChange = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setInputValue(e.target.value);
   };
 
@@ -163,45 +228,49 @@ export default function SettingsPage() {
   // };
 
   const handleUpdateGridClass = async () => {
-    const gridClassParts = inputValue.split(' ');
-    const screenSizes = ['sm', 'md', 'lg', 'xl', 'xxl'];
+    const gridClassParts = inputValue.split(" ");
+    const screenSizes = ["sm", "md", "lg", "xl", "xxl"];
     const finalGridClass = screenSizes
-      .map(size => {
-        const existingClass = gridClassParts.find(part => part.startsWith(`${size}:grid-cols-`));
-        return existingClass || '';
+      .map((size) => {
+        const existingClass = gridClassParts.find((part) =>
+          part.startsWith(`${size}:grid-cols-`)
+        );
+        return existingClass || "";
       })
       .filter(Boolean)
-      .join(' ');
-  
+      .join(" ");
+
     setGridClass(finalGridClass);
-  
+
     try {
-    
       const payload = {
-        settingsScreen: finalGridClass, 
+        settingsScreen: finalGridClass,
       };
-      const response: any = await api.post(`${Urls.application_settings_UpdateSettingsScreen}`, payload);
+      const response: any = await api.post(
+        `${Urls.application_settings_UpdateSettingsScreen}`,
+        payload
+      );
       handleResponse(response);
     } catch (error) {
       console.error("Error submitting data:", error);
     }
   };
-  
 
-
-  const loadGridClass = async()=>{
+  const loadGridClass = async () => {
     try {
-      const response = await api.getAsync(Urls.application_settings_GetSettingsScreen);
+      const response = await api.getAsync(
+        Urls.application_settings_GetSettingsScreen
+      );
       setGridClass(response);
     } catch (error) {
       console.error("Error loading settings:", error);
     }
-  }
+  };
   useEffect(() => {
-    if(gridClass == null || gridClass == '' || gridClass == undefined){
+    if (gridClass == null || gridClass == "" || gridClass == undefined) {
       loadGridClass();
     }
-  }, []); 
+  }, []);
 
   const handleGeneralHeaderClick = () => {
     const newClickCount = clickCount + 1;
@@ -215,117 +284,179 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 100 // Offset to trigger slightly before the section top
+      const scrollPosition = window.scrollY + 100; // Offset to trigger slightly before the section top
       // Check main sections
       for (const section of settingGroups) {
-        const element = sectionsRef.current[section.id]
+        const element = sectionsRef.current[section.id];
         if (element) {
-          const { offsetTop, offsetHeight } = element
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section.id)
+          const { offsetTop, offsetHeight } = element;
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(section.id);
             // Check sub-items within the active section
-            for (const setting of section.settings?.filter(x =>
-              (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
-              (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
-              (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
+            for (const setting of section.settings?.filter(
+              (x) =>
+                (x.key !== "accountsEInvoiceGCC" ||
+                  userSession.countryId === Countries.Saudi) &&
+                (x.key !== "inventoryTAXSettings" ||
+                  userSession.countryId === Countries.Saudi) &&
+                (x.key !== "inventoryGSTSettings" ||
+                  userSession.countryId === Countries.India)
             )) {
-              const subElement = subItemsRef.current[setting.key]
+              const subElement = subItemsRef.current[setting.key];
               if (subElement) {
-                const subOffsetTop = subElement.offsetTop
-                const subOffsetHeight = subElement.offsetHeight
-                if (scrollPosition >= subOffsetTop && scrollPosition < subOffsetTop + subOffsetHeight) {
-                  setActiveSubItem(setting.key)
-                  if (setting.subSettings != undefined && setting.subSettings.length > 0) {
+                const subOffsetTop = subElement.offsetTop;
+                const subOffsetHeight = subElement.offsetHeight;
+                if (
+                  scrollPosition >= subOffsetTop &&
+                  scrollPosition < subOffsetTop + subOffsetHeight
+                ) {
+                  setActiveSubItem(setting.key);
+                  if (
+                    setting.subSettings != undefined &&
+                    setting.subSettings.length > 0
+                  ) {
                     for (const subSettingCat of setting.subSettings) {
-                      const subElementCat = subItemsCatRef.current[subSettingCat.key]
+                      const subElementCat =
+                        subItemsCatRef.current[subSettingCat.key];
                       if (subElementCat) {
-                        const subOffsetTop = subElementCat.offsetTop
-                        const subOffsetHeight = subElementCat.offsetHeight
-                        if (scrollPosition >= subOffsetTop && scrollPosition < subOffsetTop + subOffsetHeight) {
-                          setActiveSubCatItem(subSettingCat.key)
-                          break
+                        const subOffsetTop = subElementCat.offsetTop;
+                        const subOffsetHeight = subElementCat.offsetHeight;
+                        if (
+                          scrollPosition >= subOffsetTop &&
+                          scrollPosition < subOffsetTop + subOffsetHeight
+                        ) {
+                          setActiveSubCatItem(subSettingCat.key);
+                          break;
                         }
                       }
                     }
+                  } else {
+                    break;
                   }
-                  else {
-                    break
-                  }
-
                 }
               }
             }
-            break
+            break;
           }
         }
       }
-    }
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const fieldDescriptions = {
-    businessType: "Select the primary type of business to help customize settings and reports for your specific industry sector.",
-    currency: "Choose the primary currency used in your financial transactions and reporting.",
-    currencyFormat: "Select how large numbers are displayed - in Millions or Lakhs (hundred thousands).",
-    decimalPoints: "Set the number of decimal places to display for monetary and numeric values.",
-    country: "Select the primary country for your business to apply region-specific settings and compliance.",
-    roundingMethod: "Determine how numerical values are rounded in calculations and financial reports."
+    businessType:
+      "Select the primary type of business to help customize settings and reports for your specific industry sector.",
+    currency:
+      "Choose the primary currency used in your financial transactions and reporting.",
+    currencyFormat:
+      "Select how large numbers are displayed - in Millions or Lakhs (hundred thousands).",
+    decimalPoints:
+      "Set the number of decimal places to display for monetary and numeric values.",
+    country:
+      "Select the primary country for your business to apply region-specific settings and compliance.",
+    roundingMethod:
+      "Determine how numerical values are rounded in calculations and financial reports.",
   };
 
   return (
     <div className="flex overflow-hidden text-black dark:text-white bg-white dark:bg-body_dark">
-      <button className="md:hidden fixed top-4 left-4 z-30 bg-gray-100 p-2 rounded-md" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} >
-        {isMobileMenuOpen ? <i className="ri-close-circle-line"></i> : <i className="ri-menu-line"></i>}
+      <button
+        className="md:hidden fixed top-4 left-4 z-30 bg-gray-100 p-2 rounded-md"
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+      >
+        {isMobileMenuOpen ? (
+          <i className="ri-close-circle-line"></i>
+        ) : (
+          <i className="ri-menu-line"></i>
+        )}
       </button>
-      <aside className={`fixed z-20 bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 ltr:border-r rtl:border-l `}>
+      <aside
+        className={`fixed z-20 bg-[#fafafa] h-screen w-[250px] md:w-[200px] lg:w-[300px] transform transition-transform duration-300 ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0 ltr:border-r rtl:border-l `}
+      >
         <div className="md:hidden flex justify-end p-4">
           <button
             onClick={() => setIsMobileMenuOpen(false)}
-            className="p-2 rounded-full hover:bg-gray-200">
+            className="p-2 rounded-full hover:bg-gray-200"
+          >
             <i className="ri-close-circle-line"></i>
           </button>
         </div>
-        <h1 className="font-medium text-xl p-5 mb-5 sm:hidden lg:block">{t("settings")}</h1>
+        <h1 className="font-medium text-xl p-5 mb-5 sm:hidden lg:block">
+          {t("settings")}
+        </h1>
         <div className="flex flex-col overflow-y-auto pb-24 h-full mt-4">
           {settingGroups.map((item) => (
             <div key={item.id}>
               <button
                 className={`  relative flex items-center w-full px-3 md:px-4 py-1.5 mt-1 md:mt-2 duration-200 border-r-4 text-left
-                  ${item.id === activeSection ? "bg-gray-300 border-primary text-primary" : "border-transparent hover:bg-gray-200 hover:border-gray-400"}`}
-                onClick={() => scrollToSection(item.id)}>
+                  ${
+                    item.id === activeSection
+                      ? "bg-gray-300 border-primary text-primary"
+                      : "border-transparent hover:bg-gray-200 hover:border-gray-400"
+                  }`}
+                onClick={() => scrollToSection(item.id)}
+              >
                 <span className="mx-4 md:mx-2 text-sm">{item.label}</span>
               </button>
               {item.id === activeSection && (
                 <div className="ml-4 mt-1 space-y-1">
-                  {item.settings?.filter(x =>
-                    (x.key !== "accountsEInvoiceGCC" || userSession.countryId=== Countries.Saudi) &&
-                    (x.key !== "inventoryTAXSettings" || userSession.countryId === Countries.Saudi) &&
-                    (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
-                  ).map((set) => (
-                    <>
-                      <button
-                        key={set.key}
-                        className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${set.key === activeSubItem ? "bg-gray-300 border-primary text-primary" : "border-transparent hover:bg-gray-200"}  `}
-                        onClick={() => scrollToSection(item.id, set.key)} >
-                        {settingGroups.find(group => group.id === item.id)?.settings.find(setting => setting.key === set.key)?.label}
-                      </button>
-                      {
-                        set.key === activeSubItem && (
+                  {item.settings
+                    ?.filter(
+                      (x) =>
+                        (x.key !== "accountsEInvoiceGCC" ||
+                          userSession.countryId === Countries.Saudi) &&
+                        (x.key !== "inventoryTAXSettings" ||
+                          userSession.countryId === Countries.Saudi) &&
+                        (x.key !== "inventoryGSTSettings" ||
+                          userSession.countryId === Countries.India)
+                    )
+                    .map((set) => (
+                      <>
+                        <button
+                          key={set.key}
+                          className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${
+                            set.key === activeSubItem
+                              ? "bg-gray-300 border-primary text-primary"
+                              : "border-transparent hover:bg-gray-200"
+                          }  `}
+                          onClick={() => scrollToSection(item.id, set.key)}
+                        >
+                          {
+                            settingGroups
+                              .find((group) => group.id === item.id)
+                              ?.settings.find(
+                                (setting) => setting.key === set.key
+                              )?.label
+                          }
+                        </button>
+                        {set.key === activeSubItem && (
                           <div className="ml-4 mt-1 space-y-1">
                             {set?.subSettings?.map((subCat) => (
                               <button
                                 key={subCat.key}
-                                className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${subCat.key === activeSubCatItem ? "bg-gray-300 border-primary text-primary" : "border-transparent hover:bg-gray-200"}  `}
-                                onClick={() => scrollToSection(item.id, set.key, subCat.key)} >
+                                className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${
+                                  subCat.key === activeSubCatItem
+                                    ? "bg-gray-300 border-primary text-primary"
+                                    : "border-transparent hover:bg-gray-200"
+                                }  `}
+                                onClick={() =>
+                                  scrollToSection(item.id, set.key, subCat.key)
+                                }
+                              >
                                 {subCat?.label}
                               </button>
                             ))}
                           </div>
-                        )
-                      }
-                    </>
-                  ))}
+                        )}
+                      </>
+                    ))}
                 </div>
               )}
             </div>
@@ -341,24 +472,25 @@ export default function SettingsPage() {
       {/* main */}
       {/* <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto h-screen scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800"> */}
       <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300">
-        <div className='flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2'>
+        <div className="flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2">
           <button
             className="md:hidden mr-2 p-1"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
             <i className="ri-menu-line"></i>
           </button>
           <input
             ref={searchInputRef}
             id="search-input"
-            type='search'
+            type="search"
             placeholder="Search..."
-            className='w-2/5 rounded-md focus:border-accent focus:outline-accent active:border-accent active:outline-accent'
+            className="w-2/5 rounded-md focus:border-accent focus:outline-accent active:border-accent active:outline-accent"
             onChange={onFilterChange}
             autoFocus
           />
           <LayoutToggle onToggle={setIsCompactView} />
         </div>
-        <div className='p-4'>
+        <div className="p-4">
           <style>{`
           @keyframes blink {
             0%, 100% { background-color: #f1f1f1; }
@@ -370,8 +502,9 @@ export default function SettingsPage() {
         `}</style>
           <section
             key="main"
-            ref={el => sectionsRef.current['main'] = el}
-            className="mb-8 last:mb-0 pt-12">
+            ref={(el) => (sectionsRef.current["main"] = el)}
+            className="mb-8 last:mb-0 pt-12"
+          >
             <div className="space-y-6">
               {inputValueVisibility && (
                 <div className="mb-4">
@@ -388,482 +521,98 @@ export default function SettingsPage() {
                   >
                     {t("apply")}
                   </button>
-                  <p className='text-danger mt-2'>For Example : xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-3</p>
+                  <p className="text-danger mt-2">
+                    For Example : xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2
+                    md:grid-cols-2 sm:grid-cols-1 gap-3
+                  </p>
                 </div>
               )}
-              <div>
-                <div key="mainGeneral" ref={el => subItemsRef.current["mainGeneral"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === 'mainGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`} onClick={handleGeneralHeaderClick}  >
-                    {t("general")}
-                  </h1>
-                  <div key="mainGeneral" className="space-y-4">
-                    <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                        {filterComponent([t("business_type")], filterText) && (
-                          <ERPDataCombobox
-                            field={{ id: "maintainBusinessType", valueKey: "value", labelKey: "label" }}
-                            id="maintainBusinessType"
-                            label={t("business_type")}
-                            data={settings?.mainSettings}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "maintainBusinessType", data.maintainBusinessType)}
-                            options={[
-                              { value: "General", label: "General" },
-                              { value: "Distribution", label: "Distribution" },
-                              { value: "Hypermarket", label: "Hypermarket" },
-                              { value: "Supermarket", label: "Supermarket" },
-                              { value: "Textiles", label: "Textiles" },
-                              { value: "Restaurant", label: "Restaurant" },
-                              { value: "Opticals", label: "Opticals" },
-                            ]}
-                          />
-                        )}
-                        {isCompactView && (
-                          <>
-                            <p className="text-sm text-gray-600 w-full border-b border-solid border-[#dfdfdf] pb-2">
-                              {fieldDescriptions.businessType}
-                            </p>
-                          </>
-                        )}
-
-                        {filterComponent([t("currency_main")], filterText) && (
-                          <ERPDataCombobox
-                            id="currency"
-                            field={{ id: "currency", getListUrl: Urls.data_currencies, valueKey: "id", labelKey: "name" }}
-                            data={settings?.mainSettings}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "currency", data.currency)}
-                            label={t("currency_main")}
-                          />
-                        )}
-
-                        {filterComponent([t("currency_format")], filterText) && (
-                          <ERPDataCombobox
-                            field={{ id: "showNumberFormat", valueKey: "value", labelKey: "label" }}
-                            id="showNumberFormat"
-                            label={t("currency_format")}
-                            data={settings?.mainSettings}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "showNumberFormat", data.showNumberFormat)}
-                            options={[
-                              { value: "Millions", label: "Millions" },
-                              { value: "Lakhs", label: "Lakhs" },
-                            ]}
-                          />
-                        )}
-
-                        {filterComponent([t("decimal_points")], filterText) && (
-                          <ERPDataCombobox
-                            field={{ id: "decimalPoints", valueKey: "value", labelKey: "label", }}
-                            id="decimalPoints"
-                            label={t("decimal_points")}
-                            data={settings?.mainSettings}
-                            defaultData={settings?.mainSettings?.decimalPoints}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "decimalPoints", data.decimalPoints)}
-                            options={[
-                              { value: 0, label: "0" },
-                              { value: 1, label: "1" },
-                              { value: 2, label: "2" },
-                              { value: 3, label: "3" },
-                              { value: 4, label: "4" },
-                              { value: 5, label: "5" },
-                            ]}
-                          />
-                        )}
-
-                        <ERPDisableEnable targetCount={15}>
-                          {(hasPermitted) => (
-                            filterComponent([t("select_country")], filterText) && (
-                              <ERPDataCombobox
-                                id="countryName"
-                                disabled={!hasPermitted}
-                                field={{ id: "countryName", getListUrl: Urls.data_countries, valueKey: "id", labelKey: "name", }}
-                                data={settings.branchSettings}
-                                label={t("select_country")}
-                                onChangeData={(data) => handleFieldChange("branchSettings", "countryName", data.countryName)}
-                              />
-                            )
-                          )}
-                        </ERPDisableEnable>
-                        {userSession.countryId === Countries.India &&
-                          filterComponent([t("rounding_method_global")], filterText) && (
-                            <ERPDataCombobox
-                              field={{ id: "roundingMethodGLOBAL", valueKey: "value", labelKey: "label" }}
-                              id="roundingMethodGLOBAL"
-                              label={t("rounding_method_global")}
-                              data={settings?.mainSettings}
-                              onChangeData={(data) => handleFieldChange("mainSettings", "roundingMethodGLOBAL", data.roundingMethodGLOBAL)}
-                              options={[
-                                { value: "Normal", label: "Normal" },
-                                { value: "No Rounding", label: "No Rounding" },
-                                { value: "Ceiling", label: "Ceiling" },
-                                { value: "Floor", label: "Floor" },
-                                { value: "Round to 0.25", label: "Round to 0.25" },
-                                { value: "Round to 0.50", label: "Round to 0.50" },
-                                { value: "Round to 0.10", label: "Round to 0.10" },
-                                { value: "Floor Round to 0.50", label: "Floor Round to 0.50" },
-                                { value: "Floor Round to 0.25", label: "Floor Round to 0.25" },
-                                { value: "Floor Round to 0.10", label: "Floor Round to 0.10" },
-                                { value: "Not Set", label: "Not Set" },
-                                { value: "Round to 0.010", label: "Round to 0.010" },
-                              ]}
-                            />
-                          )}
-                        {userSession.countryId != Countries.India &&
-                          filterComponent([t("rounding_method")], filterText) && (
-                            <ERPDataCombobox
-                              field={{ id: "roundingMethod", valueKey: "value", labelKey: "label" }}
-                              id="roundingMethod"
-                              label={t("rounding_method")}
-                              data={settings?.mainSettings}
-                              onChangeData={(data) => handleFieldChange("mainSettings", "roundingMethod", data.roundingMethod)}
-                              options={[
-                                { value: "Normal", label: "Normal" },
-                                { value: "No Rounding", label: "No Rounding" },
-                                { value: "Ceiling", label: "Ceiling" },
-                                { value: "Floor", label: "Floor" },
-                              ]}
-                            />
-                          )}
-
-                        {filterComponent([t("keep_user_actions_(in_days)")], filterText) && (
-                          <ERPInput
-                            id="keepUserActionInDays"
-                            value={settings?.inventorySettings?.keepUserActionInDays}
-                            data={settings?.inventorySettings}
-                            label={t("keep_user_actions_(in_days)")}
-                            placeholder={t("enter_number_of_days")}
-                            type="number"
-                            onChangeData={(data) => handleFieldChange("inventorySettings", "keepUserActionInDays", parseInt(data.keepUserActionInDays, 10))}
-                          />
-                        )}
-
-                        {filterComponent([t("auto_update_release_up_to")], filterText) && (
-                          <ERPInput
-                            id="autoUpdateReleaseUpTo"
-                            label={t("auto_update_release_up_to")}
-                            // type="number"
-                            data={settings?.mainSettings}
-                            value={settings?.mainSettings?.autoUpdateReleaseUpTo}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "autoUpdateReleaseUpTo", data.autoUpdateReleaseUpTo)}
-                          />
-                        )}
-
-                        {filterComponent([t("default_cost_center")], filterText) && (
-                          <ERPDataCombobox
-                            id="defaultCostCenterID"
-                            data={settings?.accountsSettings}
-                            label={t("cost_center")}
-                            field={{ id: "defaultCostCenterID", getListUrl: Urls.data_costcentres, valueKey: "id", labelKey: "name" }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultCostCenterID', data.defaultCostCenterID)}
-                          />
-                        )}
-
-                        {filterComponent([t("report_mode")], filterText) && (
-                          <ERPDataCombobox
-                            id="reportMode"
-                            field={{ id: "reportMode", valueKey: "value", labelKey: "label" }}
-                            data={settings.branchSettings}
-                            label={t("report_mode")}
-                            onChangeData={(data) => handleFieldChange("branchSettings", "reportMode", data.reportMode)}
-                            options={[
-                              { value: "Classic", label: "Classic" },
-                              { value: "Standard", label: "Standard" },
-                            ]}
-                          />
-                        )}
-
-                        {filterComponent([t("file_attachment_method")], filterText) && (
-                          <ERPDataCombobox
-                            id="fileAttachmentMethod"
-                            field={{ id: "fileAttachmentMethod", valueKey: "value", labelKey: "label" }}
-                            data={settings.branchSettings}
-                            label={t("file_attachment_method")}
-                            onChangeData={(data) => handleFieldChange("branchSettings", "fileAttachmentMethod", data.fileAttachmentMethod)}
-                            options={[
-                              { value: "No", label: "No" },
-                              { value: "File System", label: "File System" },
-                              { value: "Cloud", label: "Cloud" },
-                            ]}
-                          />
-                        )}
-
-                        {settings.branchSettings?.fileAttachmentMethod === "File System" &&
-                          filterComponent([t("shared_folder")], filterText) && (
-                            <ERPInput
-                              id="fileAttachmentFolder"
-                              value={settings.branchSettings?.fileAttachmentFolder}
-                              data={settings.branchSettings}
-                              label={t("shared_folder")}
-                              onChangeData={(data) => handleFieldChange("branchSettings", "fileAttachmentFolder", data.fileAttachmentFolder)}
-                            />
-                          )}
-
-                        {filterComponent([t("show_reminders")], filterText) && (
-                          <ERPCheckbox
-                            id="showReminders"
-                            label={t("show_reminders")}
-                            data={settings?.mainSettings}
-                            checked={settings?.mainSettings?.showReminders}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "showReminders", data.showReminders)}
-                          />
-                        )}
-
-                        {filterComponent([t("show_user_messages")], filterText) && (
-                          <ERPCheckbox
-                            id="showUserMessages"
-                            label={t("show_user_messages")}
-                            data={settings?.mainSettings}
-                            checked={settings?.mainSettings?.showUserMessages}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "showUserMessages", data.showUserMessages)}
-                          />
-                        )}
-
-                        {userSession.countryId === Countries.India &&
-                          filterComponent([t("enable_day_end")], filterText) && (
-                            <ERPCheckbox
-                              id="enableDayEnd"
-                              label={t("enable_day_end")}
-                              data={settings?.mainSettings}
-                              checked={settings?.mainSettings?.enableDayEnd}
-                              onChangeData={(data) => handleFieldChange("mainSettings", "enableDayEnd", data.enableDayEnd)}
-                            />
-                          )}
-
-                        {filterComponent([t("save_modified_transaction_summary")], filterText) && (
-                          <ERPCheckbox
-                            id="saveModTransSum"
-                            label={t("save_modified_transaction_summary")}
-                            data={settings?.mainSettings}
-                            checked={settings?.mainSettings?.saveModTransSum}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "saveModTransSum", data.saveModTransSum)}
-                          />
-                        )}
-
-                        {filterComponent([t("show_financial_year_selector_on_startup")], filterText) && (
-                          <ERPCheckbox
-                            id="showFinancialYearSelector"
-                            label={t("show_financial_year_selector_on_startup")}
-                            data={settings?.branchSettings}
-                            checked={settings?.branchSettings?.showFinancialYearSelector}
-                            onChangeData={(data) => handleFieldChange("branchSettings", "showFinancialYearSelector", data.showFinancialYearSelector)}
-                          />
-                        )}
-
-                        {filterComponent([t("maintain_auto_posting_transaction")], filterText) && (
-                          <ERPCheckbox
-                            id="autoPostingTransaction"
-                            label={t("maintain_auto_posting_transaction")}
-                            data={settings?.branchSettings}
-                            checked={settings?.branchSettings?.autoPostingTransaction}
-                            onChangeData={(data) => handleFieldChange("branchSettings", "autoPostingTransaction", data.autoPostingTransaction)}
-                          />
-                        )}
-
-                        {filterComponent([t("allow_posted_transactions_edit")], filterText) && (
-                          <ERPCheckbox
-                            id="allowEditPostedTransactions"
-                            label={t("allow_posted_transactions_edit")}
-                            data={settings?.branchSettings}
-                            checked={settings?.branchSettings?.allowEditPostedTransactions}
-                            onChangeData={(data) => handleFieldChange("branchSettings", "allowEditPostedTransactions", data.allowEditPostedTransactions)}
-                          />
-                        )}
-
-
-                        {filterComponent([t("maintain_multilanguage")], filterText) && (
-                          <ERPCheckbox
-                            id="maintainMultilanguage__"
-                            label={t("maintain_multilanguage")}
-                            data={settings?.mainSettings}
-                            checked={settings?.mainSettings?.maintainMultilanguage__}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "maintainMultilanguage__", data.maintainMultilanguage__)}
-                          />
-                        )}
-
-                        {filterComponent([t("enable_24_hours_business")], filterText) && (
-                          <ERPCheckbox
-                            id="enable24Hours"
-                            checked={settings?.accountsSettings?.enable24Hours}
-                            data={settings?.accountsSettings}
-                            label={t("enable_24_hours_business")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'enable24Hours', data.enable24Hours)}
-                          />
-                        )}
-
-                        {filterComponent([t("maintain_multi_currency_transactions")], filterText) && (
-                          <ERPCheckbox
-                            id="maintainMultiCurrencyTransactions"
-                            checked={settings?.accountsSettings?.maintainMultiCurrencyTransactions}
-                            data={settings?.accountsSettings}
-                            label={t("maintain_multi_currency_transactions")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'maintainMultiCurrencyTransactions', data.maintainMultiCurrencyTransactions)}
-                          />
-                        )}
-
-                        {filterComponent([t("maintain_cost_center")], filterText) && (
-                          <ERPCheckbox
-                            id="maintainCostCenter"
-                            checked={settings?.accountsSettings?.maintainCostCenter}
-                            data={settings?.accountsSettings}
-                            label={t("maintain_cost_center")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'maintainCostCenter', data.maintainCostCenter)}
-                          />
-                        )}
-
-                        {filterComponent([t("maintain_projects/job")], filterText) && (
-                          <ERPCheckbox
-                            id="maintainProjectSite"
-                            checked={settings?.accountsSettings?.maintainProjectSite}
-                            data={settings?.accountsSettings}
-                            label={t("maintain_projects/job")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'maintainProjectSite', data.maintainProjectSite)}
-                          />
-                        )}
-                      </div>
-
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                        <div className="flex items-center">
-                          {filterComponent([t("allow_postdated_transaction")], filterText) && (
-                            <>
-                              <ERPCheckbox
-                                id="allowPostdatedTrans"
-                                label={t("allow_postdated_transaction")}
-                                data={settings?.mainSettings}
-                                checked={settings?.mainSettings?.allowPostdatedTrans}
-                                onChangeData={(data) => handleFieldChange("mainSettings", "allowPostdatedTrans", data.allowPostdatedTrans)}
-                              />
-                              <ERPInput
-                                id="postDatedTransInNumbers"
-                                type="number"
-                                label=" "
-                                data={settings?.mainSettings}
-                                className="w-20 ml-6 mt-1"
-                                value={settings?.mainSettings?.postDatedTransInNumbers}
-                                disabled={!settings?.mainSettings?.allowPostdatedTrans}
-                                onChangeData={(data) => handleFieldChange("mainSettings", "postDatedTransInNumbers", data.postDatedTransInNumbers)}
-                              />
-                              <label className=" ml-2 mr-2 block form-check-label text-gray-700">{t("days")}</label>
-                            </>
-                          )}
-                        </div>
-
-                        <div className="flex items-center">
-                          {filterComponent([t("allow_past_dated_transaction")], filterText) && (
-                            <>
-                              <ERPCheckbox
-                                id="allowPredatedTrans"
-                                label={t("allow_past_dated_transaction")}
-                                data={settings?.mainSettings}
-                                checked={settings?.mainSettings?.allowPredatedTrans}
-                                onChangeData={(data) => handleFieldChange("mainSettings", "allowPredatedTrans", data.allowPredatedTrans)}
-                              />
-                              <ERPInput
-                                id="preDatedTransInNumbers"
-                                label=" "
-                                type="number"
-                                data={settings?.mainSettings}
-                                className="w-20 ml-6 mt-1"
-                                value={settings?.mainSettings?.preDatedTransInNumbers}
-                                disabled={!settings?.mainSettings?.allowPredatedTrans}
-                                onChangeData={(data) => handleFieldChange("mainSettings", "preDatedTransInNumbers", data.preDatedTransInNumbers)}
-                              />
-                              <label className=" ml-2 mr-2 block form-check-label text-gray-700">Days</label>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                        {filterComponent([t("maintain_separate_prefix_for_cash_sales")], filterText) &&
-                          userSession.countryId != Countries.India && (
-                            <ERPCheckbox
-                              id="maintainSeperatePrefixforCashSales"
-                              label={t("maintain_separate_prefix_for_cash_sales")}
-                              data={settings?.mainSettings}
-                              checked={settings?.mainSettings?.maintainSeperatePrefixforCashSales}
-                              onChangeData={(data) => handleFieldChange("mainSettings", "maintainSeperatePrefixforCashSales", data.maintainSeperatePrefixforCashSales)}
-                            />
-                          )}
-
-                        {filterComponent([t("enable_second_display")], filterText) && (
-                          <ERPCheckbox
-                            id="enableSecondDisplay"
-                            label={t("enable_second_display")}
-                            data={settings?.mainSettings}
-                            checked={settings?.mainSettings?.enableSecondDisplay}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "enableSecondDisplay", data.enableSecondDisplay)}
-                          />
-                        )}
-
-                        {filterComponent([t("allow_sales_route/area")], filterText) && (
-                          <ERPCheckbox
-                            id="allowSalesRouteArea"
-                            label={t("allow_sales_route/area")}
-                            data={settings?.mainSettings}
-                            checked={settings?.mainSettings?.allowSalesRouteArea}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "allowSalesRouteArea", data.allowSalesRouteArea)}
-                          />
-                        )}
-
-                        {filterComponent([t("enable_day_end")], filterText) &&
-                          userSession.countryId === Countries.India && (
-                            <ERPCheckbox
-                              id="enableDayEnd"
-                              label={t("enable_day_end")}
-                              data={settings?.mainSettings}
-                              checked={settings?.mainSettings?.enableDayEnd}
-                              onChangeData={(data) => handleFieldChange("mainSettings", "enableDayEnd", data.enableDayEnd)}
-                            />
-                          )}
-
-                        {filterComponent([t("maintain_sales")], filterText) && (
-                          <ERPCheckbox
-                            id="maintainSalesRouteCreditLimit"
-                            label={t("maintain_sales")}
-                            data={settings?.mainSettings}
-                            disabled={!settings?.mainSettings?.allowSalesRouteArea}
-                            checked={settings?.mainSettings?.maintainSalesRouteCreditLimit}
-                            onChangeData={(data) => handleFieldChange("mainSettings", "maintainSalesRouteCreditLimit", data.maintainSalesRouteCreditLimit)}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            </div>
+            <div>
+            <MainGeneralFilterableComponents 
+          key="mainGeneral"
+          subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                   handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                   blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick} 
+                   sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></MainGeneralFilterableComponents>
 
               {/* backup */}
               <div>
-                <div key="mainBackup" ref={el => subItemsRef.current["mainBackup"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'mainBackup' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}> {t("backup")}</h1>
+                <div
+                  key="mainBackup"
+                  ref={(el) => (subItemsRef.current["mainBackup"] = el)}
+                >
+                  <h1
+                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "mainBackup"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                  >
+                    {" "}
+                    {t("backup")}
+                  </h1>
                   <div key="mainBackup" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div
+                        className={`grid ${
+                          isCompactView
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${
+                                gridClass ||
+                                "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                              } gap-4 items-center justify-center`
+                        }`}
+                      >
                         {filterComponent([t("backup_methods")], filterText) && (
                           <ERPDataCombobox
                             id="backupMethods"
                             data={settings.backUPSettings}
-                            field={{ id: "backupMethods", valueKey: "value", labelKey: "label" }}
-                            onChangeData={(data: any) => handleFieldChange("backUPSettings", "backupMethods", data.backupMethods)}
+                            field={{
+                              id: "backupMethods",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            onChangeData={(data: any) =>
+                              handleFieldChange(
+                                "backUPSettings",
+                                "backupMethods",
+                                data.backupMethods
+                              )
+                            }
                             label={t("backup_methods")}
                             options={[
                               { value: "No BackUp", label: "No BackUp" },
-                              { value: "BackUp On Close", label: "BackUp On Close" },
-                              { value: "Scheduled BackUp", label: "Scheduled BackUp" },
+                              {
+                                value: "BackUp On Close",
+                                label: "BackUp On Close",
+                              },
+                              {
+                                value: "Scheduled BackUp",
+                                label: "Scheduled BackUp",
+                              },
                             ]}
                           />
                         )}
                         {filterComponent([t("backup_path")], filterText) && (
                           <ERPInput
-                          
                             id="backUpPath"
                             value={settings.backUPSettings?.backUpPath}
                             data={settings.backUPSettings}
-                            disabled={settings.backUPSettings?.backupMethods == "No BackUp" || true}
+                            disabled={
+                              settings.backUPSettings?.backupMethods ==
+                                "No BackUp" || true
+                            }
                             label={t("backup_path")}
                             placeholder={t("backup_path")}
-                            onChangeData={(data: any) => handleFieldChange("backUPSettings", "backUpPath", data.backUpPath)}
+                            onChangeData={(data: any) =>
+                              handleFieldChange(
+                                "backUPSettings",
+                                "backUpPath",
+                                data.backUpPath
+                              )
+                            }
                           />
                         )}
                         {filterComponent([t("duration")], filterText) && (
@@ -872,15 +621,27 @@ export default function SettingsPage() {
                             value={settings.backUPSettings?.backupDuration}
                             data={settings.backUPSettings}
                             label={t("duration")}
-                            disabled={settings.backUPSettings?.backupMethods == "No BackUp" || settings.backUPSettings?.backupMethods == "BackUp On Close"}
+                            disabled={
+                              settings.backUPSettings?.backupMethods ==
+                                "No BackUp" ||
+                              settings.backUPSettings?.backupMethods ==
+                                "BackUp On Close"
+                            }
                             placeholder={t("duration")}
                             type="number"
                             onChangeData={(data: any) =>
-                              handleFieldChange("backUPSettings", "backupDuration", parseFloat(data.backupDuration))
+                              handleFieldChange(
+                                "backUPSettings",
+                                "backupDuration",
+                                parseFloat(data.backupDuration)
+                              )
                             }
                           />
                         )}
-                        {filterComponent([t("compress_backup_file")], filterText) && (
+                        {filterComponent(
+                          [t("compress_backup_file")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="compressBackupFile"
                             label={t("compress_backup_file")}
@@ -888,10 +649,15 @@ export default function SettingsPage() {
                             // checked={settings?.mainSettings?.showReminders}
                             // onChangeData={(data) => handleFieldChange("mainSettings", "showReminders", data.showReminders)}
                             data={settings?.backUPSettings}
-                            checked={settings?.backUPSettings?.compressBackupFile}
-                      
+                            checked={
+                              settings?.backUPSettings?.compressBackupFile
+                            }
                             onChangeData={(data) =>
-                              handleFieldChange("backUPSettings", "compressBackupFile", data.compressBackupFile)
+                              handleFieldChange(
+                                "backUPSettings",
+                                "compressBackupFile",
+                                data.compressBackupFile
+                              )
                             }
                           />
                         )}
@@ -903,13 +669,36 @@ export default function SettingsPage() {
 
               {/* printing */}
               <div>
-                <div key="mainPrinting" ref={el => subItemsRef.current["mainPrinting"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                  ${blinkSection === 'mainPrinting' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("printing")}</h1>
+                <div
+                  key="mainPrinting"
+                  ref={(el) => (subItemsRef.current["mainPrinting"] = el)}
+                >
+                  <h1
+                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                  ${
+                    blinkSection === "mainPrinting"
+                      ? "blink-animation bg-[#f1f1f1]"
+                      : "bg-[#f1f1f1]"
+                  }`}
+                  >
+                    {t("printing")}
+                  </h1>
                   <div key="mainPrinting" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                        {filterComponent([t("default_printer")], filterText) && (
+                      <div
+                        className={`grid ${
+                          isCompactView
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${
+                                gridClass ||
+                                "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                              } gap-4 items-center justify-center`
+                        }`}
+                      >
+                        {filterComponent(
+                          [t("default_printer")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultPrinter"
                             data={settings?.printerSettings}
@@ -920,7 +709,11 @@ export default function SettingsPage() {
                             }}
                             disabled
                             onChangeData={(data: any) =>
-                              handleFieldChange("printerSettings", "defaultPrinter", data.defaultPrinter)
+                              handleFieldChange(
+                                "printerSettings",
+                                "defaultPrinter",
+                                data.defaultPrinter
+                              )
                             }
                             label={t("default_printer")}
                             options={[
@@ -932,17 +725,25 @@ export default function SettingsPage() {
                             ]}
                           />
                         )}
-                        {userSession.countryId == Countries.India && filterComponent([t("print_gatePass")], filterText) && (
-                          <ERPCheckbox
-                            id="printGatePass"
-                            checked={settings?.printerSettings?.printGatePass}
-                            data={settings?.printerSettings}
-                            label={t("print_gatePass")}
-                            onChangeData={(data: any) =>
-                              handleFieldChange("printerSettings", "printGatePass", data.printGatePass)
-                            }
-                          />
-                        )}
+                        {userSession.countryId == Countries.India &&
+                          filterComponent(
+                            [t("print_gatePass")],
+                            filterText
+                          ) && (
+                            <ERPCheckbox
+                              id="printGatePass"
+                              checked={settings?.printerSettings?.printGatePass}
+                              data={settings?.printerSettings}
+                              label={t("print_gatePass")}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "printerSettings",
+                                  "printGatePass",
+                                  data.printGatePass
+                                )
+                              }
+                            />
+                          )}
 
                         {filterComponent([t("printing_style")], filterText) && (
                           <ERPDataCombobox
@@ -955,7 +756,11 @@ export default function SettingsPage() {
                             data={settings?.branchSettings}
                             label={t("printing_style")}
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "invoicePrintingStyle", data.invoicePrintingStyle)
+                              handleFieldChange(
+                                "branchSettings",
+                                "invoicePrintingStyle",
+                                data.invoicePrintingStyle
+                              )
                             }
                             options={[
                               { value: "Default", label: "Default" },
@@ -964,25 +769,45 @@ export default function SettingsPage() {
                           />
                         )}
 
-                        {filterComponent([t("show_reprint_authorisation")], filterText) && (
+                        {filterComponent(
+                          [t("show_reprint_authorisation")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="showReprintAuthorisation"
-                            checked={settings?.printerSettings?.showReprintAuthorisation}
+                            checked={
+                              settings?.printerSettings
+                                ?.showReprintAuthorisation
+                            }
                             data={settings?.printerSettings}
                             label={t("show_reprint_authorisation")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("printerSettings", "showReprintAuthorisation", data.showReprintAuthorisation)
+                              handleFieldChange(
+                                "printerSettings",
+                                "showReprintAuthorisation",
+                                data.showReprintAuthorisation
+                              )
                             }
                           />
                         )}
-                        {filterComponent([t("use_template_selection_for_printing")], filterText) && (
+                        {filterComponent(
+                          [t("use_template_selection_for_printing")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="useTemplateSelectionForPrinting"
                             data={settings?.branchSettings}
                             label={t("use_template_selection_for_printing")}
-                            checked={settings?.branchSettings?.useTemplateSelectionForPrinting}
+                            checked={
+                              settings?.branchSettings
+                                ?.useTemplateSelectionForPrinting
+                            }
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "useTemplateSelectionForPrinting", data.useTemplateSelectionForPrinting)
+                              handleFieldChange(
+                                "branchSettings",
+                                "useTemplateSelectionForPrinting",
+                                data.useTemplateSelectionForPrinting
+                              )
                             }
                           />
                         )}
@@ -994,13 +819,36 @@ export default function SettingsPage() {
 
               {/* multi branch */}
               <div>
-                <div key="mainMultiBranch" ref={el => subItemsRef.current["mainMultiBranch"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'mainMultiBranch' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("multi_branch")}</h1>
+                <div
+                  key="mainMultiBranch"
+                  ref={(el) => (subItemsRef.current["mainMultiBranch"] = el)}
+                >
+                  <h1
+                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "mainMultiBranch"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                  >
+                    {t("multi_branch")}
+                  </h1>
                   <div key="mainMultiBranch" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                        {filterComponent([t("default_BTO_account")], filterText) && (
+                      <div
+                        className={`grid ${
+                          isCompactView
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${
+                                gridClass ||
+                                "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                              } gap-4 items-center justify-center`
+                        }`}
+                      >
+                        {filterComponent(
+                          [t("default_BTO_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultBTOAccount"
                             data={settings?.inventorySettings}
@@ -1012,13 +860,20 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "defaultBTOAccount", data.defaultBTOAccount)
+                              handleFieldChange(
+                                "inventorySettings",
+                                "defaultBTOAccount",
+                                data.defaultBTOAccount
+                              )
                             }
                             label={t("default_BTO_account")}
                           />
                         )}
 
-                        {filterComponent([t("default_BTI_account")], filterText) && (
+                        {filterComponent(
+                          [t("default_BTI_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultBTIAccount"
                             data={settings?.inventorySettings}
@@ -1030,7 +885,11 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "defaultBTIAccount", data.defaultBTIAccount)
+                              handleFieldChange(
+                                "inventorySettings",
+                                "defaultBTIAccount",
+                                data.defaultBTIAccount
+                              )
                             }
                             label={t("default_BTI_account")}
                           />
@@ -1043,40 +902,76 @@ export default function SettingsPage() {
                             data={settings?.inventorySettings}
                             label={t("BTO_using_MSP")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "bTOUsingMSP", data.bTOUsingMSP)
+                              handleFieldChange(
+                                "inventorySettings",
+                                "bTOUsingMSP",
+                                data.bTOUsingMSP
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("use_cost_for_stock_transfer_to_branch")], filterText) && (
+                        {filterComponent(
+                          [t("use_cost_for_stock_transfer_to_branch")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="useCostForStockTransferToBranch"
-                            checked={settings?.inventorySettings?.useCostForStockTransferToBranch}
+                            checked={
+                              settings?.inventorySettings
+                                ?.useCostForStockTransferToBranch
+                            }
                             data={settings?.inventorySettings}
                             label={t("use_cost_for_stock_transfer_to_branch")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "useCostForStockTransferToBranch", data.useCostForStockTransferToBranch)
+                              handleFieldChange(
+                                "inventorySettings",
+                                "useCostForStockTransferToBranch",
+                                data.useCostForStockTransferToBranch
+                              )
                             }
                           />
                         )}
                       </div>
 
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div
+                        className={`grid ${
+                          isCompactView
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${
+                                gridClass ||
+                                "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                              } gap-4 items-center justify-center`
+                        }`}
+                      >
                         <div>
-                          {filterComponent([t("maintain_synchronization")], filterText) && (
+                          {filterComponent(
+                            [t("maintain_synchronization")],
+                            filterText
+                          ) && (
                             <>
                               <ERPCheckbox
                                 id="maintainSynchronization"
-                                checked={settings?.branchSettings?.maintainSynchronization}
+                                checked={
+                                  settings?.branchSettings
+                                    ?.maintainSynchronization
+                                }
                                 data={settings?.branchSettings}
                                 label={t("maintain_synchronization")}
                                 onChangeData={(data) =>
-                                  handleFieldChange("branchSettings", "maintainSynchronization", data.maintainSynchronization)
+                                  handleFieldChange(
+                                    "branchSettings",
+                                    "maintainSynchronization",
+                                    data.maintainSynchronization
+                                  )
                                 }
                               />
                               <ERPDataCombobox
                                 id="syncMethod"
-                                disabled={settings?.branchSettings?.maintainSynchronization === false}
+                                disabled={
+                                  settings?.branchSettings
+                                    ?.maintainSynchronization === false
+                                }
                                 label=" "
                                 field={{
                                   id: "syncMethod",
@@ -1085,61 +980,115 @@ export default function SettingsPage() {
                                 }}
                                 data={settings?.branchSettings}
                                 onChangeData={(data) =>
-                                  handleFieldChange("branchSettings", "syncMethod", data.syncMethod)
+                                  handleFieldChange(
+                                    "branchSettings",
+                                    "syncMethod",
+                                    data.syncMethod
+                                  )
                                 }
                                 options={[
-                                  { value: "Manual Sync", label: "Manual Sync" },
+                                  {
+                                    value: "Manual Sync",
+                                    label: "Manual Sync",
+                                  },
                                   { value: "Auto Sync", label: "Auto Sync" },
-                                  { value: "Auto Sync and Upload Only", label: "Auto Sync and Upload Only" },
-                                  { value: "Manual Sync and Upload Only", label: "Manual Sync and Upload Only" },
-                                  { value: "Upload And Download", label: "Upload And Download" },
+                                  {
+                                    value: "Auto Sync and Upload Only",
+                                    label: "Auto Sync and Upload Only",
+                                  },
+                                  {
+                                    value: "Manual Sync and Upload Only",
+                                    label: "Manual Sync and Upload Only",
+                                  },
+                                  {
+                                    value: "Upload And Download",
+                                    label: "Upload And Download",
+                                  },
                                 ]}
                               />
                             </>
                           )}
                         </div>
 
-                        {filterComponent([t("intervals_(minutes)")], filterText) && (
+                        {filterComponent(
+                          [t("intervals_(minutes)")],
+                          filterText
+                        ) && (
                           <ERPInput
                             id="syncIntervals"
                             value={settings?.branchSettings?.syncIntervals}
                             data={settings?.branchSettings}
                             label={t("intervals_(minutes)")}
-                            disabled={settings?.branchSettings?.syncMethod !== "Auto Sync" && settings?.branchSettings?.syncMethod !== "Auto Sync and Upload Only"}
+                            disabled={
+                              settings?.branchSettings?.syncMethod !==
+                                "Auto Sync" &&
+                              settings?.branchSettings?.syncMethod !==
+                                "Auto Sync and Upload Only"
+                            }
                             type="number"
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "syncIntervals", data.syncIntervals)
+                              handleFieldChange(
+                                "branchSettings",
+                                "syncIntervals",
+                                data.syncIntervals
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("refresh_stock_after_sync")], filterText) && (
+                        {filterComponent(
+                          [t("refresh_stock_after_sync")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="refreshStockAfterSync"
-                            checked={settings?.branchSettings?.refreshStockAfterSync}
+                            checked={
+                              settings?.branchSettings?.refreshStockAfterSync
+                            }
                             data={settings?.branchSettings}
-                            disabled={!settings?.branchSettings?.maintainSynchronization}
+                            disabled={
+                              !settings?.branchSettings?.maintainSynchronization
+                            }
                             label={t("refresh_stock_after_sync")}
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "refreshStockAfterSync", data.refreshStockAfterSync)
+                              handleFieldChange(
+                                "branchSettings",
+                                "refreshStockAfterSync",
+                                data.refreshStockAfterSync
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("refresh_server_stock_after_sync")], filterText) && (
+                        {filterComponent(
+                          [t("refresh_server_stock_after_sync")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="refreshServerStockAfterSync"
-                            checked={settings?.branchSettings?.refreshServerStockAfterSync}
+                            checked={
+                              settings?.branchSettings
+                                ?.refreshServerStockAfterSync
+                            }
                             data={settings?.branchSettings}
-                            disabled={!settings?.branchSettings?.maintainSynchronization}
+                            disabled={
+                              !settings?.branchSettings?.maintainSynchronization
+                            }
                             label={t("refresh_server_stock_after_sync")}
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "refreshServerStockAfterSync", data.refreshServerStockAfterSync)
+                              handleFieldChange(
+                                "branchSettings",
+                                "refreshServerStockAfterSync",
+                                data.refreshServerStockAfterSync
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("maintain_inventory_master_entry")], filterText) && (
+                        {filterComponent(
+                          [t("maintain_inventory_master_entry")],
+                          filterText
+                        ) && (
                           <ERPDisableEnable targetCount={5}>
                             {(hasPermitted) => (
                               <ERPCheckbox
@@ -1147,28 +1096,47 @@ export default function SettingsPage() {
                                 label={t("maintain_inventory_master_entry")}
                                 disabled={!hasPermitted}
                                 data={settings?.branchSettings}
-                                checked={settings?.branchSettings?.maintainMasterEntry}
+                                checked={
+                                  settings?.branchSettings?.maintainMasterEntry
+                                }
                                 onChangeData={(data) =>
-                                  handleFieldChange("branchSettings", "maintainMasterEntry", data.maintainMasterEntry)
+                                  handleFieldChange(
+                                    "branchSettings",
+                                    "maintainMasterEntry",
+                                    data.maintainMasterEntry
+                                  )
                                 }
                               />
                             )}
                           </ERPDisableEnable>
                         )}
 
-                        {filterComponent([t("maintain_inventory_transactions_entry")], filterText) && (
+                        {filterComponent(
+                          [t("maintain_inventory_transactions_entry")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="maintainInventoryTransactionsEntry"
                             label={t("maintain_inventory_transactions_entry")}
                             data={settings?.branchSettings}
-                            checked={settings?.branchSettings?.maintainInventoryTransactionsEntry}
+                            checked={
+                              settings?.branchSettings
+                                ?.maintainInventoryTransactionsEntry
+                            }
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "maintainInventoryTransactionsEntry", data.maintainInventoryTransactionsEntry)
+                              handleFieldChange(
+                                "branchSettings",
+                                "maintainInventoryTransactionsEntry",
+                                data.maintainInventoryTransactionsEntry
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("use_branch_wise_sales_price")], filterText) && (
+                        {filterComponent(
+                          [t("use_branch_wise_sales_price")],
+                          filterText
+                        ) && (
                           <ERPDisableEnable targetCount={5}>
                             {(hasPermitted) => (
                               <ERPCheckbox
@@ -1176,76 +1144,129 @@ export default function SettingsPage() {
                                 disabled={!hasPermitted}
                                 label={t("use_branch_wise_sales_price")}
                                 data={settings?.branchSettings}
-                                checked={settings?.branchSettings?.useBranchWiseSalesPrice}
+                                checked={
+                                  settings?.branchSettings
+                                    ?.useBranchWiseSalesPrice
+                                }
                                 onChangeData={(data) =>
-                                  handleFieldChange("branchSettings", "useBranchWiseSalesPrice", data.useBranchWiseSalesPrice)
+                                  handleFieldChange(
+                                    "branchSettings",
+                                    "useBranchWiseSalesPrice",
+                                    data.useBranchWiseSalesPrice
+                                  )
                                 }
                               />
                             )}
                           </ERPDisableEnable>
                         )}
 
-                        {filterComponent([t("show_BTI_notification")], filterText) && (
+                        {filterComponent(
+                          [t("show_BTI_notification")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="showBTINotification"
-                            checked={settings?.branchSettings?.showBTINotification}
+                            checked={
+                              settings?.branchSettings?.showBTINotification
+                            }
                             data={settings?.branchSettings}
                             label={t("show_BTI_notification")}
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "showBTINotification", data.showBTINotification)
+                              handleFieldChange(
+                                "branchSettings",
+                                "showBTINotification",
+                                data.showBTINotification
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("maintain_all_branch")], filterText) && (
+                        {filterComponent(
+                          [t("maintain_all_branch")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="maintainAllBranchWithCommonInventory"
-                            checked={settings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory}
+                            checked={
+                              settings?.miscellaneousSettings
+                                ?.maintainAllBranchWithCommonInventory
+                            }
                             data={settings?.miscellaneousSettings}
                             label={t("maintain_all_branch")}
                             onChangeData={(data) =>
-                              handleFieldChange("miscellaneousSettings", "maintainAllBranchWithCommonInventory", data.maintainAllBranchWithCommonInventory)
+                              handleFieldChange(
+                                "miscellaneousSettings",
+                                "maintainAllBranchWithCommonInventory",
+                                data.maintainAllBranchWithCommonInventory
+                              )
                             }
                           />
                         )}
 
-                        {userSession.countryId === Countries.India && filterComponent([t("auto_sync")], filterText) && (
-                          <ERPCheckbox
-                            id="autoSyncSIandPI_BT"
-                            checked={settings?.miscellaneousSettings?.autoSyncSIandPI_BT}
-                            data={settings?.miscellaneousSettings}
-                            label={t("auto_sync")}
-                            onChangeData={(data) =>
-                              handleFieldChange("miscellaneousSettings", "autoSyncSIandPI_BT", data.autoSyncSIandPI_BT)
-                            }
-                          />
-                        )}
+                        {userSession.countryId === Countries.India &&
+                          filterComponent([t("auto_sync")], filterText) && (
+                            <ERPCheckbox
+                              id="autoSyncSIandPI_BT"
+                              checked={
+                                settings?.miscellaneousSettings
+                                  ?.autoSyncSIandPI_BT
+                              }
+                              data={settings?.miscellaneousSettings}
+                              label={t("auto_sync")}
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "miscellaneousSettings",
+                                  "autoSyncSIandPI_BT",
+                                  data.autoSyncSIandPI_BT
+                                )
+                              }
+                            />
+                          )}
 
-                        {filterComponent([t("apply_TAX_on_purchase_converted_to_BTO")], filterText) && (
+                        {filterComponent(
+                          [t("apply_TAX_on_purchase_converted_to_BTO")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="applyVATOnPurchaseToBTO"
                             label={t("apply_TAX_on_purchase_converted_to_BTO")}
                             data={settings?.branchSettings}
-                            checked={settings?.branchSettings?.applyVATOnPurchaseToBTO}
+                            checked={
+                              settings?.branchSettings?.applyVATOnPurchaseToBTO
+                            }
                             onChangeData={(data) =>
-                              handleFieldChange("branchSettings", "applyVATOnPurchaseToBTO", data.applyVATOnPurchaseToBTO)
+                              handleFieldChange(
+                                "branchSettings",
+                                "applyVATOnPurchaseToBTO",
+                                data.applyVATOnPurchaseToBTO
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("set_system_code")], filterText) && (
+                        {filterComponent(
+                          [t("set_system_code")],
+                          filterText
+                        ) && (
                           <div>
-                            <button className="text-blue-500 underline" onClick={() => setShowSystemCodeBox(true)}>
+                            <button
+                              className="text-blue-500 underline"
+                              onClick={() => setShowSystemCodeBox(true)}
+                            >
                               {t("set_system_code")}
                             </button>
                             {showSystemCodeBox && (
                               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
                                 <div className="max-h-[300px] w-[300px] xxl:w-[250px] xxl:max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm bg-white">
                                   <div className="flex justify-between items-center mb-5">
-                                    <h6 className="text-center font-medium">{t("sync_systemCode")}</h6>
+                                    <h6 className="text-center font-medium">
+                                      {t("sync_systemCode")}
+                                    </h6>
                                     <button
                                       className="text-red-500 font-bold"
-                                      onClick={() => setShowSystemCodeBox(false)}
+                                      onClick={() =>
+                                        setShowSystemCodeBox(false)
+                                      }
                                     >
                                       ✕
                                     </button>
@@ -1257,7 +1278,9 @@ export default function SettingsPage() {
                                       <div className="my-5 xxl:my-10">
                                         <ul className="list-none text-center text-gray-500 snap-center">
                                           <li className="py-5 xxl:py-10 px-3">
-                                            {t("click_load_to_fetch_system_code")}
+                                            {t(
+                                              "click_load_to_fetch_system_code"
+                                            )}
                                           </li>
                                         </ul>
                                       </div>
@@ -1265,8 +1288,14 @@ export default function SettingsPage() {
                                       <ul className="list-none text-center snap-center">
                                         {systemCode && systemCode.length > 0 ? (
                                           systemCode.map(
-                                            (code: systemCodeApplicationMiscSettings, index: number) => (
-                                              <li className="p-1 text-xs" key={index}>
+                                            (
+                                              code: systemCodeApplicationMiscSettings,
+                                              index: number
+                                            ) => (
+                                              <li
+                                                className="p-1 text-xs"
+                                                key={index}
+                                              >
                                                 {code.systemCode}
                                               </li>
                                             )
@@ -1282,7 +1311,9 @@ export default function SettingsPage() {
                                     <ERPButton
                                       className="w-0 h-0 p-0 bg-white"
                                       type="button"
-                                      onClick={() => setAddSystemCode(!addSystemCode)}
+                                      onClick={() =>
+                                        setAddSystemCode(!addSystemCode)
+                                      }
                                       startIcon="ri-pencil-line"
                                     />
                                   </li>
@@ -1326,7 +1357,6 @@ export default function SettingsPage() {
                             )}
                           </div>
                         )}
-
                       </div>
                     </div>
                   </div>
@@ -1335,22 +1365,48 @@ export default function SettingsPage() {
 
               {/* CRM */}
               <div>
-                <div key="mainCRM" ref={el => subItemsRef.current["mainCRM"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'mainCRM' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("crm")}</h1>
+                <div
+                  key="mainCRM"
+                  ref={(el) => (subItemsRef.current["mainCRM"] = el)}
+                >
+                  <h1
+                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "mainCRM"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                  >
+                    {t("crm")}
+                  </h1>
                   <div key="mainCRM" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                      <div
+                        className={`grid ${
+                          isCompactView
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${
+                                gridClass ||
+                                "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                              } gap-4 items-center justify-center`
+                        }`}
+                      >
                         <div className="flex items-center">
-                          {filterComponent([t("allow_privilege_card")], filterText) && (
+                          {filterComponent(
+                            [t("allow_privilege_card")],
+                            filterText
+                          ) && (
                             <>
                               <ERPCheckbox
                                 id="allowPrivilegeCard"
                                 label={t("allow_privilege_card")}
                                 data={settings?.mainSettings}
-                                checked={settings?.mainSettings?.allowPrivilegeCard}
+                                checked={
+                                  settings?.mainSettings?.allowPrivilegeCard
+                                }
                                 onChangeData={(data) =>
-                                  handleFieldChange("mainSettings",
+                                  handleFieldChange(
+                                    "mainSettings",
                                     "allowPrivilegeCard",
                                     data.allowPrivilegeCard
                                   )
@@ -1362,25 +1418,42 @@ export default function SettingsPage() {
                                 type="number"
                                 data={settings?.mainSettings}
                                 className="w-20 ml-6 mt-1"
-                                value={settings?.mainSettings?.previlegeCardPerc}
-                                disabled={!settings?.mainSettings?.allowPrivilegeCard}
+                                value={
+                                  settings?.mainSettings?.previlegeCardPerc
+                                }
+                                disabled={
+                                  !settings?.mainSettings?.allowPrivilegeCard
+                                }
                                 onChangeData={(data) =>
-                                  handleFieldChange("mainSettings", "previlegeCardPerc", data.previlegeCardPerc)
+                                  handleFieldChange(
+                                    "mainSettings",
+                                    "previlegeCardPerc",
+                                    data.previlegeCardPerc
+                                  )
                                 }
                               />
-                              <label className=" ml-2 mr-2 block form-check-label text-gray-700">%</label>
+                              <label className=" ml-2 mr-2 block form-check-label text-gray-700">
+                                %
+                              </label>
                             </>
                           )}
                         </div>
-                        {filterComponent([t("redeem_points_(separated_by_comma)")], filterText) && (
+                        {filterComponent(
+                          [t("redeem_points_(separated_by_comma)")],
+                          filterText
+                        ) && (
                           <ERPInput
                             id="redeeemValuesSeperatedByComma"
-                            value={settings?.inventorySettings?.redeeemValuesSeperatedByComma}
+                            value={
+                              settings?.inventorySettings
+                                ?.redeeemValuesSeperatedByComma
+                            }
                             data={settings?.inventorySettings}
                             label={t("redeem_points_(separated_by_comma)")}
                             placeholder={t("enter_redeem_points")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings",
+                              handleFieldChange(
+                                "inventorySettings",
                                 "redeeemValuesSeperatedByComma",
                                 data.redeeemValuesSeperatedByComma
                               )
@@ -1388,19 +1461,31 @@ export default function SettingsPage() {
                           />
                         )}
 
-                        {filterComponent([t("use_product_images")], filterText) && (
+                        {filterComponent(
+                          [t("use_product_images")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="useProductImages"
                             label={t("use_product_images")}
                             data={settings?.productsSettings}
-                            checked={settings?.productsSettings?.useProductImages}
+                            checked={
+                              settings?.productsSettings?.useProductImages
+                            }
                             onChangeData={(data) =>
-                              handleFieldChange("productsSettings", "useProductImages", data.useProductImages)
+                              handleFieldChange(
+                                "productsSettings",
+                                "useProductImages",
+                                data.useProductImages
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("product_image_path")], filterText) && (
+                        {filterComponent(
+                          [t("product_image_path")],
+                          filterText
+                        ) && (
                           <ERPInput
                             id="productImagePath"
                             value={settings?.productsSettings?.productImagePath}
@@ -1408,15 +1493,23 @@ export default function SettingsPage() {
                             label={t("product_image_path")}
                             type="text"
                             placeholder={t("product_image_path")}
-                            disabled={!settings?.productsSettings?.useProductImages}
+                            disabled={
+                              !settings?.productsSettings?.useProductImages
+                            }
                             onChangeData={(data) =>
-                              handleFieldChange("productsSettings", "productImagePath", data.productImagePath)
+                              handleFieldChange(
+                                "productsSettings",
+                                "productImagePath",
+                                data.productImagePath
+                              )
                             }
                           />
                         )}
 
-
-                        {filterComponent([t("set_gift_shared_path")], filterText) && (
+                        {filterComponent(
+                          [t("set_gift_shared_path")],
+                          filterText
+                        ) && (
                           <ERPInput
                             id="productImagePath"
                             value={settings?.productsSettings?.productImagePath}
@@ -1426,7 +1519,11 @@ export default function SettingsPage() {
                             type="text"
                             placeholder={t("set_gift_shared_path")}
                             onChangeData={(data) =>
-                              handleFieldChange("productsSettings", "productImagePath", data.productImagePath)
+                              handleFieldChange(
+                                "productsSettings",
+                                "productImagePath",
+                                data.productImagePath
+                              )
                             }
                           />
                         )}
@@ -1441,17 +1538,41 @@ export default function SettingsPage() {
           {/* general */}
           <section
             key="accounts"
-            ref={el => sectionsRef.current['accounts'] = el}
-            className="mb-8 last:mb-0">
+            ref={(el) => (sectionsRef.current["accounts"] = el)}
+            className="mb-8 last:mb-0"
+          >
             <div className="space-y-6">
               <div>
-                <div key="accountsGeneral" ref={el => subItemsRef.current["accountsGeneral"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'accountsGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("general")}</h1>
+                <div
+                  key="accountsGeneral"
+                  ref={(el) => (subItemsRef.current["accountsGeneral"] = el)}
+                >
+                  <h1
+                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "accountsGeneral"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                  >
+                    {t("general")}
+                  </h1>
                   <div key="accountsGeneral" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                        {filterComponent([t("default_cash_account")], filterText) && (
+                      <div
+                        className={`grid ${
+                          isCompactView
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${
+                                gridClass ||
+                                "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                              } gap-4 items-center justify-center`
+                        }`}
+                      >
+                        {filterComponent(
+                          [t("default_cash_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultCashAcc"
                             data={settings?.accountsSettings}
@@ -1462,10 +1583,19 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultCashAcc', data.defaultCashAcc)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultCashAcc",
+                                data.defaultCashAcc
+                              )
+                            }
                           />
                         )}
-                        {filterComponent([t("default_suspense_account")], filterText) && (
+                        {filterComponent(
+                          [t("default_suspense_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultSuspenseAcc"
                             data={settings?.accountsSettings}
@@ -1476,10 +1606,19 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultSuspenseAcc', data.defaultSuspenseAcc)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultSuspenseAcc",
+                                data.defaultSuspenseAcc
+                              )
+                            }
                           />
                         )}
-                        {filterComponent([t("default_service_account")], filterText) && (
+                        {filterComponent(
+                          [t("default_service_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultServiceAccount"
                             data={settings?.accountsSettings}
@@ -1490,10 +1629,19 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultServiceAccount', data.defaultServiceAccount)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultServiceAccount",
+                                data.defaultServiceAccount
+                              )
+                            }
                           />
                         )}
-                        {filterComponent([t("default_bank_account")], filterText) && (
+                        {filterComponent(
+                          [t("default_bank_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultBankAcc"
                             data={settings?.accountsSettings}
@@ -1504,10 +1652,19 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultBankAcc', data.defaultBankAcc)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultBankAcc",
+                                data.defaultBankAcc
+                              )
+                            }
                           />
                         )}
-                        {filterComponent([t("default_credit_card_account")], filterText) && (
+                        {filterComponent(
+                          [t("default_credit_card_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultCreditCardAcc"
                             data={settings?.accountsSettings}
@@ -1518,10 +1675,19 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultCreditCardAcc', data.defaultCreditCardAcc)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultCreditCardAcc",
+                                data.defaultCreditCardAcc
+                              )
+                            }
                           />
                         )}
-                        {filterComponent([t("default_loan_account")], filterText) && (
+                        {filterComponent(
+                          [t("default_loan_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultLoanAcc"
                             data={settings?.accountsSettings}
@@ -1533,10 +1699,19 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultLoanAcc', data.defaultLoanAcc)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultLoanAcc",
+                                data.defaultLoanAcc
+                              )
+                            }
                           />
                         )}
-                        {filterComponent([t("default_bank_charge_account")], filterText) && (
+                        {filterComponent(
+                          [t("default_bank_charge_account")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultBankChargeAccount"
                             data={settings?.accountsSettings}
@@ -1548,11 +1723,20 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultBankChargeAccount', data.defaultBankChargeAccount)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultBankChargeAccount",
+                                data.defaultBankChargeAccount
+                              )
+                            }
                           />
                         )}
                         {userSession.countryId == Countries.India &&
-                          filterComponent([t("default_indirect_expense_account")], filterText) && (
+                          filterComponent(
+                            [t("default_indirect_expense_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="defaultIndirectExpenseAccount"
                               field={{
@@ -1563,105 +1747,261 @@ export default function SettingsPage() {
                               data={settings?.accountsSettings}
                               label={t("default_indirect_expense_account")}
                               onChangeData={(data) =>
-                                handleFieldChange("accountsSettings", 'defaultIndirectExpenseAccount', data.defaultIndirectExpenseAccount)
+                                handleFieldChange(
+                                  "accountsSettings",
+                                  "defaultIndirectExpenseAccount",
+                                  data.defaultIndirectExpenseAccount
+                                )
                               }
                               options={[
-                                { value: 'All', label: 'All' },
-                                { value: 'Customer', label: 'Customer' },
-                                { value: 'Supplier', label: 'Supplier' },
-                                { value: 'ReferalAgent', label: 'Referal Agent' },
-                                { value: 'CashInHand', label: 'Cash In Hand' },
-                                { value: 'BankAccount', label: 'Bank Account' },
-                                { value: 'SuspenseAccount', label: 'Suspense Account' },
-                                { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
-                                { value: 'Cash_Bank', label: 'Cash & Bank' },
-                                { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
-                                { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
-                                { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
-                                { value: 'Sales_Account', label: 'Sales Account' },
-                                { value: 'Purchase_Account', label: 'Purchase Account' },
-                                { value: 'Salaries', label: 'Salaries' },
-                                { value: 'Discount_Received', label: 'Discount Received' },
-                                { value: 'Discount_Given', label: 'Discount Given' },
-                                { value: 'Incentive_Given', label: 'Incentive Given' },
-                                { value: 'Salary_Account', label: 'Salary Account' },
-                                { value: 'Job_Works', label: 'Job Works' },
-                                { value: 'Branch_Receivable', label: 'Branch Receivable' },
-                                { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
-                                { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
-                                { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
-                                { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
-                                { value: 'Branch_Payable', label: 'Branch Payable' },
-                                { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
-                                { value: 'Expenses', label: 'Expenses' },
-                                { value: 'Incomes', label: 'Incomes' },
-                                { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
-                                { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
-                                { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
-                                { value: 'Current_Assets', label: 'Current Assets' },
-                                { value: 'Fixed_Assets', label: 'Fixed Assets' },
-                                { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
-                                { value: 'Indirect_Income', label: 'Indirect Income' },
+                                { value: "All", label: "All" },
+                                { value: "Customer", label: "Customer" },
+                                { value: "Supplier", label: "Supplier" },
+                                {
+                                  value: "ReferalAgent",
+                                  label: "Referal Agent",
+                                },
+                                { value: "CashInHand", label: "Cash In Hand" },
+                                { value: "BankAccount", label: "Bank Account" },
+                                {
+                                  value: "SuspenseAccount",
+                                  label: "Suspense Account",
+                                },
+                                {
+                                  value: "CustomerAndSupplier",
+                                  label: "Customer and Supplier",
+                                },
+                                { value: "Cash_Bank", label: "Cash & Bank" },
+                                {
+                                  value: "Cash_Bank_Suppliers",
+                                  label: "Cash & Bank - Suppliers",
+                                },
+                                {
+                                  value: "Cash_Bank_Customers",
+                                  label: "Cash & Bank - Customers",
+                                },
+                                {
+                                  value: "Cash_Bank_Suppliers_Customers",
+                                  label: "Cash & Bank - Suppliers & Customers",
+                                },
+                                {
+                                  value: "Sales_Account",
+                                  label: "Sales Account",
+                                },
+                                {
+                                  value: "Purchase_Account",
+                                  label: "Purchase Account",
+                                },
+                                { value: "Salaries", label: "Salaries" },
+                                {
+                                  value: "Discount_Received",
+                                  label: "Discount Received",
+                                },
+                                {
+                                  value: "Discount_Given",
+                                  label: "Discount Given",
+                                },
+                                {
+                                  value: "Incentive_Given",
+                                  label: "Incentive Given",
+                                },
+                                {
+                                  value: "Salary_Account",
+                                  label: "Salary Account",
+                                },
+                                { value: "Job_Works", label: "Job Works" },
+                                {
+                                  value: "Branch_Receivable",
+                                  label: "Branch Receivable",
+                                },
+                                {
+                                  value: "SalesAndDirectIncome",
+                                  label: "Sales and Direct Income",
+                                },
+                                {
+                                  value: "PurchaseAndDirectExpense",
+                                  label: "Purchase and Direct Expense",
+                                },
+                                {
+                                  value:
+                                    "Cash_Bank_Suppliers_Customers_Employees",
+                                  label:
+                                    "Cash & Bank - Suppliers, Customers & Employees",
+                                },
+                                {
+                                  value: "Cash_Bank_Customers_Employees",
+                                  label: "Cash & Bank - Customers & Employees",
+                                },
+                                {
+                                  value: "Branch_Payable",
+                                  label: "Branch Payable",
+                                },
+                                {
+                                  value: "Branch_Recv_Payable",
+                                  label: "Branch Receivable & Payable",
+                                },
+                                { value: "Expenses", label: "Expenses" },
+                                { value: "Incomes", label: "Incomes" },
+                                {
+                                  value: "Credit_Note_Ledgers",
+                                  label: "Credit Note Ledgers",
+                                },
+                                {
+                                  value: "DebitNote_Note_Ledgers",
+                                  label: "Debit Note Ledgers",
+                                },
+                                {
+                                  value:
+                                    "Liabilities_Expenses_All_Without_Salaries",
+                                  label:
+                                    "Liabilities & Expenses (Excl. Salaries)",
+                                },
+                                {
+                                  value: "Current_Assets",
+                                  label: "Current Assets",
+                                },
+                                {
+                                  value: "Fixed_Assets",
+                                  label: "Fixed Assets",
+                                },
+                                {
+                                  value: "Indirect_Expenses",
+                                  label: "Indirect Expenses",
+                                },
+                                {
+                                  value: "Indirect_Income",
+                                  label: "Indirect Income",
+                                },
                               ]}
                             />
                           )}
-                        {filterComponent([t("maintain_billwise_account")], filterText) && (
+                        {filterComponent(
+                          [t("maintain_billwise_account")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="maintainBillwiseAccount"
-                            checked={settings?.accountsSettings?.maintainBillwiseAccount}
+                            checked={
+                              settings?.accountsSettings
+                                ?.maintainBillwiseAccount
+                            }
                             data={settings?.accountsSettings}
                             label={t("maintain_billwise_account")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'maintainBillwiseAccount', data.maintainBillwiseAccount)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "maintainBillwiseAccount",
+                                data.maintainBillwiseAccount
+                              )
+                            }
                           />
                         )}
 
-                        {filterComponent([t("billwise_mandatory")], filterText) && (
+                        {filterComponent(
+                          [t("billwise_mandatory")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="billwiseMandatory"
-                            checked={settings?.accountsSettings?.billwiseMandatory}
+                            checked={
+                              settings?.accountsSettings?.billwiseMandatory
+                            }
                             data={settings?.accountsSettings}
                             label={t("billwise_mandatory")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'billwiseMandatory', data.billwiseMandatory)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "billwiseMandatory",
+                                data.billwiseMandatory
+                              )
+                            }
                           />
                         )}
 
-                        {filterComponent([t("do_not_post_accounts_for_each_cash_sales")], filterText) && (
+                        {filterComponent(
+                          [t("do_not_post_accounts_for_each_cash_sales")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="doNotPostAccountsForEachCashSales"
-                            checked={settings?.accountsSettings?.doNotPostAccountsForEachCashSales}
+                            checked={
+                              settings?.accountsSettings
+                                ?.doNotPostAccountsForEachCashSales
+                            }
                             data={settings?.accountsSettings}
-                            label={t("do_not_post_accounts_for_each_cash_sales")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'doNotPostAccountsForEachCashSales', data.doNotPostAccountsForEachCashSales)}
+                            label={t(
+                              "do_not_post_accounts_for_each_cash_sales"
+                            )}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "doNotPostAccountsForEachCashSales",
+                                data.doNotPostAccountsForEachCashSales
+                              )
+                            }
                           />
                         )}
                         {userSession.countryId == Countries.India &&
-                          filterComponent([t("allow_PDC_to_post")], filterText) && (
+                          filterComponent(
+                            [t("allow_PDC_to_post")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="allowPostPDC"
                               checked={settings?.accountsSettings?.allowPostPDC}
                               data={settings?.accountsSettings}
                               label={t("allow_PDC_to_post")}
-                              onChangeData={(data) => handleFieldChange("accountsSettings", 'allowPostPDC', data.allowPostPDC)}
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "accountsSettings",
+                                  "allowPostPDC",
+                                  data.allowPostPDC
+                                )
+                              }
                             />
                           )}
                         {userSession.countryId == Countries.India &&
-                          filterComponent([t("enable_estimate_for_payments_and_receipts")], filterText) && (
+                          filterComponent(
+                            [t("enable_estimate_for_payments_and_receipts")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="enableCPEandCRE"
                               disabled
-                              checked={settings?.accountsSettings?.enableCPEandCRE}
+                              checked={
+                                settings?.accountsSettings?.enableCPEandCRE
+                              }
                               data={settings?.accountsSettings}
-                              label={t("enable_estimate_for_payments_and_receipts")}
-                              onChangeData={(data) => handleFieldChange("accountsSettings", 'enableCPEandCRE', data.enableCPEandCRE)}
+                              label={t(
+                                "enable_estimate_for_payments_and_receipts"
+                              )}
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "accountsSettings",
+                                  "enableCPEandCRE",
+                                  data.enableCPEandCRE
+                                )
+                              }
                             />
                           )}
-                        {filterComponent([t("print_after_save")], filterText) && (
+                        {filterComponent(
+                          [t("print_after_save")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="printAccAftersave"
-                            checked={settings?.accountsSettings?.printAccAftersave}
+                            checked={
+                              settings?.accountsSettings?.printAccAftersave
+                            }
                             data={settings?.accountsSettings}
                             label={t("print_after_save")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'printAccAftersave', data.printAccAftersave)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "printAccAftersave",
+                                data.printAccAftersave
+                              )
+                            }
                           />
                         )}
                       </div>
@@ -1672,13 +2012,36 @@ export default function SettingsPage() {
 
               {/* HR */}
               <div>
-                <div key="accountsHR" ref={el => subItemsRef.current["accountsHR"] = el} >
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'accountsHR' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("hr")}</h1>
+                <div
+                  key="accountsHR"
+                  ref={(el) => (subItemsRef.current["accountsHR"] = el)}
+                >
+                  <h1
+                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "accountsHR"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                  >
+                    {t("hr")}
+                  </h1>
                   <div key="accountsHR" className="space-y-4">
                     <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                        {filterComponent([t("default_incentive_account_1")], filterText) && (
+                      <div
+                        className={`grid ${
+                          isCompactView
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${
+                                gridClass ||
+                                "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                              } gap-4 items-center justify-center`
+                        }`}
+                      >
+                        {filterComponent(
+                          [t("default_incentive_account_1")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultIncentiveAcc1"
                             data={settings?.accountsSettings}
@@ -1691,11 +2054,20 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultIncentiveAcc1', data.defaultIncentiveAcc1)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultIncentiveAcc1",
+                                data.defaultIncentiveAcc1
+                              )
+                            }
                           />
                         )}
 
-                        {filterComponent([t("default_incentive_account_2")], filterText) && (
+                        {filterComponent(
+                          [t("default_incentive_account_2")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultIncentiveAcc2"
                             data={settings?.accountsSettings}
@@ -1707,24 +2079,42 @@ export default function SettingsPage() {
                               valueKey: "id",
                               labelKey: "name",
                             }}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultIncentiveAcc2', data.defaultIncentiveAcc2)}
-                          />
-                        )}
-
-                        {filterComponent([t("salesman_incentive")], filterText) && (
-                          <ERPInput
-                            id="salesmanIncentive"
-                            value={settings?.miscellaneousSettings.salesmanIncentive}
-                            data={settings?.miscellaneousSettings}
-                            type="number"
-                            label={t("salesman_incentive")}
                             onChangeData={(data) =>
-                              handleFieldChange("miscellaneousSettings", "salesmanIncentive", data.salesmanIncentive)
+                              handleFieldChange(
+                                "accountsSettings",
+                                "defaultIncentiveAcc2",
+                                data.defaultIncentiveAcc2
+                              )
                             }
                           />
                         )}
 
-                        {filterComponent([t("default_incentive_ledger")], filterText) && (
+                        {filterComponent(
+                          [t("salesman_incentive")],
+                          filterText
+                        ) && (
+                          <ERPInput
+                            id="salesmanIncentive"
+                            value={
+                              settings?.miscellaneousSettings.salesmanIncentive
+                            }
+                            data={settings?.miscellaneousSettings}
+                            type="number"
+                            label={t("salesman_incentive")}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "miscellaneousSettings",
+                                "salesmanIncentive",
+                                data.salesmanIncentive
+                              )
+                            }
+                          />
+                        )}
+
+                        {filterComponent(
+                          [t("default_incentive_ledger")],
+                          filterText
+                        ) && (
                           <ERPDataCombobox
                             id="defaultIncentiveLedger"
                             field={{
@@ -1737,27 +2127,63 @@ export default function SettingsPage() {
                             }}
                             data={settings?.miscellaneousSettings}
                             label={t("default_incentive_ledger")}
-                            onChangeData={(data) => handleFieldChange("miscellaneousSettings", "defaultIncentiveLedger", data.defaultIncentiveLedger)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "miscellaneousSettings",
+                                "defaultIncentiveLedger",
+                                data.defaultIncentiveLedger
+                              )
+                            }
                           />
                         )}
 
-                        {filterComponent([t("unpost_SP_deductions_to_account")], filterText) && (
+                        {filterComponent(
+                          [t("unpost_SP_deductions_to_account")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="unPostSPDeductionstoAccount"
-                            checked={settings?.accountsSettings?.unPostSPDeductionstoAccount}
+                            checked={
+                              settings?.accountsSettings
+                                ?.unPostSPDeductionstoAccount
+                            }
                             data={settings?.accountsSettings}
                             label={t("unpost_SP_deductions_to_account")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'unPostSPDeductionstoAccount', data.unPostSPDeductionstoAccount)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "unPostSPDeductionstoAccount",
+                                data.unPostSPDeductionstoAccount
+                              )
+                            }
                           />
                         )}
 
-                        {filterComponent([t("load_costcentre_wise_employees_for_salary_process")], filterText) && (
+                        {filterComponent(
+                          [
+                            t(
+                              "load_costcentre_wise_employees_for_salary_process"
+                            ),
+                          ],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="loadCostcentrewiseEmployeesForSalaryProcess"
-                            checked={settings?.accountsSettings?.loadCostcentrewiseEmployeesForSalaryProcess}
+                            checked={
+                              settings?.accountsSettings
+                                ?.loadCostcentrewiseEmployeesForSalaryProcess
+                            }
                             data={settings?.accountsSettings}
-                            label={t("load_costcentre_wise_employees_for_salary_process")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'loadCostcentrewiseEmployeesForSalaryProcess', data.loadCostcentrewiseEmployeesForSalaryProcess)}
+                            label={t(
+                              "load_costcentre_wise_employees_for_salary_process"
+                            )}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "loadCostcentrewiseEmployeesForSalaryProcess",
+                                data.loadCostcentrewiseEmployeesForSalaryProcess
+                              )
+                            }
                           />
                         )}
                       </div>
@@ -1766,25 +2192,54 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {userSession.countryId === Countries.Saudi &&
+              {userSession.countryId === Countries.Saudi && (
                 <div>
-                  <div key="accountsEInvoiceGCC" ref={el => subItemsRef.current["accountsEInvoiceGCC"] = el} >
-                    <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'accountsEInvoiceGCC' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("ksa_e-invoice")}</h1>
+                  <div
+                    key="accountsEInvoiceGCC"
+                    ref={(el) =>
+                      (subItemsRef.current["accountsEInvoiceGCC"] = el)
+                    }
+                  >
+                    <h1
+                      className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "accountsEInvoiceGCC"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                    >
+                      {t("ksa_e-invoice")}
+                    </h1>
                     <div key="accountsEInvoiceGCC" className="space-y-4">
                       <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                          {filterComponent([t("e-Invoice_sync_systemCode")], filterText) && (
+                        <div
+                          className={`grid ${
+                            isCompactView
+                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                              : `${
+                                  gridClass ||
+                                  "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                                } gap-4 items-center justify-center`
+                          }`}
+                        >
+                          {filterComponent(
+                            [t("e-Invoice_sync_systemCode")],
+                            filterText
+                          ) && (
                             <ERPDisableEnable targetCount={5}>
                               {(hasPermitted) => (
                                 <ERPInput
                                   id="kSA_EInvoice_Sync_SystemCode"
                                   disabled={!hasPermitted}
-                                  value={settings?.branchSettings.kSA_EInvoice_Sync_SystemCode}
+                                  value={
+                                    settings?.branchSettings
+                                      .kSA_EInvoice_Sync_SystemCode
+                                  }
                                   data={settings?.branchSettings}
                                   label={t("e-Invoice_sync_systemCode")}
                                   onChangeData={(data) =>
-                                    handleFieldChange("branchSettings",
+                                    handleFieldChange(
+                                      "branchSettings",
                                       "kSA_EInvoice_Sync_SystemCode",
                                       data.kSA_EInvoice_Sync_SystemCode
                                     )
@@ -1793,15 +2248,23 @@ export default function SettingsPage() {
                               )}
                             </ERPDisableEnable>
                           )}
-                          {filterComponent([t("maintain_KSA_eInvoice")], filterText) && (
+                          {filterComponent(
+                            [t("maintain_KSA_eInvoice")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="maintainKSA_EInvoice"
                               label={t("maintain_KSA_eInvoice")}
-                              disabled={settings?.branchSettings?.maintainTax === false}
+                              disabled={
+                                settings?.branchSettings?.maintainTax === false
+                              }
                               data={settings?.branchSettings}
-                              checked={settings?.branchSettings?.maintainKSA_EInvoice}
+                              checked={
+                                settings?.branchSettings?.maintainKSA_EInvoice
+                              }
                               onChangeData={(data) =>
-                                handleFieldChange("branchSettings",
+                                handleFieldChange(
+                                  "branchSettings",
                                   "maintainKSA_EInvoice",
                                   data.maintainKSA_EInvoice
                                 )
@@ -1809,14 +2272,21 @@ export default function SettingsPage() {
                             />
                           )}
 
-                          {filterComponent([t("apply_KSA_eInvoice_validation_rules")], filterText) && (
+                          {filterComponent(
+                            [t("apply_KSA_eInvoice_validation_rules")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="apply_KSA_EInvoice_Validation_Rules"
                               label={t("apply_KSA_eInvoice_validation_rules")}
-                              checked={settings?.branchSettings?.apply_KSA_EInvoice_Validation_Rules}
+                              checked={
+                                settings?.branchSettings
+                                  ?.apply_KSA_EInvoice_Validation_Rules
+                              }
                               data={settings?.branchSettings}
                               onChangeData={(data) =>
-                                handleFieldChange("branchSettings",
+                                handleFieldChange(
+                                  "branchSettings",
                                   "apply_KSA_EInvoice_Validation_Rules",
                                   data.apply_KSA_EInvoice_Validation_Rules
                                 )
@@ -1824,14 +2294,27 @@ export default function SettingsPage() {
                             />
                           )}
 
-                          {filterComponent([t("create_credit_note_automatically_on_sales_edit")], filterText) && (
+                          {filterComponent(
+                            [
+                              t(
+                                "create_credit_note_automatically_on_sales_edit"
+                              ),
+                            ],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="createCreditNoteAutomaticallyOnSalesEdit"
-                              label={t("create_credit_note_automatically_on_sales_edit")}
+                              label={t(
+                                "create_credit_note_automatically_on_sales_edit"
+                              )}
                               data={settings?.branchSettings}
-                              checked={settings?.branchSettings?.createCreditNoteAutomaticallyOnSalesEdit}
+                              checked={
+                                settings?.branchSettings
+                                  ?.createCreditNoteAutomaticallyOnSalesEdit
+                              }
                               onChangeData={(data) =>
-                                handleFieldChange("branchSettings",
+                                handleFieldChange(
+                                  "branchSettings",
                                   "createCreditNoteAutomaticallyOnSalesEdit",
                                   data.createCreditNoteAutomaticallyOnSalesEdit
                                 )
@@ -1839,37 +2322,56 @@ export default function SettingsPage() {
                             />
                           )}
                         </div>
-                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-3 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-2 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
+                        <div
+                          className={`grid ${
+                            isCompactView
+                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                              : `${
+                                  gridClass ||
+                                  "xxl:grid-cols-3 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1"
+                                } gap-2 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                          }`}
+                        >
                           {filterComponent([t("otp_email")], filterText) && (
                             <>
-                              <div className='flex gap-4 items-center'>
+                              <div className="flex gap-4 items-center">
                                 <ERPInput
                                   id="oTPEmail"
                                   label={t("otp_email")}
                                   value={settings?.mainSettings?.oTPEmail}
                                   data={settings?.mainSettings}
                                   onChangeData={(data) =>
-                                    handleFieldChange("mainSettings", "oTPEmail", data.oTPEmail)
+                                    handleFieldChange(
+                                      "mainSettings",
+                                      "oTPEmail",
+                                      data.oTPEmail
+                                    )
                                   }
                                 />
                                 <ERPButton
                                   title={t("send_otp")}
                                   variant="secondary"
                                   loading={otpSending}
-                                  className='mt-4'
+                                  className="mt-4"
                                   disabled={otpSending}
                                   onClick={() => sendOtp()}
                                 />
                               </div>
-                              <div className='flex gap-4 items-center xxl:mt-4'>
+                              <div className="flex gap-4 items-center xxl:mt-4">
                                 <ERPInput
                                   id="oTPVerification"
                                   label=" "
                                   placeholder="Enter OTP"
                                   data={settings?.mainSettings}
-                                  value={settings?.mainSettings?.oTPVerification}
+                                  value={
+                                    settings?.mainSettings?.oTPVerification
+                                  }
                                   onChangeData={(data) =>
-                                    handleFieldChange("mainSettings", "oTPVerification", data.oTPVerification)
+                                    handleFieldChange(
+                                      "mainSettings",
+                                      "oTPVerification",
+                                      data.oTPVerification
+                                    )
                                   }
                                 />
                                 <ERPButton
@@ -1887,21 +2389,47 @@ export default function SettingsPage() {
                     </div>
                   </div>
                 </div>
-              }
+              )}
             </div>
           </section>
 
-
-          <section key="inventory" ref={el => sectionsRef.current['inventory'] = el} className="mb-8 last:mb-0 space-y-6">
+          <section
+            key="inventory"
+            ref={(el) => (sectionsRef.current["inventory"] = el)}
+            className="mb-8 last:mb-0 space-y-6"
+          >
             {/* General */}
             <div>
-              <div key="inventoryGeneral" ref={el => subItemsRef.current["inventoryGeneral"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventoryGeneral' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("general")}</h1>
+              <div
+                key="inventoryGeneral"
+                ref={(el) => (subItemsRef.current["inventoryGeneral"] = el)}
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventoryGeneral"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("general")}
+                </h1>
                 <div key="inventoryGeneral" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                      {filterComponent([t("coupon_card_account")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("coupon_card_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultCouponSalesAccount"
                           data={settings?.inventorySettings}
@@ -1914,7 +2442,8 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "defaultCouponSalesAccount",
                               data.defaultCouponSalesAccount
                             )
@@ -1923,7 +2452,10 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("default_round_off_account")], filterText) && (
+                      {filterComponent(
+                        [t("default_round_off_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultRoundOffAccount"
                           data={settings?.inventorySettings}
@@ -1936,7 +2468,8 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "defaultRoundOffAccount",
                               data.defaultRoundOffAccount
                             )
@@ -1945,7 +2478,10 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("default_additional_amount_account")], filterText) && (
+                      {filterComponent(
+                        [t("default_additional_amount_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultAdditionalAmountAccount"
                           data={settings?.inventorySettings}
@@ -1958,7 +2494,8 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "defaultAdditionalAmountAccount",
                               data.defaultAdditionalAmountAccount
                             )
@@ -1976,12 +2513,19 @@ export default function SettingsPage() {
                           placeholder={t("enter_the_price_code")}
                           type="Password"
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "priceCode", data.priceCode)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "priceCode",
+                              data.priceCode
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("default_service_spare_warehouse")], filterText) && (
+                      {filterComponent(
+                        [t("default_service_spare_warehouse")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultServiceSpareWareHouse"
                           data={settings?.inventorySettings}
@@ -1993,7 +2537,8 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "defaultServiceSpareWareHouse",
                               data.defaultServiceSpareWareHouse
                             )
@@ -2017,7 +2562,8 @@ export default function SettingsPage() {
                             { value: "Ignore", label: "Ignore" },
                           ]}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "showNegStockWarning",
                               data.showNegStockWarning
                             )
@@ -2026,15 +2572,22 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("maximum_allowed_line_item_amount")], filterText) && (
+                      {filterComponent(
+                        [t("maximum_allowed_line_item_amount")],
+                        filterText
+                      ) && (
                         <ERPInput
                           id="maximum_Allowed_LineItem_Amount"
-                          value={settings?.branchSettings?.maximum_Allowed_LineItem_Amount}
+                          value={
+                            settings?.branchSettings
+                              ?.maximum_Allowed_LineItem_Amount
+                          }
                           data={settings?.branchSettings}
                           type="number"
                           label={t("maximum_allowed_line_item_amount")}
                           onChangeData={(data) =>
-                            handleFieldChange("branchSettings",
+                            handleFieldChange(
+                              "branchSettings",
                               "maximum_Allowed_LineItem_Amount",
                               data.maximum_Allowed_LineItem_Amount
                             )
@@ -2042,7 +2595,10 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("stock_transfer_negative_stock")], filterText) && (
+                      {filterComponent(
+                        [t("stock_transfer_negative_stock")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           field={{
                             id: "stockTransferNegativeStock",
@@ -2053,7 +2609,8 @@ export default function SettingsPage() {
                           label={t("stock_transfer_negative_stock")}
                           data={settings?.productsSettings}
                           onChangeData={(data) => {
-                            handleFieldChange("productsSettings",
+                            handleFieldChange(
+                              "productsSettings",
                               "stockTransferNegativeStock",
                               data.stockTransferNegativeStock
                             );
@@ -2066,14 +2623,20 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("maintain_warehouse")], filterText) && (
+                      {filterComponent(
+                        [t("maintain_warehouse")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="maintainWarehouse"
-                          checked={settings?.inventorySettings.maintainWarehouse}
+                          checked={
+                            settings?.inventorySettings.maintainWarehouse
+                          }
                           data={settings?.inventorySettings}
                           label={t("maintain_warehouse")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "maintainWarehouse",
                               data.maintainWarehouse
                             )
@@ -2084,11 +2647,14 @@ export default function SettingsPage() {
                       {filterComponent([t("print_after_save")], filterText) && (
                         <ERPCheckbox
                           id="printInvAfterSave"
-                          checked={settings?.inventorySettings?.printInvAfterSave}
+                          checked={
+                            settings?.inventorySettings?.printInvAfterSave
+                          }
                           data={settings?.inventorySettings}
                           label={t("print_after_save")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "printInvAfterSave",
                               data.printInvAfterSave
                             )
@@ -2096,14 +2662,21 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("set_product_cost_with_TAX_amount")], filterText) && (
+                      {filterComponent(
+                        [t("set_product_cost_with_TAX_amount")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="setProductCostWithVATAmount"
-                          checked={settings?.inventorySettings.setProductCostWithVATAmount}
+                          checked={
+                            settings?.inventorySettings
+                              .setProductCostWithVATAmount
+                          }
                           data={settings?.inventorySettings}
                           label={t("set_product_cost_with_TAX_amount")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "setProductCostWithVATAmount",
                               data.setProductCostWithVATAmount
                             )
@@ -2111,14 +2684,20 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("show_printer_selection")], filterText) && (
+                      {filterComponent(
+                        [t("show_printer_selection")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showPrinterSelection"
-                          checked={settings?.inventorySettings.showPrinterSelection}
+                          checked={
+                            settings?.inventorySettings.showPrinterSelection
+                          }
                           data={settings?.inventorySettings}
                           label={t("show_printer_selection")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "showPrinterSelection",
                               data.showPrinterSelection
                             )
@@ -2126,14 +2705,21 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("show_product_duplication_message")], filterText) && (
+                      {filterComponent(
+                        [t("show_product_duplication_message")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showProductDuplicationMessage"
-                          checked={settings?.inventorySettings.showProductDuplicationMessage}
+                          checked={
+                            settings?.inventorySettings
+                              .showProductDuplicationMessage
+                          }
                           data={settings?.inventorySettings}
                           label={t("show_product_duplication_message")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "showProductDuplicationMessage",
                               data.showProductDuplicationMessage
                             )
@@ -2142,14 +2728,21 @@ export default function SettingsPage() {
                       )}
 
                       {userSession.countryId == Countries.India &&
-                        filterComponent([t("enable_add_stock_adjustment")], filterText) && (
+                        filterComponent(
+                          [t("enable_add_stock_adjustment")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="enableAddStockAdjustment"
-                            checked={settings?.inventorySettings.enableAddStockAdjustment}
+                            checked={
+                              settings?.inventorySettings
+                                .enableAddStockAdjustment
+                            }
                             data={settings?.inventorySettings}
                             label={t("enable_add_stock_adjustment")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings",
+                              handleFieldChange(
+                                "inventorySettings",
                                 "enableAddStockAdjustment",
                                 data.enableAddStockAdjustment
                               )
@@ -2157,14 +2750,20 @@ export default function SettingsPage() {
                           />
                         )}
 
-                      {filterComponent([t("focus_to_qty_after_barcode")], filterText) && (
+                      {filterComponent(
+                        [t("focus_to_qty_after_barcode")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="focusToQtyAfterBarcode"
                           label={t("focus_to_qty_after_barcode")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.focusToQtyAfterBarcode}
+                          checked={
+                            settings?.productsSettings?.focusToQtyAfterBarcode
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings",
+                            handleFieldChange(
+                              "productsSettings",
                               "focusToQtyAfterBarcode",
                               data.focusToQtyAfterBarcode
                             )
@@ -2179,12 +2778,32 @@ export default function SettingsPage() {
 
             {/* products */}
             <div>
-              <div key="inventoryProducts" ref={el => subItemsRef.current["inventoryProducts"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventoryProducts' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("products")}</h1>
+              <div
+                key="inventoryProducts"
+                ref={(el) => (subItemsRef.current["inventoryProducts"] = el)}
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventoryProducts"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("products")}
+                </h1>
                 <div key="inventoryProducts" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
                       {filterComponent([t("batch_criteria")], filterText) && (
                         <ERPDataCombobox
                           id="batchCriteria"
@@ -2195,7 +2814,13 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           data={settings?.productsSettings}
-                          onChangeData={(data) => handleFieldChange("productsSettings", "batchCriteria", data.batchCriteria)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "productsSettings",
+                              "batchCriteria",
+                              data.batchCriteria
+                            )
+                          }
                           label={t("batch_criteria")}
                         />
                       )}
@@ -2207,7 +2832,13 @@ export default function SettingsPage() {
                           type="number"
                           data={settings?.productsSettings}
                           value={settings?.productsSettings?.marginRoundTo}
-                          onChangeData={(data) => handleFieldChange("productsSettings", "marginRoundTo", data.marginRoundTo)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "productsSettings",
+                              "marginRoundTo",
+                              data.marginRoundTo
+                            )
+                          }
                         />
                       )}
 
@@ -2221,7 +2852,13 @@ export default function SettingsPage() {
                           id="showHSNCodeWarning"
                           label={t("HSN_code")}
                           data={settings?.productsSettings}
-                          onChangeData={(data) => handleFieldChange("productsSettings", "showHSNCodeWarning", data.showHSNCodeWarning)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "productsSettings",
+                              "showHSNCodeWarning",
+                              data.showHSNCodeWarning
+                            )
+                          }
                           options={[
                             { value: 0, label: "Block" },
                             { value: 1, label: "Warn" },
@@ -2232,7 +2869,10 @@ export default function SettingsPage() {
 
                       {userSession.countryId == Countries.India && (
                         <>
-                          {filterComponent([t("LP_priceLess_than_selling_price")], filterText) && (
+                          {filterComponent(
+                            [t("LP_priceLess_than_selling_price")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               field={{
                                 id: "lPPriceLessThanSellingPrice",
@@ -2242,7 +2882,13 @@ export default function SettingsPage() {
                               id="lPPriceLessThanSellingPrice"
                               label={t("LP_priceLess_than_selling_price")}
                               data={settings?.productsSettings}
-                              onChangeData={(data) => handleFieldChange("productsSettings", "lPPriceLessThanSellingPrice", data.lPPriceLessThanSellingPrice)}
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "lPPriceLessThanSellingPrice",
+                                  data.lPPriceLessThanSellingPrice
+                                )
+                              }
                               options={[
                                 { value: 0, label: "Block" },
                                 { value: 1, label: "Warn" },
@@ -2251,7 +2897,10 @@ export default function SettingsPage() {
                             />
                           )}
 
-                          {filterComponent([t("MRP_less_than_sales_price")], filterText) && (
+                          {filterComponent(
+                            [t("MRP_less_than_sales_price")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               field={{
                                 id: "mRPLessThanSalesPrice",
@@ -2261,7 +2910,13 @@ export default function SettingsPage() {
                               id="mRPLessThanSalesPrice"
                               label={t("MRP_less_than_sales_price")}
                               data={settings?.productsSettings}
-                              onChangeData={(data) => handleFieldChange("productsSettings", "mRPLessThanSalesPrice", data.mRPLessThanSalesPrice)}
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "mRPLessThanSalesPrice",
+                                  data.mRPLessThanSalesPrice
+                                )
+                              }
                               options={[
                                 { value: 0, label: "Block" },
                                 { value: 1, label: "Warn" },
@@ -2270,7 +2925,10 @@ export default function SettingsPage() {
                             />
                           )}
 
-                          {filterComponent([t("zero_multi_rate_validate")], filterText) && (
+                          {filterComponent(
+                            [t("zero_multi_rate_validate")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               field={{
                                 id: "zeroMultiRateValidate",
@@ -2280,7 +2938,13 @@ export default function SettingsPage() {
                               id="zeroMultiRateValidate"
                               label={t("zero_multi_rate_validate")}
                               data={settings?.productsSettings}
-                              onChangeData={(data) => handleFieldChange("productsSettings", "zeroMultiRateValidate", data.zeroMultiRateValidate)}
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "zeroMultiRateValidate",
+                                  data.zeroMultiRateValidate
+                                )
+                              }
                               options={[
                                 { value: 0, label: "Block" },
                                 { value: 1, label: "Warn" },
@@ -2291,7 +2955,10 @@ export default function SettingsPage() {
                         </>
                       )}
 
-                      {filterComponent([t("weighing_scale_barcode_type")], filterText) && (
+                      {filterComponent(
+                        [t("weighing_scale_barcode_type")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           field={{
                             id: "weighingScaleBarcodeType",
@@ -2301,60 +2968,107 @@ export default function SettingsPage() {
                           id="weighingScaleBarcodeType"
                           label={t("weighing_scale_barcode_type")}
                           data={settings?.productsSettings}
-                          onChangeData={(data) => handleFieldChange("productsSettings", "weighingScaleBarcodeType", data.weighingScaleBarcodeType)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "productsSettings",
+                              "weighingScaleBarcodeType",
+                              data.weighingScaleBarcodeType
+                            )
+                          }
                           options={[
                             { value: 0, label: "Standard. No Check Digit" },
-                            { value: 1, label: "13 Digit With Check Digit (Qty)" },
-                            { value: 2, label: "13 Digit With Check Digit (Value)" },
-                            { value: 3, label: "13 Digit With Check Digit (Qty/Value)" },
+                            {
+                              value: 1,
+                              label: "13 Digit With Check Digit (Qty)",
+                            },
+                            {
+                              value: 2,
+                              label: "13 Digit With Check Digit (Value)",
+                            },
+                            {
+                              value: 3,
+                              label: "13 Digit With Check Digit (Qty/Value)",
+                            },
                             { value: 4, label: "Ignore" },
                           ]}
                         />
                       )}
 
                       <div>
-                        {filterComponent([t("last_generated_barcode")], filterText) && (
+                        {filterComponent(
+                          [t("last_generated_barcode")],
+                          filterText
+                        ) && (
                           <>
                             <ERPCheckbox
                               id="isLastSystemGeneratedBarcode"
                               label={t("last_generated_barcode")}
                               checked={isLastSystemGeneratedBarcode}
-                              onChange={(data) => setIsLastSystemGeneratedBarcode(data.target.checked)}
+                              onChange={(data) =>
+                                setIsLastSystemGeneratedBarcode(
+                                  data.target.checked
+                                )
+                              }
                             />
 
                             <ERPInput
                               id="lastSystemGeneratedBarcode"
                               label=" "
-                              value={settings?.productsSettings?.lastSystemGeneratedBarcode}
+                              value={
+                                settings?.productsSettings
+                                  ?.lastSystemGeneratedBarcode
+                              }
                               data={settings?.productsSettings}
                               noLabel={true}
                               type="text"
                               disabled={!isLastSystemGeneratedBarcode}
                               onChangeData={(data: any) =>
-                                handleFieldChange("productsSettings", "lastSystemGeneratedBarcode", data.lastSystemGeneratedBarcode)
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "lastSystemGeneratedBarcode",
+                                  data.lastSystemGeneratedBarcode
+                                )
                               }
                             />
                           </>
                         )}
                       </div>
 
-                      {filterComponent([t("weighing_scale_plu_file_path")], filterText) && (
+                      {filterComponent(
+                        [t("weighing_scale_plu_file_path")],
+                        filterText
+                      ) && (
                         <ERPInput
                           id="weighingScalePluFilePath"
-                          value={settings?.miscellaneousSettings?.weighingScalePluFilePath}
+                          value={
+                            settings?.miscellaneousSettings
+                              ?.weighingScalePluFilePath
+                          }
                           data={settings?.miscellaneousSettings}
                           className="flex-grow"
                           label={t("plu_path")}
-                          onChangeData={(data) => handleFieldChange("miscellaneousSettings", "weighingScalePluFilePath", data.weighingScalePluFilePath)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "miscellaneousSettings",
+                              "weighingScalePluFilePath",
+                              data.weighingScalePluFilePath
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("allow_only_scan_product")], filterText) && (
+                      {filterComponent(
+                        [t("allow_only_scan_product")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           data={settings?.productsSettings}
                           id="allowOnlyScanProductMarkedAsWeighingScaleItems"
                           label={t("allow_only_scan_product")}
-                          checked={settings?.productsSettings?.allowOnlyScanProductMarkedAsWeighingScaleItems}
+                          checked={
+                            settings?.productsSettings
+                              ?.allowOnlyScanProductMarkedAsWeighingScaleItems
+                          }
                           onChangeData={(data) =>
                             handleFieldChange(
                               "productsSettings",
@@ -2372,18 +3086,28 @@ export default function SettingsPage() {
                           label={t("allow_multi_rate")}
                           checked={settings?.productsSettings?.allowMultirate}
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "allowMultirate", data.allowMultirate)
+                            handleFieldChange(
+                              "productsSettings",
+                              "allowMultirate",
+                              data.allowMultirate
+                            )
                           }
                         />
                       )}
 
                       {userSession.countryId === Countries.India &&
-                        filterComponent([t("allow_update_multiRate")], filterText) && (
+                        filterComponent(
+                          [t("allow_update_multiRate")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="allowUpdateMultiRateinPurchase"
                             label={t("allow_update_multiRate")}
                             data={settings?.productsSettings}
-                            checked={settings?.productsSettings?.allowUpdateMultiRateinPurchase}
+                            checked={
+                              settings?.productsSettings
+                                ?.allowUpdateMultiRateinPurchase
+                            }
                             onChangeData={(data) =>
                               handleFieldChange(
                                 "productsSettings",
@@ -2401,114 +3125,207 @@ export default function SettingsPage() {
                           data={settings?.productsSettings}
                           checked={settings?.productsSettings?.allowMultiUnits}
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "allowMultiUnits", data.allowMultiUnits)
+                            handleFieldChange(
+                              "productsSettings",
+                              "allowMultiUnits",
+                              data.allowMultiUnits
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("allow_update_sales")], filterText) && (
+                      {filterComponent(
+                        [t("allow_update_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="allowUpdateSalesPriceFromPurchase"
                           label={t("allow_update_sales")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.allowUpdateSalesPriceFromPurchase}
+                          checked={
+                            settings?.productsSettings
+                              ?.allowUpdateSalesPriceFromPurchase
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "allowUpdateSalesPriceFromPurchase", data.allowUpdateSalesPriceFromPurchase)
+                            handleFieldChange(
+                              "productsSettings",
+                              "allowUpdateSalesPriceFromPurchase",
+                              data.allowUpdateSalesPriceFromPurchase
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("set_default_qty_1")], filterText) && (
+                      {filterComponent(
+                        [t("set_default_qty_1")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="setDefaultQty1"
                           data={settings?.productsSettings}
                           label={t("set_default_qty_1")}
                           checked={settings?.productsSettings?.setDefaultQty1}
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "setDefaultQty1", data.setDefaultQty1)
+                            handleFieldChange(
+                              "productsSettings",
+                              "setDefaultQty1",
+                              data.setDefaultQty1
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("set_qty1_for_weighing_scale_item_value_mode")], filterText) && (
+                      {filterComponent(
+                        [t("set_qty1_for_weighing_scale_item_value_mode")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="setQty1ForWeighingScaleItem_ValueMode"
                           data={settings?.productsSettings}
-                          label={t("set_qty1_for_weighing_scale_item_value_mode")}
-                          checked={settings?.productsSettings?.setQty1ForWeighingScaleItem_ValueMode}
+                          label={t(
+                            "set_qty1_for_weighing_scale_item_value_mode"
+                          )}
+                          checked={
+                            settings?.productsSettings
+                              ?.setQty1ForWeighingScaleItem_ValueMode
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "setQty1ForWeighingScaleItem_ValueMode", data.setQty1ForWeighingScaleItem_ValueMode)
+                            handleFieldChange(
+                              "productsSettings",
+                              "setQty1ForWeighingScaleItem_ValueMode",
+                              data.setQty1ForWeighingScaleItem_ValueMode
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("enable_google_translation")], filterText) && (
+                      {filterComponent(
+                        [t("enable_google_translation")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="enableGoogleTranslationOfProductName"
                           label={t("enable_google_translation")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.enableGoogleTranslationOfProductName}
+                          checked={
+                            settings?.productsSettings
+                              ?.enableGoogleTranslationOfProductName
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "enableGoogleTranslationOfProductName", data.enableGoogleTranslationOfProductName)
+                            handleFieldChange(
+                              "productsSettings",
+                              "enableGoogleTranslationOfProductName",
+                              data.enableGoogleTranslationOfProductName
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("include_search_item")], filterText) && (
+                      {filterComponent(
+                        [t("include_search_item")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="includeSearchItemAlias_ItemName2"
                           label={t("include_search_item")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.includeSearchItemAlias_ItemName2}
+                          checked={
+                            settings?.productsSettings
+                              ?.includeSearchItemAlias_ItemName2
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "includeSearchItemAlias_ItemName2", data.includeSearchItemAlias_ItemName2)
+                            handleFieldChange(
+                              "productsSettings",
+                              "includeSearchItemAlias_ItemName2",
+                              data.includeSearchItemAlias_ItemName2
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("advanced_product_searching")], filterText) && (
+                      {filterComponent(
+                        [t("advanced_product_searching")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="advancedProductSearching"
                           label={t("advanced_product_searching")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.advancedProductSearching}
+                          checked={
+                            settings?.productsSettings?.advancedProductSearching
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "advancedProductSearching", data.advancedProductSearching)
+                            handleFieldChange(
+                              "productsSettings",
+                              "advancedProductSearching",
+                              data.advancedProductSearching
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("load_dummy_products")], filterText) && (
+                      {filterComponent(
+                        [t("load_dummy_products")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="loadDummyProducts"
                           label={t("load_dummy_products")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.loadDummyProducts}
+                          checked={
+                            settings?.productsSettings?.loadDummyProducts
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "loadDummyProducts", data.loadDummyProducts)
+                            handleFieldChange(
+                              "productsSettings",
+                              "loadDummyProducts",
+                              data.loadDummyProducts
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("use_popup_window_for_item_search")], filterText) && (
+                      {filterComponent(
+                        [t("use_popup_window_for_item_search")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="usePopupWindowForItemSearch"
                           label={t("use_popup_window_for_item_search")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.usePopupWindowForItemSearch}
+                          checked={
+                            settings?.productsSettings
+                              ?.usePopupWindowForItemSearch
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "usePopupWindowForItemSearch", data.usePopupWindowForItemSearch)
+                            handleFieldChange(
+                              "productsSettings",
+                              "usePopupWindowForItemSearch",
+                              data.usePopupWindowForItemSearch
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("enable_supplier_wise_item_code")], filterText) && (
+                      {filterComponent(
+                        [t("enable_supplier_wise_item_code")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="enableSupplierWiseItemCode"
                           label={t("enable_supplier_wise_item_code")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.enableSupplierWiseItemCode}
-                          onChangeData={(data) => handleFieldChange("productsSettings", "enableSupplierWiseItemCode", data.enableSupplierWiseItemCode)}
+                          checked={
+                            settings?.productsSettings
+                              ?.enableSupplierWiseItemCode
+                          }
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "productsSettings",
+                              "enableSupplierWiseItemCode",
+                              data.enableSupplierWiseItemCode
+                            )
+                          }
                         />
                       )}
                     </div>
@@ -2520,45 +3337,106 @@ export default function SettingsPage() {
             {/* GST settings */}
             {userSession.countryId === Countries.India && (
               <div>
-                <div key="inventoryGSTSettings" ref={el => subItemsRef.current["inventoryGSTSettings"] = el}>
-                  <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventoryGSTSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("gst_settings")}</h1>
+                <div
+                  key="inventoryGSTSettings"
+                  ref={(el) =>
+                    (subItemsRef.current["inventoryGSTSettings"] = el)
+                  }
+                >
+                  <h1
+                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventoryGSTSettings"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                  >
+                    {t("gst_settings")}
+                  </h1>
                   <div key="inventoryGSTSettings" className="space-y-4">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
                       {filterComponent([t("default_purchase")], filterText) && (
                         <>
                           <label>{t("default_purchase")}</label>
                           <ERPCheckbox
                             id="purchaseNormalType"
-                            checked={settings?.gSTTaxesSettings?.purchaseNormalType}
+                            checked={
+                              settings?.gSTTaxesSettings?.purchaseNormalType
+                            }
                             data={settings?.gSTTaxesSettings}
                             label={t("normal")}
-                            onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "purchaseNormalType", data.purchaseNormalType)}
+                            onChangeData={(data: any) =>
+                              handleFieldChange(
+                                "gSTTaxesSettings",
+                                "purchaseNormalType",
+                                data.purchaseNormalType
+                              )
+                            }
                           />
                           <ERPCheckbox
                             id="purchaseInterstateType"
-                            checked={settings?.gSTTaxesSettings?.purchaseInterstateType}
+                            checked={
+                              settings?.gSTTaxesSettings?.purchaseInterstateType
+                            }
                             data={settings?.gSTTaxesSettings}
                             label={t("inter_state")}
-                            onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "purchaseInterstateType", data.purchaseInterstateType)}
+                            onChangeData={(data: any) =>
+                              handleFieldChange(
+                                "gSTTaxesSettings",
+                                "purchaseInterstateType",
+                                data.purchaseInterstateType
+                              )
+                            }
                           />
                           <ERPCheckbox
                             id="purchaseForm62"
                             checked={settings?.gSTTaxesSettings?.purchaseForm62}
                             data={settings?.gSTTaxesSettings}
                             label={t("form_6(2)")}
-                            onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "purchaseForm62", data.purchaseForm62)}
+                            onChangeData={(data: any) =>
+                              handleFieldChange(
+                                "gSTTaxesSettings",
+                                "purchaseForm62",
+                                data.purchaseForm62
+                              )
+                            }
                           />
                         </>
                       )}
                     </div>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
-                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
-                          {filterComponent([t("input_cst_account")], filterText) && (
+                        <div
+                          className={`grid ${
+                            isCompactView
+                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                              : `${
+                                  gridClass ||
+                                  "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                                } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                          }`}
+                        >
+                          {filterComponent(
+                            [t("input_cst_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="inputCSTAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.inputCSTAccount
+                                )
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("input_cst_account")}
                               field={{
@@ -2567,14 +3445,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCSTAccount", data.inputCSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "inputCSTAccount",
+                                  data.inputCSTAccount
+                                )
+                              }
                             />
                           )}
 
-                          {filterComponent([t("output_cst_account")], filterText) && (
+                          {filterComponent(
+                            [t("output_cst_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputCSTAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputCSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.outputCSTAccount
+                                )
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("output_cst_account")}
                               field={{
@@ -2583,14 +3475,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputCSTAccount", data.outputCSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputCSTAccount",
+                                  data.outputCSTAccount
+                                )
+                              }
                             />
                           )}
 
-                          {filterComponent([t("input_cess_account")], filterText) && (
+                          {filterComponent(
+                            [t("input_cess_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="inputCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCessAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.inputCessAccount
+                                )
+                              }
                               field={{
                                 id: "inputCessAccount",
                                 getListUrl: Urls.data_duties_taxes,
@@ -2599,14 +3505,28 @@ export default function SettingsPage() {
                               }}
                               data={settings?.gSTTaxesSettings}
                               label={t("input_cess_account")}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCessAccount", data.inputCessAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "inputCessAccount",
+                                  data.inputCessAccount
+                                )
+                              }
                             />
                           )}
 
-                          {filterComponent([t("output_cess_account")], filterText) && (
+                          {filterComponent(
+                            [t("output_cess_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputCessAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.outputCessAccount
+                                )
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("output_cess_account")}
                               field={{
@@ -2615,14 +3535,29 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputCessAccount", data.outputCessAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputCessAccount",
+                                  data.outputCessAccount
+                                )
+                              }
                             />
                           )}
 
-                          {filterComponent([t("input_add_cess_account")], filterText) && (
+                          {filterComponent(
+                            [t("input_add_cess_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="inputAddCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputAddCessAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings
+                                    ?.inputAddCessAccount
+                                )
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("input_add_cess_account")}
                               field={{
@@ -2631,14 +3566,29 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputAddCessAccount", data.inputAddCessAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "inputAddCessAccount",
+                                  data.inputAddCessAccount
+                                )
+                              }
                             />
                           )}
 
-                          {filterComponent([t("output_add_cess_account")], filterText) && (
+                          {filterComponent(
+                            [t("output_add_cess_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputAddCessAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputAddCessAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings
+                                    ?.outputAddCessAccount
+                                )
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("output_add_cess_account")}
                               field={{
@@ -2647,14 +3597,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputAddCessAccount", data.outputAddCessAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputAddCessAccount",
+                                  data.outputAddCessAccount
+                                )
+                              }
                             />
                           )}
 
-                          {filterComponent([t("expenses_tax_account")], filterText) && (
+                          {filterComponent(
+                            [t("expenses_tax_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="expensesTaxAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.expensesTaxAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.expensesTaxAccount
+                                )
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("expenses_tax_account")}
                               field={{
@@ -2663,14 +3627,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "expensesTaxAccount", data.expensesTaxAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "expensesTaxAccount",
+                                  data.expensesTaxAccount
+                                )
+                              }
                             />
                           )}
 
-                          {filterComponent([t("income_tax_account")], filterText) && (
+                          {filterComponent(
+                            [t("income_tax_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="incomeTaxAccount"
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.incomeTaxAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.incomeTaxAccount
+                                )
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("income_tax_account")}
                               field={{
@@ -2679,7 +3657,13 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "incomeTaxAccount", data.incomeTaxAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "incomeTaxAccount",
+                                  data.incomeTaxAccount
+                                )
+                              }
                             />
                           )}
                         </div>
@@ -2687,12 +3671,29 @@ export default function SettingsPage() {
                     </ERPDisableEnable>
                     <ERPDisableEnable targetCount={5}>
                       {(hasPermitted) => (
-                        <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
-                          {filterComponent([t("input_SGST_account")], filterText) && (
+                        <div
+                          className={`grid ${
+                            isCompactView
+                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                              : `${
+                                  gridClass ||
+                                  "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                                } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                          }`}
+                        >
+                          {filterComponent(
+                            [t("input_SGST_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="inputSGSTAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputSGSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.inputSGSTAccount
+                                )
+                              }
                               label={t("input_SGST_account")}
                               field={{
                                 id: "inputSGSTAccount",
@@ -2700,14 +3701,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputSGSTAccount", data.inputSGSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "inputSGSTAccount",
+                                  data.inputSGSTAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("output_SGST_account")], filterText) && (
+                          {filterComponent(
+                            [t("output_SGST_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputSGSTAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputSGSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.outputSGSTAccount
+                                )
+                              }
                               label={t("output_SGST_account")}
                               field={{
                                 id: "outputSGSTAccount",
@@ -2715,14 +3730,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputSGSTAccount", data.outputSGSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputSGSTAccount",
+                                  data.outputSGSTAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("input_CGST_account")], filterText) && (
+                          {filterComponent(
+                            [t("input_CGST_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="inputCGSTAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCGSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.inputCGSTAccount
+                                )
+                              }
                               label={t("input_CGST_account")}
                               field={{
                                 id: "inputCGSTAccount",
@@ -2730,14 +3759,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCGSTAccount", data.inputCGSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "inputCGSTAccount",
+                                  data.inputCGSTAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("output_CGST_account")], filterText) && (
+                          {filterComponent(
+                            [t("output_CGST_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputCGSTAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputCGSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.outputCGSTAccount
+                                )
+                              }
                               label={t("output_CGST_account")}
                               field={{
                                 id: "outputCGSTAccount",
@@ -2745,14 +3788,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputCGSTAccount", data.outputCGSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputCGSTAccount",
+                                  data.outputCGSTAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("input_IGST_account")], filterText) && (
+                          {filterComponent(
+                            [t("input_IGST_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="inputIGSTAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputIGSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.inputIGSTAccount
+                                )
+                              }
                               label={t("input_IGST_account")}
                               field={{
                                 id: "inputIGSTAccount",
@@ -2760,14 +3817,28 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputIGSTAccount", data.inputIGSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "inputIGSTAccount",
+                                  data.inputIGSTAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("output_IGST_account")], filterText) && (
+                          {filterComponent(
+                            [t("output_IGST_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputIGSTAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputIGSTAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings?.outputIGSTAccount
+                                )
+                              }
                               label={t("output_IGST_account")}
                               field={{
                                 id: "outputIGSTAccount",
@@ -2775,14 +3846,29 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputIGSTAccount", data.outputIGSTAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputIGSTAccount",
+                                  data.outputIGSTAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("TCS_paid_account")], filterText) && (
+                          {filterComponent(
+                            [t("TCS_paid_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputTCSPaidAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputTCSPaidAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings
+                                    ?.outputTCSPaidAccount
+                                )
+                              }
                               label={t("TCS_paid_account")}
                               field={{
                                 id: "outputTCSPaidAccount",
@@ -2790,14 +3876,29 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputTCSPaidAccount", data.outputTCSPaidAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputTCSPaidAccount",
+                                  data.outputTCSPaidAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("TCS_payable_account")], filterText) && (
+                          {filterComponent(
+                            [t("TCS_payable_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputTCSPayableAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputTCSPayableAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings
+                                    ?.outputTCSPayableAccount
+                                )
+                              }
                               label={t("TCS_payable_account")}
                               field={{
                                 id: "outputTCSPayableAccount",
@@ -2805,14 +3906,29 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputTCSPayableAccount", data.outputTCSPayableAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputTCSPayableAccount",
+                                  data.outputTCSPayableAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("input_calamity_cess_account")], filterText) && (
+                          {filterComponent(
+                            [t("input_calamity_cess_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="inputCalamityCessAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.inputCalamityCessAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings
+                                    ?.inputCalamityCessAccount
+                                )
+                              }
                               label={t("input_calamity_cess_account")}
                               field={{
                                 id: "inputCalamityCessAccount",
@@ -2820,14 +3936,29 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "inputCalamityCessAccount", data.inputCalamityCessAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "inputCalamityCessAccount",
+                                  data.inputCalamityCessAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("output_calamity_cess_account")], filterText) && (
+                          {filterComponent(
+                            [t("output_calamity_cess_account")],
+                            filterText
+                          ) && (
                             <ERPDataCombobox
                               id="outputSalesCalamityCessAccount"
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.outputSalesCalamityCessAccount)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings
+                                    ?.outputSalesCalamityCessAccount
+                                )
+                              }
                               label={t("output_calamity_cess_account")}
                               field={{
                                 id: "outputSalesCalamityCessAccount",
@@ -2835,42 +3966,100 @@ export default function SettingsPage() {
                                 valueKey: "id",
                                 labelKey: "name",
                               }}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "outputSalesCalamityCessAccount", data.outputSalesCalamityCessAccount)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "outputSalesCalamityCessAccount",
+                                  data.outputSalesCalamityCessAccount
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("consider_sales_price_as_calamity_included")], filterText) && (
+                          {filterComponent(
+                            [t("consider_sales_price_as_calamity_included")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="considerSalesPriceasCalamityIncluded"
-                              checked={settings?.gSTTaxesSettings?.considerSalesPriceasCalamityIncluded}
+                              checked={
+                                settings?.gSTTaxesSettings
+                                  ?.considerSalesPriceasCalamityIncluded
+                              }
                               data={settings?.gSTTaxesSettings}
-                              disabled={!hasPermitted && !isNullOrUndefinedOrEmpty(settings?.gSTTaxesSettings?.considerSalesPriceasCalamityIncluded)}
-                              label={t("consider_sales_price_as_calamity_included")}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "considerSalesPriceasCalamityIncluded", data.considerSalesPriceasCalamityIncluded)}
+                              disabled={
+                                !hasPermitted &&
+                                !isNullOrUndefinedOrEmpty(
+                                  settings?.gSTTaxesSettings
+                                    ?.considerSalesPriceasCalamityIncluded
+                                )
+                              }
+                              label={t(
+                                "consider_sales_price_as_calamity_included"
+                              )}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "considerSalesPriceasCalamityIncluded",
+                                  data.considerSalesPriceasCalamityIncluded
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("enable_karnataka_tax_report_format")], filterText) && (
+                          {filterComponent(
+                            [t("enable_karnataka_tax_report_format")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="enableKarnatakaTaxReportFormat"
-                              checked={settings?.gSTTaxesSettings?.enableKarnatakaTaxReportFormat}
+                              checked={
+                                settings?.gSTTaxesSettings
+                                  ?.enableKarnatakaTaxReportFormat
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("enable_karnataka_tax_report_format")}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "enableKarnatakaTaxReportFormat", data.enableKarnatakaTaxReportFormat)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "enableKarnatakaTaxReportFormat",
+                                  data.enableKarnatakaTaxReportFormat
+                                )
+                              }
                             />
                           )}
-                          {filterComponent([t("show_prev._forms")], filterText) && (
+                          {filterComponent(
+                            [t("show_prev._forms")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="showPrevForms"
-                              checked={settings?.gSTTaxesSettings?.showPrevForms}
+                              checked={
+                                settings?.gSTTaxesSettings?.showPrevForms
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("show_prev._forms")}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "showPrevForms", data.showPrevForms)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "showPrevForms",
+                                  data.showPrevForms
+                                )
+                              }
                             />
                           )}
                         </div>
                       )}
                     </ERPDisableEnable>
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
-                      <div className='flex gap-4 items-center'>
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                      }`}
+                    >
+                      <div className="flex gap-4 items-center">
                         {filterComponent([t("enable_ewb")], filterText) && (
                           <>
                             <ERPCheckbox
@@ -2878,45 +4067,82 @@ export default function SettingsPage() {
                               checked={settings?.gSTTaxesSettings?.enableEWB}
                               data={settings?.gSTTaxesSettings}
                               label={t("enable_ewb")}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "enableEWB", data.enableEWB)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "enableEWB",
+                                  data.enableEWB
+                                )
+                              }
                             />
                             <ERPButton
                               title={t("ewb_taxPro")}
-                              onClick={() => handleShowComponent('ewb')}
+                              onClick={() => handleShowComponent("ewb")}
                               disabled={!settings?.gSTTaxesSettings?.enableEWB}
                             />
                           </>
                         )}
                       </div>
 
-                      <div className='flex gap-4 items-center'>
-                        {filterComponent([t("enable_e-invoice")], filterText) && (
+                      <div className="flex gap-4 items-center">
+                        {filterComponent(
+                          [t("enable_e-invoice")],
+                          filterText
+                        ) && (
                           <>
                             <ERPCheckbox
                               id="enableEInvoiceIndia"
-                              checked={settings?.gSTTaxesSettings?.enableEInvoiceIndia}
+                              checked={
+                                settings?.gSTTaxesSettings?.enableEInvoiceIndia
+                              }
                               data={settings?.gSTTaxesSettings}
                               label={t("enable_e-invoice")}
-                              onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "enableEInvoiceIndia", data.enableEInvoiceIndia)}
+                              onChangeData={(data: any) =>
+                                handleFieldChange(
+                                  "gSTTaxesSettings",
+                                  "enableEInvoiceIndia",
+                                  data.enableEInvoiceIndia
+                                )
+                              }
                             />
                             <ERPButton
                               title={t("EInvoiceTaxPro")}
-                              onClick={() => handleShowComponent('eInvoice')}
-                              disabled={!settings?.gSTTaxesSettings?.enableEInvoiceIndia}
+                              onClick={() => handleShowComponent("eInvoice")}
+                              disabled={
+                                !settings?.gSTTaxesSettings?.enableEInvoiceIndia
+                              }
                             />
                           </>
                         )}
                       </div>
                     </div>
-                    <PopupComponent isOpen={showEInvoicePopup} onClose={() => setShowEInvoicePopup(false)}>
+                    <PopupComponent
+                      isOpen={showEInvoicePopup}
+                      onClose={() => setShowEInvoicePopup(false)}
+                    >
                       <EInvoiceTaxPro />
                     </PopupComponent>
 
-                    <PopupComponent isOpen={showEWBPopup} onClose={() => setShowEWBPopup(false)}>
+                    <PopupComponent
+                      isOpen={showEWBPopup}
+                      onClose={() => setShowEWBPopup(false)}
+                    >
                       <EWBTaxPro />
                     </PopupComponent>
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg`}`}>
-                      {filterComponent([t("e-invoice_provider_type")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("e-invoice_provider_type")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           field={{
                             id: "einvoiceProvider",
@@ -2926,7 +4152,13 @@ export default function SettingsPage() {
                           id="einvoiceProvider"
                           label={t("e-invoice_provider_type")}
                           data={settings?.gSTTaxesSettings}
-                          onChangeData={(data) => { handleFieldChange("gSTTaxesSettings", "einvoiceProvider", data.einvoiceProvider) }}
+                          onChangeData={(data) => {
+                            handleFieldChange(
+                              "gSTTaxesSettings",
+                              "einvoiceProvider",
+                              data.einvoiceProvider
+                            );
+                          }}
                           options={[
                             { value: "Clear Tax", label: "Clear Tax" },
                             { value: "Tax Pro", label: "Tax Pro" },
@@ -2939,7 +4171,13 @@ export default function SettingsPage() {
                           value={settings?.gSTTaxesSettings?.eInvoiceAuthToken}
                           data={settings?.gSTTaxesSettings}
                           label={t("clear_tax_token")}
-                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "eInvoiceAuthToken", data.eInvoiceAuthToken)}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "gSTTaxesSettings",
+                              "eInvoiceAuthToken",
+                              data.eInvoiceAuthToken
+                            )
+                          }
                         />
                       )}
                       {filterComponent([t("clear_tax_id")], filterText) && (
@@ -2948,7 +4186,13 @@ export default function SettingsPage() {
                           value={settings?.gSTTaxesSettings?.eInvoiceOwnerID}
                           data={settings?.gSTTaxesSettings}
                           label={t("clear_tax_id")}
-                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "eInvoiceOwnerID", data.eInvoiceOwnerID)}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "gSTTaxesSettings",
+                              "eInvoiceOwnerID",
+                              data.eInvoiceOwnerID
+                            )
+                          }
                         />
                       )}
                     </div>
@@ -2957,12 +4201,32 @@ export default function SettingsPage() {
               </div>
             )}
             {userSession.countryId === Countries.Saudi && (
-              <div key="inventoryTaxSettings" ref={el => subItemsRef.current["inventoryTaxSettings"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventoryTaxSettings' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("tax_settings")}</h1>
-                <div className='border border-solid border-[#e3e3e3] p-4 rounded-lg'>
+              <div
+                key="inventoryTaxSettings"
+                ref={(el) => (subItemsRef.current["inventoryTaxSettings"] = el)}
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventoryTaxSettings"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("tax_settings")}
+                </h1>
+                <div className="border border-solid border-[#e3e3e3] p-4 rounded-lg">
                   <div key="inventoryTaxSettings" className="space-y-4">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4`}`}>
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4`
+                      }`}
+                    >
                       {filterComponent([t("default_purchase")], filterText) && (
                         <>
                           <ERPDataCombobox
@@ -2976,7 +4240,11 @@ export default function SettingsPage() {
                               labelKey: "FormType",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings", "purchaseFormType", data.purchaseFormType)
+                              handleFieldChange(
+                                "taxSettings",
+                                "purchaseFormType",
+                                data.purchaseFormType
+                              )
                             }
                             label={t("default_purchase")}
                           />
@@ -2992,7 +4260,11 @@ export default function SettingsPage() {
                               labelKey: "FormType",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings", "salesFormType", data.salesFormType)
+                              handleFieldChange(
+                                "taxSettings",
+                                "salesFormType",
+                                data.salesFormType
+                              )
                             }
                             label={t("sales_form_type")}
                           />
@@ -3007,7 +4279,11 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings", "purchaseTaxAccount", data.purchaseTaxAccount)
+                              handleFieldChange(
+                                "taxSettings",
+                                "purchaseTaxAccount",
+                                data.purchaseTaxAccount
+                              )
                             }
                             label={t("purchase_tax_ledger")}
                           />
@@ -3022,11 +4298,15 @@ export default function SettingsPage() {
                               labelKey: "name",
                             }}
                             onChangeData={(data: any) =>
-                              handleFieldChange("taxSettings", "salesTaxAccount", data.salesTaxAccount)
+                              handleFieldChange(
+                                "taxSettings",
+                                "salesTaxAccount",
+                                data.salesTaxAccount
+                              )
                             }
                             label={t("sales_tax_ledger")}
                           />
-                          {1 != 1 &&
+                          {1 != 1 && (
                             <>
                               <ERPDataCombobox
                                 id="purchaseCSTAccount"
@@ -3040,7 +4320,11 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings", "purchaseCSTAccount", data.purchaseCSTAccount)
+                                  handleFieldChange(
+                                    "taxSettings",
+                                    "purchaseCSTAccount",
+                                    data.purchaseCSTAccount
+                                  )
                                 }
                                 label={t("purchase_cst_account")}
                               />
@@ -3056,7 +4340,11 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings", "salesCSTAccount", data.salesCSTAccount)
+                                  handleFieldChange(
+                                    "taxSettings",
+                                    "salesCSTAccount",
+                                    data.salesCSTAccount
+                                  )
                                 }
                                 label={t("sales_cst_account")}
                               />
@@ -3072,7 +4360,11 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings", "expensesTaxAccount", data.expensesTaxAccount)
+                                  handleFieldChange(
+                                    "taxSettings",
+                                    "expensesTaxAccount",
+                                    data.expensesTaxAccount
+                                  )
                                 }
                                 label={t("expenses_tax_account")}
                               />
@@ -3088,12 +4380,16 @@ export default function SettingsPage() {
                                   labelKey: "name",
                                 }}
                                 onChangeData={(data: any) =>
-                                  handleFieldChange("taxSettings", "incomeTaxAccount", data.incomeTaxAccount)
+                                  handleFieldChange(
+                                    "taxSettings",
+                                    "incomeTaxAccount",
+                                    data.incomeTaxAccount
+                                  )
                                 }
                                 label={t("income_tax_account")}
                               />
                             </>
-                          }
+                          )}
                         </>
                       )}
                     </div>
@@ -3103,13 +4399,36 @@ export default function SettingsPage() {
             )}
 
             <div>
-              <div key="inventoryPurchase" ref={el => subItemsRef.current["inventoryPurchase"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventoryPurchase' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("purchase")}</h1>
+              <div
+                key="inventoryPurchase"
+                ref={(el) => (subItemsRef.current["inventoryPurchase"] = el)}
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventoryPurchase"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("purchase")}
+                </h1>
                 <div key="inventoryPurchase" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                      {filterComponent([t("default_purchase_account")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("default_purchase_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultPurchaseAcc"
                           data={settings?.inventorySettings}
@@ -3121,13 +4440,20 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "defaultPurchaseAcc", data.defaultPurchaseAcc)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultPurchaseAcc",
+                              data.defaultPurchaseAcc
+                            )
                           }
                           label={t("default_purchase_account")}
                         />
                       )}
 
-                      {filterComponent([t("default_purchase_return_account")], filterText) && (
+                      {filterComponent(
+                        [t("default_purchase_return_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultPurchaseReturnAcc"
                           data={settings?.inventorySettings}
@@ -3139,13 +4465,20 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "defaultPurchaseReturnAcc", data.defaultPurchaseReturnAcc)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultPurchaseReturnAcc",
+                              data.defaultPurchaseReturnAcc
+                            )
                           }
                           label={t("default_purchase_return_account")}
                         />
                       )}
 
-                      {filterComponent([t("bill_discount_given_ledger")], filterText) && (
+                      {filterComponent(
+                        [t("bill_discount_given_ledger")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultBillDiscGivenLdg"
                           data={settings?.inventorySettings}
@@ -3157,13 +4490,20 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "defaultBillDiscGivenLdg", data.defaultBillDiscGivenLdg)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultBillDiscGivenLdg",
+                              data.defaultBillDiscGivenLdg
+                            )
                           }
                           label={t("bill_discount_given_ledger")}
                         />
                       )}
 
-                      {filterComponent([t("unit_price_decimal_points")], filterText) && (
+                      {filterComponent(
+                        [t("unit_price_decimal_points")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           field={{
                             id: "unitPrice_decimalPoint",
@@ -3173,9 +4513,15 @@ export default function SettingsPage() {
                           id="unitPrice_decimalPoint"
                           label={t("unit_price_decimal_points")}
                           data={settings?.mainSettings}
-                          defaultData={settings?.mainSettings?.unitPrice_decimalPoint}
+                          defaultData={
+                            settings?.mainSettings?.unitPrice_decimalPoint
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("mainSettings", "unitPrice_decimalPoint", data.unitPrice_decimalPoint)
+                            handleFieldChange(
+                              "mainSettings",
+                              "unitPrice_decimalPoint",
+                              data.unitPrice_decimalPoint
+                            )
                           }
                           options={[
                             { value: 0, label: "0" },
@@ -3188,7 +4534,10 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("default_purchase_assets_account")], filterText) && (
+                      {filterComponent(
+                        [t("default_purchase_assets_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultPurchaseAssetsAccount"
                           field={{
@@ -3199,95 +4548,221 @@ export default function SettingsPage() {
                           data={settings?.accountsSettings}
                           label={t("default_purchase_assets_account")}
                           options={[
-                            { value: 'All', label: 'All' },
-                            { value: 'Customer', label: 'Customer' },
-                            { value: 'Supplier', label: 'Supplier' },
-                            { value: 'ReferalAgent', label: 'Referal Agent' },
-                            { value: 'CashInHand', label: 'Cash In Hand' },
-                            { value: 'BankAccount', label: 'Bank Account' },
-                            { value: 'SuspenseAccount', label: 'Suspense Account' },
-                            { value: 'CustomerAndSupplier', label: 'Customer and Supplier' },
-                            { value: 'Cash_Bank', label: 'Cash & Bank' },
-                            { value: 'Cash_Bank_Suppliers', label: 'Cash & Bank - Suppliers' },
-                            { value: 'Cash_Bank_Customers', label: 'Cash & Bank - Customers' },
-                            { value: 'Cash_Bank_Suppliers_Customers', label: 'Cash & Bank - Suppliers & Customers' },
-                            { value: 'Sales_Account', label: 'Sales Account' },
-                            { value: 'Purchase_Account', label: 'Purchase Account' },
-                            { value: 'Salaries', label: 'Salaries' },
-                            { value: 'Discount_Received', label: 'Discount Received' },
-                            { value: 'Discount_Given', label: 'Discount Given' },
-                            { value: 'Incentive_Given', label: 'Incentive Given' },
-                            { value: 'Salary_Account', label: 'Salary Account' },
-                            { value: 'Job_Works', label: 'Job Works' },
-                            { value: 'Branch_Receivable', label: 'Branch Receivable' },
-                            { value: 'SalesAndDirectIncome', label: 'Sales and Direct Income' },
-                            { value: 'PurchaseAndDirectExpense', label: 'Purchase and Direct Expense' },
-                            { value: 'Cash_Bank_Suppliers_Customers_Employees', label: 'Cash & Bank - Suppliers, Customers & Employees' },
-                            { value: 'Cash_Bank_Customers_Employees', label: 'Cash & Bank - Customers & Employees' },
-                            { value: 'Branch_Payable', label: 'Branch Payable' },
-                            { value: 'Branch_Recv_Payable', label: 'Branch Receivable & Payable' },
-                            { value: 'Expenses', label: 'Expenses' },
-                            { value: 'Incomes', label: 'Incomes' },
-                            { value: 'Credit_Note_Ledgers', label: 'Credit Note Ledgers' },
-                            { value: 'DebitNote_Note_Ledgers', label: 'Debit Note Ledgers' },
-                            { value: 'Liabilities_Expenses_All_Without_Salaries', label: 'Liabilities & Expenses (Excl. Salaries)' },
-                            { value: 'Current_Assets', label: 'Current Assets' },
-                            { value: 'Fixed_Assets', label: 'Fixed Assets' },
-                            { value: 'Indirect_Expenses', label: 'Indirect Expenses' },
-                            { value: 'Indirect_Income', label: 'Indirect Income' },
+                            { value: "All", label: "All" },
+                            { value: "Customer", label: "Customer" },
+                            { value: "Supplier", label: "Supplier" },
+                            { value: "ReferalAgent", label: "Referal Agent" },
+                            { value: "CashInHand", label: "Cash In Hand" },
+                            { value: "BankAccount", label: "Bank Account" },
+                            {
+                              value: "SuspenseAccount",
+                              label: "Suspense Account",
+                            },
+                            {
+                              value: "CustomerAndSupplier",
+                              label: "Customer and Supplier",
+                            },
+                            { value: "Cash_Bank", label: "Cash & Bank" },
+                            {
+                              value: "Cash_Bank_Suppliers",
+                              label: "Cash & Bank - Suppliers",
+                            },
+                            {
+                              value: "Cash_Bank_Customers",
+                              label: "Cash & Bank - Customers",
+                            },
+                            {
+                              value: "Cash_Bank_Suppliers_Customers",
+                              label: "Cash & Bank - Suppliers & Customers",
+                            },
+                            { value: "Sales_Account", label: "Sales Account" },
+                            {
+                              value: "Purchase_Account",
+                              label: "Purchase Account",
+                            },
+                            { value: "Salaries", label: "Salaries" },
+                            {
+                              value: "Discount_Received",
+                              label: "Discount Received",
+                            },
+                            {
+                              value: "Discount_Given",
+                              label: "Discount Given",
+                            },
+                            {
+                              value: "Incentive_Given",
+                              label: "Incentive Given",
+                            },
+                            {
+                              value: "Salary_Account",
+                              label: "Salary Account",
+                            },
+                            { value: "Job_Works", label: "Job Works" },
+                            {
+                              value: "Branch_Receivable",
+                              label: "Branch Receivable",
+                            },
+                            {
+                              value: "SalesAndDirectIncome",
+                              label: "Sales and Direct Income",
+                            },
+                            {
+                              value: "PurchaseAndDirectExpense",
+                              label: "Purchase and Direct Expense",
+                            },
+                            {
+                              value: "Cash_Bank_Suppliers_Customers_Employees",
+                              label:
+                                "Cash & Bank - Suppliers, Customers & Employees",
+                            },
+                            {
+                              value: "Cash_Bank_Customers_Employees",
+                              label: "Cash & Bank - Customers & Employees",
+                            },
+                            {
+                              value: "Branch_Payable",
+                              label: "Branch Payable",
+                            },
+                            {
+                              value: "Branch_Recv_Payable",
+                              label: "Branch Receivable & Payable",
+                            },
+                            { value: "Expenses", label: "Expenses" },
+                            { value: "Incomes", label: "Incomes" },
+                            {
+                              value: "Credit_Note_Ledgers",
+                              label: "Credit Note Ledgers",
+                            },
+                            {
+                              value: "DebitNote_Note_Ledgers",
+                              label: "Debit Note Ledgers",
+                            },
+                            {
+                              value:
+                                "Liabilities_Expenses_All_Without_Salaries",
+                              label: "Liabilities & Expenses (Excl. Salaries)",
+                            },
+                            {
+                              value: "Current_Assets",
+                              label: "Current Assets",
+                            },
+                            { value: "Fixed_Assets", label: "Fixed Assets" },
+                            {
+                              value: "Indirect_Expenses",
+                              label: "Indirect Expenses",
+                            },
+                            {
+                              value: "Indirect_Income",
+                              label: "Indirect Income",
+                            },
                           ]}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPurchaseAssetsAccount', data.defaultPurchaseAssetsAccount)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "defaultPurchaseAssetsAccount",
+                              data.defaultPurchaseAssetsAccount
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("carry_forward_purchase")], filterText) && (
+                      {filterComponent(
+                        [t("carry_forward_purchase")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="carryForwardPurchaseOrderQtyToPurchase"
-                          checked={settings?.inventorySettings?.carryForwardPurchaseOrderQtyToPurchase}
+                          checked={
+                            settings?.inventorySettings
+                              ?.carryForwardPurchaseOrderQtyToPurchase
+                          }
                           data={settings?.inventorySettings}
                           label={t("carry_forward_purchase")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "carryForwardPurchaseOrderQtyToPurchase", data.carryForwardPurchaseOrderQtyToPurchase)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "carryForwardPurchaseOrderQtyToPurchase",
+                              data.carryForwardPurchaseOrderQtyToPurchase
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("set_product_cost_as_purchase_price")], filterText) && (
+                      {filterComponent(
+                        [t("set_product_cost_as_purchase_price")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="setProductCostasPurchasePrice"
-                          checked={settings?.inventorySettings?.setProductCostasPurchasePrice}
+                          checked={
+                            settings?.inventorySettings
+                              ?.setProductCostasPurchasePrice
+                          }
                           data={settings?.inventorySettings}
                           label={t("set_product_cost_as_purchase_price")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "setProductCostasPurchasePrice", data.setProductCostasPurchasePrice)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "setProductCostasPurchasePrice",
+                              data.setProductCostasPurchasePrice
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("set_last_purchase")], filterText) && (
+                      {filterComponent(
+                        [t("set_last_purchase")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="setLastPurchaseRateAsProctRate"
-                          checked={settings?.inventorySettings?.setLastPurchaseRateAsProctRate}
+                          checked={
+                            settings?.inventorySettings
+                              ?.setLastPurchaseRateAsProctRate
+                          }
                           data={settings?.inventorySettings}
                           label={t("set_last_purchase")}
                           onChangeData={(data: any) => {
-                            const newValue = data.setLastPurchaseRateAsProctRate;
-                            if (!newValue && settings?.inventorySettings?.setProductCostasPurchasePrice) {
-                              handleFieldChange("inventorySettings", "setProductCostasPurchasePrice", false);
+                            const newValue =
+                              data.setLastPurchaseRateAsProctRate;
+                            if (
+                              !newValue &&
+                              settings?.inventorySettings
+                                ?.setProductCostasPurchasePrice
+                            ) {
+                              handleFieldChange(
+                                "inventorySettings",
+                                "setProductCostasPurchasePrice",
+                                false
+                              );
                             }
-                            handleFieldChange("inventorySettings", "setLastPurchaseRateAsProctRate", newValue);
+                            handleFieldChange(
+                              "inventorySettings",
+                              "setLastPurchaseRateAsProctRate",
+                              newValue
+                            );
                           }}
                         />
                       )}
 
-                      {filterComponent([t("is_reference_number")], filterText) && (
+                      {filterComponent(
+                        [t("is_reference_number")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="isReferenceNumberMandatoryInPurchase"
-                          checked={settings?.inventorySettings?.isReferenceNumberMandatoryInPurchase}
+                          checked={
+                            settings?.inventorySettings
+                              ?.isReferenceNumberMandatoryInPurchase
+                          }
                           data={settings?.inventorySettings}
                           label={t("is_reference_number")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "isReferenceNumberMandatoryInPurchase", data.isReferenceNumberMandatoryInPurchase)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "isReferenceNumberMandatoryInPurchase",
+                              data.isReferenceNumberMandatoryInPurchase
+                            )
                           }
                         />
                       )}
@@ -3295,96 +4770,173 @@ export default function SettingsPage() {
                       {filterComponent([t("set_avg_purchase")], filterText) && (
                         <ERPCheckbox
                           id="setAvgPurchaseCostWithStdPurRate"
-                          checked={settings?.inventorySettings?.setAvgPurchaseCostWithStdPurRate}
+                          checked={
+                            settings?.inventorySettings
+                              ?.setAvgPurchaseCostWithStdPurRate
+                          }
                           data={settings?.inventorySettings}
                           label={t("set_avg_purchase")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "setAvgPurchaseCostWithStdPurRate", data.setAvgPurchaseCostWithStdPurRate)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "setAvgPurchaseCostWithStdPurRate",
+                              data.setAvgPurchaseCostWithStdPurRate
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("update_purchase_price")], filterText) && (
+                      {filterComponent(
+                        [t("update_purchase_price")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="updatePurhasePriceUpdateOnPurchaseBT"
-                          checked={settings?.inventorySettings?.updatePurhasePriceUpdateOnPurchaseBT}
+                          checked={
+                            settings?.inventorySettings
+                              ?.updatePurhasePriceUpdateOnPurchaseBT
+                          }
                           data={settings?.inventorySettings}
                           label={t("update_purchase_price")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "updatePurhasePriceUpdateOnPurchaseBT", data.updatePurhasePriceUpdateOnPurchaseBT)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "updatePurhasePriceUpdateOnPurchaseBT",
+                              data.updatePurhasePriceUpdateOnPurchaseBT
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("need_PO_approval_for_printout")], filterText) && (
+                      {filterComponent(
+                        [t("need_PO_approval_for_printout")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="needPOApprovalForPrintout"
-                          checked={settings?.inventorySettings?.needPOApprovalForPrintout}
+                          checked={
+                            settings?.inventorySettings
+                              ?.needPOApprovalForPrintout
+                          }
                           data={settings?.inventorySettings}
                           label={t("need_PO_approval_for_printout")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "needPOApprovalForPrintout", data.needPOApprovalForPrintout)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "needPOApprovalForPrintout",
+                              data.needPOApprovalForPrintout
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("show_account_receivable_in_purchase")], filterText) && (
+                      {filterComponent(
+                        [t("show_account_receivable_in_purchase")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showAccountReceivableInPurchase"
-                          checked={settings?.inventorySettings?.showAccountReceivableInPurchase}
+                          checked={
+                            settings?.inventorySettings
+                              ?.showAccountReceivableInPurchase
+                          }
                           data={settings?.inventorySettings}
                           label={t("show_account_receivable_in_purchase")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "showAccountReceivableInPurchase", data.showAccountReceivableInPurchase)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "showAccountReceivableInPurchase",
+                              data.showAccountReceivableInPurchase
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("check_listed_product_prices_in_purchase_invoice")], filterText) && (
+                      {filterComponent(
+                        [t("check_listed_product_prices_in_purchase_invoice")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="loadListedProductPrices"
-                          label={t("check_listed_product_prices_in_purchase_invoice")}
+                          label={t(
+                            "check_listed_product_prices_in_purchase_invoice"
+                          )}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.loadListedProductPrices}
+                          checked={
+                            settings?.productsSettings?.loadListedProductPrices
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "loadListedProductPrices", data.loadListedProductPrices)
+                            handleFieldChange(
+                              "productsSettings",
+                              "loadListedProductPrices",
+                              data.loadListedProductPrices
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("show_purchase_cost_change_warning")], filterText) && (
+                      {filterComponent(
+                        [t("show_purchase_cost_change_warning")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showPurchaseCostChangeWarning"
                           label={t("show_purchase_cost_change_warning")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.showPurchaseCostChangeWarning}
+                          checked={
+                            settings?.productsSettings
+                              ?.showPurchaseCostChangeWarning
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "showPurchaseCostChangeWarning", data.showPurchaseCostChangeWarning)
+                            handleFieldChange(
+                              "productsSettings",
+                              "showPurchaseCostChangeWarning",
+                              data.showPurchaseCostChangeWarning
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("enable_import_purchase")], filterText) && (
+                      {filterComponent(
+                        [t("enable_import_purchase")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="enableImportPurchase"
                           disabled
                           label={t("enable_import_purchase")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.enableImportPurchase}
+                          checked={
+                            settings?.productsSettings?.enableImportPurchase
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "enableImportPurchase", data.enableImportPurchase)
+                            handleFieldChange(
+                              "productsSettings",
+                              "enableImportPurchase",
+                              data.enableImportPurchase
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("maintain_untallied_bills")], filterText) && (
+                      {filterComponent(
+                        [t("maintain_untallied_bills")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="maintainUntalliedBills"
-                          checked={settings?.miscellaneousSettings?.maintainUntalliedBills}
+                          checked={
+                            settings?.miscellaneousSettings
+                              ?.maintainUntalliedBills
+                          }
                           data={settings?.miscellaneousSettings}
                           label={t("maintain_untallied_bills")}
                           onChangeData={(data) =>
-                            handleFieldChange("miscellaneousSettings", "maintainUntalliedBills", data.maintainUntalliedBills)
+                            handleFieldChange(
+                              "miscellaneousSettings",
+                              "maintainUntalliedBills",
+                              data.maintainUntalliedBills
+                            )
                           }
                         />
                       )}
@@ -3396,13 +4948,36 @@ export default function SettingsPage() {
 
             {/* sales */}
             <div>
-              <div key="inventorySales" ref={el => subItemsRef.current["inventorySales"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventorySales' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("sales")}</h1>
+              <div
+                key="inventorySales"
+                ref={(el) => (subItemsRef.current["inventorySales"] = el)}
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventorySales"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("sales")}
+                </h1>
                 <div key="inventorySales" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                      {filterComponent([t("default_sales_account")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("default_sales_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultSalesAcc"
                           data={settings?.inventorySettings}
@@ -3415,13 +4990,20 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "defaultSalesAcc", data.defaultSalesAcc)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultSalesAcc",
+                              data.defaultSalesAcc
+                            )
                           }
                           label={t("default_sales_account")}
                         />
                       )}
 
-                      {filterComponent([t("default_sales_return_account")], filterText) && (
+                      {filterComponent(
+                        [t("default_sales_return_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultSalesReturnAcc"
                           data={settings?.inventorySettings}
@@ -3434,7 +5016,8 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "defaultSalesReturnAcc",
                               data.defaultSalesReturnAcc
                             )
@@ -3443,38 +5026,23 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("bill_discount_received_ledger")], filterText) && (
-                        <ERPDataCombobox
-                          id="defaultBillDiscRecvdLdg"
-                          data={settings?.inventorySettings}
-                          field={{
-                            id: "defaultBillDiscRecvdLdg",
-                            // required: true,
-                            getListUrl: Urls.data_acc_ledgers,
-                            params: `ledgerID=0&ledgerType=${LedgerType.Discount_Received}`,
-                            valueKey: "id",
-                            labelKey: "name",
-                          }}
-                          onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
-                              "defaultBillDiscRecvdLdg",
-                              data.defaultBillDiscRecvdLdg
-                            )
-                          }
-                          label={t("bill_discount_received_ledger")}
-                        />
-                      )}
-
                       <div>
-                        {filterComponent([t("service_warranty_inv_accounts")], filterText) && (
+                        {filterComponent(
+                          [t("service_warranty_inv_accounts")],
+                          filterText
+                        ) && (
                           <>
                             <ERPCheckbox
                               id="serviceWarrantyInvAccounts"
-                              checked={settings?.inventorySettings?.serviceWarrantyInvAccounts}
+                              checked={
+                                settings?.inventorySettings
+                                  ?.serviceWarrantyInvAccounts
+                              }
                               data={settings?.inventorySettings}
                               label={t("service_warranty_inv_accounts")}
                               onChangeData={(data: any) =>
-                                handleFieldChange("inventorySettings",
+                                handleFieldChange(
+                                  "inventorySettings",
                                   "serviceWarrantyInvAccounts",
                                   data.serviceWarrantyInvAccounts
                                 )
@@ -3482,7 +5050,10 @@ export default function SettingsPage() {
                             />
                             <ERPDataCombobox
                               id="serviceWarrantyInvLedgerID"
-                              disabled={settings?.inventorySettings?.serviceWarrantyInvAccounts !== true}
+                              disabled={
+                                settings?.inventorySettings
+                                  ?.serviceWarrantyInvAccounts !== true
+                              }
                               data={settings?.inventorySettings}
                               field={{
                                 id: "serviceWarrantyInvLedgerID",
@@ -3493,7 +5064,8 @@ export default function SettingsPage() {
                                 labelKey: "name",
                               }}
                               onChangeData={(data: any) =>
-                                handleFieldChange("inventorySettings",
+                                handleFieldChange(
+                                  "inventorySettings",
                                   "serviceWarrantyInvLedgerID",
                                   data.serviceWarrantyInvLedgerID
                                 )
@@ -3506,16 +5078,23 @@ export default function SettingsPage() {
                       </div>
 
                       <div>
-                        {filterComponent([t("service_non_warranty_inv_accounts")], filterText) && (
+                        {filterComponent(
+                          [t("service_non_warranty_inv_accounts")],
+                          filterText
+                        ) && (
                           <>
                             <ERPCheckbox
                               id="serviceNonWarrantyInvAccounts"
-                              checked={settings?.inventorySettings?.serviceNonWarrantyInvAccounts}
+                              checked={
+                                settings?.inventorySettings
+                                  ?.serviceNonWarrantyInvAccounts
+                              }
                               data={settings?.inventorySettings}
                               // noLabel={true}
                               label={t("service_non_warranty_inv_accounts")}
                               onChangeData={(data: any) =>
-                                handleFieldChange("inventorySettings",
+                                handleFieldChange(
+                                  "inventorySettings",
                                   "serviceNonWarrantyInvAccounts",
                                   data.serviceNonWarrantyInvAccounts
                                 )
@@ -3524,7 +5103,8 @@ export default function SettingsPage() {
                             <ERPDataCombobox
                               id="serviceNONWarrantyInvLedgerID"
                               disabled={
-                                settings?.inventorySettings?.serviceNonWarrantyInvAccounts !== true
+                                settings?.inventorySettings
+                                  ?.serviceNonWarrantyInvAccounts !== true
                               }
                               data={settings?.inventorySettings}
                               field={{
@@ -3535,19 +5115,25 @@ export default function SettingsPage() {
                                 labelKey: "name",
                               }}
                               onChangeData={(data: any) =>
-                                handleFieldChange("inventorySettings",
+                                handleFieldChange(
+                                  "inventorySettings",
                                   "serviceNONWarrantyInvLedgerID",
                                   data.serviceWarrantyInvLedgerID
                                 )
                               }
-                              label={t("service_non_warranty_inv_accounts_info")}
+                              label={t(
+                                "service_non_warranty_inv_accounts_info"
+                              )}
                               noLabel={true}
                             />
                           </>
                         )}
                       </div>
 
-                      {filterComponent([t("block_bill_discount")], filterText) && (
+                      {filterComponent(
+                        [t("block_bill_discount")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="blockBillDiscount"
                           field={{
@@ -3559,7 +5145,10 @@ export default function SettingsPage() {
                           options={[
                             { value: "No", label: "No" },
                             { value: "On POS", label: "On POS" },
-                            { value: "On Standard Sales", label: "On Standard Sales" },
+                            {
+                              value: "On Standard Sales",
+                              label: "On Standard Sales",
+                            },
                             { value: "On Both", label: "On Both" },
                             {
                               value: "If Authentication Fails",
@@ -3567,7 +5156,8 @@ export default function SettingsPage() {
                             },
                           ]}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "blockBillDiscount",
                               data.blockBillDiscount
                             )
@@ -3576,24 +5166,36 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("discount_authorization_if_discount_above")], filterText) && (
+                      {filterComponent(
+                        [t("discount_authorization_if_discount_above")],
+                        filterText
+                      ) && (
                         <ERPInput
                           id="discontAuthorizationIfDiscountAbove"
-                          value={settings?.inventorySettings?.discontAuthorizationIfDiscountAbove}
+                          value={
+                            settings?.inventorySettings
+                              ?.discontAuthorizationIfDiscountAbove
+                          }
                           data={settings?.inventorySettings}
                           label={t("discount_authorization_if_discount_above")}
                           placeholder={t("enter_discount_threshold")}
                           type="number"
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "discontAuthorizationIfDiscountAbove",
-                              parseFloat(data.discontAuthorizationIfDiscountAbove)
+                              parseFloat(
+                                data.discontAuthorizationIfDiscountAbove
+                              )
                             )
                           }
                         />
                       )}
 
-                      {filterComponent([t("if_less_sales_rate")], filterText) && (
+                      {filterComponent(
+                        [t("if_less_sales_rate")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="showRateWarning"
                           data={settings?.inventorySettings}
@@ -3607,10 +5209,14 @@ export default function SettingsPage() {
                           options={[
                             { value: "Warn", label: "Warn" },
                             { value: "Block", label: "Block" },
-                            { value: "Ignore", label: "Ignore" }
+                            { value: "Ignore", label: "Ignore" },
                           ]}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "showRateWarning", data.showRateWarning)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "showRateWarning",
+                              data.showRateWarning
+                            )
                           }
                           label={t("if_less_sales_rate")}
                         />
@@ -3627,18 +5233,28 @@ export default function SettingsPage() {
                             labelKey: "label",
                           }}
                           options={[
-                            { value: 'Block', label: 'Block' },
-                            { value: 'Warn', label: 'Warn' },
-                            { value: 'Ignore', label: 'Ignore' },
-                            { value: 'Allow Cash Sales', label: 'Allow Cash Sales' },
+                            { value: "Block", label: "Block" },
+                            { value: "Warn", label: "Warn" },
+                            { value: "Ignore", label: "Ignore" },
+                            {
+                              value: "Allow Cash Sales",
+                              label: "Allow Cash Sales",
+                            },
                           ]}
                           onChangeData={(data) =>
-                            handleFieldChange("accountsSettings", "blockOnCreditLimit", data.blockOnCreditLimit)
+                            handleFieldChange(
+                              "accountsSettings",
+                              "blockOnCreditLimit",
+                              data.blockOnCreditLimit
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("sales_rounding_method")], filterText) && (
+                      {filterComponent(
+                        [t("sales_rounding_method")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           field={{
                             id: "pOSRoundingMethod",
@@ -3649,7 +5265,11 @@ export default function SettingsPage() {
                           label={t("sales_rounding_method")}
                           data={settings?.mainSettings}
                           onChangeData={(data) =>
-                            handleFieldChange("mainSettings", "pOSRoundingMethod", data.pOSRoundingMethod)
+                            handleFieldChange(
+                              "mainSettings",
+                              "pOSRoundingMethod",
+                              data.pOSRoundingMethod
+                            )
                           }
                           options={[
                             { value: "Normal", label: "Normal" },
@@ -3659,16 +5279,31 @@ export default function SettingsPage() {
                             { value: "Round to 0.25", label: "Round to 0.25" },
                             { value: "Round to 0.50", label: "Round to 0.50" },
                             { value: "Round to 0.10", label: "Round to 0.10" },
-                            { value: "Floor Round to 0.50", label: "Floor Round to 0.50" },
-                            { value: "Floor Round to 0.25", label: "Floor Round to 0.25" },
-                            { value: "Floor Round to 0.10", label: "Floor Round to 0.10" },
+                            {
+                              value: "Floor Round to 0.50",
+                              label: "Floor Round to 0.50",
+                            },
+                            {
+                              value: "Floor Round to 0.25",
+                              label: "Floor Round to 0.25",
+                            },
+                            {
+                              value: "Floor Round to 0.10",
+                              label: "Floor Round to 0.10",
+                            },
                             { value: "Not Set", label: "Not Set" },
-                            { value: "Round to 0.010", label: "Round to 0.010" },
+                            {
+                              value: "Round to 0.010",
+                              label: "Round to 0.010",
+                            },
                           ]}
                         />
                       )}
 
-                      {filterComponent([t("default_sales_return_payable_acc")], filterText) && (
+                      {filterComponent(
+                        [t("default_sales_return_payable_acc")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultSalesReturnPayableAcc"
                           disabled
@@ -3682,13 +5317,20 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "defaultSalesReturnPayableAcc", data.defaultSalesReturnPayableAcc)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultSalesReturnPayableAcc",
+                              data.defaultSalesReturnPayableAcc
+                            )
                           }
                           label={t("default_sales_return_payable_acc")}
                         />
                       )}
 
-                      {filterComponent([t("bill_discount_given_ledger")], filterText) && (
+                      {filterComponent(
+                        [t("bill_discount_given_ledger")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultBillDiscGivenLdg"
                           data={settings?.inventorySettings}
@@ -3700,32 +5342,20 @@ export default function SettingsPage() {
                             labelKey: "name",
                           }}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "defaultBillDiscGivenLdg", data.defaultBillDiscGivenLdg)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultBillDiscGivenLdg",
+                              data.defaultBillDiscGivenLdg
+                            )
                           }
                           label={t("bill_discount_given_ledger")}
                         />
                       )}
 
-                      {filterComponent([t("barcode_label")], filterText) && (
-                        <ERPDataCombobox
-                          id="defaultBarcodeLabel"
-                          disabled
-                          data={settings?.inventorySettings}
-                          field={{
-                            id: "defaultBarcodeLabel",
-                            required: false,
-                            valueKey: "id",
-                            labelKey: "label",
-                          }}
-                          options={[{ value: "Default.lba", label: "Default.lba" }]}
-                          onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "defaultBarcodeLabel", data.defaultBarcodeLabel)
-                          }
-                          label={t("barcode_label")}
-                        />
-                      )}
-
-                      {filterComponent([t("default_opening_stock_ledger")], filterText) && (
+                      {filterComponent(
+                        [t("default_opening_stock_ledger")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultOpeningStockValueAcc"
                           data={settings?.accountsSettings}
@@ -3737,11 +5367,20 @@ export default function SettingsPage() {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultOpeningStockValueAcc', data.defaultOpeningStockValueAcc)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "defaultOpeningStockValueAcc",
+                              data.defaultOpeningStockValueAcc
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("default_PDC_receivable_account")], filterText) && (
+                      {filterComponent(
+                        [t("default_PDC_receivable_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultPDCReceivableAccount"
                           disabled={!settings?.accountsSettings?.allowPostPDC}
@@ -3754,11 +5393,20 @@ export default function SettingsPage() {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCReceivableAccount', data.defaultPDCReceivableAccount)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "defaultPDCReceivableAccount",
+                              data.defaultPDCReceivableAccount
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("default_PDC_payable_account")], filterText) && (
+                      {filterComponent(
+                        [t("default_PDC_payable_account")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultPDCPayableAccount"
                           disabled={!settings?.accountsSettings?.allowPostPDC}
@@ -3771,7 +5419,13 @@ export default function SettingsPage() {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'defaultPDCPayableAccount', data.defaultPDCPayableAccount)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "defaultPDCPayableAccount",
+                              data.defaultPDCPayableAccount
+                            )
+                          }
                         />
                       )}
 
@@ -3787,29 +5441,56 @@ export default function SettingsPage() {
                             valueKey: "id",
                             labelKey: "name",
                           }}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", "defaultCustomerLedgerID", data.defaultCustomerLedgerID)}
-                          disabled={!settings?.accountsSettings?.setDefaultCustomerInSales}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "defaultCustomerLedgerID",
+                              data.defaultCustomerLedgerID
+                            )
+                          }
+                          disabled={
+                            !settings?.accountsSettings
+                              ?.setDefaultCustomerInSales
+                          }
                         />
                       )}
 
-                      {filterComponent([t("set_default_customer_in_sales")], filterText) && (
+                      {filterComponent(
+                        [t("set_default_customer_in_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="setDefaultCustomerInSales"
-                          checked={settings?.accountsSettings?.setDefaultCustomerInSales}
+                          checked={
+                            settings?.accountsSettings
+                              ?.setDefaultCustomerInSales
+                          }
                           data={settings?.accountsSettings}
                           label={t("set_default_customer_in_sales")}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", "setDefaultCustomerInSales", data.setDefaultCustomerInSales)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "setDefaultCustomerInSales",
+                              data.setDefaultCustomerInSales
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("set_authorization_in_sales")], filterText) && (
+                      {filterComponent(
+                        [t("set_authorization_in_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="setAuthorizationinSales"
-                          checked={settings?.inventorySettings?.setAuthorizationinSales}
+                          checked={
+                            settings?.inventorySettings?.setAuthorizationinSales
+                          }
                           data={settings?.inventorySettings}
                           label={t("set_authorization_in_sales")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "setAuthorizationinSales",
                               data.setAuthorizationinSales
                             )
@@ -3817,14 +5498,21 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("block_non_stock_serial_selling")], filterText) && (
+                      {filterComponent(
+                        [t("block_non_stock_serial_selling")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="blockNonStockSerialSelling"
-                          checked={settings?.inventorySettings?.blockNonStockSerialSelling}
+                          checked={
+                            settings?.inventorySettings
+                              ?.blockNonStockSerialSelling
+                          }
                           data={settings?.inventorySettings}
                           label={t("block_non_stock_serial_selling")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings",
+                            handleFieldChange(
+                              "inventorySettings",
                               "blockNonStockSerialSelling",
                               data.blockNonStockSerialSelling
                             )
@@ -3832,26 +5520,46 @@ export default function SettingsPage() {
                         />
                       )}
 
-                      {filterComponent([t("show_transit_mode")], filterText) && (
+                      {filterComponent(
+                        [t("show_transit_mode")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showTransitModeStockTransferAlert"
-                          checked={settings?.inventorySettings?.showTransitModeStockTransferAlert}
+                          checked={
+                            settings?.inventorySettings
+                              ?.showTransitModeStockTransferAlert
+                          }
                           data={settings?.inventorySettings}
                           label={t("show_transit_mode")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "showTransitModeStockTransferAlert", data.showTransitModeStockTransferAlert)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "showTransitModeStockTransferAlert",
+                              data.showTransitModeStockTransferAlert
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("show_account_payable_in_sales")], filterText) && (
+                      {filterComponent(
+                        [t("show_account_payable_in_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showAccountPayableInSales"
-                          checked={settings?.inventorySettings?.showAccountPayableInSales}
+                          checked={
+                            settings?.inventorySettings
+                              ?.showAccountPayableInSales
+                          }
                           data={settings?.inventorySettings}
                           label={t("show_account_payable_in_sales")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "showAccountPayableInSales", data.showAccountPayableInSales)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "showAccountPayableInSales",
+                              data.showAccountPayableInSales
+                            )
                           }
                         />
                       )}
@@ -3863,63 +5571,116 @@ export default function SettingsPage() {
                           data={settings?.inventorySettings}
                           label={t("hold_sales_man")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "holdSalesMan", data.holdSalesMan)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "holdSalesMan",
+                              data.holdSalesMan
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("show_non_stock_items_in_sales")], filterText) && (
+                      {filterComponent(
+                        [t("show_non_stock_items_in_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showNonStockItemsinSales"
-                          checked={settings?.inventorySettings?.showNonStockItemsinSales}
+                          checked={
+                            settings?.inventorySettings
+                              ?.showNonStockItemsinSales
+                          }
                           data={settings?.inventorySettings}
                           label={t("show_non_stock_items_in_sales")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "showNonStockItemsinSales", data.showNonStockItemsinSales)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "showNonStockItemsinSales",
+                              data.showNonStockItemsinSales
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("mobile_number_mandatory_in_sales")], filterText) && (
+                      {filterComponent(
+                        [t("mobile_number_mandatory_in_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="mobileNumberMandotryInSales"
-                          checked={settings?.inventorySettings?.mobileNumberMandotryInSales}
+                          checked={
+                            settings?.inventorySettings
+                              ?.mobileNumberMandotryInSales
+                          }
                           data={settings?.inventorySettings}
                           label={t("mobile_number_mandatory_in_sales")}
                           onChangeData={(data: any) =>
-                            handleFieldChange("inventorySettings", "mobileNumberMandotryInSales", data.mobileNumberMandotryInSales)
+                            handleFieldChange(
+                              "inventorySettings",
+                              "mobileNumberMandotryInSales",
+                              data.mobileNumberMandotryInSales
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("show_tender_window_in_sales")], filterText) && (
+                      {filterComponent(
+                        [t("show_tender_window_in_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showTenderDialogInSales"
-                          checked={settings?.accountsSettings?.showTenderDialogInSales}
+                          checked={
+                            settings?.accountsSettings?.showTenderDialogInSales
+                          }
                           data={settings?.accountsSettings}
                           label={t("show_tender_window_in_sales")}
-                          onChangeData={(data) => handleFieldChange('accountsSettings', 'showTenderDialogInSales', data.showTenderDialogInSales)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "showTenderDialogInSales",
+                              data.showTenderDialogInSales
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("allow_multipayment_mode")], filterText) && (
+                      {filterComponent(
+                        [t("allow_multipayment_mode")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="allowMultiPayments"
-                          checked={settings?.accountsSettings?.allowMultiPayments}
+                          checked={
+                            settings?.accountsSettings?.allowMultiPayments
+                          }
                           data={settings?.accountsSettings}
                           label={t("allow_multipayment_mode")}
-                          onChangeData={(data) => handleFieldChange('accountsSettings', 'allowMultiPayments', data.allowMultiPayments)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "allowMultiPayments",
+                              data.allowMultiPayments
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("allow_sales_route/area")], filterText) && (
+                      {filterComponent(
+                        [t("allow_sales_route/area")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="allowSalesRouteArea"
                           label={t("allow_sales_route/area")}
                           data={settings?.mainSettings}
                           checked={settings?.mainSettings?.allowSalesRouteArea}
                           onChangeData={(data) =>
-                            handleFieldChange("mainSettings", "allowSalesRouteArea", data.allowSalesRouteArea)
+                            handleFieldChange(
+                              "mainSettings",
+                              "allowSalesRouteArea",
+                              data.allowSalesRouteArea
+                            )
                           }
                         />
                       )}
@@ -3929,110 +5690,197 @@ export default function SettingsPage() {
                           id="maintainSalesRouteCreditLimit"
                           label={t("maintain_sales")}
                           data={settings?.mainSettings}
-                          disabled={!settings?.mainSettings?.allowSalesRouteArea}
-                          checked={settings?.mainSettings?.maintainSalesRouteCreditLimit}
+                          disabled={
+                            !settings?.mainSettings?.allowSalesRouteArea
+                          }
+                          checked={
+                            settings?.mainSettings
+                              ?.maintainSalesRouteCreditLimit
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("mainSettings", "maintainSalesRouteCreditLimit", data.maintainSalesRouteCreditLimit)
+                            handleFieldChange(
+                              "mainSettings",
+                              "maintainSalesRouteCreditLimit",
+                              data.maintainSalesRouteCreditLimit
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("show_employees_in_sales")], filterText) && (
+                      {filterComponent(
+                        [t("show_employees_in_sales")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showEmployeesInSales"
-                          checked={settings?.accountsSettings?.showEmployeesInSales}
+                          checked={
+                            settings?.accountsSettings?.showEmployeesInSales
+                          }
                           data={settings?.accountsSettings}
                           label={t("show_employees_in_sales")}
-                          onChangeData={(data) => handleFieldChange('accountsSettings', 'showEmployeesInSales', data.showEmployeesInSales)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "showEmployeesInSales",
+                              data.showEmployeesInSales
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("stop_scanning_(Sales)")], filterText) && (
+                      {filterComponent(
+                        [t("stop_scanning_(Sales)")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="stopScanningOnWrongBarcodeInSales"
                           label={t("stop_scanning_(Sales)")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.stopScanningOnWrongBarcodeInSales}
+                          checked={
+                            settings?.productsSettings
+                              ?.stopScanningOnWrongBarcodeInSales
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "stopScanningOnWrongBarcodeInSales", data.stopScanningOnWrongBarcodeInSales)
+                            handleFieldChange(
+                              "productsSettings",
+                              "stopScanningOnWrongBarcodeInSales",
+                              data.stopScanningOnWrongBarcodeInSales
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("load_customer_last_sales_rate")], filterText) && (
+                      {filterComponent(
+                        [t("load_customer_last_sales_rate")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="loadCustomerLastRate"
                           label={t("load_customer_last_sales_rate")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.loadCustomerLastRate}
+                          checked={
+                            settings?.productsSettings?.loadCustomerLastRate
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "loadCustomerLastRate", data.loadCustomerLastRate)
+                            handleFieldChange(
+                              "productsSettings",
+                              "loadCustomerLastRate",
+                              data.loadCustomerLastRate
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("allow_manual_product")], filterText) && (
+                      {filterComponent(
+                        [t("allow_manual_product")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="allowMannualProductSelectionInSales"
                           label={t("allow_manual_product")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.allowMannualProductSelectionInSales}
+                          checked={
+                            settings?.productsSettings
+                              ?.allowMannualProductSelectionInSales
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "allowMannualProductSelectionInSales", data.allowMannualProductSelectionInSales)
+                            handleFieldChange(
+                              "productsSettings",
+                              "allowMannualProductSelectionInSales",
+                              data.allowMannualProductSelectionInSales
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("show_rate_(tax_inclusive)")], filterText) && (
+                      {filterComponent(
+                        [t("show_rate_(tax_inclusive)")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="showRateBeforeTax"
                           label={t("show_rate_(tax_inclusive)")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.showRateBeforeTax}
+                          checked={
+                            settings?.productsSettings?.showRateBeforeTax
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "showRateBeforeTax", data.showRateBeforeTax)
+                            handleFieldChange(
+                              "productsSettings",
+                              "showRateBeforeTax",
+                              data.showRateBeforeTax
+                            )
                           }
                         />
                       )}
 
                       {userSession.countryId == Countries.India &&
-                        filterComponent([t("enable_order_management")], filterText) && (
+                        filterComponent(
+                          [t("enable_order_management")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="enableOrderMangment"
                             disabled
                             label={t("enable_order_management")}
                             data={settings?.productsSettings}
-                            checked={settings?.productsSettings?.enableOrderMangment}
+                            checked={
+                              settings?.productsSettings?.enableOrderMangment
+                            }
                             onChangeData={(data) =>
-                              handleFieldChange("productsSettings", "enableOrderMangment", data.enableOrderMangment)
+                              handleFieldChange(
+                                "productsSettings",
+                                "enableOrderMangment",
+                                data.enableOrderMangment
+                              )
                             }
                           />
                         )}
 
-                      {filterComponent([t("enable_multi_warehouse_billing")], filterText) && (
+                      {filterComponent(
+                        [t("enable_multi_warehouse_billing")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="enableMultiWarehouseBilling"
                           label={t("enable_multi_warehouse_billing")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.enableMultiWarehouseBilling}
+                          checked={
+                            settings?.productsSettings
+                              ?.enableMultiWarehouseBilling
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "enableMultiWarehouseBilling", data.enableMultiWarehouseBilling)
+                            handleFieldChange(
+                              "productsSettings",
+                              "enableMultiWarehouseBilling",
+                              data.enableMultiWarehouseBilling
+                            )
                           }
                         />
                       )}
 
-                      <ERPDisableEnable targetCount={15} >
+                      <ERPDisableEnable targetCount={15}>
                         {(hasPermitted = false) => (
                           <>
                             {hasPermitted == true &&
-                              filterComponent([t("allow_sales_detailed_edit")], filterText) && (
+                              filterComponent(
+                                [t("allow_sales_detailed_edit")],
+                                filterText
+                              ) && (
                                 <ERPCheckbox
                                   id="allowSalesDetailedEdit"
-                                  checked={settings?.miscellaneousSettings?.allowSalesDetailedEdit}
+                                  checked={
+                                    settings?.miscellaneousSettings
+                                      ?.allowSalesDetailedEdit
+                                  }
                                   data={settings?.miscellaneousSettings}
                                   label={t("allow_sales_detailed_edit")}
                                   onChangeData={(data) =>
-                                    handleFieldChange("miscellaneousSettings", "allowSalesDetailedEdit", data.allowSalesDetailedEdit)
+                                    handleFieldChange(
+                                      "miscellaneousSettings",
+                                      "allowSalesDetailedEdit",
+                                      data.allowSalesDetailedEdit
+                                    )
                                   }
                                 />
                               )}
@@ -4041,66 +5889,171 @@ export default function SettingsPage() {
                       </ERPDisableEnable>
 
                       {userSession.countryId != Countries.India &&
-                        filterComponent([t("enable_sales_invoice_draft_option")], filterText) && (
+                        filterComponent(
+                          [t("enable_sales_invoice_draft_option")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="enableSalesInvoiceDraftOption"
-                            checked={settings?.inventorySettings?.enableSalesInvoiceDraftOption}
+                            checked={
+                              settings?.inventorySettings
+                                ?.enableSalesInvoiceDraftOption
+                            }
                             data={settings?.inventorySettings}
                             label={t("enable_sales_invoice_draft_option")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "enableSalesInvoiceDraftOption", data.enableSalesInvoiceDraftOption)
+                              handleFieldChange(
+                                "inventorySettings",
+                                "enableSalesInvoiceDraftOption",
+                                data.enableSalesInvoiceDraftOption
+                              )
                             }
                           />
                         )}
 
                       {userSession.countryId != Countries.India &&
-                        filterComponent([t("show_cash_sales_separate_menu")], filterText) && (
+                        filterComponent(
+                          [t("show_cash_sales_separate_menu")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="showCashSalesSeperateMenu"
-                            checked={settings?.inventorySettings?.showCashSalesSeperateMenu}
+                            checked={
+                              settings?.inventorySettings
+                                ?.showCashSalesSeperateMenu
+                            }
                             data={settings?.inventorySettings}
                             label={t("show_cash_sales_separate_menu")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "showCashSalesSeperateMenu", data.showCashSalesSeperateMenu)
+                              handleFieldChange(
+                                "inventorySettings",
+                                "showCashSalesSeperateMenu",
+                                data.showCashSalesSeperateMenu
+                              )
                             }
                           />
                         )}
 
-                      {filterComponent([t("enable_tax_on_bill_discount")], filterText) && (
+                      {filterComponent(
+                        [t("enable_tax_on_bill_discount")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="enableTaxOnBillDiscount"
                           label={t("enable_tax_on_bill_discount")}
                           data={settings?.branchSettings}
-                          checked={settings?.branchSettings?.enableTaxOnBillDiscount}
+                          checked={
+                            settings?.branchSettings?.enableTaxOnBillDiscount
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "enableTaxOnBillDiscount", data.enableTaxOnBillDiscount)
+                            handleFieldChange(
+                              "branchSettings",
+                              "enableTaxOnBillDiscount",
+                              data.enableTaxOnBillDiscount
+                            )
                           }
                         />
                       )}
 
-                      {applicationSettings != undefined && (applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Hypermarket || applicationSettings?.mainSettings?.maintainBusinessType == BusinessType.Supermarket) &&
-                        filterComponent([t("show_party_balance_in_sales")], filterText) && (
+                      {applicationSettings != undefined &&
+                        (applicationSettings?.mainSettings
+                          ?.maintainBusinessType == BusinessType.Hypermarket ||
+                          applicationSettings?.mainSettings
+                            ?.maintainBusinessType ==
+                            BusinessType.Supermarket) &&
+                        filterComponent(
+                          [t("show_party_balance_in_sales")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="showPartyBalanceInSales"
-                            checked={settings?.accountsSettings?.showPartyBalanceInSales}
+                            checked={
+                              settings?.accountsSettings
+                                ?.showPartyBalanceInSales
+                            }
                             data={settings?.accountsSettings}
                             label={t("show_party_balance_in_sales")}
-                            onChangeData={(data) => handleFieldChange("accountsSettings", 'showPartyBalanceInSales', data.showPartyBalanceInSales)}
+                            onChangeData={(data) =>
+                              handleFieldChange(
+                                "accountsSettings",
+                                "showPartyBalanceInSales",
+                                data.showPartyBalanceInSales
+                              )
+                            }
                           />
                         )}
 
                       {userSession.countryId != Countries.India &&
-                        filterComponent([t("block_hold_items")], filterText) && (
+                        filterComponent(
+                          [t("block_hold_items")],
+                          filterText
+                        ) && (
                           <ERPCheckbox
                             id="blockHoldItems"
-                            checked={settings?.inventorySettings?.blockHoldItems}
+                            checked={
+                              settings?.inventorySettings?.blockHoldItems
+                            }
                             data={settings?.inventorySettings}
                             label={t("block_hold_items")}
                             onChangeData={(data: any) =>
-                              handleFieldChange("inventorySettings", "blockHoldItems", data.blockHoldItems)
+                              handleFieldChange(
+                                "inventorySettings",
+                                "blockHoldItems",
+                                data.blockHoldItems
+                              )
                             }
                           />
                         )}
+
+                      {filterComponent([t("barcode_label")], filterText) && (
+                        <ERPDataCombobox
+                          id="defaultBarcodeLabel"
+                          disabled
+                          data={settings?.inventorySettings}
+                          field={{
+                            id: "defaultBarcodeLabel",
+                            required: false,
+                            valueKey: "id",
+                            labelKey: "label",
+                          }}
+                          options={[
+                            { value: "Default.lba", label: "Default.lba" },
+                          ]}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultBarcodeLabel",
+                              data.defaultBarcodeLabel
+                            )
+                          }
+                          label={t("barcode_label")}
+                        />
+                      )}
+
+                      {filterComponent([t("default_brand")], filterText) && (
+                        <ERPDataCombobox
+                          id="defaultBrand"
+                          disabled
+                          data={settings?.inventorySettings}
+                          field={{
+                            id: "defaultBrand",
+                            required: false,
+                            valueKey: "id",
+                            labelKey: "label",
+                          }}
+                          options={[
+                            { value: "Default.lba", label: "Default.lba" },
+                          ]}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "inventorySettings",
+                              "defaultBrand",
+                              data.defaultBrand
+                            )
+                          }
+                          label={t("default_brand")}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
@@ -4109,13 +6062,36 @@ export default function SettingsPage() {
 
             {/* POS */}
             <div>
-              <div key="inventorySalesPOS" ref={el => subItemsCatRef.current["inventorySalesPOS"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventorySalesPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("pos")}</h1>
+              <div
+                key="inventorySalesPOS"
+                ref={(el) => (subItemsCatRef.current["inventorySalesPOS"] = el)}
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventorySalesPOS"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("pos")}
+                </h1>
                 <div key="inventorySalesPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                      {filterComponent([t("default_SI_form_type_for_POS")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("default_SI_form_type_for_POS")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultFormTypeForPOS"
                           field={{
@@ -4125,12 +6101,21 @@ export default function SettingsPage() {
                             labelKey: "FormType",
                           }}
                           data={settings?.gSTTaxesSettings}
-                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultFormTypeForPOS", data.defaultFormTypeForPOS)}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "gSTTaxesSettings",
+                              "defaultFormTypeForPOS",
+                              data.defaultFormTypeForPOS
+                            )
+                          }
                           label={t("default_SI_form_type_for_POS")}
                         />
                       )}
 
-                      {filterComponent([t("default_SI_prefix_for_POS")], filterText) && (
+                      {filterComponent(
+                        [t("default_SI_prefix_for_POS")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultPrefixForPOS"
                           field={{
@@ -4140,12 +6125,21 @@ export default function SettingsPage() {
                             labelKey: "LastVoucherPrefix",
                           }}
                           data={settings?.gSTTaxesSettings}
-                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultPrefixForPOS", data.defaultPrefixForPOS)}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "gSTTaxesSettings",
+                              "defaultPrefixForPOS",
+                              data.defaultPrefixForPOS
+                            )
+                          }
                           label={t("default_SI_prefix_for_POS")}
                         />
                       )}
 
-                      {filterComponent([t("default_SR_form_type_for_POS")], filterText) && (
+                      {filterComponent(
+                        [t("default_SR_form_type_for_POS")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultSRFormTypeForPOS"
                           data={settings?.gSTTaxesSettings}
@@ -4156,11 +6150,20 @@ export default function SettingsPage() {
                             valueKey: "FormType",
                             labelKey: "FormType",
                           }}
-                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultSRFormTypeForPOS", data.defaultSRFormTypeForPOS)}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "gSTTaxesSettings",
+                              "defaultSRFormTypeForPOS",
+                              data.defaultSRFormTypeForPOS
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("default_SR_prefix_for_POS")], filterText) && (
+                      {filterComponent(
+                        [t("default_SR_prefix_for_POS")],
+                        filterText
+                      ) && (
                         <ERPDataCombobox
                           id="defaultSRPrefixForPOS"
                           data={settings?.gSTTaxesSettings}
@@ -4171,20 +6174,36 @@ export default function SettingsPage() {
                             valueKey: "LastVoucherPrefix",
                             labelKey: "LastVoucherPrefix",
                           }}
-                          onChangeData={(data: any) => handleFieldChange("gSTTaxesSettings", "defaultSRPrefixForPOS", data.defaultSRPrefixForPOS)}
+                          onChangeData={(data: any) =>
+                            handleFieldChange(
+                              "gSTTaxesSettings",
+                              "defaultSRPrefixForPOS",
+                              data.defaultSRPrefixForPOS
+                            )
+                          }
                         />
                       )}
 
-                      {filterComponent([t("second_display_images_path")], filterText) && (
+                      {filterComponent(
+                        [t("second_display_images_path")],
+                        filterText
+                      ) && (
                         <ERPInput
                           id="secondDisplayImagesPath"
-                          value={settings?.miscellaneousSettings?.secondDisplayImagesPath}
+                          value={
+                            settings?.miscellaneousSettings
+                              ?.secondDisplayImagesPath
+                          }
                           data={settings?.miscellaneousSettings}
                           label={t("second_display_images_path")}
                           type="text"
                           placeholder={t("second_display_images_path")}
                           onChangeData={(data) =>
-                            handleFieldChange("miscellaneousSettings", "secondDisplayImagesPath", data.secondDisplayImagesPath)
+                            handleFieldChange(
+                              "miscellaneousSettings",
+                              "secondDisplayImagesPath",
+                              data.secondDisplayImagesPath
+                            )
                           }
                         />
                       )}
@@ -4194,33 +6213,60 @@ export default function SettingsPage() {
                           id="blockQtyChangeOptionInPOS"
                           label={t("block_qty_POS")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.blockQtyChangeOptionInPOS}
+                          checked={
+                            settings?.productsSettings
+                              ?.blockQtyChangeOptionInPOS
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "blockQtyChangeOptionInPOS", data.blockQtyChangeOptionInPOS)
+                            handleFieldChange(
+                              "productsSettings",
+                              "blockQtyChangeOptionInPOS",
+                              data.blockQtyChangeOptionInPOS
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("list_barcode_items_in_item_lookup")], filterText) && (
+                      {filterComponent(
+                        [t("list_barcode_items_in_item_lookup")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="listBarcodeItemsInItemLookup"
                           label={t("list_barcode_items_in_item_lookup")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.listBarcodeItemsInItemLookup}
+                          checked={
+                            settings?.productsSettings
+                              ?.listBarcodeItemsInItemLookup
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "listBarcodeItemsInItemLookup", data.listBarcodeItemsInItemLookup)
+                            handleFieldChange(
+                              "productsSettings",
+                              "listBarcodeItemsInItemLookup",
+                              data.listBarcodeItemsInItemLookup
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("stop_scanning_(POS)")], filterText) && (
+                      {filterComponent(
+                        [t("stop_scanning_(POS)")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="stopScanningOnWrongBarcode"
                           label={t("stop_scanning_(POS)")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.stopScanningOnWrongBarcode}
+                          checked={
+                            settings?.productsSettings
+                              ?.stopScanningOnWrongBarcode
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "stopScanningOnWrongBarcode", data.stopScanningOnWrongBarcode)
+                            handleFieldChange(
+                              "productsSettings",
+                              "stopScanningOnWrongBarcode",
+                              data.stopScanningOnWrongBarcode
+                            )
                           }
                         />
                       )}
@@ -4232,76 +6278,179 @@ export default function SettingsPage() {
 
             {/* counter */}
             <div>
-              <div key="inventorySalesCounter" ref={el => subItemsCatRef.current["inventorySalesCounter"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventorySalesCounter' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("Counter")}</h1>
+              <div
+                key="inventorySalesCounter"
+                ref={(el) =>
+                  (subItemsCatRef.current["inventorySalesCounter"] = el)
+                }
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventorySalesCounter"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("Counter")}
+                </h1>
                 <div key="inventorySalesCounter" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                      {filterComponent([t("allow_sales_counter")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("allow_sales_counter")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="allowSalesCounter"
-                          checked={settings?.accountsSettings?.allowSalesCounter}
+                          checked={
+                            settings?.accountsSettings?.allowSalesCounter
+                          }
                           data={settings?.accountsSettings}
                           label={t("allow_sales_counter")}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'allowSalesCounter', data.allowSalesCounter)}
-                        />
-                      )}
-
-                      {filterComponent([t("enable_authorization_for_shift_close")], filterText) && (
-                        <ERPCheckbox
-                          id="enableAuthorizationforShiftClose"
-                          disabled={!settings?.accountsSettings?.allowSalesCounter}
-                          checked={settings?.accountsSettings?.enableAuthorizationforShiftClose}
-                          data={settings?.accountsSettings}
-                          label={t("enable_authorization_for_shift_close")}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'enableAuthorizationforShiftClose', data.enableAuthorizationforShiftClose)}
-                        />
-                      )}
-
-                      {filterComponent([t("allow_user_wise_counter")], filterText) && (
-                        <ERPCheckbox
-                          id="allowUserwiseCounter"
-                          disabled={!settings?.accountsSettings?.allowSalesCounter}
-                          checked={settings?.accountsSettings?.allowUserwiseCounter}
-                          data={settings?.accountsSettings}
-                          label={t("allow_user_wise_counter")}
-                          onChangeData={(data) => handleFieldChange("accountsSettings", 'allowUserwiseCounter', data.allowUserwiseCounter)}
-                        />
-                      )}
-
-                      {filterComponent([t("maintain_counter_wise_prefix_for_transaction")], filterText) && (
-                        <ERPCheckbox
-                          id="maintainCounterWisePrefixForTransaction"
-                          label={t("maintain_counter_wise_prefix_for_transaction")}
-                          data={settings?.branchSettings}
-                          checked={settings?.branchSettings?.maintainCounterWisePrefixForTransaction}
                           onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "maintainCounterWisePrefixForTransaction", data.maintainCounterWisePrefixForTransaction)
+                            handleFieldChange(
+                              "accountsSettings",
+                              "allowSalesCounter",
+                              data.allowSalesCounter
+                            )
                           }
                         />
                       )}
 
+                      {filterComponent(
+                        [t("enable_authorization_for_shift_close")],
+                        filterText
+                      ) && (
+                        <ERPCheckbox
+                          id="enableAuthorizationforShiftClose"
+                          disabled={
+                            !settings?.accountsSettings?.allowSalesCounter
+                          }
+                          checked={
+                            settings?.accountsSettings
+                              ?.enableAuthorizationforShiftClose
+                          }
+                          data={settings?.accountsSettings}
+                          label={t("enable_authorization_for_shift_close")}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "enableAuthorizationforShiftClose",
+                              data.enableAuthorizationforShiftClose
+                            )
+                          }
+                        />
+                      )}
+
+                      {filterComponent(
+                        [t("allow_user_wise_counter")],
+                        filterText
+                      ) && (
+                        <ERPCheckbox
+                          id="allowUserwiseCounter"
+                          disabled={
+                            !settings?.accountsSettings?.allowSalesCounter
+                          }
+                          checked={
+                            settings?.accountsSettings?.allowUserwiseCounter
+                          }
+                          data={settings?.accountsSettings}
+                          label={t("allow_user_wise_counter")}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "accountsSettings",
+                              "allowUserwiseCounter",
+                              data.allowUserwiseCounter
+                            )
+                          }
+                        />
+                      )}
+
+                      {filterComponent(
+                        [t("maintain_counter_wise_prefix_for_transaction")],
+                        filterText
+                      ) && (
+                        <ERPCheckbox
+                          id="maintainCounterWisePrefixForTransaction"
+                          label={t(
+                            "maintain_counter_wise_prefix_for_transaction"
+                          )}
+                          data={settings?.branchSettings}
+                          checked={
+                            settings?.branchSettings
+                              ?.maintainCounterWisePrefixForTransaction
+                          }
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "branchSettings",
+                              "maintainCounterWisePrefixForTransaction",
+                              data.maintainCounterWisePrefixForTransaction
+                            )
+                          }
+                        />
+                      )}
                     </div>
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                      {filterComponent([t("minimum_shift_duration")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("minimum_shift_duration")],
+                        filterText
+                      ) && (
                         <>
-                          <div className='flex items-center gap-1'>
+                          <div className="flex items-center gap-1">
                             <ERPCheckbox
                               id="allowMinimumShiftDuration"
-                              checked={settings?.accountsSettings?.allowMinimumShiftDuration}
+                              checked={
+                                settings?.accountsSettings
+                                  ?.allowMinimumShiftDuration
+                              }
                               data={settings?.accountsSettings}
                               label={t("minimum_shift_duration")}
-                              onChangeData={(data) => handleFieldChange("accountsSettings", 'allowMinimumShiftDuration', data.allowMinimumShiftDuration)}
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "accountsSettings",
+                                  "allowMinimumShiftDuration",
+                                  data.allowMinimumShiftDuration
+                                )
+                              }
                             />
                             <ERPInput
                               id="minimumShiftDuration"
-                              value={settings?.accountsSettings?.minimumShiftDuration}
-                              label=' '
+                              value={
+                                settings?.accountsSettings?.minimumShiftDuration
+                              }
+                              label=" "
                               data={settings?.accountsSettings}
                               type="number"
-                              disabled={!settings?.accountsSettings?.allowMinimumShiftDuration}
-                              onChangeData={(data) => handleFieldChange("accountsSettings", 'minimumShiftDuration', data.minimumShiftDuration)}
+                              disabled={
+                                !settings?.accountsSettings
+                                  ?.allowMinimumShiftDuration
+                              }
+                              onChangeData={(data) =>
+                                handleFieldChange(
+                                  "accountsSettings",
+                                  "minimumShiftDuration",
+                                  data.minimumShiftDuration
+                                )
+                              }
                             />
                             &nbsp;Hours
                           </div>
@@ -4315,13 +6464,36 @@ export default function SettingsPage() {
 
             {/* PPOS */}
             <div>
-              <div key="inventoryPPOS" ref={el => subItemsRef.current["inventoryPPOS"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventoryPPOS' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("ppos")}</h1>
+              <div
+                key="inventoryPPOS"
+                ref={(el) => (subItemsRef.current["inventoryPPOS"] = el)}
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventoryPPOS"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("ppos")}
+                </h1>
                 <div key="inventoryPPOS" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
-                      {filterComponent([t("enable_PPOS_integration")], filterText) && (
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
+                      {filterComponent(
+                        [t("enable_PPOS_integration")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="enableVanSale"
                           label={t("enable_PPOS_integration")}
@@ -4329,28 +6501,44 @@ export default function SettingsPage() {
                           className="h-9 translate-y-[20px]"
                           checked={settings?.branchSettings?.enableVanSale}
                           onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "enableVanSale", data.enableVanSale)
+                            handleFieldChange(
+                              "branchSettings",
+                              "enableVanSale",
+                              data.enableVanSale
+                            )
                           }
                         />
                       )}
 
-                      <div className='flex justify-start space-x-3 align-center'>
+                      <div className="flex justify-start space-x-3 align-center">
                         {filterComponent([t("PPOS_branchid")], filterText) && (
                           <>
                             <ERPInput
                               id="clientPPOSBranchID"
                               label={t("PPOS_branchid")}
-                              disabled={settings?.branchSettings?.enableVanSale === false}
+                              disabled={
+                                settings?.branchSettings?.enableVanSale ===
+                                false
+                              }
                               className="w-2/3"
-                              value={settings?.branchSettings?.clientPPOSBranchID}
+                              value={
+                                settings?.branchSettings?.clientPPOSBranchID
+                              }
                               data={settings?.branchSettings}
                               onChangeData={(data) =>
-                                handleFieldChange("branchSettings", "clientPPOSBranchID", data.clientPPOSBranchID)
+                                handleFieldChange(
+                                  "branchSettings",
+                                  "clientPPOSBranchID",
+                                  data.clientPPOSBranchID
+                                )
                               }
                             />
                             <ERPButton
                               title={t("verify")}
-                              disabled={settings?.branchSettings?.enableVanSale === false}
+                              disabled={
+                                settings?.branchSettings?.enableVanSale ===
+                                false
+                              }
                               variant="secondary"
                               className="h-8 translate-y-[20px]"
                             />
@@ -4358,16 +6546,25 @@ export default function SettingsPage() {
                         )}
                       </div>
 
-                      {filterComponent([t("PPOS_productSerial")], filterText) && (
+                      {filterComponent(
+                        [t("PPOS_productSerial")],
+                        filterText
+                      ) && (
                         <ERPInput
                           id="vanSaleProductSerial"
                           label={t("PPOS_productSerial")}
-                          disabled={settings?.branchSettings?.enableVanSale === false}
+                          disabled={
+                            settings?.branchSettings?.enableVanSale === false
+                          }
                           className="w-full"
                           value={settings?.branchSettings?.vanSaleProductSerial}
                           data={settings?.branchSettings}
                           onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "vanSaleProductSerial", data.vanSaleProductSerial)
+                            handleFieldChange(
+                              "branchSettings",
+                              "vanSaleProductSerial",
+                              data.vanSaleProductSerial
+                            )
                           }
                         />
                       )}
@@ -4376,12 +6573,18 @@ export default function SettingsPage() {
                         <ERPInput
                           id="pPOSEmail"
                           label={t("PPOS_email")}
-                          disabled={settings?.branchSettings?.enableVanSale === false}
+                          disabled={
+                            settings?.branchSettings?.enableVanSale === false
+                          }
                           className="w-full"
                           value={settings?.branchSettings?.pPOSEmail}
                           data={settings?.branchSettings}
                           onChangeData={(data) =>
-                            handleFieldChange("branchSettings", "pPOSEmail", data.pPOSEmail)
+                            handleFieldChange(
+                              "branchSettings",
+                              "pPOSEmail",
+                              data.pPOSEmail
+                            )
                           }
                         />
                       )}
@@ -4393,22 +6596,53 @@ export default function SettingsPage() {
 
             {/*Schemes & Promotions*/}
             <div>
-              <div key="inventorySchemesPromotions" ref={el => subItemsRef.current["inventorySchemesPromotions"] = el}>
-                <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'inventorySchemesPromotions' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("schemes_&_promotions")}</h1>
+              <div
+                key="inventorySchemesPromotions"
+                ref={(el) =>
+                  (subItemsRef.current["inventorySchemesPromotions"] = el)
+                }
+              >
+                <h1
+                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "inventorySchemesPromotions"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+                >
+                  {t("schemes_&_promotions")}
+                </h1>
                 <div key="inventorySchemesPromotions" className="space-y-4">
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                    <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                    <div
+                      className={`grid ${
+                        isCompactView
+                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                          : `${
+                              gridClass ||
+                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center`
+                      }`}
+                    >
                       <div className="flex items-center gap-6">
-                        {filterComponent([t("gift_on_billing")], filterText) && (
+                        {filterComponent(
+                          [t("gift_on_billing")],
+                          filterText
+                        ) && (
                           <>
                             <ERPCheckbox
                               id="giftOnBilling"
                               data={settings?.productsSettings}
                               label={t("gift_on_billing")}
-                              checked={settings?.productsSettings?.giftOnBilling}
+                              checked={
+                                settings?.productsSettings?.giftOnBilling
+                              }
                               onChangeData={(data) =>
-                                handleFieldChange("productsSettings", "giftOnBilling", data.giftOnBilling)
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "giftOnBilling",
+                                  data.giftOnBilling
+                                )
                               }
                             />
                             <ERPDataCombobox
@@ -4420,14 +6654,20 @@ export default function SettingsPage() {
                               id="giftOnBillingAs"
                               data={settings?.productsSettings}
                               onChangeData={(data) => {
-                                handleFieldChange("productsSettings", "giftOnBillingAs", data.giftOnBillingAs);
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "giftOnBillingAs",
+                                  data.giftOnBillingAs
+                                );
                               }}
                               options={[
                                 { value: 0, label: "CashCoupons" },
                                 { value: 1, label: "Products" },
                                 { value: 2, label: "Special Price" },
                               ]}
-                              disabled={!settings?.productsSettings?.giftOnBilling}
+                              disabled={
+                                !settings?.productsSettings?.giftOnBilling
+                              }
                               label=" "
                             />
                           </>
@@ -4441,57 +6681,99 @@ export default function SettingsPage() {
                           data={settings?.productsSettings}
                           checked={settings?.productsSettings?.maintainSchemes}
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "maintainSchemes", data.maintainSchemes)
+                            handleFieldChange(
+                              "productsSettings",
+                              "maintainSchemes",
+                              data.maintainSchemes
+                            )
                           }
                         />
                       )}
 
-                      {filterComponent([t("exclude_scheme_product")], filterText) && (
+                      {filterComponent(
+                        [t("exclude_scheme_product")],
+                        filterText
+                      ) && (
                         <ERPCheckbox
                           id="excludeSchemeProductAmountFromPrivilegeCard"
                           label={t("exclude_scheme_product")}
                           data={settings?.productsSettings}
-                          checked={settings?.productsSettings?.excludeSchemeProductAmountFromPrivilegeCard}
+                          checked={
+                            settings?.productsSettings
+                              ?.excludeSchemeProductAmountFromPrivilegeCard
+                          }
                           onChangeData={(data) =>
-                            handleFieldChange("productsSettings", "excludeSchemeProductAmountFromPrivilegeCard", data.excludeSchemeProductAmountFromPrivilegeCard)
+                            handleFieldChange(
+                              "productsSettings",
+                              "excludeSchemeProductAmountFromPrivilegeCard",
+                              data.excludeSchemeProductAmountFromPrivilegeCard
+                            )
                           }
                         />
                       )}
 
                       {userSession.countryId == Countries.India && (
                         <>
-                          {filterComponent([t("enable_qty_slab_offer")], filterText) && (
+                          {filterComponent(
+                            [t("enable_qty_slab_offer")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="enableQtySlabOffer"
                               label={t("enable_qty_slab_offer")}
                               data={settings?.productsSettings}
-                              checked={settings?.productsSettings?.enableQtySlabOffer}
+                              checked={
+                                settings?.productsSettings?.enableQtySlabOffer
+                              }
                               onChangeData={(data) =>
-                                handleFieldChange("productsSettings", "enableQtySlabOffer", data.enableQtySlabOffer)
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "enableQtySlabOffer",
+                                  data.enableQtySlabOffer
+                                )
                               }
                             />
                           )}
 
-                          {filterComponent([t("set_product_qty_limit_in_sales")], filterText) && (
+                          {filterComponent(
+                            [t("set_product_qty_limit_in_sales")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="setProductQtyLimitinSales"
                               label={t("set_product_qty_limit_in_sales")}
                               data={settings?.productsSettings}
-                              checked={settings?.productsSettings?.setProductQtyLimitinSales}
+                              checked={
+                                settings?.productsSettings
+                                  ?.setProductQtyLimitinSales
+                              }
                               onChangeData={(data) =>
-                                handleFieldChange("productsSettings", "setProductQtyLimitinSales", data.setProductQtyLimitinSales)
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "setProductQtyLimitinSales",
+                                  data.setProductQtyLimitinSales
+                                )
                               }
                             />
                           )}
 
-                          {filterComponent([t("enable_multi_FOC")], filterText) && (
+                          {filterComponent(
+                            [t("enable_multi_FOC")],
+                            filterText
+                          ) && (
                             <ERPCheckbox
                               id="enableMultiFOC"
                               label={t("enable_multi_FOC")}
                               data={settings?.productsSettings}
-                              checked={settings?.productsSettings?.enableMultiFOC}
+                              checked={
+                                settings?.productsSettings?.enableMultiFOC
+                              }
                               onChangeData={(data) =>
-                                handleFieldChange("productsSettings", "enableMultiFOC", data.enableMultiFOC)
+                                handleFieldChange(
+                                  "productsSettings",
+                                  "enableMultiFOC",
+                                  data.enableMultiFOC
+                                )
                               }
                             />
                           )}
@@ -4507,12 +6789,30 @@ export default function SettingsPage() {
           <div>
             <section
               key="miscellaneous"
-              ref={el => sectionsRef.current['miscellaneous'] = el}
-              className="mb-8 last:mb-0 h-screen">
-              <h1 className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === 'miscellaneous' ? 'blink-animation bg-[#f1f1f1]' : 'bg-[#f1f1f1]'}`}>{t("miscellaneous")}</h1>
+              ref={(el) => (sectionsRef.current["miscellaneous"] = el)}
+              className="mb-8 last:mb-0 h-screen"
+            >
+              <h1
+                className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
+                       ${
+                         blinkSection === "miscellaneous"
+                           ? "blink-animation bg-[#f1f1f1]"
+                           : "bg-[#f1f1f1]"
+                       }`}
+              >
+                {t("miscellaneous")}
+              </h1>
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                <div className={`grid ${isCompactView ? 'grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4' : `${gridClass || 'xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'} gap-4 items-center justify-center`}`}>
+                <div
+                  className={`grid ${
+                    isCompactView
+                      ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                      : `${
+                          gridClass ||
+                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
+                  }`}
+                >
                   <div>
                     {filterComponent([t("send_sms")], filterText) && (
                       <>
@@ -4521,7 +6821,13 @@ export default function SettingsPage() {
                           checked={settings?.miscellaneousSettings?.sendSMS}
                           data={settings?.miscellaneousSettings}
                           label={t("send_sms_URL")}
-                          onChangeData={(data) => handleFieldChange("miscellaneousSettings", "sendSMS", data.sendSMS)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "miscellaneousSettings",
+                              "sendSMS",
+                              data.sendSMS
+                            )
+                          }
                         />
                         <ERPInput
                           id="sMSURL"
@@ -4529,7 +6835,13 @@ export default function SettingsPage() {
                           data={settings?.miscellaneousSettings}
                           label=" "
                           disabled={!settings?.miscellaneousSettings?.sendSMS}
-                          onChangeData={(data) => handleFieldChange("miscellaneousSettings", "sMSURL", data.sMSURL)}
+                          onChangeData={(data) =>
+                            handleFieldChange(
+                              "miscellaneousSettings",
+                              "sMSURL",
+                              data.sMSURL
+                            )
+                          }
                         />
                       </>
                     )}
@@ -4541,7 +6853,13 @@ export default function SettingsPage() {
                       value={settings?.accountsSettings?.supervisorPassword}
                       data={settings?.accountsSettings}
                       label={t("supervisor_password")}
-                      onChangeData={(data) => handleFieldChange("accountsSettings", 'supervisorPassword', data.supervisorPassword)}
+                      onChangeData={(data) =>
+                        handleFieldChange(
+                          "accountsSettings",
+                          "supervisorPassword",
+                          data.supervisorPassword
+                        )
+                      }
                     />
                   )}
                 </div>
@@ -4549,7 +6867,7 @@ export default function SettingsPage() {
             </section>
           </div>
         </div>
-      </main >
+      </main>
       <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
         <ERPButton
           title={t("save_settings")}
@@ -4560,6 +6878,6 @@ export default function SettingsPage() {
           onClick={handleSubmit}
         />
       </div>
-    </div >
-  )
+    </div>
+  );
 }

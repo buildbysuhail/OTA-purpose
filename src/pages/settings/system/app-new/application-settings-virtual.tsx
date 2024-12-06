@@ -35,6 +35,7 @@ import InventorySalesCounterFilterableComponents from "./application-settings-in
 import InventoryPPOSFilterableComponents from "./application-settings-inventory-ppos";
 import InventorySchemeAndPromotionFilterableComponents from "./application-settings-inventory-scheme-and-promotion";
 import ApplicationMiscellaneousComponents from "./application-settings-miscellaneous";
+import InventoryTAXFilterableComponents from "./application-settings-inventory-tax";
 
 const api = new APIClient();
 const LayoutToggle = ({
@@ -576,199 +577,15 @@ export default function SettingsPage() {
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
               </InventoryGSTSettings>
             )}
+            {/* Tax Settings */}
             {userSession.countryId === Countries.Saudi && (
-              <div
+              <InventoryTAXFilterableComponents
                 key="inventoryTaxSettings"
-                ref={(el) => (subItemsRef.current["inventoryTaxSettings"] = el)}
-              >
-                <h1
-                  className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === "inventoryTaxSettings"
-                      ? "blink-animation bg-[#f1f1f1]"
-                      : "bg-[#f1f1f1]"
-                    }`}
-                >
-                  {t("tax_settings")}
-                </h1>
-                <div className="border border-solid border-[#e3e3e3] p-4 rounded-lg">
-                  <div key="inventoryTaxSettings" className="space-y-4">
-                    <div
-                      className={`grid ${isCompactView
-                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                        : `${gridClass ||
-                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                        } gap-4`
-                        }`}
-                    >
-                      {filterComponent([t("default_purchase")], filterText) && (
-                        <>
-                          <ERPDataCombobox
-                            id="purchaseFormType"
-                            data={settings?.taxSettings}
-                            field={{
-                              id: "purchaseFormType",
-
-                              getListUrl: Urls.data_FormTypeByPI,
-                              valueKey: "FormType",
-                              labelKey: "FormType",
-                            }}
-                            onChangeData={(data: any) =>
-                              handleFieldChange(
-                                "taxSettings",
-                                "purchaseFormType",
-                                data.purchaseFormType
-                              )
-                            }
-                            label={t("default_purchase")}
-                          />
-
-                          <ERPDataCombobox
-                            id="salesFormType"
-                            data={settings?.taxSettings}
-                            field={{
-                              id: "salesFormType",
-
-                              getListUrl: Urls.data_FormTypeBySI,
-                              valueKey: "FormType",
-                              labelKey: "FormType",
-                            }}
-                            onChangeData={(data: any) =>
-                              handleFieldChange(
-                                "taxSettings",
-                                "salesFormType",
-                                data.salesFormType
-                              )
-                            }
-                            label={t("sales_form_type")}
-                          />
-                          <ERPDataCombobox
-                            id="purchaseTaxAccount"
-                            data={settings?.taxSettings}
-                            field={{
-                              id: "purchaseTaxAccount",
-                              required: false,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) =>
-                              handleFieldChange(
-                                "taxSettings",
-                                "purchaseTaxAccount",
-                                data.purchaseTaxAccount
-                              )
-                            }
-                            label={t("purchase_tax_ledger")}
-                          />
-                          <ERPDataCombobox
-                            id="salesTaxAccount"
-                            data={settings?.taxSettings}
-                            field={{
-                              id: "salesTaxAccount",
-                              required: false,
-                              getListUrl: Urls.data_duties_taxes,
-                              valueKey: "id",
-                              labelKey: "name",
-                            }}
-                            onChangeData={(data: any) =>
-                              handleFieldChange(
-                                "taxSettings",
-                                "salesTaxAccount",
-                                data.salesTaxAccount
-                              )
-                            }
-                            label={t("sales_tax_ledger")}
-                          />
-                          {1 != 1 && (
-                            <>
-                              <ERPDataCombobox
-                                id="purchaseCSTAccount"
-                                data={settings?.taxSettings}
-                                disabled
-                                field={{
-                                  id: "purchaseCSTAccount",
-                                  required: false,
-                                  getListUrl: Urls.data_duties_taxes,
-                                  valueKey: "id",
-                                  labelKey: "name",
-                                }}
-                                onChangeData={(data: any) =>
-                                  handleFieldChange(
-                                    "taxSettings",
-                                    "purchaseCSTAccount",
-                                    data.purchaseCSTAccount
-                                  )
-                                }
-                                label={t("purchase_cst_account")}
-                              />
-                              <ERPDataCombobox
-                                id="salesCSTAccount"
-                                disabled
-                                data={settings?.taxSettings}
-                                field={{
-                                  id: "salesCSTAccount",
-                                  required: false,
-                                  getListUrl: Urls.data_duties_taxes,
-                                  valueKey: "id",
-                                  labelKey: "name",
-                                }}
-                                onChangeData={(data: any) =>
-                                  handleFieldChange(
-                                    "taxSettings",
-                                    "salesCSTAccount",
-                                    data.salesCSTAccount
-                                  )
-                                }
-                                label={t("sales_cst_account")}
-                              />
-                              <ERPDataCombobox
-                                id="expensesTaxAccount"
-                                disabled
-                                data={settings?.taxSettings}
-                                field={{
-                                  id: "expensesTaxAccount",
-                                  required: false,
-                                  getListUrl: Urls.data_duties_taxes,
-                                  valueKey: "id",
-                                  labelKey: "name",
-                                }}
-                                onChangeData={(data: any) =>
-                                  handleFieldChange(
-                                    "taxSettings",
-                                    "expensesTaxAccount",
-                                    data.expensesTaxAccount
-                                  )
-                                }
-                                label={t("expenses_tax_account")}
-                              />
-                              <ERPDataCombobox
-                                id="incomeTaxAccount"
-                                disabled
-                                data={settings?.taxSettings}
-                                field={{
-                                  id: "incomeTaxAccount",
-                                  required: false,
-                                  getListUrl: Urls.data_duties_taxes,
-                                  valueKey: "id",
-                                  labelKey: "name",
-                                }}
-                                onChangeData={(data: any) =>
-                                  handleFieldChange(
-                                    "taxSettings",
-                                    "incomeTaxAccount",
-                                    data.incomeTaxAccount
-                                  )
-                                }
-                                label={t("income_tax_account")}
-                              />
-                            </>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </InventoryTAXFilterableComponents>
             )}
 
             {/* purchase */}
@@ -825,7 +642,8 @@ export default function SettingsPage() {
               sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
             </InventorySchemeAndPromotionFilterableComponents>
           </section>
-
+          
+          {/*miscellaneous*/}
           <ApplicationMiscellaneousComponents
             key="miscellaneous"
             subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}

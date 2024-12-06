@@ -1,6 +1,4 @@
 import { t } from "i18next";
-import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
-import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
@@ -59,7 +57,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             }
             label={t("default_purchase")}
           />
-    
+
           <ERPDataCombobox
             id="salesFormType"
             data={settings?.taxSettings}
@@ -74,7 +72,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             }
             label={t("sales_form_type")}
           />
-    
+
           <ERPDataCombobox
             id="purchaseTaxAccount"
             data={settings?.taxSettings}
@@ -90,7 +88,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             }
             label={t("purchase_tax_ledger")}
           />
-    
+
           <ERPDataCombobox
             id="salesTaxAccount"
             data={settings?.taxSettings}
@@ -106,7 +104,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             }
             label={t("sales_tax_ledger")}
           />
-    
+
           {1 !== 1 && (
             <>
               <ERPDataCombobox
@@ -125,7 +123,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                 }
                 label={t("purchase_cst_account")}
               />
-    
+
               <ERPDataCombobox
                 id="salesCSTAccount"
                 data={settings?.taxSettings}
@@ -142,7 +140,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                 }
                 label={t("sales_cst_account")}
               />
-    
+
               <ERPDataCombobox
                 id="expensesTaxAccount"
                 data={settings?.taxSettings}
@@ -159,7 +157,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                 }
                 label={t("expenses_tax_account")}
               />
-    
+
               <ERPDataCombobox
                 id="incomeTaxAccount"
                 data={settings?.taxSettings}
@@ -195,20 +193,20 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           <div key={key} ref={(el) => (subItemsRef.current["inventoryTaxSettings"] = el)}  >
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryTaxSettings"
-                  ? "blink-animation bg-[#f1f1f1]"
-                  : "bg-[#f1f1f1]"
+                ? "blink-animation bg-[#f1f1f1]"
+                : "bg-[#f1f1f1]"
                 }`}
               onClick={handleGeneralHeaderClick}  >
-              {t("backup")}
+              {t("tax_settings")}
             </h1>
             <div key="inventoryTaxSettings" className="space-y-4">
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                 <div
                   className={`grid ${isCompactView
-                      ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                      : `${gridClass ||
-                      "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                      } gap-4 items-center justify-center`
+                    ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                    : `${gridClass ||
+                    "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                    } gap-4 items-center justify-center`
                     }`}>
                   {items?.map(
                     (component: any, index: number) =>

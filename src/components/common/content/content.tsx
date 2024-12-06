@@ -177,7 +177,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/integration/whatsapp" element={<WhatsappIntegration />} />
         <Route path="/integration/email" element={<EmailIntegration />} />
         <Route path="/integration/test" element={<Test />} />
-        <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} />
+        {/* <Route path="/integration/account_group_test" element={<AccountGroupTypeTest />} /> */}
         <Route path="/integration/total-summary" element={<TotalSummary />} />
         {/* Integration End */}
 

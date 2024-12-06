@@ -11,6 +11,7 @@ import { RootState } from "../../../../redux/store";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { useApplicationMainSettings } from "../../../../utilities/hooks/use-application-main-settings";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(

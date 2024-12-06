@@ -197,7 +197,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
   const PopUpModal = () => {
     return (
       <div className="w-full pt-4">
-        <div className="grid grid-cols-12 gap-x-6 max-h-[500px]">
+        <div className="grid grid-cols-12 gap-x-6 max-h-fit">
           <div className="xxl:col-span-6 xl:col-span-6  col-span-6">
             {!!imgSrc && (
               <ReactCrop
@@ -322,6 +322,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
       <div className="Crop-Controls">
         {(imgSrc == undefined || imgSrc != null || imgSrc != "") && (
           <ERPFileUploadButton
+          buttonText="Upload Image"
             handleFileChange={onSelectFile}
           ></ERPFileUploadButton>
         )}

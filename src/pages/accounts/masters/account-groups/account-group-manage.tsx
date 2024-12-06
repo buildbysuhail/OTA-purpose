@@ -145,28 +145,23 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             />
           </>
         }
-     
+
       </div>
       <div className="flex justify-between my-2 items-center">
-   {/* Link that triggers the modal */}
-        <a
-          href="#"
-          onClick={(e) => {
-            e.preventDefault();
-            dispatch(toggleGroupOrder({ isOpen: true }));
-          }}
-          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">Group Order(in trial balance)
-          </a>
+        {/* Link that triggers the modal */}
+        <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleGroupOrder({ isOpen: true })) }}
+          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">{t("group_order")}
+        </a>
         <ERPFormButtons
-        onClear={handleClear}
-        submitDisabled={!formState?.data?.isEditable}
-        isEdit={isEdit}
-        isLoading={isLoading}
-        onCancel={handleClose}
-        onSubmit={handleSubmit}
-      />
+          onClear={handleClear}
+          submitDisabled={!formState?.data?.isEditable}
+          isEdit={isEdit}
+          isLoading={isLoading}
+          onCancel={handleClose}
+          onSubmit={handleSubmit}
+        />
       </div>
-   
+
       <ERPModal
         isForm={true}
         isFullHeight={true}

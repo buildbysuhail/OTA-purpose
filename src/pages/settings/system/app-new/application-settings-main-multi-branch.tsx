@@ -11,6 +11,8 @@ import { RootState } from "../../../../redux/store";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useRef, useState } from "react";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
+import { LedgerType } from "../../../../enums/ledger-types";
+import { useApplicationMiscSettings } from "../../../../utilities/hooks/use-application-misc-settings";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -46,6 +48,19 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
   handleGeneralHeaderClick,
   key,
 }) => {
+  const {
+    dataLoaded,
+    systemCode,
+    setAddSystemCode,
+    addSystemCode,
+    SystemCodeAddData,
+    setSystemCodeAddData,
+    isSavingSystemCode,
+    postSystemCode,
+    loadSystemCode,
+    getSystemCode,
+  } = useApplicationMiscSettings();
+  const [showSystemCodeBox, setShowSystemCodeBox] = useState(false);
   const items = [
     {
       condition: filterComponent([t("default_BTO_account")], filterText),

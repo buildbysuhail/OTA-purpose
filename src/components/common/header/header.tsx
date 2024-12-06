@@ -734,12 +734,21 @@ const Header: FC<HeaderProps> = () => {
                   </div>
                 </div>
               </div>
-              <div className="header-element header-apps  lg:py-[1rem]  dark:text-[#8c9097] dark:text-white/50  md:px-[0.65rem]  px-2 hs-dropdown ti-dropdown  [--placement:bottom-left]">
+              {/* <div className="header-element header-apps  py-[1rem]  dark:text-[#8c9097] dark:text-white/50  md:px-[0.65rem]  px-2 hs-dropdown ti-dropdown  [--placement:bottom-left]">
                 <Link
                   to={"/settings"}
                   className="!p-0 !border-0 flex-shrink-0  !rounded-full !shadow-none text-xs"
                 >
                   <i className="bx bx-cog header-link-icon text-[1.125rem]"></i>
+                </Link>
+              </div> */}
+              <div className="header-element  py-[1rem] md:px-[0.65rem] px-2">
+                <Link
+                  to={"/settings"}
+                  aria-label="settings"
+                  className="inline-flex flex-shrink-0 justify-center items-center gap-2  !rounded-full font-medium dark:hover:bg-black/20 dark:text-[#8c9097] dark:text-white/50 dark:hover:text-white dark:focus:ring-white/10 dark:focus:ring-offset-white/10"
+                >
+                    <i className="bx bx-cog full-screen-close text-[1.125rem] header-link-icon"></i>
                 </Link>
               </div>
               {/* <div className="header-element header-apps dark:text-[#8c9097] dark:text-white/50 py-[1rem] md:px-[0.65rem] px-2 hs-dropdown ti-dropdown md:!block !hidden [--placement:bottom-left]">

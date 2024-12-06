@@ -322,6 +322,7 @@ const ERPCropper: React.FC<ERPCropperProps> = ({
       <div className="Crop-Controls">
         {(imgSrc == undefined || imgSrc != null || imgSrc != "") && (
           <ERPFileUploadButton
+          buttonText="Upload Image"
             handleFileChange={onSelectFile}
           ></ERPFileUploadButton>
         )}

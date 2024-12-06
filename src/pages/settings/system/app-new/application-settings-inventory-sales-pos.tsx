@@ -26,7 +26,7 @@ interface ApplicationSettingsProps {
   key: string;
 }
 
-const MainSalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> = ({
+const InventorySalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   settings,
   handleFieldChange,
   filterComponent,
@@ -258,4 +258,4 @@ const MainSalesPOSFilterableComponents: React.FC<ApplicationSettingsProps> = ({
     </>
   );
 };
-export default MainSalesPOSFilterableComponents;
+export default InventorySalesPOSFilterableComponents;

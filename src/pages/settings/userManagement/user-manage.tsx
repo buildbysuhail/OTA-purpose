@@ -64,7 +64,7 @@ export const UserManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("email")}
           label={t("email")}
-          type="mail"
+          type="email"
           placeholder={t("email")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("email", data.email)}

@@ -43,169 +43,120 @@ const InventorySalesCounterFilterableComponents: React.FC<ApplicationSettingsPro
 }) => {
   const items = [
     {
-      condition: filterComponent([t("default_SI_form_type_for_POS")], filterText),
-      element: (
-        <ERPDataCombobox
-          id="defaultFormTypeForPOS"
-          field={{
-            id: "defaultFormTypeForPOS",
-            getListUrl: Urls.data_FormTypeBySI,
-            valueKey: "FormType",
-            labelKey: "FormType",
-          }}
-          data={settings?.gSTTaxesSettings}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "gSTTaxesSettings",
-              "defaultFormTypeForPOS",
-              data.defaultFormTypeForPOS
-            )
-          }
-          label={t("default_SI_form_type_for_POS")}
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("default_SI_prefix_for_POS")], filterText),
-      element: (
-        <ERPDataCombobox
-          id="defaultPrefixForPOS"
-          field={{
-            id: "defaultPrefixForPOS",
-            getListUrl: Urls.data_VPrefixForSI,
-            valueKey: "LastVoucherPrefix",
-            labelKey: "LastVoucherPrefix",
-          }}
-          data={settings?.gSTTaxesSettings}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "gSTTaxesSettings",
-              "defaultPrefixForPOS",
-              data.defaultPrefixForPOS
-            )
-          }
-          label={t("default_SI_prefix_for_POS")}
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("default_SR_form_type_for_POS")], filterText),
-      element: (
-        <ERPDataCombobox
-          id="defaultSRFormTypeForPOS"
-          data={settings?.gSTTaxesSettings}
-          label={t("default_SR_form_type_for_POS")}
-          field={{
-            id: "defaultSRFormTypeForPOS",
-            getListUrl: Urls.data_FormTypeBySR,
-            valueKey: "FormType",
-            labelKey: "FormType",
-          }}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "gSTTaxesSettings",
-              "defaultSRFormTypeForPOS",
-              data.defaultSRFormTypeForPOS
-            )
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("default_SR_prefix_for_POS")], filterText),
-      element: (
-        <ERPDataCombobox
-          id="defaultSRPrefixForPOS"
-          data={settings?.gSTTaxesSettings}
-          label={t("default_SR_prefix_for_POS")}
-          field={{
-            id: "defaultSRPrefixForPOS",
-            getListUrl: Urls.data_VPrefixForSR,
-            valueKey: "LastVoucherPrefix",
-            labelKey: "LastVoucherPrefix",
-          }}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "gSTTaxesSettings",
-              "defaultSRPrefixForPOS",
-              data.defaultSRPrefixForPOS
-            )
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("second_display_images_path")], filterText),
-      element: (
-        <ERPInput
-          id="secondDisplayImagesPath"
-          value={settings?.miscellaneousSettings?.secondDisplayImagesPath}
-          data={settings?.miscellaneousSettings}
-          label={t("second_display_images_path")}
-          type="text"
-          placeholder={t("second_display_images_path")}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "miscellaneousSettings",
-              "secondDisplayImagesPath",
-              data.secondDisplayImagesPath
-            )
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("block_qty_POS")], filterText),
+      condition: filterComponent([t("allow_sales_counter")], filterText),
       element: (
         <ERPCheckbox
-          id="blockQtyChangeOptionInPOS"
-          label={t("block_qty_POS")}
-          data={settings?.productsSettings}
-          checked={settings?.productsSettings?.blockQtyChangeOptionInPOS}
+          id="allowSalesCounter"
+          checked={settings?.accountsSettings?.allowSalesCounter}
+          data={settings?.accountsSettings}
+          label={t("allow_sales_counter")}
           onChangeData={(data) =>
             handleFieldChange(
-              "productsSettings",
-              "blockQtyChangeOptionInPOS",
-              data.blockQtyChangeOptionInPOS
+              "accountsSettings",
+              "allowSalesCounter",
+              data.allowSalesCounter
             )
           }
         />
       ),
     },
     {
-      condition: filterComponent([t("list_barcode_items_in_item_lookup")], filterText),
+      condition: filterComponent([t("enable_authorization_for_shift_close")], filterText),
       element: (
         <ERPCheckbox
-          id="listBarcodeItemsInItemLookup"
-          label={t("list_barcode_items_in_item_lookup")}
-          data={settings?.productsSettings}
-          checked={settings?.productsSettings?.listBarcodeItemsInItemLookup}
+          id="enableAuthorizationforShiftClose"
+          disabled={!settings?.accountsSettings?.allowSalesCounter}
+          checked={settings?.accountsSettings?.enableAuthorizationforShiftClose}
+          data={settings?.accountsSettings}
+          label={t("enable_authorization_for_shift_close")}
           onChangeData={(data) =>
             handleFieldChange(
-              "productsSettings",
-              "listBarcodeItemsInItemLookup",
-              data.listBarcodeItemsInItemLookup
+              "accountsSettings",
+              "enableAuthorizationforShiftClose",
+              data.enableAuthorizationforShiftClose
             )
           }
         />
       ),
     },
     {
-      condition: filterComponent([t("stop_scanning_(POS)")], filterText),
+      condition: filterComponent([t("allow_user_wise_counter")], filterText),
       element: (
         <ERPCheckbox
-          id="stopScanningOnWrongBarcode"
-          label={t("stop_scanning_(POS)")}
-          data={settings?.productsSettings}
-          checked={settings?.productsSettings?.stopScanningOnWrongBarcode}
+          id="allowUserwiseCounter"
+          disabled={!settings?.accountsSettings?.allowSalesCounter}
+          checked={settings?.accountsSettings?.allowUserwiseCounter}
+          data={settings?.accountsSettings}
+          label={t("allow_user_wise_counter")}
           onChangeData={(data) =>
             handleFieldChange(
-              "productsSettings",
-              "stopScanningOnWrongBarcode",
-              data.stopScanningOnWrongBarcode
+              "accountsSettings",
+              "allowUserwiseCounter",
+              data.allowUserwiseCounter
             )
           }
         />
+      ),
+    },
+    {
+      condition: filterComponent(
+        [t("maintain_counter_wise_prefix_for_transaction")],
+        filterText
+      ),
+      element: (
+        <ERPCheckbox
+          id="maintainCounterWisePrefixForTransaction"
+          label={t("maintain_counter_wise_prefix_for_transaction")}
+          data={settings?.branchSettings}
+          checked={
+            settings?.branchSettings?.maintainCounterWisePrefixForTransaction
+          }
+          onChangeData={(data) =>
+            handleFieldChange(
+              "branchSettings",
+              "maintainCounterWisePrefixForTransaction",
+              data.maintainCounterWisePrefixForTransaction
+            )
+          }
+        />
+      ),
+    },
+    {
+      condition: filterComponent([t("minimum_shift_duration")], filterText),
+      element: (
+        <div className="flex items-center gap-1">
+          <ERPCheckbox
+            id="allowMinimumShiftDuration"
+            checked={settings?.accountsSettings?.allowMinimumShiftDuration}
+            data={settings?.accountsSettings}
+            label={t("minimum_shift_duration")}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "accountsSettings",
+                "allowMinimumShiftDuration",
+                data.allowMinimumShiftDuration
+              )
+            }
+          />
+          <ERPInput
+            id="minimumShiftDuration"
+            value={settings?.accountsSettings?.minimumShiftDuration}
+            label=" "
+            data={settings?.accountsSettings}
+            type="number"
+            disabled={
+              !settings?.accountsSettings?.allowMinimumShiftDuration
+            }
+            onChangeData={(data) =>
+              handleFieldChange(
+                "accountsSettings",
+                "minimumShiftDuration",
+                data.minimumShiftDuration
+              )
+            }
+          />
+          &nbsp;Hours
+        </div>
       ),
     },
   ];

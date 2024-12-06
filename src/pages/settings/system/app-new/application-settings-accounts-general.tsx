@@ -273,6 +273,56 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       ),
     },
     {
+      condition: filterComponent([t("default_PDC_receivable_account")], filterText),
+      element: (
+        <ERPDataCombobox
+          id="defaultPDCReceivableAccount"
+          disabled={!settings?.accountsSettings?.allowPostPDC}
+          data={settings?.accountsSettings}
+          label={t("default_PDC_receivable_account")}
+          field={{
+            id: "defaultPDCReceivableAccount",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID=0&ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "accountsSettings",
+              "defaultPDCReceivableAccount",
+              data.defaultPDCReceivableAccount
+            )
+          }
+        />
+      ),
+    },
+    {
+      condition: filterComponent([t("default_PDC_payable_account")], filterText),
+      element: (
+        <ERPDataCombobox
+          id="defaultPDCPayableAccount"
+          disabled={!settings?.accountsSettings?.allowPostPDC}
+          data={settings?.accountsSettings}
+          label={t("default_PDC_payable_account")}
+          field={{
+            id: "defaultPDCPayableAccount",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID = 0 & ledgerType=${LedgerType.All}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "accountsSettings",
+              "defaultPDCPayableAccount",
+              data.defaultPDCPayableAccount
+            )
+          }
+        />
+      ),
+    },
+    {
       condition: filterComponent([t("maintain_billwise_account")], filterText),
       element: (
         <ERPCheckbox
@@ -379,6 +429,20 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
             )
           }
         />
+      ),
+    },
+    {
+      condition: filterComponent([t("maintain_tax")], filterText),
+      element: (
+        <ERPCheckbox
+        id="maintainTax"
+        label={t("maintain_tax")}
+        data={settings?.branchSettings}
+        checked={settings?.branchSettings?.maintainTax}
+        onChangeData={(data) =>
+          handleFieldChange("branchSettings","maintainTax", data.maintainTax)
+        }
+      />
       ),
     },
   ];  

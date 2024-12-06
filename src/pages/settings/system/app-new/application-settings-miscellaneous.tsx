@@ -88,6 +88,7 @@ const ApplicationMiscellaneousComponents: React.FC<ApplicationMiscellaneousProps
           value={settings?.accountsSettings?.supervisorPassword}
           data={settings?.accountsSettings}
           label={t("supervisor_password")}
+           type="Password"
           onChangeData={(data) =>
             handleFieldChange(
               "accountsSettings",

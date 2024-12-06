@@ -272,6 +272,43 @@ const InventoryProducts: React.FC<ApplicationSettingsProps> = ({
       ),
     },
     {
+      condition: filterComponent([t("use_product_images")], filterText),
+      element: (
+        <>
+        <ERPCheckbox
+          id="useProductImages"
+          label={t("use_product_images")}
+          data={settings?.productsSettings}
+          checked={settings?.productsSettings?.useProductImages}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "productsSettings",
+              "useProductImages",
+              data.useProductImages
+            )
+          }
+        />
+      
+        <ERPInput
+          id="productImagePath"
+          value={settings?.productsSettings?.productImagePath}
+          data={settings?.productsSettings}
+          label=" "
+          type="text"
+          placeholder={t("product_image_path")}
+          disabled={!settings?.productsSettings?.useProductImages}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "productsSettings",
+              "productImagePath",
+              data.productImagePath
+            )
+          }
+        />
+        </>
+      ),
+    },
+    {
       condition: filterComponent([t("allow_only_scan_product")], filterText),
       element: (
         <ERPCheckbox

@@ -100,45 +100,6 @@ const MainCRMFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       ),
     },
     {
-      condition: filterComponent([t("use_product_images")], filterText),
-      element: (
-        <ERPCheckbox
-          id="useProductImages"
-          label={t("use_product_images")}
-          data={settings?.productsSettings}
-          checked={settings?.productsSettings?.useProductImages}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "productsSettings",
-              "useProductImages",
-              data.useProductImages
-            )
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("product_image_path")], filterText),
-      element: (
-        <ERPInput
-          id="productImagePath"
-          value={settings?.productsSettings?.productImagePath}
-          data={settings?.productsSettings}
-          label={t("product_image_path")}
-          type="text"
-          placeholder={t("product_image_path")}
-          disabled={!settings?.productsSettings?.useProductImages}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "productsSettings",
-              "productImagePath",
-              data.productImagePath
-            )
-          }
-        />
-      ),
-    },
-    {
       condition: filterComponent([t("set_gift_shared_path")], filterText),
       element: (
         <ERPInput

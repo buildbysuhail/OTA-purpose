@@ -574,14 +574,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   </label>
                   <input
                     type="file"
-                    id="document1"
-                    name="document1"
+                    id="document1String"
+                    name="document1String"
                     onChange={(e) => {
                       const files = e.target.files;
                       if (files != undefined && files.length > 0) {
                         convertFileToBase64(files[0]).then((base64) => {
                           debugger;
-                          handleFieldChange("document1", base64);
+                          handleFieldChange("document1String", base64);
                         });
                       }
                     }
@@ -596,12 +596,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   </label>
                   <input
                     type="file"
-                    id="document2"
-                    name="document2"
+                    id="document2String"
+                    name="document2String"
                      onChange={(e) => {
                       const files = e.target.files;
                       if (files != undefined && files.length > 0) {
-                        convertFileToBase64(files[0]).then((base64) => handleFieldChange("document2", base64));
+                        convertFileToBase64(files[0]).then((base64) => handleFieldChange("document2String", base64));
                       }
                     }
                     }
@@ -771,12 +771,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   </label>
                   <input
                     // type="s"
-                    id="partyPhoto"
-                    name="partyPhoto"
+                    id="partyPhotoString"
+                    name="partyPhotoString"
                     onChange={(e) => {
                       const files = e.target.files;
                       if (files && files.length > 0) {
-                        handleFieldChange("partyPhoto", e.target.value);
+                        handleFieldChange("partyPhotoString", e.target.value);
                       }
                     }}
                     className="border rounded-lg p-2"

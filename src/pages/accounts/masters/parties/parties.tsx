@@ -91,7 +91,6 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
     }
   };
   const onCellPrepared = (e: any) => {
-    debugger;
     if (e.rowType === 'data' && e.column.dataField === "siNo" && (e.data.isValid === false || e.data.IsValid === false)) {
       e.cellElement.style.cssText = "background-color:#ffd0d0";
       e.cellElement.title = "Validation failed, Please check entire row.";
@@ -100,6 +99,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   }
   const onSubmit = useCallback(async () => {
     try {
+      debugger;
       const res = await api.postAsync(Urls.import_parties, failedCount > 0 && succeededCount > 0 ? store.filter((row: any) => row.isValid === true) : store);
       handleResponse(res, () => { }, () => { });
     } catch (error) {
@@ -110,7 +110,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
     }
     setLoading(true);
 
-  }, []);
+  }, [store]);
 
   const onChooseTemplate = async () => {
     try {
@@ -148,6 +148,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
         'Content-Type': 'multipart/form-data',
         'Accept': 'application/json',
       });
+      debugger;
       setStore(res.items);
       setTotalCount(res.items.length);
       setFailedCount(res.items?.filter((row: any) => row.isValid != true).length || 0);

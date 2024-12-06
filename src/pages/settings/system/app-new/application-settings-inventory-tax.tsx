@@ -4,6 +4,7 @@ import ERPInput from "../../../../components/ERPComponents/erp-input";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
+import Urls from "../../../../redux/urls";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
@@ -41,108 +42,143 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
 }) => {
   const items = [
     {
-      condition: filterComponent([t("backup_methods")], filterText),
+      condition: filterComponent([t("default_purchase")], filterText),
       element: (
-        <ERPDataCombobox
-          id="backupMethods"
-          data={settings.backUPSettings}
-          field={{
-            id: "backupMethods",
-            valueKey: "value",
-            labelKey: "label",
-          }}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "backUPSettings",
-              "backupMethods",
-              data.backupMethods
-            )
-          }
-          label={t("backup_methods")}
-          options={[
-            { value: "No BackUp", label: "No BackUp" },
-            {
-              value: "BackUp On Close",
-              label: "BackUp On Close",
-            },
-            {
-              value: "Scheduled BackUp",
-              label: "Scheduled BackUp",
-            },
-          ]}
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("backup_path")], filterText),
-      element: (
-        <ERPInput
-          id="backUpPath"
-          value={settings.backUPSettings?.backUpPath}
-          data={settings.backUPSettings}
-          disabled={
-            settings.backUPSettings?.backupMethods ==
-            "No BackUp" || true
-          }
-          label={t("backup_path")}
-          placeholder={t("backup_path")}
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "backUPSettings",
-              "backUpPath",
-              data.backUpPath
-            )
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("duration")], filterText),
-      element: (
-        <ERPInput
-          id="backupDuration"
-          value={settings.backUPSettings?.backupDuration}
-          data={settings.backUPSettings}
-          label={t("duration")}
-          disabled={
-            settings.backUPSettings?.backupMethods ==
-            "No BackUp" ||
-            settings.backUPSettings?.backupMethods ==
-            "BackUp On Close"
-          }
-          placeholder={t("duration")}
-          type="number"
-          onChangeData={(data: any) =>
-            handleFieldChange(
-              "backUPSettings",
-              "backupDuration",
-              parseFloat(data.backupDuration)
-            )
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent(
-        [t("compress_backup_file")],
-        filterText
-      ),
-      element: (
-        <ERPCheckbox
-          id="compressBackupFile"
-          label={t("compress_backup_file")}
-          data={settings?.backUPSettings}
-          checked={
-            settings?.backUPSettings?.compressBackupFile
-          }
-          onChangeData={(data) =>
-            handleFieldChange(
-              "backUPSettings",
-              "compressBackupFile",
-              data.compressBackupFile
-            )
-          }
-        />
+        <>
+          <ERPDataCombobox
+            id="purchaseFormType"
+            data={settings?.taxSettings}
+            field={{
+              id: "purchaseFormType",
+              getListUrl: Urls.data_FormTypeByPI,
+              valueKey: "FormType",
+              labelKey: "FormType",
+            }}
+            onChangeData={(data: any) =>
+              handleFieldChange("taxSettings", "purchaseFormType", data.purchaseFormType)
+            }
+            label={t("default_purchase")}
+          />
+    
+          <ERPDataCombobox
+            id="salesFormType"
+            data={settings?.taxSettings}
+            field={{
+              id: "salesFormType",
+              getListUrl: Urls.data_FormTypeBySI,
+              valueKey: "FormType",
+              labelKey: "FormType",
+            }}
+            onChangeData={(data: any) =>
+              handleFieldChange("taxSettings", "salesFormType", data.salesFormType)
+            }
+            label={t("sales_form_type")}
+          />
+    
+          <ERPDataCombobox
+            id="purchaseTaxAccount"
+            data={settings?.taxSettings}
+            field={{
+              id: "purchaseTaxAccount",
+              required: false,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) =>
+              handleFieldChange("taxSettings", "purchaseTaxAccount", data.purchaseTaxAccount)
+            }
+            label={t("purchase_tax_ledger")}
+          />
+    
+          <ERPDataCombobox
+            id="salesTaxAccount"
+            data={settings?.taxSettings}
+            field={{
+              id: "salesTaxAccount",
+              required: false,
+              getListUrl: Urls.data_duties_taxes,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            onChangeData={(data: any) =>
+              handleFieldChange("taxSettings", "salesTaxAccount", data.salesTaxAccount)
+            }
+            label={t("sales_tax_ledger")}
+          />
+    
+          {1 !== 1 && (
+            <>
+              <ERPDataCombobox
+                id="purchaseCSTAccount"
+                data={settings?.taxSettings}
+                disabled
+                field={{
+                  id: "purchaseCSTAccount",
+                  required: false,
+                  getListUrl: Urls.data_duties_taxes,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("taxSettings", "purchaseCSTAccount", data.purchaseCSTAccount)
+                }
+                label={t("purchase_cst_account")}
+              />
+    
+              <ERPDataCombobox
+                id="salesCSTAccount"
+                data={settings?.taxSettings}
+                disabled
+                field={{
+                  id: "salesCSTAccount",
+                  required: false,
+                  getListUrl: Urls.data_duties_taxes,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("taxSettings", "salesCSTAccount", data.salesCSTAccount)
+                }
+                label={t("sales_cst_account")}
+              />
+    
+              <ERPDataCombobox
+                id="expensesTaxAccount"
+                data={settings?.taxSettings}
+                disabled
+                field={{
+                  id: "expensesTaxAccount",
+                  required: false,
+                  getListUrl: Urls.data_duties_taxes,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("taxSettings", "expensesTaxAccount", data.expensesTaxAccount)
+                }
+                label={t("expenses_tax_account")}
+              />
+    
+              <ERPDataCombobox
+                id="incomeTaxAccount"
+                data={settings?.taxSettings}
+                disabled
+                field={{
+                  id: "incomeTaxAccount",
+                  required: false,
+                  getListUrl: Urls.data_duties_taxes,
+                  valueKey: "id",
+                  labelKey: "name",
+                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("taxSettings", "incomeTaxAccount", data.incomeTaxAccount)
+                }
+                label={t("income_tax_account")}
+              />
+            </>
+          )}
+        </>
       ),
     }
   ];

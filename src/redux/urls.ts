@@ -212,7 +212,7 @@ const Urls = {
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
   acc_user_config:" ",
-
+  acc_attachmentInfo:"/Core/AttachmentInfo/UploadFile",
   //Reports Start
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",

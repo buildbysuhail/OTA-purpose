@@ -12,7 +12,7 @@ import { initialPartiesData, initialProjectOrJobData, PartiesData, ProjectOrJob 
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
-import { Tab, Tabs } from "@mui/material";
+import { CircularProgress, Tab, Tabs } from "@mui/material";
 import { APIClient } from "../../../../helpers/api-client";
 import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
@@ -42,6 +42,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       getFieldProps,
       handleClose,
       isLoading,
+      formState
     } = useFormManager<PartiesData>({
       url: Urls.parties,
       onClose: useCallback(
@@ -69,6 +70,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       },
     });
 
+    const [fileLoading,setFileLoading]=useState(false)
     const { t } = useTranslation("masters");
 
     const handleFileChange = (e: { target: { files: any[] } }) => {
@@ -91,6 +93,23 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       setActiveTab(newValue);
     };
 
+
+    const handleFileUpload = async (key: any, value: any) => {
+      setFileLoading(true)
+      const payload = {
+        base64String: value,
+      };
+      try {
+        const res = await api.postAsync(Urls.acc_attachmentInfo,payload)
+        handleFieldChange(key, res) 
+      } catch (error) {
+        console.error('Error uploading file:', error)
+      }finally{
+        setFileLoading(false)
+      }
+    }
+   
+  
     return (
       <div className="w-full bordered-tab relative pb-16">
         <div className="mt-[1.5rem]">
@@ -572,6 +591,8 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   <label htmlFor="fileInput" className="text-sm text-gray-700">
                     {t("document_1")}
                   </label>
+
+                  <div className="flex gap-2 ">
                   <input
                     type="file"
                     id="document1String"
@@ -580,15 +601,37 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                       const files = e.target.files;
                       if (files != undefined && files.length > 0) {
                         convertFileToBase64(files[0]).then((base64) => {
-                          debugger;
-                          handleFieldChange("document1String", base64);
+                          handleFileUpload("document1String", base64)  
                         });
                       }
                     }
+                  
                     }
+                    disabled={fileLoading}
                     className="border rounded-lg p-2"
+                    
                   />
-                </div>
+                    {fileLoading && (
+                      <div className="flex items-center">
+                        <CircularProgress className="" color="inherit" size={14} />
+                      </div>
+                    )}
+                  </div>
+                  
+                
+                        {formState?.data?.document1String && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-700">Uploaded file:</span>
+                          <a 
+                            href={formState?.data?.document1String} 
+                            download 
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            Download
+                          </a>
+                        </div>
+                      )}
+                  </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="fileInput" className="text-sm text-gray-700">
@@ -598,15 +641,29 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                     type="file"
                     id="document2String"
                     name="document2String"
-                     onChange={(e) => {
+                    onChange={(e) => {
                       const files = e.target.files;
                       if (files != undefined && files.length > 0) {
-                        convertFileToBase64(files[0]).then((base64) => handleFieldChange("document2String", base64));
+                        convertFileToBase64(files[0]).then((base64) => {
+                          handleFileUpload("document2String", base64)  
+                        });
+                        }
                       }
-                    }
                     }
                     className="border rounded-lg p-2"
                   />
+                      {formState?.data?.document2String && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-700">Uploaded file:</span>
+                          <a 
+                            href={formState?.data?.document2String} 
+                            download 
+                            className="text-blue-600 hover:text-blue-800 underline"
+                          >
+                            Download
+                          </a>
+                        </div>
+                      )}
                 </div>
               </div>
               {isIndianCompany && (

@@ -34,6 +34,8 @@ import AccountsGeneralFilterableComponents from "./application-settings-accounts
 import AccountsHrFilterableComponents from "./application-settings-accounts-hr";
 import MainSalesPOSFilterableComponents from "./application-settings-inventory-sales-pos";
 import MainInventoryGeneralFilterableComponents from "./application-settings-inventory-general";
+import AccountsEinvoiceFilterableComponents from "./application-settings-accounts-ksa-einvoice";
+import MainMultiBranchFilterableComponents from "./application-settings-main-multi-branch";
 
 const api = new APIClient();
 const LayoutToggle = ({
@@ -425,8 +427,8 @@ export default function SettingsPage() {
                         <button
                           key={set.key}
                           className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${set.key === activeSubItem
-                              ? "bg-gray-300 border-primary text-primary"
-                              : "border-transparent hover:bg-gray-200"
+                            ? "bg-gray-300 border-primary text-primary"
+                            : "border-transparent hover:bg-gray-200"
                             }  `}
                           onClick={() => scrollToSection(item.id, set.key)}
                         >
@@ -444,8 +446,8 @@ export default function SettingsPage() {
                               <button
                                 key={subCat.key}
                                 className={`w-full px-3 md:px-4 py-1.5 text-left text-sm ${subCat.key === activeSubCatItem
-                                    ? "bg-gray-300 border-primary text-primary"
-                                    : "border-transparent hover:bg-gray-200"
+                                  ? "bg-gray-300 border-primary text-primary"
+                                  : "border-transparent hover:bg-gray-200"
                                   }  `}
                                 onClick={() =>
                                   scrollToSection(item.id, set.key, subCat.key)
@@ -552,549 +554,18 @@ export default function SettingsPage() {
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></MainPrintingFilterableComponents>
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </MainPrintingFilterableComponents>
 
 
               {/* multi branch */}
-              <div>
-                <div
-                  key="mainMultiBranch"
-                  ref={(el) => (subItemsRef.current["mainMultiBranch"] = el)}
-                >
-                  <h1
-                    className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === "mainMultiBranch"
-                        ? "blink-animation bg-[#f1f1f1]"
-                        : "bg-[#f1f1f1]"
-                      }`}
-                  >
-                    {t("multi_branch")}
-                  </h1>
-                  <div key="mainMultiBranch" className="space-y-4">
-                    <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                      <div
-                        className={`grid ${isCompactView
-                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                            : `${gridClass ||
-                            "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                            } gap-4 items-center justify-center`
-                          }`}
-                      >
-                        {filterComponent(
-                          [t("default_BTO_account")],
-                          filterText
-                        ) && (
-                            <ERPDataCombobox
-                              id="defaultBTOAccount"
-                              data={settings?.inventorySettings}
-                              field={{
-                                id: "defaultBTOAccount",
-                                getListUrl: Urls.data_acc_ledgers,
-                                params: `ledgerID=0&ledgerType=${LedgerType.Sales_Account}`,
-                                valueKey: "id",
-                                labelKey: "name",
-                              }}
-                              onChangeData={(data: any) =>
-                                handleFieldChange(
-                                  "inventorySettings",
-                                  "defaultBTOAccount",
-                                  data.defaultBTOAccount
-                                )
-                              }
-                              label={t("default_BTO_account")}
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("default_BTI_account")],
-                          filterText
-                        ) && (
-                            <ERPDataCombobox
-                              id="defaultBTIAccount"
-                              data={settings?.inventorySettings}
-                              field={{
-                                id: "defaultBTIAccount",
-                                getListUrl: Urls.data_acc_ledgers,
-                                params: `ledgerID=0&ledgerType=${LedgerType.Purchase_Account}`,
-                                valueKey: "id",
-                                labelKey: "name",
-                              }}
-                              onChangeData={(data: any) =>
-                                handleFieldChange(
-                                  "inventorySettings",
-                                  "defaultBTIAccount",
-                                  data.defaultBTIAccount
-                                )
-                              }
-                              label={t("default_BTI_account")}
-                            />
-                          )}
-
-                        {filterComponent([t("BTO_using_MSP")], filterText) && (
-                          <ERPCheckbox
-                            id="bTOUsingMSP"
-                            checked={settings?.inventorySettings?.bTOUsingMSP}
-                            data={settings?.inventorySettings}
-                            label={t("BTO_using_MSP")}
-                            onChangeData={(data: any) =>
-                              handleFieldChange(
-                                "inventorySettings",
-                                "bTOUsingMSP",
-                                data.bTOUsingMSP
-                              )
-                            }
-                          />
-                        )}
-
-                        {filterComponent(
-                          [t("use_cost_for_stock_transfer_to_branch")],
-                          filterText
-                        ) && (
-                            <ERPCheckbox
-                              id="useCostForStockTransferToBranch"
-                              checked={
-                                settings?.inventorySettings
-                                  ?.useCostForStockTransferToBranch
-                              }
-                              data={settings?.inventorySettings}
-                              label={t("use_cost_for_stock_transfer_to_branch")}
-                              onChangeData={(data: any) =>
-                                handleFieldChange(
-                                  "inventorySettings",
-                                  "useCostForStockTransferToBranch",
-                                  data.useCostForStockTransferToBranch
-                                )
-                              }
-                            />
-                          )}
-                      </div>
-
-                      <div
-                        className={`grid ${isCompactView
-                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                            : `${gridClass ||
-                            "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                            } gap-4 items-center justify-center`
-                          }`}
-                      >
-                        <div>
-                          {filterComponent(
-                            [t("maintain_synchronization")],
-                            filterText
-                          ) && (
-                              <>
-                                <ERPCheckbox
-                                  id="maintainSynchronization"
-                                  checked={
-                                    settings?.branchSettings
-                                      ?.maintainSynchronization
-                                  }
-                                  data={settings?.branchSettings}
-                                  label={t("maintain_synchronization")}
-                                  onChangeData={(data) =>
-                                    handleFieldChange(
-                                      "branchSettings",
-                                      "maintainSynchronization",
-                                      data.maintainSynchronization
-                                    )
-                                  }
-                                />
-                                <ERPDataCombobox
-                                  id="syncMethod"
-                                  disabled={
-                                    settings?.branchSettings
-                                      ?.maintainSynchronization === false
-                                  }
-                                  label=" "
-                                  field={{
-                                    id: "syncMethod",
-                                    valueKey: "value",
-                                    labelKey: "label",
-                                  }}
-                                  data={settings?.branchSettings}
-                                  onChangeData={(data) =>
-                                    handleFieldChange(
-                                      "branchSettings",
-                                      "syncMethod",
-                                      data.syncMethod
-                                    )
-                                  }
-                                  options={[
-                                    {
-                                      value: "Manual Sync",
-                                      label: "Manual Sync",
-                                    },
-                                    { value: "Auto Sync", label: "Auto Sync" },
-                                    {
-                                      value: "Auto Sync and Upload Only",
-                                      label: "Auto Sync and Upload Only",
-                                    },
-                                    {
-                                      value: "Manual Sync and Upload Only",
-                                      label: "Manual Sync and Upload Only",
-                                    },
-                                    {
-                                      value: "Upload And Download",
-                                      label: "Upload And Download",
-                                    },
-                                  ]}
-                                />
-                              </>
-                            )}
-                        </div>
-
-                        {filterComponent(
-                          [t("intervals_(minutes)")],
-                          filterText
-                        ) && (
-                            <ERPInput
-                              id="syncIntervals"
-                              value={settings?.branchSettings?.syncIntervals}
-                              data={settings?.branchSettings}
-                              label={t("intervals_(minutes)")}
-                              disabled={
-                                settings?.branchSettings?.syncMethod !==
-                                "Auto Sync" &&
-                                settings?.branchSettings?.syncMethod !==
-                                "Auto Sync and Upload Only"
-                              }
-                              type="number"
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "branchSettings",
-                                  "syncIntervals",
-                                  data.syncIntervals
-                                )
-                              }
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("refresh_stock_after_sync")],
-                          filterText
-                        ) && (
-                            <ERPCheckbox
-                              id="refreshStockAfterSync"
-                              checked={
-                                settings?.branchSettings?.refreshStockAfterSync
-                              }
-                              data={settings?.branchSettings}
-                              disabled={
-                                !settings?.branchSettings?.maintainSynchronization
-                              }
-                              label={t("refresh_stock_after_sync")}
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "branchSettings",
-                                  "refreshStockAfterSync",
-                                  data.refreshStockAfterSync
-                                )
-                              }
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("refresh_server_stock_after_sync")],
-                          filterText
-                        ) && (
-                            <ERPCheckbox
-                              id="refreshServerStockAfterSync"
-                              checked={
-                                settings?.branchSettings
-                                  ?.refreshServerStockAfterSync
-                              }
-                              data={settings?.branchSettings}
-                              disabled={
-                                !settings?.branchSettings?.maintainSynchronization
-                              }
-                              label={t("refresh_server_stock_after_sync")}
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "branchSettings",
-                                  "refreshServerStockAfterSync",
-                                  data.refreshServerStockAfterSync
-                                )
-                              }
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("maintain_inventory_master_entry")],
-                          filterText
-                        ) && (
-                            <ERPDisableEnable targetCount={5}>
-                              {(hasPermitted) => (
-                                <ERPCheckbox
-                                  id="maintainMasterEntry"
-                                  label={t("maintain_inventory_master_entry")}
-                                  disabled={!hasPermitted}
-                                  data={settings?.branchSettings}
-                                  checked={
-                                    settings?.branchSettings?.maintainMasterEntry
-                                  }
-                                  onChangeData={(data) =>
-                                    handleFieldChange(
-                                      "branchSettings",
-                                      "maintainMasterEntry",
-                                      data.maintainMasterEntry
-                                    )
-                                  }
-                                />
-                              )}
-                            </ERPDisableEnable>
-                          )}
-
-                        {filterComponent(
-                          [t("maintain_inventory_transactions_entry")],
-                          filterText
-                        ) && (
-                            <ERPCheckbox
-                              id="maintainInventoryTransactionsEntry"
-                              label={t("maintain_inventory_transactions_entry")}
-                              data={settings?.branchSettings}
-                              checked={
-                                settings?.branchSettings
-                                  ?.maintainInventoryTransactionsEntry
-                              }
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "branchSettings",
-                                  "maintainInventoryTransactionsEntry",
-                                  data.maintainInventoryTransactionsEntry
-                                )
-                              }
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("use_branch_wise_sales_price")],
-                          filterText
-                        ) && (
-                            <ERPDisableEnable targetCount={5}>
-                              {(hasPermitted) => (
-                                <ERPCheckbox
-                                  id="useBranchWiseSalesPrice"
-                                  disabled={!hasPermitted}
-                                  label={t("use_branch_wise_sales_price")}
-                                  data={settings?.branchSettings}
-                                  checked={
-                                    settings?.branchSettings
-                                      ?.useBranchWiseSalesPrice
-                                  }
-                                  onChangeData={(data) =>
-                                    handleFieldChange(
-                                      "branchSettings",
-                                      "useBranchWiseSalesPrice",
-                                      data.useBranchWiseSalesPrice
-                                    )
-                                  }
-                                />
-                              )}
-                            </ERPDisableEnable>
-                          )}
-
-                        {filterComponent(
-                          [t("show_BTI_notification")],
-                          filterText
-                        ) && (
-                            <ERPCheckbox
-                              id="showBTINotification"
-                              checked={
-                                settings?.branchSettings?.showBTINotification
-                              }
-                              data={settings?.branchSettings}
-                              label={t("show_BTI_notification")}
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "branchSettings",
-                                  "showBTINotification",
-                                  data.showBTINotification
-                                )
-                              }
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("maintain_all_branch")],
-                          filterText
-                        ) && (
-                            <ERPCheckbox
-                              id="maintainAllBranchWithCommonInventory"
-                              checked={
-                                settings?.miscellaneousSettings
-                                  ?.maintainAllBranchWithCommonInventory
-                              }
-                              data={settings?.miscellaneousSettings}
-                              label={t("maintain_all_branch")}
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "miscellaneousSettings",
-                                  "maintainAllBranchWithCommonInventory",
-                                  data.maintainAllBranchWithCommonInventory
-                                )
-                              }
-                            />
-                          )}
-
-                        {userSession.countryId === Countries.India &&
-                          filterComponent([t("auto_sync")], filterText) && (
-                            <ERPCheckbox
-                              id="autoSyncSIandPI_BT"
-                              checked={
-                                settings?.miscellaneousSettings
-                                  ?.autoSyncSIandPI_BT
-                              }
-                              data={settings?.miscellaneousSettings}
-                              label={t("auto_sync")}
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "miscellaneousSettings",
-                                  "autoSyncSIandPI_BT",
-                                  data.autoSyncSIandPI_BT
-                                )
-                              }
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("apply_TAX_on_purchase_converted_to_BTO")],
-                          filterText
-                        ) && (
-                            <ERPCheckbox
-                              id="applyVATOnPurchaseToBTO"
-                              label={t("apply_TAX_on_purchase_converted_to_BTO")}
-                              data={settings?.branchSettings}
-                              checked={
-                                settings?.branchSettings?.applyVATOnPurchaseToBTO
-                              }
-                              onChangeData={(data) =>
-                                handleFieldChange(
-                                  "branchSettings",
-                                  "applyVATOnPurchaseToBTO",
-                                  data.applyVATOnPurchaseToBTO
-                                )
-                              }
-                            />
-                          )}
-
-                        {filterComponent(
-                          [t("set_system_code")],
-                          filterText
-                        ) && (
-                            <div>
-                              <button
-                                className="text-blue-500 underline"
-                                onClick={() => setShowSystemCodeBox(true)}
-                              >
-                                {t("set_system_code")}
-                              </button>
-                              {showSystemCodeBox && (
-                                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                                  <div className="max-h-[300px] w-[300px] xxl:w-[250px] xxl:max-h-[350px] p-3 border border-gray-300 rounded-sm shadow-sm bg-white">
-                                    <div className="flex justify-between items-center mb-5">
-                                      <h6 className="text-center font-medium">
-                                        {t("sync_systemCode")}
-                                      </h6>
-                                      <button
-                                        className="text-red-500 font-bold"
-                                        onClick={() =>
-                                          setShowSystemCodeBox(false)
-                                        }
-                                      >
-                                        ✕
-                                      </button>
-                                    </div>
-
-                                    {/* Content */}
-                                    <div className="h-32 xxl:h-40 overflow-y-scroll snap-x mb-2 rounded-sm shadow-sm">
-                                      {!dataLoaded ? (
-                                        <div className="my-5 xxl:my-10">
-                                          <ul className="list-none text-center text-gray-500 snap-center">
-                                            <li className="py-5 xxl:py-10 px-3">
-                                              {t(
-                                                "click_load_to_fetch_system_code"
-                                              )}
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      ) : (
-                                        <ul className="list-none text-center snap-center">
-                                          {systemCode && systemCode.length > 0 ? (
-                                            systemCode.map(
-                                              (
-                                                code: systemCodeApplicationMiscSettings,
-                                                index: number
-                                              ) => (
-                                                <li
-                                                  className="p-1 text-xs"
-                                                  key={index}
-                                                >
-                                                  {code.systemCode}
-                                                </li>
-                                              )
-                                            )
-                                          ) : (
-                                            <li>{"No data available"}</li>
-                                          )}
-                                        </ul>
-                                      )}
-                                    </div>
-
-                                    <li className="flex justify-end mb-2">
-                                      <ERPButton
-                                        className="w-0 h-0 p-0 bg-white"
-                                        type="button"
-                                        onClick={() =>
-                                          setAddSystemCode(!addSystemCode)
-                                        }
-                                        startIcon="ri-pencil-line"
-                                      />
-                                    </li>
-                                    {addSystemCode && (
-                                      <ERPInput
-                                        id="newSystemCode"
-                                        noLabel={true}
-                                        data={SystemCodeAddData}
-                                        value={SystemCodeAddData.systemCode}
-                                        onChange={(e) => {
-                                          setSystemCodeAddData({
-                                            ...SystemCodeAddData,
-                                            systemCode: e.target.value,
-                                          });
-                                        }}
-                                        placeholder={"enter_new_system_code"}
-                                      />
-                                    )}
-                                    <div className="flex justify-end">
-                                      <ERPButton
-                                        startIcon="ri-refresh-line"
-                                        variant="secondary"
-                                        className="h-6 w-8 rounded-[2px]"
-                                        type="button"
-                                        loading={loadSystemCode}
-                                        disabled={loadSystemCode}
-                                        onClick={getSystemCode}
-                                      />
-                                      <ERPButton
-                                        startIcon="ri-save-line"
-                                        className="h-6 w-8 rounded-[2px]"
-                                        variant="primary"
-                                        type="button"
-                                        loading={isSavingSystemCode}
-                                        disabled={isSavingSystemCode}
-                                        onClick={postSystemCode}
-                                      />
-                                    </div>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <MainMultiBranchFilterableComponents
+                key="inventorySalesPOS"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </MainMultiBranchFilterableComponents>
 
               {/* CRM */}
               <MainCRMFilterableComponents
@@ -1102,8 +573,8 @@ export default function SettingsPage() {
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></MainCRMFilterableComponents>
-
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </MainCRMFilterableComponents>
             </div>
           </section>
 
@@ -1135,8 +606,8 @@ export default function SettingsPage() {
                         subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                         handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                         blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-                        sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></AccountsGeneralFilterableComponents>
-
+                        sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+                      </AccountsGeneralFilterableComponents>
                     </div>
                   </div>
                 </div>
@@ -1152,197 +623,13 @@ export default function SettingsPage() {
 
               {/* KSA E-invoice  */}
               {userSession.countryId === Countries.Saudi && (
-                <div>
-                  <div
-                    key="accountsEInvoiceGCC"
-                    ref={(el) =>
-                      (subItemsRef.current["accountsEInvoiceGCC"] = el)
-                    }
-                  >
-                    <h1
-                      className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2
-                       ${blinkSection === "accountsEInvoiceGCC"
-                          ? "blink-animation bg-[#f1f1f1]"
-                          : "bg-[#f1f1f1]"
-                        }`}
-                    >
-                      {t("ksa_e-invoice")}
-                    </h1>
-                    <div key="accountsEInvoiceGCC" className="space-y-4">
-                      <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
-                        <div
-                          className={`grid ${isCompactView
-                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                              : `${gridClass ||
-                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                              } gap-4 items-center justify-center`
-                            }`}
-                        >
-                          {filterComponent(
-                            [t("e-Invoice_sync_systemCode")],
-                            filterText
-                          ) && (
-                              <ERPDisableEnable targetCount={5}>
-                                {(hasPermitted) => (
-                                  <ERPInput
-                                    id="kSA_EInvoice_Sync_SystemCode"
-                                    disabled={!hasPermitted}
-                                    value={
-                                      settings?.branchSettings
-                                        .kSA_EInvoice_Sync_SystemCode
-                                    }
-                                    data={settings?.branchSettings}
-                                    label={t("e-Invoice_sync_systemCode")}
-                                    onChangeData={(data) =>
-                                      handleFieldChange(
-                                        "branchSettings",
-                                        "kSA_EInvoice_Sync_SystemCode",
-                                        data.kSA_EInvoice_Sync_SystemCode
-                                      )
-                                    }
-                                  />
-                                )}
-                              </ERPDisableEnable>
-                            )}
-                          {filterComponent(
-                            [t("maintain_KSA_eInvoice")],
-                            filterText
-                          ) && (
-                              <ERPCheckbox
-                                id="maintainKSA_EInvoice"
-                                label={t("maintain_KSA_eInvoice")}
-                                disabled={
-                                  settings?.branchSettings?.maintainTax === false
-                                }
-                                data={settings?.branchSettings}
-                                checked={
-                                  settings?.branchSettings?.maintainKSA_EInvoice
-                                }
-                                onChangeData={(data) =>
-                                  handleFieldChange(
-                                    "branchSettings",
-                                    "maintainKSA_EInvoice",
-                                    data.maintainKSA_EInvoice
-                                  )
-                                }
-                              />
-                            )}
-
-                          {filterComponent(
-                            [t("apply_KSA_eInvoice_validation_rules")],
-                            filterText
-                          ) && (
-                              <ERPCheckbox
-                                id="apply_KSA_EInvoice_Validation_Rules"
-                                label={t("apply_KSA_eInvoice_validation_rules")}
-                                checked={
-                                  settings?.branchSettings
-                                    ?.apply_KSA_EInvoice_Validation_Rules
-                                }
-                                data={settings?.branchSettings}
-                                onChangeData={(data) =>
-                                  handleFieldChange(
-                                    "branchSettings",
-                                    "apply_KSA_EInvoice_Validation_Rules",
-                                    data.apply_KSA_EInvoice_Validation_Rules
-                                  )
-                                }
-                              />
-                            )}
-
-                          {filterComponent(
-                            [
-                              t(
-                                "create_credit_note_automatically_on_sales_edit"
-                              ),
-                            ],
-                            filterText
-                          ) && (
-                              <ERPCheckbox
-                                id="createCreditNoteAutomaticallyOnSalesEdit"
-                                label={t(
-                                  "create_credit_note_automatically_on_sales_edit"
-                                )}
-                                data={settings?.branchSettings}
-                                checked={
-                                  settings?.branchSettings
-                                    ?.createCreditNoteAutomaticallyOnSalesEdit
-                                }
-                                onChangeData={(data) =>
-                                  handleFieldChange(
-                                    "branchSettings",
-                                    "createCreditNoteAutomaticallyOnSalesEdit",
-                                    data.createCreditNoteAutomaticallyOnSalesEdit
-                                  )
-                                }
-                              />
-                            )}
-                        </div>
-                        <div
-                          className={`grid ${isCompactView
-                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                              : `${gridClass ||
-                              "xxl:grid-cols-3 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1"
-                              } gap-2 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
-                            }`}
-                        >
-                          {filterComponent([t("otp_email")], filterText) && (
-                            <>
-                              <div className="flex gap-4 items-center">
-                                <ERPInput
-                                  id="oTPEmail"
-                                  label={t("otp_email")}
-                                  value={settings?.mainSettings?.oTPEmail}
-                                  data={settings?.mainSettings}
-                                  onChangeData={(data) =>
-                                    handleFieldChange(
-                                      "mainSettings",
-                                      "oTPEmail",
-                                      data.oTPEmail
-                                    )
-                                  }
-                                />
-                                <ERPButton
-                                  title={t("send_otp")}
-                                  variant="secondary"
-                                  loading={otpSending}
-                                  className="mt-4"
-                                  disabled={otpSending}
-                                  onClick={() => sendOtp()}
-                                />
-                              </div>
-                              <div className="flex gap-4 items-center xxl:mt-4">
-                                <ERPInput
-                                  id="oTPVerification"
-                                  label=" "
-                                  placeholder="Enter OTP"
-                                  data={settings?.mainSettings}
-                                  value={
-                                    settings?.mainSettings?.oTPVerification
-                                  }
-                                  onChangeData={(data) =>
-                                    handleFieldChange(
-                                      "mainSettings",
-                                      "oTPVerification",
-                                      data.oTPVerification
-                                    )
-                                  }
-                                />
-                                <ERPButton
-                                  title={t("verify")}
-                                  variant="primary"
-                                  loading={otpVerifying}
-                                  disabled={otpVerifying}
-                                  onClick={() => verifyOtp()}
-                                />
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <AccountsEinvoiceFilterableComponents
+                  key="accountsEInvoiceGCC"
+                  subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                  handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                  blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                  sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+                </AccountsEinvoiceFilterableComponents>
               )}
             </div>
           </section>
@@ -1379,10 +666,10 @@ export default function SettingsPage() {
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       {filterComponent([t("batch_criteria")], filterText) && (
@@ -1936,10 +1223,10 @@ export default function SettingsPage() {
                   <div key="inventoryGSTSettings" className="space-y-4">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       {filterComponent([t("default_purchase")], filterText) && (
@@ -1995,10 +1282,10 @@ export default function SettingsPage() {
                       {(hasPermitted) => (
                         <div
                           className={`grid ${isCompactView
-                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                              : `${gridClass ||
-                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                              } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${gridClass ||
+                            "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
                             }`}
                         >
                           {filterComponent(
@@ -2249,10 +1536,10 @@ export default function SettingsPage() {
                       {(hasPermitted) => (
                         <div
                           className={`grid ${isCompactView
-                              ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                              : `${gridClass ||
-                              "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                              } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                            ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                            : `${gridClass ||
+                            "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                            } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
                             }`}
                         >
                           {filterComponent(
@@ -2625,10 +1912,10 @@ export default function SettingsPage() {
                     </ERPDisableEnable>
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center border border-solid border-[#e3e3e3] p-4 rounded-lg`
                         }`}
                     >
                       <div className="flex gap-4 items-center">
@@ -2703,10 +1990,10 @@ export default function SettingsPage() {
                     </PopupComponent>
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 mt-5 border border-solid border-[#e3e3e3] p-4 rounded-lg`
                         }`}
                     >
                       {filterComponent(
@@ -2788,10 +2075,10 @@ export default function SettingsPage() {
                   <div key="inventoryTaxSettings" className="space-y-4">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4`
                         }`}
                     >
                       {filterComponent([t("default_purchase")], filterText) && (
@@ -2983,10 +2270,10 @@ export default function SettingsPage() {
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       {filterComponent(
@@ -3529,10 +2816,10 @@ export default function SettingsPage() {
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       {filterComponent(
@@ -4651,10 +3938,10 @@ export default function SettingsPage() {
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       {filterComponent(
@@ -4753,10 +4040,10 @@ export default function SettingsPage() {
                     </div>
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 md:grid-cols-1 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       {filterComponent(
@@ -4830,10 +4117,10 @@ export default function SettingsPage() {
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       {filterComponent(
@@ -4961,10 +4248,10 @@ export default function SettingsPage() {
                   <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                     <div
                       className={`grid ${isCompactView
-                          ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                          : `${gridClass ||
-                          "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                          } gap-4 items-center justify-center`
+                        ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                        : `${gridClass ||
+                        "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                        } gap-4 items-center justify-center`
                         }`}
                     >
                       <div className="flex items-center gap-6">
@@ -5147,10 +4434,10 @@ export default function SettingsPage() {
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                 <div
                   className={`grid ${isCompactView
-                      ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
-                      : `${gridClass ||
-                      "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
-                      } gap-4 items-center justify-center`
+                    ? "grid-cols-1 gap-6 xxl:w-1/3 xl:w-2/4 sm:w-3/4"
+                    : `${gridClass ||
+                    "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
+                    } gap-4 items-center justify-center`
                     }`}
                 >
                   <div>

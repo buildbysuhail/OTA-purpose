@@ -29,7 +29,7 @@ interface ApplicationSettingsProps {
   key: string;
 }
 
-const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
+const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   settings,
   handleFieldChange,
   filterComponent,
@@ -473,7 +473,7 @@ const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProp
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div key={key} ref={(el) => (subItemsCatRef.current["inventoryGeneral"] = el)}>
+          <div key={key} ref={(el) => (subItemsRef.current["inventoryGeneral"] = el)}>
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryGeneral"
                 ? "blink-animation bg-[#f1f1f1]"
@@ -506,4 +506,4 @@ const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProp
     </>
   );
 };
-export default MainInventoryGeneralFilterableComponents;
+export default InventoryGeneralFilterableComponents;

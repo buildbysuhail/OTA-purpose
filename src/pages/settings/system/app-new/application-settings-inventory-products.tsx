@@ -29,7 +29,7 @@ interface ApplicationSettingsProps {
 }
 
 
-const InventoryProducts: React.FC<ApplicationSettingsProps> = ({
+const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   settings,
   handleFieldChange,
   filterComponent,
@@ -600,7 +600,7 @@ const InventoryProducts: React.FC<ApplicationSettingsProps> = ({
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div key={key} ref={(el) => (subItemsCatRef.current["inventoryProducts"] = el)}>
+          <div key={key} ref={(el) => (subItemsRef.current["inventoryProducts"] = el)}>
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryProducts"
                 ? "blink-animation bg-[#f1f1f1]"
@@ -634,4 +634,4 @@ const InventoryProducts: React.FC<ApplicationSettingsProps> = ({
     </>
   );
 };
-export default InventoryProducts;
+export default InventoryProductsFilterableComponents;

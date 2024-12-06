@@ -434,7 +434,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div key={key} ref={(el) => (subItemsCatRef.current["inventoryPurchase"] = el)}  >
+          <div key={key} ref={(el) => (subItemsRef.current["inventoryPurchase"] = el)}  >
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryPurchase"
                 ? "blink-animation bg-[#f1f1f1]"

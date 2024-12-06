@@ -273,7 +273,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       ),
     },
     {
-      condition: filterComponent([t("default_PDC_receivable_account")], filterText),
+      condition:userSession.countryId == Countries.India &&  filterComponent([t("default_PDC_receivable_account")], filterText),
       element: (
         <ERPDataCombobox
           id="defaultPDCReceivableAccount"
@@ -298,7 +298,7 @@ const AccountsGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = 
       ),
     },
     {
-      condition: filterComponent([t("default_PDC_payable_account")], filterText),
+      condition:userSession.countryId == Countries.India &&  filterComponent([t("default_PDC_payable_account")], filterText),
       element: (
         <ERPDataCombobox
           id="defaultPDCPayableAccount"

@@ -153,6 +153,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
       labelFontSize: 0,
       otherLabelFontSize: 0,
       borderColor: "128, 128, 128",
+      selectColor:'128, 128, 128', 
       fontColor: "128, 128, 128",
       borderFocus: "128, 128, 128",
       labelColor: "128, 128, 128",
@@ -181,15 +182,18 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   let updatedUserThemeAction = reduxManager.getTypedThunk(
     updatedUserThemeRName
   );
+ 
   const handleInputBoxStyleChange = (field: keyof inputBox, value: any) => {
-    const _appState = {
-      ...appState,
-      inputBox: {
-        ...appState.inputBox,
-        [field]: value,
-      },
-    };
-    updateAppState(_appState);
+    if (appState.inputBox[field] !== value) {
+      const _appState = {
+        ...appState,
+        inputBox: {
+          ...appState.inputBox,
+          [field]: value,
+        },
+      };
+      updateAppState(_appState);
+    }
   };
 
   const handleScrollbarChange = (field: keyof AppState, value: any) => {
@@ -318,15 +322,11 @@ const resetInputBox = async ()=>{
                                 className="ti-form-radio"
                                 id="switcher-light-theme"
                                 checked={appState.mode === "light"}
-                                onChange={(e) => {
-                                  if (e.target.checked == true) {
-                                    switcherdata.Light(
-                                      updateAppState,
-                                      appState
-                                    );
-                                  }
+                                onChange={() => {
+                                  switcherdata.Light(updateAppState,appState);
                                 }}
                               />
+                              
                               <label
                                 htmlFor="switcher-light-theme"
                                 className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold"
@@ -340,11 +340,10 @@ const resetInputBox = async ()=>{
                                 name="theme-style"
                                 className="ti-form-radio"
                                 id="switcher-dark-theme"
-                                defaultChecked={appState.mode === "dark"}
-                                onChange={(e) => {
-                                  if (e.target.checked == true) {
+                                checked={appState.mode === "dark"}
+                                onChange={() => {
                                     switcherdata.Dark(updateAppState, appState);
-                                  }
+                                  
                                 }}
                               />
                               <label
@@ -1179,7 +1178,7 @@ const resetInputBox = async ()=>{
                     
                      
                         
-                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3  mt-5 switcher-style">
+                        <div className="grid  grid-cols-1 md:grid-cols-3 gap-3 items-start  mt-5 switcher-style">
                              <ERPInput
                               id="inputBox"
                               label="Demo Input"
@@ -1203,7 +1202,7 @@ const resetInputBox = async ()=>{
                               }}
                               value={demo.dateBox}
                             />
-                         <div className={`${appState.inputBox?.inputStyle === "normal"?"-translate-y-[3px]":"" }`}>
+                    
                          <ERPDataCombobox
                             id="selectBox"
                             data={demo}
@@ -1230,7 +1229,7 @@ const resetInputBox = async ()=>{
                               { value: 5, label: "5" },
                             ]}
                         />
-                         </div>
+                     
                             
                            
                         </div>
@@ -1432,7 +1431,7 @@ const resetInputBox = async ()=>{
                             </label>
                           </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 switcher-style">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 switcher-style">
                           <div className="flex items-center space-x-3">
                             <div className="basis-2/3 ">
                               <ERPSlider
@@ -1520,8 +1519,51 @@ const resetInputBox = async ()=>{
                               box
                             </div>
                           </div>
+                          <div className="flex flex-col space-y-1">
+                          <div className="flex items-center ">
+                            <label
+                              htmlFor="selectColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                              Select Color
+                            </label>
+                            <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.selectColor ??
+                                    "128, 128, 128"
+                                  })`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={appState.inputBox?.selectColor}
+                                  onChange={(e) => {
+                                    debugger;
+                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    if (rgb) {
+                                      handleInputBoxStyleChange(
+                                        "selectColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
+                                    }
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="px-4 text-secondary text-xs">
+                              <b className="me-2">Note:</b>this only apply sleclect box (combobox)
+                            </div>
+                          </div>
                         </div>
                       </div>
+
                       <div className="">
                         {appState.inputBox?.inputSize === "customize" && (
                           <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">

@@ -130,8 +130,8 @@ export const SettingsMenuItems = [
     columns: 2,
     class: 'badge !bg-warning/10 !text-warning !py-[0.25rem] !px-[0.45rem] !text-[0.75em] ms-2',
     children: [
-      { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings' },
-      { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings-new?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings_new' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings' },
+      // { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings-new?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings_new' },
       { path: `${import.meta.env.BASE_URL}settings/_/system/application-settings-virtual?settings_group_id=mainSettings`, type: 'link', active: false, selected: false, title: 'app_settings_virtual' },
       { action: toggleImportExportPopup, type: 'popup', active: false, selected: false, title: 'export_import' },
       { action: toggleResetDataBasePopup, type: 'popup', active: false, selected: false, title: 'reset_db' },

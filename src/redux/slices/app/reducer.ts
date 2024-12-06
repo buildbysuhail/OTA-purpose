@@ -44,6 +44,7 @@ import usFlag from '../../../assets/images/flags/us_flag.png'
      labelFontSize: 13,
      otherLabelFontSize: 13,
      borderColor: '128, 128, 128',
+     selectColor:'128, 128, 128', 
      fontColor: '128, 128, 128',
      labelColor:'128, 128, 128',
      borderFocus: '128, 128, 128',

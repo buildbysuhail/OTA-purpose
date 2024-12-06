@@ -951,9 +951,9 @@ export default function ERPDataCombobox({
               title={initial?.label || ""}
               value={isOpen ? inputValue : truncateValue(initial?.label || "")}
             />
-            <div className={`absolute inset-y-0 right-0 flex items-center pr-1 m-[1px] ${initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? 'bg-primary' : 'bg-white'}`}
+            <div className={`absolute inset-y-0 right-0 flex items-center m-[2px] pr-1`}
               style={{
-                // background: initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? '#f7f7f7' : '#f9f9f9',
+                background: initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? `rgb(${appState?.inputBox?.selectColor})` : '#f9f9f9',
                 borderTopRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
                 borderBottomRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
               }}>

@@ -92,6 +92,7 @@ export const initialThemeData: Theme = {
     labelFontSize:13,
     otherLabelFontSize:13,        
     borderColor: '128, 128, 128', 
+    selectColor:'128, 128, 128', 
     borderFocus: '128, 128, 128',
     fontColor:'128, 128, 128',
     labelColor:'128, 128, 128',
@@ -131,6 +132,7 @@ export interface inputBox{
   labelFontSize:number;
   otherLabelFontSize:number;
   borderColor: string;
+  selectColor: string;
   fontColor:string;
   labelColor:string;
   borderFocus: string;

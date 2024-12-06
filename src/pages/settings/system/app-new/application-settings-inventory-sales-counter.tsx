@@ -1,8 +1,6 @@
 import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../../redux/urls";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
 import { MutableRefObject, useEffect, useState } from "react";
 
@@ -170,18 +168,14 @@ const InventorySalesCounterFilterableComponents: React.FC<ApplicationSettingsPro
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div
-            key={key}
-            ref={(el) => (subItemsCatRef.current["inventorySalesCounter"] = el)}
-          >
+          <div key={key} ref={(el) => (subItemsCatRef.current["inventorySalesCounter"] = el)}  >
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventorySalesCounter"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
                 }`}
-              onClick={handleGeneralHeaderClick}
-            >
-              {t("pos")}
+              onClick={handleGeneralHeaderClick}  >
+              {t("counter")}
             </h1>
             <div key="inventorySalesCounter" className="space-y-4">
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
@@ -191,21 +185,18 @@ const InventorySalesCounterFilterableComponents: React.FC<ApplicationSettingsPro
                     : `${gridClass ||
                     "xxl:grid-cols-4 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1"
                     } gap-4 items-center justify-center`
-                    }`}
-                >
+                    }`}  >
                   {items?.map(
                     (component: any, index: number) =>
                       component.condition && (
                         <div key={index}>{component.element}</div>
-                      )
-                  )}
+                      ))}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )
-      }
+      )}
     </>
   );
 };

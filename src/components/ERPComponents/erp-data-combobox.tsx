@@ -178,14 +178,29 @@ const Row = ({
     <Combobox.Option
       style={style}
       key={`${item?.value}-${index}`}
-      className={({ active }) =>
-        `relative cursor-pointer select-none w-full rounded-sm hover:bg-gray-300 hover:text-dark hover:${setFgAccordingToBgPrimary()} ${active || isActive
-          ? "bg-primary text-white"
-          : item.is_active === false
-            ? "bg-gray-200 text-gray-400"
-            : "text-gray-900"
-        } ${sizeClasses?.options}`
-      }
+      // className={({ active }) =>
+      //   `relative cursor-pointer select-none w-full rounded-sm hover:bg-gray-300 hover:text-dark hover:${setFgAccordingToBgPrimary()} ${active || isActive
+      //     ? "bg-primary text-white"
+      //     : item.is_active === false
+      //       ? "bg-gray-200 text-gray-400"
+      //       : "text-gray-900"
+      //   } ${sizeClasses?.options}`
+      // }
+      className={({ active }) => {
+        const hoverTextClass = "hover:text-dark"; // Explicit hover text color
+        const hoverBgClass = "hover:bg-gray-300"; // Explicit hover background color
+        const dynamicHoverClass = `hover:${setFgAccordingToBgPrimary()}`; // Ensure this returns a valid Tailwind class
+      
+        return `relative cursor-pointer select-none w-full rounded-sm 
+                ${hoverBgClass} ${hoverTextClass} 
+                ${active || isActive
+                  ? "bg-primary text-white"
+                  : item.is_active === false
+                    ? "bg-gray-200 text-gray-400"
+                    : "text-gray-900"
+                } 
+                ${sizeClasses?.options}`;
+      }}
       value={item}
       disabled={!item.is_active}>
       {({ active }) => (

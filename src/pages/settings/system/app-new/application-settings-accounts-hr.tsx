@@ -1,15 +1,10 @@
 import { t } from "i18next";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
-import { useApplicationSetting } from "../../../../utilities/hooks/use-application-settings";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
-import ERPDisableEnable from "../../../../components/ERPComponents/erp-disable-inable";
-import { Countries } from "../../../../redux/slices/user-session/reducer";
 import Urls from "../../../../redux/urls";
-import { useAppSelector } from "../../../../utilities/hooks/useAppDispatch";
-import { RootState } from "../../../../redux/store";
 import { ApplicationSettingsType } from "../application-settings-types/application-settings-types";
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, useEffect, useState } from "react";
 import { LedgerType } from "../../../../enums/ledger-types";
 interface ApplicationSettingsProps {
   settings: any; // Replace `any` with the actual type if known
@@ -199,7 +194,7 @@ const AccountsHrFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             }`}
             onClick={handleGeneralHeaderClick}
           >
-            {t("general")}
+            {t("hr")}
           </h1>
           <div key="accountsHR" className="space-y-4">
             <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">

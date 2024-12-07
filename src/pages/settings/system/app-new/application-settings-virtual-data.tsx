@@ -47,6 +47,7 @@ export const settingGroups: SettingGroup[] = [
         key: 'inventorySales',
         label: 'Sales',
         subSettings: [
+          { key: 'inventorySalesGeneral', label: 'General' },
           { key: 'inventorySalesPOS', label: 'POS' },
           { key: 'inventorySalesCounter', label: 'Counter' }
         ]

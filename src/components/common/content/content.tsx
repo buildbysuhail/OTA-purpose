@@ -163,9 +163,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/system/financial-year" element={<FinancialYear />} />
         <Route path="/system/reminders" element={<Reminders />} />
         <Route path="/system/user-actions" element={<UserActionReport />} />
-        {/* <Route path="/system/application-settings" element={<ApplicationSettings />} />
-        <Route path="/system/application-settings-new" element={<ApplicationSettingsNew />} /> */}
-        <Route path="/system/application-settings-virtual" element={<ApplicationSettingsVirtual />} />
+        <Route path="/system/application-settings" element={<ApplicationSettingsVirtual />} />
         <Route path="/system/revert-bill-modifications" element={<RevertBillModifications />} />
         <Route path="/system/notification-settings" element={<NotificationSettings />} />
         <Route path="/system/counter-settings" element={<CounterSettings />} />

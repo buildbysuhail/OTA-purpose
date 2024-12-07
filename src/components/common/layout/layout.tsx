@@ -10,6 +10,7 @@ import Header from "../header/header";
 import Sidebar from "../sidebar/sidebar";
 import Footer from "../footer/footer";
 import Content from "../content/content";
+import { ERPScrollArea } from "../../ERPComponents/erp-scrollbar";
 
 interface LayoutProps {
   setMyClass: Dispatch<SetStateAction<string>>;
@@ -57,11 +58,11 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
     <>
       <Header />
       {isDesktop && <Sidebar type="erp" />}
-      <div className="content main-index max-h-dvh overflow-y-auto  scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto">
+      <ERPScrollArea className="content main-index max-h-dvh overflow-y-auto">
         <div className="main-content px-[9px]" onClick={Bodyclickk}>
           <Content />
         </div>
-      </div>
+      </ERPScrollArea>
       {/* <Footer /> */}
     </>
   );

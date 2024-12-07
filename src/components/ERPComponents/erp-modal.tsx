@@ -3,6 +3,7 @@ import React, { cloneElement, Fragment, useEffect } from "react";
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPSubmitButton from "../../components/ERPComponents/erp-submit-button";
 import { ShortKeyEvents, addPopupToStack, removePopupFromStack } from "../../utilities/shortKeys";
+import { ERPScrollArea } from "./erp-scrollbar";
 
 type ERPModalProps = {
   title: string;
@@ -148,13 +149,13 @@ const ERPModal = React.memo(
                       )}
                     </DialogTitle>
                     <div className={"max-h-[calc(100vh-8rem)]"}>
-                      <div className={`max-h-[calc(100vh-16rem)] overflow-y-auto scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-2`}>
+                      <ERPScrollArea className={`max-h-[calc(100vh-16rem)] overflow-y-auto pr-2`}>
                         {content &&
                           cloneElement(
                             content,
                             contentProps ? { contentProps: contentProps } : {}
                           )}
-                      </div>
+                      </ERPScrollArea>
                       <div>{footer}</div>
                     </div>
 

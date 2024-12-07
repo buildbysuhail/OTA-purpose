@@ -291,7 +291,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 300; // Offset to trigger slightly before the section top
+      const scrollPosition = window.scrollY + 100; // Offset to trigger slightly before the section top
       // Check main sections
       for (const section of settingGroups) {
         const element = sectionsRef.current[section.id];

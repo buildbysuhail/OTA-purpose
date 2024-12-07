@@ -92,26 +92,26 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
       ),
     },
     {
-      condition: filterComponent([t("bill_discount_given_ledger")], filterText),
+      condition: filterComponent([t("bill_discount_received_ledger")], filterText),
       element: (
         <ERPDataCombobox
-          id="defaultBillDiscGivenLdg"
+          id="defaultBillDiscRecvdLdg"
           data={settings?.inventorySettings}
           field={{
-            id: "defaultBillDiscGivenLdg",
+            id: "defaultBillDiscRecvdLdg",
             getListUrl: Urls.data_acc_ledgers,
-            params: `ledgerID=0&ledgerType=${LedgerType.Discount_Given}`,
+            params: `ledgerID=0&ledgerType=${LedgerType.Discount_Received}`,
             valueKey: "id",
             labelKey: "name",
           }}
           onChangeData={(data: any) =>
             handleFieldChange(
               "inventorySettings",
-              "defaultBillDiscGivenLdg",
-              data.defaultBillDiscGivenLdg
+              "defaultBillDiscRecvdLdg",
+              data.defaultBillDiscRecvdLdg
             )
           }
-          label={t("bill_discount_given_ledger")}
+          label={t("bill_discount_received_ledger")}
         />
       ),
     },
@@ -434,7 +434,7 @@ const InventoryPurchaseFilterableComponents: React.FC<ApplicationSettingsProps> 
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div key={key} ref={(el) => (subItemsCatRef.current["inventoryPurchase"] = el)}  >
+          <div key={key} ref={(el) => (subItemsRef.current["inventoryPurchase"] = el)}  >
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryPurchase"
                 ? "blink-animation bg-[#f1f1f1]"

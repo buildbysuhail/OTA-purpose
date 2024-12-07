@@ -24,11 +24,11 @@ import MainCRMFilterableComponents from "./application-settings-main-crm";
 import AccountsGeneralFilterableComponents from "./application-settings-accounts-general";
 import AccountsHrFilterableComponents from "./application-settings-accounts-hr";
 import MainSalesPOSFilterableComponents from "./application-settings-inventory-sales-pos";
-import MainInventoryGeneralFilterableComponents from "./application-settings-inventory-general";
+import InventoryGeneralFilterableComponents from "./application-settings-inventory-general";
 import AccountsEinvoiceFilterableComponents from "./application-settings-accounts-ksa-einvoice";
 import MainMultiBranchFilterableComponents from "./application-settings-main-multi-branch";
-import InventoryProducts from "./application-settings-inventory-products";
-import InventoryGSTSettings from "./application-settings-inventory-gst";
+import InventoryProductsFilterableComponents from "./application-settings-inventory-products";
+import InventoryGSTSettingsFilterableComponents from "./application-settings-inventory-gst";
 import InventoryPurchaseFilterableComponents from "./application-settings-inventory-purchase";
 import InventorySalesFilterableComponents from "./application-settings-inventory-sales";
 import InventorySalesCounterFilterableComponents from "./application-settings-inventory-sales-counter";
@@ -276,12 +276,9 @@ export default function SettingsPage() {
             // Check sub-items within the active section
             for (const setting of section.settings?.filter(
               (x) =>
-                (x.key !== "accountsEInvoiceGCC" ||
-                  userSession.countryId === Countries.Saudi) &&
-                (x.key !== "inventoryTAXSettings" ||
-                  userSession.countryId === Countries.Saudi) &&
-                (x.key !== "inventoryGSTSettings" ||
-                  userSession.countryId === Countries.India)
+                (x.key !== "accountsEInvoiceGCC" || userSession.countryId === Countries.Saudi) &&
+              (x.key !== "inventoryTAXSettings" || userSession.countryId !== Countries.India) &&
+              (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key];
               if (subElement) {
@@ -481,7 +478,7 @@ export default function SettingsPage() {
 
               {/* Multi Branch */}
               <MainMultiBranchFilterableComponents
-                key="inventorySalesPOS"
+                key="mainMultiBranch"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
@@ -500,8 +497,11 @@ export default function SettingsPage() {
           </section>
 
           {/* Accounts Settings */}
+          <section key="accounts" ref={(el) => (sectionsRef.current["accounts"] = el)} className="mb-8 last:mb-0 pt-12">
+            <div className="space-y-6">
+            </div>
+            <div>
           {/* General */}
-          <section>
             <AccountsGeneralFilterableComponents
               key="accountsGeneral"
               subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -528,37 +528,41 @@ export default function SettingsPage() {
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
               </AccountsEinvoiceFilterableComponents>
             )}
+            </div>
           </section>
 
           {/* Inventory Settings */}
-          <section>
+           <section key="inventory" ref={(el) => (sectionsRef.current["inventory"] = el)} className="mb-8 last:mb-0 pt-12">
+            <div className="space-y-6">
+            </div>
+            <div>
             {/* General */}
-            <MainInventoryGeneralFilterableComponents
+            <InventoryGeneralFilterableComponents
               key="inventoryGeneral"
               subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
               handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
               blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
               sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </MainInventoryGeneralFilterableComponents>
+            </InventoryGeneralFilterableComponents>
 
             {/* products */}
-            <InventoryProducts
+            <InventoryProductsFilterableComponents
               key="inventoryProducts"
               subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
               handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
               blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
               sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventoryProducts>
+            </InventoryProductsFilterableComponents>
 
             {/* GST settings */}
             {userSession.countryId === Countries.India && (
-              <InventoryGSTSettings
+              <InventoryGSTSettingsFilterableComponents
                 key="inventoryGSTSettings"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-              </InventoryGSTSettings>
+              </InventoryGSTSettingsFilterableComponents>
             )}
             {/* Tax Settings */}
             {userSession.countryId === Countries.Saudi && (
@@ -608,6 +612,7 @@ export default function SettingsPage() {
             </InventorySalesCounterFilterableComponents>
 
             {/* PPOS */}
+
             <InventoryPPOSFilterableComponents
               key="inventoryPPOS"
               subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -615,8 +620,8 @@ export default function SettingsPage() {
               blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
               sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
             </InventoryPPOSFilterableComponents>
+              {/*Schemes & Promotions*/}
 
-            {/*Schemes & Promotions*/}
             <InventorySchemeAndPromotionFilterableComponents
               key="inventorySchemesPromotions"
               subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -624,10 +629,14 @@ export default function SettingsPage() {
               blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
               sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
             </InventorySchemeAndPromotionFilterableComponents>
+            </div>
           </section>
+                             {/*miscellaneous*/}
+            <section key="miscellaneous" ref={(el) => (sectionsRef.current["miscellaneous"] = el)} className="mb-8 last:mb-0 pt-12">
+            <div className="space-y-6">
+            </div>
+            <div>
 
-          {/*miscellaneous*/}
-          <div className="h-screen">
             <ApplicationMiscellaneousComponents
               key="miscellaneous"
               subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
@@ -635,7 +644,9 @@ export default function SettingsPage() {
               blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
               sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
             </ApplicationMiscellaneousComponents>
-          </div>
+            </div>
+          </section>
+
         </div>
       </main>
       <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">

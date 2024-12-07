@@ -35,7 +35,7 @@ interface ApplicationSettingsProps {
   key: string;
 }
 
-const InventoryGSTSettings: React.FC<ApplicationSettingsProps> = ({
+const InventoryGSTSettingsFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   settings,
   handleFieldChange,
   filterComponent,
@@ -922,7 +922,7 @@ const InventoryGSTSettings: React.FC<ApplicationSettingsProps> = ({
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div key={key} ref={(el) => (subItemsCatRef.current["inventoryGSTSettings"] = el)}>
+          <div key={key} ref={(el) => (subItemsRef.current["inventoryGSTSettings"] = el)}>
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryGSTSettings"
                 ? "blink-animation bg-[#f1f1f1]"
@@ -955,4 +955,4 @@ const InventoryGSTSettings: React.FC<ApplicationSettingsProps> = ({
     </>
   );
 };
-export default InventoryGSTSettings;
+export default InventoryGSTSettingsFilterableComponents;

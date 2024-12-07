@@ -29,7 +29,7 @@ interface ApplicationSettingsProps {
   key: string;
 }
 
-const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
+const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
   settings,
   handleFieldChange,
   filterComponent,
@@ -239,6 +239,84 @@ const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProp
       ),
     },
     {
+      condition: filterComponent([t("default_brand")], filterText),
+      element: (
+        <ERPDataCombobox
+          id="defaultBrand"
+          disabled
+          data={settings?.inventorySettings}
+          field={{
+            id: "defaultBrand",
+            required: false,
+            valueKey: "id",
+            labelKey: "label",
+          }}
+          options={[
+            { value: "Default.lba", label: "Default.lba" },
+          ]}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "inventorySettings",
+              "defaultBrand",
+              data.defaultBrand
+            )
+          }
+          label={t("default_brand")}
+        />
+      ),
+    },
+    {
+      condition: filterComponent([t("barcode_label")], filterText),
+      element: (
+        <ERPDataCombobox
+          id="defaultBarcodeLabel"
+          disabled
+          data={settings?.inventorySettings}
+          field={{
+            id: "defaultBarcodeLabel",
+            required: false,
+            valueKey: "id",
+            labelKey: "label",
+          }}
+          options={[
+            { value: "Default.lba", label: "Default.lba" },
+          ]}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "inventorySettings",
+              "defaultBarcodeLabel",
+              data.defaultBarcodeLabel
+            )
+          }
+          label={t("barcode_label")}
+        />
+      ),
+    },
+    {
+      condition: filterComponent([t("default_opening_stock_ledger")], filterText),
+      element: (
+        <ERPDataCombobox
+          id="defaultOpeningStockValueAcc"
+          data={settings?.accountsSettings}
+          label={t("default_opening_stock_ledger")}
+          field={{
+            id: "defaultOpeningStockValueAcc",
+            getListUrl: Urls.data_acc_ledgers,
+            params: `ledgerID=0&ledgerType=${LedgerType.Current_Assets}`,
+            valueKey: "id",
+            labelKey: "name",
+          }}
+          onChangeData={(data) =>
+            handleFieldChange(
+              "accountsSettings",
+              "defaultOpeningStockValueAcc",
+              data.defaultOpeningStockValueAcc
+            )
+          }
+        />
+      ),
+    },
+    {
       condition: filterComponent([t("maintain_warehouse")], filterText),
       element: (
         <ERPCheckbox
@@ -366,7 +444,24 @@ const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProp
         />
       ),
     },
-
+    {
+      condition: userSession.countryId != Countries.India && filterComponent([t("block_hold_items")], filterText),
+      element: (
+        <ERPCheckbox
+          id="blockHoldItems"
+          checked={settings?.inventorySettings?.blockHoldItems}
+          data={settings?.inventorySettings}
+          label={t("block_hold_items")}
+          onChangeData={(data: any) =>
+            handleFieldChange(
+              "inventorySettings",
+              "blockHoldItems",
+              data.blockHoldItems
+            )
+          }
+        />
+      ),
+    },
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {
@@ -378,7 +473,7 @@ const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProp
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div key={key} ref={(el) => (subItemsCatRef.current["inventoryGeneral"] = el)}>
+          <div key={key} ref={(el) => (subItemsRef.current["inventoryGeneral"] = el)}>
             <h1
               className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventoryGeneral"
                 ? "blink-animation bg-[#f1f1f1]"
@@ -411,4 +506,4 @@ const MainInventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProp
     </>
   );
 };
-export default MainInventoryGeneralFilterableComponents;
+export default InventoryGeneralFilterableComponents;

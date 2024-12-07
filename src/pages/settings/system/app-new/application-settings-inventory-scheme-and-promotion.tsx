@@ -45,7 +45,7 @@ const InventorySchemeAndPromotionFilterableComponents: React.FC<ApplicationSetti
     {
       condition: filterComponent([t("gift_on_billing")], filterText),
       element: (
-        <div className="flex items-center gap-6">
+          <>
           <ERPCheckbox
             id="giftOnBilling"
             data={settings?.productsSettings}
@@ -82,7 +82,7 @@ const InventorySchemeAndPromotionFilterableComponents: React.FC<ApplicationSetti
             disabled={!settings?.productsSettings?.giftOnBilling}
             label=" "
           />
-        </div>
+          </>
       ),
     },
     {
@@ -201,7 +201,7 @@ const InventorySchemeAndPromotionFilterableComponents: React.FC<ApplicationSetti
                 : "bg-[#f1f1f1]"
                 }`}
               onClick={handleGeneralHeaderClick}  >
-              {t("backup")}
+              {t("schemes_&_promotions")}
             </h1>
             <div key="inventorySchemesPromotions" className="space-y-4">
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">

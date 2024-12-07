@@ -724,24 +724,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         />
       ),
     },
-    {
-      condition: filterComponent([t("allow_sales_route/area")], filterText),
-      element: (
-        <ERPCheckbox
-          id="allowSalesRouteArea"
-          label={t("allow_sales_route/area")}
-          data={settings?.mainSettings}
-          checked={settings?.mainSettings?.allowSalesRouteArea}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "mainSettings",
-              "allowSalesRouteArea",
-              data.allowSalesRouteArea
-            )
-          }
-        />
-      ),
-    },
+   
     {
       condition:
         filterComponent([t("enable_day_end")], filterText) &&
@@ -754,25 +737,6 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           checked={settings?.mainSettings?.enableDayEnd}
           onChangeData={(data) =>
             handleFieldChange("mainSettings", "enableDayEnd", data.enableDayEnd)
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("maintain_sales")], filterText),
-      element: (
-        <ERPCheckbox
-          id="maintainSalesRouteCreditLimit"
-          label={t("maintain_sales")}
-          data={settings?.mainSettings}
-          disabled={!settings?.mainSettings?.allowSalesRouteArea}
-          checked={settings?.mainSettings?.maintainSalesRouteCreditLimit}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "mainSettings",
-              "maintainSalesRouteCreditLimit",
-              data.maintainSalesRouteCreditLimit
-            )
           }
         />
       ),

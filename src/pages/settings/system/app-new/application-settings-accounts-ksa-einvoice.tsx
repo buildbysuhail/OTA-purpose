@@ -42,7 +42,7 @@ const AccountsEinvoiceFilterableComponents: React.FC<ApplicationSettingsProps> =
   handleGeneralHeaderClick,
   key,
 }) => {
-  const { verifyOtp, sendOtp, otpSending, otpVerifying } =useApplicationMainSettings();
+  const { verifyOtp, sendOtp, otpSending, otpVerifying } = useApplicationMainSettings();
   const { t } = useTranslation("applicationSettings")
   const items = [
     {
@@ -126,53 +126,56 @@ const AccountsEinvoiceFilterableComponents: React.FC<ApplicationSettingsProps> =
     {
       condition: filterComponent([t("otp_email")], filterText),
       element: (
-        <div className="flex flex-col gap-4">
-          <div className="flex gap-4 items-center">
-            <ERPInput
-              id="oTPEmail"
-              label={t("otp_email")}
-              value={settings?.mainSettings?.oTPEmail}
-              data={settings?.mainSettings}
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "mainSettings",
-                  "oTPEmail",
-                  data.oTPEmail
-                )
-              }
-            />
-            <ERPButton
-              title={t("send_otp")}
-              variant="secondary"
-              loading={otpSending}
-              className="mt-4"
-              disabled={otpSending}
-              onClick={() => sendOtp()}
-            />
-          </div>
-          <div className="flex gap-4 items-center">
-            <ERPInput
-              id="oTPVerification"
-              label=" "
-              placeholder="Enter OTP"
-              data={settings?.mainSettings}
-              value={settings?.mainSettings?.oTPVerification}
-              onChangeData={(data) =>
-                handleFieldChange(
-                  "mainSettings",
-                  "oTPVerification",
-                  data.oTPVerification
-                )
-              }
-            />
-            <ERPButton
-              title={t("verify")}
-              variant="primary"
-              loading={otpVerifying}
-              disabled={otpVerifying}
-              onClick={() => verifyOtp()}
-            />
-          </div>
+        <div className="flex gap-4 items-center">
+          <ERPInput
+            id="oTPEmail"
+            label={t("otp_email")}
+            value={settings?.mainSettings?.oTPEmail}
+            data={settings?.mainSettings}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "mainSettings",
+                "oTPEmail",
+                data.oTPEmail
+              )
+            }
+          />
+          <ERPButton
+            title={t("send_otp")}
+            variant="secondary"
+            loading={otpSending}
+            className="mt-4"
+            disabled={otpSending}
+            onClick={() => sendOtp()}
+          />
+        </div>
+      )
+    },
+    {
+      condition: filterComponent([t("otp_email")], filterText),
+      element: (
+        <div className="flex gap-4 items-center">
+          <ERPInput
+            id="oTPVerification"
+            label=" "
+            placeholder="Enter OTP"
+            data={settings?.mainSettings}
+            value={settings?.mainSettings?.oTPVerification}
+            onChangeData={(data) =>
+              handleFieldChange(
+                "mainSettings",
+                "oTPVerification",
+                data.oTPVerification
+              )
+            }
+          />
+          <ERPButton
+            title={t("verify")}
+            variant="primary"
+            loading={otpVerifying}
+            disabled={otpVerifying}
+            onClick={() => verifyOtp()}
+          />
         </div>
       ),
     },

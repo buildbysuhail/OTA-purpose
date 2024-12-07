@@ -53,13 +53,46 @@ class APIClient {
         : axios.get(`${url}`);
     return response;
   };
-  getAsync = async (url: string, queryString: string = ""): Promise<any> => {
+  getAsync = async (url: string, queryString: string = "", config:any = undefined): Promise<any> => {
     try {
       setAuthorization();
       const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
-      const response = await axios.get(fullUrl);
+      const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
       if (response?.status != undefined && response?.status != null) {
         return response?.data;
+      }
+      else {
+        return response
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        // Handle Axios specific errors
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.error('Error data:', error.response.data);
+          console.error('Error status:', error.response.status);
+          console.error('Error headers:', error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error('Error request:', error.request);
+        } else {
+          console.error('Error message:', error.message);
+        }
+      } else {
+        // Handle non-Axios errors
+        console.error('Unexpected error:', error);
+      }
+      return undefined; // Re-throw the error for the caller to handle if needed
+    }
+  };
+  getNativeAsync = async (url: string, queryString: string = "", config:any = undefined): Promise<any> => {
+    try {
+      setAuthorization();
+      const fullUrl = queryString !== "" ? `${url}?${queryString}` : url;
+      const response = config != undefined ? await axios.get(fullUrl,config) : await axios.get(fullUrl);
+      if (response?.status != undefined && response?.status != null) {
+        return response;
       }
       else {
         return response

@@ -38,6 +38,7 @@ import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import MUIERPDataCombobox from "../../components/ERPComponents/erp-data-combobox-mui";
+import { ERPScrollbar } from "../../components/ERPComponents/erp-scrollbar";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -1129,7 +1130,17 @@ const resetInputBox = async ()=>{
                           </div>
                           </div>
                           {/* Preview Section */}
-                          <div
+                          <ERPScrollbar className="w-full h-64 border border-gray-300 overflow-y-auto rounded-md">
+                            <div className="h-96 p-2">
+                              <p>This is a preview of the scrollbar style selected by the user.</p>
+                              <p>Scroll down to see the effect.</p>
+                              <p>Normal and thin options are available.</p>
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                              <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                            </div>
+                          </ERPScrollbar>
+                          {/* <div
                             className={`
                           w-full h-64 border border-gray-300 rounded-md overflow-y-auto
                          scrollbar
@@ -1153,7 +1164,7 @@ const resetInputBox = async ()=>{
                             }
                            
                           >
-                            {/* Content to showcase scrollbar */}
+                       
                             <div className="h-96 p-2">
                               <p>
                                 This is a preview of the scrollbar style
@@ -1176,7 +1187,7 @@ const resetInputBox = async ()=>{
                                 exercitation ullamco.
                               </p>
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                       <div className="">

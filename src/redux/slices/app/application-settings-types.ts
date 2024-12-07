@@ -20,6 +20,6 @@ export const ApplicationSettingsInitialState: ApplicationSettingsType = {
   printerSettings: ApplicationPrintSettingsInitialState,
   productsSettings: ApplicationProductsSettingsInitialState,
   gSTTaxesSettings: ApplicationGstSettingsInitialState,
-  taxSettings: ApplicationTaxSettingsInitialState,
+  taxesSettings: ApplicationTaxSettingsInitialState,
   apiLoaded: false
 };

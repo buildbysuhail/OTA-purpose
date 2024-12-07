@@ -32,12 +32,12 @@
     "default_credit_card_account": "Credit Card Account",
     "default_cost_center": "Default Cost Center",
     "default_customer": "Default Customer",
-    "default_opening_stock_ledger": "Default Opening Stock Ledger",
+    "default_opening_stock_ledger": "Opening Stock Ledger",
     "default_loan_account": "Loan Account",
     "default_incentive_account_1": "Incentive Account 1",
     "default_incentive_account_2": "Incentive Account 2",
-    "default_PDC_receivable_account": "Default PDC Receivable Account",
-    "default_PDC_payable_account": "Default PDC Payable Account",
+    "default_PDC_receivable_account": "PDC Receivable Account",
+    "default_PDC_payable_account": "PDC Payable Account",
     "default_bank_charge_account": "Bank Charge Account",
     "default_indirect_expense_account": "Indirect Expense Account",
     "default_purchase_assets_account": "Purchase Assets Account",
@@ -75,10 +75,10 @@
     "default_additional_amount_account": "Additional Amount Account",
     "default_BTO_account": "BTO Account",
     "default_BTI_account": "BTI Account",
-    "default_sales_return_payable_acc": "Default Sales Return Payable Acc:",
+    "default_sales_return_payable_acc": "Sales Return Payable Acc:",
     "service_warranty_inv_accounts": "Warranty Service Accounts",
     "service_non_warranty_inv_accounts": "Non Warranty Service Accounts",
-    "default_brand": "Default Brand",
+    "default_brand": "Brand",
     "negative_stock": "Negative Stock",
     "maintain_warehouse": "Maintain Warehouse",
     "price_code": "Price Code",
@@ -285,5 +285,7 @@
     "schemes_&_promotions":"Schemes & Promotions",
     "miscellaneous":"Miscellaneous",
 
-    "save_settings":"Save Settings"
+    "save_settings":"Save Settings",
+    "show_party_balance_in_sales":"Show Party Balance In Sales",
+    "allow_sales_detailed_edit":"Allow Sales Detailed Edit"
 }

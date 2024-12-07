@@ -43,20 +43,20 @@ const ApplicationSettingsNew: React.FC = () => {
   //   (Object.keys(applicationSettings) as Array<keyof ApplicationSettingsType>).forEach((sectionKey) => {
   //     debugger;
   //     const section = applicationSettings[sectionKey];
-  
+
   //     // Ensure section is defined and is an object
   //     if (section && typeof section === "object") {
   //       // Count properties in the section that match the search term
   //       const count = Object.values(section).filter((prop) =>
   //         prop.text.toLowerCase().includes(searchTerm.toLowerCase())
   //       ).length;
-  
+
   //       result[sectionKey] = count;
   //     }
   //   });
 
   // return result;
-     
+
   // }, [searchTerm])
 
   const handleSettingsGroupChange = (newSettingsGroup: ApplicationSettingsIds) => {
@@ -75,7 +75,7 @@ const ApplicationSettingsNew: React.FC = () => {
       case "branchSettings": return <BranchSettingsForm />;
       case "printerSettings": return <PrintSettingForm />;
       case "backUPSettings": return <BackupSettingsForm />;
-      case "taxSettings": return <TaxSettingsForm />;
+      case "taxesSettings": return <TaxSettingsForm />;
       default: return null;
     }
   };
@@ -106,8 +106,8 @@ const ApplicationSettingsNew: React.FC = () => {
           </div>
         </div> */}
         <div className="flex flex-col overflow-y-auto pb-24 h-full mt-4">
-          {ApplicationSettingsTypes.filter(x => 
-            userSession.countryId === Countries.India ? x.settings_group_id !== "taxSettings" : x.settings_group_id !== "gSTTaxesSettings"
+          {ApplicationSettingsTypes.filter(x =>
+            userSession.countryId === Countries.India ? x.settings_group_id !== "taxesSettings" : x.settings_group_id !== "gSTTaxesSettings"
           ).map((settings) => (
             <button
               key={settings.settings_group_id}

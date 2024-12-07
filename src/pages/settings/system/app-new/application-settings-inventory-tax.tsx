@@ -47,7 +47,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
         <>
           <ERPDataCombobox
             id="purchaseFormType"
-            data={settings?.taxSettings}
+            data={settings?.taxesSettings}
             field={{
               id: "purchaseFormType",
               getListUrl: Urls.data_FormTypeByPI,
@@ -55,14 +55,14 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               labelKey: "FormType",
             }}
             onChangeData={(data: any) =>
-              handleFieldChange("taxSettings", "purchaseFormType", data.purchaseFormType)
+              handleFieldChange("taxesSettings", "purchaseFormType", data.purchaseFormType)
             }
             label={t("default_purchase")}
           />
 
           <ERPDataCombobox
             id="salesFormType"
-            data={settings?.taxSettings}
+            data={settings?.taxesSettings}
             field={{
               id: "salesFormType",
               getListUrl: Urls.data_FormTypeBySI,
@@ -70,14 +70,14 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               labelKey: "FormType",
             }}
             onChangeData={(data: any) =>
-              handleFieldChange("taxSettings", "salesFormType", data.salesFormType)
+              handleFieldChange("taxesSettings", "salesFormType", data.salesFormType)
             }
             label={t("sales_form_type")}
           />
 
           <ERPDataCombobox
             id="purchaseTaxAccount"
-            data={settings?.taxSettings}
+            data={settings?.taxesSettings}
             field={{
               id: "purchaseTaxAccount",
               required: false,
@@ -86,14 +86,14 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               labelKey: "name",
             }}
             onChangeData={(data: any) =>
-              handleFieldChange("taxSettings", "purchaseTaxAccount", data.purchaseTaxAccount)
+              handleFieldChange("taxesSettings", "purchaseTaxAccount", data.purchaseTaxAccount)
             }
             label={t("purchase_tax_ledger")}
           />
 
           <ERPDataCombobox
             id="salesTaxAccount"
-            data={settings?.taxSettings}
+            data={settings?.taxesSettings}
             field={{
               id: "salesTaxAccount",
               required: false,
@@ -102,7 +102,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               labelKey: "name",
             }}
             onChangeData={(data: any) =>
-              handleFieldChange("taxSettings", "salesTaxAccount", data.salesTaxAccount)
+              handleFieldChange("taxesSettings", "salesTaxAccount", data.salesTaxAccount)
             }
             label={t("sales_tax_ledger")}
           />
@@ -111,7 +111,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             <>
               <ERPDataCombobox
                 id="purchaseCSTAccount"
-                data={settings?.taxSettings}
+                data={settings?.taxesSettings}
                 disabled
                 field={{
                   id: "purchaseCSTAccount",
@@ -121,14 +121,14 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                   labelKey: "name",
                 }}
                 onChangeData={(data: any) =>
-                  handleFieldChange("taxSettings", "purchaseCSTAccount", data.purchaseCSTAccount)
+                  handleFieldChange("taxesSettings", "purchaseCSTAccount", data.purchaseCSTAccount)
                 }
                 label={t("purchase_cst_account")}
               />
 
               <ERPDataCombobox
                 id="salesCSTAccount"
-                data={settings?.taxSettings}
+                data={settings?.taxesSettings}
                 disabled
                 field={{
                   id: "salesCSTAccount",
@@ -138,14 +138,14 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                   labelKey: "name",
                 }}
                 onChangeData={(data: any) =>
-                  handleFieldChange("taxSettings", "salesCSTAccount", data.salesCSTAccount)
+                  handleFieldChange("taxesSettings", "salesCSTAccount", data.salesCSTAccount)
                 }
                 label={t("sales_cst_account")}
               />
 
               <ERPDataCombobox
                 id="expensesTaxAccount"
-                data={settings?.taxSettings}
+                data={settings?.taxesSettings}
                 disabled
                 field={{
                   id: "expensesTaxAccount",
@@ -155,14 +155,14 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                   labelKey: "name",
                 }}
                 onChangeData={(data: any) =>
-                  handleFieldChange("taxSettings", "expensesTaxAccount", data.expensesTaxAccount)
+                  handleFieldChange("taxesSettings", "expensesTaxAccount", data.expensesTaxAccount)
                 }
                 label={t("expenses_tax_account")}
               />
 
               <ERPDataCombobox
                 id="incomeTaxAccount"
-                data={settings?.taxSettings}
+                data={settings?.taxesSettings}
                 disabled
                 field={{
                   id: "incomeTaxAccount",
@@ -172,7 +172,7 @@ const InventoryTAXFilterableComponents: React.FC<ApplicationSettingsProps> = ({
                   labelKey: "name",
                 }}
                 onChangeData={(data: any) =>
-                  handleFieldChange("taxSettings", "incomeTaxAccount", data.incomeTaxAccount)
+                  handleFieldChange("taxesSettings", "incomeTaxAccount", data.incomeTaxAccount)
                 }
                 label={t("income_tax_account")}
               />

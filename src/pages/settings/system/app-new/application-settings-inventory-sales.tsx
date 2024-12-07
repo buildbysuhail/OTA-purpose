@@ -46,6 +46,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
   key,
 }) => {
   const { t } = useTranslation("applicationSettings")
+  const [showAllowSalesEdit, setShowAllowSalesEdit] = useState(false);
   const items = [
     {
       condition: filterComponent([t("default_sales_account")], filterText),
@@ -724,46 +725,47 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
     {
       condition: filterComponent([t("enable_multi_warehouse_billing")], filterText),
       element: (
-        <ERPCheckbox
-          id="enableMultiWarehouseBilling"
-          label={t("enable_multi_warehouse_billing")}
-          data={settings?.productsSettings}
-          checked={settings?.productsSettings?.enableMultiWarehouseBilling}
-          onChangeData={(data) =>
-            handleFieldChange(
-              "productsSettings",
-              "enableMultiWarehouseBilling",
-              data.enableMultiWarehouseBilling
-            )
-          }
-        />
-      ),
-    },
-    {
-      condition: filterComponent([t("allow_sales_detailed_edit")], filterText),
-      element: (
         <ERPDisableEnable targetCount={15}>
           {(hasPermitted = false) => (
             <>
+              <ERPCheckbox
+                id="enableMultiWarehouseBilling"
+                label={t("enable_multi_warehouse_billing")}
+                data={settings?.productsSettings}
+                checked={settings?.productsSettings?.enableMultiWarehouseBilling}
+                onChangeData={(data) =>
+                  handleFieldChange(
+                    "productsSettings",
+                    "enableMultiWarehouseBilling",
+                    data.enableMultiWarehouseBilling
+                  )
+                }
+              />
               {hasPermitted == true && (
-                <ERPCheckbox
-                  id="allowSalesDetailedEdit"
-                  checked={settings?.miscellaneousSettings?.allowSalesDetailedEdit}
-                  data={settings?.miscellaneousSettings}
-                  label={t("allow_sales_detailed_edit")}
-                  onChangeData={(data) =>
-                    handleFieldChange(
-                      "miscellaneousSettings",
-                      "allowSalesDetailedEdit",
-                      data.allowSalesDetailedEdit
-                    )
-                  }
-                />
+                setShowAllowSalesEdit(true)
               )}
             </>
           )}
         </ERPDisableEnable>
+
       ),
+    },
+    {
+      condition: filterComponent([t("allow_sales_detailed_edit")], filterText) && showAllowSalesEdit,
+      element: (<ERPCheckbox
+        id="allowSalesDetailedEdit"
+        checked={settings?.miscellaneousSettings?.allowSalesDetailedEdit}
+        data={settings?.miscellaneousSettings}
+        label={t("allow_sales_detailed_edit")}
+        onChangeData={(data) =>
+          handleFieldChange(
+            "miscellaneousSettings",
+            "allowSalesDetailedEdit",
+            data.allowSalesDetailedEdit
+          )
+        }
+      />)
+
     },
     {
       condition: userSession.countryId != Countries.India && filterComponent([t("enable_sales_invoice_draft_option")], filterText),
@@ -840,7 +842,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
         />
       ),
     },
-    
+
   ];
   const [hasMatchedItems, setHasMatchedItems] = useState<boolean>(true);
   useEffect(() => {

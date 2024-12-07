@@ -285,5 +285,7 @@
     "schemes_&_promotions": "الخطط والعروض الترويجية",
     "miscellaneous": "متنوع",
 
-    "save_settings":"حفظ الإعدادات"
+    "save_settings":"حفظ الإعدادات",
+    "show_party_balance_in_sales": "إظهار رصيد الطرف في المبيعات",
+    "allow_sales_detailed_edit": "السماح بتعديل مفصل للمبيعات"
 }

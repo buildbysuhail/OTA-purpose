@@ -18,7 +18,7 @@ export interface ApplicationSettingsType {
   printerSettings: ApplicationPrintSettings;
   productsSettings: ApplicationProductsSettings;
   gSTTaxesSettings: ApplicationGstSettings;
-  taxSettings: ApplicationTaxSettings;
+  taxesSettings: ApplicationTaxSettings;
   miscellaneousSettings: ApplicationMiscellaneousSettings;
   apiLoaded: boolean
 }

@@ -167,7 +167,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
                                 ? "Products"
                                 : _paretnt == "gSTTaxesSettings"
                                   ? "GSTTaxes"
-                                  : _paretnt == "taxSettings"
+                                  : _paretnt == "taxesSettings"
                                     ? "Taxes"
                                     : _paretnt == "miscellaneousSettings"
                                       ? "Miscellaneous"

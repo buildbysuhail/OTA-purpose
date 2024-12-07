@@ -277,8 +277,8 @@ export default function SettingsPage() {
             for (const setting of section.settings?.filter(
               (x) =>
                 (x.key !== "accountsEInvoiceGCC" || userSession.countryId === Countries.Saudi) &&
-              (x.key !== "inventoryTAXSettings" || userSession.countryId !== Countries.India) &&
-              (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
+                (x.key !== "inventoryTaxSettings" || userSession.countryId !== Countries.India) &&
+                (x.key !== "inventoryGSTSettings" || userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key];
               if (subElement) {
@@ -363,7 +363,7 @@ export default function SettingsPage() {
                       (x) =>
                         (x.key !== "accountsEInvoiceGCC" ||
                           userSession.countryId === Countries.Saudi) &&
-                        (x.key !== "inventoryTAXSettings" ||
+                        (x.key !== "inventoryTaxSettings" ||
                           userSession.countryId === Countries.Saudi) &&
                         (x.key !== "inventoryGSTSettings" ||
                           userSession.countryId === Countries.India)
@@ -417,8 +417,7 @@ export default function SettingsPage() {
         />
       )}
       {/* main */}
-      {/* <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto h-screen scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-800"> */}
-      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300">
+      <main className="flex-1 md:ml-[200px] lg:ml-[300px] relative transition-all duration-300 overflow-y-auto scrollbar-thin scrollbar-track-gray scrollbar-thumb-gray hover:scrollbar-thumb-gray dark:scrollbar-track-gray dark:scrollbar-thumb-gray dark:hover:scrollbar-thumb-gray scrollbar-thumb-rounded-full scrollbar-track-rounded-full">
         <div className="flex items-center justify-between z-10 fixed bg-white shadow w-[-webkit-fill-available] p-2">
           <button className="md:hidden mr-2 p-1" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             <i className="ri-menu-line"></i>
@@ -435,7 +434,7 @@ export default function SettingsPage() {
           <LayoutToggle onToggle={setIsCompactView} />
         </div>
         <div className="p-4">
-          <style>{`  @keyframes blink {0%, 100% { background-color: #f1f1f1; }50% { background-color: #e0e0e0; }  }.blink-animation {animation: blink 2s ease-in-out;}`}</style>
+          <style>{`@keyframes blink {0%, 100% { background-color: #f1f1f1; }50% { background-color: #e0e0e0; }  }.blink-animation {animation: blink 2s ease-in-out;}`}</style>
           <section key="main" ref={(el) => (sectionsRef.current["main"] = el)} className="mb-8 last:mb-0 pt-12">
             <div className="space-y-6">
               {inputValueVisibility && (
@@ -501,154 +500,151 @@ export default function SettingsPage() {
             <div className="space-y-6">
             </div>
             <div>
-          {/* General */}
-            <AccountsGeneralFilterableComponents
-              key="accountsGeneral"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </AccountsGeneralFilterableComponents>
-
-            {/* HR */}
-            <AccountsHrFilterableComponents
-              key="accountsHR"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></AccountsHrFilterableComponents>
-
-            {/* KSA E-invoice  */}
-            {userSession.countryId === Countries.Saudi && (
-              <AccountsEinvoiceFilterableComponents
-                key="accountsEInvoiceGCC"
+              {/* General */}
+              <AccountsGeneralFilterableComponents
+                key="accountsGeneral"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-              </AccountsEinvoiceFilterableComponents>
-            )}
+              </AccountsGeneralFilterableComponents>
+
+              {/* HR */}
+              <AccountsHrFilterableComponents
+                key="accountsHR"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} ></AccountsHrFilterableComponents>
+
+              {/* KSA E-invoice  */}
+              {userSession.countryId === Countries.Saudi && (
+                <AccountsEinvoiceFilterableComponents
+                  key="accountsEInvoiceGCC"
+                  subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                  handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                  blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                  sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+                </AccountsEinvoiceFilterableComponents>
+              )}
             </div>
           </section>
 
           {/* Inventory Settings */}
-           <section key="inventory" ref={(el) => (sectionsRef.current["inventory"] = el)} className="mb-8 last:mb-0 pt-12">
+          <section key="inventory" ref={(el) => (sectionsRef.current["inventory"] = el)} className="mb-8 last:mb-0 pt-12">
             <div className="space-y-6">
             </div>
             <div>
-            {/* General */}
-            <InventoryGeneralFilterableComponents
-              key="inventoryGeneral"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventoryGeneralFilterableComponents>
-
-            {/* products */}
-            <InventoryProductsFilterableComponents
-              key="inventoryProducts"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventoryProductsFilterableComponents>
-
-            {/* GST settings */}
-            {userSession.countryId === Countries.India && (
-              <InventoryGSTSettingsFilterableComponents
-                key="inventoryGSTSettings"
+              {/* General */}
+              <InventoryGeneralFilterableComponents
+                key="inventoryGeneral"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-              </InventoryGSTSettingsFilterableComponents>
-            )}
-            {/* Tax Settings */}
-            {userSession.countryId === Countries.Saudi && (
-              <InventoryTAXFilterableComponents
-                key="inventoryTaxSettings"
+              </InventoryGeneralFilterableComponents>
+
+              {/* products */}
+              <InventoryProductsFilterableComponents
+                key="inventoryProducts"
                 subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
                 handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
                 blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
                 sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-              </InventoryTAXFilterableComponents>
-            )}
+              </InventoryProductsFilterableComponents>
 
-            {/* purchase */}
-            <InventoryPurchaseFilterableComponents
-              key="inventoryPurchase"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventoryPurchaseFilterableComponents>
+              {/* GST settings */}
+              {userSession.countryId === Countries.India && (
+                <InventoryGSTSettingsFilterableComponents
+                  key="inventoryGSTSettings"
+                  subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                  handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                  blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                  sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+                </InventoryGSTSettingsFilterableComponents>
+              )}
+              {/* Tax Settings */}
+              {userSession.countryId === Countries.Saudi && (
+                <InventoryTAXFilterableComponents
+                  key="inventoryTaxSettings"
+                  subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                  handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                  blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                  sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+                </InventoryTAXFilterableComponents>
+              )}
 
-            {/* sales */}
-            <InventorySalesFilterableComponents
-              key="inventorySales"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventorySalesFilterableComponents>
+              {/* purchase */}
+              <InventoryPurchaseFilterableComponents
+                key="inventoryPurchase"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </InventoryPurchaseFilterableComponents>
 
-            {/* POS */}
-            <MainSalesPOSFilterableComponents
-              key="inventorySalesPOS"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </MainSalesPOSFilterableComponents>
+              {/* sales */}
+              <InventorySalesFilterableComponents
+                key="inventorySales"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </InventorySalesFilterableComponents>
 
-            {/* counter */}
-            <InventorySalesCounterFilterableComponents
-              key="inventorySalesCounter"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventorySalesCounterFilterableComponents>
+              {/* POS */}
+              <MainSalesPOSFilterableComponents
+                key="inventorySalesPOS"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </MainSalesPOSFilterableComponents>
 
-            {/* PPOS */}
+              {/* counter */}
+              <InventorySalesCounterFilterableComponents
+                key="inventorySalesCounter"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </InventorySalesCounterFilterableComponents>
 
-            <InventoryPPOSFilterableComponents
-              key="inventoryPPOS"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventoryPPOSFilterableComponents>
+              {/* PPOS */}
+              <InventoryPPOSFilterableComponents
+                key="inventoryPPOS"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </InventoryPPOSFilterableComponents>
+
               {/*Schemes & Promotions*/}
-
-            <InventorySchemeAndPromotionFilterableComponents
-              key="inventorySchemesPromotions"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </InventorySchemeAndPromotionFilterableComponents>
-            </div>
-          </section>
-                             {/*miscellaneous*/}
-            <section key="miscellaneous" ref={(el) => (sectionsRef.current["miscellaneous"] = el)} className="mb-8 last:mb-0 pt-12">
-            <div className="space-y-6">
-            </div>
-            <div>
-
-            <ApplicationMiscellaneousComponents
-              key="miscellaneous"
-              subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
-              handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
-              blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
-              sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
-            </ApplicationMiscellaneousComponents>
+              <InventorySchemeAndPromotionFilterableComponents
+                key="inventorySchemesPromotions"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </InventorySchemeAndPromotionFilterableComponents>
             </div>
           </section>
 
+          {/*miscellaneous*/}
+          <section key="miscellaneous" ref={(el) => (sectionsRef.current["miscellaneous"] = el)}>
+            <div className="h-screen">
+              <ApplicationMiscellaneousComponents
+                key="miscellaneous"
+                subItemsRef={subItemsRef} filterComponent={filterComponent} filterText={filterText} gridClass={gridClass}
+                handleFieldChange={handleFieldChange} isCompactView={isCompactView} settings={settings} userSession={userSession}
+                blinkSection={blinkSection} handleGeneralHeaderClick={handleGeneralHeaderClick}
+                sectionsRef={sectionsRef} subItemsCatRef={subItemsCatRef} >
+              </ApplicationMiscellaneousComponents>
+            </div>
+          </section>
         </div>
       </main>
+
       <div className="flex justify-end items-center py-1 px-8 fixed bottom-0 right-0 bg-[#fafafa] w-full shadow-[0_0.2rem_0.4rem_rgba(0,0,0,0.5)]">
         <ERPButton
           title={t("save_settings")}

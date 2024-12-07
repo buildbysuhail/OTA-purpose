@@ -75,7 +75,7 @@
     "default_additional_amount_account": "Additional Amount Account",
     "default_BTO_account": "BTO Account",
     "default_BTI_account": "BTI Account",
-    "default_sales_return_payable_acc": "Default Sales Return Payable Acc:",
+    "default_sales_return_payable_acc": "Sales Return Payable Acc:",
     "service_warranty_inv_accounts": "Warranty Service Accounts",
     "service_non_warranty_inv_accounts": "Non Warranty Service Accounts",
     "default_brand": "Default Brand",
@@ -285,5 +285,7 @@
     "schemes_&_promotions":"Schemes & Promotions",
     "miscellaneous":"Miscellaneous",
 
-    "save_settings":"Save Settings"
+    "save_settings":"Save Settings",
+    "show_party_balance_in_sales":"Show Party Balance In Sales",
+    "allow_sales_detailed_edit":"Allow Sales Detailed Edit"
 }

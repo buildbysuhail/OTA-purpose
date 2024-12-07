@@ -17,12 +17,15 @@ import { AppState, languagesData, Theme } from "../redux/slices/app/types";
 import { syncAppStates } from "./auth/syncSettings";
 import { CircularProgress } from "@mui/material";
 import { UserTypeRights } from "../redux/slices/user-rights/reducer";
+import { setApplicationSettings } from "../redux/slices/app/application-settings-reducer";
+import { APIClient } from "../helpers/api-client";
+import Urls from "../redux/urls";
 
 interface ChildComponentProps {
   onLoadingChange: (isLoading: boolean) => void;
 }
 
-
+const api = new APIClient();
 const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -50,6 +53,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     
     onLoadingChange(false);
     if (response.isOk == true) {   
+     
       Cookies.set("token", response.item.token, { expires: 30 }); 
       Cookies.set("up", response.item.userProfileDetails, { expires: 30 }); 
       localStorage.setItem("ut", response.item.userThemes); 
@@ -61,7 +65,13 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       const _userThemes = atob(response.item.userThemes);
       const userThemes: AppState = customJsonParse(_userThemes);
       let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
-      syncAppStates(dispatch,userThemes, userProfileDetails,userRights, locale);          
+      syncAppStates(dispatch,userThemes, userProfileDetails,userRights, locale);  
+      const settings = await api.getAsync(Urls.application_setting);
+      dispatch(setApplicationSettings(
+        {
+          ...settings,
+          apiLoaded: true
+      }));        
     }
     handleResponse(response, () => {
       // navigate("/")

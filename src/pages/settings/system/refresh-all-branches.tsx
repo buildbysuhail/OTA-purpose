@@ -35,19 +35,23 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
     getFieldProps,
     isLoading,
     formState,
-    handleClose
+    handleClose,
   } = useFormManager<RefreshAllBranches>({
     url: Urls.refreshAllBranches,
-    onClose:useCallback(() => dispatch(toggleRefreshAllBranches({ isOpen: false, key: null,})), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleRefreshAllBranches({ isOpen: false })), [dispatch]),
+    onClose: useCallback(
+      () => dispatch(toggleRefreshAllBranches({ isOpen: false, key: null })),
+      [dispatch]
+    ),
+    onSuccess: useCallback(
+      () => dispatch(toggleRefreshAllBranches({ isOpen: false })),
+      [dispatch]
+    ),
     initialData: initialRefreshAllBranches,
     method: ActionType.POST,
     useApiClient: true,
-    loadDataRequired: false
+    loadDataRequired: false,
   });
 
-
-  
   const handleConditionalSubmit = useCallback(async () => {
     if (formState?.data?.agreementChecked) {
       await handleSubmit();
@@ -56,22 +60,19 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-1 gap-4">
-        <p>
-          {t("sync_master_data")}
-        </p>
-      </div>
-
       <div className="flex items-center justify-between my-4">
         <ERPCheckbox
           {...getFieldProps("agreementChecked")}
-          label={t("recover_until_sync")}
-          onChangeData={(checked: any) => handleFieldChange("agreementChecked", checked.agreementChecked)}
+          label={t("i_agreed")}
+          onChangeData={(checked: any) =>
+            handleFieldChange("agreementChecked", checked.agreementChecked)
+          }
         />
         <div>
           <ERPFormButtons
             isEdit={isEdit}
             isLoading={isLoading}
+            submitDisabled={!formState?.data?.agreementChecked}
             onCancel={handleClose}
             onSubmit={handleConditionalSubmit}
           />

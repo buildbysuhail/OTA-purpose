@@ -24,14 +24,14 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
     (state: RootState) => state.ApplicationSettings
   );
   const [filterText, setFilterSearch] = useState("");
-  debugger;
+  
   const [settingsPrev, setSettingsPrev] = useState();
   useEffect(() => {
     if (applicationSettings.apiLoaded) {
       setSettingsPrev(JSON.parse(JSON.stringify(applicationSettings)));
     }
   }, [applicationSettings.apiLoaded]);
-  debugger;
+  
   const [isSaving, setIsSaving] = useState(false);
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -47,7 +47,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
       settingName: keyof ApplicationSettingsType[T],
       value: any
     ) => {
-      debugger;
+      
       if (
         settingName === "allowSalesRouteArea" &&
         value === false &&
@@ -110,10 +110,10 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
     [dispatch]
   );
   const handleSubmit = useCallback(async () => {
-    debugger;
+    
     setIsSaving(true);
     console.log("Saving settings initiated.");
-    debugger;
+    
 
     try {
       // Compare settings with previous state to find changes (supports nested structures)
@@ -140,7 +140,7 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
             if (typeof currentValue === "object" && currentValue !== null) {
               compareObjects(currentValue, previousValue, settingsName);
             } else if (currentValue !== previousValue && parentKey != "") {
-              debugger;
+              
               const _paretnt: keyof ApplicationSettingsType =
                 parentKey as keyof ApplicationSettingsType;
 
@@ -204,11 +204,11 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
         });
 
         console.log("API response received:", response);
-        debugger;
+        
         handleResponse(
           response,
           () => {
-            debugger;
+            
             console.log("Settings updated successfully.");
             setSettingsPrev(JSON.parse(JSON.stringify(applicationSettings)));
           },

@@ -46,7 +46,7 @@ export interface AccTransactionMaster {
   debitNoteTransId: number;
   creditNoteTransId: number;
   currencyId: number;
-  accTransDetailId: number;
+  // accTransDetailId: number;
   adjustedTransDetailId: number;
   currencyRate?: number;
   isPosted: boolean;
@@ -285,7 +285,7 @@ export const accTransactionInitialData: AccTransactionData = {
     debitNoteTransId: 0,
     creditNoteTransId: 0,
     currencyId: 0,
-    accTransDetailId: 0,
+    // accTransDetailId: 0,
     adjustedTransDetailId: 0,
     currencyRate: undefined,
     isPosted: false,
@@ -337,6 +337,7 @@ export interface AccTransactionFormState {
   isBounced: boolean; // IsBounced
   isEntryControl: boolean; // IsEntryControl
   isEdit: boolean; // isEdit
+  isRowEdit: boolean; // isRowEdit
   dtLedgerCodes: any[]; // DtLedgerCodes (DataTable converted to array)
   isBahamdoonPOSReceipt: boolean;
   billwiseData: BillwiseData[];
@@ -357,6 +358,7 @@ export interface AccTransactionFormState {
   masterAccountID: number; // Master account ID
   masterBalance: number; // Master account balance
   masterAccountName: string; // Master account name
+  previousNarration: string[]; 
   row: AccTransactionRow;
   rowProcessing: boolean;
   transactionProcessing: boolean;
@@ -409,5 +411,7 @@ export const accTransactionFormStateInitialData: AccTransactionFormState = {
   userConfig: { clearDetailsAfterSaveAccounts: true, keepNarrationForJV: true, mnuShowConfirmationForEditOnAccounts: true, presetCostenterId: 0 },
   isBahamdoonPOSReceipt: false,
   unlocking: false,
-  total: 0
+  total: 0,
+  previousNarration: [],
+  isRowEdit: false
 }

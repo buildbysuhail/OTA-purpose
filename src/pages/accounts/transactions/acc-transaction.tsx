@@ -84,7 +84,8 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     setUserRight,
     enableControls,
     disableControls,
-    disableCombo,
+    changeComboVisibility,
+    ledgerCodeRef,
     validate
   } = useAccTransaction(transactionType ?? "");
   
@@ -830,6 +831,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 className="min-w-[100px]"
                 label={formElements.ledgerCode.label}
                 value={formState.row.ledgerCode}
+                ref={ledgerCodeRef}
                 onChange={(e) =>
                   dispatch(
                     accFormStateRowHandleFieldChange({
@@ -1083,6 +1085,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       valueKey: "id",
                       labelKey: "name",
                       getListUrl: Urls.data_BankAccounts,
+                      params: {ledgerID: formState.row.ledgerId != undefined && formState.row.ledgerId != null ? formState.row.ledgerId : 0}
                     }}
                     onChange={(e) =>
                       dispatch(

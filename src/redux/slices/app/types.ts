@@ -146,5 +146,6 @@ export interface inputBox{
 }
 export interface AppInitialState {
   syncing: boolean;
+  softwareDate: string;
   appState: AppState;
 }

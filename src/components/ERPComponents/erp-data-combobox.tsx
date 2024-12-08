@@ -399,7 +399,7 @@ export default function ERPDataCombobox({
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
-  }, [field?.getListUrl, field?.freezeDataLoad, reload, disabledApiCall]);
+  }, [field?.getListUrl,field?.params, field?.freezeDataLoad, reload, disabledApiCall]);
 
   const loadData = async () => {
     setLoading(true);

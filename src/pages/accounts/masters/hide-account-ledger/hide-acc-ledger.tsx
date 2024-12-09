@@ -46,7 +46,7 @@ const HideAccountLedger = () => {
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - 200;
-    let gridHeightWindows = wh - 300;
+    let gridHeightWindows = wh - 600;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
   const { t } = useTranslation("masters");
@@ -95,81 +95,6 @@ const HideAccountLedger = () => {
     setIsSaving(false);
   };
 
-  const renderToolbarContent = () => (
-    <div className="flex flex-col lg:flex-row space-x-3 items-center mb-3">
-      <ERPDataCombobox
-        //   className="w-[200px]"
-        id="userTypeCode"
-        field={{
-          id: "userTypeCode",
-          required: true,
-          getListUrl: Urls.data_user_types,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={handleUserTypeChange}
-        data={postData}
-        defaultData={postData}
-        label={t("user_type_code")}
-      />
-      <ERPDataCombobox
-        //   className="w-[200px]"
-        id="groupId"
-        field={{
-          id: "groupId",
-          required: true,
-          getListUrl: Urls.data_acc_groups,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data: any) => {
-          setPostData((prev) => ({
-            ...prev,
-            groupId: data.groupId,
-          }));
-        }}
-        data={postData}
-        defaultData={postData}
-        label={t("account_group")}
-      />
-       <ERPButton
-                      title={t("add")}
-                      variant="primary"
-                      disabled={isSaving}
-                      loading={isSaving}
-                      type="button"
-                      onClick={() => handleSubmit(true)}
-                    />
-      <ERPDataCombobox
-        //   className="w-[200px]"
-        id="ledgerId"
-        field={{
-          id: "ledgerId",
-          required: true,
-          getListUrl: Urls.data_acc_ledgers,
-          valueKey: "id",
-          labelKey: "name",
-        }}
-        onChangeData={(data: any) => {
-          setPostData((prev) => ({
-            ...prev,
-            ledgerId: data.ledgerId,
-          }));
-        }}
-        data={postData}
-        defaultData={postData}
-        label={t("ledger")}
-      />
-       <ERPButton
-                      title={t("add")}
-                      variant="primary"
-                      disabled={isSaving}
-                      loading={isSaving}
-                      type="button"
-                      onClick={() => handleSubmit(false)}
-                    />
-    </div>
-  );
 
   const initialLoadGrid = useCallback(async (userTypeCode: string) => {
     debugger;
@@ -216,6 +141,85 @@ const HideAccountLedger = () => {
       <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
+          <div className="flex flex-col gap-4 justify-start items-start my-4">
+      <ERPDataCombobox
+              //   className="w-[200px]"
+              id="userTypeCode"
+              field={{
+                id: "userTypeCode",
+                required: true,
+                getListUrl: Urls.data_user_types,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onChangeData={handleUserTypeChange}
+              data={postData}
+              defaultData={postData}
+              label={t("user_type_code")}
+            />
+            <div className="flex space-x-5 ">
+            <ERPDataCombobox
+              //   className="w-[200px]"
+              id="groupId"
+              field={{
+                id: "groupId",
+                required: true,
+                getListUrl: Urls.data_acc_groups,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onChangeData={(data: any) => {
+                setPostData((prev) => ({
+                  ...prev,
+                  groupId: data.groupId,
+                }));
+              }}
+              data={postData}
+              defaultData={postData}
+              label={t("account_group")}
+            />
+            <ERPButton
+            className="self-end"
+                title={t("add")}
+                variant="primary"
+                disabled={isSaving}
+                loading={isSaving}
+                type="button"
+                onClick={() => handleSubmit(true)}
+              />
+            </div>
+            <div className="flex space-x-5 ">
+            <ERPDataCombobox
+              //   className="w-[200px]"
+              id="ledgerId"
+              field={{
+                id: "ledgerId",
+                required: true,
+                getListUrl: Urls.data_acc_ledgers,
+                valueKey: "id",
+                labelKey: "name",
+              }}
+              onChangeData={(data: any) => {
+                setPostData((prev) => ({
+                  ...prev,
+                  ledgerId: data.ledgerId,
+                }));
+              }}
+              data={postData}
+              defaultData={postData}
+              label={t("ledger")}
+            />
+            <ERPButton
+             className="self-end"
+                title={t("add")}
+                variant="primary"
+                disabled={isSaving}
+                loading={isSaving}
+                type="button"
+                onClick={() => handleSubmit(false)}
+              />
+            </div>
+      </div>
             <div className="grid grid-cols-1 gap-3">
               {
                 <div>
@@ -309,12 +313,9 @@ const HideAccountLedger = () => {
                     </div>
                   )}
                 />
-                <Toolbar>
-                  <Item location="before">{renderToolbarContent()}</Item>
-                  <Item location="after">
-                   
-                  </Item>
-                </Toolbar>
+              {/* <Toolbar>
+              <Item location="before" render={renderToolbarContent} />
+                </Toolbar> */}
               </DataGrid>
             </div>
           </div>

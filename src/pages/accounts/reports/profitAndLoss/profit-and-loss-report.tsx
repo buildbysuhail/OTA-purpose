@@ -322,7 +322,7 @@ const ProfitAndLossReport = () => {
         isOpen={isOpenDetails.isOpen}
         // title={t("bank_cards")}
         title="Account Report"
-        width="w-full max-w-[90%]"
+        width="w-full max-w-[90%]" 
         isForm={true}
         closeModal={() => {
           setIsOpenDetails({ isOpen: false, key: 0 });

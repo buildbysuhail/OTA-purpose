@@ -100,14 +100,14 @@ const CashBookSummary = () => {
                   reload={true} 
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
-                  childPopupProps={{
-                    content: <CashBookMonthWise/>,
-                    title: t("cash_book_monthwise"),
-                    isForm: false,
-                    width: "mw-100",
-                    drillDownCells: "ledgerName,",
-                    bodyProps: "ledgerID,asonDate" 
-                  }}
+                  // childPopupProps={{
+                  //   content: <CashBookMonthWise/>,
+                  //   title: t("cash_book_monthwise"),
+                  //   isForm: false,
+                  //   width: "mw-100",
+                  //   drillDownCells: "ledgerName,",
+                  //   bodyProps: "ledgerID,asonDate" 
+                  // }}
                 ></ErpDevGrid>
               </div>
             </div>

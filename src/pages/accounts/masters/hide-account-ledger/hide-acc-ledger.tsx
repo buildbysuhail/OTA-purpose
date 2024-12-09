@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { DataGrid, RemoteOperations } from "devextreme-react/data-grid";
-import {Column,  FilterRow,  Paging,  Scrolling,  SearchPanel,  Toolbar,  Item,} from "devextreme-react/data-grid";
+import { Column, FilterRow, Paging, Scrolling, SearchPanel, Toolbar, Item, } from "devextreme-react/data-grid";
 //   import ERPToast from "../../../../../../components/ERPComponents/erp-toast";
 import { useNavigate } from "react-router-dom";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
@@ -39,6 +39,8 @@ const HideAccountLedger = () => {
   const [store, setStore] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [errorLedger, setErrorLedger] = useState("");
+  const [errorGroup, setErrorGroup] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,32 +50,46 @@ const HideAccountLedger = () => {
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
   const { t } = useTranslation("masters");
-  const handleSubmit = async () => {
+  const handleSubmit = async (isGroup: boolean) => {
+    setErrorLedger("");
     setIsSaving(true);
     try {
-      if ((postData.groupId && postData.groupId) || (postData.ledgerId && postData.ledgerId > 0)) {
+      if(isGroup)
+      {
         if (postData.groupId && postData.groupId > 0) {
           const response: any = await api.post(`${Urls.hide_Ledger}`, {
-            isGroup: true,
+            isGroup: isGroup,
             ledgerGroupId: postData.groupId,
             userTypeCode: postData.userTypeCode,
           });
+          if (response.isOk != true) {
+            setErrorGroup(response.messages[0]);
+          }
           handleResponse(response);
 
         }
-        if (postData.ledgerId && postData.ledgerId > 0) {
-          const response: any = await api.post(
-            `${Urls.hide_Ledger}`,
-            {
-              isGroup: false,
-              ledgerGroupId: postData.ledgerId,
-              userTypeCode: postData.userTypeCode,
-            }
-          );
-          handleResponse(response);
+        else{
+          ERPToast.show("Please choose Group", "warning")
         }
-        initialLoadGrid(postData.userTypeCode)
-      }      
+      }
+      else
+      {
+        if (postData.ledgerId && postData.ledgerId > 0) {
+          const response: any = await api.post(`${Urls.hide_Ledger}`, {
+            isGroup: isGroup,
+            ledgerGroupId: postData.groupId,
+            userTypeCode: postData.userTypeCode,
+          });
+          if (response.isOk != true) {
+            setErrorGroup(response.messages[0]);
+          }
+          handleResponse(response);
+
+        }
+        else{
+          ERPToast.show("Please choose Group", "warning")
+        }
+      }
     } catch (error) { }
 
     setIsSaving(false);
@@ -116,6 +132,14 @@ const HideAccountLedger = () => {
         defaultData={postData}
         label={t("account_group")}
       />
+       <ERPButton
+                      title={t("add")}
+                      variant="primary"
+                      disabled={isSaving}
+                      loading={isSaving}
+                      type="button"
+                      onClick={() => handleSubmit(true)}
+                    />
       <ERPDataCombobox
         //   className="w-[200px]"
         id="ledgerId"
@@ -136,6 +160,14 @@ const HideAccountLedger = () => {
         defaultData={postData}
         label={t("ledger")}
       />
+       <ERPButton
+                      title={t("add")}
+                      variant="primary"
+                      disabled={isSaving}
+                      loading={isSaving}
+                      type="button"
+                      onClick={() => handleSubmit(false)}
+                    />
     </div>
   );
 
@@ -185,6 +217,19 @@ const HideAccountLedger = () => {
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
             <div className="grid grid-cols-1 gap-3">
+              {
+                <div>
+                  {errorGroup && errorGroup != "" &&
+                  <div className="bg-[#f78181] text-white border border-[#f54444] px-4 py-3 rounded relative" role="alert">
+                  <strong className="font-bold">Holy smokes!</strong>
+                  <span className="block sm:inline">{errorGroup}</span>
+                  <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => {setErrorGroup("")}}>
+                    <svg className="fill-current h-6 w-6 text-red-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                  </span>
+                </div>
+                  }
+                </div>
+              }
               <DataGrid
                 height={gridHeight.windows}
                 dataSource={store}
@@ -267,14 +312,7 @@ const HideAccountLedger = () => {
                 <Toolbar>
                   <Item location="before">{renderToolbarContent()}</Item>
                   <Item location="after">
-                    <ERPButton
-                      title={t("add")}
-                      variant="primary"
-                      disabled={isSaving}
-                      loading={isSaving}
-                      type="button"
-                      onClick={handleSubmit}
-                    />
+                   
                   </Item>
                 </Toolbar>
               </DataGrid>

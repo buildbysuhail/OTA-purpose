@@ -100,21 +100,21 @@ const accTransactionSlice = createSlice({
           }
         }
       }
-      {
-        if (userSession.presetCostCenterId > 0)
-          cbEmployee.SelectedValue =
-            PolosysFrameWork.General.EMPLOYEEID.ToString();
-      }
-      if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
-        cbCostCentre.SelectedValue =
-          PolosysFrameWork.General.PRESET_COSTCENTER_ID;
-        cbCostCentre.Enabled = false;
-      } else {
-        if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
-          cbCostCentre.SelectedIndex = -1;
-          cbCostCentre.SelectedValue = 0;
-        }
-      }
+      // {
+      //   if (userSession.presetCostCenterId > 0)
+      //     cbEmployee.SelectedValue =
+      //       PolosysFrameWork.General.EMPLOYEEID.ToString();
+      // }
+      // if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
+      //   cbCostCentre.SelectedValue =
+      //     PolosysFrameWork.General.PRESET_COSTCENTER_ID;
+      //   cbCostCentre.Enabled = false;
+      // } else {
+      //   if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
+      //     cbCostCentre.SelectedIndex = -1;
+      //     cbCostCentre.SelectedValue = 0;
+      //   }
+      // }
     },
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (

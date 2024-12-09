@@ -1130,7 +1130,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   getListUrl: Urls.data_costcentres,
                 }}
                 disabled={
-                  userSession.presetCostCenterId > 0 ||
+                  formState.userConfig.presetCostenterId > 0 ||
                   formElements.costCentreId.disabled
                 }
                 onChange={(e) =>

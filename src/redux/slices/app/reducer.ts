@@ -59,9 +59,10 @@ import usFlag from '../../../assets/images/flags/us_flag.png'
    locale: { code: 'en', name: 'English', rtl: false, flag:usFlag },
  }
  export const initialState: AppInitialState = {
-  syncing: false,
-  appState: appInitialState,
-};
+   syncing: false,
+   appState: appInitialState,
+   softwareDate: ''
+ };
 
 const appStateSlice = createSlice({
   name: 'appState',

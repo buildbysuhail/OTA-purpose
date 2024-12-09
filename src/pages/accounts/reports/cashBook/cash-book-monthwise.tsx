@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment, useState } from "react";
+import { FC, Fragment, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,14 +9,21 @@ import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDayWise from "./cash-book-daywise";
 
+// interface CashBookMonthWiseProps {
+//   contentProps?: any
+//   enablefilter?: boolean;
+// }
 interface CashBookMonthWiseProps {
-  contentProps?: any
-  enablefilter?: boolean;
+  postData: any;
+  groupName?: string;
 }
+
+
+const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) => {
 // interface CashBookMonthWiseFilters {
 //   from: Date
 // }
-const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWiseProps) => {
+// const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
@@ -107,7 +114,7 @@ const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWis
                   gridHeader={t("cash_book")}
                   dataUrl= {Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
-                  postData = {contentProps}
+                  postData = {postData}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

@@ -77,7 +77,7 @@ const HideAccountLedger = () => {
         if (postData.ledgerId && postData.ledgerId > 0) {
           const response: any = await api.post(`${Urls.hide_Ledger}`, {
             isGroup: isGroup,
-            ledgerGroupId: postData.groupId,
+            ledgerGroupId: postData.ledgerId,
             userTypeCode: postData.userTypeCode,
           });
           if (response.isOk != true) {

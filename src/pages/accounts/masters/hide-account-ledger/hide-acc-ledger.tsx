@@ -64,6 +64,7 @@ const HideAccountLedger = () => {
           });
           if (response.isOk != true) {
             setErrorGroup(response.messages[0]);
+            await initialLoadGrid(postData.userTypeCode);
           }
           handleResponse(response);
 
@@ -82,6 +83,7 @@ const HideAccountLedger = () => {
           });
           if (response.isOk != true) {
             setErrorGroup(response.messages[0]);
+            await initialLoadGrid(postData.userTypeCode);
           }
           handleResponse(response);
 

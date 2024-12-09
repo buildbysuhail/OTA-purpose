@@ -8,7 +8,12 @@ import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
 import { toggleParties } from "../../../../redux/slices/popup-reducer";
-import { initialPartiesData, initialProjectOrJobData, PartiesData, ProjectOrJob } from "./parties-manage-type";
+import {
+  initialPartiesData,
+  initialProjectOrJobData,
+  PartiesData,
+  ProjectOrJob,
+} from "./parties-manage-type";
 import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 import ERPButton from "../../../../components/ERPComponents/erp-button";
 import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
@@ -18,20 +23,26 @@ import { RootState } from "../../../../redux/store";
 import { Countries } from "../../../../redux/slices/user-session/reducer";
 import { convertFileToBase64 } from "../../../../utilities/file-utils";
 import ErpCropper from "../../../../components/ERPComponents/erp-cropper";
+import ERPToast from "../../../../components/ERPComponents/erp-toast";
 
 interface PartiesManageProps {
   type: string; // Define type as a string prop
 }
 const api = new APIClient();
-export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = "Cust" }) => {
+export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
+  ({ type = "Cust" }) => {
     const [activeTab, setActiveTab] = useState("address");
     const rootState = useRootState();
     const dispatch = useDispatch();
     const userSession = useSelector((state: RootState) => state.UserSession);
-    const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
+    const applicationSettings = useSelector(
+      (state: RootState) => state.ApplicationSettings
+    );
     const isIndianCompany = userSession.countryId === Countries.India;
     const [isTCSApplicable, setIsTCSApplicable] = useState(false);
-    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(initialProjectOrJobData.data);
+    const [projectOrJob, setProjectOrJob] = useState<ProjectOrJob>(
+      initialProjectOrJobData.data
+    );
     const [image, setImage] = useState<string>("#");
 
     const {
@@ -42,7 +53,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
       getFieldProps,
       handleClose,
       isLoading,
-      formState
+      formState,
     } = useFormManager<PartiesData>({
       url: Urls.parties,
       onClose: useCallback(
@@ -70,7 +81,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
       },
     });
 
-    const [fileLoading,setFileLoading]=useState(false)
+    const [fileLoading, setFileLoading] = useState(false);
     const { t } = useTranslation("masters");
     const handleFileChange = (e: { target: { files: any[] } }) => {
       const file = e.target.files[0];
@@ -97,23 +108,56 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
       };
     }, []);
 
-
     const handleFileUpload = async (key: any, value: any) => {
-      setFileLoading(true)
+      setFileLoading(true);
       const payload = {
         base64String: value,
       };
       try {
-        const res = await api.postAsync(Urls.acc_attachmentInfo,payload)
-        handleFieldChange(key, res) 
+        const res = await api.postAsync(Urls.acc_attachment_upload, payload);
+        handleFieldChange(key, res);
       } catch (error) {
-        console.error('Error uploading file:', error)
-      }finally{
-        setFileLoading(false)
+        console.error("Error uploading file:", error);
+      } finally {
+        setFileLoading(false);
       }
-    }
-   
-  
+    };
+
+    const handleDownload = async (fileName: string) => {
+      ERPToast.show("Download started...", "success");
+      try {
+        const parts = fileName.split("-");
+        parts.pop();
+        const url = `${
+          Urls.acc_attachmentInfo_download
+        }?fileName=${encodeURIComponent(parts.join("-"))}`;
+
+        const res = await api.getNativeAsync(url, undefined, {
+          responseType: "blob", // Ensure the response is treated as a binary blob
+        });
+        debugger;
+        if (res) {
+          // Create a download link and trigger download
+          const url = window.URL.createObjectURL(res);
+          const link = document.createElement("a");
+          link.href = url;
+
+          // Fallback to the provided fileName or a default name
+          const suggestedFileName = parts.join("-") || "download";
+
+          link.setAttribute("download", suggestedFileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      } catch (error) {
+        console.error("Error downloading file:", error);
+        ERPToast.show("Download failed.", "error");
+      } finally {
+        setFileLoading(false);
+      }
+    };
+
     return (
       <div className="w-full bordered-tab relative pb-16">
         <div className="mt-[1.5rem]">
@@ -181,7 +225,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                 handleFieldChange("partyCategoryID", data.partyCategoryID);
               }}
               label={t("party_category")}
-            // disabled={true}
+              // disabled={true}
             />
             <ERPDataCombobox
               {...getFieldProps("accGroupID")}
@@ -242,7 +286,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
             <ERPInput
               {...getFieldProps("cstNumber")}
               label={t("cr_no")}
-
               placeholder={t("cr_no")}
               required={false}
               onChangeData={(data: any) =>
@@ -290,12 +333,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                     valueKey: "value",
                     labelKey: "label",
                   }}
-                  onChangeData={(data: any) => handleFieldChange("drCr", data.drCr)}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("drCr", data.drCr)
+                  }
                   label=" "
                   enableClearOption={false}
                   options={[
-                    { value: 'Dr', label: t('Dr') },
-                    { value: 'Cr', label: t('Cr') },
+                    { value: "Dr", label: t("Dr") },
+                    { value: "Cr", label: t("Cr") },
                   ]}
                 />
               </div>
@@ -304,17 +349,26 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
             <ERPCheckbox
               {...getFieldProps("billwiseBillApplicable")}
               label={t("bill_wise_applicable")}
-              onChangeData={(data: any) => handleFieldChange("billwiseBillApplicable", data.billwiseBillApplicable)}
+              onChangeData={(data: any) =>
+                handleFieldChange(
+                  "billwiseBillApplicable",
+                  data.billwiseBillApplicable
+                )
+              }
             />
             <ERPCheckbox
               {...getFieldProps("isActive")}
               label={t("is_active")}
-              onChangeData={(data: any) => handleFieldChange("isActive", data.isActive)}
+              onChangeData={(data: any) =>
+                handleFieldChange("isActive", data.isActive)
+              }
             />
             <ERPCheckbox
               {...getFieldProps("isCommon")}
               label={t("is_common")}
-              onChangeData={(data: any) => handleFieldChange("isCommon", data.isCommon)}
+              onChangeData={(data: any) =>
+                handleFieldChange("isCommon", data.isCommon)
+              }
             />
           </div>
 
@@ -370,7 +424,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                     labelKey: "label",
                   }}
                   onChangeData={(data: any) => {
-                    handleFieldChange("registrationType", data !== null && data !== undefined ? data.registrationType : "Regular");
+                    handleFieldChange(
+                      "registrationType",
+                      data !== null && data !== undefined
+                        ? data.registrationType
+                        : "Regular"
+                    );
                   }}
                   label={t("registration_type")}
                   options={[
@@ -379,15 +438,36 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                     { value: "Composite", label: "Composite" },
                     { value: "Unregistered", label: "Unregistered" },
                     { value: "Unregistered+RCM", label: "Unregistered+RCM" },
-                    { value: "Foreign non-Resident Taxpayer", label: "Foreign non-Resident Taxpayer" },
-                    { value: "Input Service distributor", label: "Input Service distributor" },
+                    {
+                      value: "Foreign non-Resident Taxpayer",
+                      label: "Foreign non-Resident Taxpayer",
+                    },
+                    {
+                      value: "Input Service distributor",
+                      label: "Input Service distributor",
+                    },
                     { value: "Tax Deductor", label: "Tax Deductor" },
-                    { value: "E-commerce Operator", label: "E-commerce Operator" },
-                    { value: "Government Departments", label: "Government Departments" },
-                    { value: "SEZ supplies with payment", label: "SEZ supplies with payment" },
-                    { value: "SEZ supplies without payment", label: "SEZ supplies without payment" },
+                    {
+                      value: "E-commerce Operator",
+                      label: "E-commerce Operator",
+                    },
+                    {
+                      value: "Government Departments",
+                      label: "Government Departments",
+                    },
+                    {
+                      value: "SEZ supplies with payment",
+                      label: "SEZ supplies with payment",
+                    },
+                    {
+                      value: "SEZ supplies without payment",
+                      label: "SEZ supplies without payment",
+                    },
                     { value: "Deemed Export", label: "Deemed Export" },
-                    { value: "Intra-State supplies attracting IGST", label: "Intra-State supplies attracting IGST" }
+                    {
+                      value: "Intra-State supplies attracting IGST",
+                      label: "Intra-State supplies attracting IGST",
+                    },
                   ]}
                   defaultValue={{ value: "Regular", label: "Regular" }}
                 />
@@ -403,27 +483,37 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
           </div>
         </div>
 
-        <Tabs value={activeTab} onChange={handleTabChange} >
+        <Tabs value={activeTab} onChange={handleTabChange}>
           <Tab label="Address" value="address" />
           <Tab label="Bank" value="bank" />
           <Tab label="Details" value="details" />
           <Tab label="More" value="more" />
           {/* <Tab label="Project/Job" value="project_job" /> */}
-          {userSession.countryId != Countries.India && applicationSettings?.branchSettings?.maintainKSA_EInvoice == true &&
-            <Tab label="Other" value="other_details" />
-          }
+          {userSession.countryId != Countries.India &&
+            applicationSettings?.branchSettings?.maintainKSA_EInvoice ==
+              true && <Tab label="Other" value="other_details" />}
         </Tabs>
         <div className="pt-4">
-          {activeTab === 'address' &&
+          {activeTab === "address" && (
             <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
               <ERPInput
                 {...getFieldProps("address2")}
-                label={userSession.countryId == Countries.India ? t("address_2_city_district") : t("address_2_city")}
-                placeholder={userSession.countryId == Countries.India ? t("address_2_city_district") : t("address_2_city")}
+                label={
+                  userSession.countryId == Countries.India
+                    ? t("address_2_city_district")
+                    : t("address_2_city")
+                }
+                placeholder={
+                  userSession.countryId == Countries.India
+                    ? t("address_2_city_district")
+                    : t("address_2_city")
+                }
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("address2", data.address2)}
+                onChangeData={(data: any) =>
+                  handleFieldChange("address2", data.address2)
+                }
               />
-              {userSession.countryId != Countries.India &&
+              {userSession.countryId != Countries.India && (
                 <ERPInput
                   {...getFieldProps("address3")}
                   label={t("address3_district")}
@@ -433,45 +523,55 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                     handleFieldChange("address3", data.address3)
                   }
                 />
-              }
-              {userSession.countryId == Countries.India &&
+              )}
+              {userSession.countryId == Countries.India && (
                 <ERPInput
                   {...getFieldProps("address3")}
                   label={t("address_4_building_no")}
                   placeholder={t("address_4_building_no")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("address3", data.address3)}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("address3", data.address3)
+                  }
                 />
-              }
-              {userSession.countryId != Countries.India &&
+              )}
+              {userSession.countryId != Countries.India && (
                 <ERPInput
                   {...getFieldProps("address4")}
                   label={t("address_4_building_no")}
                   placeholder={t("address_4_building_no")}
                   required={false}
-                  onChangeData={(data: any) => handleFieldChange("address4", data.address4)}
+                  onChangeData={(data: any) =>
+                    handleFieldChange("address4", data.address4)
+                  }
                 />
-              }
+              )}
               <ERPInput
                 {...getFieldProps("officePhone")}
                 label={t("office_phone")}
                 placeholder={t("office_phone")}
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("officePhone", data.officePhone)}
+                onChangeData={(data: any) =>
+                  handleFieldChange("officePhone", data.officePhone)
+                }
               />
               <ERPInput
                 {...getFieldProps("workPhone")}
                 label={t("work_phone")}
                 placeholder={t("work_phone")}
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("workPhone", data.workPhone)}
+                onChangeData={(data: any) =>
+                  handleFieldChange("workPhone", data.workPhone)
+                }
               />
               <ERPInput
                 {...getFieldProps("contactPhone")}
                 label={t("contact_phone")}
                 placeholder={t("contact_phone")}
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("contactPhone", data.contactPhone)}
+                onChangeData={(data: any) =>
+                  handleFieldChange("contactPhone", data.contactPhone)
+                }
               />
               <ERPInput
                 {...getFieldProps("email")}
@@ -479,14 +579,18 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                 placeholder={t("email")}
                 type="email"
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("email", data.email)}
+                onChangeData={(data: any) =>
+                  handleFieldChange("email", data.email)
+                }
               />
               <ERPInput
                 {...getFieldProps("webURL")}
                 label={t("website")}
                 placeholder={t("website")}
                 required={false}
-                onChangeData={(data: any) => handleFieldChange("webURL", data.webURL)}
+                onChangeData={(data: any) =>
+                  handleFieldChange("webURL", data.webURL)
+                }
               />
               <ERPInput
                 {...getFieldProps("postalCode")}
@@ -497,73 +601,83 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                   handleFieldChange("postalCode", data.postalCode)
                 }
               />
-            </div>}
-          {activeTab === 'bank' && <>
-            <div className="flex align-center gap-3">
-              <div className="w-1/2 border rounded-lg p-4">
-                <h6 className="border-b pb-2 mb-2 text-sm font-bold">Bank 1</h6>
-                <div className="flex flex-col gap-3">
-                  <ERPInput
-                    {...getFieldProps("bankAcNumber1")}
-                    label={t("account_number")}
-                    placeholder={t("account_number")}
-                    required={false}
-                    onChangeData={(data: any) => handleFieldChange("bankAcNumber1", data.bankAcNumber1)}
-                  />
-                  <ERPInput
-                    {...getFieldProps("bankAcName1")}
-                    label={t("account_name")}
-                    placeholder={t("account_name")}
-                    required={false}
-                    onChangeData={(data: any) => handleFieldChange("bankAcName1", data.bankAcName1)}
-                  />
-                  <ERPInput
-                    {...getFieldProps("bankDetails1")}
-                    label={t("remarks")}
-                    placeholder={t("remarks")}
-                    required={false}
-                    onChangeData={(data: any) => handleFieldChange("bankDetails1", data.bankDetails1)}
-                  />
-                </div>
-              </div>
-
-              <div className="w-1/2 border rounded-lg p-4">
-                <h6 className="border-b pb-2 mb-2 text-sm font-bold">
-                  Bank 2
-                </h6>
-                <div className="flex flex-col gap-3">
-                  <ERPInput
-                    {...getFieldProps("bankAcNumber2")}
-                    label={t("account_number")}
-                    placeholder={t("account_number")}
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange("bankAcNumber2", data.bankAcNumber2)
-                    }
-                  />
-                  <ERPInput
-                    {...getFieldProps("bankAcName2")}
-                    label={t("account_name")}
-                    placeholder={t("account_name")}
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange("bankAcName2", data.bankAcName2)
-                    }
-                  />
-                  <ERPInput
-                    {...getFieldProps("bankDetails2")}
-                    label={t("remarks")}
-                    placeholder={t("remarks")}
-                    required={false}
-                    onChangeData={(data: any) =>
-                      handleFieldChange("bankDetails2", data.bankDetails2)
-                    }
-                  />
-                </div>
-              </div>
             </div>
-          </>
-          }
+          )}
+          {activeTab === "bank" && (
+            <>
+              <div className="flex align-center gap-3">
+                <div className="w-1/2 border rounded-lg p-4">
+                  <h6 className="border-b pb-2 mb-2 text-sm font-bold">
+                    Bank 1
+                  </h6>
+                  <div className="flex flex-col gap-3">
+                    <ERPInput
+                      {...getFieldProps("bankAcNumber1")}
+                      label={t("account_number")}
+                      placeholder={t("account_number")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("bankAcNumber1", data.bankAcNumber1)
+                      }
+                    />
+                    <ERPInput
+                      {...getFieldProps("bankAcName1")}
+                      label={t("account_name")}
+                      placeholder={t("account_name")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("bankAcName1", data.bankAcName1)
+                      }
+                    />
+                    <ERPInput
+                      {...getFieldProps("bankDetails1")}
+                      label={t("remarks")}
+                      placeholder={t("remarks")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("bankDetails1", data.bankDetails1)
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="w-1/2 border rounded-lg p-4">
+                  <h6 className="border-b pb-2 mb-2 text-sm font-bold">
+                    Bank 2
+                  </h6>
+                  <div className="flex flex-col gap-3">
+                    <ERPInput
+                      {...getFieldProps("bankAcNumber2")}
+                      label={t("account_number")}
+                      placeholder={t("account_number")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("bankAcNumber2", data.bankAcNumber2)
+                      }
+                    />
+                    <ERPInput
+                      {...getFieldProps("bankAcName2")}
+                      label={t("account_name")}
+                      placeholder={t("account_name")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("bankAcName2", data.bankAcName2)
+                      }
+                    />
+                    <ERPInput
+                      {...getFieldProps("bankDetails2")}
+                      label={t("remarks")}
+                      placeholder={t("remarks")}
+                      required={false}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("bankDetails2", data.bankDetails2)
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
           {activeTab === "details" && (
             <div className="grid grid-cols-2 gap-6 mt-5">
               <div className="grid grid-cols-2 gap-6 p-5 border rounded-lg">
@@ -589,45 +703,50 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                   </label>
 
                   <div className="flex gap-2 ">
-                  <input
-                    type="file"
-                     id="document1String"
-                    name="document1String"
-                    onChange={(e) => {
-                      const files = e.target.files;
-                      if (files != undefined && files.length > 0) {
-                        convertFileToBase64(files[0]).then((base64) => {
-                          handleFileUpload("document1String", base64)  
-                        });
-                      }
-                    }
-                  
-                    }
-                    disabled={fileLoading}
-                    className="border rounded-lg p-2"
-                    
-                  />
+                    <input
+                      type="file"
+                      id="document1String"
+                      name="document1String"
+                      onChange={(e) => {
+                        const files = e.target.files;
+                        if (files != undefined && files.length > 0) {
+                          convertFileToBase64(files[0]).then((base64) => {
+                            handleFileUpload("document1String", base64);
+                          });
+                        }
+                      }}
+                      disabled={fileLoading}
+                      className="border rounded-lg p-2"
+                    />
                     {fileLoading && (
                       <div className="flex items-center">
-                        <CircularProgress className="" color="inherit" size={14} />
+                        <CircularProgress
+                          className=""
+                          color="inherit"
+                          size={14}
+                        />
                       </div>
                     )}
                   </div>
-                  
-                
-                        {formState?.data?.document1String && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-700">Uploaded file:</span>
-                          <a 
-                            href={formState?.data?.document1String} 
-                            download 
-                            className="text-blue-600 hover:text-blue-800 underline"
-                          >
-                            Download
-                          </a>
-                        </div>
-                      )}
-                  </div>
+
+                  {formState?.data?.document1String && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-700">
+                        Uploaded file:
+                      </span>
+                      <a
+                        href="#"
+                        onClick={() =>
+                          handleDownload(formState?.data?.document1String)
+                        }
+                        download
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        Download
+                      </a>
+                    </div>
+                  )}
+                </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="fileInput" className="text-sm text-gray-700">
@@ -635,31 +754,32 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                   </label>
                   <input
                     type="file"
-                     id="document2String"
+                    id="document2String"
                     name="document2String"
                     onChange={(e) => {
                       const files = e.target.files;
                       if (files != undefined && files.length > 0) {
                         convertFileToBase64(files[0]).then((base64) => {
-                          handleFileUpload("document2String", base64)  
+                          handleFileUpload("document2String", base64);
                         });
-                        }
                       }
-                    }
+                    }}
                     className="border rounded-lg p-2"
                   />
-                      {formState?.data?.document2String && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm text-gray-700">Uploaded file:</span>
-                          <a 
-                            href={formState?.data?.document2String} 
-                            download 
-                            className="text-blue-600 hover:text-blue-800 underline"
-                          >
-                            Download
-                          </a>
-                        </div>
-                      )}
+                  {formState?.data?.document2String && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-700">
+                        Uploaded file:
+                      </span>
+                      <a
+                        href={formState?.data?.document2String}
+                        download
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        Download
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
               {isIndianCompany && (
@@ -702,7 +822,16 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                       }}
                       onChange={(data: any) => {
                         debugger;
-                        handleFieldChange({ stateName: data !== null && data !== undefined ? data.label.toString() : "", stateCode: data !== null && data !== undefined ? data.value.toString() : "" });
+                        handleFieldChange({
+                          stateName:
+                            data !== null && data !== undefined
+                              ? data.label.toString()
+                              : "",
+                          stateCode:
+                            data !== null && data !== undefined
+                              ? data.value.toString()
+                              : "",
+                        });
                       }}
                       label={t("state_name")}
                     />
@@ -712,19 +841,25 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                       disabled={true}
                       placeholder={t("state_code")}
                       required={false}
-                      onChangeData={(data: any) => handleFieldChange("stateCode", data.stateCode)}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("stateCode", data.stateCode)
+                      }
                     />
                     <ERPCheckbox
                       {...getFieldProps("stopCredit")}
                       label={t("stop_credit")}
-                      onChangeData={(data: any) => handleFieldChange("stopCredit", data.stopCredit)}
+                      onChangeData={(data: any) =>
+                        handleFieldChange("stopCredit", data.stopCredit)
+                      }
                     />
                   </>
                 </div>
               )}
-            </div>)}
-          {activeTab === 'more' && <>
-            {/* <div className="border p-4 rounded-lg mt-5">
+            </div>
+          )}
+          {activeTab === "more" && (
+            <>
+              {/* <div className="border p-4 rounded-lg mt-5">
       <h6>Payment Day</h6>
       <div className="grid grid-cols-7 gap-6 mt-3">
         <ERPCheckbox
@@ -764,67 +899,79 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
         />
       </div>
     </div> */}
-            <div className="border p-4 rounded-lg mt-5">
-              <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
-                <ERPDataCombobox
-                  {...getFieldProps("priceCategoryID")}
-                  field={{
-                    id: "priceCategoryID",
-                    required: false,
-                    getListUrl: Urls.data_pricectegory,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  onChangeData={(data: any) => handleFieldChange("priceCategoryID", data.priceCategoryID)}
-                  label={t("price_category")}
-                />
-                <ERPDataCombobox
-                  {...getFieldProps("formTypeID")}
-                  field={{
-                    id: "formTypeID",
-                    required: false,
-                    getListUrl: Urls.data_form_type,
-                    valueKey: "id",
-                    labelKey: "name",
-                  }}
-                  onChangeData={(data: any) => handleFieldChange("formTypeID", data.formTypeID)}
-                  label={t("form_type")}
-                />
-                <ERPInput
-                  {...getFieldProps("visitSequenceNo")}
-                  label={t("visit_seq_no")}
-                  placeholder={t("visit_seq_no")}
-                  type="number"
-                  required={false}
-                  onChangeData={(data: any) => handleFieldChange("visitSequenceNo", data.visitSequenceNo)}
-                />
-                {isIndianCompany && (
-                  <>
-                    <ERPInput
-                      {...getFieldProps("legalName")}
-                      label={t("legal_name")}
-                      placeholder={t("legal_name")}
-                      required={false}
-                      onChangeData={(data: any) => handleFieldChange("legalName", data.legalName)}
-                    />
-                    <ERPInput
-                      {...getFieldProps("tradeName")}
-                      label={t("trade_name")}
-                      placeholder={t("trade_name")}
-                      required={false}
-                      onChangeData={(data: any) => handleFieldChange("tradeName", data.tradeName)}
-                    />
-                  </>
-                )}
-                <div className="md:mt-2">
-                  <ErpCropper
-                    apiUrl="/Subscription/Profile/UploadUserImage"
-                    onImageSuccess={onImageSuccess}
-                    useCircle>
-                  </ErpCropper>
+              <div className="border p-4 rounded-lg mt-5">
+                <div className="grid xxl:grid-cols-5 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-3 items-center">
+                  <ERPDataCombobox
+                    {...getFieldProps("priceCategoryID")}
+                    field={{
+                      id: "priceCategoryID",
+                      required: false,
+                      getListUrl: Urls.data_pricectegory,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    onChangeData={(data: any) =>
+                      handleFieldChange("priceCategoryID", data.priceCategoryID)
+                    }
+                    label={t("price_category")}
+                  />
+                  <ERPDataCombobox
+                    {...getFieldProps("formTypeID")}
+                    field={{
+                      id: "formTypeID",
+                      required: false,
+                      getListUrl: Urls.data_form_type,
+                      valueKey: "id",
+                      labelKey: "name",
+                    }}
+                    onChangeData={(data: any) =>
+                      handleFieldChange("formTypeID", data.formTypeID)
+                    }
+                    label={t("form_type")}
+                  />
+                  <ERPInput
+                    {...getFieldProps("visitSequenceNo")}
+                    label={t("visit_seq_no")}
+                    placeholder={t("visit_seq_no")}
+                    type="number"
+                    required={false}
+                    onChangeData={(data: any) =>
+                      handleFieldChange("visitSequenceNo", data.visitSequenceNo)
+                    }
+                  />
+                  {isIndianCompany && (
+                    <>
+                      <ERPInput
+                        {...getFieldProps("legalName")}
+                        label={t("legal_name")}
+                        placeholder={t("legal_name")}
+                        required={false}
+                        onChangeData={(data: any) =>
+                          handleFieldChange("legalName", data.legalName)
+                        }
+                      />
+                      <ERPInput
+                        {...getFieldProps("tradeName")}
+                        label={t("trade_name")}
+                        placeholder={t("trade_name")}
+                        required={false}
+                        onChangeData={(data: any) =>
+                          handleFieldChange("tradeName", data.tradeName)
+                        }
+                      />
+                    </>
+                  )}
+                  <div className="md:mt-2">
+                    <ErpCropper
+                      apiUrl="/Subscription/Profile/UploadUserImage"
+                      onImageSuccess={onImageSuccess}
+                      useCircle
+                    ></ErpCropper>
+                  </div>
                 </div>
               </div>
-            </div></>}
+            </>
+          )}
           {/* {activeTab === 'project_job' && <div className="grid grid-cols-4 gap-6">
             <ERPInput
               {...getFieldProps("projectName")}
@@ -855,7 +1002,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
             />
 
           </div>} */}
-          {activeTab === 'other_details' && (
+          {activeTab === "other_details" && (
             <div className="grid grid-cols-4 gap-6">
               <ERPDataCombobox
                 {...getFieldProps("idType")}
@@ -864,7 +1011,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(({ type = 
                   valueKey: "label",
                   labelKey: "label",
                 }}
-                onChangeData={(data) => handleFieldChange("idType", data.idType)}
+                onChangeData={(data) =>
+                  handleFieldChange("idType", data.idType)
+                }
                 label={t("id_type")}
                 options={[
                   { value: "TIN", label: "TIN" },

@@ -854,16 +854,16 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
     <>
       {items.filter((component) => component.condition == true).length > 0 && (
         <div>
-          <div key={key} ref={(el) => (subItemsRef.current["inventorySales"] = el)}  >
+          <div key={key} ref={(el) => (subItemsCatRef.current["inventorySalesGeneral"] = el)}  >
             <h1
-              className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventorySales"
+              className={`h-[50px] text-[20px] font-normal flex items-center my-2 rounded-md px-2 ${blinkSection === "inventorySalesGeneral"
                 ? "blink-animation bg-[#f1f1f1]"
                 : "bg-[#f1f1f1]"
                 }`}
               onClick={handleGeneralHeaderClick}  >
               {t("sales")}
             </h1>
-            <div key="inventorySales" className="space-y-4">
+            <div key="inventorySalesGeneral" className="space-y-4">
               <div className="border border-solid border-[#e3e3e3] p-4 flex flex-col gap-6 rounded-lg">
                 <div
                   className={`grid ${isCompactView

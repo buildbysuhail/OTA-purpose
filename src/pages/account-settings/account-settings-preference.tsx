@@ -32,12 +32,13 @@ import { reduxManager } from "../../redux/dynamic-store-manager-pro";
 import ERPInput from "../../components/ERPComponents/erp-input";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { RootState } from "../../redux/store";
-import { setAppState, setInputBox } from "../../redux/slices/app/reducer";
+import { setAppState, setInputBox, setScrollbarColor, setScrollbarWidth } from "../../redux/slices/app/reducer";
 import ERPRadio from "../../components/ERPComponents/erp-radio";
 import ERPCheckbox from "../../components/ERPComponents/erp-checkbox";
 import ERPDateInput from "../../components/ERPComponents/erp-date-input";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import MUIERPDataCombobox from "../../components/ERPComponents/erp-data-combobox-mui";
+import { ERPScrollArea} from "../../components/ERPComponents/erp-scrollbar";
 interface AccountSettingsProps {}
 interface UserLanguage {
   language?: string | null;
@@ -203,6 +204,15 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
     };
     updateAppState(_appState);
   };
+
+  
+  // const handleScrollbarChange = (key: string, value: any) => {
+  //   if (key === 'scrollbarWidth') {
+  //     dispatch(setScrollbarWidth(value));
+  //   } else if (key === 'scrollbarColor') {
+  //     dispatch(setScrollbarColor(value));
+  //   }
+  // };
 
   const saveThemeChange = async () => {
     debugger;
@@ -1050,7 +1060,7 @@ const resetInputBox = async ()=>{
                               Scrollbar Width:
                             </h6>
                             <div className="flex flex-col gap-2">
-                              {["lg", "md", "sm"].map((width) => (
+                              {["md", "sm"].map((width) => (
                                 <div key={width} className="flex items-center">
                                   <input
                                     type="radio"
@@ -1069,31 +1079,34 @@ const resetInputBox = async ()=>{
                                     htmlFor={`scrollbar-${width}`}
                                     className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2 font-semibold"
                                   >
-                                    {width === "lg"
+                                    {/* {width === "lg"
                                       ? "Thick"
                                       : width === "md"
                                       ? "Medium"
-                                      : "Thin"}
+                                      : "Thin"} */}
+                                      {width === "md"? "Normal" : "Thin"}
                                   </label>
                                 </div>
                               ))}
                             </div>
-                            <h6 className="switcher-style-head ">
-                              Scrollbar Color:
-                            </h6>
-                            <div className="ti-form-radio">
+                       
+
+                            <div className="flex  ">
+                           
+                            <div className="ti-form-radio -translate-x-1">
                               <div
-                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                className="  relative theme-container h-6 w-6 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
                                 style={{
                                   backgroundColor: `rgb(${
-                                    appState.scrollbarColor ?? "128, 128, 128"
+                                  appState.scrollbarColor ?? "128, 128, 128"
+                                    
                                   })`,
                                 }}
                               >
-                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <i className="ri-palette-line text-white text-sm absolute pointer-events-none"></i>
                                 <input
                                   type="color"
-                                  value={appState.inputBox?.fontColor}
+                                  value={appState.scrollbarColor}
                                   onChange={(e) => {
                                     const rgb = hexToRgb(e.target.value);
                                     if (rgb) {
@@ -1107,16 +1120,32 @@ const resetInputBox = async ()=>{
                                 />
                               </div>
                             </div>
+                            <label
+                              htmlFor="selectColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70  font-semibold  self-center"
+                            >
+                              {" "}
+                              Scrollbar Color
+                          </label>
+                          </div>
                           </div>
                           {/* Preview Section */}
-                          <div
+                          <ERPScrollArea className="w-full h-64 border border-gray-300 overflow-y-auto rounded-md">
+                            <div className="h-96 p-2">
+                              <p>This is a preview of the scrollbar style selected by the user.</p>
+                              <p>Scroll down to see the effect.</p>
+                              <p>Normal and thin options are available.</p>
+                              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                              <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                              <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+                            </div>
+                          </ERPScrollArea>
+                          {/* <div
                             className={`
                           w-full h-64 border border-gray-300 rounded-md overflow-y-auto
-                          scrollbar
+                         scrollbar
                           ${
-                            appState.scrollbarWidth === "lg"
-                              ? "scrollbar-thick"
-                              : appState.scrollbarWidth === "md"
+                           appState.scrollbarWidth === "md"
                               ? "scrollbar"
                               : "scrollbar-thin"
                           }
@@ -1133,8 +1162,9 @@ const resetInputBox = async ()=>{
                                 "--tw-scrollbar-track": "rgb(241,245,249)",
                               } as React.CSSProperties
                             }
+                           
                           >
-                            {/* Content to showcase scrollbar */}
+                       
                             <div className="h-96 p-2">
                               <p>
                                 This is a preview of the scrollbar style
@@ -1157,7 +1187,7 @@ const resetInputBox = async ()=>{
                                 exercitation ullamco.
                               </p>
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                       <div className="">
@@ -1519,52 +1549,11 @@ const resetInputBox = async ()=>{
                               box
                             </div>
                           </div>
-                          <div className="flex flex-col space-y-1">
-                          <div className="flex items-center ">
-                            <label
-                              htmlFor="selectColor"
-                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
-                            >
-                              {" "}
-                              Select Color
-                            </label>
-                            <div className="ti-form-radio">
-                              <div
-                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
-                                style={{
-                                  backgroundColor: `rgb(${
-                                    appState.inputBox?.selectColor ??
-                                    "128, 128, 128"
-                                  })`,
-                                }}
-                              >
-                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
-                                <input
-                                  type="color"
-                                  value={appState.inputBox?.selectColor}
-                                  onChange={(e) => {
-                                    debugger;
-                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
-                                    if (rgb) {
-                                      handleInputBoxStyleChange(
-                                        "selectColor",
-                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
-                                      );
-                                    }
-                                  }}
-                                  className="opacity-0 w-full h-full cursor-pointer "
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div className="px-4 text-secondary text-xs">
-                              <b className="me-2">Note:</b>this only apply sleclect box (combobox)
-                            </div>
-                          </div>
+                        
                         </div>
                       </div>
 
-                      <div className="">
+                      <div className="py-3">
                         {appState.inputBox?.inputSize === "customize" && (
                           <div className="grid  grid-cols-1 md:grid-cols-2 gap-4  switcher-style ">
                             <div className="flex items-center space-x-3">
@@ -1992,7 +1981,46 @@ const resetInputBox = async ()=>{
                               </div>
                             </div>
                           </div>
+                        
                         </div>
+                        <div className="flex items-center justify-start px-[1.563rem]">
+                            <label
+                              htmlFor="selectColor"
+                              className="text-defaultsize text-defaulttextcolor dark:text-defaulttextcolor/70 ms-2  font-semibold -translate-y-2"
+                            >
+                              {" "}
+                             Active Select Box Color
+                            </label>
+                            <div className="ti-form-radio">
+                              <div
+                                className="  relative theme-container h-8 w-8 rounded-full border border-solid border-gray-300 flex items-center justify-center overflow-hidden"
+                                style={{
+                                  backgroundColor: `rgb(${
+                                    appState.inputBox?.selectColor ??
+                                    "128, 128, 128"
+                                  })`,
+                                }}
+                              >
+                                <i className="ri-palette-line text-white text-lg absolute pointer-events-none"></i>
+                                <input
+                                  type="color"
+                                  value={appState.inputBox?.selectColor}
+                                  onChange={(e) => {
+                                    debugger;
+                                    const rgb = hexToRgb(e.target.value); // Use e instead of event
+                                    if (rgb) {
+                                      handleInputBoxStyleChange(
+                                        "selectColor",
+                                        `${rgb?.r},${rgb?.g},${rgb?.b}`
+                                      );
+                                    }
+                                  }}
+                                  className="opacity-0 w-full h-full cursor-pointer "
+                                />
+                              </div>
+                            </div>
+                          </div>
+                      
                       </div>
 
                       <div className="">

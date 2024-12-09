@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // import { handleResponse } from '../HandleResponse';
 import { customJsonParse } from "../../../utilities/jsonConverter";
@@ -17,6 +17,7 @@ import {
   accFormStateRowHandleFieldChange,
   accFormStateTransactionMasterHandleFieldChange,
   accFormStateTransactionUpdate,
+  clearState,
 } from "./reducer";
 import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 import { loadAccVoucher } from "./thunk";
@@ -47,11 +48,16 @@ export const useAccTransaction = (transactionType: string) => {
   const clientSession = useAppSelector(
     (state: RootState) => state.ClientSession
   );
+  const ledgerCodeRef = useRef<HTMLInputElement>(null);
   const clearControlForNew = async () => {
     undoEditMode();
     dispatch(accFormStateClearRowForNew);
   };
-
+  const focusLedgerCode = () => {
+    if (ledgerCodeRef.current) {
+      ledgerCodeRef.current.focus();
+    }
+  };
   const initialFormElements = {
     foreignCurrency: {
       visible: true,
@@ -60,6 +66,7 @@ export const useAccTransaction = (transactionType: string) => {
     },
     voucherPrefix: { visible: true, disabled: false, label: "Prefix" },
     voucherNumber: { visible: true, disabled: false, label: "Voucher Number" },
+    btnDown: { visible: true, disabled: false, label: "" },
     transactionDate: {
       visible: true,
       disabled: false,
@@ -107,6 +114,7 @@ export const useAccTransaction = (transactionType: string) => {
     btnSave: { visible: true, disabled: false, label: "Save" },
     btnPrintCheque: { visible: true, disabled: false, label: "Print Cheque" },
     btnAttachment: { visible: true, disabled: false, label: "Attachments" },
+    lnkUnlockVoucher: { visible: false, disabled: false, label: "Unlock" },
   };
   type FormElementsState = {
     [key in keyof typeof initialFormElements]: FormElementState;
@@ -229,32 +237,32 @@ export const useAccTransaction = (transactionType: string) => {
       },
     }));
   };
-  const disableCombo = () => {
+  const changeComboVisibility = (visibility: boolean) => {
     setFormElements((prev) => ({
       ...prev,
       employee: {
         ...prev.employee,
-        disabled: true,
+        disabled: visibility,
       },
       jvDrCr: {
         ...prev.jvDrCr,
-        disabled: true,
+        disabled: visibility,
       },
       masterAccount: {
         ...prev.masterAccount,
-        disabled: true,
+        disabled: visibility,
       },
       referenceDate: {
         ...prev.referenceDate,
-        disabled: true,
+        disabled: visibility,
       },
       transactionDate: {
         ...prev.transactionDate,
-        disabled: true,
+        disabled: visibility,
       },
       btnEdit: {
         ...prev.btnEdit,
-        disabled: true,
+        disabled: visibility,
       },
     }));
   };
@@ -424,17 +432,53 @@ export const useAccTransaction = (transactionType: string) => {
         applicationSettings.accountsSettings.defaultCreditCardAcc > 0
           ? applicationSettings.accountsSettings.defaultCreditCardAcc
           : applicationSettings.accountsSettings.defaultBankAcc;
+
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            masterAccountID: defaultAccID,
+            isBahamdoonPOSReceipt: true,
+          },
+        })
+      );
     } else if (master.voucherType === "CR") {
       const cashLedgerID =
         userSession.counterwiseCashLedgerId > 0 &&
         applicationSettings.accountsSettings.allowSalesCounter
           ? userSession.counterwiseCashLedgerId
           : applicationSettings.accountsSettings.defaultCashAcc;
+
+      dispatch(
+        accFormStateHandleFieldChange({
+          fields: {
+            masterAccountID: cashLedgerID,
+            isBahamdoonPOSReceipt: true,
+          },
+        })
+      );
     }
-    dispatch(
-      accFormStateHandleFieldChange({ fields: { isBahamdoonPOSReceipt: true } })
-    );
     dispatch(accFormStateTransactionUpdate({ key: "master", value: master }));
+
+    setFormElements((prev) => ({
+      ...prev,
+      voucherPrefix: { ...prev.voucherPrefix, disabled: true },
+      voucherNumber: { ...prev.voucherNumber, disabled: true },
+      btnDown: { ...prev.btnDown, disabled: true },
+      transactionDate: { ...prev.transactionDate, disabled: true },
+      ledgerCode: { ...prev.ledgerCode, disabled: true },
+      remarks: { ...prev.remarks, disabled: true },
+      commonNarration: { ...prev.commonNarration, disabled: true },
+      ledgerId: { ...prev.ledgerId, disabled: true },
+      btnBillWise: { ...prev.btnBillWise, disabled: true },
+      referenceDate: { ...prev.referenceDate, disabled: true },
+      masterAccount: { ...prev.masterAccount, disabled: true },
+      employee: { ...prev.employee, disabled: true },
+      projectId: { ...prev.projectId, disabled: true },
+      discount: { ...prev.discount, disabled: true },
+      chequeNumber: { ...prev.chequeNumber, disabled: true },
+      bankDate: { ...prev.bankDate, disabled: true },
+      btnEdit: { ...prev.btnEdit, visible: false },
+    }));
   };
   const save = async () => {
     if (validate() == true) {
@@ -448,6 +492,81 @@ export const useAccTransaction = (transactionType: string) => {
       );
     }
   };
+  const clearControls = async () => {
+    dispatch(clearState());
+    setFormElements((prev) => ({
+      ...prev,
+      amount: {
+        ...prev.amount,
+        disabled: false,
+      },
+      btnSave: {
+        ...prev.btnSave,
+        disabled: false,
+      },
+      btnEdit: {
+        ...prev.btnEdit,
+        disabled: false,
+      },
+      btnDelete: {
+        ...prev.btnDelete,
+        disabled: false,
+      },
+      btnPrint: {
+        ...prev.btnPrint,
+        disabled: false,
+      },
+      lnkUnlockVoucher: {
+        ...prev.lnkUnlockVoucher,
+        visible: false,
+      },
+    }));
+    getNextVoucherNumber(
+      formState.transaction.master.formType,
+      formState.transaction.master.voucherType,
+      formState.transaction.master.voucherPrefix
+    );
+    enableControls();
+    focusLedgerCode();
+
+    changeComboVisibility(true);
+    if (
+      userSession.counterwiseCashLedgerId > 0 &&
+      applicationSettings.accountsSettings.allowSalesCounter
+    ) {
+      if (
+        formState.transaction.master.voucherType == "CP" ||
+        formState.transaction.master.voucherType == "CR"
+      ) {
+        cbMasterAccount.SelectedValue =
+          PolosysFrameWork.General.COUNTERWISECASHLEDGERID;
+
+        if (PolosysFrameWork.General.COUNTERASSIGNEDCASHLEDGERID > 0) {
+          cbMasterAccount.Enabled = false;
+        }
+      }
+    }
+    //else
+    //{
+    //    cbMasterAccount.SelectedValue = Settings.AccountsSettings.DefaultCashLedgerID;
+    //}
+    //   if (PolosysFrameWork.General.DBID_VALUE.Trim() == "543140180640" || PolosysFrameWork.General.DBID_VALUE.Trim() == "BAHAMDOON")
+    {
+      if (PolosysFrameWork.General.EMPLOYEEID > 0)
+        cbEmployee.SelectedValue =
+          PolosysFrameWork.General.EMPLOYEEID.ToString();
+    }
+    if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
+      cbCostCentre.SelectedValue =
+        PolosysFrameWork.General.PRESET_COSTCENTER_ID;
+      cbCostCentre.Enabled = false;
+    } else {
+      if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
+        cbCostCentre.SelectedIndex = -1;
+        cbCostCentre.SelectedValue = 0;
+      }
+    }
+  };
 
   return {
     undoEditMode,
@@ -459,9 +578,11 @@ export const useAccTransaction = (transactionType: string) => {
     setUserRight,
     enableControls,
     disableControls,
-    disableCombo,
+    changeComboVisibility,
     validate,
     setupBahamdoonPOSReceipts,
     save,
+    clearControls,
+    ledgerCodeRef,
   };
 };

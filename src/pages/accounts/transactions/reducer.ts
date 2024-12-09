@@ -13,12 +13,6 @@ import VoucherType from "../../../enums/voucher-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
 
-const softwareDate = useAppSelector(
-  (state: RootState) => state.AppState.softwareDate
-);
-const applicationSettings = useAppSelector(
-  (state: RootState) => state.ApplicationSettings
-);
 const accTransactionSlice = createSlice({
   name: "accTransaction",
   initialState: accTransactionFormStateInitialData,
@@ -32,7 +26,9 @@ const accTransactionSlice = createSlice({
     },
 
     // clear entire for new voucher
-    clearState: (state) => {
+    clearState: (state,
+      action: PayloadAction<{rootState: RootState}>) => {
+        const { rootState } = action.payload;
       state.isBahamdoonPOSReceipt = false;
       (state.transaction.master.accTransMasterID = 0),
         (state.row.ledgerCode = "");
@@ -47,16 +43,17 @@ const accTransactionSlice = createSlice({
       state.transaction.master.referenceNumber = "";
       state.row.chqDate = new Date().toISOString();
       state.row.bankDate = new Date().toISOString();
-      state.transaction.master.transactionDate = softwareDate;
+      state.transaction.master.transactionDate = rootState.AppState.softwareDate;
       state.row.narration = "";
       state.row.amount = 0.0;
       state.row.discount = 0.0;
       state.masterAccountID = 0;
       state.row.costCentreId =
-        applicationSettings.accountsSettings.defaultCostCenterID;
+      rootState.ApplicationSettings.accountsSettings.defaultCostCenterID;
       state.transaction.details = [];
       state.isEdit = false;
       state.isRowEdit = false;
+      state.printOnSave = true;
       state.transaction.master.isLocked = false;
     },
     // Update a specific field in the form state

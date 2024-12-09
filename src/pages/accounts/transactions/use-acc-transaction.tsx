@@ -477,6 +477,7 @@ export const useAccTransaction = (transactionType: string) => {
       discount: { ...prev.discount, disabled: true },
       chequeNumber: { ...prev.chequeNumber, disabled: true },
       bankDate: { ...prev.bankDate, disabled: true },
+      btnEdit: { ...prev.btnEdit, visible: false },
     }));
   };
   const save = async () => {

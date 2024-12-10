@@ -208,7 +208,7 @@ const Row = ({
         <div
           className={`flex items-center px-3 py-2 ${isSelected ? "bg-primary" : ""
             }`}
-          onClick={() => handleSelect(item)}>
+            onClick={(e) => { e.stopPropagation(); handleSelect(item)}}>
           <div className="flex-shrink-0 w-5">
             {isSelected && (
               <CheckIcon
@@ -379,15 +379,16 @@ export default function ERPDataCombobox({
     }
     setBorderStyles(style);
   }, [appState?.mode, isFocused, isHovered, appState?.inputBox?.borderColor, appState?.inputBox?.borderFocus])
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        componentRef?.current &&
-        !componentRef?.current?.contains(event.target as Node)
+        componentRef.current &&
+        !componentRef.current.contains(event.target as Node) &&
+        !document.querySelector('.MuiAutocomplete-popper')?.contains(event.target as Node) &&
+        !document.querySelector('.combobox-dropdown')?.contains(event.target as Node)
       ) {
         setIsOpen(false);
-        // setActiveIndex(-1);
+        setActiveIndex(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -948,7 +949,7 @@ export default function ERPDataCombobox({
               className={`form-control ${sizeClasses?.input} placeholder:capitalize`}
               displayValue={() => inputValue || initial?.label || ""}
               onChange={handleInputChange}
-              onClick={() => !disabled && setIsOpen(!isOpen)}
+              onClick={(e) => { e.stopPropagation();!disabled && setIsOpen(!isOpen)}}
               onKeyDown={handleKeyDown}
               placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}
@@ -974,7 +975,7 @@ export default function ERPDataCombobox({
               {/* Dropdown button */}
               <Combobox.Button
                 className="p-1 hover:bg-gray-100 rounded-full"
-                onClick={() => !disabled && setIsOpen(!isOpen)}
+                onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen)}}
               >
                 <ChevronDownIcon
                   className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
@@ -987,7 +988,13 @@ export default function ERPDataCombobox({
           {isOpen &&
             createPortal(
               <div
-                className="absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
+              ref={(el) => {
+                if (el) {
+                  (el as any).__reactRefHandlers = { contains: () => true };
+                }
+              }}
+              
+                className="combobox-dropdown absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
                 style={{
                   width: comboboxRef.current?.offsetWidth || "auto", 
                   top: comboboxRef.current?.getBoundingClientRect().bottom || 0,

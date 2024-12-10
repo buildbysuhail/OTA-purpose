@@ -111,11 +111,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const handleFileUpload = async (key: any, value: any) => {
       setFileLoading(true);
       const payload = {
-        base64String: value,
+        FileData: value,
       };
       try {
         const res = await api.postAsync(Urls.acc_attachment_upload, payload);
-        handleFieldChange(key, res);
+        handleFieldChange(key, res.item.fileData);
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {

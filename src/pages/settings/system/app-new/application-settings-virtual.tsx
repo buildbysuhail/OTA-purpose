@@ -507,7 +507,7 @@ export default function SettingsPage() {
             ref={searchInputRef}
             id="search-input"
             type="search"
-            placeholder="Search..."
+            placeholder="Search (Ctrl+Shift+F)"
             className="w-2/5 rounded-md focus:border-accent focus:outline-accent active:border-accent active:outline-accent"
             onChange={onFilterChange}
             autoFocus

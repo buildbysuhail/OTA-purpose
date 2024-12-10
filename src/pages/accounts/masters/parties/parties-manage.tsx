@@ -75,6 +75,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           accGroupID: type == "Cust" ? 154 : 22,
           partyCategoryID: type == "Cust" ? 1 : 2,
           priceCategoryID: 1,
+          country: "Saudi Arabia",
           registrationType: "Regular",
           drCr: "Dr",
         },
@@ -111,11 +112,11 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     const handleFileUpload = async (key: any, value: any) => {
       setFileLoading(true);
       const payload = {
-        base64String: value,
+        FileData: value,
       };
       try {
         const res = await api.postAsync(Urls.acc_attachment_upload, payload);
-        handleFieldChange(key, res);
+        handleFieldChange(key, res.item.fileData);
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {
@@ -1038,12 +1039,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 }
               />
               <ERPInput
-                {...getFieldProps("additionalNumber")}
+                {...getFieldProps("plotIdentificationNumber")}
                 label={t("additional_number")}
                 placeholder={t("additional_number")}
                 required={false}
                 onChangeData={(data) =>
-                  handleFieldChange("additionalNumber", data.additionalNumber)
+                  handleFieldChange("plotIdentificationNumber", data.plotIdentificationNumber)
                 }
               />
               <ERPInput
@@ -1073,19 +1074,19 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 field={{
                   id: "country",
                   getListUrl: Urls.data_countries,
-                  valueKey: "id",
+                  valueKey: "name",
                   labelKey: "name",
                 }}
               />
               <ERPInput
-                {...getFieldProps("countrySubDivision")}
+                {...getFieldProps("countrySubEntity")}
                 label={t("country_sub_division")}
                 placeholder={t("country_sub_division")}
                 required={false}
                 onChangeData={(data) =>
                   handleFieldChange(
-                    "countrySubDivision",
-                    data.countrySubDivision
+                    "countrySubEntity",
+                    data.countrySubEntity
                   )
                 }
               />

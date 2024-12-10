@@ -1,75 +1,100 @@
-import { Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
 
-function Menuloop({ MENUITEMS, toggleSidemenu , level, t}: any) {
-  
-    return (
-        <Fragment>
-            <Link to="#!" className={`side-menu__item ${MENUITEMS?.selected ? 'active' : ''}`} onClick={(event) => {event.preventDefault();toggleSidemenu(event, MENUITEMS); }}>
-                {MENUITEMS.icon}
-                <span className={`${level == 1 ? "side-menu__label" :"" }`}>
-                    {t(MENUITEMS.title)}
-                    {MENUITEMS.badgetxt ? (
-                        <span className={MENUITEMS.class}>
-                            {MENUITEMS.badgetxt}
-                        </span>
-                    ) : (
-                        ""
-                    )}
-                </span>
-                <i className="fe fe-chevron-right side-menu__angle"></i>
-            </Link>
-            <ul className={`slide-menu child${level}  ${MENUITEMS.active ? 'double-menu-active' : ''}  `} style={
-                MENUITEMS.active
-                    ? { display: "block" }
-                    : { display: "none" }
-            }>
-               {level <= 1 ? <li className='slide side-menu__label1'>
-                   <Link to="#">{t(MENUITEMS.title)}</Link> 
-                </li> :""}
-                {MENUITEMS.children.map((firstlevel:any)=>
+function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
+  return (
+    <Fragment>
+      <Link
+        to="#!"
+        className={`side-menu__item ${MENUITEMS?.selected ? "active" : ""}`}
+        onClick={(event) => {
+          event.preventDefault();
+          toggleSidemenu(event, MENUITEMS);
+        }}
+      >
+        {MENUITEMS.icon}
+        <span className={`${level == 1 ? "side-menu__label" : ""}`}>
+          {t(MENUITEMS.title)}
+          {MENUITEMS.badgetxt ? (
+            <span className={MENUITEMS.class}>{MENUITEMS.badgetxt}</span>
+          ) : (
+            ""
+          )}
+        </span>
+        <i className="fe fe-chevron-right side-menu__angle"></i>
+      </Link>
+      <ul
+        className={`slide-menu child${level}  ${
+          MENUITEMS.active ? "double-menu-active" : ""
+        }  `}
+        style={MENUITEMS.active ? { display: "block" } : { display: "none" }}
+      >
+        {level <= 1 ? (
+          <li className="slide side-menu__label1">
+            <Link to="#">{t(MENUITEMS.title)}</Link>
+          </li>
+        ) : (
+          ""
+        )}
+        {MENUITEMS.children
+          ?.filter(
+            (x: any) =>
+              x.visible == undefined ||
+              (x.visible != undefined && x.visible == true)
+          )
+          .map((firstlevel: any) => (
+            <>
+              {
+                firstlevel?.disabled ? (
+                  <li className={`${firstlevel.menutitle ? 'slide__category' :firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
+                    <p className="text-xs cursor  side-menu__item">
+                    {t(firstlevel.title)}
+                  </p>
+                  </li>
+                  ) : (
                     <li className={`${firstlevel.menutitle ? 'slide__category' :firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
-                   {firstlevel.type === "link" ?
-                        <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''}`}>
-                          {firstlevel.icon}
-                          <span className="">
-                            {t(firstlevel.title)}
-                            {firstlevel.badgetxt ? (
-                              <span className={firstlevel.class}>
-                                {firstlevel.badgetxt}
+                       {firstlevel.type === "link" ?
+                            <Link to={firstlevel.path} className={`side-menu__item ${firstlevel.selected ? 'active' : ''}`}>
+                              {firstlevel.icon}
+                              <span className="">
+                                {t(firstlevel.title)}
+                                {firstlevel.badgetxt ? (
+                                  <span className={firstlevel.class}>
+                                    {firstlevel.badgetxt}
+                                  </span>
+                                ) : (
+                                  ""
+                                )}
                               </span>
-                            ) : (
-                              ""
-                            )}
-                          </span>
-                        </Link>
-                        : ""}
-                         {firstlevel.type === "empty" ? 
-                        <Link to="#" className='side-menu__item'>
-                          {firstlevel.icon}
-                          <span className="">
-                            {t(firstlevel.title)}
-                            {firstlevel.badgetxt ? (
-                              <span className={firstlevel.class}>
-                                {firstlevel.badgetxt}
+                            </Link>
+                            : ""}
+                             {firstlevel.type === "empty" ? 
+                            <Link to="#" className='side-menu__item'>
+                              {firstlevel.icon}
+                              <span className="">
+                                {t(firstlevel.title)}
+                                {firstlevel.badgetxt ? (
+                                  <span className={firstlevel.class}>
+                                    {firstlevel.badgetxt}
+                                  </span>
+                                ) : (
+                                  ""
+                                )}
                               </span>
-                            ) : (
-                              ""
-                            )}
-                          </span>
-                        </Link>
-                        : ""}
-                        {firstlevel.type=== "sub" ? 
-                         <Menuloop MENUITEMS={firstlevel} toggleSidemenu={toggleSidemenu} level={level+1}/>
-                        : ''}
-
-                    </li>
-                    )}
-
-
-            </ul>
-        </Fragment>
-    )
+                            </Link>
+                            : ""}
+                            {firstlevel.type=== "sub" ? 
+                             <Menuloop MENUITEMS={firstlevel} toggleSidemenu={toggleSidemenu} level={level+1}/>
+                            : ''}
+    
+                        </li>
+                   )
+              }
+            </>
+          ))}
+      </ul>
+    </Fragment>
+  );
 }
 
-export default Menuloop
+export default Menuloop;

@@ -42,6 +42,9 @@ export const useAccTransaction = (transactionType: string) => {
   const dispatch = useDispatch();
   const appDispatch = useAppDispatch();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
+  const softwareDate = useAppSelector(
+    (state: RootState) => state.AppState.softwareDate
+  );
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -493,7 +496,11 @@ export const useAccTransaction = (transactionType: string) => {
     }
   };
   const clearControls = async () => {
-    dispatch(clearState());
+    dispatch(clearState({
+      userSession, softwareDate, defaultCostCenterID: applicationSettings.accountsSettings.defaultCostCenterID,
+      counterwiseCashLedgerId: 0,
+      allowSalesCounter: 0
+    }));
     setFormElements((prev) => ({
       ...prev,
       amount: {
@@ -530,42 +537,42 @@ export const useAccTransaction = (transactionType: string) => {
     focusLedgerCode();
 
     changeComboVisibility(true);
-    if (
-      userSession.counterwiseCashLedgerId > 0 &&
-      applicationSettings.accountsSettings.allowSalesCounter
-    ) {
-      if (
-        formState.transaction.master.voucherType == "CP" ||
-        formState.transaction.master.voucherType == "CR"
-      ) {
-        cbMasterAccount.SelectedValue =
-          PolosysFrameWork.General.COUNTERWISECASHLEDGERID;
+    // if (
+    //   userSession.counterwiseCashLedgerId > 0 &&
+    //   applicationSettings.accountsSettings.allowSalesCounter
+    // ) {
+    //   if (
+    //     formState.transaction.master.voucherType == "CP" ||
+    //     formState.transaction.master.voucherType == "CR"
+    //   ) {
+    //     cbMasterAccount.SelectedValue =
+    //       PolosysFrameWork.General.COUNTERWISECASHLEDGERID;
 
-        if (PolosysFrameWork.General.COUNTERASSIGNEDCASHLEDGERID > 0) {
-          cbMasterAccount.Enabled = false;
-        }
-      }
-    }
+    //     if (PolosysFrameWork.General.COUNTERASSIGNEDCASHLEDGERID > 0) {
+    //       cbMasterAccount.Enabled = false;
+    //     }
+    //   }
+    // }
     //else
     //{
     //    cbMasterAccount.SelectedValue = Settings.AccountsSettings.DefaultCashLedgerID;
     //}
     //   if (PolosysFrameWork.General.DBID_VALUE.Trim() == "543140180640" || PolosysFrameWork.General.DBID_VALUE.Trim() == "BAHAMDOON")
-    {
-      if (PolosysFrameWork.General.EMPLOYEEID > 0)
-        cbEmployee.SelectedValue =
-          PolosysFrameWork.General.EMPLOYEEID.ToString();
-    }
-    if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
-      cbCostCentre.SelectedValue =
-        PolosysFrameWork.General.PRESET_COSTCENTER_ID;
-      cbCostCentre.Enabled = false;
-    } else {
-      if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
-        cbCostCentre.SelectedIndex = -1;
-        cbCostCentre.SelectedValue = 0;
-      }
-    }
+    // {
+    //   if (PolosysFrameWork.General.EMPLOYEEID > 0)
+    //     cbEmployee.SelectedValue =
+    //       PolosysFrameWork.General.EMPLOYEEID.ToString();
+    // }
+    // if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
+    //   cbCostCentre.SelectedValue =
+    //     PolosysFrameWork.General.PRESET_COSTCENTER_ID;
+    //   cbCostCentre.Enabled = false;
+    // } else {
+    //   if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
+    //     cbCostCentre.SelectedIndex = -1;
+    //     cbCostCentre.SelectedValue = 0;
+    //   }
+    // }
   };
 
   return {

@@ -19,12 +19,14 @@ import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import ErpAvatar from "../../ERPComponents/erp-avatar";
 import { useTranslation } from "react-i18next";
 import { ReportsMenuItems } from "./sidemenu/reports-routes";
+import { Countries } from "../../../redux/slices/user-session/reducer";
 interface SidebarProps {
   type: "erp" | "account-settings" | "workspace-settings" | "settings" | "reports";
 }
 
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
+  let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
   const [menuitems, setMenuitems] = useState<any>(() => {
     switch (type) {
       case "erp":
@@ -43,15 +45,43 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   });
   useEffect(() => {
     if (type == "settings") {
-      if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setMenuitems([]) }
+      let st: [] = []
       if (userSession.userTypeCode == "BA") {
-        const st = menuitems.filter((x: any) => x.title != 'branches');
-        setMenuitems(st);
+        st = menuitems.filter((x: any) => x.title != 'branches');
       }
       if (userSession.userTypeCode == "BA") {
-        const st = menuitems.filter((x: any) => x.title != 'branch_info');
-        setMenuitems(st);
+        st = menuitems.filter((x: any) => x.title != 'branch_info');
       }
+      const sd = st.map((x: any) => x.children?.map((item: any) => {
+        item.visible = true;
+        item.disabled = false;
+        if(item.title === "refresh_all_branches") {
+          if(userSession.userTypeCode !== "CA" && applicationSettings?.miscellaneousSettings?.maintainAllBranchWithCommonInventory != true) {
+            item.disabled = true;
+          }
+        }
+        
+        if(item.title === "company_profile_india" && userSession.countryId != Countries.India) {
+          item.visible = false;
+        }
+        
+        if(item.title === "hide_account_ledger" && userSession.countryId == Countries.India) {
+          item.visible = false;
+        }
+        if(item.title === "company_profile_others" && userSession.countryId == Countries.India) {
+          item.visible = false;
+        }
+        if(item.title === "upi" || item.title === "qr_pay") {
+          debugger
+        }
+        if(item.title === "upi" && userSession.countryId != Countries.India) {
+          item.visible = false;
+        }
+        if(item.title === "qr_pay" && userSession.countryId == Countries.India) {
+          item.visible = false;
+        }
+      }))
+      setMenuitems(st);
     }
   }, []);
   const { t } = useTranslation();

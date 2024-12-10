@@ -64,9 +64,10 @@ const HideAccountLedger = () => {
           });
           if (response.isOk != true) {
             setErrorGroup(response.messages[0]);
-            await initialLoadGrid(postData.userTypeCode);
           }
-          handleResponse(response);
+          
+          handleResponse(response,async()=>{
+            await initialLoadGrid(postData.userTypeCode);});
 
         }
         else{
@@ -85,8 +86,8 @@ const HideAccountLedger = () => {
             setErrorGroup(response.messages[0]);
             await initialLoadGrid(postData.userTypeCode);
           }
-          handleResponse(response);
-
+          handleResponse(response,async()=>{
+            await initialLoadGrid(postData.userTypeCode);});
         }
         else{
           ERPToast.show("Please choose Group", "warning")

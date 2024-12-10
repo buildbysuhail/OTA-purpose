@@ -144,7 +144,7 @@ const Upi = () => {
                   gridId="grd_acc_group"
                   popupAction={toggleUpi}
                   gridAddButtonType="popup"
-                  reload={rootState?.PopupData?.accountGroup?.reload}
+                  reload={rootState?.PopupData?.upi?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
               </div>

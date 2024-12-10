@@ -8,7 +8,9 @@ import { APIClient } from "../../helpers/api-client";
 import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography, AutocompleteProps, AutocompleteValue, AutocompleteChangeReason, AutocompleteChangeDetails, Paper } from "@mui/material";
+import { createPortal } from "react-dom";
+import { styled } from "@mui/system";
 
 interface Option {
   value: string;
@@ -190,15 +192,15 @@ const Row = ({
         const hoverTextClass = "hover:text-dark"; // Explicit hover text color
         const hoverBgClass = "hover:bg-gray-300"; // Explicit hover background color
         const dynamicHoverClass = `hover:${setFgAccordingToBgPrimary()}`; // Ensure this returns a valid Tailwind class
-      
+
         return `relative cursor-pointer select-none w-full rounded-sm 
                 ${hoverBgClass} ${hoverTextClass} 
                 ${active || isActive
-                  ? "bg-primary text-white"
-                  : item.is_active === false
-                    ? "bg-gray-200 text-gray-400"
-                    : "text-gray-900"
-                } 
+            ? "bg-primary text-white"
+            : item.is_active === false
+              ? "bg-gray-200 text-gray-400"
+              : "text-gray-900"
+          } 
                 ${sizeClasses?.options}`;
       }}
       value={item}
@@ -207,7 +209,7 @@ const Row = ({
         <div
           className={`flex items-center px-3 py-2 ${isSelected ? "bg-primary" : ""
             }`}
-          onClick={() => handleSelect(item)}>
+            onClick={(e) => { e.stopPropagation(); handleSelect(item)}}>
           <div className="flex-shrink-0 w-5">
             {isSelected && (
               <CheckIcon
@@ -378,15 +380,16 @@ export default function ERPDataCombobox({
     }
     setBorderStyles(style);
   }, [appState?.mode, isFocused, isHovered, appState?.inputBox?.borderColor, appState?.inputBox?.borderFocus])
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
-        componentRef?.current &&
-        !componentRef?.current?.contains(event.target as Node)
+        componentRef.current &&
+        !componentRef.current.contains(event.target as Node) &&
+        !document.querySelector('.MuiAutocomplete-popper')?.contains(event.target as Node) &&
+        !document.querySelector('.combobox-dropdown')?.contains(event.target as Node)
       ) {
         setIsOpen(false);
-        // setActiveIndex(-1);
+        setActiveIndex(-1);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -399,7 +402,7 @@ export default function ERPDataCombobox({
     if (!disabledApiCall && field?.freezeDataLoad !== true) {
       loadData();
     }
-  }, [field?.getListUrl,field?.params, field?.freezeDataLoad, reload, disabledApiCall]);
+  }, [field?.getListUrl, field?.params, field?.freezeDataLoad, reload, disabledApiCall]);
 
   const loadData = async () => {
     setLoading(true);
@@ -806,6 +809,39 @@ export default function ERPDataCombobox({
       ))
       : text;
   }
+  interface AutocompleteProps<T, Multiple extends boolean | undefined = undefined, DisableClearable extends boolean | undefined = undefined, FreeSolo extends boolean | undefined = undefined>
+  extends Omit<React.ComponentProps<typeof Autocomplete<T, Multiple, DisableClearable, FreeSolo>>, 'onChange'> {
+  onChange?: (
+    event: React.SyntheticEvent,
+    value: AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>,
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<T> | undefined
+  ) => void;
+}
+const StyledAutocomplete = styled(Autocomplete)`
+  & .MuiAutocomplete-popper .MuiAutocomplete-listbox {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #888 #f1f1f1;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #555;
+    }
+  }
+`;
+
+
   const sizeStyles = getSizeStyles();
   if (_useMUI == true) {
     const getOptionSizeStyles = () => {
@@ -830,18 +866,38 @@ export default function ERPDataCombobox({
           return {};
       }
     };
-    const handleItemSelect = (event: any, value: Option | null) => {
+    // handleItemSelect: (event: React.SyntheticEvent, value: Option | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<Option> | undefined) => void;
+    const handleItemSelect = (event: any, value: Option | null | any) => {
       if (value) {
         handleItemClick(value);
       }
     };
+    const ScrollbarStyles = styled('div')`
+  .custom-scrollbar {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+  }
+`;
+
     return (
       <div className={className}
         style={{
           marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
           marginTop: `${appState?.inputBox?.marginTop ?? 0}px`
         }}>
-        <Autocomplete
+        {/* <Autocomplete
           id={id}
           options={items}
           value={initial}
@@ -889,7 +945,64 @@ export default function ERPDataCombobox({
               {option.label}
             </li>
           )}
-        />
+        /> */}
+          <Autocomplete
+        id={id}
+        options={items}
+        value={initial}
+        onChange={handleItemSelect}
+        getOptionLabel={(option: any) => option.label || ""}
+        isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
+        loading={loading}
+        disabled={disabled}
+        autoHighlight
+        openOnFocus
+        fullWidth
+        ListboxProps={{
+          style: { maxHeight: '200px',scrollbarWidth: 'thin' }
+        }}
+        PaperComponent={({ children }) => (
+          <Paper elevation={1} style={{ backgroundColor: 'white', borderRadius: 4, overflowY:'scroll', height:'200px' }}>
+            {children}
+          </Paper>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
+            required={required}
+            variant={_variant}
+            sx={sizeStyles.mui}
+            onKeyDown={handleKeyDownEnter}
+            data-skip={skip}
+            data-jump-to={jumpTo}
+            data-jump-target={jumpTarget}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <React.Fragment>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </React.Fragment>
+              ),
+            }}
+          />
+        )}
+        renderOption={(props, option: any) => (
+          <li
+            {...props}
+            style={{
+              ...getOptionSizeStyles(),
+              opacity: option.is_active === false ? 0.5 : 1,
+              backgroundColor:
+                option.is_active === false ? "#f5f5f5" : undefined,
+            }}>
+            {option.label}
+          </li>
+        )}
+      />
         <Typography
           className="text-[#374151] text-xs font-medium mt-1">
           {infoWithLineBreaks(info)}
@@ -929,106 +1042,98 @@ export default function ERPDataCombobox({
           </label>
         )}
         <Combobox
-          onKeyDown={handleKeyDownEnter}
-          data-skip={skip}
-          disabled={disabled}
-          value={initial}
-          // onChange={handleItemClick}
           as="div"
           className="relative">
-          <div className={`flex  ${labelDirection === "vertical" ? "" : "basis-2/3"}}`}>
+          <div className="flex">
             <Combobox.Input
+              ref={comboboxRef}
               style={{
                 height,
                 fontSize,
                 fontWeight,
                 color,
                 borderColor: borderStyles,
-                "--tw-ring-shadow": "none",
                 outline: "none",
                 transition: "border-color 0.2s ease-in-out",
                 borderRadius: `${appState?.inputBox?.borderRadius}px`,
-              } as React.CSSProperties}
+              }}
               className={`form-control ${sizeClasses?.input} placeholder:capitalize`}
               displayValue={() => inputValue || initial?.label || ""}
               onChange={handleInputChange}
-              onClick={() => !disabled && setIsOpen(!isOpen)}
+              onClick={(e) => { e.stopPropagation();!disabled && setIsOpen(!isOpen)}}
               onKeyDown={handleKeyDown}
               placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              ref={comboboxRef}
               autoComplete="off"
               spellCheck={false}
               autoFocus={autoFocus}
               title={initial?.label || ""}
               value={isOpen ? inputValue : truncateValue(initial?.label || "")}
             />
-            <div className={`absolute inset-y-0 right-0 flex items-center m-[2px] pr-1`}
+            <div
+              className={`absolute inset-y-0 right-0 flex items-center m-[2px] pr-1`}
               style={{
-                background: initial?.value !== undefined && initial?.value !== null && initial?.value !== '' ? `rgb(${appState?.inputBox?.selectColor})` : '#f9f9f9',
+                background: initial?.value !== undefined && initial?.value !== null && initial?.value !== ''
+                  ? `rgb(${appState?.inputBox?.selectColor})`
+                  : '#f9f9f9',
                 borderTopRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
                 borderBottomRightRadius: `${appState?.inputBox?.borderRadius ?? 5}px`,
-              }}>
-              {enableClearOption && (initial || inputValue) && !noXMarkIcon && (
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    clearSelection();
-                    setIsOpen(false);
-                  }}
-                  className="p-1 hover:bg-gray-100 rounded-full"
-                  aria-label="Clear selection">
-                  <XMarkIcon
-                    className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500`}
-                    aria-hidden="true"
-                  />
-                </button>
-              )}
+              }}
+            >
+              {/* Dropdown button */}
               <Combobox.Button
                 className="p-1 hover:bg-gray-100 rounded-full"
-                onClick={() => !disabled && setIsOpen(!isOpen)}>
+                onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen)}}
+              >
                 <ChevronDownIcon
-                  className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""}`} aria-hidden="true"
+                  className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
+                    }`}
+                  aria-hidden="true"
                 />
               </Combobox.Button>
             </div>
           </div>
-          <Transition
-            show={isOpen}
-            as={React.Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-            afterLeave={() => {
-              if (!initial) {
-                setQuery("");
-                setInputValue("");
-                // setActiveIndex(-1);
-              }
-            }}>
-
-            <Combobox.Options className={`absolute z-50 mt-1 w-full min-w-[50px] rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden ${sizeClasses.options}`} static>
-
-              {loading ? (
-                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">Loading...</div>
-              ) : filteredItems?.length === 0 ? (
-                <div className="relative cursor-default select-none py-2 px-4 text-gray-700">No data found</div>
-              ) : (
-                <ComboboxList
-                  ref={listRef}
-                  items={filteredItems}
-                  selectedValue={initial}
-                  onSelect={handleItemClick}
-                  activeIndex={activeIndex}
-                  customSize={_customSize}
-                />
-              )}
-            </Combobox.Options>
-          </Transition>
+          {isOpen &&
+            createPortal(
+              <div
+              ref={(el) => {
+                if (el) {
+                  (el as any).__reactRefHandlers = { contains: () => true };
+                }
+              }}
+              
+                className="combobox-dropdown absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
+                style={{
+                  width: comboboxRef.current?.offsetWidth || "auto", 
+                  top: comboboxRef.current?.getBoundingClientRect().bottom || 0,
+                  left: comboboxRef.current?.getBoundingClientRect().left || 0,
+                  position: "fixed", 
+                }}
+              >
+                {loading ? (
+                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700 text-center animate-pulse">
+                    Loading...
+                  </div>
+                ) : filteredItems?.length === 0 ? (
+                  <div className="relative cursor-default select-none py-2 px-4 text-gray-700">
+                    No data found
+                  </div>
+                ) : (
+                  <ComboboxList
+                    ref={listRef}
+                    items={filteredItems}
+                    selectedValue={initial}
+                    onSelect={handleItemClick}
+                    activeIndex={activeIndex}
+                    customSize={_customSize}
+                  />
+                )}
+              </div>,
+              document.body // Render to body to escape parent constraints
+            )}
         </Combobox>
         <div className="text-[#374151] text-xs font-medium ">
           {infoWithLineBreaks(info)}

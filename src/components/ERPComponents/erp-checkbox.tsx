@@ -135,7 +135,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
           {...props}
         />
         {!noLabel && (
-          <span className={`ml-2 ${labelClassName} ${disabled ? 'text-gray-400' : ''}`} style={sizeStyles.label}>
+          <span className={`ml-2 ${labelClassName} ${disabled ? 'text-gray-400' : ''} text-black`} style={sizeStyles.label}>
             {iLabel}
             {required && !noLabel && "*"}
           </span>

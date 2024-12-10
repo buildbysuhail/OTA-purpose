@@ -124,14 +124,14 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       }
     };
 
-    const handleDownload = async (fileName: string) => {
+    const handleDownload = async (fileData: string) => {
       ERPToast.show("Download started...", "success");
       try {
-        const parts = fileName.split("-");
+        const parts = fileData.split("-");
         parts.pop();
         const url = `${
           Urls.acc_attachmentInfo_download
-        }?fileName=${encodeURIComponent(parts.join("-"))}`;
+        }?fileData=${encodeURIComponent(fileData)}`;
 
         const res = await api.getNativeAsync(url, undefined, {
           responseType: "blob", // Ensure the response is treated as a binary blob

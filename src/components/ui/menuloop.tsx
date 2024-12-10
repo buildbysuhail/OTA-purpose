@@ -46,9 +46,11 @@ function Menuloop({ MENUITEMS, toggleSidemenu, level, t }: any) {
             <>
               {
                 firstlevel?.disabled ? (
-                  <p className="text-xs cursor  transition-all ease-in-out">
+                  <li className={`${firstlevel.menutitle ? 'slide__category' :firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
+                    <p className="text-xs cursor  side-menu__item">
                     {t(firstlevel.title)}
                   </p>
+                  </li>
                   ) : (
                     <li className={`${firstlevel.menutitle ? 'slide__category' :firstlevel.menutitle_lg ? 'slide__category slide__category__lg' : ''} ${firstlevel?.type == 'empty' ? 'slide' : ''} ${firstlevel?.type == 'link' ? 'slide' : ''} ${firstlevel?.type == 'sub' ? 'slide has-sub' : ''} ${firstlevel?.active ? 'open' : ''} ${firstlevel?.selected ? 'active' : ''}`} key={Math.random()}>
                        {firstlevel.type === "link" ?

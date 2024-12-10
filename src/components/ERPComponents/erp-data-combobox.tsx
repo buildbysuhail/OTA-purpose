@@ -8,8 +8,9 @@ import { APIClient } from "../../helpers/api-client";
 import { setFgAccordingToBgPrimary } from "../../utilities/Utils";
 import { useAppSelector } from "../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../redux/store";
-import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography } from "@mui/material";
+import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography, AutocompleteProps, AutocompleteValue, AutocompleteChangeReason, AutocompleteChangeDetails, Paper } from "@mui/material";
 import { createPortal } from "react-dom";
+import { styled } from "@mui/system";
 
 interface Option {
   value: string;
@@ -808,6 +809,39 @@ export default function ERPDataCombobox({
       ))
       : text;
   }
+  interface AutocompleteProps<T, Multiple extends boolean | undefined = undefined, DisableClearable extends boolean | undefined = undefined, FreeSolo extends boolean | undefined = undefined>
+  extends Omit<React.ComponentProps<typeof Autocomplete<T, Multiple, DisableClearable, FreeSolo>>, 'onChange'> {
+  onChange?: (
+    event: React.SyntheticEvent,
+    value: AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>,
+    reason: AutocompleteChangeReason,
+    details?: AutocompleteChangeDetails<T> | undefined
+  ) => void;
+}
+const StyledAutocomplete = styled(Autocomplete)`
+  & .MuiAutocomplete-popper .MuiAutocomplete-listbox {
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #888 #f1f1f1;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #888;
+      border-radius: 4px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #555;
+    }
+  }
+`;
+
+
   const sizeStyles = getSizeStyles();
   if (_useMUI == true) {
     const getOptionSizeStyles = () => {
@@ -832,18 +866,38 @@ export default function ERPDataCombobox({
           return {};
       }
     };
-    const handleItemSelect = (event: any, value: Option | null) => {
+    // handleItemSelect: (event: React.SyntheticEvent, value: Option | null, reason: AutocompleteChangeReason, details?: AutocompleteChangeDetails<Option> | undefined) => void;
+    const handleItemSelect = (event: any, value: Option | null | any) => {
       if (value) {
         handleItemClick(value);
       }
     };
+    const ScrollbarStyles = styled('div')`
+  .custom-scrollbar {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+    &::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
+  }
+`;
+
     return (
       <div className={className}
         style={{
           marginBottom: `${appState?.inputBox?.marginBottom ?? 0}px`,
           marginTop: `${appState?.inputBox?.marginTop ?? 0}px`
         }}>
-        <Autocomplete
+        {/* <Autocomplete
           id={id}
           options={items}
           value={initial}
@@ -891,7 +945,64 @@ export default function ERPDataCombobox({
               {option.label}
             </li>
           )}
-        />
+        /> */}
+          <Autocomplete
+        id={id}
+        options={items}
+        value={initial}
+        onChange={handleItemSelect}
+        getOptionLabel={(option: any) => option.label || ""}
+        isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
+        loading={loading}
+        disabled={disabled}
+        autoHighlight
+        openOnFocus
+        fullWidth
+        ListboxProps={{
+          style: { maxHeight: '200px',scrollbarWidth: 'thin' }
+        }}
+        PaperComponent={({ children }) => (
+          <Paper elevation={1} style={{ backgroundColor: 'white', borderRadius: 4, overflowY:'scroll', height:'200px' }}>
+            {children}
+          </Paper>
+        )}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
+            required={required}
+            variant={_variant}
+            sx={sizeStyles.mui}
+            onKeyDown={handleKeyDownEnter}
+            data-skip={skip}
+            data-jump-to={jumpTo}
+            data-jump-target={jumpTarget}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <React.Fragment>
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
+                  {params.InputProps.endAdornment}
+                </React.Fragment>
+              ),
+            }}
+          />
+        )}
+        renderOption={(props, option: any) => (
+          <li
+            {...props}
+            style={{
+              ...getOptionSizeStyles(),
+              opacity: option.is_active === false ? 0.5 : 1,
+              backgroundColor:
+                option.is_active === false ? "#f5f5f5" : undefined,
+            }}>
+            {option.label}
+          </li>
+        )}
+      />
         <Typography
           className="text-[#374151] text-xs font-medium mt-1">
           {infoWithLineBreaks(info)}

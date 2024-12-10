@@ -75,6 +75,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           accGroupID: type == "Cust" ? 154 : 22,
           partyCategoryID: type == "Cust" ? 1 : 2,
           priceCategoryID: 1,
+          country: "Saudi Arabia",
           registrationType: "Regular",
           drCr: "Dr",
         },

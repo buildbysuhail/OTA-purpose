@@ -18,7 +18,6 @@ import DayBookDetailed from '../../../pages/accounts/reports/dayBook/day-book-de
 import DayBookSummary from '../../../pages/accounts/reports/dayBook/dayBookSummary/day-book-summary';
 import PaymentReport from '../../../pages/accounts/reports/payment-report';
 import CollectionReport from '../../../pages/accounts/reports/collection-report';
-import CashSummary from '../../../pages/accounts/reports/cash-summary';
 import TransactionReport from '../../../pages/accounts/reports/transaction-report';
 import AccountsHistoryReport from '../../../pages/accounts/reports/transactionHistory/accountsHistory/accounts-history-report';
 import DailySummary from '../../../pages/accounts/reports/dailySummary/dailySummary/daily-summary';
@@ -116,6 +115,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../redux/store';
 import { Countries } from '../../../redux/slices/user-session/reducer';
 import ProfitAndLossReport from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report';
+import CashSummary from '../../../pages/accounts/reports/cashSummary/cash-summary';
+import CashSummaryLedgerwise from '../../../pages/accounts/reports/cashSummary/cash-summary-ledgerwise';
 const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
 const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report'));
 const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
@@ -224,7 +225,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/day_book_summary" element={<DayBookSummary />} />
         <Route path="/accounts/payment_report" element={<PaymentReport />} />
         <Route path="/accounts/collection_report" element={<CollectionReport />} />
-        <Route path="/accounts/cash_summary" element={<CashSummary />} />
+        <Route path="/accounts/cash_summary" element={<CashSummary/>} />
+        <Route path="/accounts/cash_summary_ledgerwise" element={<CashSummaryLedgerwise/>} />
         <Route path="/accounts/transaction_report" element={<TransactionReport />} />
         <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport />} />
         <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport />} />

@@ -5,6 +5,7 @@ import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
 import ERPInput from "../../../components/ERPComponents/erp-input";
 import { LedgerType } from "../../../enums/ledger-types";
 import Urls from "../../../redux/urls";
+import moment from 'moment';
 
 const LedgerReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: any) => {
 
@@ -117,12 +118,12 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: 
     }
 
     {/* Checkboxes Grid */}
-    {/* <div className="col-span-2 grid grid-cols-2 gap-4">
+    <div className="col-span-2 grid grid-cols-2 gap-4">
     <ERPCheckbox
-      {...getFieldProps("summaryWise")}
+      {...getFieldProps("showSummary")}
       label={t("Summary Wise")}
-      onChangeData={(data) => handleFieldChange('summaryWise', data.summaryWise)}
-    /> */}
+      onChangeData={(data) => handleFieldChange('showSummary', data.showSummary)}
+    />
 
     {/* <ERPCheckbox
       {...getFieldProps("ignoreCashSales")}
@@ -154,26 +155,27 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: 
       onChangeData={(data) => handleFieldChange('showSeparateColorForDebitBalance', data.showSeparateColorForDebitBalance)}
     />
 
-    {/* <ERPCheckbox
+    <ERPCheckbox
       {...getFieldProps("showPendingCheques")}
       label={t("Show Pending Cheques")}
       onChangeData={(data) => handleFieldChange('showPendingCheques', data.showPendingCheques)}
-    /> */}
+    />
   </div>
-  // </div>
+  </div>
 
 );
 }
 export default LedgerReportFilter;
 export const LedgerReportFilterInitialState = {
-  dateFrom: new Date(), // Default empty string
+  // dateFrom: new Date(-45), // Default empty string
+  dateFrom:  moment().subtract(45, 'days').toDate(), 
   dateTo: new Date(), // Default empty string 
   all: false, // Default to false
   ledgerCode: "", // Default empty string
   ledgerID: 0, // Default to 0
   relLedgerID: -1, // Default empty string
   costCentreID: -1, // Default empty string
-  summaryWise: false, // Default to false
+  showSummary: false, // Default to false
   counterID:0,
   ignoreCashSales: false, // Default to false
   // showWithInventoryDetails: false, // Default to false

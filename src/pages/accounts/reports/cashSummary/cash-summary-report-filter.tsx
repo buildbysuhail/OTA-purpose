@@ -1,4 +1,5 @@
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
 
 
 const CashSummaryReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
@@ -18,22 +19,12 @@ const CashSummaryReportFilter = ({ getFieldProps, handleFieldChange, t }: any) =
         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
       />
     </div>
-
-
-    {/* Cost Centre Section
-    //show ledger wise summary always true from meeting polosys
-    <ERPDataCombobox
-      {...getFieldProps("costCenterID")}
-      label={t("Cost Centre")}
-      field={{
-        id: "costCenterID",
-        getListUrl: Urls.data_costcentres,
-        valueKey: "id",
-        labelKey: "name",
-      }}
-      onChangeData={(data) => handleFieldChange('costCenterID', data.costCenterID)}
-    /> */}
-
+    {/* show ledger wise summary always true from meeting polosys */}
+    {/* <ERPCheckbox
+          {...getFieldProps("showLedgerwiseSummary")}
+          label={t("show_ledgerwise_summary")}
+          onChangeData={(data) => handleFieldChange('showLedgerwiseSummary', data.showLedgerwiseSummary)}
+        /> */}
   </div>
 
 );
@@ -42,4 +33,5 @@ export default CashSummaryReportFilter;
 export const CashSummaryReportFilterInitialState = {
   fromDate: new Date(), 
   toDate: new Date(),
+  showLedgerwiseSummary:true
 };

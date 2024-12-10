@@ -212,8 +212,8 @@ const Urls = {
   acc_group_order: "/Accounts/AccGroupOrderArrangement/",
   bankCards: "/Accounts/BankCards/",
   acc_user_config:" ",
-  acc_attachment_upload:"/Core/AttachmentInfo/UploadFile/",
-  acc_attachmentInfo_download:"/Core/AttachmentInfo/download/",
+  acc_attachment_upload:"/Core/AttachmentInfo/Upload/",
+  acc_attachmentInfo_download:"/Core/AttachmentInfo/Download/",
   //Reports Start
   acc_reports_ledger: "/Accounts/RptLedgerReport/LedgerReport/",
   acc_reports_cash_book: "/Accounts/RptCashBook/CashBookLedgerSummary/",

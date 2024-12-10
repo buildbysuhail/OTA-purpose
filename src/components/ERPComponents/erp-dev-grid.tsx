@@ -217,7 +217,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   data,
   postData,
   filterInitialData,
-  enablefilter = true,
+  enablefilter = false,
   filterContent = <></>,
   filterWidth = "w-full max-w-[1000px]",
   method = ActionType.GET,

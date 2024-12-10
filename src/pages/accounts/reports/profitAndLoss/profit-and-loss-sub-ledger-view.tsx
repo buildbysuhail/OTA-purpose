@@ -1,4 +1,4 @@
-import { FC,   useState } from "react";
+import { FC,   MouseEventHandler,   useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
@@ -11,19 +11,23 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import CashBookMonthWise from "../cashBook/cash-book-monthwise";
+import { ProfitAndLossReportFilterInitialState } from "./profit-and-loss-report-filter";
 
 
 interface ProfitAndLossSubledgerwiseViewProps {
-  postData: any;
-  // accGroupID: isOpenDetails.key,
-  //             expAccGroupID:0,
-  //             dateFrom: filter.fromDate,
-  //             asOnDate: filter.toDate,
+  postData: any; 
   groupName?: string;
 }
 
 
 const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = ({postData , groupName }) => {
+  const [isOpenDetails, setIsOpenDetails] = useState<{
+    isOpen: boolean;
+    key: number;
+    ledgerName?: string;
+  }>({ isOpen: false, key: 0 });
+  const [filter, setFilter] = useState<any>(ProfitAndLossReportFilterInitialState);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
@@ -112,6 +116,21 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
       ),
     },
   ];
+  // const ProfitAndLossDrillDownRow: React.FC<{
+  //   item: any;
+  //   setIsOpenDetails: (isOpen: any) => void;
+  // }> = ({ item, setIsOpenDetails }) => {
+  //   const { t } = useTranslation();
+  
+  //   const handleClick: MouseEventHandler<HTMLAnchorElement> = (event) => {
+  //     event.preventDefault();
+  //     setIsOpenDetails({
+  //       isOpen: true,
+  //       key: item.ledgerID,
+  //       groupName: item.ledgerName,
+  //     });
+  //   };
+  
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -139,6 +158,26 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
             </div>
           </div>
         </div>
+        <ERPModal
+        isOpen={isOpenDetails.isOpen}
+        // title={t("bank_cards")}
+        title="Monthwise ledger Report"
+        width="w-full max-w-[90%]" 
+        isForm={true}
+        closeModal={() => {
+          setIsOpenDetails({ isOpen: false, key: 0 });
+        }}
+        content={
+          <CashBookMonthWise
+            postData={{
+              fromDate: filter.fromDate,
+              asOnDate: filter.toDate,
+              AccLedger:isOpenDetails.key,
+            }}
+             groupName={isOpenDetails.ledgerName}
+          />
+        }
+      />
       </div>
       
     </Fragment>

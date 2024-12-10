@@ -348,7 +348,7 @@ export default function SettingsPage() {
                         const subOffsetHeight = subElementCat.offsetHeight;
                         if (
                           scrollPosition >= subOffsetTop &&
-                          scrollPosition < subOffsetTop + subOffsetHeight  
+                          scrollPosition < subOffsetTop + subOffsetHeight
                         ) {
                           console.log(`subSettingCat.key:${subSettingCat.key}`);
 
@@ -792,62 +792,62 @@ export default function SettingsPage() {
                 sectionsRef={sectionsRef}
                 subItemsCatRef={subItemsCatRef}
               ></InventoryPurchaseFilterableComponents>
- <section
-            key="inventorySales"
-            ref={(el) => (subItemsRef.current["inventorySales"] = el)}
-            className="mb-8 last:mb-0 pt-12"
-          >
-              {/* sales */}
-              <InventorySalesFilterableComponents
-                key="inventorySalesGeneral"
-                subItemsRef={subItemsRef}
-                filterComponent={filterComponent}
-                filterText={filterText}
-                gridClass={gridClass}
-                handleFieldChange={handleFieldChange}
-                isCompactView={isCompactView}
-                settings={settings}
-                userSession={userSession}
-                blinkSection={blinkSection}
-                handleGeneralHeaderClick={handleGeneralHeaderClick}
-                sectionsRef={sectionsRef}
-                subItemsCatRef={subItemsCatRef}
-              ></InventorySalesFilterableComponents>
+              <section
+                key="inventorySales"
+                ref={(el) => (subItemsRef.current["inventorySales"] = el)}
+                className="mb-8 last:mb-0 pt-12"
+              >
+                {/* sales */}
+                <InventorySalesFilterableComponents
+                  key="inventorySalesGeneral"
+                  subItemsRef={subItemsRef}
+                  filterComponent={filterComponent}
+                  filterText={filterText}
+                  gridClass={gridClass}
+                  handleFieldChange={handleFieldChange}
+                  isCompactView={isCompactView}
+                  settings={settings}
+                  userSession={userSession}
+                  blinkSection={blinkSection}
+                  handleGeneralHeaderClick={handleGeneralHeaderClick}
+                  sectionsRef={sectionsRef}
+                  subItemsCatRef={subItemsCatRef}
+                ></InventorySalesFilterableComponents>
 
-              {/* POS */}
-              <MainSalesPOSFilterableComponents
-                key="inventorySalesPOS"
-                subItemsRef={subItemsRef}
-                filterComponent={filterComponent}
-                filterText={filterText}
-                gridClass={gridClass}
-                handleFieldChange={handleFieldChange}
-                isCompactView={isCompactView}
-                settings={settings}
-                userSession={userSession}
-                blinkSection={blinkSection}
-                handleGeneralHeaderClick={handleGeneralHeaderClick}
-                sectionsRef={sectionsRef}
-                subItemsCatRef={subItemsCatRef}
-              ></MainSalesPOSFilterableComponents>
+                {/* POS */}
+                <MainSalesPOSFilterableComponents
+                  key="inventorySalesPOS"
+                  subItemsRef={subItemsRef}
+                  filterComponent={filterComponent}
+                  filterText={filterText}
+                  gridClass={gridClass}
+                  handleFieldChange={handleFieldChange}
+                  isCompactView={isCompactView}
+                  settings={settings}
+                  userSession={userSession}
+                  blinkSection={blinkSection}
+                  handleGeneralHeaderClick={handleGeneralHeaderClick}
+                  sectionsRef={sectionsRef}
+                  subItemsCatRef={subItemsCatRef}
+                ></MainSalesPOSFilterableComponents>
 
-              {/* counter */}
-              <InventorySalesCounterFilterableComponents
-                key="inventorySalesCounter"
-                subItemsRef={subItemsRef}
-                filterComponent={filterComponent}
-                filterText={filterText}
-                gridClass={gridClass}
-                handleFieldChange={handleFieldChange}
-                isCompactView={isCompactView}
-                settings={settings}
-                userSession={userSession}
-                blinkSection={blinkSection}
-                handleGeneralHeaderClick={handleGeneralHeaderClick}
-                sectionsRef={sectionsRef}
-                subItemsCatRef={subItemsCatRef}
-              ></InventorySalesCounterFilterableComponents>
-</section>
+                {/* counter */}
+                <InventorySalesCounterFilterableComponents
+                  key="inventorySalesCounter"
+                  subItemsRef={subItemsRef}
+                  filterComponent={filterComponent}
+                  filterText={filterText}
+                  gridClass={gridClass}
+                  handleFieldChange={handleFieldChange}
+                  isCompactView={isCompactView}
+                  settings={settings}
+                  userSession={userSession}
+                  blinkSection={blinkSection}
+                  handleGeneralHeaderClick={handleGeneralHeaderClick}
+                  sectionsRef={sectionsRef}
+                  subItemsCatRef={subItemsCatRef}
+                ></InventorySalesCounterFilterableComponents>
+              </section>
               {/* PPOS */}
               <InventoryPPOSFilterableComponents
                 key="inventoryPPOS"

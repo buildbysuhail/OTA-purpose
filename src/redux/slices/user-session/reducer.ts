@@ -15,37 +15,6 @@ export enum Countries {
   India = 48,
   Saudi = 1,
 }
-export const initialUserSessionData: UserModel = {
-  userId: 0,
-  displayName: "",
-  userimage: "",
-  userTypeCode: "",
-  userTypeName: "",
-  email: "",
-  currentClientId: 0,
-  currentClientName: "",
-  currentBranchAddress: [],
-  currentBranchId: 0,
-  currentBranchName: "",
-  currency: null,
-  currencySymbol: null,
-  taxDecimalPoint: 0,
-  unitPriceDecimalPoint: 0,
-  language: "en",
-  companies: [],
-  branches: [],
-  presetCostCenterId: 0,
-  productVersion: "",
-  dbIdValue: "",
-  counterwiseCashLedgerId: 0, // Adjust the type as per your requirements (e.g., string, number, etc.)
-  counterAssignedCashLedgerId: 0,
-  employeeId: 0,
-  systemCode: "",
-  systemName: "",
-  financialYearStatus: "",
-  userName: "",
-  counterName: ""
-};
 export interface UserModel {
   userId: number;
   userName: string;
@@ -71,7 +40,6 @@ export interface UserModel {
   finFrom?: Date | null;
   finTo?: Date | null;
   financialYearStatus:string;
-  presetCostCenterId: number | 0;
   employeeId: number | 0;
   productVersion: string | "";
   dbIdValue: string | "";
@@ -81,7 +49,7 @@ export interface UserModel {
   systemName: string | "";
 }
 // export const initialState : login  =  {loading: false, token: ""};
-export const initialState: UserModel = {
+export const initialUserSessionData: UserModel = {
   userId: 0,
   displayName: "",
   userTypeCode: "",
@@ -102,7 +70,6 @@ export const initialState: UserModel = {
   finTo: null,
   companies: [], // Initializing as an empty array
   branches: [], // Initializing as an empty array
-  presetCostCenterId: 0,
   productVersion: "",
   dbIdValue: "",
   employeeId: 0,
@@ -116,7 +83,7 @@ export const initialState: UserModel = {
 };
 const userSessionSlice = createSlice({
   name: "userSession",
-  initialState,
+  initialState: initialUserSessionData,
   reducers: {
     setUserSession: (state, action: PayloadAction<UserModel>) => {
       return action.payload;

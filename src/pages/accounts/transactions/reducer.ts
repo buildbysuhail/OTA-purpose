@@ -6,12 +6,15 @@ import {
   AccTransactionRow,
   AccTransactionMaster,
   AccTransactionRowInitialData,
+  FormElementsState,
 } from "./acc-transaction-types";
 import { useAccTransaction } from "./use-acc-transaction";
 import { loadAccVoucher, unlockAccTransactionMaster } from "./thunk";
 import VoucherType from "../../../enums/voucher-types";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 import { RootState } from "../../../redux/store";
+import { UserModel } from "../../../redux/slices/user-session/reducer";
+import { UserAction } from "../../../helpers/user-right-helper";
 
 const accTransactionSlice = createSlice({
   name: "accTransaction",
@@ -24,11 +27,28 @@ const accTransactionSlice = createSlice({
     ) => {
       return action.payload;
     },
+    setUserRightInReducer: (state, action: PayloadAction<{userSession: UserModel, hasRight: (formCode: string, action: UserAction) => boolean }>) => {
+      const { userSession, hasRight } = action.payload;
 
+      const isFinancialYearClosed = userSession.financialYearStatus === "Closed";
+
+      state.formElements.btnSave.visible = !isFinancialYearClosed && 
+        hasRight(state.formCode, UserAction.Add) && 
+        state?.transaction?.details?.length > 0;
+
+        state.formElements.btnEdit.visible = !isFinancialYearClosed && 
+        hasRight(state.formCode, UserAction.Edit);
+
+        state.formElements.btnDelete.visible = !isFinancialYearClosed && 
+        hasRight(state.formCode, UserAction.Delete);
+
+        state.formElements.btnPrint.visible = !isFinancialYearClosed && 
+        hasRight(state.formCode, UserAction.Print);
+    },
     // clear entire for new voucher
     clearState: (state,
-      action: PayloadAction<{rootState: RootState}>) => {
-        const { rootState } = action.payload;
+      action: PayloadAction<{userSession: UserModel,softwareDate: string, defaultCostCenterID: number, counterwiseCashLedgerId: number, allowSalesCounter: number}>) => {
+        const { userSession, softwareDate, defaultCostCenterID, counterwiseCashLedgerId, allowSalesCounter} = action.payload;
       state.isBahamdoonPOSReceipt = false;
       (state.transaction.master.accTransMasterID = 0),
         (state.row.ledgerCode = "");
@@ -43,18 +63,58 @@ const accTransactionSlice = createSlice({
       state.transaction.master.referenceNumber = "";
       state.row.chqDate = new Date().toISOString();
       state.row.bankDate = new Date().toISOString();
-      state.transaction.master.transactionDate = rootState.AppState.softwareDate;
+      state.transaction.master.transactionDate = softwareDate;
       state.row.narration = "";
       state.row.amount = 0.0;
       state.row.discount = 0.0;
       state.masterAccountID = 0;
-      state.row.costCentreId =
-      rootState.ApplicationSettings.accountsSettings.defaultCostCenterID;
+      state.row.costCentreId = defaultCostCenterID;
       state.transaction.details = [];
       state.isEdit = false;
       state.isRowEdit = false;
       state.printOnSave = true;
       state.transaction.master.isLocked = false;
+
+      state.formElements.pnlMasters.disabled = false;
+      state.formElements.dxGrid.disabled = false;
+
+      state.formElements.bankDate.disabled = true;
+      state.formElements.btnEdit.visible = false;
+      state.formElements.btnDelete.visible = false;
+      state.formElements.btnSave.disabled = true;
+      state.formElements.btnPrint.disabled = true;
+      state.formElements.amount.disabled = false;
+
+      if (
+        counterwiseCashLedgerId > 0 &&
+        allowSalesCounter
+      ) {
+        if (
+          state.transaction.master.voucherType == "CP" ||
+          state.transaction.master.voucherType == "CR"
+        ) {
+          state.masterAccountID = counterwiseCashLedgerId;
+  
+          if (state.userConfig.counterAssignedCashLedgerId > 0) {
+            state.formElements.masterAccount.disabled = true;
+          }
+        }
+      }
+      // {
+      //   if (userSession.presetCostCenterId > 0)
+      //     cbEmployee.SelectedValue =
+      //       PolosysFrameWork.General.EMPLOYEEID.ToString();
+      // }
+      // if (PolosysFrameWork.General.PRESET_COSTCENTER_ID > 0) {
+      //   cbCostCentre.SelectedValue =
+      //     PolosysFrameWork.General.PRESET_COSTCENTER_ID;
+      //   cbCostCentre.Enabled = false;
+      // } else {
+      //   if (PolosysFrameWork.General.DBID_VALUE == "SAMAPLASTICS") {
+      //     cbCostCentre.SelectedIndex = -1;
+      //     cbCostCentre.SelectedValue = 0;
+      //   }
+      // }
     },
     // Update a specific field in the form state
     accFormStateHandleFieldChange: (
@@ -91,6 +151,25 @@ const accTransactionSlice = createSlice({
       (state.transaction[key] as typeof value) = value;
     },
 
+    accFormStateFormElementHandleFieldChange: (
+      state,
+      action: PayloadAction<{
+        fields: { [fieldId in keyof FormElementsState]?: any };
+      }>
+    ) => {
+      const { fields } = action.payload;
+
+      // Check if 'fields' is an object (multiple fields)
+      Object.keys(fields).forEach((key) => {
+        // Update the corresponding field in the state
+        const fieldValue = fields[key as keyof FormElementsState];
+        
+        // Convert Date fields to ISO strings
+        (state.formElements[
+          key as keyof FormElementsState
+        ] as typeof fieldValue) = fieldValue;
+      });
+    },
     // Update a specific field in the master object within the transaction
     // dispatch(accFormStateTransactionMasterHandleFieldChange({ fields: "voucherPrefix", value: "INV123" }));
     // dispatch(accFormStateTransactionMasterHandleFieldChange({ fields: { voucherPrefix: "INV123", referenceNumber: "REF456" } }));
@@ -343,6 +422,7 @@ export const {
   accFormStateReset,
   accFormStateClearRowForNew,
   clearState,
+  setUserRightInReducer
 } = accTransactionSlice.actions;
 
 export default accTransactionSlice.reducer;

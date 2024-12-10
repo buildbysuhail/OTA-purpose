@@ -1038,12 +1038,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 }
               />
               <ERPInput
-                {...getFieldProps("additionalNumber")}
+                {...getFieldProps("plotIdentificationNumber")}
                 label={t("additional_number")}
                 placeholder={t("additional_number")}
                 required={false}
                 onChangeData={(data) =>
-                  handleFieldChange("additionalNumber", data.additionalNumber)
+                  handleFieldChange("plotIdentificationNumber", data.plotIdentificationNumber)
                 }
               />
               <ERPInput
@@ -1073,19 +1073,19 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 field={{
                   id: "country",
                   getListUrl: Urls.data_countries,
-                  valueKey: "id",
+                  valueKey: "name",
                   labelKey: "name",
                 }}
               />
               <ERPInput
-                {...getFieldProps("countrySubDivision")}
+                {...getFieldProps("countrySubEntity")}
                 label={t("country_sub_division")}
                 placeholder={t("country_sub_division")}
                 required={false}
                 onChangeData={(data) =>
                   handleFieldChange(
-                    "countrySubDivision",
-                    data.countrySubDivision
+                    "countrySubEntity",
+                    data.countrySubEntity
                   )
                 }
               />

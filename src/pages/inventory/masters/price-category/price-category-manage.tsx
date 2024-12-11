@@ -23,7 +23,7 @@ export const PriceCategoryManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<PriceCategoryData>({
     url: Urls.priceCategory,
-    onClose:useCallback(() => dispatch(togglePriceCategory({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(togglePriceCategory({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(togglePriceCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]

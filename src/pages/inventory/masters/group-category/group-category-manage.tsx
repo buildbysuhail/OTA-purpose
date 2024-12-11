@@ -27,7 +27,7 @@ export const GroupCategoryManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<GroupCategoryData>({
     url: Urls.group_category,
-    onClose:useCallback(() => dispatch(toggleGroupCategory({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleGroupCategory({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleGroupCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]

@@ -54,8 +54,8 @@ const UserTypes = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode }) }}
-            edit={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode }) }}
+            view={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode,reload: false }) }}
+            edit={{ type: "popup", action: () => toggleUserTypePopup({ isOpen: true, key: cellElement?.data?.userTypeCode,reload: false }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",

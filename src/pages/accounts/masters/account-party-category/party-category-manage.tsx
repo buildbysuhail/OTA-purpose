@@ -20,7 +20,7 @@ export const PartyCategoryManage: React.FC = React.memo(() => {
         () => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: true })),
         [dispatch]
       ),
-      onClose: useCallback(() => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, })), [dispatch]),
+      onClose: useCallback(() => dispatch(togglePartyCategoryPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
       key: rootState.PopupData.partyCategory.key,
       useApiClient: true,
       initialData: initialPartyCategory,

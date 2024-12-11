@@ -64,7 +64,7 @@ export const getFieldPropsGlobal =
     t: any,
     options?: { onChangeData?: (data: any) => void; label?: string }
   ): FormField => {
-    debugger;
+    
     const __data = data?.data ? data?.data : data;
     const _value = getNestedValue(__data, fieldId);
     const value =  _value == undefined || _value == null || _value == "" ? "" : _value == 0 ? '0' : _value|| "";
@@ -80,7 +80,7 @@ export const getFieldPropsGlobal =
       checked,
       onChangeData: options?.onChangeData
         ? (event: any) => options.onChangeData?.(event.target.value)
-        : (eventData: any) => {debugger; const nestedValue = getNestedValue(eventData, fieldId);
+        : (eventData: any) => { const nestedValue = getNestedValue(eventData, fieldId);
           console.log("fieldId:", fieldId);
           console.log("eventData:", eventData);
           console.log("nestedValue:", nestedValue);handleFieldChange(fieldId, nestedValue)},

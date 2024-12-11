@@ -215,7 +215,7 @@ const BarcodePrint: React.FC = () => {
   };
 
   const barcodeFormSubmit = useCallback(async () => {
-    debugger;
+    
     setBarcodeFormLoading(true);
     const response =
       await SystemSettingsApi.postBarcodePrint(barcodeForm?.data);
@@ -394,7 +394,7 @@ const BarcodePrint: React.FC = () => {
                       data={barcodeForm.data}
                       validation={barcodeForm?.validations?.formBcode}
                       onChangeData={(data: any) => {
-                        debugger;
+                        
                         setBarcodeForm((prev: any) => ({
                           ...prev,
                           data: data,

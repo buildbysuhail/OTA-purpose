@@ -111,7 +111,7 @@ const ResetDbManage: React.FC = React.memo(() => {
   const { t } = useTranslation("system");
 
   const handleSubmit = useCallback(async () => {
-    debugger;
+    
     const masters = Object.keys(master)
       .filter((key) => master[key]) // Filter only the true values
       .map((key) => ({ tableTypeCode: key }));
@@ -146,7 +146,7 @@ const ResetDbManage: React.FC = React.memo(() => {
   }, [postData?.data, master,master]);
 
   const onClose = useCallback(() => {
-    dispatch(toggleResetDataBasePopup({ isOpen: false, key: null }));
+    dispatch(toggleResetDataBasePopup({ isOpen: false, key: null,reload: false }));
   }, []);
 
   return (

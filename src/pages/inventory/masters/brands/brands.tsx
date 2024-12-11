@@ -122,8 +122,8 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID }) }}
-              edit={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID }) }}
+              view={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID,reload: false }) }}
+              edit={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID,reload: false }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",

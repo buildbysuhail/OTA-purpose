@@ -47,7 +47,7 @@ const BankPosSettingsManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<BankPoseData>({
     url: Urls.BankPosSettings,
-    onClose:useCallback(() => dispatch(toggleBankPosPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleBankPosPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleBankPosPopup({ isOpen: false })),
       [dispatch]

@@ -28,7 +28,7 @@ export const CounterManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<CounterData>({
     url: Urls.Counter,
-    onClose:useCallback(() => dispatch(toggleCounterPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleCounterPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleCounterPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -39,7 +39,7 @@ export const CounterManage: React.FC = React.memo(() => {
   });
 
   const onClose = useCallback(() => {
-    dispatch(toggleCounterPopup({ isOpen: false, key: null }));
+    dispatch(toggleCounterPopup({ isOpen: false, key: null,reload: false }));
   }, []);
 
   const applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);

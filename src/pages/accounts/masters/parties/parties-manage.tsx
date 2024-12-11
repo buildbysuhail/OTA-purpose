@@ -57,7 +57,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     } = useFormManager<PartiesData>({
       url: Urls.parties,
       onClose: useCallback(
-        () => dispatch(toggleParties({ isOpen: false, key: null })),
+        () => dispatch(toggleParties({ isOpen: false, key: null,reload: false })),
         [dispatch]
       ),
       onSuccess: useCallback(
@@ -136,7 +136,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
         const res = await api.getNativeAsync(url, undefined, {
           responseType: "blob", // Ensure the response is treated as a binary blob
         });
-        debugger;
+        
         if (res) {
           // Create a download link and trigger download
           const url = window.URL.createObjectURL(res);
@@ -822,7 +822,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         labelKey: "name",
                       }}
                       onChange={(data: any) => {
-                        debugger;
+                        
                         handleFieldChange({
                           stateName:
                             data !== null && data !== undefined

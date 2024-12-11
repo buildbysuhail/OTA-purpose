@@ -90,7 +90,7 @@ const EInvoiceTaxPro = () => {
     } = useFormManager<EInvoiceTaxProData>({
         url: Urls.eInvoiceGST,
         onSuccess: useCallback(
-            () => dispatch(toggleEInvoiceGST({ isOpen: false, key: null })),
+            () => dispatch(toggleEInvoiceGST({ isOpen: false, key: null,reload: false })),
             [dispatch]
         ),
         loadDataRequired: true,

@@ -89,7 +89,7 @@ function App() {
   let upt = Cookies.get("up");
   let urr = Cookies.get("ur");
   let utt = localStorage.getItem("ut");
-debugger;
+
   let userRights: UserTypeRights[] = [];
   try {
     if (urr != undefined && urr != null && urr != "") {
@@ -97,7 +97,7 @@ debugger;
     }
   } catch (error) { }
 
-debugger;
+
   let userProfileDetails: UserModel = initialUserSessionData;
   try {
     if (upt != undefined && upt != null && upt != "") {
@@ -125,7 +125,7 @@ debugger;
     load();
   }, []);
   const load = async() => {
-    debugger;
+    
     const settings = await api.getAsync(Urls.application_setting);
     dispatch(setApplicationSettings(
       {

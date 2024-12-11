@@ -46,7 +46,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   const [recursive, setRecursive] = useState(false);
   const [selectionMode, setSelectionMode] = useState('all');
   const getImmediateParentsOfEndNodes = (rights: UserRight[]): UserRight[] => {
-    debugger
+    
     // Step 1: Find all ids that do not act as a `headId`, indicating they are end-level nodes
     let sdsd = rights.filter(right => !rights.some(child => child.headId === right.id))
     let sds = sdsd.map(endNode => endNode.headId)
@@ -74,10 +74,10 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
       // 'S': userRights.filter(item => item.formCode === 'S').map(item => item.id),
     };
     const selectedPermissionIds = permissionMap[permission] || [];
-    debugger;
+    
     // Ensure that prevKeys is an array before proceeding
     setSelectedRowKeys((prevKeys: number[]) => {
-      debugger;
+      
       if (!Array.isArray(prevKeys)) {
         // Fallback if prevKeys is not an array, return empty array
         return checked ? selectedPermissionIds : [];
@@ -121,7 +121,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   }, [userRightTypes, userRights]);
 
   const onSelectionChanged = useCallback((e: TreeListTypes.SelectionChangedEvent) => {
-    debugger;
+    
     const selectedData = e.component?.getSelectedRowsData(selectionMode)?.map(x => x.id) ?? [];
     setSelectedRowKeys(selectedData);
   }, []);
@@ -146,7 +146,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
     const groupedDataMap = new Map<string, { userTypeCode: string; userRights: string; treeNodeIndex: number }>();
 
     immediateParentsOfEndNodes.forEach(parent => {
-      debugger;
+      
       const childNodes = userRights.filter(child => child.headId === parent.id);
       let parentUserRights = '';
       let hasSelectedRights = false;
@@ -204,7 +204,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   };
 
   useEffect(() => {
-    debugger;
+    
     if (postData.data.userType) {
       loadUserType();
     }
@@ -216,7 +216,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
   };
   const handleSubmit = useCallback(async () => {
     setPostUserTypeLoading(true);
-    debugger;
+    
     if (!userRightTypes) {
       setUserRightTypes([]);
     }
@@ -260,7 +260,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
 
   }, [userTypeForClone]);
   const onClose = useCallback(() => {
-    dispatch(toggleUserTypePrivilegePopup({ isOpen: false, key: null }));
+    dispatch(toggleUserTypePrivilegePopup({ isOpen: false, key: null,reload: false }));
   }, []);
   const { t } = useTranslation("userManage");
 

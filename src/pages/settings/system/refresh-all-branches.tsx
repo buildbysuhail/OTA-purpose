@@ -39,7 +39,7 @@ export const RefreshAllBranches: React.FC = React.memo(() => {
   } = useFormManager<RefreshAllBranches>({
     url: Urls.refreshAllBranches,
     onClose: useCallback(
-      () => dispatch(toggleRefreshAllBranches({ isOpen: false, key: null })),
+      () => dispatch(toggleRefreshAllBranches({ isOpen: false, key: null,reload: false })),
       [dispatch]
     ),
     onSuccess: useCallback(

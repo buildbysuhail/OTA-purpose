@@ -118,8 +118,8 @@ const Upi = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID }) }}
-            edit={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID }) }}
+            view={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
+            edit={{ type: "popup", action: () => toggleUpi({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
             delete={{
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
@@ -158,7 +158,7 @@ const Upi = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUpi({ isOpen: false, key: null }));
+          dispatch(toggleUpi({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedUpiManage />}
       />

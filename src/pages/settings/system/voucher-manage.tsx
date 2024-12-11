@@ -23,7 +23,7 @@ export const VoucherManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<VoucherData>({
     url: Urls.Voucher,
-    onClose: useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]

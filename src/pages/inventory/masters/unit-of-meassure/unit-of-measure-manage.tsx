@@ -24,7 +24,7 @@ export const UnitOfMeasureManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<MeasureData>({
     url: Urls.unitOfMeasure,
-    onClose:useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleUnitOfMeasure({ isOpen: false, key: null, reload: true })),
       [dispatch]

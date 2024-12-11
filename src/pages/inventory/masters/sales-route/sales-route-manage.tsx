@@ -36,7 +36,7 @@ export const SalesRouteManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<SalesRouteData>({
     url: Urls.salesRoute,
-    onClose:useCallback(() => dispatch(toggleSalesRoute({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleSalesRoute({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleSalesRoute({ isOpen: false, key: null, reload: true })),
       [dispatch]

@@ -49,7 +49,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         ),
       [dispatch]
     ),
-    onClose: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
     initialData: initialAccountGroup,

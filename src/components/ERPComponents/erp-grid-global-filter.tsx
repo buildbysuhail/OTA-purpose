@@ -35,7 +35,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   // Fetch props for fields dynamically
   const getFieldProps = useCallback(
     (fieldId: string): FormField => {
-      debugger;
+      
       console.log('getFieldProps called');
       
       return getFieldPropsGlobal(fieldId, formState);
@@ -47,7 +47,7 @@ const ErpGridGlobalFilter: FC<ErpGridGlobalFilterProps> = ({
   const handleFieldChange = useCallback(
     (fields: { [fieldId: string]: any } | string, value?: any) => {
       
-      debugger;
+      
       // Convert single field updates to multi-field format
       const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: formState})
       setFormState(updatedData);

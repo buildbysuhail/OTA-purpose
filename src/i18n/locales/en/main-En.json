@@ -73,5 +73,7 @@
     "add":"Add",
     "clear":"Clear",
     "cancel":"Cancel",
-    "submit":"Submit"
+    "submit":"Submit",
+
+    "branches": "Branches"
 }

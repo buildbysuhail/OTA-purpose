@@ -7,7 +7,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
-import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../cash-summary-report-filter";
+import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "../cashSummary/cash-summary-report-filter";
 
 const DailySummaryGlobal = () => {
   const { t } = useTranslation();

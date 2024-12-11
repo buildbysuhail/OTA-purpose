@@ -497,7 +497,7 @@ const AccountSettingsProfile: FC<AccountSettingsProps> = (props) => {
                     id="dob"
                     type="date"
                     required
-                    value={basicInfo.data.dob}
+                    value={basicInfo.data?.dob}
                     label={"Date of Birth"}
                     data={basicInfo?.data}
                     onChange={(e) => {

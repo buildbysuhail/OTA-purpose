@@ -209,7 +209,7 @@ const Row = ({
         <div
           className={`flex items-center px-3 py-2 ${isSelected ? "bg-primary" : ""
             }`}
-            onClick={(e) => { e.stopPropagation(); handleSelect(item)}}>
+          onClick={(e) => { e.stopPropagation(); handleSelect(item) }}>
           <div className="flex-shrink-0 w-5">
             {isSelected && (
               <CheckIcon
@@ -810,15 +810,15 @@ export default function ERPDataCombobox({
       : text;
   }
   interface AutocompleteProps<T, Multiple extends boolean | undefined = undefined, DisableClearable extends boolean | undefined = undefined, FreeSolo extends boolean | undefined = undefined>
-  extends Omit<React.ComponentProps<typeof Autocomplete<T, Multiple, DisableClearable, FreeSolo>>, 'onChange'> {
-  onChange?: (
-    event: React.SyntheticEvent,
-    value: AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>,
-    reason: AutocompleteChangeReason,
-    details?: AutocompleteChangeDetails<T> | undefined
-  ) => void;
-}
-const StyledAutocomplete = styled(Autocomplete)`
+    extends Omit<React.ComponentProps<typeof Autocomplete<T, Multiple, DisableClearable, FreeSolo>>, 'onChange'> {
+    onChange?: (
+      event: React.SyntheticEvent,
+      value: AutocompleteValue<T, Multiple, DisableClearable, FreeSolo>,
+      reason: AutocompleteChangeReason,
+      details?: AutocompleteChangeDetails<T> | undefined
+    ) => void;
+  }
+  const StyledAutocomplete = styled(Autocomplete)`
   & .MuiAutocomplete-popper .MuiAutocomplete-listbox {
     max-height: 200px !important;
     overflow-y: auto !important;
@@ -946,63 +946,63 @@ const StyledAutocomplete = styled(Autocomplete)`
             </li>
           )}
         /> */}
-          <Autocomplete
-        id={id}
-        options={items}
-        value={initial}
-        onChange={handleItemSelect}
-        getOptionLabel={(option: any) => option.label || ""}
-        isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
-        loading={loading}
-        disabled={disabled}
-        autoHighlight
-        openOnFocus
-        fullWidth
-        ListboxProps={{
-          style: { maxHeight: '200px',scrollbarWidth: 'thin' }
-        }}
-        PaperComponent={({ children }) => (
-          <Paper elevation={1} style={{ backgroundColor: 'white', borderRadius: 4, overflowY:'scroll', height:'200px' }}>
-            {children}
-          </Paper>
-        )}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
-            required={required}
-            variant={_variant}
-            sx={sizeStyles.mui}
-            onKeyDown={handleKeyDownEnter}
-            data-skip={skip}
-            data-jump-to={jumpTo}
-            data-jump-target={jumpTarget}
-            InputProps={{
-              ...params.InputProps,
-              endAdornment: (
-                <React.Fragment>
-                  {loading ? (
-                    <CircularProgress color="inherit" size={20} />
-                  ) : null}
-                  {params.InputProps.endAdornment}
-                </React.Fragment>
-              ),
-            }}
-          />
-        )}
-        renderOption={(props, option: any) => (
-          <li
-            {...props}
-            style={{
-              ...getOptionSizeStyles(),
-              opacity: option.is_active === false ? 0.5 : 1,
-              backgroundColor:
-                option.is_active === false ? "#f5f5f5" : undefined,
-            }}>
-            {option.label}
-          </li>
-        )}
-      />
+        <Autocomplete
+          id={id}
+          options={items}
+          value={initial}
+          onChange={handleItemSelect}
+          getOptionLabel={(option: any) => option.label || ""}
+          isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
+          loading={loading}
+          disabled={disabled}
+          autoHighlight
+          openOnFocus
+          fullWidth
+          ListboxProps={{
+            style: { maxHeight: '200px', scrollbarWidth: 'thin' }
+          }}
+          PaperComponent={({ children }) => (
+            <Paper elevation={1} style={{ backgroundColor: 'white', borderRadius: 4, overflowY: 'scroll', height: '200px' }}>
+              {children}
+            </Paper>
+          )}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={!noLabel ? label || id?.replaceAll("_", " ") : undefined}
+              required={required}
+              variant={_variant}
+              sx={sizeStyles.mui}
+              onKeyDown={handleKeyDownEnter}
+              data-skip={skip}
+              data-jump-to={jumpTo}
+              data-jump-target={jumpTarget}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {loading ? (
+                      <CircularProgress color="inherit" size={20} />
+                    ) : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                ),
+              }}
+            />
+          )}
+          renderOption={(props, option: any) => (
+            <li
+              {...props}
+              style={{
+                ...getOptionSizeStyles(),
+                opacity: option.is_active === false ? 0.5 : 1,
+                backgroundColor:
+                  option.is_active === false ? "#f5f5f5" : undefined,
+              }}>
+              {option.label}
+            </li>
+          )}
+        />
         <Typography
           className="text-[#374151] text-xs font-medium mt-1">
           {infoWithLineBreaks(info)}
@@ -1060,7 +1060,7 @@ const StyledAutocomplete = styled(Autocomplete)`
               className={`form-control ${sizeClasses?.input} placeholder:capitalize`}
               displayValue={() => inputValue || initial?.label || ""}
               onChange={handleInputChange}
-              onClick={(e) => { e.stopPropagation();!disabled && setIsOpen(!isOpen)}}
+              onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen) }}
               onKeyDown={handleKeyDown}
               placeholder={t("select") + " " + (label || id?.replaceAll("_", " "))}
               onMouseEnter={handleMouseEnter}
@@ -1086,7 +1086,7 @@ const StyledAutocomplete = styled(Autocomplete)`
               {/* Dropdown button */}
               <Combobox.Button
                 className="p-1 hover:bg-gray-100 rounded-full"
-                onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen)}}
+                onClick={(e) => { e.stopPropagation(); !disabled && setIsOpen(!isOpen) }}
               >
                 <ChevronDownIcon
                   className={`${sizeClasses?.icons} text-gray-400 hover:text-gray-500 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
@@ -1099,18 +1099,18 @@ const StyledAutocomplete = styled(Autocomplete)`
           {isOpen &&
             createPortal(
               <div
-              ref={(el) => {
-                if (el) {
-                  (el as any).__reactRefHandlers = { contains: () => true };
-                }
-              }}
-              
-                className="combobox-dropdown absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden"
+                ref={(el) => {
+                  if (el) {
+                    (el as any).__reactRefHandlers = { contains: () => true };
+                  }
+                }}
+
+                className="combobox-dropdown absolute z-50 mt-1 bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none overflow-hidden rounded-md"
                 style={{
-                  width: comboboxRef.current?.offsetWidth || "auto", 
+                  width: comboboxRef.current?.offsetWidth || "auto",
                   top: comboboxRef.current?.getBoundingClientRect().bottom || 0,
                   left: comboboxRef.current?.getBoundingClientRect().left || 0,
-                  position: "fixed", 
+                  position: "fixed",
                 }}
               >
                 {loading ? (

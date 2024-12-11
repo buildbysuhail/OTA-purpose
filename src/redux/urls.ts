@@ -226,6 +226,7 @@ const Urls = {
   acc_reports_payment: "/Accounts/RptPaymentReport/PaymentReport/",
   acc_reports_collection: "/Accounts/RptCollectionReport/CollectionReport/",
   acc_reports_cash_summary: "/Accounts/RptCashSummaryReport/CashSummary/",
+  acc_reports_cash_summary_ledgerwise: "/Accounts/RptCashSummaryReport/CashSummaryLedgerwise/",
   acc_reports_transaction: "/Accounts/RptReports/TransactionReport/",
   acc_reports_inventory_history: "/Accounts/RptTransactionHistory/TransactionHistoryInventory/",
   acc_reports_inventory_history_popup: "/Accounts/RptTransactionHistory/ShowTransHistoryInventoryPopUp/",

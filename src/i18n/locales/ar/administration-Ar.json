@@ -62,5 +62,19 @@
    "postal_code": "الرمز البريدي",
    "additional_number": "رقم إضافي",
    "region_country_sub_entity": "المنطقة/البلد الكيان الفرعي",
-   "telephone": "الهاتف"
+   "telephone": "الهاتف",
+
+   "created_date": "تاريخ الإنشاء",
+   "modified_date": "تاريخ التعديل",
+   "actions": "الإجراءات",
+   "name": "الاسم",
+   "land_phone": "هاتف أرضي",
+   "mobile_phone": "الهاتف المحمول",
+   "register_no": "رقم التسجيل",
+   "financial_year_from": "السنة المالية من",
+   "financial_year_to": "السنة المالية إلى",
+   "username": "اسم المستخدم",
+   "password": "كلمة المرور",
+   "confirm_password": "تأكيد كلمة المرور",
+   "branch": "الفرع"
 }

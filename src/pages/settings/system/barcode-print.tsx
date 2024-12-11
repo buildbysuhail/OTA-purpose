@@ -150,7 +150,6 @@ const BarcodePrint: React.FC = () => {
     if (["si", "pi", "bti", "bto", "os"].includes(value)) {
       setIsOther(false);
     }
-
     setVoucherForm((prev: any) => ({
       ...prev,
       data: {
@@ -215,16 +214,13 @@ const BarcodePrint: React.FC = () => {
     setData(response);
   }, [barcodeForm.data]);
 
-
   const voucherFormSubmit = useCallback(async () => {
     setVoucherFormLoading(true);
     const response =
       await SystemSettingsApi.postVoucherPrint(voucherForm?.data);
     setVoucherFormLoading(false);
-
     setData(response);
   }, [voucherForm]);
-
 
   const barcodeDescSubmit = useCallback(() => {
     setShowPrint(true);
@@ -239,8 +235,6 @@ const BarcodePrint: React.FC = () => {
       }));
     }, 1000);
   }, [barcodeDesc?.data]);
-
-
 
   // Define columns for the Counters grid
   const columns: DevGridColumn[] = useMemo(
@@ -362,7 +356,6 @@ const BarcodePrint: React.FC = () => {
       <div className="p-0 bg-gray-100 min-h-screen">
         {/* BarcodePrint Form */}
         <div className="p-2 bg-white border border-gray-300 rounded-md shadow-md mx-auto my-0">
-
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-2">
             {/* Top Section */}
@@ -457,10 +450,7 @@ const BarcodePrint: React.FC = () => {
                   <div className="space-y-4">
                     <div className="grid grid-cols-3 xxl:grid-cols-6 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-3 gap-2">
                       {[{ key: "si", label: t("sales") }, { key: "pi", label: t("purchase") }, { key: "bti", label: t("bti") }, { key: "bto", label: t("bto") }, { key: "os", label: t("os") }].map((_item, index) => (
-                        <div
-                          key={`type-${_item.key.toLowerCase()}-${index}`}
-                          className="flex items-center space-x-2"
-                        >
+                        <div  key={`type-${_item.key.toLowerCase()}-${index}`}  className="flex items-center space-x-2">
                           <ERPRadio
                             id={`type-${_item.key.toLowerCase()}-${index}`}
                             name="vType"
@@ -481,7 +471,6 @@ const BarcodePrint: React.FC = () => {
                         />
                       </div>
                     </div>
-
                     {isOther && (
                       <div className="flex items-center space-x-2 mt-4">
                         <ERPInput
@@ -567,9 +556,6 @@ const BarcodePrint: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-
-
               {/* Fourth div - Notes Grid */}
               <div className="flex-1 border p-4 rounded-lg">
                 <div className="grid xxl:grid-cols-3 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-2">
@@ -651,7 +637,6 @@ const BarcodePrint: React.FC = () => {
                     validation={barcodeDesc?.validations?.labelDesign}
                     onChangeData={(data: any) => { handleComboboxChange("labelDesign", data) }}
                   />
-
                   <ERPInput
                     id="startRow"
                     label={t("start_row")}
@@ -709,14 +694,8 @@ const BarcodePrint: React.FC = () => {
                     onClick={barcodeDescSubmit}
                   />
                 </div>
-
               </div>
             </div>
-
-            {/* Right side */}
-
-
-
           </form>
         </div>
         <div className="grid grid-cols-12 gap-x-6">
@@ -730,7 +709,6 @@ const BarcodePrint: React.FC = () => {
                   hideDefaultSearchPanel={true}
                   hideDefaultExportButton={true}
                   data={data}
-
                   gridId="grd_barcode_print"
                   popupAction={toggleCounterPopup}
                   gridAddButtonType="popup"
@@ -741,8 +719,6 @@ const BarcodePrint: React.FC = () => {
             </div>
           </div>
         </div>
-
-
       </div>
       {template && data &&
         <ERPModal
@@ -752,13 +728,10 @@ const BarcodePrint: React.FC = () => {
           closeModal={() => {
             setShowPrint(false);
           }}
-          content={<DownloadPreview template={template} data={data} />}
-        >
-
+          content={<DownloadPreview template={template} data={data} />}>
         </ERPModal>
       }
     </Fragment>
   );
 };
-
 export default BarcodePrint;

@@ -120,6 +120,30 @@ const LedgerReport = () => {
   </span>
       ),
     },
+    {
+      dataField: "chequeNumber",
+      caption: t("cheque_number"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "checkStatus",
+      caption: t("check_status"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "chequeDate",
+      caption: t("cheque_date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
   ];
   return (
     <Fragment>

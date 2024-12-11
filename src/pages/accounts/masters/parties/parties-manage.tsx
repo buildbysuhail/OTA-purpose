@@ -128,20 +128,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       ERPToast.show("Download started...", "success");
       try {
         const parts = fileData.split("-");
+        let fileType = parts[parts.length-1];
         parts.pop();
-        const url = `${
-          Urls.acc_attachmentInfo_download
-        }?fileData=${encodeURIComponent(fileData)}`;
-
-        const res = await api.getNativeAsync(url, undefined, {
-          responseType: "blob", // Ensure the response is treated as a binary blob
-        });
-        debugger;
-        if (res) {
-          // Create a download link and trigger download
-          const url = window.URL.createObjectURL(res);
+        if(fileType == "FileUrl")
+        {
           const link = document.createElement("a");
-          link.href = url;
+          link.href = parts.join("-");
 
           // Fallback to the provided fileName or a default name
           const suggestedFileName = parts.join("-") || "download";
@@ -151,6 +143,32 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           link.click();
           document.body.removeChild(link);
         }
+        else
+        {
+          const url = `${
+            Urls.acc_attachmentInfo_download
+          }?fileData=${encodeURIComponent(fileData)}`;
+  
+          const res = await api.getNativeAsync(url, undefined, {
+            responseType: "blob", // Ensure the response is treated as a binary blob
+          });
+          debugger;
+          if (res) {
+            // Create a download link and trigger download
+            const url = window.URL.createObjectURL(res);
+            const link = document.createElement("a");
+            link.href = url;
+  
+            // Fallback to the provided fileName or a default name
+            const suggestedFileName = parts.join("-") || "download";
+  
+            link.setAttribute("download", suggestedFileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }
+        }
+
       } catch (error) {
         console.error("Error downloading file:", error);
         ERPToast.show("Download failed.", "error");

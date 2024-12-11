@@ -50,7 +50,7 @@ export const SalesmanRoute: React.FC = React.memo(() => {
     const isEdit = id !== null && id !== undefined;
 
     const onClose = useCallback(() => {
-      dispatch(toggleSalesManRoute({ isOpen: false, key: null }));
+      dispatch(toggleSalesManRoute({ isOpen: false, key: null,reload: false }));
     }, []);
 
     const { t } = useTranslation();

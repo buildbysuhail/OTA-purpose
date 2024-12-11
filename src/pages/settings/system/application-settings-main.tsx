@@ -93,7 +93,7 @@ const ERPSettingsFormMain = () => {
     settingName: keyof ApplicationMainSettings,
     value: any
   ) => {
-    debugger;
+    
     setSettings((prevSettings = {} as ApplicationMainSettings) => {
       if (settingName === "allowSalesRouteArea" && value == false) {
         const newSettings = {

@@ -205,6 +205,8 @@ const popupDataSlice = createSlice({
       state.commands = action.payload;
     },
     toggleAccountGroupPopup: (state, action: PayloadAction<popupDataProps>) => {
+      console.log(`toggleAccountGroupPopup:${action.payload.reload}`);
+      
       state.accountGroup = action.payload;
     },
     toggleBankCardsPopup: (state, action: PayloadAction<popupDataProps>) => {

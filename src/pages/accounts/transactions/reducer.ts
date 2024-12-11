@@ -123,7 +123,7 @@ const accTransactionSlice = createSlice({
         fields: { [fieldId in keyof AccTransactionFormState]?: any };
       }>
     ) => {
-      debugger;
+      
       const { fields } = action.payload;
       // Check if 'fields' is an object (multiple fields)
       Object.keys(fields).forEach((key) => {
@@ -220,7 +220,7 @@ const accTransactionSlice = createSlice({
       state,
       action: PayloadAction<AccTransactionRow>
     ) => {
-      debugger;
+      
       const serializedRow = {
         ...action.payload,
         chqDate: action.payload.chqDate
@@ -272,7 +272,7 @@ const accTransactionSlice = createSlice({
         fields: { [fieldId in keyof AccTransactionRow]?: any };
       }>
     ) => {
-      debugger;
+      
       const { fields } = action.payload;
 
       // Use Object.entries to get key-value pairs

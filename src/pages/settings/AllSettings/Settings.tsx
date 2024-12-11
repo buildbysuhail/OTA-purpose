@@ -83,7 +83,7 @@ const Settings = () => {
   }, []);
   
   useEffect(() => {
-    debugger;
+    
     if (userSession.userTypeCode != "CA" && userSession.userTypeCode != "BA") { setSettingRoutes([]) }
   }, []);
 

@@ -117,7 +117,7 @@ const ERPCheckbox = forwardRef<HTMLInputElement, ERPCheckboxProps>(({
           id={id}
           name={id}
           onChange={(e) => {
-            debugger;
+            
             onChangeData && data && onChangeData({ ...data, [id]: e.target.checked });
             onChange && onChange(e);
           }}

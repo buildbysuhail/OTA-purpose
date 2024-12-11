@@ -105,7 +105,7 @@ const PartyCategory = () => {
             action: () =>
               togglePartyCategoryPopup({
                 isOpen: true,
-                key: cellElement?.data?.id,
+                key: cellElement?.data?.id,reload: false
               }),
           }}
           edit={{
@@ -113,7 +113,7 @@ const PartyCategory = () => {
             action: () =>
               togglePartyCategoryPopup({
                 isOpen: true,
-                key: cellElement?.data?.id,
+                key: cellElement?.data?.id,reload: false
               }),
           }}
           delete={{
@@ -153,7 +153,7 @@ const PartyCategory = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(togglePartyCategoryPopup({ isOpen: false, key: null }));
+          dispatch(togglePartyCategoryPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedPartyCategoryManage />}
       />

@@ -99,7 +99,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
   }
   const onSubmit = useCallback(async () => {
     try {
-      debugger;
+      
       const res = await api.postAsync(Urls.import_parties, failedCount > 0 && succeededCount > 0 ? store.filter((row: any) => row.isValid === true) : store);
       handleResponse(res, () => { }, () => { });
     } catch (error) {
@@ -148,7 +148,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
         'Content-Type': 'multipart/form-data',
         'Accept': 'application/json',
       });
-      debugger;
+      
       setStore(res.items);
       setTotalCount(res.items.length);
       setFailedCount(res.items?.filter((row: any) => row.isValid != true).length || 0);
@@ -521,8 +521,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+          edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -570,7 +570,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
         width="w-full max-w-[1400px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleParties({ isOpen: false, key: null }));
+          dispatch(toggleParties({ isOpen: false, key: null,reload: false }));
         }}
         content={
           <div className="h-[700px] overflow-y-auto">

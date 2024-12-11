@@ -22,7 +22,7 @@ const ApplicationMiscellaneousSettingsPop : React.FC = React.memo(() => {
     const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
       useFormManager<DeleteInactiveTransactionManageData>({
         url: Urls.deleteInactiveTransactions,
-        onClose:useCallback(() => dispatch(toggleMiscellaneousSettingsPopup({ isOpen: false, key: null,})), [dispatch]),
+        onClose:useCallback(() => dispatch(toggleMiscellaneousSettingsPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
         onSuccess: useCallback(
           () =>
             dispatch(

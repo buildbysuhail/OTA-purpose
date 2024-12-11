@@ -28,7 +28,7 @@ export const capitalizeAndAddSpace = (input: string): string => {
 
   // Add space before each subsequent capital letter (except the first)
   const result = capitalized.replace(/([A-Z])/g, ' $1').trim();
-debugger;
+
   return result;
 }
 export const lowercaseAndAddUnderscore = (input: string): string => {

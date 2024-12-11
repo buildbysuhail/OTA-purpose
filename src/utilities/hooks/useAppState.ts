@@ -9,7 +9,7 @@ export const useAppState = () => {
   const appState = useSelector((state: RootState) => state.AppState?.appState);
   
   const updateAppState = (newState: (typeof appState)) => {
-    debugger;
+    
     dispatch(setAppState(newState));
   };
 console.log(appState);

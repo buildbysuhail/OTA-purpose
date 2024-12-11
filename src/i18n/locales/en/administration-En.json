@@ -62,5 +62,19 @@
     "postal_code": "Postal Code",
     "additional_number": "Additional Number",
     "region_country_sub_entity": "Region/Country Sub Entity",
-    "telephone": "Telephone"
+    "telephone": "Telephone",
+
+    "created_date": "Created Date",
+    "modified_date": "Modified Date",
+    "actions": "Actions",
+    "name":"Name",
+    "land_phone": "Land Phone",
+    "mobile_phone": "Mobile Phone",
+    "register_no": "Register No",
+    "financial_year_from": "Financial Year From",
+    "financial_year_to": "Financial Year To",
+    "username": "User Name",
+    "password":"Password",
+    "confirm_password": "Confirm Password",
+    "branch": "Branch"
 }

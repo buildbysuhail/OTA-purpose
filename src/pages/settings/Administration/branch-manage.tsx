@@ -112,13 +112,13 @@ export const BranchGridManage: React.FC = React.memo(() => {
   const dispatch = useDispatch();
   const rootState = useRootState();
   const userSession = useAppSelector((state: RootState) => state.UserSession);
-  debugger;
+  
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading, formState,handleClose } =
     useFormManager<BranchData>({
       url: Urls.Branch,
-      onClose:useCallback(() => dispatch(toggleBranchGridPopup({ isOpen: false, key: null,})), [dispatch]),
+      onClose:useCallback(() => dispatch(toggleBranchGridPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
       onSuccess: useCallback(
-        () => dispatch(toggleBranchGridPopup({ isOpen: false, key: null })),
+        () => dispatch(toggleBranchGridPopup({ isOpen: false, key: null,reload: false })),
         [dispatch]
       ),
       key: rootState.PopupData.branchGrid.key,

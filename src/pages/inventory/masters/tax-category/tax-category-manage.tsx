@@ -24,7 +24,7 @@ export const TaxCategoryManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<TaxCategoryData>({
     url: Urls.taxCategory,
-    onClose:useCallback(() => dispatch(toggleTaxCategory({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleTaxCategory({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleTaxCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]

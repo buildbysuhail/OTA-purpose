@@ -165,7 +165,7 @@ const RevertBillModifications: React.FC = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleRevertBillModifications({ isOpen: false, key: null }));
+          dispatch(toggleRevertBillModifications({ isOpen: false, key: null,reload: false }));
         }}
       />
     </Fragment>

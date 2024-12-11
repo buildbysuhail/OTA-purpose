@@ -29,7 +29,7 @@ export const SchemesManage: React.FC = React.memo(() => {
       () => dispatch(toggleSchemes({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
-    onClose:useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleSchemes({ isOpen: false, key: null,reload: false })), [dispatch]),
     key: rootState.PopupData.vehicles.key,
     useApiClient: true,
     initialData: initialSchemesData

@@ -42,7 +42,7 @@
 //   });
 
 //   const onClose = useCallback(() => {
-//     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
+//     dispatch(toggleAccountGroupPopup({ isOpen: false, key: null,reload: false }));
 //   }, []);
 
 //   const TwilioConnectPopup: React.FC = () => {

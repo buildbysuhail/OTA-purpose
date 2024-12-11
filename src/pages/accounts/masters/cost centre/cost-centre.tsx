@@ -58,8 +58,8 @@ const CostCentre = () => {
       width: 180,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID }) }}
-          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID }) }}
+          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID,reload: false }) }}
+          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID,reload: false }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -98,7 +98,7 @@ const CostCentre = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCostCentrePopup({ isOpen: false, key: null }));
+          dispatch(toggleCostCentrePopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedCostCentreManage />}
       />

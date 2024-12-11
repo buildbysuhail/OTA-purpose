@@ -99,8 +99,8 @@ const CurrencyMaster = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
-          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId }) }}
+          view={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId,reload: false }) }}
+          edit={{ type: "popup", action: () => toggleCurrencyMasterPopup({ isOpen: true, key: cellElement?.data?.currencyId,reload: false }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -138,7 +138,7 @@ const CurrencyMaster = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
+          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedCurrencyMasterManage />}
       />

@@ -72,7 +72,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
           item.visible = false;
         }
         if(item.title === "upi" || item.title === "qr_pay") {
-          debugger
+          
         }
         if(item.title === "upi" && userSession.countryId != Countries.India) {
           item.visible = false;

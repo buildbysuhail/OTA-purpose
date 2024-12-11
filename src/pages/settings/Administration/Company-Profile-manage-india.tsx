@@ -60,7 +60,7 @@ const CompanyProfileManageIndia: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<CompanyProfileData>({
     url: Urls.CompanyProfileIndia,
-    onClose:useCallback(() => dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleCompanyProfileIndiaPopup({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true

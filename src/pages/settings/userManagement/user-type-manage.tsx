@@ -31,7 +31,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
   } = useFormManager<UserTypeData>({
     url: Urls.UserTypes,
     onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null, reload:true  })), [dispatch]),
-    onClose:useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     key: rootState.PopupData.userType.key,
     keyField:"userTypeCode",
     useApiClient: true,

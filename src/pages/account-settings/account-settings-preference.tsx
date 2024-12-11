@@ -215,7 +215,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   // };
 
   const saveThemeChange = async () => {
-    debugger;
+    
     const res = await api.postAsync(Urls.updateUserThemes, {
       userThemes: btoa(JSON.stringify(appState)),
     });
@@ -228,7 +228,7 @@ const AccountSettingsPreference: FC<AccountSettingsProps> = (props: any) => {
   };
   
 const resetInputBox = async ()=>{
-  debugger;
+  
   try{
     const res = await api.getAsync(Urls.getInputBox)
     const _inputBox = atob(res);
@@ -1856,7 +1856,7 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.inputBox?.borderColor}
                                   onChange={(e) => {
-                                    debugger;
+                                    
                                     const rgb = hexToRgb(e.target.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(
@@ -2006,7 +2006,7 @@ const resetInputBox = async ()=>{
                                   type="color"
                                   value={appState.inputBox?.selectColor}
                                   onChange={(e) => {
-                                    debugger;
+                                    
                                     const rgb = hexToRgb(e.target.value); // Use e instead of event
                                     if (rgb) {
                                       handleInputBoxStyleChange(

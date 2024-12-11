@@ -71,7 +71,7 @@ const SpecialSchemes: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<SpecialSchemesData>({
     url: Urls.CompanyProfiles,
-    onClose:useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleSpecialSchemes({ isOpen: false })), [dispatch]),
     method: ActionType.POST,
     useApiClient: true

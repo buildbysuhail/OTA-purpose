@@ -163,8 +163,8 @@ const PrivilegeCard = () => {
       width: 100,
       cellRender: (cellElement: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID }) }}
-          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID }) }}
+          view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID,reload: false }) }}
+          edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID,reload: false }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -204,7 +204,7 @@ const PrivilegeCard = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null }));
+          dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedPrivilegeCardrManage />}
       />

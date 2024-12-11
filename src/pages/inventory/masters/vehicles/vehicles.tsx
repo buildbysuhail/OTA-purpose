@@ -191,8 +191,8 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+              edit={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",

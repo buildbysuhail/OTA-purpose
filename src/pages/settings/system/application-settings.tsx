@@ -43,7 +43,7 @@ const ApplicationSettings: React.FC = () => {
   //   const result: SearchCount = {};
 
   //   (Object.keys(applicationSettings) as Array<keyof ApplicationSettingsType>).forEach((sectionKey) => {
-  //     debugger;
+  //     
   //     const section = applicationSettings[sectionKey];
 
   //     // Ensure section is defined and is an object

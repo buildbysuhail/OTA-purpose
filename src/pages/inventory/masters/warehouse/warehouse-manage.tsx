@@ -25,7 +25,7 @@ export const WarehouseManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<WarehouseData>({
     url: Urls.Warehouse,
-    onClose:useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleWarehouse({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleWarehouse({ isOpen: false, key: null, reload: true })),
       [dispatch]

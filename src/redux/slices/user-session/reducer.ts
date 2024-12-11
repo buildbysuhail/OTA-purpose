@@ -92,7 +92,7 @@ const userSessionSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(userSession?.fulfilled, (state, action) => {
       if (action.payload.isOk) {
-        debugger;
+        
         Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 });
         return action.payload.item;
       }

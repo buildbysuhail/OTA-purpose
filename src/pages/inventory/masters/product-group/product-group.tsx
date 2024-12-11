@@ -199,8 +199,8 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID }) }}
-              edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID }) }}
+              view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID,reload: false }) }}
+              edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID,reload: false }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",

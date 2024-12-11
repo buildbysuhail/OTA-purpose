@@ -29,9 +29,9 @@ const UserActionReportFilter: React.FC = React.memo(() => {
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
     useFormManager<UserActionReport>({
       url: Urls.userActionReport,
-      onClose:useCallback(() => dispatch(toggleUserActionPopup({ isOpen: false, key: null,})), [dispatch]),
+      onClose:useCallback(() => dispatch(toggleUserActionPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
       onSuccess: useCallback(
-        () => dispatch(toggleUserActionPopup({ isOpen: false, key: null })),
+        () => dispatch(toggleUserActionPopup({ isOpen: false, key: null,reload: false })),
         [dispatch]
       ),
       method: ActionType.POST,

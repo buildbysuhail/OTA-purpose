@@ -26,9 +26,9 @@ export const SampleMange: React.FC = React.memo(() => {
   const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading ,handleClose} =
     useFormManager<SampleData>({
       url: Urls.UserTypes,
-      onClose:useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null,})), [dispatch]),
+      onClose:useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null,reload: false })), [dispatch]),
       onSuccess: useCallback(
-        () => dispatch(toggleUserTypePopup({ isOpen: false, key: null })),
+        () => dispatch(toggleUserTypePopup({ isOpen: false, key: null,reload: false })),
         [dispatch]
       ),
       key: rootState.PopupData.userType.key,

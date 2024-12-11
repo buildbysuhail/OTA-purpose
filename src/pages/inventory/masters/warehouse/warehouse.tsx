@@ -147,8 +147,8 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+              edit={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",

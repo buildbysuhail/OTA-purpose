@@ -145,8 +145,8 @@ const Users = () => {
       cellRender: (cellElement: any, cellInfo: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
-            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user }) }}
+            view={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user,reload: false }) }}
+            edit={{ type: "popup", action: () => toggleUserPopup({ isOpen: true, key: cellElement?.data?.user,reload: false }) }}
           // delete={{
           //   confirmationRequired: true,
           //   confirmationMessage: "Are you sure you want to delete this item?",
@@ -185,7 +185,7 @@ const Users = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleUserPopup({ isOpen: false, key: null }));
+          dispatch(toggleUserPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedUsersManage />}
       />

@@ -23,7 +23,7 @@ export const BranchLedgerManage = () => {
     handleClose
   } = useFormManager<BranchLedgerData>({
     url: Urls.branch_ledger,
-    onClose: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.branchLedger.key,
     keyField: "branchLedgerID",

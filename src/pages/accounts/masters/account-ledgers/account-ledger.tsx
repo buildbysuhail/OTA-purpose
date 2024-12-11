@@ -201,8 +201,8 @@ const AccountLedgerType = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+          edit={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
           delete={{
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
@@ -241,7 +241,7 @@ const AccountLedgerType = () => {
         width="w-full max-w-[700px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));
+          dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedAccountLedgerManage />}
       />

@@ -125,7 +125,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   };
 
   const handleApplyPreferences = () => {
-    debugger;
+    
     // Save preferences to localStorage
     localStorage.setItem(
       `gridPreferences_${gridId}`,

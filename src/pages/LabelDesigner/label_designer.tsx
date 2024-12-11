@@ -33,6 +33,7 @@ import {
   FormControl,
   Typography,
   Button,
+  Popover 
 } from "@mui/material";
 import jsPDF from "jspdf";
 import {
@@ -263,6 +264,18 @@ export default function ExtendedPDFBarcodeDesigner() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   const [value, setValue] = React.useState("element");
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const colId = open ? 'add-columns' : undefined;
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
   const inputFile = useRef<HTMLInputElement>(null);
@@ -393,6 +406,9 @@ export default function ExtendedPDFBarcodeDesigner() {
           fontSize: 12,
           font: "Roboto",
           fontStyle: "normal",
+          lineThickness:"1",
+          lineColor:"#000000",
+          lineType:"solid",
           width: componentType === DesignerElementType.barcode ? 150 : 100,
           height: componentType === DesignerElementType.barcode ? 80 : 30,
           ...(componentType === DesignerElementType.barcode && {
@@ -461,6 +477,38 @@ export default function ExtendedPDFBarcodeDesigner() {
       setSelectedComponent({
         ...selectedComponent,
         barcodeProps: { ...selectedComponent.barcodeProps, [property]: value },
+      });
+    }
+  };
+
+  const handleTablePropertyChange = (
+    property: any,
+    value: string | number | boolean
+  ) => {
+    if (
+      selectedComponent &&
+      selectedComponent.type === DesignerElementType.table &&
+      selectedComponent.tableProps
+    ) {
+      const updatedComponents =
+        templateData?.barcodeState?.placedComponents?.map((comp) =>
+          comp.id === selectedComponent.id && comp.tableProps
+            ? {
+              ...comp,
+              tableProps: { ...comp.tableProps, [property]: value },
+            }
+            : comp
+        );
+      setTemplateData((prev: TemplateState) => ({
+        ...prev,
+        barcodeState: {
+          ...prev.barcodeState,
+          placedComponents: updatedComponents || [], // Use an empty array if undefined
+        },
+      }));
+      setSelectedComponent({
+        ...selectedComponent,
+        tableProps: { ...selectedComponent.tableProps, [property]: value },
       });
     }
   };
@@ -664,6 +712,9 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   };
 
+
+  
+
   useEffect(() => {
     templateData?.barcodeState?.placedComponents?.forEach(generateBarcode);
   }, [templateData?.barcodeState?.placedComponents, barcodeErrors]);
@@ -770,37 +821,73 @@ export default function ExtendedPDFBarcodeDesigner() {
           </div>
         );
         case DesignerElementType.table:
-          return (
-            <div
-              key={component.id}
-              style={style}
-              onClick={() => handleComponentClick(component)}
-              onMouseDown={(e) => handleMouseDown(e, component)}
-            >
-              {component.content}
-              <DeleteButton
-                id={component.id}
-                isSelected={isSelected}
-                handleDelete={handleDelete}
-              ></DeleteButton>
-            </div>
-          );
-          case DesignerElementType.line:
-            return (
-              <div
+               return (
+                <div
                 key={component.id}
-                style={style}
+                style={{
+                  ...style,
+                  border: selectedComponent?.id === component.id ? "2px solid #2196f3" : "none",
+                  width: 'auto',
+                  overflow: 'hidden',
+                  height:"100px"
+                }}
                 onClick={() => handleComponentClick(component)}
                 onMouseDown={(e) => handleMouseDown(e, component)}
               >
-                {component.content}
+                <table style={{ width: '100%', borderCollapse: 'collapse' ,height:"100px",}}>
+                  <thead>
+                    <tr>
+                      <th style={{
+                        border: '1px solid #ccc',
+                        padding: '5px',
+                        backgroundColor: '#f0f0f0',
+                      }}>
+                        Add Columns
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                <td className="border border-gray-400 px-4 py-2">test</td>
+              </tr>
+                  </tbody>
+                </table>
                 <DeleteButton
                   id={component.id}
                   isSelected={isSelected}
                   handleDelete={handleDelete}
-                ></DeleteButton>
+                />
               </div>
-            );
+      );
+        case DesignerElementType.line:
+          return (
+            <div
+              key={component.id}
+              style={{
+                ...style,
+                width: `${component.lineHeight}px`,
+                padding: 0,
+                position: 'relative',
+                overflow: 'visible',
+                border: selectedComponent?.id === component.id ? "2px solid #2196f3" : "none",
+              }}
+              onClick={() => handleComponentClick(component)}
+              onMouseDown={(e) => handleMouseDown(e, component)}
+            >
+              <div
+                style={{
+                  borderTop: `${component?.lineThickness || 1}px ${component?.lineType || 'solid'} ${component?.lineColor || 'black'}`,
+                  width: `${component.lineHeight}px`,
+                  margin: 0,
+                }}
+              />
+              <DeleteButton
+                id={component.id}
+                isSelected={isSelected}
+                handleDelete={handleDelete}
+              />
+            </div>
+          );
     }
   };
 
@@ -850,7 +937,6 @@ export default function ExtendedPDFBarcodeDesigner() {
         <div className="bg-white border-b border-gray-200 p-2 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <div className=" ">
-              {/* <ERPPreviousUrlButton></ERPPreviousUrlButton> */}
               <ERPPreviousUrlButton size="37px" />
             </div>
           </div>
@@ -974,7 +1060,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             </div>
             <Tabs value={value} onChange={handleTabChange}>
               <Tab label="Element" value="element" />
-              <Tab label="Label" value="label" />
+              {templateGroup === "barcode" &&<Tab label="Label" value="label" /> }
               <Tab label="Page" value="page" />
             </Tabs>
           </div>
@@ -984,46 +1070,43 @@ export default function ExtendedPDFBarcodeDesigner() {
               {selectedComponent && (
                 <Box
                   sx={{ maxHeight: 'calc(100vh - 8rem)', overflowY: 'auto', py: 2, spaceY: 2 }}
-                  className="scrollbar scrollbar-thick scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
+                  className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
                 // className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 "
                 >
-                  <Box sx={{ mb: 1 }}>
+                  {(selectedComponent.type !== DesignerElementType.table && selectedComponent.type !== DesignerElementType.line  )  && (
+                    <Box sx={{ mb: 1 }}>
+                      {selectedComponent.type === DesignerElementType.field ? (
+                        <ERPDataCombobox
+                          id="content"
+                          data={selectedComponent}
+                          label="Content"
+                          field={{
+                            id: "content",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={fields?.map((field, index) => ({
+                            value: field,
+                            label: field,
+                          }))}
+                          onChangeData={(data) =>
+                            handlePropertyChange("content", data.content)
+                          }
+                        />
+                      ) : (
+                        <ERPInput
+                          id="content"
+                          label="Content"
+                          value={selectedComponent.content}
+                          data={selectedComponent}
+                          onChange={(e) =>
+                            handlePropertyChange("content", e.target.value)
+                          }
+                        />
+                      )}
+                    </Box>
+                  )}
 
-                    {selectedComponent.type === DesignerElementType.field ? (
-                      <ERPDataCombobox
-                        id="content"
-                        data={selectedComponent}
-
-                        label="Content"
-                        field={{
-                          id: "content",
-                          valueKey: "value",
-                          labelKey: "label",
-                        }}
-                        options={fields?.map((field, index) => ({
-                          value: field,
-                          label: field,
-                        }))}
-                        // onChange={(e) =>
-                        //   handlePropertyChange("content", e.value)
-                        // }
-                        onChangeData={(data) =>
-                          handlePropertyChange("content", data.content)
-                        }
-
-                      />
-                    ) : (
-                      <ERPInput
-                        id="content"
-                        label="Content"
-                        value={selectedComponent.content}
-                        data={selectedComponent}
-                        onChange={(e) =>
-                          handlePropertyChange("content", e.target.value)
-                        }
-                      />
-                    )}
-                  </Box>
                   <Box sx={{ mb: 1 }}>
                     <ERPInput
                       id="x"
@@ -1048,36 +1131,132 @@ export default function ExtendedPDFBarcodeDesigner() {
                       }
                     />
                   </Box>
-                  <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
+                  
+                  {selectedComponent.type === DesignerElementType.table &&(
+                  <>
+
+                        <Button aria-describedby={colId} className="ti-btn ti-btn-primary-full " onClick={handleClick}>
+                          Add Columns
+                        </Button>
+                        <Popover
+                          id={colId}
+                          open={open}
+                          anchorEl={anchorEl}
+                          onClose={handleClose}
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                          }}
+                        >
+                      
+                      </Popover>
+                  {/* <Box sx={{mb:1}}>  
+  
+                         <button className="ti-btn ti-btn-primary-full  flex"
+                          onClick={() =>setAddCol(true)  }
+                         >
+                           <Plus className="w-4 h-4" />
+                           Add Columns
+                        </button>
+                       
+                  </Box>
+
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={addCol}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                  >
+                    <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+                  </Popover> */}
+               {/* <Box 
+               sx={{
+                 display: "flex",
+                 flexDirection: "column",
+                 gap:2,
+                 alignItems:"center",
+                 justifyContent:"flex-start",
+                 mb: 1, 
+               }} >
+
+               </Box> */}
+               </>
+               )}
+                
+
+                  {selectedComponent.type !== DesignerElementType.table && (
+                      <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
+                      <Box className="basis-2/3">
+                        <ERPSlider
+                          label="Rotate"
+                          value={selectedComponent.rotate}
+                          onChange={(e) =>
+                            handlePropertyChange("rotate", e.target.valueAsNumber)
+                          }
+                          min={0}
+                          max={360}
+                        />
+                      </Box>
+
+                      <Box className="basis-1/3">
+                        <ERPInput
+                          id="rotate"
+                          type="number"
+                          noLabel
+                          value={selectedComponent.rotate}
+                          data={selectedComponent}
+                          onChange={(e) =>
+                            handlePropertyChange(
+                              "rotate",
+                              parseInt(e.target.value, 10)
+                            )
+                          }
+                        />
+                      </Box>
+                    </Box>
+                  )}
+             
+                  {selectedComponent.type === DesignerElementType.line ? 
+                  (
+                    <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
                     <Box className="basis-2/3">
                       <ERPSlider
-                        label="Rotate"
-                        value={selectedComponent.rotate}
+                        label="line Height"
+                        value={selectedComponent?.lineHeight}
                         onChange={(e) =>
-                          handlePropertyChange("rotate", e.target.valueAsNumber)
+                          handlePropertyChange(
+                            "lineHeight",
+                            e.target.valueAsNumber
+                          )
                         }
-                        min={0}
-                        max={360}
+                        min={10}
+                        max={1400}
                       />
                     </Box>
-
                     <Box className="basis-1/3">
+
                       <ERPInput
-                        id="rotate"
+                        id="lineHeight"
                         type="number"
-                        label="Rotate"
-                        value={selectedComponent.rotate}
+                        noLabel
+                        value={selectedComponent.lineHeight}
                         data={selectedComponent}
                         onChange={(e) =>
                           handlePropertyChange(
-                            "rotate",
+                            "lineHeight",
                             parseInt(e.target.value, 10)
                           )
                         }
                       />
+
                     </Box>
                   </Box>
-                  <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
+                  ):(
+                    <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
                     <Box className="basis-2/3">
                       <ERPSlider
                         label="Width"
@@ -1089,7 +1268,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                           )
                         }
                         min={10}
-                        max={200}
+                        max={500}
                       />
                     </Box>
                     <Box className="basis-1/3">
@@ -1097,7 +1276,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                       <ERPInput
                         id="width"
                         type="number"
-                        label="Width"
+                        noLabel
                         value={selectedComponent.width}
                         data={selectedComponent}
                         onChange={(e) =>
@@ -1110,64 +1289,140 @@ export default function ExtendedPDFBarcodeDesigner() {
 
                     </Box>
                   </Box>
-                  <Box>
+                  )
+                  }
+                
+               
+                  {selectedComponent.type === DesignerElementType.line && (
+                  <div className="space-y-3 mb-1">
+                    <Box
+                      sx={{ mb: 1 }}
+                      className="flex justify-start gap-2 items-center"
+                    >
+                      <Box className="basis-2/3">
+                        <ERPSlider
+                          label="Line Thickness"
+                          value={selectedComponent?.lineThickness}
+                          onChange={(e) =>
+                            handlePropertyChange("lineThickness", e.target.valueAsNumber)
+                          }
+                          min={1}
+                          max={5}
+                        />
+                      </Box>
 
+                      <Box className="basis-1/3">
+                        <ERPInput
+                          id="lineThickness"
+                          type="number"
+                          noLabel
+                          value={selectedComponent?.lineThickness}
+                          data={selectedComponent}
+                          onChange={(e) =>
+                            handlePropertyChange("lineThickness", parseInt(e.target.value, 10))
+                          }
+                        />
+                      </Box>
+                    </Box>
 
-                    <ERPSlider
-                      label="Height"
-                      value={selectedComponent.height}
-                      onChange={(e) =>
-                        handlePropertyChange(
-                          "height",
-                          e.target.valueAsNumber
-                        )
-                      }
-                      min={10}
-                      max={200}
-                    />
-                  </Box>
-                  <Box sx={{ mb: 1 }}>
-                    {selectedComponent.type !== DesignerElementType.barcode && (
+                    <Box sx={{ mb: 1 }}>
+                      <ERPDataCombobox
+                        id="lineType"
+                        data={selectedComponent}
+                        label="lineType"
+                        field={{
+                          id: "lineType",
+                          valueKey: "value",
+                          labelKey: "label",
+                        }}
+                        options={[
+                          { value: "solid", label: "solid" },
+                          { value: "dotted", label: "dotted" },
+                          { value: "dashed", label: "dashed" },
+                        
+                        ]}
+                        onChangeData={(data) =>
+                          handlePropertyChange("lineType", data.lineType)
+                        }
+                      />
+                    </Box>
+
+                    <Box sx={{ mb: 1 }}>
                       <ERPInput
-                        id="height"
-                        type="number"
-                        label="Height"
-                        value={selectedComponent.height}
+                        id="lineColor"
+                        label="Line Color"
+                        type="color"
+                        value={selectedComponent?.lineColor}
                         data={selectedComponent}
                         onChange={(e) =>
                           handlePropertyChange(
-                            "height",
-                            parseInt(e.target.value, 10)
+                            "lineColor",
+                            e.target.value
                           )
                         }
                       />
-                    )}
-                  </Box>
-                  <Box sx={{ mb: 1 }} hidden={selectedComponent.type === DesignerElementType.barcode}>
+                    </Box>
+                  </div>
+                    
+                  )}
 
-                    <ERPDataCombobox
-                      id="font"
-                      data={selectedComponent}
-                      label="Font"
-                      field={{
-                        id: "font",
-                        valueKey: "value",
-                        labelKey: "label",
-                      }}
-                      options={[
-                        { value: "Roboto", label: "Roboto" },
-                        { value: "RobotoMono", label: "RobotoMono" },
-                        { value: "FiraSans", label: "FiraSans" },
+                  {(selectedComponent.type !== DesignerElementType.line && selectedComponent.type !== DesignerElementType.table)&&(
+                      <Box
+                      sx={{ mb: 1 }}
+                      className="flex justify-start gap-2 items-center"
+                    >
+                      <Box className="basis-2/3">
+                        <ERPSlider
+                          label="Height"
+                          value={selectedComponent.height}
+                          onChange={(e) =>
+                            handlePropertyChange("height", e.target.valueAsNumber)
+                          }
+                          min={10}
+                          max={500}
+                        />
+                      </Box>
 
-                      ]}
-                      onChange={(e) =>
-                        handlePropertyChange("font", e.value)
-                      }
-                    />
-                  </Box>
+                      <Box className="basis-1/3">
+                        <ERPInput
+                          id="height"
+                          type="number"
+                          noLabel
+                          value={selectedComponent.height}
+                          data={selectedComponent}
+                          onChange={(e) =>
+                            handlePropertyChange("height", parseInt(e.target.value, 10))
+                          }
+                        />
+                      </Box>
+                    </Box>
+                  )}
+
+                  
                   <Box sx={{ mb: 1 }}>
-                    {selectedComponent.type !== DesignerElementType.barcode && (
+                    {(selectedComponent.type == DesignerElementType.text || selectedComponent.type == DesignerElementType.field  ) && (
                       <div className="flex flex-col gap-2">
+                        <Box sx={{ mb: 1 }}>
+                          <ERPDataCombobox
+                            id="font"
+                            data={selectedComponent}
+                            label="Font"
+                            field={{
+                              id: "font",
+                              valueKey: "value",
+                              labelKey: "label",
+                            }}
+                            options={[
+                              { value: "Roboto", label: "Roboto" },
+                              { value: "RobotoMono", label: "RobotoMono" },
+                              { value: "FiraSans", label: "FiraSans" },
+
+                            ]}
+                            onChange={(e) =>
+                              handlePropertyChange("font", e.value)
+                            }
+                          />
+                          </Box>
                         <Box>
                           <InputLabel
                             sx={{
@@ -1336,10 +1591,6 @@ export default function ExtendedPDFBarcodeDesigner() {
                             max={10}
                           />
                         </Box>
-
-
-
-
 
                         <Box>
                           <ERPSlider
@@ -1580,221 +1831,224 @@ export default function ExtendedPDFBarcodeDesigner() {
                 </Box>
               )}
             </Box>
+           {templateGroup === "barcode" &&(
             <Box hidden={value !== "label"}>
 
-              <Box sx={{ mb: 1 }}>
+            <Box sx={{ mb: 1 }}>
+              <ERPInput
+                id="ColumnsPerRow"
+                label="Columns Per Row"
+                type="number"
+                value={
+                  templateData?.barcodeState?.labelState?.columnsPerRow
+                }
+                data={templateData}
+                onChange={(e) =>
+                  handleLabelPropsChange("columnsPerRow", e.target.value)
+                }
+              />
+            </Box>
+            <Box sx={{ mb: 1 }}>
+              <ERPInput
+                id="rowsPerPage"
+                label="Row Per Page"
+                type="number"
+                value={templateData?.barcodeState?.labelState?.rowsPerPage}
+                data={templateData}
+                onChange={(e) => {
+                  
+                  handleLabelPropsChange("rowsPerPage", e.target.value);
+                }}
+              />
+            </Box>
+            <Box sx={{ mb: 1 }}>
+              <ERPInput
+                id="labelWidth"
+                label="Label Width"
+                value={templateData?.barcodeState?.labelState?.labelWidth}
+                data={templateData}
+                onChange={(e) => {
+                  handleLabelPropsChange("labelWidth", e.target.value);
+                }}
+              />
+            </Box>
+            <Box sx={{ mb: 1 }}>
+              <ERPInput
+                id="labelHeight"
+                label="Label  Height"
+                value={templateData?.barcodeState?.labelState?.labelHeight}
+                data={templateData}
+                onChange={(e) =>
+                  handleLabelPropsChange("labelHeight", e.target.value)
+                }
+              />
+            </Box>
+
+            <Box sx={{ mb: 1 }}>
+              <div className="flex flex-col gap-3">
+                <div className="text-xs">Background Image</div>
                 <ERPInput
-                  id="ColumnsPerRow"
-                  label="Columns Per Row"
-                  type="number"
-                  value={
-                    templateData?.barcodeState?.labelState?.columnsPerRow
-                  }
-                  data={templateData}
-                  onChange={(e) =>
-                    handleLabelPropsChange("columnsPerRow", e.target.value)
-                  }
-                />
-              </Box>
-              <Box sx={{ mb: 1 }}>
-                <ERPInput
-                  id="rowsPerPage"
-                  label="Row Per Page"
-                  type="number"
-                  value={templateData?.barcodeState?.labelState?.rowsPerPage}
-                  data={templateData}
-                  onChange={(e) => {
+                  id='background_image'
+                  type="file"
+                  ref={inputFile}
+                  onChange={(e: any) => {
+
                     
-                    handleLabelPropsChange("rowsPerPage", e.target.value);
+                    if (e.target.files[0].size > 2097152) {
+                      ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
+                    } else {
+
+                      handleImagePropsChange('background_image', e.target.files[0]);
+                    }
                   }}
+                  className={"hidden"}
+                  accept="image/png,image/jpeg"
+                  label="Image"
+
+                  placeholder=" "
                 />
-              </Box>
-              <Box sx={{ mb: 1 }}>
-                <ERPInput
-                  id="labelWidth"
-                  label="Label Width"
-                  value={templateData?.barcodeState?.labelState?.labelWidth}
-                  data={templateData}
-                  onChange={(e) => {
-                    handleLabelPropsChange("labelWidth", e.target.value);
-                  }}
-                />
-              </Box>
-              <Box sx={{ mb: 1 }}>
-                <ERPInput
-                  id="labelHeight"
-                  label="Label  Height"
-                  value={templateData?.barcodeState?.labelState?.labelHeight}
-                  data={templateData}
-                  onChange={(e) =>
-                    handleLabelPropsChange("labelHeight", e.target.value)
-                  }
-                />
-              </Box>
+                <label htmlFor="background_image">
+                  <div
+                    onClick={() => inputFile?.current?.click()}
+                    className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData?.barcodeState?.labelState?.background_image ? "hidden" : ""}`}
+                  >
+                    Choose from Desktop</div>
+                </label>
 
-              <Box sx={{ mb: 1 }}>
-                <div className="flex flex-col gap-3">
-                  <div className="text-xs">Background Image</div>
-                  <ERPInput
-                    id='background_image'
-                    type="file"
-                    ref={inputFile}
-                    onChange={(e: any) => {
-
-                      
-                      if (e.target.files[0].size > 2097152) {
-                        ERPToast.showWith("Maximum file size allowed is 2 MB, please try with different file.", "warning");
-                      } else {
-
-                        handleImagePropsChange('background_image', e.target.files[0]);
-                      }
-                    }}
-                    className={"hidden"}
-                    accept="image/png,image/jpeg"
-                    label="Image"
-
-                    placeholder=" "
-                  />
-                  <label htmlFor="background_image">
+                {templateData?.barcodeState?.labelState?.background_image &&
+                  <>
+                    <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
+                    {templateData?.barcodeState?.labelState?.background_image && <img
+                      draggable={false}
+                      src={templateData?.barcodeState?.labelState?.background_image}
+                      alt="background_image"
+                      height={100} width={100}
+                      className="size-5" />
+                    }
                     <div
-                      onClick={() => inputFile?.current?.click()}
-                      className={`text-xs border rounded px-1 py-2 text-center bg-[#F1F5F9] cursor-pointer ${templateData?.barcodeState?.labelState?.background_image ? "hidden" : ""}`}
+                      className="text-accent text-xs cursor-pointer  max-w-min"
+                      onClick={handleRemoveImage}
                     >
-                      Choose from Desktop</div>
-                  </label>
-
-                  {templateData?.barcodeState?.labelState?.background_image &&
-                    <>
-                      <div className="text-xs bg-[#FEF4EA] px-2 py-2 rounded">Click Save to apply the selected background image</div>
-                      {templateData?.barcodeState?.labelState?.background_image && <img
-                        draggable={false}
-                        src={templateData?.barcodeState?.labelState?.background_image}
-                        alt="background_image"
-                        height={100} width={100}
-                        className="size-5" />
-                      }
-                      <div
-                        className="text-accent text-xs cursor-pointer  max-w-min"
-                        onClick={handleRemoveImage}
-                      >
-                        Remove
-                      </div>
-                      <div className="font-light text-sm">Image Position</div>
-                      <ERPDataCombobox
-                        noLabel
-                        id="bg_image_position"
-                        data={templateData?.barcodeState?.labelState}
-                        defaultValue={templateData?.barcodeState?.labelState?.labelHeight ?? "top left"}
-                        onChange={(e) =>
-                          handleLabelPropsChange("bg_image_position", e.value)
-                        }
-                        field={{
-                          id: "bg_image_position",
-                          valueKey: "value",
-                          labelKey: "label",
-                        }}
-                        options={[
-                          { label: "Top Left", value: "top left" },
-                          { label: "Top Center", value: "top center" },
-                          { label: "Top Right", value: "top right" },
-                          { label: "Center Left", value: "center left" },
-                          { label: "Center Center", value: "center center" },
-                          { label: "Center Right", value: "center right" },
-                          { label: "Bottom Left", value: "bottom left" },
-                          { label: "Bottom Center", value: "bottom center" },
-                          { label: "Bottom Right", value: "bottom right" },
-                          { label: "Stretch", value: "stretch" },
-                          { label: "Contain", value: "contain" },
-                          { label: "Cover", value: "cover" }
-                        ]}
-                      />
-
-                    </>}
-                </div>
-              </Box>
-              <Box sx={{ mb: 1 }}>
-                <InputLabel
-                  sx={{
-                    textTransform: "capitalize",
-                    marginBottom: "0.25rem",
-                    display: "block",
-                    fontSize: "0.75rem",
-                    color: "rgb(17, 24, 39)",
-                    textAlign: "left",
-                    direction: "rtl",
-                  }}
-                  htmlFor="margin"
-                >
-                  Padding (pt)
-                </InputLabel>
-                <Box
-                  display="grid"
-                  gridTemplateColumns="repeat(2, 1fr)"
-                  gap={2}
-                >
-                  {(["top", "left", "right", "bottom"] as PaddingMarginSides[]).map((side) => (
-                    <ERPInput
-                      id={side}
-                      label={side.charAt(0).toUpperCase() + side.slice(1)}
-                      key={side}
-                      type="number"
-                      placeholder={
-                        side.charAt(0).toUpperCase() + side.slice(1)
-                      }
-                      value={templateData?.barcodeState?.labelState?.padding?.[side]}
+                      Remove
+                    </div>
+                    <div className="font-light text-sm">Image Position</div>
+                    <ERPDataCombobox
+                      noLabel
+                      id="bg_image_position"
                       data={templateData?.barcodeState?.labelState}
+                      defaultValue={templateData?.barcodeState?.labelState?.labelHeight ?? "top left"}
                       onChange={(e) =>
-                        handleLabelPropsChange("padding", {
-                          ...templateData?.barcodeState?.labelState?.padding,
-                          [side]: parseInt(e.target.value),
-                        })
+                        handleLabelPropsChange("bg_image_position", e.value)
                       }
+                      field={{
+                        id: "bg_image_position",
+                        valueKey: "value",
+                        labelKey: "label",
+                      }}
+                      options={[
+                        { label: "Top Left", value: "top left" },
+                        { label: "Top Center", value: "top center" },
+                        { label: "Top Right", value: "top right" },
+                        { label: "Center Left", value: "center left" },
+                        { label: "Center Center", value: "center center" },
+                        { label: "Center Right", value: "center right" },
+                        { label: "Bottom Left", value: "bottom left" },
+                        { label: "Bottom Center", value: "bottom center" },
+                        { label: "Bottom Right", value: "bottom right" },
+                        { label: "Stretch", value: "stretch" },
+                        { label: "Contain", value: "contain" },
+                        { label: "Cover", value: "cover" }
+                      ]}
                     />
-                  ))}
-                </Box>
-              </Box>
-              <Box sx={{ mb: 1 }}>
-                <InputLabel
-                  sx={{
-                    textTransform: "capitalize",
-                    marginBottom: "0.25rem",
-                    display: "block",
-                    fontSize: "0.75rem",
-                    color: "rgb(17, 24, 39)",
-                    textAlign: "left",
-                    direction: "rtl",
-                  }}
-                  htmlFor="margin"
-                >
-                  Gap (pt)
-                </InputLabel>
-                <Box
-                  display="grid"
-                  gridTemplateColumns="repeat(2, 1fr)"
-                  gap={2}
-                >
-                  {(["hgap", "vgap",] as GapSides[]).map((side) => (
-                    <ERPInput
-                      id={side}
-                      label={side.charAt(0).toUpperCase() + side.slice(1)}
-                      key={side}
-                      type="number"
-                      placeholder={
-                        side.charAt(0).toUpperCase() + side.slice(1)
-                      }
-                      value={templateData?.barcodeState?.labelState?.gap?.[side]}
-                      data={templateData?.barcodeState?.labelState}
-                      onChange={(e) =>
-                        handleLabelPropsChange("gap", {
-                          ...templateData?.barcodeState?.labelState?.gap,
-                          [side]: parseInt(e.target.value),
-                        })
-                      }
-                    />
-                  ))}
-                </Box>
+
+                  </>}
+              </div>
+            </Box>
+            <Box sx={{ mb: 1 }}>
+              <InputLabel
+                sx={{
+                  textTransform: "capitalize",
+                  marginBottom: "0.25rem",
+                  display: "block",
+                  fontSize: "0.75rem",
+                  color: "rgb(17, 24, 39)",
+                  textAlign: "left",
+                  direction: "rtl",
+                }}
+                htmlFor="margin"
+              >
+                Padding (pt)
+              </InputLabel>
+              <Box
+                display="grid"
+                gridTemplateColumns="repeat(2, 1fr)"
+                gap={2}
+              >
+                {(["top", "left", "right", "bottom"] as PaddingMarginSides[]).map((side) => (
+                  <ERPInput
+                    id={side}
+                    label={side.charAt(0).toUpperCase() + side.slice(1)}
+                    key={side}
+                    type="number"
+                    placeholder={
+                      side.charAt(0).toUpperCase() + side.slice(1)
+                    }
+                    value={templateData?.barcodeState?.labelState?.padding?.[side]}
+                    data={templateData?.barcodeState?.labelState}
+                    onChange={(e) =>
+                      handleLabelPropsChange("padding", {
+                        ...templateData?.barcodeState?.labelState?.padding,
+                        [side]: parseInt(e.target.value),
+                      })
+                    }
+                  />
+                ))}
               </Box>
             </Box>
+            <Box sx={{ mb: 1 }}>
+              <InputLabel
+                sx={{
+                  textTransform: "capitalize",
+                  marginBottom: "0.25rem",
+                  display: "block",
+                  fontSize: "0.75rem",
+                  color: "rgb(17, 24, 39)",
+                  textAlign: "left",
+                  direction: "rtl",
+                }}
+                htmlFor="margin"
+              >
+                Gap (pt)
+              </InputLabel>
+              <Box
+                display="grid"
+                gridTemplateColumns="repeat(2, 1fr)"
+                gap={2}
+              >
+                {(["hgap", "vgap",] as GapSides[]).map((side) => (
+                  <ERPInput
+                    id={side}
+                    label={side.charAt(0).toUpperCase() + side.slice(1)}
+                    key={side}
+                    type="number"
+                    placeholder={
+                      side.charAt(0).toUpperCase() + side.slice(1)
+                    }
+                    value={templateData?.barcodeState?.labelState?.gap?.[side]}
+                    data={templateData?.barcodeState?.labelState}
+                    onChange={(e) =>
+                      handleLabelPropsChange("gap", {
+                        ...templateData?.barcodeState?.labelState?.gap,
+                        [side]: parseInt(e.target.value),
+                      })
+                    }
+                  />
+                ))}
+              </Box>
+            </Box>
+            </Box>
+           )} 
+           
 
             <Box hidden={value !== "page"}>
               <Box sx={{ spaceY: 2 }}>

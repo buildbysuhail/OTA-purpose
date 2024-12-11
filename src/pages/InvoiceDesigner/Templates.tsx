@@ -343,7 +343,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
       ));
-    templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    // templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+     navigate(`/label-designer/new?template_group=${templateGroup}`) 
+
   };
 
   return (

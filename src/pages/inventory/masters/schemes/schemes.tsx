@@ -182,6 +182,15 @@ const MemoizedSchemesManage = useMemo(() => React.memo(SchemesManage), []);
               view={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               edit={{ type: "popup", action: () => toggleSchemes({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleSchemes({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.vehicles,key:cellElement?.data?.id
@@ -193,7 +202,9 @@ const MemoizedSchemesManage = useMemo(() => React.memo(SchemesManage), []);
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleSchemes({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -208,6 +219,11 @@ const MemoizedSchemesManage = useMemo(() => React.memo(SchemesManage), []);
                   gridId="grd_schemes"
                   popupAction={toggleSchemes}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleSchemes({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.schemes?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

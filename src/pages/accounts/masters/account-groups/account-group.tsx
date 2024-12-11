@@ -4,10 +4,7 @@ import ERPModal from "../../../../components/ERPComponents/erp-modal";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import { toggleAccountGroupPopup } from "../../../../redux/slices/popup-reducer";
 import Urls from "../../../../redux/urls";
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "../../../../utilities/hooks/useAppDispatch";
+import {  useAppDispatch,  useAppSelector,} from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import { AccountGroupManage } from "./account-group-manage";
@@ -278,7 +275,7 @@ const AccountGroupType = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          // dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: false }));
+          dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedAccountGroupManage />}
       />

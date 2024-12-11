@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
@@ -158,6 +158,9 @@ const Users = () => {
       },
     }
   ], []);
+  useEffect(() => {
+    dispatch(toggleUserPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6 bg-[#fafafa]">
@@ -171,6 +174,11 @@ const Users = () => {
                 gridId="grd_users"
                 popupAction={toggleUserPopup}
                 gridAddButtonType="popup"
+                changeReload={(reload: any) => {
+                  dispatch(
+                    toggleUserPopup({ ...rootState, reload: reload })
+                  );
+                }}
                 reload={rootState?.PopupData?.user?.reload}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}

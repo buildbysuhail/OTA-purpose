@@ -202,6 +202,15 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
               view={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID,reload: false }) }}
               edit={{ type: "popup", action: () => toggleProductGroup({ isOpen: true, key: cellElement?.data?.productGroupID,reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleProductGroup({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.productGroup,key:cellElement?.data?.id
@@ -213,7 +222,9 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleProductGroup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -228,6 +239,11 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(ProductGroupManage),
                   gridId="grd_productGroup"
                   popupAction={toggleProductGroup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleProductGroup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.productGroup?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

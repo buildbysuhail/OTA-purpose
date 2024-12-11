@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -11,7 +11,6 @@ import { useTranslation } from "react-i18next";
 import { PartyCategoryManage } from "./party-category-manage";
 
 const PartyCategory = () => {
-
   const MemoizedPartyCategoryManage = useMemo(() => React.memo(PartyCategoryManage), []);
   const dispatch = useAppDispatch();
   const { t } = useTranslation("masters");
@@ -104,8 +103,7 @@ const PartyCategory = () => {
             type: "popup",
             action: () =>
               togglePartyCategoryPopup({
-                isOpen: true,
-                key: cellElement?.data?.id,reload: false
+                isOpen: true, key: cellElement?.data?.id, reload: false
               }),
           }}
           edit={{
@@ -113,10 +111,19 @@ const PartyCategory = () => {
             action: () =>
               togglePartyCategoryPopup({
                 isOpen: true,
-                key: cellElement?.data?.id,reload: false
+                key: cellElement?.data?.id, reload: false
               }),
           }}
           delete={{
+            onSuccess: () => {
+              dispatch(
+                togglePartyCategoryPopup({
+                  isOpen: false,
+                  key: null,
+                  reload: true,
+                })
+              );
+            },
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.account_party_category,
@@ -126,6 +133,9 @@ const PartyCategory = () => {
       ),
     },
   ];
+  useEffect(() => {
+    dispatch(togglePartyCategoryPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -139,6 +149,11 @@ const PartyCategory = () => {
                 gridId="grd__party_category"
                 popupAction={togglePartyCategoryPopup}
                 gridAddButtonType="popup"
+                changeReload={(reload: any) => {
+                  dispatch(
+                    togglePartyCategoryPopup({ ...rootState, reload: reload })
+                  );
+                }}
                 reload={rootState?.PopupData?.partyCategory?.reload}
                 gridAddButtonIcon="ri-add-line"
                 pageSize={40}
@@ -153,7 +168,7 @@ const PartyCategory = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(togglePartyCategoryPopup({ isOpen: false, key: null,reload: false }));
+          dispatch(togglePartyCategoryPopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedPartyCategoryManage />}
       />

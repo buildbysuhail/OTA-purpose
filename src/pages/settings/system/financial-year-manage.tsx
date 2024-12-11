@@ -59,7 +59,6 @@ export const FinancialYearManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const { t } = useTranslation("system");
-
   const {
     isEdit,
     handleSubmit,
@@ -70,14 +69,12 @@ export const FinancialYearManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<FinancialYearData>({
     url: Urls.FinancialYear,
-    onClose:useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleFinancialYearPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.financialYear.key,
     useApiClient: true,
     initialData: initialFinancialYearData
   });
-
-
 
   return (
     <div className="w-full pt-4">
@@ -94,21 +91,21 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("dateTo", data.dateTo)}
         />
-           <ERPDataCombobox
-           {...getFieldProps("fStatus")}
-            field={{
-              id: "fStatus",
-              valueKey: "value",
-              labelKey: "label",
-            }}
-            onChangeData={(data: any) => handleFieldChange("fStatus", data.fStatus)}
-            label={t('status')}
-            options={[
+        <ERPDataCombobox
+          {...getFieldProps("fStatus")}
+          field={{
+            id: "fStatus",
+            valueKey: "value",
+            labelKey: "label",
+          }}
+          onChangeData={(data: any) => handleFieldChange("fStatus", data.fStatus)}
+          label={t('status')}
+          options={[
             { value: 'Active', label: t('active') },
             { value: 'Inactive', label: t('inactive') },
             { value: 'Progress', label: t('progress') },
-            ]}
-          />
+          ]}
+        />
         <ERPInput
           {...getFieldProps("remarks")}
           label={t("remarks")}
@@ -124,14 +121,13 @@ export const FinancialYearManage: React.FC = React.memo(() => {
           required={false}
           onChangeData={(data: any) => handleFieldChange("openingStockValue", data.openingStockValue)}
         />
-   
-       
-         
-        <ERPCheckbox
-          {...getFieldProps('visibleOnStartUp')}
-          label={t("visible_on_startUp")}
-          onChangeData={(data: any) => handleFieldChange('visibleOnStartUp', data.visibleOnStartUp)}
-        />
+        <div className="flex items-center">
+          <ERPCheckbox
+            {...getFieldProps('visibleOnStartUp')}
+            label={t("visible_on_startUp")}
+            onChangeData={(data: any) => handleFieldChange('visibleOnStartUp', data.visibleOnStartUp)}
+          />
+        </div>
       </div>
       <ERPFormButtons
         onClear={handleClear}

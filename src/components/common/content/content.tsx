@@ -122,6 +122,7 @@ const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-repor
 const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
 const OpeningStock = lazy(() => import('../../../pages/accounts/reports/tax-report/opening-stock/opening-stock-report'));
 const StockFlow = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-flow/stock-flow-report'));
+const TransactionAnalysisReport = lazy(() => import('../../../pages/inventory/reports/transaction-analysis-report/transaction-analysis-report'));
 
 interface ContentProps { }
 const loading = (
@@ -225,8 +226,8 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/day_book_summary" element={<DayBookSummary />} />
         <Route path="/accounts/payment_report" element={<PaymentReport />} />
         <Route path="/accounts/collection_report" element={<CollectionReport />} />
-        <Route path="/accounts/cash_summary" element={<CashSummary/>} />
-        <Route path="/accounts/cash_summary_ledgerwise" element={<CashSummaryLedgerwise/>} />
+        <Route path="/accounts/cash_summary" element={<CashSummary />} />
+        <Route path="/accounts/cash_summary_ledgerwise" element={<CashSummaryLedgerwise />} />
         <Route path="/accounts/transaction_report" element={<TransactionReport />} />
         <Route path="/accounts/transaction_history_accounts" element={<AccountsHistoryReport />} />
         <Route path="/accounts/transaction_history_inventory" element={<InventoryHistoryReport />} />
@@ -253,6 +254,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/inventory/daily_balance_report" element={<DailyBalanceAmount />} />
         <Route path="/inventory/opening_stock_report" element={<OpeningStock />} />
         <Route path="/inventory/stock_flow_report" element={<StockFlow />} />
+        <Route path="/inventory/transaction_analysis_report" element={<TransactionAnalysisReport />} />
 
 
         {/* Reports - Tax*/}

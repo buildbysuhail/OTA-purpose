@@ -171,6 +171,15 @@ const UnitOfMeasure = () => {
             view={{ type: "popup", action: () => toggleUnitOfMeasure({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             edit={{ type: "popup", action: () => toggleUnitOfMeasure({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             delete={{
+              onSuccess: () => {
+                dispatch(
+                  toggleUnitOfMeasure({
+                    isOpen: false,
+                    key: null,
+                    reload: true,
+                  })
+                );
+              },
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
               url: Urls?.unitOfMeasure, key: cellElement?.data?.id
@@ -181,7 +190,9 @@ const UnitOfMeasure = () => {
     },
   ],
   []);
-
+  useEffect(() => {
+    dispatch(toggleUnitOfMeasure({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -196,6 +207,11 @@ const UnitOfMeasure = () => {
                   gridId="grd_unitOfMeasure"
                   popupAction={toggleUnitOfMeasure}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleUnitOfMeasure({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.unitOfMeasure?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

@@ -13,7 +13,6 @@ import { CounterManage } from "./counters-manage";
 
 
 const Counters = () => {
-  
 const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
   const { t } = useTranslation("system");
   const dispatch = useAppDispatch();
@@ -135,6 +134,15 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
               view={{ type: "popup", action: () => toggleCounterPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               edit={{ type: "popup", action: () => toggleCounterPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleCounterPopup({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.Counter,key:cellElement?.data?.id
@@ -146,7 +154,9 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleCounterPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -161,6 +171,11 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
                   gridId="grd_counter"
                   popupAction={toggleCounterPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleCounterPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.counter?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>

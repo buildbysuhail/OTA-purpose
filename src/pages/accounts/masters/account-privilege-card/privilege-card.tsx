@@ -166,6 +166,15 @@ const PrivilegeCard = () => {
           view={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID,reload: false }) }}
           edit={{ type: "popup", action: () => togglePrivilegeCardPopup({ isOpen: true, key: cellElement?.data?.privilegeCardsID,reload: false }) }}
           delete={{
+            onSuccess: () => {
+              dispatch(
+                togglePrivilegeCardPopup({
+                  isOpen: false,
+                  key: null,
+                  reload: true,
+                })
+              );
+            },
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.account_privilege_card,
@@ -175,7 +184,9 @@ const PrivilegeCard = () => {
       ),
     },
   ], [t]);
-
+  useEffect(() => {
+    dispatch(togglePrivilegeCardPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -190,6 +201,11 @@ const PrivilegeCard = () => {
                   gridId="grd_privilege_card"
                   popupAction={togglePrivilegeCardPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      togglePrivilegeCardPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.privilegeCard?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

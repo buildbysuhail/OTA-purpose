@@ -66,6 +66,7 @@ export const ReportsMenuItems = [
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/daily_balance_report`, type: 'link', active: false, selected: false, title: 'daily_balance_report'},
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/opening_stock_report`, type: 'link', active: false, selected: false, title: 'opening_stock_report'},
       { path: `${import.meta.env.BASE_URL}reports/_/inventory/stock_flow_report`, type: 'link', active: false, selected: false, title: 'stock_flow_report'},
+      { path: `${import.meta.env.BASE_URL}reports/_/inventory/transaction_analysis_report`, type: 'link', active: false, selected: false, title: 'transaction_analysis_report'},
 
     ]
   },

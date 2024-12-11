@@ -24,8 +24,8 @@ const TransactionAnalysisReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      minWidth: 100,
+      allowSorting: true,
+      width: 200,
     },
     {
       dataField: "month",
@@ -33,18 +33,16 @@ const TransactionAnalysisReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      minWidth: 200,
+      allowSorting: true,
+      width: 200,
     },
     {
       dataField: "sales",
-      caption:  t("sales"),
+      caption: t("sales"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      width: 150,
-      visible:false
+      allowSorting: true,
     },
     {
       dataField: "purchase",
@@ -52,20 +50,18 @@ const TransactionAnalysisReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      width: 150,
-      visible:false
+      allowSorting: true,
+      width: 200,
     },
- 
+
     {
       dataField: "expense",
       caption: t("expense"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      width: 150,
-      visible:false
+      allowSorting: true,
+      width: 200,
     },
     {
       dataField: "income",
@@ -73,19 +69,17 @@ const TransactionAnalysisReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      width: 150,
-      visible:false
+      allowSorting: true,
+      width: 200,
     },
     {
       dataField: "A/CPayable",
       caption: t("a/c_payable"),
-      dataType: "number",
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      width: 150,
-      visible:false
+      allowSorting: true,
+      width: 200,
     },
     {
       dataField: "A/CReceivable",
@@ -93,64 +87,33 @@ const TransactionAnalysisReport = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      allowSorting:true,
-      width: 150,
-      visible:false
+      allowSorting: true,
+      width: 200,
     },
-    
-   
-    
-    // {
-    //   dataField: "actions",
-    //   caption: t("actions"),
-    //   allowSearch: false,
-    //   allowFiltering: false,
-    //   fixed: true,
-    //   fixedPosition: "right",
-    //   width: 180,
-    //   cellRender: (cellElement: any, cellInfo: any) => (
-    //     <ERPGridActions
-    //       view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: false, key: cellInfo?.data?.id }) }}
-    //       delete={{
-    //         confirmationRequired: true,
-    //         confirmationMessage: "Are you sure you want to delete this item?",
-    //         // action: () => handleDelete(cellInfo?.data?.id),
-    //       }}
-    //     />
-    //   ),
-    // },
   ];
   return (
     <Fragment>
-     <div className="grid grid-cols-12 gap-x-6">
+      <div className="grid grid-cols-12 gap-x-6">
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
-              <ErpDevGrid
+                <ErpDevGrid
                   columns={columns}
-                  gridHeader={t("ledger_report")}
-                  dataUrl= {Urls.inv_reports_price_list}
+                  gridHeader={t("transaction_analysis_report")}
+                  dataUrl={Urls.inv_reports_price_list}
                   hideGridAddButton={true}
-                  enablefilter={true}
-                  showFilterInitially={true}
+                  enablefilter={false}
                   method={ActionType.POST}
-                  filterContent={<PriceListReportFilter/>}
-                  filterInitialData={PriceListReportFilterInitialState}
-                  reload={true} 
-                  gridId="grd_cost_centre"
-                ></ErpDevGrid>
+                  reload={true}
+                  gridId="grd_cost_centre">
+                </ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
       </div>
-      
-    
-      
     </Fragment>
   );
 };
-
 export default TransactionAnalysisReport;

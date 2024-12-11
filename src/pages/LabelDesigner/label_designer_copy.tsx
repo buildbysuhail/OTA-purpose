@@ -329,7 +329,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    debugger;
+    
     e.preventDefault();
     const componentType = parseInt(
       e.dataTransfer.getData("componentType")
@@ -427,7 +427,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   };
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
-    debugger;
+    
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
       setDraggingComponent(component);

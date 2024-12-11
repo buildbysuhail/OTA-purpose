@@ -152,9 +152,18 @@ const MemoizedSalesRouteManage = useMemo(() => React.memo(SalesRouteManage), [])
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+              edit={{ type: "popup", action: () => toggleSalesRoute({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleSalesRoute({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.salesRoute,key:cellElement?.data?.id
@@ -166,7 +175,9 @@ const MemoizedSalesRouteManage = useMemo(() => React.memo(SalesRouteManage), [])
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleSalesRoute({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -181,6 +192,11 @@ const MemoizedSalesRouteManage = useMemo(() => React.memo(SalesRouteManage), [])
                   gridId="grd_salesRoute"
                   popupAction={toggleSalesRoute}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleSalesRoute({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.salesRoute?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

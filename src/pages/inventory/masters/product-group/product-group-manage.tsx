@@ -25,7 +25,7 @@ export const ProductGroupManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<ProductGroupData>({
     url: Urls.productGroup,
-    onClose:useCallback(() => dispatch(toggleProductGroup({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleProductGroup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleProductGroup({ isOpen: false, key: null, reload: true })),
       [dispatch]

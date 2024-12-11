@@ -134,7 +134,7 @@ const handleClear = async ()=>{
         <div className="xxl:col-span-12 xl:col-span-12 col-span-12">
           <div className="p-4">
           <h1 className='text-2xl font-normal tracking-wide text-#3f3f46 dark:te'>{t("counter_settings")}</h1>
-          <div className="grid grid-cols-1 space-y-4 md:w-[550px] mb-3">
+          <div className="grid grid-cols-1 gap-4 md:w-[550px] my-3">
                 <ErpInput
                 // labelDirection="horizontal"
                  className="w-full"

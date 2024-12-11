@@ -128,9 +128,18 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id })}}
-              edit={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id })}}
+              view={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id,reload: false })}}
+              edit={{ type: "popup", action: () => togglePriceCategory({ isOpen: true, key: cellElement?.data?.id,reload: false })}}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    togglePriceCategory({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.priceCategory,key:cellElement?.data?.id
@@ -142,7 +151,9 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(togglePriceCategory({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -157,6 +168,11 @@ const MemoizedPriceCategoryManage = useMemo(() => React.memo(PriceCategoryManage
                   gridId="priceCategory"
                   popupAction={togglePriceCategory}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      togglePriceCategory({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.priceCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

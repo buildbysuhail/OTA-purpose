@@ -136,9 +136,18 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+              edit={{ type: "popup", action: () => toggleSection({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleSection({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.section,key:cellElement?.data?.id
@@ -150,7 +159,9 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleSection({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -165,6 +176,11 @@ const MemoizedSectionManage = useMemo(() => React.memo(SectionManage), []);
                   gridId="grd_section"
                   popupAction={toggleSection}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleSection({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.section?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

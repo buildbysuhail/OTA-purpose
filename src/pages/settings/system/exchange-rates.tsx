@@ -330,7 +330,7 @@ const ExchangeRates = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null }));
+          dispatch(toggleCurrencyMasterPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedCurrencyMasterManage />}
       />

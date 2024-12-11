@@ -38,11 +38,11 @@ const HeadersAndFooters : React.FC = React.memo(() => {
     const { isEdit, handleClear, handleSubmit, handleFieldChange, getFieldProps, isLoading,handleClose } =
       useFormManager<HeadersAndFootersInf>({
         url: Urls.headers_footers,
-        onClose:useCallback(() => dispatch(toggleHeaderFooterPopup({ isOpen: false, key: null,})), [dispatch]),
+        onClose:useCallback(() => dispatch(toggleHeaderFooterPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
         onSuccess: useCallback(
           () =>
             dispatch(
-              toggleHeaderFooterPopup({ isOpen: false, key: null })
+              toggleHeaderFooterPopup({ isOpen: false, key: null,reload: false })
             ),
           [dispatch]
         ),

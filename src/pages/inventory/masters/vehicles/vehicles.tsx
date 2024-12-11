@@ -191,9 +191,18 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+              edit={{ type: "popup", action: () => toggleVehicles({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleVehicles({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.vehicles,key:cellElement?.data?.id
@@ -205,7 +214,9 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleVehicles({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -220,6 +231,11 @@ const MemoizedVehiclesManage = useMemo(() => React.memo(VehiclesManage), []);
                   gridId="grd_vehicles"
                   popupAction={toggleVehicles}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleVehicles({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.vehicles?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

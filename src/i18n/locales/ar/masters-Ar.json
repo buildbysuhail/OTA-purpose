@@ -170,5 +170,15 @@
    "group_order": "ترتيب المجموعة (في ميزان المراجعة)",
    "print_label": "طباعة الملصق",
    "address_2_city": "العنوان 2/المدينة",
-   "address3_district": "العنوان 3/المنطقة"
+   "address3_district": "العنوان 3/المنطقة",
+
+   "enter_code": "أدخل الرمز",
+   "enter_name": "أدخل الاسم",
+   "enter_alias_name": "أدخل الاسم المستعار",
+   "enter_name_in_arabic": "أدخل الاسم باللغة العربية",
+   "enter_remarks": "أدخل الملاحظات",
+   "enter_cost_centre_name": "أدخل اسم مركز التكلفة",
+   "enter_short_name": "أدخل الاسم المختصر",
+   "additional_number": "رقم إضافي",
+   "country_sub_division": "التقسيم الفرعي للبلد"
 }

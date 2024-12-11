@@ -49,7 +49,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         ),
       [dispatch]
     ),
-    onClose: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleAccountGroupPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.accountGroup.key,
     useApiClient: true,
     initialData: initialAccountGroup,
@@ -145,13 +145,13 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             />
           </>
         }
-
+        <div className="flex items-center">
+          <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleGroupOrder({ isOpen: true })) }}
+            className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">{t("group_order")}
+          </a>
+        </div>
       </div>
-      <div className="flex justify-between my-2 items-center">
         {/* Link that triggers the modal */}
-        <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleGroupOrder({ isOpen: true })) }}
-          className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">{t("group_order")}
-        </a>
         <ERPFormButtons
           onClear={handleClear}
           submitDisabled={!formState?.data?.isEditable}
@@ -160,7 +160,6 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onCancel={handleClose}
           onSubmit={handleSubmit}
         />
-      </div>
 
       <ERPModal
         isForm={true}

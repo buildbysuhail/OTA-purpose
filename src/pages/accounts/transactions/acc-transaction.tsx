@@ -201,7 +201,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         );
         fetchVoucherNumber();
         if (voucherType == "CP" || voucherType == "CR") {
-          debugger;
+          
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -357,7 +357,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       voucherType,
       voucherPrefix
     );
-    debugger;
+    
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
         fields: {

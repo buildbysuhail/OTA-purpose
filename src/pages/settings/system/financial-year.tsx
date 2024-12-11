@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
@@ -15,7 +15,6 @@ const FinancialYear = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation("system");
   const rootState = useRootState();
-
   const columns: DevGridColumn[] = useMemo(() => [
     {
       dataField: "siNo",
@@ -143,9 +142,18 @@ const FinancialYear = () => {
 
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            view={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleFinancialYearPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
             delete={{
+              onSuccess: () => {
+                dispatch(
+                  toggleFinancialYearPopup({
+                    isOpen: false,
+                    key: null,
+                    reload: true,
+                  })
+                );
+              },
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
               url:Urls?.FinancialYear,key:cellElement?.data?.id
@@ -155,6 +163,9 @@ const FinancialYear = () => {
       },
     }
   ], []);
+  useEffect(() => {
+    dispatch(toggleFinancialYearPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -169,6 +180,11 @@ const FinancialYear = () => {
                   gridId="grd_fin_year"
                   popupAction={toggleFinancialYearPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleFinancialYearPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.financialYear?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
@@ -183,7 +199,7 @@ const FinancialYear = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleFinancialYearPopup({ isOpen: false, key: null }));
+          dispatch(toggleFinancialYearPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedFinancialYearManage />}
       />

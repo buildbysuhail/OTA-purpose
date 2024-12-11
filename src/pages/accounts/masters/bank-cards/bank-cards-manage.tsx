@@ -24,7 +24,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
   } = useFormManager<BankCardsData>({
     url: Urls.bankCards,
     onSuccess: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
-    onClose: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleBankCardsPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     key: rootState.PopupData.bankCard.key,
     keyField: "paymentTypeID",
     useApiClient: true,
@@ -45,7 +45,7 @@ export const BankCardsManage: React.FC = React.memo(() => {
             labelKey: "label",
           }}
           onChange={(data: any) => {
-            debugger;
+            
             handleFieldChange({ paymentType: data.value, paymentName: data.label })
           }}
           label={t("bank_cards")}

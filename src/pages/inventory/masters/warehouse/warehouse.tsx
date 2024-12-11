@@ -147,9 +147,18 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
         cellRender: (cellElement: any) => {
           return (
             <ERPGridActions
-              view={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id }) }}
-              edit={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id }) }}
+              view={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+              edit={{ type: "popup", action: () => toggleWarehouse({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleWarehouse({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.Warehouse,key:cellElement?.data?.id
@@ -161,7 +170,9 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleWarehouse({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -176,6 +187,11 @@ const MemoizedWarehouseManage = useMemo(() => React.memo(WarehouseManage), []);
                   gridId="grd_Warehouse"
                   popupAction={toggleWarehouse}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleWarehouse({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.warehouse?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

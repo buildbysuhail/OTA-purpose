@@ -142,7 +142,7 @@ export default function SettingsPage() {
   ) => {
     let targetElement: HTMLElement | null = null;
     if (subItemsCatKey) {
-      debugger;
+      
       targetElement = subItemsCatRef.current[subItemsCatKey];
       setActiveSubCatItem(subItemsCatKey);
       setBlinkSection(subItemsCatKey);
@@ -315,7 +315,7 @@ export default function SettingsPage() {
                   userSession.countryId === Countries.India)
             )) {
               const subElement = subItemsRef.current[setting.key];
-              debugger;
+              
               if (
                 subElement ||
                 (setting.subSettings != undefined &&
@@ -332,7 +332,7 @@ export default function SettingsPage() {
                   scrollPosition < subOffsetTop + subOffsetHeight
                 ) {
                   if (setting.key.includes("inventory")) {
-                    debugger;
+                    
                   }
                   setActiveSubItem(setting.key);
                   setBlinkSection(setting.key);

@@ -8,7 +8,7 @@ import { UserRight } from "../settings/userManagement/data";
 import { setUserRights, UserTypeRights } from "../../redux/slices/user-rights/reducer";
 export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   dispatch(setDirection(locale.rtl ? "rtl" : "ltr"));
-  debugger;
+  
   dispatch(setLocale(locale));
 
   localStorage.setItem("ynexltr", locale.rtl ? "rtl" : "ltr");
@@ -21,7 +21,7 @@ export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSe
   dispatch(setUserRights(userRights));
 
   setLanguage(dispatch, locale);
-debugger;
+
   dispatch(setInputBox(res.inputBox));
   dispatch(setScrollbarWidth(res.scrollbarWidth));
   dispatch(setScrollbarColor(res.scrollbarColor));

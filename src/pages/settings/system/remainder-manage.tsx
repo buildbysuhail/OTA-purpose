@@ -23,7 +23,7 @@ export const RemainderManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<RemainderData>({
     url: Urls.Remainder,
-    onClose:useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleRemainderPopup({ isOpen: false, key: null, reload: true  })), [dispatch]),
     key: rootState.PopupData.reminder.key,
     keyField:"remaindersID",

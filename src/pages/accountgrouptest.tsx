@@ -202,7 +202,7 @@ const AccountGroupTypeTest = () => {
                 action: () =>
                   toggleAccountGroupPopup({
                     isOpen: true,
-                    key: cellElement?.data?.id,
+                    key: cellElement?.data?.id,reload: false
                   }),
               }}
               edit={{
@@ -210,7 +210,7 @@ const AccountGroupTypeTest = () => {
                 action: () =>
                   toggleAccountGroupPopup({
                     isOpen: true,
-                    key: cellElement?.data?.id,
+                    key: cellElement?.data?.id,reload: false
                   }),
               }}
               delete={{
@@ -255,7 +255,7 @@ const AccountGroupTypeTest = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleAccountGroupPopup({ isOpen: false, key: null }));
+          dispatch(toggleAccountGroupPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedAccountGroupManage />}
       />

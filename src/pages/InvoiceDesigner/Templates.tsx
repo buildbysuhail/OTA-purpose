@@ -114,7 +114,7 @@ const Templates = ({ }) => {
   };
 
   useEffect(() => {
-    debugger;
+    
     setTempData([]);
     getTemplates();
   }, [templateGroup]);
@@ -343,7 +343,9 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
       setTemplate(
         _template
       ));
-    templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+    // templateGroup == "barcode" ? navigate(`/label-designer/new?template_group=${templateGroup}`) : navigate(`/invoice_designer/new?template_group=${templateGroup}`);
+     navigate(`/label-designer/new?template_group=${templateGroup}`) 
+
   };
 
   return (
@@ -362,7 +364,7 @@ const ChooseTemplate = ({ templateGroup, setShowTemplateListing, tempData }: Cho
         <div className="flex gap-4 flex-wrap p-5">
           {tempData
             ?.map((template: TemplateState, index: number) => {
-              debugger;
+              
               const paperSize = template?.propertiesState?.pageSize;
               const thumbImage = paperSize === "3Inch" || paperSize === "4Inch" ? retailStdTempImage : stdTempImage;
               return (

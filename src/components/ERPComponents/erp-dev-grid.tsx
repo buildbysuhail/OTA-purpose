@@ -117,6 +117,7 @@ interface ERPDevGridProps {
   initialPreferences?: GridPreference;
   paramNames?: string[];
   reload?: boolean;
+  changeReload?: (action: boolean) => void;
   showFilterInitially?: boolean;
   childPopupProps?: {
     title: string,
@@ -130,7 +131,7 @@ interface ERPDevGridProps {
   }
 }
 const api = new APIClient();
-const createStore = (
+const createStore = async (
   keyExpr: string | string[] | undefined,
   dataUrl: string,
   enablefilter: boolean,
@@ -142,7 +143,6 @@ const createStore = (
   paramNames: string[] = ["skip", "take", "requireTotalCount", "sort", "filter"],
   bodyProps?: any,
 ) => {
-
   return new CustomStore({
     key: keyExpr,
     load: async (loadOptions: any) => {
@@ -164,27 +164,36 @@ const createStore = (
             JSON.stringify(loadOptions[paramName])
           ])
       );
+
       // Append filterData to params
-      if (enablefilter == true && filterData != undefined && filterData != null) {
+      if (enablefilter && filterData) {
         Object.entries(filterData).forEach(([key, value]) => {
           params[key] = JSON.stringify(value);
         });
       }
+
       const queryString = new URLSearchParams(params).toString();
+
       try {
-        const result = method == ActionType.GET ? await api.get(dataUrl, queryString) : method == ActionType.POST ? await api.postAsync(dataUrl, filterData != undefined && filterData != null ? filterData : postData ? postData : {}, queryString) : null;
+        const result = method === ActionType.GET
+          ? await api.get(dataUrl, queryString)
+          : method === ActionType.POST
+          ? await api.postAsync(dataUrl, filterData ?? postData ?? {}, queryString)
+          : null;
+
         return result
           ? {
-            data: result.data,
-            totalCount: result.totalCount,
-          }
+              data: result.data,
+              totalCount: result.totalCount,
+            }
           : {
-            data: [],
-            totalCount: 0,
-            summary: {},
-            groupCount: 0,
-          };
+              data: [],
+              totalCount: 0,
+              summary: {},
+              groupCount: 0,
+            };
       } catch (err) {
+        console.error("Load failed:", err);
         return {
           data: [],
           totalCount: 0,
@@ -257,6 +266,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   heightToAdjustOnMobile = 200,
   heightToAdjustOnWindows = 100,
   popupAction,
+  changeReload,
   defaultColumnWidth,
   columnAutoWidth = true,
   columnHidingEnabled = false,
@@ -297,7 +307,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number }>({ mobile: 500, windows: 500 });
   const [addButtonText, setAddButtonText] = useState<string>(gridAddButtonText == "Add" ? t("add") : gridAddButtonText);
-  const onPopupOpenClick = useCallback(() => { popupAction && dispatch(popupAction({ isOpen: true, key: null })); }, [dispatch, popupAction]);
+  const onPopupOpenClick = useCallback(() => { popupAction && dispatch(popupAction({ isOpen: true, key: null, reload: false})); }, [dispatch, popupAction]);
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
@@ -312,6 +322,10 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
+  const [_reload, set_reload] = useState(reload);
+  useEffect(() => {
+    set_reload(reload);
+  }, [reload]);
   useEffect(() => {
     if (gridId != "" && columns != undefined && columns != null) {
       onApplyPreferences(getInitialPreference(gridId, columns));
@@ -329,7 +343,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   ); // Add any other dependencies here
   const onApplyFilter = useCallback(
     (_filter: any) => {
-      debugger;
+      
       const dss = { ..._filter }
       console.log(`prev:${filter}`);
       console.log(`latest:${_filter}`);
@@ -343,7 +357,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   ); // Add any other dependencies here
   const onCloseFilter = useCallback(
     () => {
-      debugger;
+      
       console.log(`filterShowCountww: ${filterShowCount}`);
       if (filterShowCount == 0) {
         setFilter({});
@@ -354,33 +368,68 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     },
     []
   );
-  const store = useMemo(() => {
+ 
+const [currentStore, setCurrentStore] = useState<CustomStore<any, any> | null>(null);
+const [store, setStore] = useState<CustomStore | null>(null);
+useEffect(() => {
+  const fetchStore = async () => {
     if (data) {
-      return data;
+      setStore(data);
+      return;
     }
-    else if (!dataUrl) {
-      return null;
+
+    if (!dataUrl) {
+      setStore(null);
+      return;
     }
-    debugger;
-    if (filterShowCount == 0 && enablefilter == true && showFilterInitially) {
+
+    if (filterShowCount === 0 && enablefilter && showFilterInitially) {
       setShowFilter(true);
       return;
     } else {
       setShowFilter(false);
     }
-    return createStore(
-      keyExpr,
-      dataUrl ?? "",
-      enablefilter,
-      allowEditing,
-      method,
-      postData,
-      filter,
-      initialFilters,
-      paramNames,
-      bodyProps,
-    );
-  }, [data, keyExpr, dataUrl, allowEditing, method, filter, reload, postData]);
+
+    console.log(`reload: ${_reload}`);
+
+    if (_reload !== undefined && _reload !== true) {
+      // Return the current store without reloading
+      setStore(currentStore);
+      return;
+    }
+
+
+    try {
+      const newStore = await createStore(
+        keyExpr,
+        dataUrl ?? "",
+        enablefilter,
+        allowEditing,
+        method,
+        postData,
+        filter,
+        initialFilters,
+        paramNames,
+        bodyProps
+      );
+
+      setCurrentStore(newStore);
+      setStore(newStore);
+
+      if (_reload === true) {
+        changeReload && changeReload(false);
+      }
+    } catch (error) {
+      console.error("Error creating store:", error);
+      setStore(null);
+    } finally {
+    }
+  };
+
+  fetchStore();
+}, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload, postData]);
+
+const memoizedStore = useMemo(() => store, [store]);
   const onExportingHandler = useCallback((e: any) => {
     if (onExporting) {
       onExporting(e);
@@ -432,7 +481,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         const trimmedProp = prop.trim();
         updatedBodyProps[trimmedProp] = event.data[trimmedProp];
       });
-      debugger;
+      
       // Update bodyProps state
       onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
@@ -453,7 +502,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     <Fragment>
       <div className={className}>
         <DataGrid
-          dataSource={store}
+          dataSource={memoizedStore}
           height={gridHeight.windows}
           showBorders={showBorders}
           remoteOperations={remoteOperations}
@@ -515,15 +564,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           ) : (
             <Export enabled={false}></Export>
           )}
-          {stateStoring && (
-            <StateStoring
-              enabled={stateStoring.enabled}
-              type={stateStoring.type}
-              storageKey={stateStoring.storageKey}
-              customLoad={stateStoring.customLoad}
-              customSave={stateStoring.customSave}
-            />
-          )}
+         
           <Toolbar>
             {!hideGridHeader && (filterInitialData == undefined || filterInitialData == null) && (
               <Item location="before">

@@ -47,7 +47,7 @@ const Login = () => {
       const login = await dispatch(loginUser(data)).unwrap();
 
       setError('');
-debugger;
+
       if (login.isOk == true) {
         if (login.item.hasToChooseBranch) {
           setHasToChooseBranch(true);
@@ -61,7 +61,7 @@ debugger;
         Cookies.set("up", login.item.userProfileDetails, { expires: 30 });
         localStorage.setItem("ut", login.item.userThemes);
         Cookies.set("ur", login.item.useRights, { expires: 30 });
-        debugger;
+        
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
         const _userRights = atob(login.item.userRights);

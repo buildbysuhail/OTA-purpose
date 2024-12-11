@@ -67,7 +67,7 @@ export function useFormManager<T>({
   );
   
   // if(localFormState == undefined || localFormState == null || localFormState?.data == undefined || localFormState?.data ==null )
-  debugger
+  
   const [localFormState, setLocalFormState] = useState<ApiResponse<any>>(initialData);
   const [prevLocalFormState, setPrevLocalFormState] = useState<ApiResponse<any>>(initialData);
   const reduxFormState = useAppSelector<ApiResponse<any>>(
@@ -100,7 +100,7 @@ export function useFormManager<T>({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    debugger;
+    
     if (useApiClient || isEdit) {
       loadFormData();
     }
@@ -308,7 +308,7 @@ export function useFormManager<T>({
 
   const handleFieldChange = useCallback(
     (fields: { [fieldId: string]: any } | string, value?: any) => {  
-      debugger;
+      
       // Update the nested fields for all provided fieldIds
       const updatedData = handleFieldChangeGlobal({fields: fields, value: value, formState: (useApiClient ? localFormState : reduxFormState)?.data})
   
@@ -375,7 +375,7 @@ export function useFormManager<T>({
       fieldId: string,
       options?: { onChangeData?: (data: any) => void; label?: string }
     ): FormField => {
-      debugger;
+      
       const formState = useApiClient ? localFormState : reduxFormState;
   
       return getFieldPropsAdvGlob(

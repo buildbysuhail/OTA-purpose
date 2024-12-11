@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -201,19 +201,32 @@ const AccountLedgerType = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-          edit={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+          view={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+          edit={{ type: "popup", action: () => toggleAccountLedgerPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
           delete={{
+            onSuccess: () => {
+              dispatch(
+                toggleAccountLedgerPopup({
+                  isOpen: false,
+                  key: null,
+                  reload: true,
+                })
+              );
+            },
+            visible: cellElement?.data?.isDeletable == true,
             confirmationRequired: true,
-            confirmationMessage: "Are you sure you want to delete this item?",
-            url: Urls?.account_ledger, key: cellElement?.data?.id
-
+            confirmationMessage:
+              "Are you sure you want to delete this item?",
+            url: Urls?.account_ledger,
+            key: cellElement?.data?.id,
           }}
         />
       ),
     },
   ], [t]);
-
+  useEffect(() => {
+    dispatch(toggleAccountLedgerPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -227,10 +240,11 @@ const AccountLedgerType = () => {
                 gridId="grd_user_type"
                 popupAction={toggleAccountLedgerPopup}
                 gridAddButtonType="popup"
+                changeReload={(reload: any) => { dispatch(toggleAccountLedgerPopup({ ...rootState, reload: reload })) }}
                 reload={rootState?.PopupData?.accountLedger?.reload}
                 gridAddButtonIcon="ri-add-line"
-                pageSize={40}
-              ></ErpDevGrid>
+                pageSize={40}>
+              </ErpDevGrid>
             </div>
           </div>
         </div>
@@ -240,9 +254,7 @@ const AccountLedgerType = () => {
         title={t("acc_ledger")}
         width="w-full max-w-[700px]"
         isForm={true}
-        closeModal={() => {
-          dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null }));
-        }}
+        closeModal={() => { dispatch(toggleAccountLedgerPopup({ isOpen: false, key: null, reload: false })); }}
         content={<MemoizedAccountLedgerManage />}
       />
     </Fragment>

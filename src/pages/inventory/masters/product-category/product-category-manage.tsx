@@ -24,7 +24,7 @@ export const ProductCategoryManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<ProductCategoryManageData>({
     url: Urls.productCategory,
-    onClose:useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleProductCategory({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleProductCategory({ isOpen: false, key: null, reload: true })),
       [dispatch]

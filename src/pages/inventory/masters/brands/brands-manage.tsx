@@ -24,7 +24,7 @@ export const BrandsManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<BrandsData>({
     url: Urls.brands,
-    onClose:useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleBrands({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleBrands({ isOpen: false, key: null, reload: true })),
       [dispatch]

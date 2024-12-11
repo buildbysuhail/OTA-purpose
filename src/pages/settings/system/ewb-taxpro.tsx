@@ -90,7 +90,7 @@ const EWBTaxPro = () => {
     } = useFormManager<EWBTaxProData>({
         url: Urls.eWayBill,
         onSuccess: useCallback(
-            () => dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null })),
+            () => dispatch(toggleEWayBillTaxPro({ isOpen: false, key: null,reload: false })),
             [dispatch]
         ),
         loadDataRequired: true,

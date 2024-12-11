@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -116,9 +116,18 @@ const BankCards = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID }) }}
-          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID }) }}
+          view={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
+          edit={{ type: "popup", action: () => toggleBankCardsPopup({ isOpen: true, key: cellElement?.data?.paymentTypeID,reload: false }) }}
           delete={{
+            onSuccess: () => {
+              dispatch(
+                toggleBankCardsPopup({
+                  isOpen: false,
+                  key: null,
+                  reload: true,
+                })
+              );
+            },
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.bankCards,
@@ -128,6 +137,9 @@ const BankCards = () => {
       ),
     },
   ];
+  useEffect(() => {
+    dispatch(toggleBankCardsPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -142,6 +154,11 @@ const BankCards = () => {
                   gridId="grd_bank_cards"
                   popupAction={toggleBankCardsPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleBankCardsPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.bankCard?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
@@ -156,7 +173,7 @@ const BankCards = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleBankCardsPopup({ isOpen: false, key: null }));
+          dispatch(toggleBankCardsPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedBankCardsManage />}
       />

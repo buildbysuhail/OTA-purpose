@@ -55,7 +55,7 @@ const DayCloseManage = () => {
     handleClose
   } = useFormManager<DayCloseManageData>({
     url: Urls.DayClose,
-    onClose:useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, key: null,})), [dispatch]),
+    onClose:useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleDayClosePopup({ isOpen: false, })),
       [dispatch]
     ),

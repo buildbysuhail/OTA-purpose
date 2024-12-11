@@ -100,7 +100,7 @@ const HideAccountLedger = () => {
 
 
   const initialLoadGrid = useCallback(async (userTypeCode: string) => {
-    debugger;
+    
     if (userTypeCode != undefined && userTypeCode != null && userTypeCode != '') {
       setLoading(true);
       try {
@@ -122,7 +122,7 @@ const HideAccountLedger = () => {
         ...prev,
         userTypeCode: data.userTypeCode,
       }));
-      debugger;
+      
       await initialLoadGrid(data.userTypeCode);
     },
     [initialLoadGrid]

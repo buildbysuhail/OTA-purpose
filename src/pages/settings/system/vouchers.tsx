@@ -152,8 +152,8 @@ const SystemVoucher = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id }) }}
-            edit={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id }) }}
+            view={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleVoucherPopup({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
           // delete={{
           //   confirmationRequired: true,
           //   confirmationMessage: "Are you sure you want to delete this item?",
@@ -164,7 +164,9 @@ const SystemVoucher = () => {
       },
     },
   ], []);
-
+  useEffect(() => {
+    dispatch(toggleVoucherPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -179,6 +181,11 @@ const SystemVoucher = () => {
                   gridId="grd_voucher"
                   popupAction={toggleVoucherPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleVoucherPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.voucher?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>
@@ -192,7 +199,7 @@ const SystemVoucher = () => {
         title={t("voucher")}
         isForm={true}
         width="w-full max-w-[600px]"
-        closeModal={() => { dispatch(toggleVoucherPopup({ isOpen: false, key: null })); }}
+        closeModal={() => { dispatch(toggleVoucherPopup({ isOpen: false, key: null,reload: false })); }}
         content={<MemoizedVoucherManage />}
       />
     </Fragment>

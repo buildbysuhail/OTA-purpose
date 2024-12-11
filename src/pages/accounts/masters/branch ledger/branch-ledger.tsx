@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -103,9 +103,18 @@ const BranchLedger = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID }) }}
-          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID }) }}
+          view={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID,reload: false }) }}
+          edit={{ type: "popup", action: () => toggleBranchLedgerPopup({ isOpen: true, key: cellElement?.data?.branchLedgerID,reload: false }) }}
           delete={{
+            onSuccess: () => {
+              dispatch(
+                toggleBranchLedgerPopup({
+                  isOpen: false,
+                  key: null,
+                  reload: true,
+                })
+              );
+            },
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.branch_ledger, key: cellElement?.data?.branchLedgerID
@@ -115,7 +124,9 @@ const BranchLedger = () => {
       ),
     },
   ];
-
+  useEffect(() => {
+    dispatch(toggleBranchLedgerPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -130,6 +141,11 @@ const BranchLedger = () => {
                   gridId="grd_branch_ledger"
                   popupAction={toggleBranchLedgerPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleBranchLedgerPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.branchLedger?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
@@ -144,7 +160,7 @@ const BranchLedger = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null }));
+          dispatch(toggleBranchLedgerPopup({ isOpen: false, key: null,reload: false }));
         }}
         content={<MemoizedBranchLedgerManage />}
       />

@@ -23,7 +23,7 @@ export const VoucherManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<VoucherData>({
     url: Urls.Voucher,
-    onClose: useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     onSuccess: useCallback(
       () => dispatch(toggleVoucherPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
@@ -79,11 +79,13 @@ export const VoucherManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("lastVoucherNumber", data.lastVoucherNumber)}
         />
-        <ERPCheckbox
-          {...getFieldProps('isDefault')}
-          label={t("is_default")}
-          onChangeData={(data: any) => handleFieldChange('isDefault', data.isDefault)}
-        />
+        <div className="flex items-center">
+          <ERPCheckbox
+            {...getFieldProps('isDefault')}
+            label={t("is_default")}
+            onChangeData={(data: any) => handleFieldChange('isDefault', data.isDefault)}
+          />
+        </div>
       </div>
       <ERPFormButtons
         onClear={handleClear}

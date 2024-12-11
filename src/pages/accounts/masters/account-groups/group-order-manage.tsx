@@ -55,19 +55,19 @@ export const AccountGroupOrderContent: React.FC<AccountGroupOrderContentProps> =
   };
   
   const handleDragStart = (e: any) => {
-    debugger;
+    
     dragItem.current = e.target.id;
   };
 
   const handleDragEnd = (e: any) => {
-    debugger;
+    
     e.preventDefault();
     dragOverItem.current = e.currentTarget.id;
   };
 
   const handleDropping = (e: any) => {
 
-    debugger;
+    
     let startIndex = formData?.findIndex((fld: any) => fld?.groupName === dragItem.current);
     let endIndex = formData?.findIndex((fld: any) => fld?.groupName === dragOverItem.current);
 
@@ -144,7 +144,7 @@ export const AccountGroupOrderFooter: React.FC<AccountGroupOrderFooterProps> = R
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const onClose = useCallback(() => {
-    dispatch(toggleGroupOrder({ isOpen: false, key: null }));
+    dispatch(toggleGroupOrder({ isOpen: false, key: null,reload: false }));
   }, [dispatch]);
 
   return (

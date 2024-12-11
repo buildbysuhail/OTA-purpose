@@ -29,7 +29,7 @@ export const CostCentreManage = () => {
         ),
       [dispatch]
     ),
-    onClose: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleCostCentrePopup({ isOpen: false, key: null,reload: false })), [dispatch]),
     key: rootState.PopupData.costCentre.key,
     keyField: "costCentreID",
     useApiClient: true,

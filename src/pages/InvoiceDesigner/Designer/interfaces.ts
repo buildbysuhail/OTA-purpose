@@ -78,7 +78,11 @@ export interface PlacedComponent {
   font: string;
   width: number;
   height: number;
-  rotate:number
+  rotate:number;
+  lineThickness?:string;
+  lineColor?:string;
+  lineHeight?:number;
+  lineType?:"solid"|"dotted"|"dashed";
   barcodeProps?: {
     format: string;
     barWidth: number;
@@ -96,12 +100,9 @@ export interface PlacedComponent {
  tableProps?: {
     caption: string;
     field: number;
-    columnWidth: number;
-    textAlign: "left" | "center" | "right";
-    font: string;
-    fontSize: number;
-    fontStyle: "normal" | "bold" | "italic";
+    columnCount:number;
   };
+
 }
 export interface PropertiesState {
   template_type?: TemplateTypes;
@@ -807,7 +808,7 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
     },
     barcodeState: {
        placedComponents:[],
-       labelState: {columnsPerRow:1, labelHeight:200,labelWidth:300, rowsPerPage: 5}
+       labelState: {columnsPerRow:1, labelHeight:200,labelWidth:300, rowsPerPage: 1}
     },
   },
 };

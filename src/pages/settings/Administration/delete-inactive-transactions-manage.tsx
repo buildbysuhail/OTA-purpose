@@ -22,7 +22,7 @@ const DeleteInactiveTransactionManage: React.FC = React.memo(() => {
   const { isEdit, formState, handleSubmit, handleClear, handleFieldChange, getFieldProps, isLoading, handleClose } =
     useFormManager<DeleteInactiveTransactionManageData>({
       url: Urls.deleteInactiveTransactions,
-      onClose: useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null, })), [dispatch]),
+      onClose: useCallback(() => dispatch(toggleDeleteInactiveTransactionPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
       onSuccess: useCallback(
         () =>
           dispatch(

@@ -27,7 +27,7 @@ export const UpiManage: React.FC = React.memo(() => {
     handleClose,
   } = useFormManager<UpiData>({
     url: Urls.upi,
-    onClose: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null, })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null,reload: false })), [dispatch]),
     onSuccess: useCallback(() => dispatch(toggleUpi({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.upi.key,
     keyField: "paymentTypeID",
@@ -48,7 +48,7 @@ export const UpiManage: React.FC = React.memo(() => {
             labelKey: "label"
           }}
           onChange={(data: any) => {
-            debugger;
+            
             handleFieldChange({ paymentType: data.value, paymentName: data.label })
           }}
           label={userSession.countryId == Countries.India ? t("upi") : t("qr_pay")}

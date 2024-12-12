@@ -11,6 +11,7 @@ import Sidebar from "../sidebar/sidebar";
 import Footer from "../footer/footer";
 import Content from "../content/content";
 import { ERPScrollArea } from "../../ERPComponents/erp-scrollbar";
+import ERPAttachment from "../../ERPComponents/erp-attachment";
 
 interface LayoutProps {
   setMyClass: Dispatch<SetStateAction<string>>;
@@ -58,6 +59,9 @@ const Layout: FC<LayoutProps> = ({ setMyClass }) => {
     <>
       <Header />
       {isDesktop && <Sidebar type="erp" />}
+      {/* <div className="w-full h-16 bg-black fixed top-0 left-0">
+      {isDesktop && <ERPAttachment />}
+      </div> */}
       <ERPScrollArea className="content main-index max-h-dvh overflow-y-auto">
         <div className="main-content px-[9px]" onClick={Bodyclickk}>
           <Content />

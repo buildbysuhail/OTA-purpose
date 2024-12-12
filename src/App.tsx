@@ -54,6 +54,7 @@ import { UserRight } from "./pages/settings/userManagement/data";
 import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
+import ERPAttachment from "./components/ERPComponents/erp-attachment";
 
 export const LoadingAnimation = () => {
   return (
@@ -224,6 +225,9 @@ function App() {
         </div>
       </HelmetProvider>
       <div className="transition fixed inset-0 z-50 bg-gray-900 bg-opacity-50 dark:bg-opacity-80 opacity-0 hidden"></div>
+      {/* <div className=" w-1/4 h-full  bg-black fixed top-0 right-0">
+      <ERPAttachment />
+      </div> */}
       {deviceInfo?.isMobile && (
         <div className="w-full h-16 bg-white fixed bottom-0 left-0">
           <MobileFooter />

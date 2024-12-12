@@ -35,6 +35,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
   const [selectionLoading, setSelectionLoading] = useState<{loading: boolean, clientId: number, branchId: number}>({loading: false, clientId: 0, branchId: 0});
 
   const UserSession = useAppSelector((state: RootState) => state?.UserBranches);
+  let userBranches = useAppSelector((state: RootState) => state.UserBranches);
 
   /* ########################################################################################### */
   const avatarStyle = useMemo(() => {
@@ -96,7 +97,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       
      
       <div className="flex flex-col gap-3 sm:col-span-2">
-        {UserSession?.branches?.map((item: BranchSelectDto, index: number) => (
+        {userBranches?.branches?.map((item: BranchSelectDto, index: number) => (
           <div
             key={`org-${index}`}
             onClick={() => {

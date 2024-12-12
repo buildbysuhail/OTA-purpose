@@ -24,10 +24,11 @@ const OrgSelect = ({ initialHeight = 100 }) => {
 
   const tanant = useSelector((state: any) => state?.PostUserTenant);
   const userSession = useAppSelector((state: RootState) => state?.UserSession);
+  let userBranches = useAppSelector((state: RootState) => state.UserBranches);
   const handleSubmit = async () => {
     // event.preventDefault();
     setIsLoading(true);
-    const isBranchActive = userSession?.branches?.some(
+    const isBranchActive = userBranches?.branches?.some(
       (item: BranchSelectDto) => item?.isActive
     );
     if (isBranchActive) {

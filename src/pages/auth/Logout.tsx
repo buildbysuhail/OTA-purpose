@@ -8,6 +8,8 @@ import { logoutUser } from "../../redux/slices/auth/login/thunk";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { initialUserSessionData, setUserSession } from "../../redux/slices/user-session/reducer";
+import { setUserBranches } from "../../redux/slices/user-session/user-branches-reducer";
+import { setUserRights } from "../../redux/slices/user-rights/reducer";
 
 const Logout = () => {
   const { t } = useTranslation();
@@ -31,6 +33,8 @@ const Logout = () => {
     Cookies.remove("ut");
     Cookies.remove("up");
     dispatch(setUserSession(initialUserSessionData));
+      dispatch(setUserBranches([]));
+      dispatch(setUserRights([]));
     navigate("/login");
     if (logout.isOk == true) {
      

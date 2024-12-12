@@ -83,47 +83,64 @@ function App() {
   const [MyclassName, setMyClass] = useState("");
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const token = Cookies.get("token");
-
   const deviceInfo = useSelector((state: RootState) => state.DeviceInfo);
+  const { i18n } = useTranslation()
 
-  let upt = Cookies.get("up");
-  let urr = Cookies.get("ur");
-  let utt = localStorage.getItem("ut");
-
-  let userRights: UserTypeRights[] = [];
-  try {
-    if (urr != undefined && urr != null && urr != "") {
-      userRights = customJsonParse(atob(urr));
-    }
-  } catch (error) { }
-
-
-  let userProfileDetails: UserModel = initialUserSessionData;
-  try {
-    if (upt != undefined && upt != null && upt != "") {
-      userProfileDetails = customJsonParse(atob(upt));
-    }
-  } catch (error) { }
-
-  let userThemes: AppState = appInitialState;
-  try {
-  console.log("utt:", utt);
-    if (utt != undefined && utt != null && utt != "") {
-      userThemes = customJsonParse(atob(utt));
-  console.log("Base64 Encoded userThemes:", utt);
-  console.log("Decoded userThemes:", customJsonParse(atob(utt)));
-    }
-  } catch (error) { }
-  const { i18n } = useTranslation();
-  let locale = languagesData.find(
-    (l) => l.code == userProfileDetails.language
-  ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
-  syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
-  const language = userProfileDetails?.language;
+  
 
   useEffect(() => {
     load();
+  }, []);
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+
+
+    let upt = Cookies.get("up");
+    let urr = Cookies.get("ur");
+    let utt = localStorage.getItem("ut");
+  
+    let userRights: UserTypeRights[] = [];
+    try {
+      if (urr != undefined && urr != null && urr != "") {
+        userRights = customJsonParse(atob(urr));
+      }
+    } catch (error) { }
+  
+  
+    let userProfileDetails: UserModel = initialUserSessionData;
+    try {
+      if (upt != undefined && upt != null && upt != "") {
+        userProfileDetails = customJsonParse(atob(upt));
+      }
+    } catch (error) { }
+  
+    let userThemes: AppState = appInitialState;
+    try {
+    console.log("utt:", utt);
+      if (utt != undefined && utt != null && utt != "") {
+        userThemes = customJsonParse(atob(utt));
+    console.log("Base64 Encoded userThemes:", utt);
+    console.log("Decoded userThemes:", customJsonParse(atob(utt)));
+      }
+    } catch (error) { };
+    let locale = languagesData.find(
+      (l) => l.code == userProfileDetails.language
+    ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
+    debugger;
+    syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
+    const language = userProfileDetails?.language;
+
+    if (!token && pathname !== "/shared-view") {
+      navigate("/login");
+    } else {
+    }
+
+    if (locale && i18n && typeof i18n.changeLanguage === "function") {
+      i18n.changeLanguage(language);
+    } else {
+      console.error("i18n is not properly initialized:", i18n);
+    }
   }, []);
   const load = async() => {
     
@@ -134,19 +151,19 @@ function App() {
         apiLoaded: true
     }));
   }
-  useEffect(() => {
-    if (locale && i18n && typeof i18n.changeLanguage === "function") {
-      i18n.changeLanguage(language);
-    } else {
-      console.error("i18n is not properly initialized:", i18n);
-    }
-  }, [i18n, language, locale]);
-  useEffect(() => {
-    if (!token && pathname !== "/shared-view") {
-      navigate("/login");
-    } else {
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (locale && i18n && typeof i18n.changeLanguage === "function") {
+  //     i18n.changeLanguage(language);
+  //   } else {
+  //     console.error("i18n is not properly initialized:", i18n);
+  //   }
+  // }, [i18n, language, locale]);
+  // useEffect(() => {
+  //   if (!token && pathname !== "/shared-view") {
+  //     navigate("/login");
+  //   } else {
+  //   }
+  // }, [token]);
   const Bodyclickk = () => {
     if (localStorage.getItem("ynexverticalstyles") == "icontext") {
       setMyClass("");

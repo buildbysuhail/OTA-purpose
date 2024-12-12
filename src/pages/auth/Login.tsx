@@ -61,7 +61,7 @@ const Login = () => {
         Cookies.set("up", login.item.userProfileDetails, { expires: 30 });
         localStorage.setItem("ut", login.item.userThemes);
         Cookies.set("ur", login.item.useRights, { expires: 30 });
-        
+        debugger;
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);
         const _userRights = atob(login.item.userRights);

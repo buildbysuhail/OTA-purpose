@@ -138,6 +138,15 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
               view={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               edit={{ type: "popup", action: () => toggleGroupCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleGroupCategory({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.section,key:cellElement?.data?.id
@@ -149,7 +158,9 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleGroupCategory({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -164,6 +175,11 @@ const MemoizedGroupCategoryManage = useMemo(() => React.memo(GroupCategoryManage
                   gridId="grd_group_category"
                   popupAction={toggleGroupCategory}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleGroupCategory({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.groupCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

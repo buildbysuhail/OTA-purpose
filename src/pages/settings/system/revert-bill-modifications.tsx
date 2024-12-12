@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
@@ -136,7 +136,9 @@ const RevertBillModifications: React.FC = () => {
     ],
     [t]
   );
-
+  useEffect(() => {
+    dispatch(toggleRevertBillModifications({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -150,6 +152,11 @@ const RevertBillModifications: React.FC = () => {
                   dataUrl={Urls.revertBillModifications}
                   gridId="grd_revertBillModifications"
                   popupAction={toggleRevertBillModifications}
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleRevertBillModifications({ ...rootState, reload: reload })
+                    );
+                  }}
                   hideGridAddButton={true}
                   reload={rootState?.PopupData?.revertBillModifications?.reload}
                   gridAddButtonIcon="ri-history-line"

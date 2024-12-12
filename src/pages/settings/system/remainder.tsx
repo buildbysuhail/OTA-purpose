@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import Urls from "../../../redux/urls";
 
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
@@ -76,6 +76,15 @@ const Remainders = () => {
             view={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID,reload: false }) }}
             edit={{ type: "popup", action: () => toggleRemainderPopup({ isOpen: true, key: cellElement?.data?.remaindersID,reload: false }) }}
             delete={{
+              onSuccess: () => {
+                dispatch(
+                  toggleRemainderPopup({
+                    isOpen: false,
+                    key: null,
+                    reload: true,
+                  })
+                );
+              },
               confirmationRequired: true,
               confirmationMessage: "Are you sure you want to delete this item?",
               url: Urls?.Remainder, key: cellElement?.data?.remaindersID
@@ -85,6 +94,9 @@ const Remainders = () => {
       },
     },
   ], []);
+  useEffect(() => {
+    dispatch(toggleRemainderPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -99,6 +111,11 @@ const Remainders = () => {
                   gridId="grd_remainder"
                   popupAction={toggleRemainderPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleRemainderPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.reminder?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>

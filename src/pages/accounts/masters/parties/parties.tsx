@@ -524,6 +524,15 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
           view={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
           edit={{ type: "popup", action: () => toggleParties({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
           delete={{
+            onSuccess: () => {
+              dispatch(
+                toggleParties({
+                  isOpen: false,
+                  key: null,
+                  reload: true,
+                })
+              );
+            },
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.parties, key: cellElement?.data?.id
@@ -532,6 +541,9 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
       ),
     },
   ];
+  useEffect(() => {
+    dispatch(toggleParties({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -554,6 +566,11 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                         <i className="ri-upload-line text-sm"></i>
                       </button>)
                   }]}
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleParties({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.parties?.reload}
                   gridAddButtonIcon="ri-add-line"
                 />

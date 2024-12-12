@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo } from "react";
+import React, { Fragment, useEffect, useMemo } from "react";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
@@ -58,9 +58,18 @@ const CostCentre = () => {
       width: 180,
       cellRender: (cellElement: any, cellInfo: any) => (
         <ERPGridActions
-          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID,reload: false }) }}
-          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID,reload: false }) }}
+          view={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false }) }}
+          edit={{ type: "popup", action: () => toggleCostCentrePopup({ isOpen: true, key: cellElement?.data?.costCentreID, reload: false }) }}
           delete={{
+            onSuccess: () => {
+              dispatch(
+                toggleCostCentrePopup({
+                  isOpen: false,
+                  key: null,
+                  reload: true,
+                })
+              );
+            },
             confirmationRequired: true,
             confirmationMessage: "Are you sure you want to delete this item?",
             url: Urls?.cost_center,
@@ -70,6 +79,9 @@ const CostCentre = () => {
       ),
     },
   ];
+  useEffect(() => {
+    dispatch(toggleCostCentrePopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -84,6 +96,11 @@ const CostCentre = () => {
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleCostCentrePopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.costCentre?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>
@@ -98,7 +115,7 @@ const CostCentre = () => {
         width="w-full max-w-[600px]"
         isForm={true}
         closeModal={() => {
-          dispatch(toggleCostCentrePopup({ isOpen: false, key: null,reload: false }));
+          dispatch(toggleCostCentrePopup({ isOpen: false, key: null, reload: false }));
         }}
         content={<MemoizedCostCentreManage />}
       />

@@ -136,6 +136,15 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
               view={{ type: "popup", action: () => toggleSalesManRoute({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               edit={{ type: "popup", action: () => toggleSalesManRoute({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleSalesManRoute({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.sales_man_route,key:cellElement?.data?.id
@@ -147,7 +156,9 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleSalesManRoute({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -162,6 +173,11 @@ const MemoizedProductGroupManage = useMemo(() => React.memo(SalesmanRoute), []);
                   gridId="grd_salesman_route"
                   popupAction={toggleSalesManRoute}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleSalesManRoute({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.salesManRoute?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

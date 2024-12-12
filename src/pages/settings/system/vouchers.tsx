@@ -164,7 +164,9 @@ const SystemVoucher = () => {
       },
     },
   ], []);
-
+  useEffect(() => {
+    dispatch(toggleVoucherPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -179,6 +181,11 @@ const SystemVoucher = () => {
                   gridId="grd_voucher"
                   popupAction={toggleVoucherPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleVoucherPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.voucher?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>

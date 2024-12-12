@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState, ChangeEvent, FormEvent, useCallback } from "react";
+import React, { Fragment, useMemo, useState, ChangeEvent, FormEvent, useCallback, useEffect } from "react";
 import Urls from "../../../redux/urls";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import ERPDevGrid from "../../../components/ERPComponents/erp-dev-grid";
@@ -350,7 +350,9 @@ const BarcodePrint: React.FC = () => {
     ],
     [t, dispatch]
   );
-
+  useEffect(() => {
+    dispatch(toggleCounterPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="p-0 bg-gray-100 min-h-screen">
@@ -712,6 +714,11 @@ const BarcodePrint: React.FC = () => {
                   gridId="grd_barcode_print"
                   popupAction={toggleCounterPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleCounterPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.barcodeprint?.reload}
                   gridAddButtonIcon="ri-add-line"
                 />

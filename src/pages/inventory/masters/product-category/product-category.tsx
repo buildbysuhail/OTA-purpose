@@ -135,6 +135,15 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
               view={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               edit={{ type: "popup", action: () => toggleProductCategory({ isOpen: true, key: cellElement?.data?.id, reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleProductCategory({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.productCategory,key:cellElement?.data?.id
@@ -146,7 +155,9 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleProductCategory({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -161,6 +172,11 @@ const MemoizedProductCategoryManage = useMemo(() => React.memo(ProductCategoryMa
                   gridId="grd_productCategory"
                   popupAction={toggleProductCategory}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleProductCategory({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.productCategory?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

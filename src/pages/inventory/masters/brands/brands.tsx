@@ -125,6 +125,15 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
               view={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID,reload: false }) }}
               edit={{ type: "popup", action: () => toggleBrands({ isOpen: true, key: cellElement?.data?.brandID,reload: false }) }}
               delete={{
+                onSuccess: () => {
+                  dispatch(
+                    toggleBrands({
+                      isOpen: false,
+                      key: null,
+                      reload: true,
+                    })
+                  );
+                },
                 confirmationRequired: true,
                 confirmationMessage: "Are you sure you want to delete this item?",
                 url:Urls?.brands,key:cellElement?.data?.brandID
@@ -136,7 +145,9 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
     ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleBrands({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -151,6 +162,11 @@ const MemoizedBrandsManage = useMemo(() => React.memo(BrandsManage), []);
                   gridId="grd_brands"
                   popupAction={toggleBrands}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleBrands({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.brands?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ErpDevGrid>

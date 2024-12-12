@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import LedgerReportFilter, { LedgerReportFilterInitialState } from "./ledger-report-filter";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface LedgerReport {
   from: Date
@@ -20,6 +21,7 @@ const LedgerReport = () => {
   const { t } = useTranslation();
   const [filter, setFilter] =useState<LedgerReport>({from: new Date()});
   const rootState = useRootState();
+  const { getFormattedValue} = useNumberFormat()
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -115,10 +117,34 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+        <span className={`${cellElement.data?.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
+    },
+    {
+      dataField: "chequeNumber",
+      caption: t("cheque_number"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "checkStatus",
+      caption: t("check_status"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
+    },
+    {
+      dataField: "chequeDate",
+      caption: t("cheque_date"),
+      dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+      width: 170,
     },
   ];
   return (

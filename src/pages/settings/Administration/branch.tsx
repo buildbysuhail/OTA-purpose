@@ -39,7 +39,7 @@ const BranchGrid = () => {
       dataField: "companyID",
       caption: t("company_id"),
       dataType: "number",
-      visible:false,
+      visible: false,
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
@@ -144,7 +144,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "tin",
@@ -154,7 +154,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "registrationNumber",
@@ -164,7 +164,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "createdDate",
@@ -174,7 +174,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "modifiedDate",
@@ -184,7 +184,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "remarks",
@@ -194,7 +194,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible:false
+      visible: false
     },
     {
       dataField: "actions",
@@ -207,13 +207,13 @@ const BranchGrid = () => {
       cellRender: (cellElement: any) => {
         return (
           <ERPGridActions
-            view={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID,reload: false }) }}
-            edit={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID,reload: false }) }}
-            // delete={{
-            //   confirmationRequired: true,
-            //   confirmationMessage: t("delete_this_item"),
-            //   url: Urls?.Branch, key: cellElement?.data?.branchID
-            // }}
+            view={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID, reload: false }) }}
+            edit={{ type: "popup", action: () => toggleBranchGridPopup({ isOpen: true, key: cellElement?.data?.branchID, reload: false }) }}
+          // delete={{
+          //   confirmationRequired: true,
+          //   confirmationMessage: t("delete_this_item"),
+          //   url: Urls?.Branch, key: cellElement?.data?.branchID
+          // }}
           />
         )
       },
@@ -221,7 +221,9 @@ const BranchGrid = () => {
   ],
     []
   );
-
+  useEffect(() => {
+    dispatch(toggleBranchGridPopup({ ...rootState, reload: true }));
+  }, []);
   return (
     <Fragment>
       <div className="grid grid-cols-12 gap-x-6">
@@ -236,6 +238,11 @@ const BranchGrid = () => {
                   gridId="grd_branch"
                   popupAction={toggleBranchGridPopup}
                   gridAddButtonType="popup"
+                  changeReload={(reload: any) => {
+                    dispatch(
+                      toggleBranchGridPopup({ ...rootState, reload: reload })
+                    );
+                  }}
                   reload={rootState?.PopupData?.branch?.reload}
                   gridAddButtonIcon="ri-add-line"
                 ></ERPDevGrid>

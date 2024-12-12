@@ -259,9 +259,11 @@ const Urls = {
   acc_reports_aging_analysis: "/Accounts/RptAging/AgingAnalysisReport/",
 
   acc_reports_trial_balance: "/Accounts/RptReports/TrialBalance/",
+  acc_reports_trial_balance_detailed: "/Accounts/RptReports/TrialBalancePeriodwise/",
   acc_reports_balance_sheet: "/Accounts/RptReports/BalanceSheet/",
   acc_reports_account_ledger_balance_view: "/Accounts/RptReports/AccountLedgerBalanceView/",
   acc_reports_profit_and_loss: "/Accounts/RptReports/ProfitAndLoss/",
+  acc_reports_profit_and_loss_detailed: "/Accounts/RptReports/ProfitAndLossDetailed/",
   acc_reports_account_ledger_balance_view_sub_group_inc: "/Accounts/RptReports/AccountLedgerBalanceViewSubGroupIncluded/",
   acc_reports_closing_stock_details: "/Accounts/RptReports/ClosingStockDetails/",
 

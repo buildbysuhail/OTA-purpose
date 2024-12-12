@@ -1,8 +1,8 @@
 
-import ERPDateInput from "../../../components/ERPComponents/erp-date-input";
-import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
-import Urls from "../../../redux/urls";
-import ERPCheckbox from "../../../components/ERPComponents/erp-checkbox";
+import ERPDateInput from "../../../../components/ERPComponents/erp-date-input";
+import ERPDataCombobox from "../../../../components/ERPComponents/erp-data-combobox";
+import Urls from "../../../../redux/urls";
+import ERPCheckbox from "../../../../components/ERPComponents/erp-checkbox";
 
 
 const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange, t }: any) => {
@@ -29,11 +29,11 @@ const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange, t }: any) 
         onChangeData={(data: any) => handleFieldChange("asonDate", data.asonDate)}
         autoFocus={true}
       />
-      <ERPDateInput
+      {/* <ERPDateInput
         {...getFieldProps("toDate")}
         label={t("To")}
         onChangeData={(data: any) => handleFieldChange("toDate", data.toDate)}
-      />
+      /> */}
     </div>
     <ERPDataCombobox
       {...getFieldProps("costCentreID")}
@@ -46,11 +46,11 @@ const TrialBalanceReportFilter = ({ getFieldProps, handleFieldChange, t }: any) 
       }}
       onChangeData={(data) => handleFieldChange('costCentreID', data.costCentreID)}
     />
-    <ERPCheckbox
+    {/* <ERPCheckbox
       {...getFieldProps("isPeriodWise")}
       label={t("Period_wise")}
       onChangeData={(data) => handleFieldChange('isPeriodWise', data.isPeriodWise)}
-    />
+    /> */}
   </div>
 );
 }

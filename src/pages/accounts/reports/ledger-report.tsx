@@ -78,7 +78,7 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
   {cellElement.data.particulars}
   </span>
       ),
@@ -91,7 +91,8 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
+  
   {cellElement.data.debit}
   </span>
       ),
@@ -104,7 +105,8 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
+  
   {cellElement.data.credit}
   </span>
       ),
@@ -117,7 +119,8 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data?.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
+  
   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),

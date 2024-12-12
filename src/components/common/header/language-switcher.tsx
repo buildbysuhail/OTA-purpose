@@ -40,8 +40,8 @@ const LanguageSwitcher: FC<HeaderProps> = ({className}) => {
     setLanguage(dispatch,locale);
   };
 const setLocaleInStorage = (locale: Locale) => {
-  let upt = Cookies.get("up");
-  let utt = Cookies.get("ut");
+  let upt = localStorage.getItem("up");
+  let utt = localStorage.getItem("ut");
   
   let userProfileDetails: UserModel = initialUserSessionData;
   try {
@@ -64,7 +64,7 @@ const setLocaleInStorage = (locale: Locale) => {
   userProfileDetails.language = locale.code;
   userThemes.direction = locale.rtl ? "rtl" : "ltr";
   debugger;
-  Cookies.set("up", modelToBase64(userProfileDetails), { expires: 30 });
+  localStorage.setItem("up", modelToBase64(userProfileDetails));
   localStorage.setItem("ut", modelToBase64(userThemes));
 
 }

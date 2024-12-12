@@ -55,10 +55,10 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     onLoadingChange(false);
     if (response.isOk == true) {   
      debugger;
-      Cookies.set("token", response.item.token, { expires: 30 }); 
-      Cookies.set("up", response.item.userProfileDetails, { expires: 30 }); 
+      localStorage.setItem("token", response.item.token); 
+      localStorage.setItem("up", response.item.userProfileDetails); 
       localStorage.setItem("ut", response.item.userThemes); 
-      Cookies.set("ur", response.item.userRights, { expires: 30 });
+      localStorage.setItem("ur", response.item.userRights);
       const _userRights = atob(response.item.userRights);
       const userRights: UserTypeRights[] = customJsonParse(_userRights);
       const _userProfileDetails = atob(response.item.userProfileDetails);

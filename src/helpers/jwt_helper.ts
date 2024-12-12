@@ -5,7 +5,7 @@ const jwtHelper = {
   getLoggedInUser: () => {
     
 
-    const user = Cookies.get("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return null;
     } else {
@@ -16,7 +16,7 @@ const jwtHelper = {
   getLoggedInUserToken: () => {
     
 
-    const user = Cookies.get("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return null;
     } else {
@@ -26,7 +26,7 @@ const jwtHelper = {
   getLoggedInUserRole: () => {
     
 
-    const user = Cookies.get("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return null;
     } else {
@@ -35,7 +35,7 @@ const jwtHelper = {
     }
   },
   isUserCustomer: () => {
-    const user = Cookies.get("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return false;
     } else {
@@ -47,7 +47,7 @@ const jwtHelper = {
   },
   getCurrency: () => {
     
-    const user = Cookies.get("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return 'USD';
     } else {
@@ -56,7 +56,7 @@ const jwtHelper = {
     }
   },
   getLocale: () => {
-    const user = Cookies.get("token");
+    const user = localStorage.getItem("token");
     if (!user) {
       return 'en-US';
     } else {

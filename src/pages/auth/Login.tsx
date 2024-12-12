@@ -57,10 +57,10 @@ const Login = () => {
           setIsLoggedToBranch(true);
           setHasToChooseBranch(false);
         }
-        Cookies.set("token", login.item.token, { expires: 30 });
-        Cookies.set("up", login.item.userProfileDetails, { expires: 30 });
+        localStorage.setItem("token", login.item.token);
+        localStorage.setItem("up", login.item.userProfileDetails);
         localStorage.setItem("ut", login.item.userThemes);
-        Cookies.set("ur", login.item.useRights, { expires: 30 });
+        localStorage.setItem("ur", login.item.useRights);
         debugger;
         const _userProfileDetails = atob(login.item.userProfileDetails);
         const userProfileDetails: UserModel = customJsonParse(_userProfileDetails);

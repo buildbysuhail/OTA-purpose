@@ -56,7 +56,7 @@ const Header: FC<HeaderProps> = () => {
     setFullScreen(!!document.fullscreenElement);
   };
   // useEffect(() => {
-  //   const token = Cookies.get("token");
+  //   const token = localStorage.getItem("token");
   //   if (token) syncAppStates();
   //   else navigate("/login");
   // }, []);

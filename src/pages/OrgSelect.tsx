@@ -57,70 +57,21 @@ const OrgSelect = ({ initialHeight = 100 }) => {
   // };
 
   return (
-    <div className="min-h-screen  overflow-y-auto flex sm:items-center sm:justify-center bg-gradient-to-r from-cyan-500 to-blue-500">
-      {/* {!deviceInfo?.isMobile && (
-        <div>
-          <div className="flex flex-col h-[100%] w-[100%]  sm:w-[540px]  justify-center px-5 py-2 sm:my-16 pb-[2.5rem] bg-white dark:bg-body_dark shadow-md rounded-md">
-            <div className="w-full text-right">
-              <Link
-                className=" ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
-                to="/logout"
-              >
-                <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
-                Log Out
-              </Link>
-            </div>
-            <div className=" m-[25px] sm:m-10 text-center">
-              <span className="avatar avatar-xxl avatar-rounded">
-                <ErpAvatar
-                  alt="Remy Sharp"
-                  src={
-                    typeof userSession?.userimage === "string"
-                      ? userSession?.userimage
-                      : ""
-                  }
-                  sx={{ width: 75, height: 75 }}
-                />
-              </span>
 
-              <h6 className="font-semibold mb-1  text-[1rem]">
-                {userSession?.displayName}
-              </h6>
-              <p className="mb-1  text-[.8rem]">{userSession?.email}</p>
-              <div className="mt-4 pb-4">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  {"My Organization"}
-                </h2>
-              </div>
-              <BranchSelector onLoadingChange={handleLoadingChange} />
-              <div className="grid grid-cols-1 gap-3 ">
-                <ERPButton
-                  type="button"
-                  onClick={handleSubmit}
-                  loading={false}
-                  title="continue"
-                  variant="primary"
-                  disabled={isLoading}
-                ></ERPButton>
-                <ERPButton
-                  type="button"
-                  onClick={useGoBack()}
-                  loading={false}
-                  title="back"
-                  variant="secondary"
-                  disabled={isLoading}
-                ></ERPButton>
-              </div>
-            </div>
-          </div>
-        </div>
-      )} */}
+    <div className="max-h-screen flex flex-col" style={{marginBlock:'auto'}}>
+    {/* Header */}
+    {/* <header className="h-14 border-b flex items-center px-4">
+      <h1 className="text-lg font-semibold">Select Organization</h1>
+    </header> */}
 
-      {!deviceInfo?.isMobile && (
-        <div className="flex justify-center items-center h-full px-4 py-6 sm:py-3">
-          <div className="relative flex flex-col w-full max-w-[400px] sm:max-w-[540px] bg-white dark:bg-body_dark shadow-md rounded-md p-5 sm:p-8 min-h-[512px]">
-            {/* Logout Button */}
-            <div className="w-full text-right mb-1">
+    {/* Main content - centers content vertically and horizontally */}
+    <main className="flex-1 flex items-center justify-center p-4">
+      <div className="w-full max-w-md flex flex-col bg-white rounded-lg shadow-lg max-h-[calc(90vh-3.5rem)]">
+        <div className="flex-1 overflow-y-auto p-0 space-y-6"  style={{scrollbarWidth: 'thin'}}>
+          <div className="p-6 space-y-6">
+            {/* Profile Section */}
+            <div className="">
+              <div className="flex justify-end">
               <Link
                 className="ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
                 to="/logout"
@@ -128,12 +79,9 @@ const OrgSelect = ({ initialHeight = 100 }) => {
                 <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
                 Log Out
               </Link>
-            </div>
-
-            {/* User Information */}
-            <div className="text-center mb-1">
-              <span className="avatar avatar-xxl avatar-rounded inline-block mb-1">
-                <ErpAvatar
+              </div>
+              <div className="flex items-center space-x-4 p-4">
+            <ErpAvatar
                   alt="User Avatar"
                   src={
                     typeof userSession?.userimage === "string"
@@ -142,42 +90,40 @@ const OrgSelect = ({ initialHeight = 100 }) => {
                   }
                   sx={{ width: 75, height: 75 }}
                 />
-              </span>
-
-              <h6 className="font-semibold mb-1 text-lg">
-                {userSession?.displayName}
-              </h6>
-              <p className="mb-1 text-sm text-gray-600">{userSession?.email}</p>
-
-              {/* Organization Info */}
-              <div className="mt-2 mb-2">
-                <h2 className="text-lg font-semibold text-gray-900">
-                  My Organization
-                </h2>
-              </div>
+      <div className="flex flex-col">
+        <span className="text-lg font-semibold">{userSession?.displayName}</span>
+        <span className="text-sm text-gray-500">{userSession?.email}</span>
+      </div>
+    </div>
             </div>
 
-            {/* Scrollable Branch Selector */}
-            {/* <div className="flex-1 overflow-y-auto h-[500px] min-h-[152px] max-h-[900px] mb-[45px]">
+            {/* Organizations Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">My Organization</h3>
+              <div className="space-y-3">
               <BranchSelector onLoadingChange={handleLoadingChange} />
-            </div> */}
-            {/* <div className={`flex-1 overflow-y-auto max-h-[152px] mb-[45px]${getClassName()}`}> */}
-            <ERPScrollArea className="flex-1 overflow-y-auto max-h-[152px] mb-[45px]">
-              <div >
-                <BranchSelector onLoadingChange={handleLoadingChange} />
+
+                {/* <div className="border rounded-lg p-4 flex items-center hover:bg-gray-50 cursor-pointer">
+                  <img
+                    src="/placeholder.svg?height=40&width=40"
+                    alt="Polo"
+                    className="w-10 h-10 rounded"
+                  />
+                  <div className="ml-4 flex-1">
+                    <div className="font-medium">Polo</div>
+                    <div className="text-sm text-gray-500">1 Business Name</div>
+                  </div>
+                  <div className="w-5 h-5 rounded-full border-2 border-primary"></div>
+                </div> */}
               </div>
-            </ERPScrollArea>
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4  mb-[45px] overflow-y-auto">
-              <BranchSelector onLoadingChange={handleLoadingChange} />
-            </div> */}
+            </div>
+          </div>
+        </div>
 
-            {/* <div className="flex-1 overflow-y-auto min-h-[152px] mb-[45px]">
-              <BranchSelector onLoadingChange={handleLoadingChange} />
-            </div> */}
-
-            {/* Fixed Bottom Buttons */}
-            <div className="absolute bottom-0 left-0 w-full bg-white dark:bg-body_dark shadow-inner p-4 flex gap-4">
-              <ERPButton
+        {/* Action Buttons - Fixed at the bottom */}
+        <div className="p-6 border-t">
+          <div className="flex gap-4">
+          <ERPButton
                 type="button"
                 onClick={handleSubmit}
                 loading={false}
@@ -195,92 +141,11 @@ const OrgSelect = ({ initialHeight = 100 }) => {
                 disabled={isLoading}
                 className="w-full"
               />
-            </div>
           </div>
         </div>
-      )}
-
-      {deviceInfo?.isMobile && (
-        <div>
-          <div className="flex flex-col h-[100%] w-[100%] sm:w-[540px]  justify-start px-5 py-2 sm:my-16 pb-[2.5rem] bg-white dark:bg-body_dark shadow-md rounded-md">
-            {/* <div className="w-full text-right">
-              <Link
-                className=" ti-dropdown-item !text-[0.8125rem] !p-[0.65rem] !gap-x-0 !inline-flex"
-                to="/logout"
-              >
-                <i className="ti ti-logout text-[1.125rem] me-2 opacity-[0.7]"></i>
-                Log Out1
-              </Link>
-            </div> */}
-            <div className=" mx-[25px] my-2 sm:m-10 text-center">
-              <div className="">
-                <span className="avatar avatar-xxl avatar-rounded">
-                  <ErpAvatar
-                    alt="Remy Sharp"
-                    src={
-                      typeof userSession?.userimage === "string"
-                        ? userSession?.userimage
-                        : ""
-                    }
-                    sx={{ width: 75, height: 75 }}
-                  />
-                </span>
-
-                <h6 className="font-semibold mb-1  text-[1rem]">
-                  {userSession?.displayName}
-                </h6>
-                <p className="mb-1  text-[.8rem]">{userSession?.email}</p>
-                <div className="mt-4 pb-4">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    {"My Organization"}
-                  </h2>
-                </div>
-              </div>
-              <BranchSelector onLoadingChange={handleLoadingChange} />
-              <div className="grid grid-cols-1 gap-3">
-                <ERPButton
-                  type="button"
-                  onClick={handleSubmit}
-                  loading={false}
-                  title="continue"
-                  variant="primary"
-                  disabled={isLoading}
-                ></ERPButton>
-                <ERPButton
-                  type="button"
-                  onClick={useGoBack()}
-                  loading={false}
-                  title="back"
-                  variant="secondary"
-                  disabled={isLoading}
-                ></ERPButton>
-                {/* <ERPButton
-                  type="button"
-                  // onClick={useGoBack()}
-                  loading={false}
-                  title="Log Out"
-                  variant="secondary"
-                  disabled={isLoading}
-                ></ERPButton> */}
-                <Link
-                  className=" w-[100%] h-fit flex justify-center items-center "
-                  to="/logout"
-                >
-                  <ERPButton
-                    title="Log Out"
-                    // onClick={updateLanguage}
-                    variant="primary"
-                    className="w-full px-6 py-2 rounded bg-[#dc2626] text-[#ffffff] font-medium hover:bg-[#b91c1c] transition-colors"
-                    // loading={userLanguage.loading}
-                    // disabled={userLanguage.loading}
-                  ></ERPButton>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+      </div>
+    </main>
+  </div>
   );
 };
 

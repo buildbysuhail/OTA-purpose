@@ -93,11 +93,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    const token = localStorage.getItem("token");
 
 
-    let upt = Cookies.get("up");
-    let urr = Cookies.get("ur");
+    let upt = localStorage.getItem("up");
+    let urr = localStorage.getItem("ur");
     let utt = localStorage.getItem("ut");
   
     let userRights: UserTypeRights[] = [];

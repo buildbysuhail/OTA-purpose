@@ -17,7 +17,7 @@ interface LedgerReport {
 }
 const LedgerReport = () => {
   const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const { t } = useTranslation("accountsReport");
   const [filter, setFilter] =useState<LedgerReport>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [

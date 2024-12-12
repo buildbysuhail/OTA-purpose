@@ -20,6 +20,7 @@ import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
+import dxDataGrid from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -320,6 +321,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
   const [_reload, set_reload] = useState(reload);
+  const [isPdfMode, setIsPdfMode] = useState(false);
   useEffect(() => {
     set_reload(reload);
   }, [reload]);
@@ -414,10 +416,32 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       }
     };
     fetchStore();
-  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload, postData]);
-
+  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload, postData, isPdfMode]);
+  const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
   const memoizedStore = useMemo(() => store, [store]);
 
+  const switchPdf = useCallback((e: any) => {
+    setIsPdfMode((prevpdf: boolean) => {
+      setGridCols((prev: any) => {
+        debugger;
+        if (!prevpdf) {
+          // to pdf
+          if (preferences) {
+            return preferences.columnPreferences.filter(x => x.visible == true && x.showInPdf == true)
+          }
+        } else {
+          if (preferences) {
+            return preferences.columnPreferences.filter(x => x.visible == true)
+          }
+        }
+        return prev;
+      })
+      return !prevpdf;  // Return the previous value if no change
+    });
+  }, [preferences, gridInstance]);
+  const onGridReady = (e: any) => {
+    setGridInst(e.component); // Store the instance when the grid is ready
+  };
   const onExportingHandler = useCallback((e: any) => {
     if (onExporting) {
       onExporting(e);
@@ -429,25 +453,17 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
             .filter(colPref => colPref.visible && colPref.showInPdf)
             .map(colPref => colPref.dataField)
           : gridCols.filter(colPref => colPref.visible && colPref.showInPdf).map(col => col.dataField);
-
-        const columnWidths = preferences
-          ? visibleColumns.map(colField => {
-            const colPref = preferences.columnPreferences.find(pref => pref.dataField === colField);
-            return colPref ? colPref.width || 100 : 100;
-          })
-          : visibleColumns.map(() => 100);
-        debugger;
+        // Export the DataGrid to PDF after modifying visibility
         exportDataGridToPdf({
           jsPDFDocument: doc,
-          component: e.component,
-          // columnWidths: [40, 40, 40, 100],
+          component: e.component, // Use the original component with updated column visibility
           customizeCell({ gridCell, pdfCell }) {
             if (
-              pdfCell && 
+              pdfCell &&
               gridCell?.rowType === "data" &&
               !visibleColumns.includes(gridCell?.column?.dataField)
             ) {
-              pdfCell.text = ""; 
+              pdfCell.text = "";  // Hide cell content if the column is not visible
             }
           }
         }).then(() => {
@@ -503,6 +519,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     <Fragment>
       <div className={className}>
         <DataGrid
+
+          onInitialized={onGridReady}
           dataSource={memoizedStore}
           height={gridHeight.windows}
           showBorders={showBorders}
@@ -601,6 +619,37 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 gridId={gridId}
                 onApplyPreferences={onApplyPreferences}
               />
+            </Item>
+            <Item>
+              <div className="flex items-center space-x-2">
+                {/* <span className="text-sm font-medium text-gray-700">View Mode:</span> */}
+                <div className="inline-flex bg-gray-100 rounded-lg p-1">
+                  <button
+                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${!isPdfMode
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'text-gray-600 hover:bg-gray-200'
+                      }`}
+                    onClick={() => {
+                      if (isPdfMode) {
+                        switchPdf(null);
+                      }
+                    }}>
+                    Normal View
+                  </button>
+                  <button
+                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${isPdfMode
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'text-gray-600 hover:bg-gray-200'
+                      }`}
+                    onClick={() => {
+                      if (!isPdfMode) {
+                        switchPdf(null);
+                      }
+                    }}>
+                    PDF View
+                  </button>
+                </div>
+              </div>
             </Item>
             {!hideGridAddButton && (
               <Item>

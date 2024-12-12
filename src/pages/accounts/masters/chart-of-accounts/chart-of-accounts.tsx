@@ -75,53 +75,69 @@ const OptionsColumn = ({ data }: { data: any }) => {
 
   return (
     <div ref={menuRef} className="absolute">
+      {(data.isAddable || data.isEditable || data.isDeletable ) && (
       <button
         className="hover:bg-gray-100 p-1 rounded transition-colors"
         onClick={toggleMenu}
       >
         <MoreVertical size={18} className="text-gray-500" />
       </button>
+      )}
 
       {menuVisible && (
         <div className="absolute top-0 right-0 mt-[1.6rem] w-40 bg-white border border-gray-300 rounded shadow-md z-50 transition-all duration-300 ease-in-out ">
-          <button
-            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-            onClick={(e) => {
-              dispatch(toggleAccountGroupPopup({ isOpen: true, key: null }));
-              console.log("popup open");
-            }}
-          >
-            Add Group
-          </button>
-          <button
-            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-            onClick={(e) => {
-              dispatch(toggleAccountLedgerPopup({ isOpen: true, key: null }));
-              console.log("popup open");
-            }}
-          >
-            Add Ledger
-          </button>
-          <button
-            className="block w-full px-4 py-2 text-left hover:bg-gray-100"
-            onClick={() =>
-              data.isGroup
-                ? dispatch(
-                    toggleAccountGroupPopup({ isOpen: true, key: data.id })
-                  )
-                : dispatch(
-                    toggleAccountLedgerPopup({ isOpen: true, key: data.id })
-                  )
-            }
-          >
-            Edit
-          </button>
-          <button
-            className="block w-full px-4 py-2 text-left hover:bg-red-100 text-red-600"
-            onClick={() => handleDelete(data)}
-          >
-            Delete
-          </button>
+          {data.isAddable && (
+            <>
+              <button
+                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                onClick={(e) => {
+                  dispatch(
+                    toggleAccountGroupPopup({ isOpen: true, key: null })
+                  );
+                  console.log("popup open");
+                }}
+              >
+                Add Group
+              </button>
+
+              <button
+                className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                onClick={(e) => {
+                  dispatch(
+                    toggleAccountLedgerPopup({ isOpen: true, key: null })
+                  );
+                  console.log("popup open");
+                }}
+              >
+                Add Ledger
+              </button>
+            </>
+          )}
+          {data.isEditable && (
+            <button
+              className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+              onClick={() =>
+                data.isGroup
+                  ? dispatch(
+                      toggleAccountGroupPopup({ isOpen: true, key: data.id })
+                    )
+                  : dispatch(
+                      toggleAccountLedgerPopup({ isOpen: true, key: data.id })
+                    )
+              }
+            >
+              Edit
+            </button>
+          )}
+
+          {data.isDeletable && (
+            <button
+              className="block w-full px-4 py-2 text-left hover:bg-red-100 text-red-600"
+              onClick={() => handleDelete(data)}
+            >
+              Delete
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -218,13 +234,16 @@ const ChartOfAccounts: React.FC = React.memo(() => {
                         dataField="accountGroup"
                         caption="Account Group"
                       />
-                      <Column dataField="aliasName" caption="Alias Name" />
-                      <Column dataField="balance" caption="Balance" />
-                      <Column dataField="createdUser" caption="Created User" />
+                      <Column dataField="aliasName" caption="Alias Name" width={200}/>
+                      { showbalance &&
+                      <Column dataField="balance" caption="Balance" width={150} />
+}
+                      <Column dataField="createdUser" caption="Created User" width={100} />
                       <Column
                         dataField="createdDate"
                         caption="Created Date"
                         dataType="date"
+                        width={100}
                       />
                       <Column
                         width={60}

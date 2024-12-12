@@ -63,6 +63,7 @@ const setLocaleInStorage = (locale: Locale) => {
   
   userProfileDetails.language = locale.code;
   userThemes.direction = locale.rtl ? "rtl" : "ltr";
+  debugger;
   Cookies.set("up", modelToBase64(userProfileDetails), { expires: 30 });
   localStorage.setItem("ut", modelToBase64(userThemes));
 

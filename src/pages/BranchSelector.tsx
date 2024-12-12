@@ -34,7 +34,8 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
   const [selected, setSelected] = useState<number>();
   const [selectionLoading, setSelectionLoading] = useState<{loading: boolean, clientId: number, branchId: number}>({loading: false, clientId: 0, branchId: 0});
 
-  const UserSession = useAppSelector((state: RootState) => state?.UserSession);
+  const UserSession = useAppSelector((state: RootState) => state?.UserBranches);
+  let userBranches = useAppSelector((state: RootState) => state.UserBranches);
 
   /* ########################################################################################### */
   const avatarStyle = useMemo(() => {
@@ -53,7 +54,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
     
     onLoadingChange(false);
     if (response.isOk == true) {   
-     
+     debugger;
       Cookies.set("token", response.item.token, { expires: 30 }); 
       Cookies.set("up", response.item.userProfileDetails, { expires: 30 }); 
       localStorage.setItem("ut", response.item.userThemes); 
@@ -65,6 +66,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       const _userThemes = atob(response.item.userThemes);
       const userThemes: AppState = customJsonParse(_userThemes);
       let locale = (languagesData.find((l) => l.code == userProfileDetails.language))??{ code: 'en', name: 'English', flag: usFlag, rtl: false };
+      debugger;
       syncAppStates(dispatch,userThemes, userProfileDetails,userRights, locale);  
       const settings = await api.getAsync(Urls.application_setting);
       dispatch(setApplicationSettings(
@@ -84,8 +86,9 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
   /* ########################################################################################### */
 
   useEffect(() => {
+    console.log(UserSession);
     
-  }, []);
+  }, [UserSession]);
 
   /* ########################################################################################### */
 
@@ -94,7 +97,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
       
      
       <div className="flex flex-col gap-3 sm:col-span-2">
-        {UserSession?.branches?.map((item: BranchSelectDto, index: number) => (
+        {userBranches?.branches?.map((item: BranchSelectDto, index: number) => (
           <div
             key={`org-${index}`}
             onClick={() => {
@@ -120,7 +123,6 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
            {(selectionLoading.loading && selectionLoading.clientId == item?.clientId && selectionLoading.branchId == item?.id) &&  <div className="absolute w-full h-full bg-gray-50/80 z-[1] top-0 left-0 flex items-center justify-center">
             <CircularProgress className="" color="inherit" size={25} />
           </div>}
-            
       <span className="avatar avatar-md avatar-badge pr-4">
                             <ErpAvatar
                               variant="square"

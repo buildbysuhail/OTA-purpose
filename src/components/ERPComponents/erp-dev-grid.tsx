@@ -20,6 +20,7 @@ import { formatDate } from "devextreme/localization";
 import { ActionType } from "../../redux/types";
 import ERPModal from "./erp-modal";
 import ErpGridGlobalFilter from "./erp-grid-global-filter";
+import dxDataGrid from "devextreme/ui/data_grid";
 
 interface ToolbarItem {
   item: React.ReactNode;
@@ -83,10 +84,7 @@ interface ERPDevGridProps {
   gridAddButtonText?: string | "Add";
   heightToAdjustOnWindows?: number;
   heightToAdjustOnMobile?: number;
-  popupAction?: (value: popupDataProps) => {
-    type: string;
-    payload: popupDataProps;
-  };
+  popupAction?: (value: popupDataProps) => { type: string; payload: popupDataProps; };
   defaultColumnWidth?: number;
   columnAutoWidth?: boolean;
   columnHidingEnabled?: boolean;
@@ -178,20 +176,20 @@ const createStore = async (
         const result = method === ActionType.GET
           ? await api.get(dataUrl, queryString)
           : method === ActionType.POST
-          ? await api.postAsync(dataUrl, filterData ?? postData ?? {}, queryString)
-          : null;
+            ? await api.postAsync(dataUrl, filterData ?? postData ?? {}, queryString)
+            : null;
 
         return result
           ? {
-              data: result.data,
-              totalCount: result.totalCount,
-            }
+            data: result.data,
+            totalCount: result.totalCount,
+          }
           : {
-              data: [],
-              totalCount: 0,
-              summary: {},
-              groupCount: 0,
-            };
+            data: [],
+            totalCount: 0,
+            summary: {},
+            groupCount: 0,
+          };
       } catch (err) {
         console.error("Load failed:", err);
         return {
@@ -307,7 +305,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const dispatch = useAppDispatch();
   const [gridHeight, setGridHeight] = useState<{ mobile: number; windows: number }>({ mobile: 500, windows: 500 });
   const [addButtonText, setAddButtonText] = useState<string>(gridAddButtonText == "Add" ? t("add") : gridAddButtonText);
-  const onPopupOpenClick = useCallback(() => { popupAction && dispatch(popupAction({ isOpen: true, key: null, reload: false})); }, [dispatch, popupAction]);
+  const onPopupOpenClick = useCallback(() => { popupAction && dispatch(popupAction({ isOpen: true, key: null, reload: false })); }, [dispatch, popupAction]);
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
@@ -323,6 +321,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const [bodyProps, setBodyProps] = useState({});
   const [_filterInitialData, set_filterInitialData] = useState(filterInitialData);
   const [_reload, set_reload] = useState(reload);
+  const [isPdfMode, setIsPdfMode] = useState(false);
   useEffect(() => {
     set_reload(reload);
   }, [reload]);
@@ -343,7 +342,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   ); // Add any other dependencies here
   const onApplyFilter = useCallback(
     (_filter: any) => {
-      
+
       const dss = { ..._filter }
       console.log(`prev:${filter}`);
       console.log(`latest:${_filter}`);
@@ -357,7 +356,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   ); // Add any other dependencies here
   const onCloseFilter = useCallback(
     () => {
-      
       console.log(`filterShowCountww: ${filterShowCount}`);
       if (filterShowCount == 0) {
         setFilter({});
@@ -368,87 +366,106 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     },
     []
   );
- 
-const [currentStore, setCurrentStore] = useState<CustomStore<any, any> | null>(null);
-const [store, setStore] = useState<CustomStore | null>(null);
-useEffect(() => {
-  const fetchStore = async () => {
-    if (data) {
-      setStore(data);
-      return;
-    }
 
-    if (!dataUrl) {
-      setStore(null);
-      return;
-    }
-
-    if (filterShowCount === 0 && enablefilter && showFilterInitially) {
-      setShowFilter(true);
-      return;
-    } else {
-      setShowFilter(false);
-    }
-
-    console.log(`reload: ${_reload}`);
-
-    if (_reload !== undefined && _reload !== true) {
-      // Return the current store without reloading
-      setStore(currentStore);
-      return;
-    }
-
-
-    try {
-      const newStore = await createStore(
-        keyExpr,
-        dataUrl ?? "",
-        enablefilter,
-        allowEditing,
-        method,
-        postData,
-        filter,
-        initialFilters,
-        paramNames,
-        bodyProps
-      );
-
-      setCurrentStore(newStore);
-      setStore(newStore);
-
-      if (_reload === true) {
-        changeReload && changeReload(false);
+  const [currentStore, setCurrentStore] = useState<CustomStore<any, any> | null>(null);
+  const [store, setStore] = useState<CustomStore | null>(null);
+  useEffect(() => {
+    const fetchStore = async () => {
+      if (data) {
+        setStore(data);
+        return;
       }
-    } catch (error) {
-      console.error("Error creating store:", error);
-      setStore(null);
-    } finally {
-    }
+      if (!dataUrl) {
+        setStore(null);
+        return;
+      }
+      if (filterShowCount === 0 && enablefilter && showFilterInitially) {
+        setShowFilter(true);
+        return;
+      } else {
+        setShowFilter(false);
+      }
+      console.log(`reload: ${_reload}`);
+      if (_reload !== undefined && _reload !== true) {
+        // Return the current store without reloading
+        setStore(currentStore);
+        return;
+      }
+      try {
+        const newStore = await createStore(
+          keyExpr,
+          dataUrl ?? "",
+          enablefilter,
+          allowEditing,
+          method,
+          postData,
+          filter,
+          initialFilters,
+          paramNames,
+          bodyProps
+        );
+        setCurrentStore(newStore);
+        setStore(newStore);
+        if (_reload === true) {
+          changeReload && changeReload(false);
+        }
+      } catch (error) {
+        console.error("Error creating store:", error);
+        setStore(null);
+      } finally {
+      }
+    };
+    fetchStore();
+  }, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload, postData, isPdfMode]);
+  const [gridInstance, setGridInst] = useState<dxDataGrid | null>(null);
+  const memoizedStore = useMemo(() => store, [store]);
+
+  const switchPdf = useCallback((e: any) => {
+    setIsPdfMode((prevpdf: boolean) => {
+      setGridCols((prev: any) => {
+        debugger;
+        if (!prevpdf) {
+          // to pdf
+          if (preferences) {
+            return preferences.columnPreferences.filter(x => x.visible == true && x.showInPdf == true)
+          }
+        } else {
+          if (preferences) {
+            return preferences.columnPreferences.filter(x => x.visible == true)
+          }
+        }
+        return prev;
+      })
+      return !prevpdf;  // Return the previous value if no change
+    });
+  }, [preferences, gridInstance]);
+  const onGridReady = (e: any) => {
+    setGridInst(e.component); // Store the instance when the grid is ready
   };
-
-  fetchStore();
-}, [data, keyExpr, dataUrl, allowEditing, method, filter, _reload, postData]);
-
-const memoizedStore = useMemo(() => store, [store]);
   const onExportingHandler = useCallback((e: any) => {
     if (onExporting) {
       onExporting(e);
     } else {
       if (e.format === "pdf") {
         const doc = new jsPDF();
+        const visibleColumns = preferences
+          ? preferences.columnPreferences
+            .filter(colPref => colPref.visible && colPref.showInPdf)
+            .map(colPref => colPref.dataField)
+          : gridCols.filter(colPref => colPref.visible && colPref.showInPdf).map(col => col.dataField);
+        // Export the DataGrid to PDF after modifying visibility
         exportDataGridToPdf({
           jsPDFDocument: doc,
-          component: e.component,
-          // columnWidths: [40, 40, 40, 100],
+          component: e.component, // Use the original component with updated column visibility
           customizeCell({ gridCell, pdfCell }) {
-            // if (gridCell.rowType === 'data') {
-            //   pdfCell.styles = {
-            //     ...pdfCell.styles,
-            //     'font-family': 'Arial',
-            //     'font-size': 10
-            //   };
-            // }
-          },
+            if (
+              pdfCell &&
+              gridCell?.rowType === "data" &&
+              !visibleColumns.includes(gridCell?.column?.dataField)
+            ) {
+              pdfCell.text = "";  // Hide cell content if the column is not visible
+            }
+          }
         }).then(() => {
           doc.save("DataGrid.pdf");
         });
@@ -469,7 +486,7 @@ const memoizedStore = useMemo(() => store, [store]);
         });
       }
     }
-  }, [onExporting, gridId]);
+  }, [onExporting, gridId, preferences, gridCols]);
   const handleCellClick = useCallback((event: any) => {
     // Check if the clicked cell's field matches childPopupProps.drillDownCells
     const _drillDownCells = childPopupProps?.drillDownCells.split(',')
@@ -481,7 +498,7 @@ const memoizedStore = useMemo(() => store, [store]);
         const trimmedProp = prop.trim();
         updatedBodyProps[trimmedProp] = event.data[trimmedProp];
       });
-      
+
       // Update bodyProps state
       onCellClick && onCellClick(event);
       setBodyProps(updatedBodyProps);
@@ -502,6 +519,8 @@ const memoizedStore = useMemo(() => store, [store]);
     <Fragment>
       <div className={className}>
         <DataGrid
+
+          onInitialized={onGridReady}
           dataSource={memoizedStore}
           height={gridHeight.windows}
           showBorders={showBorders}
@@ -564,7 +583,7 @@ const memoizedStore = useMemo(() => store, [store]);
           ) : (
             <Export enabled={false}></Export>
           )}
-         
+
           <Toolbar>
             {!hideGridHeader && (filterInitialData == undefined || filterInitialData == null) && (
               <Item location="before">
@@ -600,6 +619,37 @@ const memoizedStore = useMemo(() => store, [store]);
                 gridId={gridId}
                 onApplyPreferences={onApplyPreferences}
               />
+            </Item>
+            <Item>
+              <div className="flex items-center space-x-2">
+                {/* <span className="text-sm font-medium text-gray-700">View Mode:</span> */}
+                <div className="inline-flex bg-gray-100 rounded-lg p-1">
+                  <button
+                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${!isPdfMode
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'text-gray-600 hover:bg-gray-200'
+                      }`}
+                    onClick={() => {
+                      if (isPdfMode) {
+                        switchPdf(null);
+                      }
+                    }}>
+                    Normal View
+                  </button>
+                  <button
+                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${isPdfMode
+                      ? 'bg-blue-500 text-white shadow-md'
+                      : 'text-gray-600 hover:bg-gray-200'
+                      }`}
+                    onClick={() => {
+                      if (!isPdfMode) {
+                        switchPdf(null);
+                      }
+                    }}>
+                    PDF View
+                  </button>
+                </div>
+              </div>
             </Item>
             {!hideGridAddButton && (
               <Item>
@@ -671,9 +721,7 @@ const memoizedStore = useMemo(() => store, [store]);
           title={childPopupProps.title}
           width={childPopupProps.width}
           isForm={childPopupProps.isForm}
-          closeModal={() => {
-            setIsChildOpen({ isOpen: false, props: {} });
-          }}
+          closeModal={() => { setIsChildOpen({ isOpen: false, props: {} }); }}
           content={childPopupProps.content}
           contentProps={isChildOpen.props}
         />

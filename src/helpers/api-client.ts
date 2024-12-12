@@ -129,10 +129,10 @@ class APIClient {
     return headers ? axios.post(url, data, { headers: headers }) : axios.post(url, data);
   };
 
-  postAsync = async (url: string, data: any, params?: any): Promise<any> => {
+  postAsync = async (url: string, data: any, params?: any, config:any = undefined): Promise<any> => {
     setAuthorization();
 
-    const response = params ? await axios.post(`${url}?${params}`, data) : await axios.post(`${url}`, data);
+    const response = params ? await axios.post(`${url}?${params}`, data,config) : await axios.post(`${url}`, data,config);
 
     return response;
     // if (response?.status != undefined && response?.status != null) {

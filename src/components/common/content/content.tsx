@@ -27,7 +27,7 @@ import OutstandingAccountPayableReport from '../../../pages/accounts/reports/out
 import OutstandingAccountReceivableReport from '../../../pages/accounts/reports/outStandingReports/outstanding-account-receivable-report';
 import OutstandingAccountPayableAgingReport from '../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-payable-aging-report';
 import OutstandingAccountReceivableAgingReport from '../../../pages/accounts/reports/outStandingReportsAging/outstanding-account-receivable-aging-report';
-import TrialBalance from '../../../pages/accounts/reports/trial-balance';
+import TrialBalance from '../../../pages/accounts/reports/trialBalance/trial-balance';
 import BalanceSheet from '../../../pages/accounts/reports/balanceSheet/balace-sheet';
 import InventoryHistoryReport from '../../../pages/accounts/reports/transactionHistory/InventoryHistory/inventory-history-report';
 import BillwiseProfitGlobal from '../../../pages/accounts/reports/billwise-profit/billwise-profit-global';
@@ -117,6 +117,9 @@ import { Countries } from '../../../redux/slices/user-session/reducer';
 import ProfitAndLossReport from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report';
 import CashSummary from '../../../pages/accounts/reports/cashSummary/cash-summary';
 import CashSummaryLedgerwise from '../../../pages/accounts/reports/cashSummary/cash-summary-ledgerwise';
+import TrialBalancePeriodwiseReportFilter from '../../../pages/accounts/reports/trialBalance/trial-balance-report-filter-periodwise';
+import TrialBalancePeriodwise from '../../../pages/accounts/reports/trialBalance/trial-balance-detailed';
+import ProfitAndLossDetailedReport from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report-detailed';
 const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
 const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report'));
 const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
@@ -239,7 +242,9 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/outstanding_aging_payable" element={<OutstandingAccountPayableAgingReport />} />
         <Route path="/accounts/outstanding_aging_receivable" element={<OutstandingAccountReceivableAgingReport />} />
         <Route path="/accounts/trial_balance" element={<TrialBalance />} />
+        <Route path="/accounts/trial_balance_period_wise" element={<TrialBalancePeriodwise/>} />
         <Route path="/accounts/profit_and_loss" element={<ProfitAndLossReport />} />
+        <Route path="/accounts/profit_and_loss_detailed" element={<ProfitAndLossDetailedReport />} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
         <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
         <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />

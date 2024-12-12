@@ -1,0 +1,9 @@
+{
+    "date":"Date",
+    "form": "Form",
+    "voucher_no": "Voucher Number",
+    "ref_no": "Ref No",
+    "ref_date": "Ref Date",
+    "narration": "Narration",
+    "account": "Account"
+}

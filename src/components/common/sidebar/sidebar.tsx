@@ -27,7 +27,11 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
+  
   const [menuitems, setMenuitems] = useState<any>(() => {
+    console.log(`type${type}`);
+    console.log(`type${SettingsMenuItems}`);
+    
     switch (type) {
       case "erp":
         return MENUITEMS;
@@ -46,6 +50,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   useEffect(() => {
     if (type == "settings") {
       let st: [] = []
+      debugger;
       if (userSession.userTypeCode == "BA") {
         st = menuitems.filter((x: any) => x.title != 'branches');
       }
@@ -83,7 +88,7 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
       }))
       setMenuitems(st);
     }
-  }, []);
+  }, [userSession.userTypeCode]);
   const { t } = useTranslation();
   const [companyLogo, setCompanyLogo] = useState<string>("");
   const { appState, updateAppState } = useAppState();

@@ -63,11 +63,34 @@ export function getInitialPreference(gridId: any, columns: any) {
       const parsedPreferences = JSON.parse(savedPreferences) as GridPreference;
       const mergedPreferences = new Array<ColumnPreference>();
       
-      columns?.forEach((column: DevGridColumn, index: number) => {
-        let columnPreference = parsedPreferences.columnPreferences?.find(c => c.dataField === column.dataField) 
-          || getDefaultColumnPreference(column, index);
-        columnPreference.dataField = column.dataField ?? removeSpacesAndCapitalize(column.caption ?? "");
-        mergedPreferences.push(columnPreference);
+      // Create a mapping of columns by their `dataField` for easy lookup
+      const columnMap = new Map<string, DevGridColumn>();
+      columns?.forEach((column: any) => {
+        const dataField = column.dataField ?? removeSpacesAndCapitalize(column.caption ?? "");
+        columnMap.set(dataField, column);
+      });
+      
+      // Go through parsedPreferences.columnPreferences to preserve the order
+      parsedPreferences.columnPreferences?.forEach((savedPreference) => {
+        const column = columnMap.get(savedPreference.dataField);
+        if (column) {
+          mergedPreferences.push({
+            ...savedPreference,
+            dataField: savedPreference.dataField,
+          });
+          columnMap.delete(savedPreference.dataField); // Remove the matched column
+        }
+      });
+      
+      // Add any remaining columns that weren't in parsedPreferences.columnPreferences
+      columns?.forEach((column: any, index: any) => {
+        if (columnMap.has(column.dataField)) {
+          const defaultPreference = getDefaultColumnPreference(column, index);
+          mergedPreferences.push({
+            ...defaultPreference,
+            dataField: column.dataField ?? removeSpacesAndCapitalize(column.caption ?? ""),
+          });
+        }
       });
       
       updatedPreferences = {

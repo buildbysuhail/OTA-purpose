@@ -285,8 +285,8 @@ inv_reports_stock_flow:"",
   acc_transaction_base: "/api/Accounts/",
 
   // Accounts End
-
-
+  //Grid Preference
+  grid_preference:"/Core/GridPreference",
   //Templates
   templates: "/Core/Template/",
   crm_templates: "/Core/Template/CRM/",

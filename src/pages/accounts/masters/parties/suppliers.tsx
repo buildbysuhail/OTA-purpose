@@ -6,7 +6,7 @@ const Suppliers = () => {
   
   return (
     <Fragment>
-      <Parties type="Supp"></Parties>
+      <Parties type="Supp" gridId="grd_supp"></Parties>
       
     </Fragment>
   );

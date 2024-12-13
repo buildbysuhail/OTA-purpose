@@ -149,6 +149,7 @@
     "bank_cards": "Bank Cards",
     "payment_type_ID": "Payment Type ID",
     "ledger_ID": "Ledger ID",
+    "bank":"Bank",
     "payment_type": "Payment Type",
     "payment_name": "Payment Name",
     "modified_user_ID": "Modified User ID",

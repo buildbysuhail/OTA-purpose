@@ -6,7 +6,7 @@ const Customers = () => {
   
   return (
     <Fragment>
-      <Parties type="Cust"></Parties>
+      <Parties type="Cust" gridId="grd_cust"></Parties>
       
     </Fragment>
   );

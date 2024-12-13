@@ -146,7 +146,7 @@ const PartyCategory = () => {
                 columns={columns}
                 gridHeader={t("party_category")}
                 dataUrl={Urls.account_party_category}
-                gridId="grd__party_category"
+                gridId="grd_party_category"
                 popupAction={togglePartyCategoryPopup}
                 gridAddButtonType="popup"
                 changeReload={(reload: any) => {

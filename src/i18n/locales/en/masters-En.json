@@ -50,8 +50,8 @@
     "currency":"Currency",
 
     "cost_centre": "Cost Center",
-    "cost_centre_id": "Cost Centre ID",
-    "cost_centre_name": "Cost Centre Name",
+    "cost_centre_id": "Cost Center ID",
+    "cost_centre_name": "Cost Center Name",
 
     "branch_ledger": "Branch Ledgers",
     "ref_branch_name": "Ref Branch Name",
@@ -65,7 +65,7 @@
 
     "party_category": "Party Category",
 
-    "si_no": "SiNo",
+    "si_no": "S.No",
 
     "id": "Id",
     "code": "Code",
@@ -172,13 +172,13 @@
     "address_2_city": "Address 2/City",
     "address3_district": "Address 3/District",
 
-    "enter_code": "Enter Code",
-    "enter_name": "Enter Name",
-    "enter_alias_name": "Enter Alias Name",
-    "enter_name_in_arabic": "Enter Name In Arabic",
-    "enter_remarks": "Enter Remarks",
-    "enter_cost_centre_name": "Enter Cost Centre Name",
-    "enter_short_name": "Enter Short Name",
-    "additional_number": "Additional Number",
-    "country_sub_division": "Country Sub Division"
+    "enter_code": "Enter code",
+    "enter_name": "Enter name",
+    "enter_alias_name": "Enter alias name",
+    "enter_name_in_arabic": "Enter name in arabic",
+    "enter_remarks": "Enter remarks",
+    "enter_cost_centre_name": "Enter cost center name",
+    "enter_short_name": "Enter short name",
+    "additional_number": "Additional number",
+    "country_sub_division": "Country sub division"
 }

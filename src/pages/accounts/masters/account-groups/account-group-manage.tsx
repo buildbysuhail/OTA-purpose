@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountGroupPopup, toggleGroupOrder, } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -54,6 +54,12 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialAccountGroup,
   });
+  useEffect(() => {
+    if(rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)
+    {
+      handleFieldChange("parentGroupID", rootState.PopupData.accountGroup.data.groupId)
+    }
+  },[])
   const { t } = useTranslation("masters");
 
   return (
@@ -86,7 +92,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("shortName", data.shortName)
           }
-          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
+          disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}
         />
         <ERPDataCombobox
           {...getFieldProps("parentGroupID")}

@@ -92,7 +92,7 @@ const OptionsColumn = ({ data }: { data: any }) => {
                 className="block w-full px-4 py-2 text-left hover:bg-gray-100"
                 onClick={(e) => {
                   dispatch(
-                    toggleAccountGroupPopup({ isOpen: true, key: null })
+                    toggleAccountGroupPopup({ isOpen: true, key: null, data:{groupId: data.id} })
                   );
                   console.log("popup open");
                 }}
@@ -104,7 +104,7 @@ const OptionsColumn = ({ data }: { data: any }) => {
                 className="block w-full px-4 py-2 text-left hover:bg-gray-100"
                 onClick={(e) => {
                   dispatch(
-                    toggleAccountLedgerPopup({ isOpen: true, key: null })
+                    toggleAccountLedgerPopup({ isOpen: true, key: null, data:{groupId: data.id} })
                   );
                   console.log("popup open");
                 }}

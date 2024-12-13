@@ -144,7 +144,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
             <span className="text-sm">🔗</span> // Link emoji for inactive
           )}
           <span>{item?.name}</span>
-          <span className="lowercase"> •{item.name}</span>
+          <span className="lowercase"> •{item.userName}</span>
         </a>
       </div>
             <div className="flex w-full text-right place-content-end">

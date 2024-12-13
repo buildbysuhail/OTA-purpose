@@ -680,7 +680,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 </Item>
               ))}
           </Toolbar>
-          {gridCols?.map((column) => (
+          {gridCols?.filter(x => x.visible == true)?.map((column) => (
             <Column
               customizeText={column.customizeText}
               allowEditing={column.allowEditing || false}

@@ -80,6 +80,7 @@ const HorizontalProfitAndLoss: React.FC<{
   const expense = data?.filter((item: any) => item?.transType == "E");
 
   const income = data?.filter((item: any) => item?.transType == "I");
+  const subLedger = data?.filter((item: any) => item?.transType == "L");
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -96,6 +97,26 @@ const HorizontalProfitAndLoss: React.FC<{
             {expense?.map((item: any, index: number) => (
               <ProfitAndLossRow
                 key={`asset-${index}`}
+                item={item}
+                setIsOpenDetails={setIsOpenDetails}
+              />
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 className="text-lg font-bold mb-2">{t("subLedger")}</h3>
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-gray-400">
+              <th className="py-2 ps-2">{t("subLedger")}</th>
+              <th className="py-2 text-end pe-2">{t("amount")}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subLedger?.map((item: any, index: number) => (
+              <ProfitAndLossRow
+                key={`liability-${index}`}
                 item={item}
                 setIsOpenDetails={setIsOpenDetails}
               />

@@ -30,6 +30,26 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       console.error('Error saving settings:', error);
     }
   };
+
+  const handleTranslation = async() => {
+    try {
+      debugger;
+      const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${'en'}&tl=${'ar'}&dt=t&q=${encodeURIComponent(formState.data.accGroupName)}`);
+      if (!response.ok) {
+        //throw new Error(HTTP error! status: ${response.status});
+      }
+      const data = await response.json();
+      if(data[0]?.[0]!=null){
+        handleFieldChange('arabicName',data[0]?.[0]?.[0]);
+      }
+      console.log('Fetched Data:', data);
+    } catch (error) {
+      console.error('Fetch Error:', error);
+    }}
+    const handleGroupOrder = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault()
+      dispatch(toggleGroupOrder({ isOpen: true }))
+    }
   // =============================================================
   const {
     isEdit,
@@ -61,6 +81,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     }
   },[rootState.PopupData.accountGroup.data?.groupId])
   const { t } = useTranslation("masters");
+
 
   return (
     <div className="w-full pt-4">
@@ -151,11 +172,22 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             />
           </>
         }
-        <div className="flex items-center">
-          <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleGroupOrder({ isOpen: true })) }}
-            className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">{t("group_order")}
-          </a>
-        </div>
+    <div className="flex items-center space-x-4">
+      <a
+        href="#"
+        onClick={handleGroupOrder}
+        className="text-[#27272a] text-sm font-semibold underline decoration-sky-500"
+      >
+        {t("group_order")}
+      </a>
+      <a
+        href="#"
+        onClick={handleTranslation}
+        className="text-[#27272a] text-sm font-semibold underline decoration-sky-500"
+      >
+        Translate to Arabic
+      </a>
+    </div>
       </div>
         {/* Link that triggers the modal */}
         <ERPFormButtons
@@ -181,5 +213,5 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         footer={<AccountGroupOrderFooter onSubmit={onSubmit} />}
       />
     </div>
-  );
+  )
 });

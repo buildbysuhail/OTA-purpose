@@ -63,8 +63,8 @@ const Upi = () => {
       minWidth: 150,
     },
     {
-      dataField: "createdUserID",
-      caption: t("created_user_ID"),
+      dataField: "createdUser",
+      caption: t("created_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -81,8 +81,8 @@ const Upi = () => {
       minWidth: 150,
     },
     {
-      dataField: "modifiedUserID",
-      caption: t("modified_user_ID"),
+      dataField: "modifiedUser",
+      caption: t("modified_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,

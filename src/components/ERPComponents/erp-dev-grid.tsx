@@ -649,37 +649,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 onApplyPreferences={onApplyPreferences}
               />
             </Item>
-            <Item>
-              <div className="flex items-center space-x-2">
-                {/* <span className="text-sm font-medium text-gray-700">View Mode:</span> */}
-                <div className="inline-flex bg-gray-100 rounded-lg p-1">
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${!isPdfMode
-                      ? 'bg-blue-500 text-white shadow-md'
-                      : 'text-gray-600 hover:bg-gray-200'
-                      }`}
-                    onClick={() => {
-                      if (isPdfMode) {
-                        switchPdf(null);
-                      }
-                    }}>
-                    Normal View
-                  </button>
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${isPdfMode
-                      ? 'bg-blue-500 text-white shadow-md'
-                      : 'text-gray-600 hover:bg-gray-200'
-                      }`}
-                    onClick={() => {
-                      if (!isPdfMode) {
-                        switchPdf(null);
-                      }
-                    }}>
-                    PDF View
-                  </button>
-                </div>
-              </div>
-            </Item>
+           
             {!hideGridAddButton && (
               <Item>
                 <div>

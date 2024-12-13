@@ -57,23 +57,22 @@ export const AccountLedgerManage = () => {
     ) {
       load();
     }
-    
   }, [rootState.PopupData.accountLedger.data?.groupId]);
   const load = async () => {
     try {
       const res = await api.getAsync(Urls.data_getNextLedgerCode);
       if (res) {
-        handleFieldChange({ledgerCode: res.toString(),accGroupID: rootState.PopupData.accountLedger.data.groupId });
-      }
-      else
-      {
+        handleFieldChange({
+          ledgerCode: res.toString(),
+          accGroupID: rootState.PopupData.accountLedger.data.groupId,
+        });
+      } else {
         if (
           rootState.PopupData.accountLedger.data != undefined &&
           rootState.PopupData.accountLedger.data != null &&
           rootState.PopupData.accountLedger.data.groupId != undefined &&
           rootState.PopupData.accountLedger.data.groupId != null
         ) {
-         
           handleFieldChange(
             "accGroupID",
             rootState.PopupData.accountLedger.data.groupId
@@ -146,7 +145,6 @@ export const AccountLedgerManage = () => {
           label={t("group_under")}
         />
 
-
         {/* <div className="w-full max-w-md mx-auto"> */}
         <div className="flex  space-x-3">
           {formState?.data?.ledgerID == undefined ||
@@ -154,6 +152,7 @@ export const AccountLedgerManage = () => {
               <>
                 <div className="basis-2/3">
                   <ERPInput
+                    min={0}
                     {...getFieldProps("opBalance")}
                     label={t("opening_balance")}
                     type="number"

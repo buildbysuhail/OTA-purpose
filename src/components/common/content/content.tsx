@@ -120,6 +120,7 @@ import CashSummaryLedgerwise from '../../../pages/accounts/reports/cashSummary/c
 import TrialBalancePeriodwiseReportFilter from '../../../pages/accounts/reports/trialBalance/trial-balance-report-filter-periodwise';
 import TrialBalancePeriodwise from '../../../pages/accounts/reports/trialBalance/trial-balance-detailed';
 import ProfitAndLossDetailedReport from '../../../pages/accounts/reports/profitAndLoss/profit-and-loss-report-detailed';
+import BalancesheetVertical from '../../../pages/accounts/reports/balanceSheet/balancesheet-vertical';
 const PriceList = lazy(() => import('../../../pages/accounts/reports/tax-report/price-list/price-list-report'));
 const StockLedger = lazy(() => import('../../../pages/accounts/reports/tax-report/stock-ledger/stock-ledger-report'));
 const DailyBalanceAmount = lazy(() => import('../../../pages/accounts/reports/tax-report/daily-balance/daily-balance-report'));
@@ -246,6 +247,7 @@ const Content: FC<ContentProps> = () => {
         <Route path="/accounts/profit_and_loss" element={<ProfitAndLossReport />} />
         <Route path="/accounts/profit_and_loss_detailed" element={<ProfitAndLossDetailedReport />} />
         <Route path="/accounts/balance_sheet" element={<BalanceSheet />} />
+        <Route path="/accounts/balance_sheet_vertical" element={<BalancesheetVertical />} />
         <Route path="/accounts/payable_aging" element={<AccountPayableAgingReport />} />
         <Route path="/accounts/receivable_aging" element={<AccountReceivableAgingReport />} />
         {/* Reports - Accounts */}

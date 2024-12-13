@@ -9,36 +9,59 @@ import Urls from "../../../../redux/urls";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import LedgerReportFilter, { LedgerReportFilterInitialState } from "../ledger-report-filter";
+import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
 
 
-interface BalancesheetDetailsProps {
-  postData: any;
-  groupName?: string;
-}
-const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName }) => {
+
+const BalancesheetVertical = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
-      dataField: "accGroupName",
+      dataField: "accGroupID",
+      caption: t("accGroup_ID"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "ledgerID",
+      caption: t("ledger_ID"),
+      dataType: "number",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "accGroup",
       caption: t("group_name"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-red text-lg' :cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green text-lg': ''}`}>
+  {cellElement.data.accGroup}
+</span>
+      ),
     },
     {
-      dataField: "balance",
-      caption: t("balance"),
-      dataType: "number",
+      dataField: "code",
+      caption: t("code"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 90,
     },
     {
-      dataField: "branch",
-      caption:  t("branch"),
+      dataField: "particulars",
+      caption: t("particulars"),
       dataType: "string",
+      allowSearch: true,
+      allowFiltering: true,
+    },
+    {
+      dataField: "debit",
+      caption: t("debit"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
@@ -52,19 +75,21 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
       width: 150,
     },
     {
-      dataField: "debit",
-      caption: t("debit"),
-      dataType: "number",
+      dataField: "isGroup",
+      caption: t("is_group"),
+      dataType: "string",
       allowSearch: true,
       allowFiltering: true,
       width: 150,
     },
+
     {
-      dataField: "ledgerName",
-      caption: t("ledger_name"),
-      dataType: "string",
+      dataField: "amount",
+      caption: t("amount"),
+      dataType: "number",
       allowSearch: true,
       allowFiltering: true,
+      width: 150,
     },
   ];
   return (
@@ -76,14 +101,18 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
                   columns={columns}
-                  gridHeader={groupName}
-                  dataUrl= {Urls.acc_reports_account_ledger_balance_view}
-                  postData={postData}
-                  hideGridAddButton={true}
-                  enablefilter={false}
+                  // gridHeader={groupName}
+                  dataUrl={Urls.acc_reports_balance_sheet_vertical}
+                  // postData={postData}
+                  enablefilter={true}
                   showFilterInitially={true}
+                  filterContent={<BalanceSheetFilter />}
+                  filterInitialData={BalanceSheetFilterInitialState}
+                  filterWidth="100"
+                  reload={true}
+                  hideGridAddButton={true}
                   method={ActionType.POST}
-                  gridId="grd_balancesheet_details"
+                  gridId="grd_balancesheet_vertical"
                 ></ErpDevGrid>
               </div>
             </div>
@@ -94,4 +123,4 @@ const BalancesheetDetails:FC<BalancesheetDetailsProps> = ({postData , groupName 
   );
 };
 
-export default BalancesheetDetails;
+export default BalancesheetVertical;

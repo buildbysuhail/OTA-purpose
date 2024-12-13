@@ -80,7 +80,7 @@ const HorizontalProfitAndLoss: React.FC<{
   const expense = data?.filter((item: any) => item?.transType == "E");
 
   const income = data?.filter((item: any) => item?.transType == "I");
-  const subLedger = data?.filter((item: any) => item?.transType == "L");
+  // const subLedger = data?.filter((item: any) => item?.ti == "L");
 
   return (
     <div className="grid grid-cols-2 gap-4">
@@ -104,7 +104,7 @@ const HorizontalProfitAndLoss: React.FC<{
           </tbody>
         </table>
       </div>
-      <div>
+      {/* <div>
         <h3 className="text-lg font-bold mb-2">{t("subLedger")}</h3>
         <table className="w-full text-left border-collapse">
           <thead>
@@ -123,7 +123,7 @@ const HorizontalProfitAndLoss: React.FC<{
             ))}
           </tbody>
         </table>
-      </div>
+      </div> */}
       <div>
         <h3 className="text-lg font-bold mb-2">{t("income")}</h3>
         <table className="w-full text-left border-collapse">
@@ -174,7 +174,7 @@ const ProfitAndLossDetailedReport = () => {
   const LoadAsync = async (_filter?: any) => {
     setLoading(true);
     const res = await api.postAsync(
-      Urls.acc_reports_profit_and_loss,
+      Urls.acc_reports_profit_and_loss_detailed,
       _filter || filter
     );
     setData(res?.data || []);
@@ -370,12 +370,7 @@ const ProfitAndLossDetailedReport = () => {
         />
         }
       />
-
       )}
-
-      
-      
-      
     </div>
   );
 };

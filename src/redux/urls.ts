@@ -261,6 +261,7 @@ const Urls = {
   acc_reports_trial_balance: "/Accounts/RptReports/TrialBalance/",
   acc_reports_trial_balance_detailed: "/Accounts/RptReports/TrialBalancePeriodwise/",
   acc_reports_balance_sheet: "/Accounts/RptReports/BalanceSheet/",
+  acc_reports_balance_sheet_vertical: "/Accounts/RptReports/BalanceSheetDetailed/",
   acc_reports_account_ledger_balance_view: "/Accounts/RptReports/AccountLedgerBalanceView/",
   acc_reports_profit_and_loss: "/Accounts/RptReports/ProfitAndLoss/",
   acc_reports_profit_and_loss_detailed: "/Accounts/RptReports/ProfitAndLossDetailed/",

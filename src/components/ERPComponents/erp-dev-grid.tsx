@@ -697,7 +697,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
               cellRender={column.cellRender}
-              visible={column.visible || false}
+              visible={column.visible || true}
             />
           ))}
           {summaryItems.length > 0 && (

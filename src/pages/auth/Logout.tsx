@@ -26,12 +26,12 @@ const Logout = () => {
   }, []);
   const handleLogout = async () => {
     const logout = await dispatch(
-      logoutUser({ systemId: Cookies.get("systemId") ?? "" })
+      logoutUser({ systemId: localStorage.getItem("systemId") ?? "" })
     ).unwrap();
 
-    Cookies.remove("token");
-    Cookies.remove("ut");
-    Cookies.remove("up");
+    localStorage.removeItem("token");
+    localStorage.removeItem("ut");
+    localStorage.removeItem("up");
     dispatch(setUserSession(initialUserSessionData));
       dispatch(setUserBranches([]));
       dispatch(setUserRights([]));

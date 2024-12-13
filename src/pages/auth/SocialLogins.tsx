@@ -27,7 +27,7 @@ const SocialLogins = () => {
   //     // const token = response?.payload?.data?.access;
   //     // if (token) {
   //     //   dispatch(setToken(token));
-  //     //   Cookies.set("token", token, { expires: 30 });
+  //     //   localStorage.setItem("up"token", token, { expires: 30 });
   //     //   const companyResp = (await dispatch(getUserComapanies())) as any;
   //     //   companyResp?.payload?.data?.length > 0 ? navigate("/select-organization") : navigate("/create-organization");
   //     // }

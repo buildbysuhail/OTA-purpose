@@ -137,30 +137,16 @@ export const AccountLedgerManage = () => {
           onChangeData={(data: any) => {
             handleFieldChange("accGroupID", data.accGroupID);
           }}
-          disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}
+          disabled={
+            rootState.PopupData.accountLedger.data != undefined &&
+            rootState.PopupData.accountLedger.data != null &&
+            rootState.PopupData.accountLedger.data?.groupId != undefined &&
+            rootState.PopupData.accountLedger.data?.groupId != null
+          }
           label={t("group_under")}
         />
 
-        <ERPDataCombobox
-          {...getFieldProps("accGroupID")}
-          field={{
-            id: "accGroupID",
-            required: true,
-            getListUrl: Urls.data_acc_groups,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          // disabled={
-          //   rootState.PopupData.accountLedger.data != undefined &&
-          //   rootState.PopupData.accountLedger.data != null &&
-          //   rootState.PopupData.accountLedger.data?.groupId != undefined &&
-          //   rootState.PopupData.accountLedger.data?.groupId != null
-          // }
-          onChangeData={(data: any) => {
-            handleFieldChange("accGroupID", data.accGroupID);
-          }}
-          label={t("group_under")}
-        />
+
         {/* <div className="w-full max-w-md mx-auto"> */}
         <div className="flex  space-x-3">
           {formState?.data?.ledgerID == undefined ||

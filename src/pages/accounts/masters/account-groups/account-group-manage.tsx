@@ -59,7 +59,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     {
       handleFieldChange("parentGroupID", rootState.PopupData.accountGroup.data.groupId)
     }
-  },[])
+  },[rootState.PopupData.accountGroup.data?.groupId])
   const { t } = useTranslation("masters");
 
   return (
@@ -92,7 +92,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("shortName", data.shortName)
           }
-          disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}
+          disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) }
         />
         <ERPDataCombobox
           {...getFieldProps("parentGroupID")}
@@ -106,7 +106,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("parentGroupID", data.parentGroupID);
           }}
-          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
+          disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}
           label={t("group_under")}
         />
         <ERPInput

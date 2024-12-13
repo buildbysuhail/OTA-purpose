@@ -34,6 +34,12 @@ export const AccountLedgerManage = () => {
     useApiClient: true,
     initialData: initialAccountLedger
   });
+    useEffect(() => {
+      if(rootState.PopupData.accountLedger.data != undefined && rootState.PopupData.accountLedger.data != null && rootState.PopupData.accountLedger.data.groupId != undefined && rootState.PopupData.accountLedger.data.groupId != null)
+      {
+        handleFieldChange("accGroupID", rootState.PopupData.accountLedger.data.groupId)
+      }
+    },[rootState.PopupData.accountLedger.data?.groupId])
   useEffect(() => {
     if(rootState.PopupData.accountLedger.key === undefined || rootState.PopupData.accountLedger.key === null ) {
       load();
@@ -54,6 +60,7 @@ export const AccountLedgerManage = () => {
 
   return (
     <div className="w-full pt-4">
+      {rootState.PopupData.accountLedger.data?.groupId}
       <div className="grid grid-cols-2 gap-3">
         <ERPInput
           {...getFieldProps('ledgerCode')}
@@ -90,6 +97,7 @@ export const AccountLedgerManage = () => {
             valueKey: "id",
             labelKey: "name",
           }}
+          disabled={(rootState.PopupData.accountLedger.data != undefined && rootState.PopupData.accountLedger.data != null && rootState.PopupData.accountLedger.data.groupId != undefined && rootState.PopupData.accountLedger.data.groupId != null)}
           onChangeData={(data: any) => {
             handleFieldChange("accGroupID", data.accGroupID);
           }}

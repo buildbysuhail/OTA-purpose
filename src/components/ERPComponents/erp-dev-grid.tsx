@@ -439,6 +439,15 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       return !prevpdf;  // Return the previous value if no change
     });
   }, [preferences, gridInstance]);
+  const switchToPdf = useCallback(() => {
+      setGridCols((prev: any) => {
+        if (preferences) {
+          const cols = preferences.columnPreferences.filter(x => x.visible == true && x.showInPdf == true);
+          return cols;
+        }
+        return prev;
+      })
+  }, [preferences, gridInstance]);
   const onGridReady = (e: any) => {
     setGridInst(e.component); // Store the instance when the grid is ready
   };
@@ -448,30 +457,50 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     } else {
       if (e.format === "pdf") {
         const doc = new jsPDF();
-        const visibleColumns = preferences
+        
+        // Store original column visibility states
+        const originalColumnVisibility = e.component.getVisibleColumns().map((column: any) => ({
+          dataField: column.dataField,
+          visible: column.visible
+        }));
+  
+        // Get columns that should be shown in PDF
+        const pdfVisibleColumns = preferences
           ? preferences.columnPreferences
-            .filter(colPref => colPref.visible && colPref.showInPdf)
-            .map(colPref => colPref.dataField)
-          : gridCols.filter(colPref => colPref.visible && colPref.showInPdf).map(col => col.dataField);
-        // Export the DataGrid to PDF after modifying visibility
+              .filter(colPref => colPref.showInPdf)
+              .map(colPref => colPref.dataField)
+          : gridCols
+              .filter(col => col.showInPdf)
+              .map(col => col.dataField);
+  
+        // Temporarily hide columns that shouldn't be in PDF
+        e.component.beginUpdate();
+        e.component.getVisibleColumns().forEach((column: any) => {
+          if (!pdfVisibleColumns.includes(column.dataField)) {
+            e.component.columnOption(column.dataField, 'visible', false);
+          }
+        });
+  
+        // Export to PDF with only PDF-visible columns
         exportDataGridToPdf({
           jsPDFDocument: doc,
-          component: e.component, // Use the original component with updated column visibility
-          customizeCell({ gridCell, pdfCell }) {
-            if (
-              pdfCell &&
-              gridCell?.rowType === "data" &&
-              !visibleColumns.includes(gridCell?.column?.dataField)
-            ) {
-              pdfCell.text = "";  // Hide cell content if the column is not visible
-            }
-          }
+          component: e.component,
         }).then(() => {
-          doc.save("DataGrid.pdf");
+          debugger;
+          // Restore original column visibility
+          switchToPdf();
+          // gridCols.forEach((dataField: any, visible: any) => {
+          //   e.component.columnOption(dataField, 'visible', true);
+          // });
+          // e.component.endUpdate();
+          
+          doc.save(`${gridId}.pdf`);
         });
+  
       } else if (e.format === "xlsx") {
         const workbook = new Workbook();
         const worksheet = workbook.addWorksheet("Main sheet");
+        
         exportDataGridToExcel({
           component: e.component,
           worksheet,
@@ -620,37 +649,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 onApplyPreferences={onApplyPreferences}
               />
             </Item>
-            <Item>
-              <div className="flex items-center space-x-2">
-                {/* <span className="text-sm font-medium text-gray-700">View Mode:</span> */}
-                <div className="inline-flex bg-gray-100 rounded-lg p-1">
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${!isPdfMode
-                      ? 'bg-blue-500 text-white shadow-md'
-                      : 'text-gray-600 hover:bg-gray-200'
-                      }`}
-                    onClick={() => {
-                      if (isPdfMode) {
-                        switchPdf(null);
-                      }
-                    }}>
-                    Normal View
-                  </button>
-                  <button
-                    className={`px-3 py-1 text-sm rounded-md transition-all duration-200 ${isPdfMode
-                      ? 'bg-blue-500 text-white shadow-md'
-                      : 'text-gray-600 hover:bg-gray-200'
-                      }`}
-                    onClick={() => {
-                      if (!isPdfMode) {
-                        switchPdf(null);
-                      }
-                    }}>
-                    PDF View
-                  </button>
-                </div>
-              </div>
-            </Item>
+           
             {!hideGridAddButton && (
               <Item>
                 <div>
@@ -681,7 +680,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 </Item>
               ))}
           </Toolbar>
-          {gridCols?.map((column) => (
+          {gridCols?.filter(x => x.visible == true)?.map((column) => (
             <Column
               customizeText={column.customizeText}
               allowEditing={column.allowEditing || false}

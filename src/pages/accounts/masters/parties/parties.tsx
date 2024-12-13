@@ -16,6 +16,7 @@ import DataGrid, { Column, Scrolling, RemoteOperations, Paging, KeyboardNavigati
 import ERPFileUploadButton from "../../../../components/ERPComponents/erp-file-upload-button";
 interface PartiesProps {
   type: string;
+  gridId:string;
 }
 export const getInitialImportExportData = (type: string) => ({
   data: {
@@ -56,7 +57,7 @@ interface PartiesForImport {
   obDate?: Date | null;
 }
 const api = new APIClient();
-const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
+const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) => {
   const MemoizedPartiesManage = useMemo(() => React.memo(PartiesManage), []);
   const [totalCount, setTotalCount] = useState(0);
   const [failedCount, setFailedCount] = useState(0);
@@ -555,7 +556,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' }) => {
                   columns={columns}
                   gridHeader={type === 'Cust' ? t("customers") : t("suppliers")}
                   dataUrl={`${Urls.parties}type/${type}`}
-                  gridId="grd_parties"
+                  gridId={gridId}
                   popupAction={toggleParties}
                   gridAddButtonType="popup"
                   customToolbarItems={[{

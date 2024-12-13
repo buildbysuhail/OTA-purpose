@@ -6,6 +6,7 @@ import { modelToBase64 } from "../../../utilities/jsonConverter";
 export interface BranchSelectDto {
   id: number;
   name?: string;
+  userName?: string;
   clientId: number;
   clientName?: string;
   logo?: string;

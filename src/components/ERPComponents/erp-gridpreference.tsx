@@ -6,12 +6,15 @@ import ERPSubmitButton from "./erp-submit-button";
 import ERPModal from "./erp-modal";
 import { ColumnPreference, DevGridColumn, GridPreference, initialGridPreference } from "../types/dev-grid-column";
 import { getInitialPreference } from "../../utilities/dx-grid-preference-updater";
+import { APIClient } from "../../helpers/api-client";
+import Urls from "../../redux/urls";
+import { json } from "react-router-dom";
 interface GridPreferenceChooserProps {
   gridId: string;
   columns: DevGridColumn[];
   onApplyPreferences: (pref: any) => void;
 }
-
+const api = new APIClient();
 
 const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
   gridId,
@@ -45,7 +48,7 @@ const GridPreferenceChooser: FC<GridPreferenceChooserProps> = ({
 
     let startIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragItem.current);
     let endIndex = preferences.columnPreferences?.findIndex((fld: any) => fld?.dataField === dragOverItem.current);
-debugger;
+    debugger;
     setPreferences((prevPreferences: any) => {
       return {
         ...prevPreferences,
@@ -125,17 +128,19 @@ debugger;
     });
   };
 
-  const handleApplyPreferences = () => {
+  const handleApplyPreferences = async () => {
     debugger;
+    const preference = JSON.stringify(preferences)
     // Save preferences to localStorage
     localStorage.setItem(
       `gridPreferences_${gridId}`,
-      JSON.stringify(preferences)
+      preference
     );
+    await api.postAsync(Urls.grid_preference, { GridID: gridId, Design: preference })
     setIsOpen(false);
     // Call the callback function to apply preferences
     onChange(preferences);
-  };
+  }
 
 
   // ==================================================================
@@ -249,21 +254,21 @@ debugger;
               })
             }
 
-         
+
           </div>
         </div>
         )}
         footer={(
           <div className="flex gap-10 justify-between py-3 border-t mt-5">
-          <ERPSubmitButton type="button" 
-          variant="primary"
-          onClick={handleApplyPreferences}>
-            Save
-          </ERPSubmitButton>
-          <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28 bg-[#e5e7eb] text-[#404040]" >
-            Cancel
-          </ERPSubmitButton>
-        </div>
+            <ERPSubmitButton type="button"
+              variant="primary"
+              onClick={handleApplyPreferences}>
+              Save
+            </ERPSubmitButton>
+            <ERPSubmitButton type="reset" onClick={() => setIsOpen(false)} className=" w-28 bg-[#e5e7eb] text-[#404040]" >
+              Cancel
+            </ERPSubmitButton>
+          </div>
         )}
       />
 

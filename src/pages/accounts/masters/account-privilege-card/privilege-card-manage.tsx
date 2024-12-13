@@ -135,7 +135,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange('oBalance', data.oBalance)}
         />
         <ERPDateInput
-          {...getFieldProps("activateDate")}
+          {...getFieldProps("activatedDate")}
           label={t("activate_date")}
           onChangeData={(data: any) => handleDateChange("activateDate", data.activateDate)}
         />

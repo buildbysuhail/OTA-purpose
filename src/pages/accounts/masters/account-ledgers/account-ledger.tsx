@@ -137,7 +137,7 @@ const AccountLedgerType = () => {
       width: 100,
     },
     {
-      dataField: "accountGroupId",
+      dataField: "accountGroupID",
       caption: t("account_group_id"),
       dataType: "string",
       allowSorting: true,

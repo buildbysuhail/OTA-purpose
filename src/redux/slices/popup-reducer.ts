@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 export interface popupDataProps {
   isOpen?: boolean | false;
   key?: any | null;
+  data?: any | undefined;
   mode?: "add" | "edit" | "view";
   reload?: boolean;
 }

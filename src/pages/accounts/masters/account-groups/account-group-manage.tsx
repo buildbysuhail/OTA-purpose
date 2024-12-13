@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleAccountGroupPopup, toggleGroupOrder, } from "../../../../redux/slices/popup-reducer";
 import ERPInput from "../../../../components/ERPComponents/erp-input";
@@ -30,6 +30,26 @@ export const AccountGroupManage: React.FC = React.memo(() => {
       console.error('Error saving settings:', error);
     }
   };
+
+  const handleTranslation = async() => {
+    try {
+      debugger;
+      const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${'en'}&tl=${'ar'}&dt=t&q=${encodeURIComponent(formState.data.accGroupName)}`);
+      if (!response.ok) {
+        //throw new Error(HTTP error! status: ${response.status});
+      }
+      const data = await response.json();
+      if(data[0]?.[0]!=null){
+        handleFieldChange('arabicName',data[0]?.[0]?.[0]);
+      }
+      console.log('Fetched Data:', data);
+    } catch (error) {
+      console.error('Fetch Error:', error);
+    }}
+    const handleGroupOrder = (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault()
+      dispatch(toggleGroupOrder({ isOpen: true }))
+    }
   // =============================================================
   const {
     isEdit,
@@ -54,7 +74,14 @@ export const AccountGroupManage: React.FC = React.memo(() => {
     useApiClient: true,
     initialData: initialAccountGroup,
   });
+  useEffect(() => {
+    if(rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)
+    {
+      handleFieldChange("parentGroupID", rootState.PopupData.accountGroup.data.groupId)
+    }
+  },[rootState.PopupData.accountGroup.data?.groupId])
   const { t } = useTranslation("masters");
+
 
   return (
     <div className="w-full pt-4">
@@ -86,7 +113,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) =>
             handleFieldChange("shortName", data.shortName)
           }
-          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
+          disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) }
         />
         <ERPDataCombobox
           {...getFieldProps("parentGroupID")}
@@ -100,7 +127,7 @@ export const AccountGroupManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => {
             handleFieldChange("parentGroupID", data.parentGroupID);
           }}
-          disabled={formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true}
+          disabled={(formState?.data?.accGroupId != undefined && formState?.data?.accGroupId > 0 && formState?.data?.isEditable != true) || (rootState.PopupData.accountGroup.data != undefined && rootState.PopupData.accountGroup.data != null && rootState.PopupData.accountGroup.data.groupId != undefined && rootState.PopupData.accountGroup.data.groupId != null)}
           label={t("group_under")}
         />
         <ERPInput
@@ -145,11 +172,22 @@ export const AccountGroupManage: React.FC = React.memo(() => {
             />
           </>
         }
-        <div className="flex items-center">
-          <a href="#" onClick={(e) => { e.preventDefault(); dispatch(toggleGroupOrder({ isOpen: true })) }}
-            className="text-[#27272a] text-sm  font-semibold  underline  decoration-sky-500">{t("group_order")}
-          </a>
-        </div>
+    <div className="flex items-center space-x-4">
+      <a
+        href="#"
+        onClick={handleGroupOrder}
+        className="text-[#27272a] text-sm font-semibold underline decoration-sky-500"
+      >
+        {t("group_order")}
+      </a>
+      <a
+        href="#"
+        onClick={handleTranslation}
+        className="text-[#27272a] text-sm font-semibold underline decoration-sky-500"
+      >
+        Translate to Arabic
+      </a>
+    </div>
       </div>
         {/* Link that triggers the modal */}
         <ERPFormButtons
@@ -175,5 +213,5 @@ export const AccountGroupManage: React.FC = React.memo(() => {
         footer={<AccountGroupOrderFooter onSubmit={onSubmit} />}
       />
     </div>
-  );
+  )
 });

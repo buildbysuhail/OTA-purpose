@@ -125,23 +125,16 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     };
 
     const handleDownload = async (fileData: string) => {
+      debugger;
       ERPToast.show("Download started...", "success");
       try {
         const parts = fileData.split("-");
         let fileType = parts[parts.length-1];
         parts.pop();
+        const link = document.createElement("a");
         if(fileType == "FileUrl")
         {
-          const link = document.createElement("a");
           link.href = parts.join("-");
-
-          // Fallback to the provided fileName or a default name
-          const suggestedFileName = parts.join("-") || "download";
-
-          link.setAttribute("download", suggestedFileName);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
         }
         else
         {
@@ -153,21 +146,17 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             responseType: "blob", // Ensure the response is treated as a binary blob
           });
           debugger;
-          if (res) {
-            // Create a download link and trigger download
-            const url = window.URL.createObjectURL(res);
-            const link = document.createElement("a");
+          if (res) {            
             link.href = url;
-  
-            // Fallback to the provided fileName or a default name
-            const suggestedFileName = parts.join("-") || "download";
-  
-            link.setAttribute("download", suggestedFileName);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
           }
         }
+          // Fallback to the provided fileName or a default name
+          const suggestedFileName = parts.join("-") || "download";
+
+          link.setAttribute("download", suggestedFileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
 
       } catch (error) {
         console.error("Error downloading file:", error);

@@ -10,6 +10,7 @@ import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import { useSearchParams } from "react-router-dom";
+import TrialBalancePeriodwiseReportFilter, { TrialBalancePeriodwiseReportFilterInitialState } from "./trialBalance/trial-balance-report-filter-periodwise";
 
 interface TransactionReport {
 
@@ -135,6 +136,11 @@ const TransactionReport = () => {
                   hideGridAddButton={true}
                   // gridAddButtonType="popup"
                   reload={true}
+                  filterWidth="100"
+                  // enablefilter={true}
+                  // showFilterInitially={true}
+                  // filterContent={<TrialBalancePeriodwiseReportFilter />}
+                  // filterInitialData={TrialBalancePeriodwiseReportFilterInitialState}
                 ></ErpDevGrid>
               </div>
             </div>

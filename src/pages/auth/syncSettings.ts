@@ -6,6 +6,7 @@ import { UserModel, setUserSession } from "../../redux/slices/user-session/reduc
 import { AppDispatch } from "../../redux/store";
 import { UserRight } from "../settings/userManagement/data";
 import { setUserRights, UserTypeRights } from "../../redux/slices/user-rights/reducer";
+import { setUserBranches } from "../../redux/slices/user-session/user-branches-reducer";
 export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
   dispatch(setDirection(locale.rtl ? "rtl" : "ltr"));
   
@@ -16,8 +17,10 @@ export const setLanguage = async (dispatch: AppDispatch, locale: Locale) => {
 
 }
 export const syncAppStates = async (dispatch: AppDispatch, res: AppState, userSession: UserModel,  userRights: UserTypeRights[], locale: Locale) => {
-
-  dispatch(setUserSession(userSession));
+debugger;
+  dispatch(setUserBranches(userSession.branches));
+  dispatch(setUserSession({...userSession, branches:[]}));
+  dispatch(setUserBranches(userSession.branches));
   dispatch(setUserRights(userRights));
 
   setLanguage(dispatch, locale);

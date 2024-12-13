@@ -8,6 +8,8 @@ import { logoutUser } from "../../redux/slices/auth/login/thunk";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { initialUserSessionData, setUserSession } from "../../redux/slices/user-session/reducer";
+import { setUserBranches } from "../../redux/slices/user-session/user-branches-reducer";
+import { setUserRights } from "../../redux/slices/user-rights/reducer";
 
 const Logout = () => {
   const { t } = useTranslation();
@@ -24,13 +26,15 @@ const Logout = () => {
   }, []);
   const handleLogout = async () => {
     const logout = await dispatch(
-      logoutUser({ systemId: Cookies.get("systemId") ?? "" })
+      logoutUser({ systemId: localStorage.getItem("systemId") ?? "" })
     ).unwrap();
 
-    Cookies.remove("token");
-    Cookies.remove("ut");
-    Cookies.remove("up");
+    localStorage.removeItem("token");
+    localStorage.removeItem("ut");
+    localStorage.removeItem("up");
     dispatch(setUserSession(initialUserSessionData));
+      dispatch(setUserBranches([]));
+      dispatch(setUserRights([]));
     navigate("/login");
     if (logout.isOk == true) {
      

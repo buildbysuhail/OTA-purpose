@@ -15,7 +15,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 axios.defaults.headers.post["X-Custom-Header"] = new Date().toISOString();
 
 // content type
-const token = Cookies.get("token");
+const token = localStorage.getItem("token");
 if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
 // intercepting to capture errors
@@ -33,7 +33,7 @@ axios.interceptors.response.use(
  * @param {*} token
  */
 const setAuthorization = () => {
-  const token = Cookies.get("token");
+  const token = localStorage.getItem("token");
   if (token) axios.defaults.headers.common["Authorization"] = "Bearer " + token;
 
   axios.defaults.headers.common["X-Software-Date"] = new Date().toDateString();
@@ -129,10 +129,10 @@ class APIClient {
     return headers ? axios.post(url, data, { headers: headers }) : axios.post(url, data);
   };
 
-  postAsync = async (url: string, data: any, params?: any): Promise<any> => {
+  postAsync = async (url: string, data: any, params?: any, config:any = undefined): Promise<any> => {
     setAuthorization();
 
-    const response = params ? await axios.post(`${url}?${params}`, data) : await axios.post(`${url}`, data);
+    const response = params ? await axios.post(`${url}?${params}`, data,config) : await axios.post(`${url}`, data,config);
 
     return response;
     // if (response?.status != undefined && response?.status != null) {

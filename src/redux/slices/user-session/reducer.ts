@@ -93,13 +93,13 @@ const userSessionSlice = createSlice({
     builder.addCase(userSession?.fulfilled, (state, action) => {
       if (action.payload.isOk) {
         
-        Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 });
+        localStorage.setItem("up", modelToBase64(action.payload.item));
         return action.payload.item;
       }
     });
     builder.addCase(setBranch.fulfilled, (state, action) => {
       if (action.payload.isOk) {
-        // Cookies.set("up", modelToBase64(action.payload.item), { expires: 30 });
+        // localStorage.setItem("up", modelToBase64(action.payload.item));
         // return  action.payload.item;
       }
     });

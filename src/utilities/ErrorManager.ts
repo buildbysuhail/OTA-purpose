@@ -71,7 +71,7 @@ const ErrorManager = {
           msg = error?.response?.data?.detail || msg;
         }
         ERPToast.show(msg, "error");
-        Cookies.remove("token");
+        // localStorage.removeItem("token");
         return;
       }
 
@@ -117,7 +117,7 @@ const ErrorManager = {
     }
   },
   logOut() {
-    Cookies.remove("token");
+    localStorage.removeItem("token");
   },
 };
 

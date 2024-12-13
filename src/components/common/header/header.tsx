@@ -49,12 +49,14 @@ const Header: FC<HeaderProps> = () => {
     }
   };
   let userSession = useAppSelector((state: RootState) => state.UserSession);
+  
+  let userBranches = useAppSelector((state: RootState) => state.UserBranches);
 
   const handleFullscreenChange = () => {
     setFullScreen(!!document.fullscreenElement);
   };
   // useEffect(() => {
-  //   const token = Cookies.get("token");
+  //   const token = localStorage.getItem("token");
   //   if (token) syncAppStates();
   //   else navigate("/login");
   // }, []);
@@ -905,7 +907,7 @@ const Header: FC<HeaderProps> = () => {
                           <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
                           Organizations{" "}
                           <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
-                            {userSession?.branches?.length}
+                            {userBranches?.branches?.length}
                           </span>
                         </Link>
                       </li>
@@ -1005,7 +1007,7 @@ const Header: FC<HeaderProps> = () => {
                           <i className="ti ti-inbox text-[1.125rem] me-2 opacity-[0.7]"></i>
                           Organizations{" "}
                           <span className="!py-1 !px-[0.45rem] !font-semibold !rounded-sm text-success text-[0.75em] bg-success/10 ms-auto">
-                            {userSession?.branches?.length}
+                            {userBranches?.branches?.length}
                           </span>
                         </Link>
                       </li>

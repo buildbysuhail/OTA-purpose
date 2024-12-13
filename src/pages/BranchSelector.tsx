@@ -137,7 +137,7 @@ const BranchSelector: React.FC<ChildComponentProps> = ({ onLoadingChange }) => {
         <a className="text-left">
           {item?.clientName}
         </a>
-        <a className="capitalize text-gray-500 flex gap-2 items-center">
+        <a className="capitalize text-gray-500 flex gap-2 items-center" style={{    minWidth:'max-content' }}>
           {item?.isActive ? (
             <span className="text-sm">🏢</span> // Building emoji for active
           ) : (

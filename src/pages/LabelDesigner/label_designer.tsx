@@ -63,6 +63,7 @@ import {
   LabelState,
   PlacedComponent,
   PropertiesState,
+  tableColumns,
   TemplateState,
 } from "../InvoiceDesigner/Designer/interfaces";
 import { useAppDispatch } from "../../utilities/hooks/useAppDispatch";
@@ -73,6 +74,7 @@ import ERPPreviousUrlButton from "../../components/ERPComponents/erp-previous-ui
 import { handleSetTemplateBarcodeLabelBackgroundImage } from "../../redux/slices/templates/reducer";
 import { convertFileToBase64 } from "../../utilities/file-utils";
 import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
+import { AddColumnsManage } from "./column-manage";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -264,18 +266,10 @@ export default function ExtendedPDFBarcodeDesigner() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<(HTMLCanvasElement | null)[]>([]);
   const [value, setValue] = React.useState("element");
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+  const [isAddColumnModalOpen, setIsAddColumnModalOpen] = useState(false);
+  const [modalPosition, setModalPosition] = useState({ top: 0});
+  const [sidebarWidth, setSidebarWidth] = useState(300);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const colId = open ? 'add-columns' : undefined;
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
   const inputFile = useRef<HTMLInputElement>(null);
@@ -379,7 +373,7 @@ export default function ExtendedPDFBarcodeDesigner() {
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    
+    debugger;
     e.preventDefault();
     const componentType = parseInt(
       e.dataTransfer.getData("componentType")
@@ -471,7 +465,7 @@ export default function ExtendedPDFBarcodeDesigner() {
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
-          placedComponents: updatedComponents || [], // Use an empty array if undefined
+          placedComponents: updatedComponents || [], 
         },
       }));
       setSelectedComponent({
@@ -495,7 +489,7 @@ export default function ExtendedPDFBarcodeDesigner() {
           comp.id === selectedComponent.id && comp.tableProps
             ? {
               ...comp,
-              tableProps: { ...comp.tableProps, [property]: value },
+            tableProps: { ...comp.tableProps, [property]: value },
             }
             : comp
         );
@@ -503,17 +497,53 @@ export default function ExtendedPDFBarcodeDesigner() {
         ...prev,
         barcodeState: {
           ...prev.barcodeState,
-          placedComponents: updatedComponents || [], // Use an empty array if undefined
+          placedComponents: updatedComponents || [], 
         },
       }));
       setSelectedComponent({
         ...selectedComponent,
-        tableProps: { ...selectedComponent.tableProps, [property]: value },
+      tableProps: { ...selectedComponent.tableProps, [property]: value },
       });
     }
   };
+
+  const handleAddColumn = (columnData: tableColumns) => {
+    if (selectedComponent && selectedComponent.type === DesignerElementType.table) {
+      const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp) =>
+        comp.id === selectedComponent.id
+          ? {
+              ...comp,
+              tableProps: {
+                ...comp.tableProps,
+                columns: [...(comp.tableProps?.columns || []), columnData],
+              },
+            }
+          : comp
+      );
+
+      // setTemplateData((prev: TemplateState) => ({
+      //   ...prev,
+      //   barcodeState: {
+      //     ...prev.barcodeState,
+      //     placedComponents: updatedComponents || [],
+      //   },
+      // }));
+
+      // setSelectedComponent({
+      //   ...selectedComponent,
+      //   tableProps: {
+      //     ...selectedComponent.tableProps,
+      //     columns: [...(selectedComponent.tableProps?.columns || []), columnData],
+      //   },
+      // });
+
+      setIsAddColumnModalOpen(false);
+    }
+  };
+  
+   
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
-    
+    debugger;
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
       setDraggingComponent(component);
@@ -1046,7 +1076,9 @@ export default function ExtendedPDFBarcodeDesigner() {
               }`}
           />
         }
-        className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden"
+        onResize={(e, { size }) => setSidebarWidth(size.width)}
+        className="bg-card text-card-foreground rounded-lg shadow-lg overflow-hidden relative"
+     
       >
         <div className="p-4 h-full">
           <div className="flex flex-col mb-4 z-10">
@@ -1131,62 +1163,39 @@ export default function ExtendedPDFBarcodeDesigner() {
                       }
                     />
                   </Box>
-                  
-                  {selectedComponent.type === DesignerElementType.table &&(
-                  <>
-
-                        <Button aria-describedby={colId} className="ti-btn ti-btn-primary-full " onClick={handleClick}>
-                          Add Columns
-                        </Button>
-                        <Popover
-                          id={colId}
-                          open={open}
-                          anchorEl={anchorEl}
-                          onClose={handleClose}
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                          }}
-                        >
-                      
-                      </Popover>
-                  {/* <Box sx={{mb:1}}>  
-  
-                         <button className="ti-btn ti-btn-primary-full  flex"
-                          onClick={() =>setAddCol(true)  }
-                         >
-                           <Plus className="w-4 h-4" />
-                           Add Columns
-                        </button>
-                       
-                  </Box>
-
-                  <Popover
-                    id={id}
-                    open={open}
-                    anchorEl={addCol}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
+                  {selectedComponent && selectedComponent.type === DesignerElementType.table && (
+                  <Button 
+                    variant="contained" 
+                    onClick={() => {
+                      const buttonElement = document.querySelector('.add-columns-button');
+                      if (buttonElement) {
+                        const rect = buttonElement.getBoundingClientRect();
+                        setModalPosition({ top: rect.bottom});
+                      }
+                      setIsAddColumnModalOpen(true);
                     }}
+                    className="add-columns-button"
                   >
-                    <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-                  </Popover> */}
-               {/* <Box 
-               sx={{
-                 display: "flex",
-                 flexDirection: "column",
-                 gap:2,
-                 alignItems:"center",
-                 justifyContent:"flex-start",
-                 mb: 1, 
-               }} >
-
-               </Box> */}
-               </>
-               )}
-                
+                    Add Columns
+                  </Button>
+                    )}
+                  <ERPModal
+                        title="Add Columns"
+                        isOpen={isAddColumnModalOpen}
+                        closeModal={() => setIsAddColumnModalOpen(false)}
+                        customPosition={true}
+                        isForm
+                        customStyle={{
+                          position: 'absolute',
+                          top: `${100}px`,
+                          right: `${10}px`,
+                          width: `${sidebarWidth-40}px`,
+                          height: 'auto',
+                          maxHeight: '80%',
+                    }}
+                    content={<AddColumnsManage onSubmit={handleAddColumn} />}
+                   
+                  />
 
                   {selectedComponent.type !== DesignerElementType.table && (
                       <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
@@ -1220,77 +1229,73 @@ export default function ExtendedPDFBarcodeDesigner() {
                     </Box>
                   )}
              
-                  {selectedComponent.type === DesignerElementType.line ? 
-                  (
-                    <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
-                    <Box className="basis-2/3">
-                      <ERPSlider
-                        label="line Height"
-                        value={selectedComponent?.lineHeight}
-                        onChange={(e) =>
-                          handlePropertyChange(
-                            "lineHeight",
-                            e.target.valueAsNumber
-                          )
-                        }
-                        min={10}
-                        max={1400}
-                      />
-                    </Box>
-                    <Box className="basis-1/3">
-
-                      <ERPInput
-                        id="lineHeight"
-                        type="number"
-                        noLabel
-                        value={selectedComponent.lineHeight}
-                        data={selectedComponent}
-                        onChange={(e) =>
-                          handlePropertyChange(
-                            "lineHeight",
-                            parseInt(e.target.value, 10)
-                          )
-                        }
-                      />
-
-                    </Box>
-                  </Box>
-                  ):(
-                    <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
-                    <Box className="basis-2/3">
-                      <ERPSlider
-                        label="Width"
-                        value={selectedComponent.width}
-                        onChange={(e) =>
-                          handlePropertyChange(
-                            "width",
-                            e.target.valueAsNumber
-                          )
-                        }
-                        min={10}
-                        max={500}
-                      />
-                    </Box>
-                    <Box className="basis-1/3">
-
-                      <ERPInput
-                        id="width"
-                        type="number"
-                        noLabel
-                        value={selectedComponent.width}
-                        data={selectedComponent}
-                        onChange={(e) =>
-                          handlePropertyChange(
-                            "width",
-                            parseInt(e.target.value, 10)
-                          )
-                        }
-                      />
-
-                    </Box>
-                  </Box>
-                  )
-                  }
+                  {selectedComponent.type === DesignerElementType.line ? (
+                        <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
+                          <Box className="basis-2/3">
+                            <ERPSlider
+                              label="Line Height"
+                              value={selectedComponent?.lineHeight}
+                              onChange={(e) =>
+                                handlePropertyChange(
+                                  "lineHeight",
+                                  e.target.valueAsNumber
+                                )
+                              }
+                              min={10}
+                              max={1400}
+                            />
+                          </Box>
+                          <Box className="basis-1/3">
+                            <ERPInput
+                              id="lineHeight"
+                              type="number"
+                              noLabel
+                              value={selectedComponent.lineHeight}
+                              data={selectedComponent}
+                              onChange={(e) =>
+                                handlePropertyChange(
+                                  "lineHeight",
+                                  parseInt(e.target.value, 10)
+                                )
+                              }
+                            />
+                          </Box>
+                        </Box>
+                      ) : (
+                        selectedComponent.type !== DesignerElementType.table && (
+                          <Box sx={{ mb: 1 }} className="flex justify-start gap-2 items-center">
+                            <Box className="basis-2/3">
+                              <ERPSlider
+                                label="Width"
+                                value={selectedComponent.width}
+                                onChange={(e) =>
+                                  handlePropertyChange(
+                                    "width",
+                                    e.target.valueAsNumber
+                                  )
+                                }
+                                min={10}
+                                max={500}
+                              />
+                            </Box>
+                            <Box className="basis-1/3">
+                              <ERPInput
+                                id="width"
+                                type="number"
+                                noLabel
+                                value={selectedComponent.width}
+                                data={selectedComponent}
+                                onChange={(e) =>
+                                  handlePropertyChange(
+                                    "width",
+                                    parseInt(e.target.value, 10)
+                                  )
+                                }
+                              />
+                            </Box>
+                          </Box>
+                        )
+                      )}
                 
                
                   {selectedComponent.type === DesignerElementType.line && (

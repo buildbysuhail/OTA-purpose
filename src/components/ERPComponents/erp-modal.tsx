@@ -25,6 +25,8 @@ type ERPModalProps = {
   closeOnSubmit?: boolean;
   closeButton?: "Button" | "LeftArrow" | "None";
   disableOutsideClickClose?: boolean;
+  customPosition?: boolean;
+  customStyle?: React.CSSProperties;
 };
 
 const ERPModal = React.memo(
@@ -48,6 +50,8 @@ const ERPModal = React.memo(
     width = "w-full",
     closeOnSubmit = true,
     disableOutsideClickClose = true,
+    customPosition = false,
+    customStyle = {},
   }: ERPModalProps) => {
     const handleClose = () => closeModal(false);
     const handleSubmit = () => {
@@ -99,21 +103,28 @@ const ERPModal = React.memo(
     return (
       <div>
         <Transition appear show={isOpen} as={Fragment}>
-          <Dialog as="div" className={`relative z-50`} onClose={disableOutsideClickClose ? () => {} : handleClose}>
-            <Transition
-              as={Fragment}
-              show={isOpen}
-              enter="ease-out duration-300"
-              enterFrom="opacity-0"
-              enterTo="opacity-100"
-              leave="ease-in duration-200"
-              leaveFrom="opacity-100"
-              leaveTo="opacity-0">
-              <div className="fixed inset-0 bg-[#71717a] bg-opacity-50" />
-            </Transition>
+          <Dialog 
+            as="div" 
+            className={`relative z-50 ${customPosition ? '' : 'fixed inset-0'}`} 
+            onClose={disableOutsideClickClose ? () => {} : handleClose}
+            style={customPosition ? customStyle : {}}
+          >
+          {!customPosition &&
+           <Transition
+                as={Fragment}
+                show={isOpen}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0">
+                <div className="fixed inset-0 bg-[#71717a] bg-opacity-50" />
+              </Transition>
+          }
 
-            <div className={`fixed inset-0`}>
-              <div className={`flex min-h-full items-center justify-center text-center p-4`}>
+            <div className={`${customPosition ? '' : 'fixed inset-0'}`}>
+              <div className={`flex min-h-full items-center justify-center text-center ${customPosition ? '' : 'p-4'}`}>
                 <TransitionChild
                   as={Fragment}
                   enter="ease-out duration-300"
@@ -148,7 +159,7 @@ const ERPModal = React.memo(
                         </div>
                       )}
                     </DialogTitle>
-                    <div className={"max-h-[calc(100vh-8rem)]"}>
+                    <div className={ "max-h-[calc(100vh-8rem)]"}>
                       <ERPScrollArea className={`max-h-[calc(100vh-16rem)] overflow-y-auto pr-2`}>
                         {content &&
                           cloneElement(
@@ -203,3 +214,4 @@ const ERPModal = React.memo(
   }
 );
 export default ERPModal;
+

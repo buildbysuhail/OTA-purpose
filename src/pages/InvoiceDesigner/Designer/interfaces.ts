@@ -98,12 +98,22 @@ export interface PlacedComponent {
     fontStyle: "normal" | "bold" | "italic";
   };
  tableProps?: {
-    caption: string;
-    field: number;
-    columnCount:number;
+    showBorder: boolean;
+    columns: tableColumns[]
   };
-
 }
+ export interface tableColumns {
+    caption: string;
+    field: string;
+    textAlign: "left" | "center" | "right";
+    fontStyle: "normal" | "bold" | "italic";
+    font: string;
+    fontSize: number;
+    width: number;
+    height: number;
+    textColor:string;
+    bgColor:string;
+  };
 export interface PropertiesState {
   template_type?: TemplateTypes;
   template_kind?: TemplateKindType;

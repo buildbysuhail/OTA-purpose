@@ -47,7 +47,6 @@ export const useApplicationSetting = (): UseApplicationSettingReturnType => {
       settingName: keyof ApplicationSettingsType[T],
       value: any
     ) => {
-      
       if (
         settingName === "allowSalesRouteArea" &&
         value === false &&
@@ -257,7 +256,8 @@ type UseApplicationSettingReturnType = {
   handleFieldChange: <T extends keyof ApplicationSettingsType>(
     type: T,
     settingName: keyof ApplicationSettingsType[T],
-    value: any
+    value: any,
+    min?: number
   ) => void;
   filterComponent: (translations: string[], filterText: string) => boolean;
   onFilterChange: (event: React.ChangeEvent<HTMLInputElement>) => void;

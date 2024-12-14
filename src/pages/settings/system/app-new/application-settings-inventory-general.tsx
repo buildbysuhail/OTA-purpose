@@ -196,7 +196,8 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
       condition: filterComponent([t("maximum_allowed_line_item_amount")], filterText),
       element: (
         <ERPInput
-          id="maximum_Allowed_LineItem_Amount"
+          id="maximum_Allowed_LineItem_Amount"  
+          min={0}
           value={settings?.branchSettings?.maximum_Allowed_LineItem_Amount}
           data={settings?.branchSettings}
           type="number"
@@ -205,7 +206,7 @@ const InventoryGeneralFilterableComponents: React.FC<ApplicationSettingsProps> =
             handleFieldChange(
               "branchSettings",
               "maximum_Allowed_LineItem_Amount",
-              data.maximum_Allowed_LineItem_Amount
+              parseFloat(data.maximum_Allowed_LineItem_Amount)
             )
           }
         />

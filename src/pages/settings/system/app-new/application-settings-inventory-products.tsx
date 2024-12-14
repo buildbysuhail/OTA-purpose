@@ -70,13 +70,14 @@ const InventoryProductsFilterableComponents: React.FC<ApplicationSettingsProps> 
       condition: filterComponent([t("margin_round_to")], filterText),
       element: (
         <ERPInput
-          id="marginRoundTo"
+          id="marginRoundTo"  
+          min={0}
           label={t("margin_round_to")}
           type="number"
           data={settings?.productsSettings}
           value={settings?.productsSettings?.marginRoundTo}
           onChangeData={(data) =>
-            handleFieldChange("productsSettings", "marginRoundTo", data.marginRoundTo)
+            handleFieldChange("productsSettings", "marginRoundTo", parseInt(data.marginRoundTo))
           }
         />
       ),

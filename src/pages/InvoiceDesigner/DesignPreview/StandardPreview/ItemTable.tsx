@@ -10,8 +10,8 @@ const ItemTable = ({ template, data, templateGroupId, currency }: StandardPrevie
   //   const fontColor = template?.itemTableState?.headerFontColor || "#000";
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left || 10;
-  const paddingRight = template?.propertiesState?.margins?.right || 10;
+  const paddingLeft = template?.propertiesState?.padding?.left || 10;
+  const paddingRight = template?.propertiesState?.padding?.right || 10;
 
   const itemTableState = template?.itemTableState;
 

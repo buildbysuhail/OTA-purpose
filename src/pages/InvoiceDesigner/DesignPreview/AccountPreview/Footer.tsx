@@ -13,9 +13,9 @@ const Footer = ({ template, data, templateGroupId }: AccountPreviewProps) => {
   const labelFontWeight = template?.propertiesState?.label_font_weight || "normal";
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left || 10;
-  const paddingRight = template?.propertiesState?.margins?.right || 10;
-  const paddingBottom = template?.propertiesState?.margins?.bottom || 50;
+  const paddingLeft = template?.propertiesState?.padding?.left || 10;
+  const paddingRight = template?.propertiesState?.padding?.right || 10;
+  const paddingBottom = template?.propertiesState?.padding?.bottom || 50;
   /// Footer background color
   const backgroundColor = template?.footerState?.bg_color || "#fff";
   const footerFontColor = template?.footerState?.footerFontColor || "#000";

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
 import ERPInput from "../../../components/ERPComponents/erp-input";
@@ -103,15 +103,12 @@ const BranchManage: React.FC = React.memo(() => {
     dispatch(toggleBranchPopup({ isOpen: false }));
   }, [dispatch]);
   const {
-    isEdit,
-    handleSubmit,
     handleFieldChange,
     getFieldProps,
-    isLoading,
     handleClear,
     formState
   } = useFormManager<BranchDataInfo>({
-    url: Urls.BranchInfo,
+    url:`${Urls.BranchInfo}` ,
     onSuccess: useCallback(() => {
       dispatch(toggleBranchPopup({ isOpen: false }));
     }, [dispatch]),
@@ -121,8 +118,10 @@ const BranchManage: React.FC = React.memo(() => {
     initialData: initialBranchData
   });
 
+
+
   return (
-    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="w-full p-4">
+    <form onSubmit={(e) => { e.preventDefault(); }} className="w-full p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <ERPInput
           {...getFieldProps("branchID")}
@@ -272,14 +271,15 @@ const BranchManage: React.FC = React.memo(() => {
           onChangeData={(value) => handleFieldChange("useMainBranchInventory", value.useMainBranchInventory)}
         />
       </div>
-      {/* <div className="mt-4">
-        <ERPFormButtons
+    
+        {/* <ERPFormButtons
           onClear={handleClear}
-          isEdit={isEdit}
+          isEdit
+          onSubmit={handleSubmit}
           isLoading={isLoading}
           onCancel={onClose}
-        />
-      </div> */}
+        /> */}
+   
     </form>
   );
 });

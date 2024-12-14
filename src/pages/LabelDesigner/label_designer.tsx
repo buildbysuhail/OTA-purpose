@@ -12,7 +12,9 @@ import {
   Printer,
   Download,
   X,
+  Image ,
   Table,
+  QrCode 
 } from "lucide-react";
 import JsBarcode from "jsbarcode";
 // import { ReactBarcode, Renderer } from 'react-jsbarcode';
@@ -75,6 +77,7 @@ import { handleSetTemplateBarcodeLabelBackgroundImage } from "../../redux/slices
 import { convertFileToBase64 } from "../../utilities/file-utils";
 import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { AddColumnsManage } from "./column-manage";
+import { EditButton } from "./edit-button";
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -149,13 +152,12 @@ const printers = [
 const pageSizeOptions = [
   { label: "A5", value: "A5" },
   { label: "A4", value: "A4" },
+  { label: `3 "`, value: "3Inch" },
+  { label: `4 "`, value: "4Inch" },
+  { label: `LETTER "`, value: "LETTER" },
   { label: "Custom", value: "Custom" },
 ];
 
-const retailPageSizes = [
-  { label: `3 "`, value: "3Inch" },
-  { label: `4 "`, value: "4Inch" },
-];
 
 const fields = [
   "[Footer1]",
@@ -265,14 +267,14 @@ export default function ExtendedPDFBarcodeDesigner() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const canvasRef = useRef<HTMLDivElement>(null);
   const barcodeRefs = useRef<(HTMLCanvasElement | null)[]>([]);
-  const [value, setValue] = React.useState("element");
+  const [activeTab, setActiveTab] = useState("page");
   const [isAddColumnModalOpen, setIsAddColumnModalOpen] = useState(false);
-  const [modalPosition, setModalPosition] = useState({ top: 0});
   const [sidebarWidth, setSidebarWidth] = useState(300);
-
+  const [editingColumnData, setEditingColumnData] = useState<tableColumns | undefined>(undefined);
   const appState = useAppState();
   useState<PurchaseItem | null>(null);
   const inputFile = useRef<HTMLInputElement>(null);
+
   const handleContentLabelResize = (
     e: React.SyntheticEvent,
     { size }: { size: { width: number; height: number } }
@@ -284,19 +286,37 @@ export default function ExtendedPDFBarcodeDesigner() {
         barcodeState: {
           ...prevData.barcodeState,
           labelState: {
-            ...prevData?.barcodeState?.labelState, // No need for optional chaining here if prevData is always valid
+            ...prevData?.barcodeState?.labelState, 
             labelWidth: size.width,
             labelHeight: size.height,
           },
-          placedComponents: prevData?.barcodeState?.placedComponents || [], // Ensure it's an array
+          placedComponents: prevData?.barcodeState?.placedComponents || [], 
         },
       };
       return updated;
     });
   };
 
+  const handlePageResize = (
+    e: React.SyntheticEvent,
+    { size }: { size: { width: number; height: number } }
+  ) => {
+    setTemplateData((prevData: TemplateState) => {
+      const updated = {
+        ...prevData,
+        propertiesState: {
+          ...prevData.propertiesState,
+          width: size.width,
+          height: size.height,
+        },
+      };
+      return updated;
+    });
+  };
+  
+  
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
+    setActiveTab(newValue);
   };
 
   const { id } = useParams();
@@ -307,27 +327,30 @@ export default function ExtendedPDFBarcodeDesigner() {
   );
   const pxToPoint = (px: number) => px * (72 / 96);
 
-  let paperWidth;
-  const paperSize = templateData?.propertiesState?.pageSize || "A4";
+  let paperWidth, paperHeight;
+  const paperSize = templateData?.propertiesState?.pageSize || "Custom";
   
   switch (paperSize) {
     case "A5":
-      paperWidth = "w-[450px]";
-      break;
-    case "A4":
-      paperWidth = "w-[500px]";
-      break;
-    case "LETTER":
-      paperWidth = "w-[600px]";
-      break;
-    case "3Inch":
-      paperWidth = "w-[210px]";
-      break;
-    case "4Inch":
-      paperWidth = "w-[260px]";
-      break;
-    default:
-      paperWidth = "w-[500px]";
+    paperWidth = "420pt"; // 5.83in x 8.27in
+    paperHeight = "595pt";
+    break;
+  case "A4":
+    paperWidth = "589pt"; // 8.27in x 11.69in
+    paperHeight = "842pt";
+    break;
+  case "LETTER":
+    paperWidth = "612pt"; // 8.5in x 11in
+    paperHeight = "792pt";
+    break;
+  case "3Inch":
+    paperWidth = "216pt"; // 3in x 6in
+    paperHeight = "432pt";
+    break;
+  case "4Inch":
+    paperWidth = "288pt"; // 4in x 8in
+    paperHeight = "576pt";
+    break;
   }
 
   const components = [
@@ -360,6 +383,18 @@ export default function ExtendedPDFBarcodeDesigner() {
       label: "line",
       icon: <Minus className="w-4 h-4" />,
       defaultContent: "Line",
+    },
+    {
+      id: DesignerElementType.image,
+      label: "Image",
+      icon: <Image className="w-4 h-4" />,
+      defaultContent: "Image",
+    },
+    {
+      id: DesignerElementType.qrCode,
+      label: "QrCode",
+      icon: <QrCode className="w-4 h-4" />,
+      defaultContent: "QrCode",
     },
 
   ];
@@ -441,6 +476,7 @@ export default function ExtendedPDFBarcodeDesigner() {
 
   const handleComponentClick = (component: PlacedComponent) => {
     setSelectedComponent(component);
+    setActiveTab("element");
   };
 
   const handleBarcodePropertyChange = (
@@ -475,72 +511,89 @@ export default function ExtendedPDFBarcodeDesigner() {
     }
   };
 
-  const handleTablePropertyChange = (
-    property: any,
-    value: string | number | boolean
-  ) => {
-    if (
-      selectedComponent &&
-      selectedComponent.type === DesignerElementType.table &&
-      selectedComponent.tableProps
-    ) {
-      const updatedComponents =
-        templateData?.barcodeState?.placedComponents?.map((comp) =>
-          comp.id === selectedComponent.id && comp.tableProps
-            ? {
-              ...comp,
-            tableProps: { ...comp.tableProps, [property]: value },
-            }
-            : comp
-        );
-      setTemplateData((prev: TemplateState) => ({
-        ...prev,
-        barcodeState: {
-          ...prev.barcodeState,
-          placedComponents: updatedComponents || [], 
-        },
-      }));
-      setSelectedComponent({
-        ...selectedComponent,
-      tableProps: { ...selectedComponent.tableProps, [property]: value },
-      });
+
+  const handleEditColumn = (componentId: number, columnIndex: number) => {
+    const component = templateData.barcodeState?.placedComponents.find(comp => comp.id === componentId);
+    if (component && component.type === DesignerElementType.table && component.tableProps) {
+      const columnData = component.tableProps.columns[columnIndex];
+      setSelectedComponent(component);
+      setEditingColumnData(columnData);
+      setIsAddColumnModalOpen(true);
     }
   };
 
   const handleAddColumn = (columnData: tableColumns) => {
     if (selectedComponent && selectedComponent.type === DesignerElementType.table) {
-      const updatedComponents = templateData?.barcodeState?.placedComponents?.map((comp) =>
+      const updatedComponents = templateData.barcodeState?.placedComponents.map((comp) =>
         comp.id === selectedComponent.id
           ? {
               ...comp,
               tableProps: {
                 ...comp.tableProps,
-                columns: [...(comp.tableProps?.columns || []), columnData],
+                columns: editingColumnData
+                  ? comp.tableProps?.columns.map((col, index) =>
+                      index === comp.tableProps?.columns.findIndex(c => c === editingColumnData)
+                        ? columnData
+                        : col
+                    )
+                  : [...(comp.tableProps?.columns || []), columnData],
+                showBorder: comp.tableProps?.showBorder ?? true,
               },
             }
           : comp
-      );
+      ) as PlacedComponent[];
 
-      // setTemplateData((prev: TemplateState) => ({
-      //   ...prev,
-      //   barcodeState: {
-      //     ...prev.barcodeState,
-      //     placedComponents: updatedComponents || [],
-      //   },
-      // }));
+      setTemplateData((prev) => ({
+        ...prev,
+        barcodeState: {
+          ...prev.barcodeState,
+          placedComponents: updatedComponents,
+        },
+      }));
 
-      // setSelectedComponent({
-      //   ...selectedComponent,
-      //   tableProps: {
-      //     ...selectedComponent.tableProps,
-      //     columns: [...(selectedComponent.tableProps?.columns || []), columnData],
-      //   },
-      // });
+      setSelectedComponent({
+        ...selectedComponent,
+        tableProps: {
+          ...selectedComponent.tableProps,
+          columns: editingColumnData
+            ? (selectedComponent.tableProps?.columns ?? []).map((col, index) =>
+                index === (selectedComponent.tableProps?.columns ?? []).findIndex(c => c === editingColumnData)
+                  ? columnData
+                  : col
+              )
+            : [...(selectedComponent.tableProps?.columns ?? []), columnData],
+          showBorder: selectedComponent.tableProps?.showBorder ?? true,
+        },
+      });
 
       setIsAddColumnModalOpen(false);
+      setEditingColumnData(undefined);
     }
   };
-  
+
+  const handleDeleteColumn = (componentId: number, columnIndex: number) => {
+    setTemplateData((prev) => ({
+      ...prev,
+      barcodeState: {
+        ...prev.barcodeState,
+        placedComponents: prev.barcodeState?.placedComponents.map((comp) => {
+          if (comp.id === componentId && comp.type === DesignerElementType.table && comp.tableProps) {
+            return {
+              ...comp,
+              tableProps: {
+                ...comp.tableProps,
+                columns: comp.tableProps.columns.filter((_, index) => index !== columnIndex),
+              },
+            };
+          }
+          return comp;
+        }) ?? [],
+      },
+    }));
+    setIsAddColumnModalOpen(false);
+    setEditingColumnData(undefined);
+  };
+
    
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
     debugger;
@@ -851,44 +904,94 @@ export default function ExtendedPDFBarcodeDesigner() {
           </div>
         );
         case DesignerElementType.table:
-               return (
-                <div
-                key={component.id}
-                style={{
-                  ...style,
-                  border: selectedComponent?.id === component.id ? "2px solid #2196f3" : "none",
-                  width: 'auto',
-                  overflow: 'hidden',
-                  height:"100px"
-                }}
-                onClick={() => handleComponentClick(component)}
-                onMouseDown={(e) => handleMouseDown(e, component)}
-              >
-                <table style={{ width: '100%', borderCollapse: 'collapse' ,height:"100px",}}>
-                  <thead>
-                    <tr>
-                      <th style={{
+          return (
+            <div
+              key={component.id}
+              style={{
+                ...style,
+                border: selectedComponent?.id === component.id ? "2px solid #2196f3" : "none",
+                width: 'auto',
+                height: "auto",
+              }}
+              onClick={() => handleComponentClick(component)}
+              onMouseDown={(e) => handleMouseDown(e, component)}
+            >
+              <table style={{ 
+                width: '100%', 
+                borderCollapse: 'collapse',
+                border: component.tableProps?.showBorder ? '1px solid #ccc' : 'none',
+              }}>
+                 <thead>
+                <tr>
+                  {component.tableProps?.columns && component.tableProps.columns.length > 0 ? (
+                    component.tableProps.columns.map((column, index) => (
+                      <th 
+                        key={index}
+                        style={{
+                          border: component.tableProps?.showBorder ? '1px solid #ccc' : 'none',
+                          padding: '5px',
+                          backgroundColor: column.bgColor || '#f0f0f0',
+                          color: column.textColor || '#000000',
+                          fontFamily: column.font || 'inherit',
+                          fontSize: `${column.fontSize || 16}px`,
+                          fontStyle: column.fontStyle || 'normal',
+                          textAlign: column.textAlign || 'left',
+                          width: `${column.width}px`,
+                          position: 'relative',
+                        }}
+                      >
+                        {column.caption}
+                        <EditButton onClick={() => handleEditColumn(component.id, index)} />
+                      </th>
+                    ))
+                  ) : (
+                    <th style={{
+                      border: '1px solid #ccc',
+                      padding: '5px',
+                      backgroundColor: '#f0f0f0',
+                      textAlign: 'center',
+                    }}>
+                      Demo Column
+                    </th>
+                  )}
+                </tr>
+              </thead>
+                <tbody>
+                  <tr>
+                    {component.tableProps?.columns && component.tableProps.columns.length > 0 ? (
+                      component.tableProps.columns.map((column, index) => (
+                        <td 
+                          key={index}
+                          style={{
+                            border: component.tableProps?.showBorder ? '1px solid #ccc' : 'none',
+                            padding: '5px',
+                            textAlign: column.textAlign || 'left',
+                            width: `${column.width}px`,
+                          
+                          }}
+                        >
+                          {column.field}
+                        </td>
+                      ))
+                    ) : (
+                      <td style={{
                         border: '1px solid #ccc',
                         padding: '5px',
-                        backgroundColor: '#f0f0f0',
+                        textAlign: 'center',
                       }}>
-                        Add Columns
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  <tr>
-                <td className="border border-gray-400 px-4 py-2">test</td>
-              </tr>
-                  </tbody>
-                </table>
-                <DeleteButton
-                  id={component.id}
-                  isSelected={isSelected}
-                  handleDelete={handleDelete}
-                />
-              </div>
-      );
+                        Sample Data
+                      </td>
+                    )}
+                  </tr>
+                </tbody>
+              </table>
+              <DeleteButton
+                id={component.id}
+                isSelected={isSelected}
+                handleDelete={handleDelete}
+              />
+            </div>
+          );
         case DesignerElementType.line:
           return (
             <div
@@ -999,7 +1102,7 @@ export default function ExtendedPDFBarcodeDesigner() {
 
         {/* Design Canvas */}
 
-        <div
+        {/* <div
           id="teplate-container-base"
           className="flex-1 bg-gray-50"
           onDrop={handleDrop}
@@ -1060,6 +1163,114 @@ export default function ExtendedPDFBarcodeDesigner() {
               )}
             </div>
           </ResizableBox>
+        </div> */}
+
+         {/* Design Canvas */}
+
+         <div
+            id="teplate-container-base"
+            className="flex-1 bg-gray-50"
+            onDrop={handleDrop}
+            onDragOver={(e) => e.preventDefault()}
+            style={{
+              width:
+                templateGroup === "barcode"
+                  ? (templateData?.barcodeState?.labelState?.labelWidth ?? 300) *
+                    (templateData?.barcodeState?.labelState?.columnsPerRow ?? 1)
+                  :templateData?.propertiesState?.pageSize === "Custom" ?templateData.propertiesState?.width: paperWidth,
+              maxHeight:
+                templateGroup === "barcode"
+                  ? (templateData?.barcodeState?.labelState?.labelHeight ?? 300) *
+                    (templateData?.barcodeState?.labelState?.rowsPerPage ?? 1)
+                  : templateData?.propertiesState?.pageSize === "Custom" ?templateData.propertiesState?.height: paperHeight,
+            }}       
+         >
+          
+          {templateGroup === "barcode" ? (
+            <ResizableBox
+              width={templateData?.barcodeState?.labelState?.labelWidth ?? 300}
+              height={templateData?.barcodeState?.labelState?.labelHeight ?? 200}
+              minConstraints={[50, 50]}
+              maxConstraints={[1400, 1000]}
+              resizeHandles={["se"]}
+              className="box"
+              onResize={handleContentLabelResize}
+            >
+              <div
+                ref={canvasRef}
+                id="teplate-container"
+                className="bg-white shadow-sm mx-auto overflow-hidden relative"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  transform: `scale(${zoom / 100})`,
+                  transformOrigin: "top center",
+                  border: "2px dashed #ccc",
+                  padding: `${templateData?.barcodeState?.labelState?.padding?.top ?? 0}pt 
+                            ${templateData?.barcodeState?.labelState?.padding?.right ?? 0}pt 
+                            ${templateData?.barcodeState?.labelState?.padding?.bottom ?? 0}pt 
+                            ${templateData?.barcodeState?.labelState?.padding?.left ?? 0}pt`,
+                  backgroundImage: templateData?.barcodeState?.labelState?.background_image
+                    ? `url(${templateData?.barcodeState?.labelState?.background_image})`
+                    : "none",
+                  backgroundPosition: ["cover", "contain", "stretch"].includes(templateData?.barcodeState?.labelState?.bg_image_position ?? "")
+                    ? "center"
+                    : templateData?.barcodeState?.labelState?.bg_image_position ?? "center",
+                  backgroundSize:
+                    templateData?.barcodeState?.labelState?.bg_image_position === "cover"
+                      ? "cover"
+                      : templateData?.barcodeState?.labelState?.bg_image_position === "contain"
+                        ? "contain"
+                        : templateData?.barcodeState?.labelState?.bg_image_position === "stretch"
+                          ? "100% 100%"
+                          : "auto",
+                  backgroundRepeat: "no-repeat",
+                }}
+              >
+                {templateData?.barcodeState?.placedComponents?.map(renderComponent)}
+              </div>
+            </ResizableBox>
+          ) :templateData?.propertiesState?.pageSize === "Custom" ? (
+            <ResizableBox
+             width={templateData.propertiesState.width ?? 300}
+             height={templateData.propertiesState.height ?? 300}
+              minConstraints={[50, 50]}
+              maxConstraints={[1400, 1000]}
+              resizeHandles={["se"]}
+              className="box"
+              onResize={handlePageResize}
+            >
+              <div
+                ref={canvasRef}
+                id="teplate-container"
+                className="bg-white shadow-sm mx-auto overflow-hidden relative"
+                style={{
+                  transform: `scale(${zoom / 100})`,
+                  transformOrigin: "top center",
+                  border: "2px dashed #ccc",
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                {templateData?.barcodeState?.placedComponents?.map(renderComponent)}
+              </div>
+            </ResizableBox>
+          ) : (
+            <div
+              ref={canvasRef}
+              id="teplate-container"
+              className={`bg-white shadow-sm mx-auto relative`}
+              style={{
+                transform: `scale(${zoom / 100})`,
+                transformOrigin: "top center",
+                border: "2px dashed #ccc",
+                width: `${paperWidth}`,
+                height: `${paperHeight}`,
+              }}
+            >
+              {templateData?.barcodeState?.placedComponents?.map(renderComponent)}
+            </div>
+          )}
         </div>
       </div>
 
@@ -1090,14 +1301,14 @@ export default function ExtendedPDFBarcodeDesigner() {
                 <Settings className="w-4 h-4" />
               </button>
             </div>
-            <Tabs value={value} onChange={handleTabChange}>
-              <Tab label="Element" value="element" />
-              {templateGroup === "barcode" &&<Tab label="Label" value="label" /> }
+            <Tabs value={activeTab} onChange={handleTabChange}>
               <Tab label="Page" value="page" />
-            </Tabs>
+              <Tab label="Element" value="element" />
+              {templateGroup === "barcode" && <Tab label="Label" value="label" />}
+          </Tabs>
           </div>
           <Box>
-            <Box hidden={value !== "element"}
+            <Box hidden={activeTab !== "element"}
               sx={{ maxHeight: 'calc(100vh)', pb: 2 }}>
               {selectedComponent && (
                 <Box
@@ -1166,35 +1377,32 @@ export default function ExtendedPDFBarcodeDesigner() {
                   {selectedComponent && selectedComponent.type === DesignerElementType.table && (
                   <Button 
                     variant="contained" 
-                    onClick={() => {
-                      const buttonElement = document.querySelector('.add-columns-button');
-                      if (buttonElement) {
-                        const rect = buttonElement.getBoundingClientRect();
-                        setModalPosition({ top: rect.bottom});
-                      }
-                      setIsAddColumnModalOpen(true);
-                    }}
+                    onClick={() => {setIsAddColumnModalOpen(true)}}
                     className="add-columns-button"
                   >
                     Add Columns
                   </Button>
                     )}
                   <ERPModal
-                        title="Add Columns"
-                        isOpen={isAddColumnModalOpen}
-                        closeModal={() => setIsAddColumnModalOpen(false)}
-                        customPosition={true}
-                        isForm
-                        customStyle={{
-                          position: 'absolute',
-                          top: `${100}px`,
-                          right: `${10}px`,
-                          width: `${sidebarWidth-40}px`,
-                          height: 'auto',
-                          maxHeight: '80%',
+                    title={editingColumnData ? "Edit Column" : "Add Column"}
+                    isOpen={isAddColumnModalOpen}
+                    closeModal={() => {
+                      setIsAddColumnModalOpen(false);
+                      setEditingColumnData(undefined);
                     }}
-                    content={<AddColumnsManage onSubmit={handleAddColumn} />}
-                   
+                    customPosition={true}
+                    isForm
+                    customStyle={{
+                      position: 'absolute',
+                      top: `${100}px`,
+                      right: `${10}px`,
+                      width: `${sidebarWidth - 40}px`,
+                      height: 'auto',
+                      maxHeight: '80%',
+                    }}
+                    content={<AddColumnsManage onSubmit={handleAddColumn} initialData={editingColumnData} 
+                    onDelete={editingColumnData ? () => handleDeleteColumn(selectedComponent!.id, selectedComponent!.tableProps!.columns.findIndex(col => col === editingColumnData)) : undefined}
+                    />}
                   />
 
                   {selectedComponent.type !== DesignerElementType.table && (
@@ -1837,7 +2045,7 @@ export default function ExtendedPDFBarcodeDesigner() {
               )}
             </Box>
            {templateGroup === "barcode" &&(
-            <Box hidden={value !== "label"}>
+            <Box hidden={activeTab !== "label"}>
 
             <Box sx={{ mb: 1 }}>
               <ERPInput
@@ -2055,7 +2263,7 @@ export default function ExtendedPDFBarcodeDesigner() {
            )} 
            
 
-            <Box hidden={value !== "page"}>
+            <Box hidden={activeTab !== "page"}>
               <Box sx={{ spaceY: 2 }}>
                 <Box sx={{ mb: 1 }}>
                   <ERPInput
@@ -2068,26 +2276,50 @@ export default function ExtendedPDFBarcodeDesigner() {
                     }
                   />
                 </Box>
+                
+                {templateGroup !== "barcode" &&(
+                <Box sx={{ mb: 1 }}>
+                <ERPDataCombobox
+                  defaultValue={templateData?.propertiesState?.pageSize ?? "A4"}
+              
+                  field={{
+                    id: "pageSize",
+                    required: true,
+                    valueKey: "value",
+                    labelKey: "label",
+                  }}
+                  data={templateData?.propertiesState}
+                  onChangeData={(data: any) => {
+                    handlePagePropsChange("pageSize", data.pageSize);
+                  }}
+                  id="pageSize"
+                  options={pageSizeOptions}
+                  label="Page Size"
+                />
+                </Box>
+                )}
 
                 {templateData?.propertiesState?.pageSize === "Custom" && (
                   <Box sx={{ mb: 1 }}>
                     <div className="flex justify-start items-center space-x-1">
                       <ERPInput
+                      type="number"
                         id="width"
                         label="Page Width"
                         value={templateData?.propertiesState?.width}
                         data={templateData?.propertiesState}
                         onChange={(e) => {
-                          handlePagePropsChange("width", e.target.value);
+                          handlePagePropsChange("width", parseInt(e.target.value));
                         }}
                       />
                       <ERPInput
                         id="height"
+                        type="number"
                         label="Page  Height"
                         value={templateData?.propertiesState?.height}
                         data={templateData?.propertiesState}
                         onChange={(e) =>
-                          handlePagePropsChange("height", e.target.value)
+                          handlePagePropsChange("height", parseInt(e.target.value))
                         }
                       />
                     </div>
@@ -2124,11 +2356,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                         placeholder={
                           side.charAt(0).toUpperCase() + side.slice(1)
                         }
-                        value={templateData?.propertiesState?.margins?.[side]}
+                        value={templateData?.propertiesState?.padding?.[side]}
                         data={templateData?.propertiesState}
                         onChange={(e) =>
-                          handlePagePropsChange("margins", {
-                            ...templateData?.propertiesState?.margins,
+                          handlePagePropsChange("padding", {
+                            ...templateData?.propertiesState?.padding,
                             [side]: parseInt(e.target.value),
                           })
                         }
@@ -2136,18 +2368,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                     ))}
                   </Box>
                 </Box>
-                {/* <Box sx={{ mb: 1 }}>
-                <ERPInput
-                  id="borderColor"
-                  label="Border Color"
-                  type="color"
-                  value={templateData?.propertiesState?.borderColor}
-                  data={templateData?.propertiesState}
-                  onChange={(e) =>
-                    handlePagePropsChange("borderColor", e.target.value)
-                  }
-                />
-              </Box> */}
+               
 
                 <Box sx={{ mb: 1 }}>
                   <ERPDataCombobox
@@ -2185,7 +2406,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             style={{
               width: "8.5in",
               height: "11in",
-              margin: `${pxToPoint(templateData?.propertiesState?.margins?.top ||0)}pt ${pxToPoint(templateData?.propertiesState?.margins?.right||0)}pt ${pxToPoint(templateData?.propertiesState?.margins?.bottom||0)}pt ${pxToPoint(templateData?.propertiesState?.margins?.left||0)}pt`,
+              margin: `${pxToPoint(templateData?.propertiesState?.padding?.top ||0)}pt ${pxToPoint(templateData?.propertiesState?.padding?.right||0)}pt ${pxToPoint(templateData?.propertiesState?.padding?.bottom||0)}pt ${pxToPoint(templateData?.propertiesState?.padding?.left||0)}pt`,
             }}
           >
             {templateData?.barcodeState?.placedComponents?.map(renderComponent)}

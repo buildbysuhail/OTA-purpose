@@ -63,7 +63,9 @@ export enum DesignerElementType {
   barcode = 2,
   field = 3,
   table= 4,
-  line = 5
+  line = 5,
+  image = 6,
+  qrCode=7
 }
 
 export interface PlacedComponent {
@@ -103,14 +105,13 @@ export interface PlacedComponent {
   };
 }
  export interface tableColumns {
-    caption: string;
+    caption?: string;
     field: string;
     textAlign: "left" | "center" | "right";
     fontStyle: "normal" | "bold" | "italic";
     font: string;
     fontSize: number;
     width: number;
-    height: number;
     textColor:string;
     bgColor:string;
   };
@@ -121,11 +122,11 @@ export interface PropertiesState {
 
   templateName?: string;
   pageSize?: string;
-  width?: any;
-  height?: any;
+  width?: number;
+  height?: number;
   orientation?: "portrait" | "landscape";
   // Martgins
-  margins?: {
+  padding?: {
     top?: number;
     bottom?: number;
     left?: number;
@@ -535,9 +536,9 @@ export const initialTemplateState: ActionState<TemplateState> = {
       template_kind: "standard",
       template_group: "sales_invoice",
       templateName: "",
-      pageSize: "A4",
+      pageSize: "Custom",
       orientation: "portrait",
-      margins: { top: 10, bottom: 10, left: 10, right: 10 },
+      padding: { top: 10, bottom: 10, left: 10, right: 10 },
       bg_color: "#FFFFFF",
       bg_image_position: "center",
       font: "Arial",
@@ -812,8 +813,8 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       template_kind: "standard",
       template_group: "barcode",
       templateName: "Barcode 1",
-      pageSize: "A4",
-      margins: { top: 0, bottom: 0, left: 0, right: 0 },
+      pageSize: "Custom",
+      padding: { top: 0, bottom: 0, left: 0, right: 0 },
       bg_color: "#FFFFFF",
     },
     barcodeState: {

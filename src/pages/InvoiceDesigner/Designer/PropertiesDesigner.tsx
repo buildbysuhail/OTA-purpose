@@ -135,65 +135,65 @@ const PropertiesDesigner: React.FC<PropertiesDesignerProps> = ({ propertiesState
 
         {/* */}
         <div>
-          <label htmlFor="margins" className="font-light text-sm">
-            Margins <span className="text-xs">(in pts)</span>
+          <label htmlFor="padding" className="font-light text-sm">
+            padding <span className="text-xs">(in pts)</span>
           </label>
           <div className="flex gap-2 mt-1">
             <ERPInput
-              value={propertiesState?.margins?.top}
+              value={propertiesState?.padding?.top}
               onChange={(e) => {
                 if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, margins: { ...propertiesState?.margins, top: e.target.valueAsNumber } });
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, top: e.target.valueAsNumber } });
                 }
               }}
               label="Top"
               type="number"
-              id="margins_top"
+              id="padding_top"
               placeholder=" "
               className="w-full"
               min={0}
               max={60}
             />
             <ERPInput
-              value={propertiesState?.margins?.bottom}
+              value={propertiesState?.padding?.bottom}
               onChange={(e) => {
                 if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, margins: { ...propertiesState?.margins, bottom: e.target.valueAsNumber } });
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, bottom: e.target.valueAsNumber } });
                 }
               }}
               label="Bottom"
               type="number"
-              id="margins_bottom"
+              id="padding_bottom"
               placeholder=" "
               className="w-full"
               min={0}
               max={60}
             />
             <ERPInput
-              value={propertiesState?.margins?.left}
+              value={propertiesState?.padding?.left}
               onChange={(e) => {
                 if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, margins: { ...propertiesState?.margins, left: e.target.valueAsNumber } });
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, left: e.target.valueAsNumber } });
                 }
               }}
               label="Left"
               type="number"
-              id="margins_left"
+              id="padding_left"
               placeholder=" "
               className="w-full"
               min={0}
               max={60}
             />
             <ERPInput
-              value={propertiesState?.margins?.right}
+              value={propertiesState?.padding?.right}
               onChange={(e) => {
                 if (!(e.target.valueAsNumber > 60)) {
-                  onChange?.({ ...propertiesState, margins: { ...propertiesState?.margins, right: e.target.valueAsNumber } });
+                  onChange?.({ ...propertiesState, padding: { ...propertiesState?.padding, right: e.target.valueAsNumber } });
                 }
               }}
               label="Right"
               type="number"
-              id="margins_right"
+              id="padding_right"
               placeholder=" "
               className="w-full"
               min={0}

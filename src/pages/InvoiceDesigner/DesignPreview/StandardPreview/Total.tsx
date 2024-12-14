@@ -19,8 +19,8 @@ const Total = ({ template, data, templateGroupId, currency }: StandardPreviewPro
   const balanceFontColor = template?.totalState?.balanceFontColor || "#000";
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left || 10;
-  const paddingRight = template?.propertiesState?.margins?.right || 10;
+  const paddingLeft = template?.propertiesState?.padding?.left || 10;
+  const paddingRight = template?.propertiesState?.padding?.right || 10;
 
   const totalState = template?.totalState;
 

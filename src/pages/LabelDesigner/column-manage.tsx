@@ -1,34 +1,32 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
-    Tabs,
-    Tab,
     Box,
-    TextField,
-    FormControlLabel,
-    Checkbox,
-    Select,
-    MenuItem,
     InputLabel,
-    FormControl,
-    Typography,
-    Button,
-    Popover 
-  } from "@mui/material";
+ } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import ErpInput from "../../components/ERPComponents/erp-input";
-
+import { Trash2 } from 'lucide-react';
 import ERPButton from "../../components/ERPComponents/erp-button";
 import ERPDataCombobox from "../../components/ERPComponents/erp-data-combobox";
 import ERPSlider from "../../components/ERPComponents/erp-slider";
 import { tableColumns } from "../InvoiceDesigner/Designer/interfaces";
 import ERPFormButtons from "../../components/ERPComponents/erp-form-buttons";
-export const AddColumnsManage: React.FC<{
+interface AddColumnsManageProps {
     onSubmit: (columnData: tableColumns) => void;
-  }> = React.memo(({ onSubmit }) => {
+    onDelete?: () => void;
+    initialData?: tableColumns;
+  }
+  export const AddColumnsManage: React.FC<AddColumnsManageProps> = React.memo(({onSubmit, onDelete, initialData}) => {
     const [ColumnData, setColumnData] = React.useState<tableColumns>({} as tableColumns); 
       
   const {t}=useTranslation("userManage");
+  useEffect(() => {
+    if (initialData) {
+      setColumnData(initialData);
+    }
+  }, [initialData]);
+
   const handleSubmit = () => {
     onSubmit(ColumnData);
   };
@@ -48,6 +46,14 @@ export const AddColumnsManage: React.FC<{
       p: 1,
     }}
   >
+       {onDelete && (
+          <ERPButton
+            onClick={onDelete}
+            variant="secondary"
+            startIcon={<Trash2 className="w-4 h-4" />}
+            title="Delete Column"
+          />
+        )}
     <ErpInput
         id="caption"
         label="Caption"
@@ -88,15 +94,7 @@ export const AddColumnsManage: React.FC<{
         min={0}
         max={500}
     />
-     <ERPSlider
-        label={`Height (${ColumnData?.height})`}
-        value={ColumnData?.height}
-        onChange={(e) =>
-            handleFieldChange("height", e.target.valueAsNumber )
-        }
-        min={5}
-        max={30}
-    />
+
      <ERPSlider
         label={`Font Size (${ColumnData?.fontSize})`}
         value={ColumnData?.fontSize}
@@ -266,6 +264,7 @@ export const AddColumnsManage: React.FC<{
 
       <ERPFormButtons
          onSubmit={handleSubmit}
+         
       />
   </Box>
   );

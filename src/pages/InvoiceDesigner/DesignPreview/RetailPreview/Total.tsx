@@ -11,8 +11,8 @@ const Total = ({ template, data, currency }: RetailPreviewProps) => {
   const balnceFontSize = template?.totalState?.balanceFontSize || 12;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left || 10;
-  const paddingRight = template?.propertiesState?.margins?.right || 10;
+  const paddingLeft = template?.propertiesState?.padding?.left || 10;
+  const paddingRight = template?.propertiesState?.padding?.right || 10;
 
   const totalState = template?.totalState;
 

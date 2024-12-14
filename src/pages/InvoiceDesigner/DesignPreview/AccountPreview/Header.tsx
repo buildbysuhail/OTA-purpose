@@ -10,9 +10,9 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency}
   const headerState = template?.headerState;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
-  const paddingTop = template?.propertiesState?.margins?.top || 10;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
+  const paddingTop = template?.propertiesState?.padding?.top || 10;
 
   const titleColor = template?.headerState?.docTitleFontColor || "#000";
   const titleFontSize = headerState?.docTitleFontSize || 16;
@@ -259,8 +259,8 @@ const RecieptTablePreview = ({ data, template, currency }: AccountPreviewProps) 
   // const currencySymbol = getCurrentCurrencySymbol();
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
 
   return (
     <div
@@ -342,8 +342,8 @@ export const AccountSummaryPreview = ({ data, template, currency }: AccountPrevi
   const headerState = template?.headerState;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
 
   return (
     <div

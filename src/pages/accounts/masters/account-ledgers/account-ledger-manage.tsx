@@ -88,7 +88,7 @@ export const AccountLedgerManage = () => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps("ledgerCode")}
           label={t("code")}
@@ -150,7 +150,7 @@ export const AccountLedgerManage = () => {
           {formState?.data?.ledgerID == undefined ||
             (formState?.data?.ledgerID <= 0 && (
               <>
-                <div className="basis-2/3">
+                <div className="">
                   <ERPInput
                     min={0}
                     {...getFieldProps("opBalance")}
@@ -161,7 +161,7 @@ export const AccountLedgerManage = () => {
                     }
                   />
                 </div>
-                <div className="basis-1/3 translate-y-[17px]">
+                <div className="">
                   <ERPDataCombobox
                     {...getFieldProps("drCr")}
                     field={{
@@ -172,7 +172,7 @@ export const AccountLedgerManage = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("drCr", data.drCr)
                     }
-                    label=" "
+                    label="DrCr"
                     enableClearOption={false}
                     options={[
                       { value: "Dr", label: t("Dr") },

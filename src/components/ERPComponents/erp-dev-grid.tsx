@@ -334,8 +334,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   }, [gridId]);
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
-      // Your logic to handle preference changes
-      // For example:
       setPreferences(pref);
       const updatedColumns = applyGridColumnPreferences(columns, pref);
       setGridCols(updatedColumns);
@@ -429,11 +427,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         if (!prevpdf) {
           // to pdf
           if (preferences) {
-            return preferences.columnPreferences.filter(x => x.visible == true && x.showInPdf == true)
+            return preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true)
           }
         } else {
           if (preferences) {
-            return preferences.columnPreferences.filter(x => x.visible == true)
+            return preferences.columnPreferences.filter(x => x.visible == false)
           }
         }
         return prev;
@@ -444,7 +442,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   const switchToPdf = useCallback(() => {
     setGridCols((prev: any) => {
       if (preferences) {
-        const cols = preferences.columnPreferences.filter(x => x.visible == true && x.showInPdf == true);
+        const cols = preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true);
         return cols;
       }
       return prev;
@@ -611,7 +609,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           {allowPaging && (
             <Paging defaultPageSize={pageSize} pageSize={pageSize} />
           )}
-          {allowFiltering && <FilterRow visible={true}>
+          {allowFiltering && <FilterRow visible={false}>
             {initialFilters.map((filter, index) => (
               <Column
                 key={index}
@@ -621,7 +619,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               />
             ))}
           </FilterRow>}
-          {allowSearching && <SearchPanel visible={true} />}
+          {allowSearching && <SearchPanel visible={false} />}
           <HeaderFilter visible={false} />
           {allowColumnChooser && <ColumnChooser enabled={true} />}
           {allowSelection && <Selection mode={selectionMode} />}
@@ -728,7 +726,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
               cellRender={column.cellRender}
-              visible={column.visible || true}
+              visible={column.visible || false}
             />
           ))}
           {summaryItems.length > 0 && (

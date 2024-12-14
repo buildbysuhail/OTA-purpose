@@ -225,7 +225,7 @@ const PrivilegeCard = () => {
       <ERPModal
         isOpen={rootState.PopupData.privilegeCard.isOpen || false}
         title={t("privilege_card")}
-        width="w-full max-w-[600px]"
+        width="w-full max-w-[800px]"
         isForm={true}
         closeModal={() => {
           dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null,reload: false }));

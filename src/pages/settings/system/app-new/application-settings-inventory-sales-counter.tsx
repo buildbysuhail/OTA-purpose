@@ -151,7 +151,7 @@ const InventorySalesCounterFilterableComponents: React.FC<ApplicationSettingsPro
               handleFieldChange(
                 "accountsSettings",
                 "minimumShiftDuration",
-                data.minimumShiftDuration
+                parseFloat(data.minimumShiftDuration)
               )
             }
           />

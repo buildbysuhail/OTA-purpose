@@ -194,7 +194,8 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
       condition: filterComponent([t("intervals_(minutes)")], filterText),
       element: (
         <ERPInput
-          id="syncIntervals"
+          id="syncIntervals"  
+          min={0}
           value={settings?.branchSettings?.syncIntervals}
           data={settings?.branchSettings}
           label={t("intervals_(minutes)")}
@@ -207,7 +208,7 @@ const MainMultiBranchFilterableComponents: React.FC<ApplicationSettingsProps> = 
             handleFieldChange(
               "branchSettings",
               "syncIntervals",
-              data.syncIntervals
+              parseFloat(data.syncIntervals)
             )
           }
         />

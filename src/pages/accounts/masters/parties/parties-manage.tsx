@@ -302,6 +302,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             />
             <ERPInput
               {...getFieldProps("creditDays")}
+              min={0}
               label={t("credit_days")}
               type="number"
               placeholder={t("credit_days")}
@@ -312,6 +313,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
             />
             <ERPInput
               {...getFieldProps("creditAmount")}
+              min={0}
               label={t("credit_amount")}
               type="number"
               placeholder={t("credit_amount")}
@@ -321,9 +323,10 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }
             />
 
-            <div className="flex items-center gap-4">
+            <div className="flex gap-4">
               <ERPInput
                 {...getFieldProps("opBalance")}
+                min={0}
                 disabled={isEdit}
                 label={t("op_balance")}
                 type="number"
@@ -333,7 +336,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("opBalance", data.opBalance)
                 }
               />
-              <div className="mt-4">
+              <div className="">
                 <ERPDataCombobox
                   {...getFieldProps("drCr")}
                   field={{
@@ -344,7 +347,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("drCr", data.drCr)
                   }
-                  label=" "
+                  label="DrCr"
                   enableClearOption={false}
                   options={[
                     { value: "Dr", label: t("Dr") },
@@ -939,6 +942,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   />
                   <ERPInput
                     {...getFieldProps("visitSequenceNo")}
+                    min={0}
                     label={t("visit_seq_no")}
                     placeholder={t("visit_seq_no")}
                     type="number"

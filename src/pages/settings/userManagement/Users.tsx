@@ -40,7 +40,7 @@ const Users = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
+      showInPdf:true,
     },
     {
       dataField: "password",
@@ -49,6 +49,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 140,
+      visible:false,
     },
     {
       dataField: "counter",
@@ -57,6 +58,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "userType",
@@ -65,6 +67,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "createdUser",
@@ -109,6 +112,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false
     },
     {
       dataField: "employeeName",
@@ -117,6 +121,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "maxDiscPercAllowed",
@@ -125,6 +130,7 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible: false
     },
     {
       dataField: "passkey",
@@ -133,10 +139,12 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: false
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

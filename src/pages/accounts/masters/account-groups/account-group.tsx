@@ -48,7 +48,7 @@ const AccountGroupType = () => {
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
-        minWidth: 200,
+        showInPdf:true,
       },
       {
         dataField: "shortName",
@@ -67,6 +67,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        showInPdf:true,
       },
       {
         dataField: "remarks",
@@ -76,6 +77,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "isEditable",
@@ -85,6 +87,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "isDeletable",
@@ -94,6 +97,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        showInPdf:true,
       },
       {
         dataField: "isProtected",
@@ -103,6 +107,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       {
         dataField: "isCommon",
@@ -112,6 +117,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       {
         dataField: "createdUser",
@@ -157,6 +163,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        visible:false,
       },
       {
         dataField: "parentGroupId",
@@ -176,6 +183,7 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        visible:false,
       },
       {
         dataField: "displayOrder",
@@ -185,10 +193,12 @@ const AccountGroupType = () => {
         allowSearch: true,
         allowFiltering: true,
         width: 100,
+        visible:false,
       },
       {
         dataField: "actions",
         caption: t("actions"),
+        isLocked: true,
         allowSearch: false,
         allowFiltering: false,
         fixed: true,

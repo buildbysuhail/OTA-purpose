@@ -24,8 +24,7 @@ const UserTypes = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
-      isLocked: true,
+      showInPdf:true,
     },
     {
       dataField: "userTypeCode",
@@ -34,6 +33,7 @@ const UserTypes = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "remarks",
@@ -42,10 +42,12 @@ const UserTypes = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      showInPdf:true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

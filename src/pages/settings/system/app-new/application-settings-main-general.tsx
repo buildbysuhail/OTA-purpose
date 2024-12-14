@@ -247,7 +247,8 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       ),
       element: (
         <ERPInput
-          id="keepUserActionInDays"
+          id="keepUserActionInDays"  
+          min={0}
           value={settings?.inventorySettings?.keepUserActionInDays}
           data={settings?.inventorySettings}
           label={t("keep_user_actions_(in_days)")}
@@ -622,17 +623,17 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           />
           <ERPInput
             id="postDatedTransInNumbers"
+            min={0}
             type="number"
             label=" "
             data={settings?.mainSettings}
-            className="min-w-20 ml-2 mt-1"
             value={settings?.mainSettings?.postDatedTransInNumbers}
             disabled={!settings?.mainSettings?.allowPostdatedTrans}
             onChangeData={(data) =>
               handleFieldChange(
                 "mainSettings",
                 "postDatedTransInNumbers",
-                data.postDatedTransInNumbers
+                parseInt(data.postDatedTransInNumbers,10)
               )
             }
           />
@@ -664,6 +665,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
           />
           <ERPInput
             id="preDatedTransInNumbers"
+            min={0}
             label=" "
             type="number"
             data={settings?.mainSettings}
@@ -674,7 +676,7 @@ const MainGeneralFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               handleFieldChange(
                 "mainSettings",
                 "preDatedTransInNumbers",
-                data.preDatedTransInNumbers
+                parseInt(data.preDatedTransInNumbers,10)
               )
             }
           />

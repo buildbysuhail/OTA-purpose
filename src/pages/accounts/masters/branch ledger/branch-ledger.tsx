@@ -41,6 +41,7 @@ const BranchLedger = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "purchaseLedger",
@@ -49,6 +50,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      showInPdf:true,
     },
     {
       dataField: "refBranchID",
@@ -66,6 +68,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      showInPdf:true
     },
     {
       dataField: "receivableLedger",
@@ -74,6 +77,7 @@ const BranchLedger = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      showInPdf:true,
     },
     {
       dataField: "payableLedgerID",
@@ -96,6 +100,7 @@ const BranchLedger = () => {
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

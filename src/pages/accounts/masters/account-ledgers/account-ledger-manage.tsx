@@ -57,23 +57,22 @@ export const AccountLedgerManage = () => {
     ) {
       load();
     }
-    
   }, [rootState.PopupData.accountLedger.data?.groupId]);
   const load = async () => {
     try {
       const res = await api.getAsync(Urls.data_getNextLedgerCode);
       if (res) {
-        handleFieldChange({ledgerCode: res.toString(),accGroupID: rootState.PopupData.accountLedger.data.groupId });
-      }
-      else
-      {
+        handleFieldChange({
+          ledgerCode: res.toString(),
+          accGroupID: rootState.PopupData.accountLedger.data.groupId,
+        });
+      } else {
         if (
           rootState.PopupData.accountLedger.data != undefined &&
           rootState.PopupData.accountLedger.data != null &&
           rootState.PopupData.accountLedger.data.groupId != undefined &&
           rootState.PopupData.accountLedger.data.groupId != null
         ) {
-         
           handleFieldChange(
             "accGroupID",
             rootState.PopupData.accountLedger.data.groupId
@@ -89,7 +88,7 @@ export const AccountLedgerManage = () => {
 
   return (
     <div className="w-full pt-4">
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 gap-3">
         <ERPInput
           {...getFieldProps("ledgerCode")}
           label={t("code")}
@@ -146,14 +145,14 @@ export const AccountLedgerManage = () => {
           label={t("group_under")}
         />
 
-
         {/* <div className="w-full max-w-md mx-auto"> */}
         <div className="flex  space-x-3">
           {formState?.data?.ledgerID == undefined ||
             (formState?.data?.ledgerID <= 0 && (
               <>
-                <div className="basis-2/3">
+                <div className="">
                   <ERPInput
+                    min={0}
                     {...getFieldProps("opBalance")}
                     label={t("opening_balance")}
                     type="number"
@@ -162,7 +161,7 @@ export const AccountLedgerManage = () => {
                     }
                   />
                 </div>
-                <div className="basis-1/3 translate-y-[17px]">
+                <div className="">
                   <ERPDataCombobox
                     {...getFieldProps("drCr")}
                     field={{
@@ -173,7 +172,7 @@ export const AccountLedgerManage = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("drCr", data.drCr)
                     }
-                    label=" "
+                    label="DrCr"
                     enableClearOption={false}
                     options={[
                       { value: "Dr", label: t("Dr") },

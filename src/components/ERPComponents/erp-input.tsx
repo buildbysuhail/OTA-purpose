@@ -406,6 +406,8 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
     };
     const sizeStyles = getSizeStyles();
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      debugger;
+     
       onChangeData &&
         data &&
         onChangeData(setNestedValue(data, id, e.target?.value));

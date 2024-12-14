@@ -34,6 +34,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "currencyName",
@@ -42,6 +43,7 @@ const CurrencyMaster = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "currencySymbol",
@@ -51,6 +53,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "subUnit",
@@ -60,6 +63,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "subUnitSymbol",
@@ -69,6 +73,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "countryName",
@@ -78,6 +83,7 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "countryId",
@@ -87,11 +93,13 @@ const CurrencyMaster = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
 
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

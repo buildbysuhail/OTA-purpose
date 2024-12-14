@@ -7,9 +7,9 @@ const Header = ({ template, data, docTitle, docIDKey, templateGroupId, currency 
   const headerState = template?.headerState;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
-  const paddingTop = template?.propertiesState?.margins?.top || 10;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
+  const paddingTop = template?.propertiesState?.padding?.top || 10;
 
   /// font size and color
   const fontSize = template?.propertiesState?.font_size || 12;

@@ -39,7 +39,7 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-red text-lg' :cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green text-lg': ''}`}>
+        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
   {cellElement.data.accGroup}
 </span>
       ),
@@ -65,6 +65,11 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
+  {cellElement.data.debit}
+</span>
+      ),
     },
     {
       dataField: "credit",
@@ -73,6 +78,11 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
+  {cellElement.data.credit}
+</span>
+      ),
     },
     {
       dataField: "isGroup",
@@ -81,6 +91,11 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
+  {cellElement.data.isGroup}
+</span>
+      ),
     },
 
     {
@@ -90,6 +105,11 @@ const BalancesheetVertical = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
+  {cellElement.data.amount}
+</span>
+      ),
     },
   ];
   return (

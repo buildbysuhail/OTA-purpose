@@ -24,6 +24,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "branchID",
@@ -32,6 +33,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "cardNumber",
@@ -40,6 +42,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "cardHolderName",
@@ -47,7 +50,7 @@ const PrivilegeCard = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-      width: 150,
+      showInPdf:true,
     },
     {
       dataField: "address1",
@@ -56,6 +59,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "address2",
@@ -72,6 +76,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "mobile",
@@ -80,6 +85,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     // {
     //   dataField: "email",
@@ -112,6 +118,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 130,
+      showInPdf:true,
     },
     // {
     //   dataField: "priceCategoryID",
@@ -128,6 +135,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 170,
+      showInPdf:true,
     },
     {
       dataField: "expiryDate",
@@ -136,6 +144,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     {
       dataField: "activatedDate",
@@ -144,6 +153,7 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      showInPdf:true,
     },
     // {
     //   dataField: "createdUserID",
@@ -160,10 +170,12 @@ const PrivilegeCard = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

@@ -43,6 +43,7 @@ const PartyCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "remarks",
@@ -52,6 +53,7 @@ const PartyCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "createdUser",
@@ -60,6 +62,7 @@ const PartyCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
     },
     {
       dataField: "createdDate",
@@ -69,6 +72,7 @@ const PartyCategory = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true
     },
     {
       dataField: "modifiedUser",
@@ -77,7 +81,7 @@ const PartyCategory = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      visible: false
+      visible: false,
     },
     {
       dataField: "modifiedDate",
@@ -92,6 +96,7 @@ const PartyCategory = () => {
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

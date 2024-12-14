@@ -23,6 +23,7 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      visible:false,
     },
     {
       dataField: "costCentreName",
@@ -31,6 +32,7 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      showInPdf:true
     },
     {
       dataField: "shortName",
@@ -39,6 +41,7 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 220,
+      showInPdf:true,
     },
     {
       dataField: "remarks",
@@ -47,10 +50,12 @@ const CostCentre = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 220,
+      showInPdf:true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

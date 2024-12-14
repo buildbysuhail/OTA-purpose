@@ -45,6 +45,7 @@ const AccountLedgerType = () => {
       allowFiltering: true,
       width: 100,
       visible: false,
+      showInPdf:true,
     },
     {
       dataField: "ledger",
@@ -53,7 +54,7 @@ const AccountLedgerType = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200
+      showInPdf:true,
     },
     {
       dataField: "accountGroup",
@@ -63,6 +64,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "aliasName",
@@ -72,6 +74,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "remarks",
@@ -81,6 +84,8 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false,
+      showInPdf:true
     },
     {
       dataField: "isDeletable",
@@ -154,6 +159,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "isActive",
@@ -163,6 +169,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "isCostCentreApplicable",
@@ -172,6 +179,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      visible:false,
     },
     {
       dataField: "isCommon",
@@ -181,6 +189,7 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "arabicName",
@@ -190,10 +199,12 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked: true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

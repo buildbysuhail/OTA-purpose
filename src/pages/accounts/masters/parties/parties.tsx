@@ -204,6 +204,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "party",
@@ -212,7 +213,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 250,
+      showInPdf:true,
     },
     {
       dataField: "ledger",
@@ -222,6 +223,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       minWidth: 250,
+      showInPdf:true,
     },
     {
       dataField: "displayName",
@@ -231,6 +233,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       minWidth: 250,
+      visible:false,
     },
     {
       dataField: "address",
@@ -240,6 +243,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
     },
     // {
     //   dataField: "ifsc",
@@ -258,6 +262,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "mobilePhone",
@@ -267,6 +272,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "workPhone",
@@ -276,6 +282,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "contactPhone",
@@ -285,6 +292,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "faxNumber",
@@ -294,6 +302,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "webURL",
@@ -303,6 +312,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "email",
@@ -312,6 +322,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "startDate",
@@ -321,6 +332,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "expiryDate",
@@ -330,6 +342,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "creditDays",
@@ -339,6 +352,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "creditAmount",
@@ -348,6 +362,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "priceCategoryName",
@@ -357,6 +372,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "taxNumber",
@@ -366,6 +382,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "cstNumber",
@@ -375,10 +392,11 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "userName",
-      caption: t("user_name"),
+      caption: t("created_user"),
       dataType: "string",
       allowSorting: true,
       allowSearch: true,
@@ -420,6 +438,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible: type == 'Supp',
+      showInPdf: type == 'Supp'
     },
     {
       dataField: "arabicName",
@@ -429,6 +449,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      showInPdf:true
     },
     {
       dataField: "buildingNumber",
@@ -438,6 +459,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false
     },
     {
       dataField: "plotIdentificationNumber",
@@ -447,6 +469,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "postalCode",
@@ -456,6 +479,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "citySubDivision",
@@ -465,6 +489,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "country",
@@ -474,6 +499,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "countrySubEntity",
@@ -483,6 +509,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "idType",
@@ -492,6 +519,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "idNumber",
@@ -501,6 +529,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
     {
       dataField: "parentRoute",
@@ -510,12 +539,14 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
+      visible:false,
     },
 
     {
       dataField: "actions",
       caption: t("actions"),
       allowSearch: false,
+      isLocked: true,
       allowFiltering: false,
       fixed: true,
       fixedPosition: "right",

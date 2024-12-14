@@ -24,6 +24,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false,
     },
     {
       dataField: "branchID",
@@ -33,6 +34,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false
     },
     {
       dataField: "ledgerID",
@@ -42,6 +44,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false,
     },
     {
       dataField: "bank",
@@ -51,6 +54,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "paymentType",
@@ -60,6 +64,7 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "paymentName",
@@ -68,7 +73,7 @@ const BankCards = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "createdUser",
@@ -114,10 +119,12 @@ const BankCards = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      showInPdf:true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked:true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

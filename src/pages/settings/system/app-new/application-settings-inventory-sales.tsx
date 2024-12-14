@@ -213,6 +213,7 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
       element: (
         <ERPInput
           id="discontAuthorizationIfDiscountAbove"
+          min={0}
           value={settings?.inventorySettings?.discontAuthorizationIfDiscountAbove}
           data={settings?.inventorySettings}
           label={t("discount_authorization_if_discount_above")}
@@ -725,9 +726,15 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
     {
       condition: filterComponent([t("enable_multi_warehouse_billing")], filterText),
       element: (
-        <ERPDisableEnable targetCount={15}>
-          {(hasPermitted = false) => (
-            <>
+        <ERPDisableEnable>
+          {(hasPermitted = false) => {
+            // Conditionally set the state outside of the JSX return
+            if (hasPermitted) {
+              setShowAllowSalesEdit(true);
+            }
+
+            // Return the JSX to meet the ReactNode requirement
+            return (
               <ERPCheckbox
                 id="enableMultiWarehouseBilling"
                 label={t("enable_multi_warehouse_billing")}
@@ -741,13 +748,9 @@ const InventorySalesFilterableComponents: React.FC<ApplicationSettingsProps> = (
                   )
                 }
               />
-              {hasPermitted == true && (
-                setShowAllowSalesEdit(true)
-              )}
-            </>
-          )}
+            );
+          }}
         </ERPDisableEnable>
-
       ),
     },
     {

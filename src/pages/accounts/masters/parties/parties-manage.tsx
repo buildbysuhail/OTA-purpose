@@ -323,7 +323,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }
             />
 
-            <div className="flex items-center gap-4">
+            <div className="flex gap-4">
               <ERPInput
                 {...getFieldProps("opBalance")}
                 min={0}
@@ -336,7 +336,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   handleFieldChange("opBalance", data.opBalance)
                 }
               />
-              <div className="mt-4">
+              <div className="">
                 <ERPDataCombobox
                   {...getFieldProps("drCr")}
                   field={{
@@ -347,7 +347,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                   onChangeData={(data: any) =>
                     handleFieldChange("drCr", data.drCr)
                   }
-                  label=" "
+                  label="DrCr"
                   enableClearOption={false}
                   options={[
                     { value: "Dr", label: t("Dr") },

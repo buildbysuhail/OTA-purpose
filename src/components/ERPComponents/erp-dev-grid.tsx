@@ -112,6 +112,7 @@ interface ERPDevGridProps {
   dateSerializationFormat?: string;
   loadPanelEnabled?: boolean;
   hoverStateEnabled?: boolean;
+  wordWrapEnabled?: boolean;
   initialPreferences?: GridPreference;
   paramNames?: string[];
   reload?: boolean;
@@ -286,6 +287,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   dateSerializationFormat,
   loadPanelEnabled = true,
   hoverStateEnabled = true,
+  wordWrapEnabled = true,
   initialPreferences,
   reload,
   showFilterInitially = false,
@@ -332,8 +334,6 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   }, [gridId]);
   const onApplyPreferences = useCallback(
     (pref: GridPreference) => {
-      // Your logic to handle preference changes
-      // For example:
       setPreferences(pref);
       const updatedColumns = applyGridColumnPreferences(columns, pref);
       setGridCols(updatedColumns);
@@ -427,11 +427,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         if (!prevpdf) {
           // to pdf
           if (preferences) {
-            return preferences.columnPreferences.filter(x => x.visible == true && x.showInPdf == true)
+            return preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true)
           }
         } else {
           if (preferences) {
-            return preferences.columnPreferences.filter(x => x.visible == true)
+            return preferences.columnPreferences.filter(x => x.visible == false)
           }
         }
         return prev;
@@ -440,13 +440,13 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
     });
   }, [preferences, gridInstance]);
   const switchToPdf = useCallback(() => {
-      setGridCols((prev: any) => {
-        if (preferences) {
-          const cols = preferences.columnPreferences.filter(x => x.visible == true && x.showInPdf == true);
-          return cols;
-        }
-        return prev;
-      })
+    setGridCols((prev: any) => {
+      if (preferences) {
+        const cols = preferences.columnPreferences.filter(x => x.visible == false && x.showInPdf == true);
+        return cols;
+      }
+      return prev;
+    })
   }, [preferences, gridInstance]);
   const onGridReady = (e: any) => {
     setGridInst(e.component); // Store the instance when the grid is ready
@@ -456,51 +456,80 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       onExporting(e);
     } else {
       if (e.format === "pdf") {
-        const doc = new jsPDF();
-        
+        const doc = new jsPDF({ orientation: "landscape", unit: "pt", format: "a4" });
         // Store original column visibility states
+        const pageTitle = gridHeader;
+        doc.setFontSize(16);
+        doc.text(pageTitle, 40, 30);
+        doc.setFontSize(10);
+
         const originalColumnVisibility = e.component.getVisibleColumns().map((column: any) => ({
           dataField: column.dataField,
           visible: column.visible
         }));
-  
-        // Get columns that should be shown in PDF
+
         const pdfVisibleColumns = preferences
           ? preferences.columnPreferences
-              .filter(colPref => colPref.showInPdf)
-              .map(colPref => colPref.dataField)
+            .filter((colPref) => colPref.showInPdf)
+            .map((colPref) => colPref.dataField)
           : gridCols
-              .filter(col => col.showInPdf)
-              .map(col => col.dataField);
-  
-        // Temporarily hide columns that shouldn't be in PDF
+            .filter((col) => col.showInPdf)
+            .map((col) => col.dataField);
+
+        const pageWidth = doc.internal.pageSize.getWidth() - 80;
+
+        const columnsWithoutWidth = pdfVisibleColumns.filter(
+          (colField) => !preferences?.columnPreferences.find(
+            (colPref) => colPref.dataField === colField && colPref.width
+          )
+        );
+
+        const pdfColumnsWidths = preferences
+          ? preferences.columnPreferences
+            .filter((colPref) => colPref.showInPdf)
+            .map((colPref) => {
+              if (!colPref.width) {
+                return 0;
+              }
+              return colPref.width || 150;
+            })
+          : gridCols
+            .filter((col) => col.showInPdf)
+            .map((col) => col.width || 100);
+
+        if (columnsWithoutWidth.length > 0) {
+          const specifiedWidthTotal = pdfColumnsWidths
+            .filter(width => width > 0)
+            .reduce((sum, width) => sum + width, 0);
+          const remainingWidth = pageWidth - specifiedWidthTotal;
+          const defaultColumnWidth = remainingWidth / columnsWithoutWidth.length;
+
+          pdfColumnsWidths.forEach((width, index) => {
+            if (width === 0) {
+              pdfColumnsWidths[index] = defaultColumnWidth;
+            }
+          });
+        }
+
         e.component.beginUpdate();
+        e.component.option('wordWrapEnabled', true);
         e.component.getVisibleColumns().forEach((column: any) => {
           if (!pdfVisibleColumns.includes(column.dataField)) {
-            e.component.columnOption(column.dataField, 'visible', false);
+            e.component.columnOption(column.dataField, "visible", false);
           }
         });
-  
-        // Export to PDF with only PDF-visible columns
+
         exportDataGridToPdf({
           jsPDFDocument: doc,
           component: e.component,
+          columnWidths: pdfColumnsWidths,
         }).then(() => {
-          debugger;
-          // Restore original column visibility
-          switchToPdf();
-          // gridCols.forEach((dataField: any, visible: any) => {
-          //   e.component.columnOption(dataField, 'visible', true);
-          // });
-          // e.component.endUpdate();
-          
           doc.save(`${gridId}.pdf`);
         });
-  
       } else if (e.format === "xlsx") {
         const workbook = new Workbook();
-        const worksheet = workbook.addWorksheet("Main sheet");
-        
+        const worksheet = workbook.addWorksheet(gridHeader);
+
         exportDataGridToExcel({
           component: e.component,
           worksheet,
@@ -515,7 +544,9 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         });
       }
     }
-  }, [onExporting, gridId, preferences, gridCols]);
+  },
+    [onExporting, gridId, preferences, gridCols]
+  );
   const handleCellClick = useCallback((event: any) => {
     // Check if the clicked cell's field matches childPopupProps.drillDownCells
     const _drillDownCells = childPopupProps?.drillDownCells.split(',')
@@ -544,11 +575,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       };
     }
   }, []);
+  
   return (
     <Fragment>
       <div className={className}>
         <DataGrid
-
+          // wordWrapEnabled={wordWrapEnabled}
           onInitialized={onGridReady}
           dataSource={memoizedStore}
           height={gridHeight.windows}
@@ -579,7 +611,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           {allowPaging && (
             <Paging defaultPageSize={pageSize} pageSize={pageSize} />
           )}
-          {allowFiltering && <FilterRow visible={true}>
+          {allowFiltering && <FilterRow visible={false}>
             {initialFilters.map((filter, index) => (
               <Column
                 key={index}
@@ -589,7 +621,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               />
             ))}
           </FilterRow>}
-          {allowSearching && <SearchPanel visible={true} />}
+          {allowSearching && <SearchPanel visible={false} />}
           <HeaderFilter visible={false} />
           {allowColumnChooser && <ColumnChooser enabled={true} />}
           {allowSelection && <Selection mode={selectionMode} />}
@@ -606,7 +638,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
           {allowExport ? (
             <Export
               enabled={true}
-              formats={exportFormats}
+              formats={["pdf", "xlsx"]}
               allowExportSelectedData={true}
             />
           ) : (
@@ -649,7 +681,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 onApplyPreferences={onApplyPreferences}
               />
             </Item>
-           
+
             {!hideGridAddButton && (
               <Item>
                 <div>
@@ -680,7 +712,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 </Item>
               ))}
           </Toolbar>
-          {gridCols?.filter(x => x.visible == true)?.map((column) => (
+          {gridCols?.map((column) => (
             <Column
               customizeText={column.customizeText}
               allowEditing={column.allowEditing || false}
@@ -696,7 +728,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
               fixed={column.fixed}
               fixedPosition={column.fixedPosition}
               cellRender={column.cellRender}
-              visible={column.visible || true}
+              visible={column.visible || false}
             />
           ))}
           {summaryItems.length > 0 && (

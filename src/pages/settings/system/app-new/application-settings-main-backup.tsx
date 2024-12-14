@@ -102,7 +102,8 @@ const MainBackupFilterableComponents: React.FC<ApplicationSettingsProps> = ({
       condition: filterComponent([t("duration")], filterText),
       element: (
         <ERPInput
-          id="backupDuration"
+          id="backupDuration"  
+          min={0}
           value={settings.backUPSettings?.backupDuration}
           data={settings.backUPSettings}
           label={t("duration")}

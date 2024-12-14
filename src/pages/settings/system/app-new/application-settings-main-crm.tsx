@@ -59,7 +59,8 @@ const MainCRMFilterableComponents: React.FC<ApplicationSettingsProps> = ({
             }
           />
           <ERPInput
-            id="previlegeCardPerc"
+            id="previlegeCardPerc"  
+            min={0}
             label=" "
             type="number"
             data={settings?.mainSettings}
@@ -70,7 +71,7 @@ const MainCRMFilterableComponents: React.FC<ApplicationSettingsProps> = ({
               handleFieldChange(
                 "mainSettings",
                 "previlegeCardPerc",
-                data.previlegeCardPerc
+                parseFloat(data.previlegeCardPerc)
               )
             }
           />

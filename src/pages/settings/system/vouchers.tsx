@@ -25,6 +25,8 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      isLocked:true,
+      showInPdf:true,
     },
     {
       dataField: "voucherType",
@@ -33,7 +35,7 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 100,
+      showInPdf:true,
     },
     {
       dataField: "formType",
@@ -43,6 +45,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      showInPdf:true,
     },
     {
       dataField: "lastVoucherPrefix",
@@ -52,6 +55,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "lastVoucherNumber",
@@ -61,6 +65,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      showInPdf:true,
     },
     {
       dataField: "descriptions",
@@ -70,6 +75,7 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible:false,
     },
     {
       dataField: "id",
@@ -78,18 +84,18 @@ const SystemVoucher = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      visible: false,
       minWidth: 100,
+      visible:false,
     },
     {
       dataField: "printDesignFileName",
       caption: t("printDesign_fileName"),
       dataType: "string",
-      visible: false,
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
+      visible: false,
     },
     {
       dataField: "createdUser",
@@ -140,10 +146,12 @@ const SystemVoucher = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 100,
+      visible:false,
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked:false,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

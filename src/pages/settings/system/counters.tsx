@@ -26,6 +26,8 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
         allowSearch: true,
         allowFiltering: true,
         width: 70,
+        isLocked:true,
+        showInPdf:true,
       },
       {
         dataField: "counter",
@@ -34,6 +36,7 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
         allowSorting: true,
         allowSearch: true,
         allowFiltering: true,
+        showInPdf:true,
       },
       {
         dataField: "descriptions",
@@ -43,6 +46,7 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
         allowSearch: true,
         allowFiltering: true,
         width: 170,
+        visible:false,
       },
       {
         dataField: "maintainShift",
@@ -52,6 +56,7 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        showInPdf:true,
       },
       {
         dataField: "createdUser",
@@ -101,6 +106,7 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
         allowSearch: true,
         allowFiltering: true,
         width: 120,
+        visible:false,
       },
       {
         dataField: "ledgerName",
@@ -110,6 +116,7 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
         allowSearch: true,
         allowFiltering: true,
         width: 170,
+        showInPdf:true,
       },
       {
         dataField: "vrPrefix",
@@ -119,10 +126,12 @@ const MemoizedCounterManage = useMemo(() => React.memo(CounterManage), []);
         allowSearch: true,
         allowFiltering: true,
         width: 150,
+        showInPdf:true,
       },
       {
         dataField: "actions",
         caption: t("actions"),
+        isLocked:true,
         allowSearch: false,
         allowFiltering: false,
         fixed: true,

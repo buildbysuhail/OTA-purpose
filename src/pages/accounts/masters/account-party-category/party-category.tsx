@@ -25,6 +25,7 @@ const PartyCategory = () => {
       alignment: "left",
       allowFiltering: true,
       width: 100,
+      showInPdf:true,
     },
     {
       dataField: "id",

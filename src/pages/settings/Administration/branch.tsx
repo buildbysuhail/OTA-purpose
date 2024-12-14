@@ -25,6 +25,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
     },
     {
       dataField: "branchName",
@@ -33,17 +34,17 @@ const BranchGrid = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      width: 200,
+      showInPdf:true,
     },
     {
       dataField: "companyID",
       caption: t("company_id"),
       dataType: "number",
-      visible: false,
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      visible: false,
     },
     {
       dataField: "country",
@@ -53,6 +54,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "bState",
@@ -62,6 +64,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "district",
@@ -71,6 +74,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "city",
@@ -80,6 +84,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "address1",
@@ -89,6 +94,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "address2",
@@ -98,6 +104,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
 
     {
@@ -108,6 +115,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "mobile",
@@ -117,6 +125,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "phone",
@@ -126,6 +135,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      visible:false,
     },
     {
       dataField: "email",
@@ -135,6 +145,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
     },
     {
       dataField: "fax",
@@ -164,7 +175,7 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: false
+      showInPdf:true,
     },
     {
       dataField: "createdDate",
@@ -174,7 +185,6 @@ const BranchGrid = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
-      visible: false
     },
     {
       dataField: "modifiedDate",
@@ -199,6 +209,7 @@ const BranchGrid = () => {
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked:true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

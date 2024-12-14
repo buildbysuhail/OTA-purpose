@@ -25,6 +25,7 @@ const FinancialYear = () => {
       allowFiltering: true,
       width: 100,
       isLocked: true,
+      showInPdf:true,
     },
     {
       dataField: "id",
@@ -34,7 +35,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      isLocked: false,
+      visible:false,
     },
     {
       dataField: "fromDate",
@@ -43,6 +44,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
+      showInPdf:true,
      
     },
     {
@@ -52,7 +54,7 @@ const FinancialYear = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-     
+     showInPdf:true,
     },
     {
       dataField: "status",
@@ -62,6 +64,7 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "remarks",
@@ -80,6 +83,7 @@ const FinancialYear = () => {
       allowSearch: false,
       allowFiltering: true,
       width: 170,
+      visible:false,
     },
     {
       dataField: "createdUser",
@@ -129,10 +133,12 @@ const FinancialYear = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked:true,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

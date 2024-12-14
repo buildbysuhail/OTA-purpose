@@ -33,8 +33,8 @@ const Remainders = () => {
       allowSorting: true,
       allowSearch: true,
       allowFiltering: true,
-      minWidth: 200,
       isLocked: true,
+      showInPdf:true,
     },
     {
       dataField: "descriptions",
@@ -43,6 +43,7 @@ const Remainders = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 250,
+      showInPdf:true,
     },
     {
       dataField: "remaindingDate",
@@ -52,6 +53,7 @@ const Remainders = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      showInPdf:true,
     },
     {
       dataField: "numberOfDays",
@@ -61,10 +63,12 @@ const Remainders = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      showInPdf:true,
     },
     {
       dataField: "actions",
       caption: t("actions"),
+      isLocked:false,
       allowSearch: false,
       allowFiltering: false,
       fixed: true,

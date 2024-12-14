@@ -25,6 +25,7 @@ const AccountLedgerType = () => {
       allowFiltering: true,
       width: 70,
       isLocked: true,
+      showInPdf:true,
     },
     {
       dataField: "id",
@@ -84,7 +85,6 @@ const AccountLedgerType = () => {
       allowSearch: true,
       allowFiltering: true,
       minWidth: 150,
-      visible:false,
       showInPdf:true
     },
     {

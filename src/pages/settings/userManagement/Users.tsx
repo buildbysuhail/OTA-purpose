@@ -24,6 +24,8 @@ const Users = () => {
       allowSearch: true,
       allowFiltering: false,
       width: 60,
+      isLocked:false,
+      showInPdf:true,
     },
     {
       dataField: "id",

@@ -30,6 +30,7 @@ const AccountGroupType = () => {
         allowFiltering: true,
         width: 70,
         isLocked: true,
+        showInPdf:true,
       },
       {
         dataField: "id",

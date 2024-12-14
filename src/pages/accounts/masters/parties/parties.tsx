@@ -186,6 +186,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowFiltering: true,
       width: 50,
       isLocked: true,
+      showInPdf:true,
     },
     {
       dataField: "id",

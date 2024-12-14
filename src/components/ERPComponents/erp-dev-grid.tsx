@@ -512,6 +512,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
         }
 
         e.component.beginUpdate();
+        e.component.option('wordWrapEnabled', true);
         e.component.getVisibleColumns().forEach((column: any) => {
           if (!pdfVisibleColumns.includes(column.dataField)) {
             e.component.columnOption(column.dataField, "visible", false);
@@ -574,11 +575,12 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
       };
     }
   }, []);
+  
   return (
     <Fragment>
       <div className={className}>
         <DataGrid
-          wordWrapEnabled={wordWrapEnabled}
+          // wordWrapEnabled={wordWrapEnabled}
           onInitialized={onGridReady}
           dataSource={memoizedStore}
           height={gridHeight.windows}

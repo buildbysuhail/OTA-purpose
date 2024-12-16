@@ -284,6 +284,7 @@ inv_reports_stock_flow:"",
   // Transaction
   
   acc_transaction_base: "/api/Accounts/",
+  acc_transaction_ledger_bill_wise: "/api/Accounts/ledgerBillwise",
 
   // Accounts End
   //Grid Preference

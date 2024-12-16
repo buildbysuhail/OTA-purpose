@@ -17,7 +17,7 @@ import store from "devextreme/data/odata/store";
 import { RootState } from "../../../redux/store";
 import { useAppSelector } from "../../../utilities/hooks/useAppDispatch";
 
-const BillwiswPopup: FC = () => {
+const BillWisePopup: FC = () => {
   const formState = useAppSelector((state: RootState) => state.AccTransaction);
   const [gridHeight, setGridHeight] = useState<number>(500);
   useEffect(() => {
@@ -251,7 +251,7 @@ const BillwiswPopup: FC = () => {
               </div>
               <div className="flex justify-center items-center mt-4 p-4 bg-gray-100 rounded-md max-w-60">
                 <strong className="mr-3">Net Adjustment </strong>
-                <span className="">{formState.billwiseData.reduce((total, item) => total + (item.AmountToAssign || 0), 0)}</span>
+                <span className="">{formState.billwiseData?.reduce((total, item) => total + (item.AmountToAssign || 0), 0)}</span>
               </div>
             </div>
           </div>
@@ -261,4 +261,4 @@ const BillwiswPopup: FC = () => {
   );
 };
 
-export default BillwiswPopup;
+export default BillWisePopup;

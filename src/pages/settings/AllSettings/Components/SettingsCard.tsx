@@ -21,6 +21,7 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
   const [distributedItems, setDistributedItems] = useState<any>([]);
 
   const distributeItems = (): any => {
+    debugger;
     let st = items;
     if (userSession.userTypeCode === "BA") {
       st = st?.filter((x: any) => x.title !== "branches");
@@ -68,8 +69,14 @@ const SettingsCard: React.FC<SettingsCardProps> = ({ data }) => {
   };
 
   useEffect(() => {
-    setDistributedItems(distributeItems());
-  }, [applicationSettings.miscellaneousSettings]);
+    if (
+      applicationSettings?.miscellaneousSettings &&
+      userSession?.userTypeCode &&
+      userSession?.countryId
+    ) {
+      setDistributedItems(distributeItems());
+    }
+  }, [applicationSettings?.miscellaneousSettings, userSession?.userTypeCode, userSession?.countryId]);
 
   return (
     <div className="w-auto bg-gray-50 rounded-lg p-5 border flex flex-grow ">

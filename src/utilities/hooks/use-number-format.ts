@@ -46,56 +46,16 @@ export const useNumberFormat = () => {
   }
   
   function getFormattedValue(val: number, ignoreNullOrZero: boolean = true): string {
+    debugger;
     if(ignoreNullOrZero && (val == undefined || val == null || val == 0 ))
     {
       return '';
     }
     const decimalPoint = applicationSettings.mainSettings.decimalPoints;
-    val = roundTo(val, 6);
-  
     let formattedText: string = val.toLocaleString(undefined, {
       minimumFractionDigits: decimalPoint,
       maximumFractionDigits: decimalPoint,
     });
-  
-    if (roundTo(val, 2) === val && decimalPoint === 2) {
-      formattedText = roundTo(val, 2).toLocaleString(undefined, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      });
-    } else if (roundTo(val, 3) === val) {
-      formattedText = roundTo(val, 3).toLocaleString(undefined, {
-        minimumFractionDigits: 3,
-        maximumFractionDigits: 3,
-      });
-    } else if (roundTo(val, 4) === val) {
-      formattedText = roundTo(val, 4).toLocaleString(undefined, {
-        minimumFractionDigits: 4,
-        maximumFractionDigits: 4,
-      });
-    } else if (roundTo(val, 5) === val) {
-      formattedText = roundTo(val, 5).toLocaleString(undefined, {
-        minimumFractionDigits: 5,
-        maximumFractionDigits: 5,
-      });
-    } else if (roundTo(val, 6) === val) {
-      formattedText = roundTo(val, 6).toLocaleString(undefined, {
-        minimumFractionDigits: 6,
-        maximumFractionDigits: 6,
-      });
-    } else {
-      if (decimalPoint === 3) {
-        formattedText = roundTo(val, 3).toLocaleString(undefined, {
-          minimumFractionDigits: 3,
-          maximumFractionDigits: 3,
-        });
-      } else {
-        formattedText = roundTo(val, 2).toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2,
-        });
-      }
-    }
   
     return formattedText;
   }

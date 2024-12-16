@@ -8,6 +8,7 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDayWise from "./cash-book-daywise";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
 
 // interface CashBookMonthWiseProps {
 //   contentProps?: any
@@ -16,16 +17,19 @@ import CashBookDayWise from "./cash-book-daywise";
 interface CashBookMonthWiseProps {
   postData: any;
   groupName?: string;
+  contentProps?: any;
 }
 
 
-const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) => {
+const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , contentProps}) => {
+  debugger;
 // interface CashBookMonthWiseFilters {
 //   from: Date
 // }
 // const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  // const [_postData, setPostData] = useState({})
   // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -114,7 +118,7 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) =>
                   gridHeader={t("cash_book")}
                   dataUrl= {Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
-                  postData = {postData}
+                  postData = {mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

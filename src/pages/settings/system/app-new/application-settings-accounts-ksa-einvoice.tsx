@@ -146,7 +146,10 @@ const AccountsEinvoiceFilterableComponents: React.FC<ApplicationSettingsProps> =
             loading={otpSending}
             className="mt-4"
             disabled={otpSending}
-            onClick={() => sendOtp()}
+            onClick={() => {
+              debugger;
+              sendOtp()
+            }}
           />
         </div>
       )

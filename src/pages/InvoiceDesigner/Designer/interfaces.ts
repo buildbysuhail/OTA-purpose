@@ -35,6 +35,11 @@ export interface TemplateState {
   barcodeState?: BarcodeState;
   isCurrent?: boolean;
 }
+export interface HistoryComponent {
+  id: number;
+  field: any;
+  value: any
+ }
 export interface LabelState {
   columnsPerRow?: number;
   rowsPerPage?: number;
@@ -85,6 +90,7 @@ export interface PlacedComponent {
   lineColor?:string;
   lineHeight?:number;
   lineType?:"solid"|"dotted"|"dashed";
+  imgFit?:string;
   barcodeProps?: {
     format: string;
     barWidth: number;

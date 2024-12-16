@@ -34,6 +34,7 @@ import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useTransaction } from "../../use-transaction";
 import { AccTransactionUserConfig } from "./acc-transaction-user-config";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
+import BillWisePopup from "./billwise-popup";
 
 interface BilledItem {
   id?: number;
@@ -87,10 +88,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
     disableControls,
     changeComboVisibility,
     ledgerCodeRef,
-    validate
+    validate,
   } = useAccTransaction(transactionType ?? "");
-  
-  const {validateTransactionDate} = useTransaction(transactionType ?? "");
+
+  const { validateTransactionDate } = useTransaction(transactionType ?? "");
   const applicationSettings = useAppSelector(
     (state: RootState) => state.ApplicationSettings
   );
@@ -181,6 +182,20 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       })
     );
   }, []);
+  useEffect(() => {
+    const fetchBillwise = async () => {
+      if (formState.showbillwise && formState.row.ledgerId) {
+        try {
+          const billwise = await api.getAsync(`Urls.acc_transaction_ledger_bill_wise/${formState.row.ledgerId}`);
+         dispatch(accFormStateHandleFieldChange({fields:{billwiseData: billwise}}));
+        } catch (error) {
+         
+        }
+      }
+    };
+  
+    fetchBillwise();
+  }, [formState.showbillwise, formState.row.ledgerId]);
 
   useEffect(() => {
     const initializeFormElements = async () => {
@@ -202,7 +217,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         );
         fetchVoucherNumber();
         if (voucherType == "CP" || voucherType == "CR") {
-          
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
@@ -266,7 +280,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           dispatch(
             accFormStateHandleFieldChange({
               fields: {
-                masterAccountID: userCashLedgerID > 0 ? userCashLedgerID : applicationSettings.accountsSettings.defaultCashAcc,
+                masterAccountID:
+                  userCashLedgerID > 0
+                    ? userCashLedgerID
+                    : applicationSettings.accountsSettings.defaultCashAcc,
               },
             })
           );
@@ -358,7 +375,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       voucherType,
       voucherPrefix
     );
-    
+
     dispatch(
       accFormStateTransactionMasterHandleFieldChange({
         fields: {
@@ -602,7 +619,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         <div className="space-y-6 p-4">
           <div className="flex justify-between items-center mb-4">
             <div className="flex items-center gap-2">
-            <AccTransactionUserConfig/>
+              <AccTransactionUserConfig />
               {formElements.foreignCurrency.visible && (
                 <ERPCheckbox
                   id="foreignCurrency"
@@ -615,7 +632,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       })
                     )
                   }
-                  disabled={formElements.foreignCurrency?.disabled || formElements.pnlMasters?.disabled}
+                  disabled={
+                    formElements.foreignCurrency?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
                 />
               )}
             </div>
@@ -639,7 +659,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.voucherPrefix?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.voucherPrefix?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
@@ -656,14 +679,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.voucherNumber?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.voucherNumber?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
             {formElements.transactionDate.visible && (
               <ERPDateInput
                 id="transactionDate"
-                className="w-[130px]"
+                className="w-[150px] "
                 label={formElements.transactionDate.label}
                 value={new Date(formState.transaction.master.transactionDate)}
                 onChange={(e) =>
@@ -673,14 +699,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.transactionDate?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.transactionDate?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
             {formElements.referenceNumber.visible && (
               <ERPInput
                 id="referenceNumber"
-                className="w-[100px]"
+                className="min-w-[130px] max-w-[160px]"
                 label={formElements.referenceNumber.label}
                 value={formState.transaction.master.referenceNumber}
                 onChange={(e) =>
@@ -690,7 +719,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.referenceNumber?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.referenceNumber?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
@@ -707,7 +739,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.referenceDate?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.referenceDate?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
@@ -737,7 +772,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     required: true,
                     getListUrl: Urls.data_acc_ledgers,
                   }}
-                  disabled={formElements.masterAccount?.disabled || formElements.pnlMasters?.disabled}
+                  disabled={
+                    formElements.masterAccount?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
                 />
               </div>
             )}
@@ -763,7 +801,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   { value: "Dr", label: "Debit" },
                   { value: "Cr", label: "Credit" },
                 ]}
-                disabled={formElements.drCr?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.drCr?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
@@ -786,14 +827,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   required: true,
                   getListUrl: Urls.data_employees,
                 }}
-                disabled={formElements.employee?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.employee?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
             {formElements.remarks.visible && (
               <ERPInput
                 id="remarks"
-                className="w-full"
+                className="max-w-[500px]"
                 label={formElements.remarks.label}
                 value={formState.transaction.master.remarks}
                 onChange={(e) =>
@@ -803,14 +847,17 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.remarks?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.remarks?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
             {formElements.commonNarration.visible && (
               <ERPInput
                 id="notes"
-                className="w-full"
+                className="max-w-[500px]"
                 label={formElements.commonNarration.label}
                 value={formState.transaction.master.commonNarration}
                 onChange={(e) =>
@@ -820,7 +867,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.commonNarration?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.commonNarration?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
           </div>
@@ -840,10 +890,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.ledgerCode?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.ledgerCode?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
-
+            {formState?.row.ledgerId?.toString()}
             {formElements.ledgerId.visible && (
               <ERPDataCombobox
                 id="ledgerId"
@@ -858,12 +911,16 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   );
                 }}
                 field={{
+                  id:"ledgerId",
                   valueKey: "id",
                   labelKey: "name",
                   required: true,
                   getListUrl: Urls.data_acc_ledgers,
                 }}
-                disabled={formElements.ledgerId?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.ledgerId?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
@@ -881,7 +938,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.amount?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.amount?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
@@ -906,7 +966,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                   { value: "Dr", label: "Debit" },
                   { value: "Cr", label: "Credit" },
                 ]}
-                disabled={formElements.drCr?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.drCr?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
 
@@ -924,7 +987,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       })
                     )
                   }
-                  disabled={formElements.narration?.disabled || formElements.pnlMasters?.disabled}
+                  disabled={
+                    formElements.narration?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
                 />
               </div>
             )}
@@ -939,12 +1005,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               className="h-fit"
               loading={formState.rowProcessing}
               type="button"
-              onClick={() =>
-              {
+              onClick={() => {
                 // validate()
-                dispatch(accFormStateTransactionDetailsRowAdd(formState.row))
-              }
-              }
+                dispatch(accFormStateTransactionDetailsRowAdd(formState.row));
+              }}
             />
           </div>
 
@@ -969,7 +1033,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.currencyID?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.currencyID?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
             {formElements.exchangeRate.visible && (
@@ -986,7 +1053,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.exchangeRate?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.exchangeRate?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
             <div className="flex items-center">
@@ -1003,7 +1073,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       })
                     )
                   }
-                  disabled={formElements.hasDiscount?.disabled || formElements.pnlMasters?.disabled}
+                  disabled={
+                    formElements.hasDiscount?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
                 />
               )}
               {formElements.discount.visible && (
@@ -1019,7 +1092,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       })
                     )
                   }
-                  disabled={formElements.discount?.disabled || formElements.pnlMasters?.disabled}
+                  disabled={
+                    formElements.discount?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
                 />
               )}
             </div>
@@ -1036,7 +1112,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.chequeNumber?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.chequeNumber?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
             {formElements.bankDate.visible && (
@@ -1052,7 +1131,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.bankDate?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.bankDate?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
           </div>
@@ -1073,7 +1155,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         })
                       )
                     }
-                    disabled={formElements.nameOnCheque?.disabled || formElements.pnlMasters?.disabled}
+                    disabled={
+                      formElements.nameOnCheque?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
                   />
                 )}
                 {formElements.bankName.visible && (
@@ -1086,7 +1171,13 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       valueKey: "id",
                       labelKey: "name",
                       getListUrl: Urls.data_BankAccounts,
-                      params: {ledgerID: formState.row.ledgerId != undefined && formState.row.ledgerId != null ? formState.row.ledgerId : 0}
+                      params: {
+                        ledgerID:
+                          formState.row.ledgerId != undefined &&
+                          formState.row.ledgerId != null
+                            ? formState.row.ledgerId
+                            : 0,
+                      },
                     }}
                     onChange={(e) =>
                       dispatch(
@@ -1095,7 +1186,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                         })
                       )
                     }
-                    disabled={formElements.bankName?.disabled || formElements.pnlMasters?.disabled}
+                    disabled={
+                      formElements.bankName?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
                   />
                 )}
               </>
@@ -1117,7 +1211,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.projectId?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.projectId?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
             {formElements.costCentreId.visible && (
@@ -1179,7 +1276,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.printOnSave?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.printOnSave?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
             {formElements.printPreview.visible && (
@@ -1194,7 +1294,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.printPreview?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.printPreview?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
             {(voucherType == "BP" || voucherType == "CQP") &&
@@ -1210,7 +1313,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                       })
                     )
                   }
-                  disabled={formElements.printCheque?.disabled || formElements.pnlMasters?.disabled}
+                  disabled={
+                    formElements.printCheque?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
                 />
               )}
             {formElements.keepNarration.visible && (
@@ -1225,7 +1331,10 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                     })
                   )
                 }
-                disabled={formElements.keepNarration?.disabled || formElements.pnlMasters?.disabled}
+                disabled={
+                  formElements.keepNarration?.disabled ||
+                  formElements.pnlMasters?.disabled
+                }
               />
             )}
             {(voucherType == "BP" || voucherType == "CQP") && (
@@ -1261,7 +1370,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             enablefilter={false}
             data={formState.transaction.details}
             gridId={gridCode}
-            
+
             // summary={[
             //   { column: "debit", summaryType: "sum" }, // Count the total number of rows
             //   { column: "amount", summaryType: "sum", valueFormat: "currency" }, // Sum of the "value" column, formatted as currency
@@ -1611,7 +1720,38 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         </div> */}
 
               {/* ======= */}
-              <div>
+              
+            </div>
+            <div className="flex bg-white mt-auto fixed bottom-0 w-full z-10  space-x-2 p-0 m-0">
+              <ERPButton
+                title="Save & New"
+                onClick={() => {}}
+                variant="secondary"
+                className="flex-1 !m-0 !rounded-none"
+              />
+              <ERPButton
+                title="Save"
+                onClick={() => {}}
+                variant="primary"
+                className="flex-1 !m-0 !rounded-none"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+        <ERPModal
+        isForm={true}
+        isFullHeight={true}
+        isOpen={formState.showbillwise ?? false}
+        title="Billwise"
+        closeModal={() => {
+          dispatch(accFormStateHandleFieldChange({fields:{showbillwise: false}}));
+        }}
+
+        width="!w-[80rem] !max-w-[60rem]"
+        content={<BillWisePopup  />}
+      />
+      <div>
                 {/* The ERPModal component */}
                 <ERPModal
                   isForm={true}
@@ -1879,7 +2019,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
         </div>
       )}
-      <CustomerDetailsSidebar ></CustomerDetailsSidebar>
     </div>
   );
 };

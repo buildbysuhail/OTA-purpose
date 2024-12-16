@@ -33,6 +33,7 @@ import { useAccTransaction } from "./use-acc-transaction";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
 import { useTransaction } from "../../use-transaction";
 import { AccTransactionUserConfig } from "./acc-transaction-user-config";
+import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 
 interface BilledItem {
   id?: number;
@@ -1878,6 +1879,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
           </div>
         </div>
       )}
+      <CustomerDetailsSidebar ></CustomerDetailsSidebar>
     </div>
   );
 };

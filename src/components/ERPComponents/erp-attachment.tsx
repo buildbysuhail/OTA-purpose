@@ -79,9 +79,9 @@ export default function ERPAttachment() {
   }
 
   return (
-    <div className=" w-full  p-4 mt-[60px] self-end ">
+    <div className=" w-full  p-2 mt-[60px] self-end max-h-[100%] overflow-auto  pb-[64px]">  
       <div
-        className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+        className={`border-2 border-dashed rounded-lg p-3  text-center transition-colors ${
           isDragging ? 'border-[#3b82f6] bg-[#eff6ff]' : 'border-gray-300 hover:border-[#93c5fd]'
         }`}
         onDragOver={(e) => {
@@ -91,7 +91,7 @@ export default function ERPAttachment() {
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
       >
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-[6px]">
           <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
           </svg>
@@ -116,11 +116,11 @@ export default function ERPAttachment() {
         </div>
       </div>
 
-      <div className="mt-8 ">
+      <div className="mt-1 ">
         {files.map((file) => (
           <div
             key={file.id}
-            className="flex items-center  bg-gray-50 rounded-lg p-3 transition-all hover:bg-gray-100"
+            className="flex items-center  bg-gray-50 rounded-lg p-3 transition-all hover:bg-gray-300 border border-b-[#00000024]"
           >
             <svg className="w-5 h-5 text-[#3b82f6] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />

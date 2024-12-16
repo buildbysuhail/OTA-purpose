@@ -52,7 +52,7 @@ const BillWisePopup: FC = () => {
                 <DataGrid
                   id="TestPopup"
                   height={gridHeight}
-                  dataSource={store}
+                  dataSource={formState.billwiseData}
                   className="custom-data-grid"
                   showBorders={true}
                   columnAutoWidth={true}
@@ -76,7 +76,7 @@ const BillWisePopup: FC = () => {
                   {/* <LoadPanel visible={true} /> */}
 
                   <Column
-                    dataField="SiNo"
+                    dataField="slNo"
                     caption="SiNo"
                     dataType="number"
                     allowFiltering={true}
@@ -84,39 +84,31 @@ const BillWisePopup: FC = () => {
                     width={50}
                   />
                   <Column
-                    dataField="Select"
-                    caption="Select"
-                    dataType="boolean"
+                    dataField="voucherType"
+                    caption="VoucherType"
+                    dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
                     width={100}
                   />
                   <Column
-                    dataField="VrType"
-                    caption="Voucher Type"
+                    dataField="voucherNumber"
+                    caption="BillNo"
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
                     width={150}
                   />
                   <Column
-                    dataField="BillNo"
-                    caption="Bill No"
-                    dataType="number"
-                    allowFiltering={true}
-                    allowSearch={true}
-                    width={100}
-                  />
-                  <Column
-                    dataField="Date"
-                    caption="Date"
+                    dataField="transactionDate"
+                    caption="TransactionDate"
                     dataType="date"
                     allowFiltering={true}
                     allowSearch={true}
                     width={100}
                   />
                   <Column
-                    dataField="Amount"
+                    dataField="amount"
                     caption="Amount"
                     dataType="number"
                     allowFiltering={true}
@@ -124,7 +116,7 @@ const BillWisePopup: FC = () => {
                     width={100}
                   />
                   <Column
-                    dataField="AdjAmount"
+                    dataField="adjustedAmount"
                     caption="Adjusted Amount"
                     dataType="number"
                     allowFiltering={true}
@@ -132,47 +124,47 @@ const BillWisePopup: FC = () => {
                     width={150}
                   />
                   <Column
-                    dataField="Balance"
-                    caption="Balance"
+                    dataField="billwiseAmount"
+                    caption="Amount To Set"
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
                     width={100}
                   />
                   <Column
-                    dataField="AmountToAssign"
-                    caption="Amount to Assign"
+                    dataField="referenceNumber"
+                    caption="ReferenceNumber"
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
                     width={150}
                   />
                   <Column
-                    dataField="BalanceAfter"
-                    caption="Balance After"
+                    dataField="financialYearID"
+                    caption="FinancialYearID"
                     dataType="number"
                     allowFiltering={true}
                     allowSearch={true}
                     width={130}
                   />
                   <Column
-                    dataField="PartyName"
-                    caption="Party Name"
+                    dataField="formType"
+                    caption="FormType"
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
                   />
                   <Column
-                    dataField="RefDate"
-                    caption="Reference Date"
-                    dataType="date"
+                    dataField="voucherPrefix"
+                    caption="VoucherPrefix"
+                    dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
                     width={130}
                   />
                   <Column
-                    dataField="AccTransDetailID"
-                    caption="Account Transaction ID"
+                    dataField="partyName"
+                    caption="PartyName"
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
@@ -180,9 +172,9 @@ const BillWisePopup: FC = () => {
                     visible={false}
                   />
                   <Column
-                    dataField="RafNo"
-                    caption="Raf No"
-                    dataType="string"
+                    dataField="referenceDate"
+                    caption="Reference Date"
+                    dataType="date"
                     allowFiltering={true}
                     allowSearch={true}
                     width={100}
@@ -198,8 +190,8 @@ const BillWisePopup: FC = () => {
                     visible={false}
                   />
                   <Column
-                    dataField="FinancilaYearID"
-                    caption="Financial Year ID"
+                    dataField="balance"
+                    caption="Balance After"
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
@@ -207,8 +199,8 @@ const BillWisePopup: FC = () => {
                     visible={false}
                   />
                   <Column
-                    dataField="VoucherPrefix"
-                    caption="Voucher Prefix"
+                    dataField="drCr"
+                    caption="DrCr"
                     dataType="string"
                     allowFiltering={true}
                     allowSearch={true}
@@ -227,7 +219,7 @@ const BillWisePopup: FC = () => {
                       displayFormat="{0}"
                     />
                     <TotalItem
-                      column="AdjAmount"
+                      column="Adjusted Amount"
                       summaryType="sum"
                       displayFormat="{0}"
                     />
@@ -237,12 +229,12 @@ const BillWisePopup: FC = () => {
                       displayFormat="{0}"
                     />
                     <TotalItem
-                      column="AmountToAssign"
+                      column="Amount to Set"
                       summaryType="sum"
                       displayFormat="{0}"
                     />
                     <TotalItem
-                      column="BalanceAfter"
+                      column="Balance After"
                       summaryType="sum"
                       displayFormat="{0}"
                     />

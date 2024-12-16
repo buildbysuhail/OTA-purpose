@@ -115,7 +115,7 @@ function App() {
         userProfileDetails = customJsonParse(atob(upt));
       }
     } catch (error) { }
-  
+  debugger;
     let userThemes: AppState = appInitialState;
     try {
     console.log("utt:", utt);

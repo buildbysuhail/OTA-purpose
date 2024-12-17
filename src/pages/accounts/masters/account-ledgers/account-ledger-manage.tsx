@@ -152,12 +152,13 @@ export const AccountLedgerManage = () => {
               <>
                 <div className="">
                   <ERPInput
-                    min={0}
-                    {...getFieldProps("opBalance")}
+                    {...getFieldProps("opBalance","decimal")}
                     label={t("opening_balance")}
+                    min={0}
+                    placeholder={t('opening_balance')}
                     type="number"
                     onChangeData={(data: any) =>
-                      handleFieldChange("opBalance", data.opBalance)
+                      handleFieldChange("opBalance", parseFloat(data.opBalance))
                     }
                   />
                 </div>

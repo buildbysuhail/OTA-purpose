@@ -309,7 +309,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               }
             />
             <ERPInput
-              {...getFieldProps("creditAmount")}
+              {...getFieldProps("creditAmount", "decimal")}
               min={0}
               label={t("credit_amount")}
               type="number"

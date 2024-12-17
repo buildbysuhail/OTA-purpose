@@ -72,6 +72,7 @@
     "customers": "Customers",
     "customer": "Customer",
     "supplier": "Supplier",
+    "suppliers":"Suppliers",
     "display_name": "Display Name",
     "address": "Address",
     "office_phone": "Office Phone",

@@ -1885,6 +1885,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         />
       </div>
       <CustomerDetailsSidebar ></CustomerDetailsSidebar>
+      <AttachmentSidebar></AttachmentSidebar>
       <div className="flex items-center justify-between p-4 sticky bottom-0 left-0 right-0 bg-white z-50 shadow-md w-full">
         <div className=" flex items-center gap-4">
           {formElements.printOnSave.visible && (

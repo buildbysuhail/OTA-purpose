@@ -35,6 +35,7 @@ import { useTransaction } from "../../use-transaction";
 import { AccTransactionUserConfig } from "./acc-transaction-user-config";
 import BillWisePopup from "./billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
+import AttachmentSidebar from "../../transaction-base/Attachment-button";
 
 interface BilledItem {
   id?: number;
@@ -2002,6 +2003,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
         />
       </div>
       <CustomerDetailsSidebar ></CustomerDetailsSidebar>
+      <AttachmentSidebar></AttachmentSidebar>
     </div>
   );
 };

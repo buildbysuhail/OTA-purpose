@@ -5,28 +5,35 @@ const getNestedValue = (obj: any, path: string) => {
   return path.split(".").reduce((acc, part) => acc && acc[part], obj);
 };
 
-export const getFieldPropsGlobal = (fieldId: string, data: any): FormField => {
+export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, min?: number): FormField => {
   debugger;
   const _value = getNestedValue(data?.data ? data?.data : data, fieldId);
   let value;
   if (_value === undefined || _value === null || _value === "") {
-    value = "";
+    value = undefined;
   } else if (_value === 0) {
     value = 0;
+  } else if (Number.isNaN(_value)) {
+    value = _value;
   } else {
     value = _value || "";
   }
+ 
   const validation = getNestedValue(data?.validations, fieldId);
   const checked =
     getNestedValue(data?.data ? data?.data : data, fieldId) || false;
-
-  return {
+  const ret = {
     id: fieldId,
     data: data?.data ? data?.data : data,
     value,
     validation,
     checked,
   };
+  console.log(`ret`);
+  console.log(ret);
+  
+  
+  return ret;
 };
 
 const setNestedValueGlobal = (obj: any, path: string, value: any): any => {

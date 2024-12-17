@@ -34,7 +34,7 @@ const CashBookSummary = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {cellElement.data.ledgerName}
   </span>
       ),
@@ -47,7 +47,7 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
   </span>
       ),
@@ -60,7 +60,7 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
   </span>
       ),
@@ -73,7 +73,7 @@ const CashBookSummary = () => {
       allowFiltering: true,
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),

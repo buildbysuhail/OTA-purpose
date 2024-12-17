@@ -7,6 +7,7 @@ const getNestedValue = (obj: any, path: string) => {
 
 export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, min?: number): FormField => {
   
+  debugger;
   const _value = getNestedValue(data?.data ? data?.data : data, fieldId);
   let value;
   if (_value === undefined || _value === null || _value === "") {
@@ -19,6 +20,14 @@ export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, mi
     value = _value || "";
   }
   if(type == "int" && value != undefined && value != undefined && !Number.isNaN(value)) {
+    debugger;
+    const str = value.toString();
+    if(str.includes('.'))
+    {
+      value = parseInt((value as string).replace('.',''));
+    }
+  }
+  if(type == "decimal" && value != undefined && value != undefined && !Number.isNaN(value)) {
     debugger;
     const str = value.toString();
     if(str.includes('.'))

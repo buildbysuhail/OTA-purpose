@@ -12,7 +12,6 @@ import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "./cash-summary-report-filter";
 import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
-
 interface CashSummary {
   from: Date
 }

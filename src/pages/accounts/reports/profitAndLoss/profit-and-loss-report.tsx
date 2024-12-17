@@ -235,7 +235,7 @@ const ProfitAndLossReport = () => {
                 initialData={ProfitAndLossReportFilterInitialState}
                 content={<ProfitAndLossReportFilter />}
                 toogleFilter={showFilter}
-                onApplyFilters={(filters) => onApplyFilter(filters)}
+                onApplyFilters={(filters) => onApplyFilter(filters)}  
                 onClose={onCloseFilter}
               />
             </button>
@@ -312,9 +312,9 @@ const ProfitAndLossReport = () => {
             )}
           </>
         )}
-        <p className="text-center mt-4">
+        {/* <p className="text-center mt-4">
           Accrual basis Wednesday, 20 December 2023 11:30 am GMT+00:00
-        </p>
+        </p> */}
       </div>
       {(isOpenDetails.key!==0&&isOpenDetails.key!==-400&&
 

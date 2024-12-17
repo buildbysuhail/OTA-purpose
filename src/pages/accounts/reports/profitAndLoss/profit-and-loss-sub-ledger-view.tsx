@@ -139,6 +139,7 @@ const ProfitAndLossSubledgerwiseView:FC<ProfitAndLossSubledgerwiseViewProps> = (
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   gridHeader={groupName}
                   dataUrl= {Urls.acc_reports_account_ledger_balance_view_sub_group_inc}

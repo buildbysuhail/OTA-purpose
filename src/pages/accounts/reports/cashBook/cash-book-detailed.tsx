@@ -127,6 +127,7 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   gridHeader={t("cash_book_detailed")}
                   dataUrl= {Urls.acc_reports_cash_book_transactionwise}

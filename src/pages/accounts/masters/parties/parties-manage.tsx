@@ -316,12 +316,12 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               placeholder={t("credit_amount")}
               required={false}
               onChangeData={(data: any) =>
-                handleFieldChange("creditAmount", data.creditAmount)
+                handleFieldChange("creditAmount", parseFloat(data.creditAmount))
               }
             />
             <div className="flex gap-4">
               <ERPInput
-                {...getFieldProps("opBalance")}
+                {...getFieldProps("opBalance","int")}
                 min={0}
                 disabled={isEdit}
                 label={t("op_balance")}
@@ -329,7 +329,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 placeholder={t("op_balance")}
                 required={false}
                 onChangeData={(data: any) =>
-                  handleFieldChange("opBalance", data.opBalance)
+                  handleFieldChange("opBalance", parseFloat(data.opBalance))
                 }
               />
               <div className="">

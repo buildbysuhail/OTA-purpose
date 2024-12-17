@@ -132,7 +132,7 @@ export const UserManage: React.FC = React.memo(() => {
         />
 
         <ERPInput
-          {...getFieldProps("maxDiscPercAllowed")}
+          {...getFieldProps("maxDiscPercAllowed","decimal")}
           label={t("max_dis%")}
           type="number"
           min={0}

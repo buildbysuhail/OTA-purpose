@@ -8,6 +8,7 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import BillwiseProfitReportFilter, { BillwiseProfitReportFilterInitialState } from "./billwise-profit-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const BillwiseProfitGlobal = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
@@ -17,6 +18,7 @@ const BillwiseProfitGlobal = () => {
   // });
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+     const { getFormattedValue } = useNumberFormat()
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
     {
@@ -51,6 +53,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 80,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span>
+ {`${cellElement.data?.qty == 0 || cellElement.data?.qty == null ? '' : cellElement.data.qty < 0 ? getFormattedValue(-1 * cellElement.data.qty) : getFormattedValue(cellElement.data.qty)}`}
+  </span>
+      ),
     },
     {
       dataField: "free",
@@ -85,6 +92,11 @@ const BillwiseProfitGlobal = () => {
       allowSearch: true,
       allowFiltering: true,
       width: 120,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span>
+   {`${cellElement.data?.grossAmount == 0 || cellElement.data?.grossAmount == null ? '' : cellElement.data.grossAmount < 0 ? getFormattedValue(-1 * cellElement.data.grossAmount) : getFormattedValue(cellElement.data.grossAmount)}`}
+  </span>
+      ),
     },
     {
       dataField: "discAmt",
@@ -103,7 +115,7 @@ const BillwiseProfitGlobal = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.salesPrice}
+   {`${cellElement.data?.salesPrice == 0 || cellElement.data?.salesPrice == null ? '' : cellElement.data.salesPrice < 0 && (cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt") ? getFormattedValue(-1 * cellElement.data.salesPrice) : getFormattedValue(cellElement.data.salesPrice)}`}
   </span>
       ),
     },
@@ -116,7 +128,7 @@ const BillwiseProfitGlobal = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.cost}
+   {`${cellElement.data?.cost == 0 || cellElement.data?.cost == null ? '' : cellElement.data.cost < 0 ? getFormattedValue(-1 * cellElement.data.cost) : getFormattedValue(cellElement.data.cost)}`}
   </span>
       ),
     },
@@ -129,7 +141,8 @@ const BillwiseProfitGlobal = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.netAmt}
+      {`${cellElement.data?.netAmt == 0 || cellElement.data?.netAmt == null ? '' : cellElement.data.netAmt < 0 ? getFormattedValue(-1 * cellElement.data.netAmt) : getFormattedValue(cellElement.data.netAmt)}`}
+  
   </span>
       ),
     },
@@ -144,7 +157,7 @@ const BillwiseProfitGlobal = () => {
       width: 110,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.profit}
+   {`${cellElement.data?.profit == 0 || cellElement.data?.profit == null ? '' : cellElement.data.profit < 0 ? getFormattedValue(-1 * cellElement.data.profit) : getFormattedValue(cellElement.data.profit)}`}
   </span>
       ),
     },
@@ -157,7 +170,7 @@ const BillwiseProfitGlobal = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.markupPerc}
+   {`${cellElement.data?.markupPerc == 0 || cellElement.data?.markupPerc == null ? '' : cellElement.data.markupPerc < 0 ? getFormattedValue(-1 * cellElement.data.markupPerc) : getFormattedValue(cellElement.data.markupPerc)}`}
   </span>
       ),
     },
@@ -170,7 +183,7 @@ const BillwiseProfitGlobal = () => {
       width: 120,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.marginPerc}
+   {`${cellElement.data?.marginPerc == 0 || cellElement.data?.marginPerc == null ? '' : cellElement.data.marginPerc < 0 ? getFormattedValue(-1 * cellElement.data.marginPerc) : getFormattedValue(cellElement.data.marginPerc)}`}
   </span>
       ),
     },
@@ -183,8 +196,8 @@ const BillwiseProfitGlobal = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.sgst}
-  </span>
+     {`${cellElement.data?.sgst == 0 || cellElement.data?.sgst == null ? '' : cellElement.data.sgst < 0 && cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt"? getFormattedValue(-1 * cellElement.data.sgst) : getFormattedValue(cellElement.data.sgst)}`}
+     </span>
       ),
     },
     {
@@ -196,8 +209,8 @@ const BillwiseProfitGlobal = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.cgst}
-  </span>
+    {`${cellElement.data?.cgst == 0 || cellElement.data?.cgst == null ? '' : cellElement.data.cgst < 0 && cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt"? getFormattedValue(-1 * cellElement.data.cgst) : getFormattedValue(cellElement.data.cgst)}`}
+    </span>
       ),
     },
     {
@@ -209,8 +222,8 @@ const BillwiseProfitGlobal = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.igst}
-  </span>
+   {`${cellElement.data?.igst == 0 || cellElement.data?.igst == null ? '' : cellElement.data.igst < 0 && cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt"? getFormattedValue(-1 * cellElement.data.igst) : getFormattedValue(cellElement.data.igst)}`}
+   </span>
       ),
     },
     {
@@ -222,8 +235,8 @@ const BillwiseProfitGlobal = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.cess}
-  </span>
+   {`${cellElement.data?.cess == 0 || cellElement.data?.cess == null ? '' : cellElement.data.cess < 0 && cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt"? getFormattedValue(-1 * cellElement.data.cess) : getFormattedValue(cellElement.data.cess)}`}
+   </span>
       ),
     },
     {
@@ -235,7 +248,7 @@ const BillwiseProfitGlobal = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.addCess}
+     {`${cellElement.data?.addCess == 0 || cellElement.data?.addCess == null ? '' : cellElement.data.addCess < 0 && cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt"? getFormattedValue(-1 * cellElement.data.addCess) : getFormattedValue(cellElement.data.addCess)}`}
   </span>
       ),
     },
@@ -248,7 +261,7 @@ const BillwiseProfitGlobal = () => {
       width: 100,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.calmityCess}
+  {`${cellElement.data?.calmityCess == 0 || cellElement.data?.calmityCess == null ? '' : cellElement.data.calmityCess < 0 && cellElement.data.productName==="Grand Total"||cellElement.data.productName==="Disc+AddAmt"? getFormattedValue(-1 * cellElement.data.calmityCess) : getFormattedValue(cellElement.data.calmityCess)}`}
   </span>
       ),
     },

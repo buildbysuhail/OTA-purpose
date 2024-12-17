@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../../components/types/dev-grid-column";
 import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
@@ -9,11 +9,20 @@ import { ActionType } from "../../../../redux/types";
 import DayBookBillWise from "../dayBook/dayBookSummary/day-book-billwise";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
 import CashBookMonthWise from "./cash-book-monthwise";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 // interface DayBookSummary {
 //   from: Date
 // }
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
+  const { getFormattedValue} = useNumberFormat()
+  const [isOpenDetails, setIsOpenDetails] = useState<{
+      isOpen: boolean;
+      key: number;
+      groupName?: string;
+    }>({ isOpen: false, key: 0 });
+      const [filter, setFilter] = useState<any>(CashBookReportFilterInitialState);
   const { t } = useTranslation();
   // const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
   const rootState = useRootState();
@@ -39,7 +48,7 @@ const CashBookSummary = () => {
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+ {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
   </span>
       ),
     },
@@ -52,7 +61,7 @@ const CashBookSummary = () => {
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+ {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
   </span>
       ),
     },
@@ -65,11 +74,10 @@ const CashBookSummary = () => {
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),
     },
-    
     {
       dataField: "branch",
       caption:  t("branch"),
@@ -100,19 +108,39 @@ const CashBookSummary = () => {
                   reload={true} 
                   // popupAction={toggleCostCentrePopup}
                   hideGridAddButton={true}
-                  // childPopupProps={{
-                  //   content: <CashBookMonthWise/>,
-                  //   title: t("cash_book_monthwise"),
-                  //   isForm: false,
-                  //   width: "mw-100",
-                  //   drillDownCells: "ledgerName,",
-                  //   bodyProps: "ledgerID,asonDate" 
-                  // }}
+                  childPopupProps={{
+                    content: <CashBookMonthWise postData={
+                      {asOnDate: filter.asonDate}}/>,
+                    title: t("cash_book_monthwise"),
+                    isForm: false,
+                    width: "mw-100",
+                    drillDownCells: "ledgerName,",
+                    bodyProps: "ledgerID" 
+                  }}
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
+        {/* <ERPModal
+        isOpen={isOpenDetails.isOpen}
+        // title={t("bank_cards")}
+        title="Balance Sheet"
+        width="w-full max-w-[90%]"
+        isForm={true}
+        closeModal={() => {
+          setIsOpenDetails({ isOpen: false, key: 0 });
+        }}
+        content={
+          <CashBookMonthWise
+            postData={{
+              ledgerID: isOpenDetails.key,
+              asOnDate: filter.asOnDate,
+            }}
+            groupName={isOpenDetails.groupName}
+          />
+        }
+      /> */}
       </div>
     </Fragment>
   );

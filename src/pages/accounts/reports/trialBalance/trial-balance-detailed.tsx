@@ -92,7 +92,7 @@ const TrialBalancePeriodwise = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'font-bold text-red text-lg': ''}`}>
-  {cellElement.data.openingCredit}
+            {`${cellElement.data?.openingCredit == 0 || cellElement.data?.openingCredit == null ? '' : cellElement.data.openingCredit < 0 ? getFormattedValue(-1* cellElement.data.openingCredit) : getFormattedValue(cellElement.data.openingCredit)}`}
 </span>
       ),
     },
@@ -118,7 +118,8 @@ const TrialBalancePeriodwise = () => {
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red text-lg' : ''}`}>
-          {cellElement.data.debit}
+         {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+
         </span>
       ),
     },
@@ -131,7 +132,7 @@ const TrialBalancePeriodwise = () => {
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : cellElement.data.ledgerName == "TOTAL" ? 'pl-4 font-bold text-red text-lg' : ''}`}>
-          {cellElement.data.credit}
+                {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
         </span>
       ),
     },
@@ -171,7 +172,7 @@ const TrialBalancePeriodwise = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
-  {cellElement.data.closingCredit}
+           {`${cellElement.data?.closingCredit == 0 || cellElement.data?.closingCredit == null ? '' : cellElement.data.closingCredit < 0 ? getFormattedValue(-1* cellElement.data.closingCredit) : getFormattedValue(cellElement.data.closingCredit)}`}
 </span>
       ),
     },
@@ -252,7 +253,7 @@ const TrialBalancePeriodwise = () => {
                   reload={true}
                   filterWidth="100"
                   enablefilter={true}
-                  showFilterInitially={true}
+                  showFilterInitially={true }
                   filterContent={<TrialBalancePeriodwiseReportFilter />}
                   filterInitialData={TrialBalancePeriodwiseReportFilterInitialState}
                 ></ErpDevGrid>

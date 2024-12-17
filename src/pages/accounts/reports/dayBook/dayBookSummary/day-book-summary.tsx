@@ -9,12 +9,14 @@ import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "../day-book-report-filter";
 import DayBookBillWise from "./day-book-billwise";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 // interface DayBookSummary {
 //   from: Date
 // }
 const DayBookSummary = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const { getFormattedValue} = useNumberFormat()
   // const [filter, setFilter] =useState<DayBookSummary>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -80,9 +82,9 @@ const DayBookSummary = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-          {cellElement.data.balance}
-        </span>
+  <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
+  </span>
       ),
     },
 

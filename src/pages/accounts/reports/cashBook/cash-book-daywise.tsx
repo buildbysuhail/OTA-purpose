@@ -8,6 +8,7 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDetailed from "./cash-book-detailed";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 interface CashBookMonthDayWiseProps {
   contentProps?: any
   enablefilter?: boolean;
@@ -15,6 +16,7 @@ interface CashBookMonthDayWiseProps {
 const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const { getFormattedValue} = useNumberFormat()
   // const [filter, setFilter] =useState<CashBookDayWise>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -47,7 +49,7 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
   </span>
       ),
     },
@@ -60,7 +62,7 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
   </span>
       ),
     },
@@ -71,6 +73,11 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       allowSearch: true,
       allowFiltering: true,
       width: 150,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+  {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1* cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr' }`}
+</span>
+      ),
     },
     {
       dataField: "branch",
@@ -90,7 +97,7 @@ const CashBookDayWise = ({contentProps, enablefilter = false}:CashBookMonthDayWi
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.closingBalance}
+   {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1* cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
     },

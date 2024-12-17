@@ -351,10 +351,6 @@ const ProfitAndLossReport = () => {
       />
 
       )}
-
-      
-      
-      
     </div>
   );
 };

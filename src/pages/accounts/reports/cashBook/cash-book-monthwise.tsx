@@ -8,6 +8,8 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import CashBookDayWise from "./cash-book-daywise";
+import { mergeObjectsRemovingIdenticalKeys } from "../../../../utilities/Utils";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 // interface CashBookMonthWiseProps {
 //   contentProps?: any
@@ -16,16 +18,20 @@ import CashBookDayWise from "./cash-book-daywise";
 interface CashBookMonthWiseProps {
   postData: any;
   groupName?: string;
+  contentProps?: any;
 }
 
 
-const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) => {
+const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , contentProps}) => {
+  debugger;
 // interface CashBookMonthWiseFilters {
 //   from: Date
 // }
 // const CashBookMonthWise = ({contentProps, enablefilter = false}:CashBookMonthWiseProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+   const { getFormattedValue} = useNumberFormat()
+  // const [_postData, setPostData] = useState({})
   // const [filter, setFilter] =useState<CashBookMonthWiseFilters>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -74,6 +80,11 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+  </span>
+      ),
     },
     {
       dataField: "credit",
@@ -82,6 +93,11 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+  </span>
+      ),
     },
     {
       dataField: "monthBal",
@@ -90,6 +106,11 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 200,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.isGroup == true ? 'font-bold text-green text-lg' :cellElement.data.ledgerName=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+  {`${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data.monthBal < 0 ? getFormattedValue(-1* cellElement.data.monthBal) : getFormattedValue(cellElement.data.monthBal)} ${cellElement.data?.monthBal == 0 || cellElement.data?.monthBal == null ? '' : cellElement.data?.monthBal >= 0 ? 'Dr' : 'Cr' }`}
+</span>
+      ),
     },
     {
       dataField: "closingBalance",
@@ -98,8 +119,12 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 250,
-    },
-    
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+   {`${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data.closingBalance < 0 ? getFormattedValue(-1* cellElement.data.closingBalance) : getFormattedValue(cellElement.data.closingBalance)} ${cellElement.data?.closingBalance == 0 || cellElement.data?.closingBalance == null ? '' : cellElement.data?.closingBalance >= 0 ? 'Dr' : 'Cr' }`}
+  </span>
+      ),
+    }
   ];
   return (
     <Fragment>
@@ -114,7 +139,7 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , groupName}) =>
                   gridHeader={t("cash_book")}
                   dataUrl= {Urls.acc_reports_cash_book_monthwise}
                   method={ActionType.POST}
-                  postData = {postData}
+                  postData = {mergeObjectsRemovingIdenticalKeys(postData, contentProps)}
                   gridId="grd_cost_centre"
                   popupAction={toggleCostCentrePopup}
                   // allowEditing={false}

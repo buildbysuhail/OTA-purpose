@@ -11,12 +11,14 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "./cash-summary-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface CashSummary {
   from: Date
 }
 const CashSummary = () => {
   const dispatch = useAppDispatch();
+       const { getFormattedValue} = useNumberFormat()
   const { t } = useTranslation();
   const [filter, setFilter] =useState<CashSummary>({from: new Date()});
   const rootState = useRootState();
@@ -41,7 +43,7 @@ const CashSummary = () => {
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party==="OPENING BALANCE" ? 'font-bold text-red text-lg' : cellElement.data.party==="CLOSING BALANCE"?'font-bold text-red text-lg':''}`}>
-  {cellElement.data.billed}
+  {`${cellElement.data?.billed == 0 || cellElement.data?.billed == null ? '' : cellElement.data.billed < 0 ? getFormattedValue(-1* cellElement.data.billed) : getFormattedValue(cellElement.data.billed)}`}
   </span>
       ),
     },

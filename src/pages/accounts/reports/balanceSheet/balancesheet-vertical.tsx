@@ -10,13 +10,24 @@ import { useAppDispatch } from "../../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../../utilities/hooks/useRootState";
 import LedgerReportFilter, { LedgerReportFilterInitialState } from "../ledger-report-filter";
 import BalanceSheetFilter, { BalanceSheetFilterInitialState } from "./balance-sheet-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
+import BalancesheetDetails from "./balancesheet-details";
+import ERPModal from "../../../../components/ERPComponents/erp-modal";
+
 
 
 
 const BalancesheetVertical = () => {
+  const [isOpenDetails, setIsOpenDetails] = useState<{
+    isOpen: boolean;
+    key: number;
+    groupName?: string;
+  }>({ isOpen: false, key: 0 });
+  const [filter, setFilter] = useState<any>(BalanceSheetFilterInitialState);
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
   const rootState = useRootState();
+    const { getFormattedValue} = useNumberFormat()
   const columns: DevGridColumn[] = [
     {
       dataField: "accGroupID",
@@ -97,7 +108,6 @@ const BalancesheetVertical = () => {
 </span>
       ),
     },
-
     {
       dataField: "amount",
       caption: t("amount"),
@@ -107,7 +117,7 @@ const BalancesheetVertical = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.isSubTotal == true?'font-bold text-black':cellElement.data.isTotal == true ? 'font-bold text-blue':cellElement.data.isGroup == true&&cellElement.data.isSubGroup == true?'font-bold text-green':cellElement.data.isGroup == true ? 'pl-4 font-bold text-red' : ''}`}>
-  {cellElement.data.amount}
+        {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr' }`}
 </span>
       ),
     },
@@ -132,12 +142,32 @@ const BalancesheetVertical = () => {
                   reload={true}
                   hideGridAddButton={true}
                   method={ActionType.POST}
+                  // postData={postdata}
                   gridId="grd_balancesheet_vertical"
                 ></ErpDevGrid>
               </div>
             </div>
           </div>
         </div>
+        <ERPModal
+        isOpen={isOpenDetails.isOpen}
+        // title={t("bank_cards")}
+        title="Balance Sheet"
+        width="w-full max-w-[90%]"
+        isForm={true}
+        closeModal={() => {
+          setIsOpenDetails({ isOpen: false, key: 0 });
+        }}
+        content={
+          <BalancesheetDetails
+            postData={{
+              accGroupID: isOpenDetails.key,
+              asOnDate: filter.asOnDate,
+            }}
+            groupName={isOpenDetails.groupName}
+          />
+        }
+      />
       </div>
     </Fragment>
   );

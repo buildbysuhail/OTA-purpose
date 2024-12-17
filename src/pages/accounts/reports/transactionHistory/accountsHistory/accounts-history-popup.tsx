@@ -109,6 +109,7 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   gridHeader={t("accounts_transaction_history_popup")}
                   dataUrl= {Urls.acc_reports_accounts_history_popup}
@@ -119,7 +120,6 @@ const AccountsHistoryPopup = ({contentProps}:AccountsHistoryPopupProps) => {
                   hideGridAddButton={true}
                   reload={true}
                     childPopupProps={{
-
                       content: <AccountsHistoryPopup/>,
                       title: t("accounts_transaction_history_popup"),
                       isForm: false,

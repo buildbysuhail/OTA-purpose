@@ -28,9 +28,9 @@ const LedgerReportFilter = ({ getFieldProps, handleFieldChange, t, formState }: 
 
     {/* All Checkbox */}
     <ERPCheckbox
-      {...getFieldProps("all")}
+      {...getFieldProps("showAll")}
       label={t("All")}
-      onChangeData={(data) => handleFieldChange("all", data.all)}
+      onChangeData={(data) => handleFieldChange("showAll", data.showAll)}
     />
 
     {/* Ledger Code Section */}
@@ -170,7 +170,7 @@ export const LedgerReportFilterInitialState = {
   // dateFrom: new Date(-45), // Default empty string
   dateFrom:  moment().subtract(45, 'days').toDate(), 
   dateTo: new Date(), // Default empty string 
-  all: false, // Default to false
+  showAll: false, // Default to false
   ledgerCode: "", // Default empty string
   ledgerID: 0, // Default to 0
   relLedgerID: -1, // Default empty string

@@ -351,7 +351,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
       const dss = { ..._filter }
       console.log(`prev:${filter}`);
+      console.log(filter);
       console.log(`latest:${_filter}`);
+      console.log(_filter);
+      console.log(dss);
+      
       if (filterShowCount == 0) {
         setFilterShowCount((prev) => prev + 1);
         console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);

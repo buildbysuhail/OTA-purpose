@@ -1,27 +1,51 @@
-import { Fragment, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { useAppDispatch } from "../../../utilities/hooks/useAppDispatch";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import { DevGridColumn } from "../../../components/types/dev-grid-column";
-import ERPGridActions from "../../../components/ERPComponents/erp-grid-actions";
-import { toggleCostCentrePopup } from "../../../redux/slices/popup-reducer";
 import ErpDevGrid from "../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../redux/urls";
-import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
-import { useSearchParams } from "react-router-dom";
 import LedgerReportFilter, { LedgerReportFilterInitialState } from "./ledger-report-filter";
 import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
+import { APIClient } from "../../../helpers/api-client";
+import ErpGridGlobalFilter from "../../../components/ERPComponents/erp-grid-global-filter";
 
 interface LedgerReport {
   from: Date
 }
+const api = new APIClient();
 const LedgerReport = () => {
   const dispatch = useAppDispatch();
+  const [data, setData] = useState<any[]>([]);
   const { t } = useTranslation("accountsReport");
-  const [filter, setFilter] =useState<LedgerReport>({from: new Date()});
+  const [showFilter, setShowFilter] = useState<boolean>(false);
+  const [filter, setFilter] = useState<any>(LedgerReportFilterInitialState);
+  const [filterShowCount, setFilterShowCount] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
   const rootState = useRootState();
-  const { getFormattedValue} = useNumberFormat()
+  const LoadAsync = async (_filter?: any) => {
+    setLoading(true);
+    const res = await api.postAsync(
+      Urls.acc_reports_profit_and_loss,
+      _filter || filter
+    );
+    setData(res?.data || []);
+    setLoading(false);
+  };
+  const { getFormattedValue } = useNumberFormat()
+  const onApplyFilter = useCallback((_filter: any) => {
+    setFilter({ ..._filter });
+    LoadAsync(_filter);
+  }, []);
+
+  const onCloseFilter = useCallback(() => {
+    if (filterShowCount === 0) {
+      setFilter({});
+      setFilterShowCount((prev) => prev + 1);
+    }
+    setShowFilter(false);
+  }, [filterShowCount]);
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -41,7 +65,7 @@ const LedgerReport = () => {
     },
     {
       dataField: "vchNo",
-      caption:  t("voucher_no"),
+      caption: t("voucher_no"),
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
@@ -78,9 +102,9 @@ const LedgerReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
-  {cellElement.data.particulars}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+          {cellElement.data.particulars}
+        </span>
       ),
     },
     {
@@ -91,9 +115,9 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
-   {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+          {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+        </span>
       ),
     },
     {
@@ -104,9 +128,9 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
-  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
-  </span>
+        <span className={`${cellElement.data.particulars === "TOTAL" ? 'font-bold text-red' : cellElement.data.particulars === "Pending Cheques" || cellElement.data.particulars === "Total Pending Cheque Amt" ? 'font-bold text-blue' : ''}`}>
+          {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
+        </span>
       ),
     },
     {
@@ -117,9 +141,16 @@ const LedgerReport = () => {
       allowFiltering: true,
       width: 170,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' :cellElement.data.particulars==="Pending Cheques"||cellElement.data.particulars==="Total Pending Cheque Amt"? 'font-bold text-blue':''}`}>
-  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
-  </span>
+        <span
+          className={`${"font-bold text-red"
+            }`}
+        >
+          {`${cellElement.data?.balance == null
+            ? '0'
+            : cellElement.data.balance < 0
+              ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr'
+              : getFormattedValue(cellElement.data.balance) + ' Dr'}`}
+        </span>
       ),
     },
     {
@@ -154,17 +185,20 @@ const LedgerReport = () => {
           <div className="">
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
+                <button className="flex items-center bg-gray-100 p-0 rounded-md">
+
+                </button>
                 <ErpDevGrid
                   columns={columns}
                   gridHeader={t("ledger_report")}
-                  dataUrl= {Urls.acc_reports_ledger}
+                  dataUrl={Urls.acc_reports_ledger}
                   hideGridAddButton={true}
                   enablefilter={true}
                   showFilterInitially={true}
                   method={ActionType.POST}
-                  filterContent={<LedgerReportFilter/>}
+                  filterContent={<LedgerReportFilter />}
                   filterInitialData={LedgerReportFilterInitialState}
-                  reload={true} 
+                  reload={true}
                   gridId="grd_cost_centre"
                 ></ErpDevGrid>
               </div>

@@ -10,7 +10,6 @@ import ERPModal from "../../../components/ERPComponents/erp-modal";
 import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../redux/types";
 import { useSearchParams } from "react-router-dom";
-import TrialBalancePeriodwiseReportFilter, { TrialBalancePeriodwiseReportFilterInitialState } from "./trialBalance/trial-balance-report-filter-periodwise";
 
 interface TransactionReport {
 
@@ -30,7 +29,6 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 120,
     },
-   
     {
       dataField: "vchNo",
       caption:  t("voucher_no"),
@@ -62,7 +60,7 @@ const TransactionReport = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {cellElement.data.particulars}
   </span>
       ),
@@ -101,7 +99,7 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {cellElement.data.debit}
   </span>
       ),
@@ -114,7 +112,7 @@ const TransactionReport = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red' : ''}`}>
   {cellElement.data.credit}
   </span>
       ),

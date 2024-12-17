@@ -458,7 +458,7 @@ const UserTypePrivilegeManage: React.FC = React.memo(() => {
           </div>
         }
         {/* Form Buttons */}
-        <div className="flex justify-end mt-6">
+        <div className="flex justify-end mt-6 space-x-2">
           <ERPButton
             title={t("save")}
             variant="primary"

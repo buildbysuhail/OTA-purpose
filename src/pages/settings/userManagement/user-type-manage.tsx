@@ -17,7 +17,7 @@ interface UserTypeData {
   remarks: string;
 }
 
-export const UserTypeManage : React.FC = React.memo(() =>  {
+export const UserTypeManage: React.FC = React.memo(() => {
   const rootState = useRootState();
   const dispatch = useDispatch();
   const {
@@ -30,14 +30,14 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
     isLoading,
   } = useFormManager<UserTypeData>({
     url: Urls.UserTypes,
-    onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null, reload:true  })), [dispatch]),
-    onClose:useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null, reload: true })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleUserTypePopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.userType.key,
-    keyField:"userTypeCode",
+    keyField: "userTypeCode",
     useApiClient: true,
     initialData: initialDataUserType
   });
-  const {t}=useTranslation("userManage");
+  const { t } = useTranslation("userManage");
 
   return (
     <div className="w-full pt-4">
@@ -47,7 +47,7 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
           label={t("user_type_name")}
           placeholder={t("user_type_name")}
           required={true}
-          onChangeData={(data: any) => {handleFieldChange('userTypeName', data.userTypeName)}}
+          onChangeData={(data: any) => { handleFieldChange('userTypeName', data.userTypeName) }}
         />
         <ERPInput
           {...getFieldProps('userTypeCode')}
@@ -64,16 +64,18 @@ export const UserTypeManage : React.FC = React.memo(() =>  {
           required={true}
           onChangeData={(data: any) => handleFieldChange('remarks', data.remarks)}
         />
-        <ERPCheckbox
-          {...getFieldProps('isEditable')}
-          label={t("is_editable")}
-          onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
-        />
-        <ERPCheckbox
-          {...getFieldProps('isDeletable')}
-          label={t("is_deletable")}
-          onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
-        />
+        <div className="flex space-x-4">
+          <ERPCheckbox
+            {...getFieldProps('isEditable')}
+            label={t("is_editable")}
+            onChangeData={(data: any) => handleFieldChange('isEditable', data.isEditable)}
+          />
+          <ERPCheckbox
+            {...getFieldProps('isDeletable')}
+            label={t("is_deletable")}
+            onChangeData={(data: any) => handleFieldChange('isDeletable', data.isDeletable)}
+          />
+        </div>
       </div>
       <ERPFormButtons
         onClear={handleClear}

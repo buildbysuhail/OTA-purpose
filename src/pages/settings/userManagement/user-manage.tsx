@@ -134,7 +134,8 @@ export const UserManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("maxDiscPercAllowed")}
           label={t("max_dis%")}
-          type="text"
+          type="number"
+          min={0}
           placeholder={t("max_dis%")}
           required={false}
           onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", parseFloat(data.maxDiscPercAllowed))}

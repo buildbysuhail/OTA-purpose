@@ -17,14 +17,14 @@ import { useNavigate } from "react-router-dom";
 interface CounterData {
   systemName:string
   systemCode:string
-  counterID:number|null
+  counterId:number|null
 }
 const api = new APIClient();
 const CounterSettings = () => {
   const initData:CounterData = {
     systemName:"",
     systemCode:"",
-    counterID:null,
+    counterId:null,
   }
  const[counterData,setCounterData]=useState<CounterData>(initData)
  const [defaultSystemCode, setDefaultSystemCode] = useState("");
@@ -55,7 +55,7 @@ const handleRowClick = (e: any) => {
   setCounterData({
     systemName: rowData.pCname,
     systemCode: rowData.systemCode,
-    counterID: rowData.counterID,
+    counterId: rowData.counterId,
   });
 };
 
@@ -77,7 +77,7 @@ const handleClear = async ()=>{
   setCounterData({
     systemName: "",
     systemCode: "",
-    counterID: null,
+    counterId: null,
   }); 
 }
 
@@ -169,11 +169,12 @@ const handleClear = async ()=>{
                 <ERPDataCombobox
                 //  labelDirection="horizontal"
                  className="w-full"
-                  id="counterID"
+                  id="counterId"
                   data={counterData}
+                  value={counterData?.counterId}
                   label={t("counterID")}
                   field={{
-                    id: "counterID",
+                    id: "counterId",
                     getListUrl: Urls.data_counters,
                     valueKey: "id",
                     labelKey: "name",
@@ -181,7 +182,7 @@ const handleClear = async ()=>{
                   onChange={(e) => {
                     setCounterData((prevTheme) => ({
                       ...prevTheme,
-                      counterID: e?.value ?? null,
+                      counterId: e?.value ?? null,
                     }));
                   }}
                 

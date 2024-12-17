@@ -137,14 +137,7 @@ export const UserManage: React.FC = React.memo(() => {
           type="text"
           placeholder={t("max_dis%")}
           required={false}
-          onChange={(e) => {
-            const sanitizedValue = e.target.value
-              .replace(/[^0-9.]/g, '')
-              .replace(/\.{2,}/g, '.')
-              .replace(/^(\d*\.)(.*)\.?/g, '$1$2');
-
-            handleFieldChange("maxDiscPercAllowed", sanitizedValue);
-          }}
+          onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", parseFloat(data.maxDiscPercAllowed))}
         />
 
         {applicationSettings.mainSettings.maintainBusinessType == 'Restaurant' &&

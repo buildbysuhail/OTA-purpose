@@ -304,10 +304,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               type="number"
               placeholder={t("credit_days")}
               required={false}
-              onChange={(e) => {
-                const value = e.target.value.replace(/[^0-9]/g, '');
-                handleFieldChange("creditDays", value);
-              }}
+              onChangeData={(data: any) =>
+                handleFieldChange("creditDays", data.creditDays)
+              }
             />
             <ERPInput
               {...getFieldProps("creditAmount")}
@@ -316,18 +315,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
               type="number"
               placeholder={t("credit_amount")}
               required={false}
-              onChange={(e) => {
-                const value = e.target.value
-                  .replace(/\.{2,}/g, '.')  // Replace multiple consecutive dots with a single dot
-                  .replace(/[^0-9.]/g, '');  // Remove any non-numeric characters except first dot
-
-                const parts = value.split('.');
-                const finalValue = parts.length > 2
-                  ? `${parts[0]}.${parts.slice(1).join('')}`
-                  : value;
-
-                handleFieldChange("creditAmount", finalValue);
-              }}
+              onChangeData={(data: any) =>
+                handleFieldChange("creditAmount", data.creditAmount)
+              }
             />
             <div className="flex gap-4">
               <ERPInput
@@ -338,18 +328,9 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 type="number"
                 placeholder={t("op_balance")}
                 required={false}
-                onChange={(e) => {
-                  const value = e.target.value
-                    .replace(/\.{2,}/g, '.')  // Replace multiple consecutive dots with a single dot
-                    .replace(/[^0-9.]/g, '');  // Remove any non-numeric characters except first dot
-
-                  const parts = value.split('.');
-                  const finalValue = parts.length > 2
-                    ? `${parts[0]}.${parts.slice(1).join('')}`
-                    : value;
-
-                  handleFieldChange("opBalance", finalValue);
-                }}
+                onChangeData={(data: any) =>
+                  handleFieldChange("opBalance", data.opBalance)
+                }
               />
               <div className="">
                 <ERPDataCombobox

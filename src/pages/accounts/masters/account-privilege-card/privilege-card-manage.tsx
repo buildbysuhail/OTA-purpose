@@ -30,7 +30,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
       () => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
-    onClose: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.privilegeCard.key,
     keyField: "privilegeCardsID",
     useApiClient: true,

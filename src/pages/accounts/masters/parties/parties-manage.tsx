@@ -57,7 +57,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
     } = useFormManager<PartiesData>({
       url: Urls.parties,
       onClose: useCallback(
-        () => dispatch(toggleParties({ isOpen: false, key: null,reload: false })),
+        () => dispatch(toggleParties({ isOpen: false, key: null, reload: false })),
         [dispatch]
       ),
       onSuccess: useCallback(
@@ -129,34 +129,31 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
       ERPToast.show("Download started...", "success");
       try {
         const parts = fileData.split("-");
-        let fileType = parts[parts.length-1];
+        let fileType = parts[parts.length - 1];
         parts.pop();
         const link = document.createElement("a");
-        if(fileType == "FileUrl")
-        {
+        if (fileType == "FileUrl") {
           link.href = parts.join("-");
         }
-        else
-        {
-          const url = `${
-            Urls.acc_attachmentInfo_download
-          }?fileData=${encodeURIComponent(fileData)}`;
-  
+        else {
+          const url = `${Urls.acc_attachmentInfo_download
+            }?fileData=${encodeURIComponent(fileData)}`;
+
           const res = await api.getNativeAsync(url, undefined, {
             responseType: "blob", // Ensure the response is treated as a binary blob
           });
           debugger;
-          if (res) {            
+          if (res) {
             link.href = url;
           }
         }
-          // Fallback to the provided fileName or a default name
-          const suggestedFileName = parts.join("-") || "download";
+        // Fallback to the provided fileName or a default name
+        const suggestedFileName = parts.join("-") || "download";
 
-          link.setAttribute("download", suggestedFileName);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
+        link.setAttribute("download", suggestedFileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
       } catch (error) {
         console.error("Error downloading file:", error);
@@ -233,7 +230,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("partyCategoryID", data.partyCategoryID);
               }}
               label={t("party_category")}
-              // disabled={true}
+            // disabled={true}
             />
             <ERPDataCombobox
               {...getFieldProps("accGroupID")}
@@ -322,7 +319,6 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("creditAmount", data.creditAmount)
               }
             />
-
             <div className="flex gap-4">
               <ERPInput
                 {...getFieldProps("opBalance")}
@@ -502,7 +498,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
           {/* <Tab label="Project/Job" value="project_job" /> */}
           {userSession.countryId != Countries.India &&
             applicationSettings?.branchSettings?.maintainKSA_EInvoice ==
-              true && <Tab label="Other" value="other_details" />}
+            true && <Tab label="Other" value="other_details" />}
         </Tabs>
         <div className="pt-4">
           {activeTab === "address" && (
@@ -832,7 +828,7 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                         labelKey: "name",
                       }}
                       onChange={(data: any) => {
-                        
+
                         handleFieldChange({
                           stateName:
                             data !== null && data !== undefined

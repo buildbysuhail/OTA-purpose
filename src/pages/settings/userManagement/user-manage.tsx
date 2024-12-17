@@ -14,10 +14,10 @@ import ApplicationSettings from "../system/application-settings";
 import { RootState } from "../../../redux/store";
 
 export const UserManage: React.FC = React.memo(() => {
-  const applicationSettings = useSelector((state:RootState)=>state.ApplicationSettings);
+  const applicationSettings = useSelector((state: RootState) => state.ApplicationSettings);
   const rootState = useRootState();
   const dispatch = useDispatch();
-  const {t} = useTranslation("userManage");
+  const { t } = useTranslation("userManage");
   const {
     isEdit,
     handleSubmit,
@@ -29,12 +29,12 @@ export const UserManage: React.FC = React.memo(() => {
     handleClose
   } = useFormManager<UserData>({
     url: Urls.Users,
-    onClose:useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
-    onSuccess: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null,reload:true })), [dispatch]),
+    onClose: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
+    onSuccess: useCallback(() => dispatch(toggleUserPopup({ isOpen: false, key: null, reload: true })), [dispatch]),
     key: rootState.PopupData.user.key,
-    keyField:'user',
-    useApiClient:true,
-    initialData:initialDataUser
+    keyField: 'user',
+    useApiClient: true,
+    initialData: initialDataUser
   });
 
   return (
@@ -102,20 +102,20 @@ export const UserManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("userTypeCode", data.userTypeCode)}
         />
         {applicationSettings.accountsSettings.allowSalesCounter &&
-        <ERPDataCombobox
-          {...getFieldProps("counterID")}
-          id="counterID"
-          field={{
-            id: "counterID",
-            required: true,
-            getListUrl: Urls.data_counters,
-            valueKey: "id",
-            labelKey: "name",
-          }}
-          label={t("counter")}
-          required={true}
-          onChangeData={(data: any) => handleFieldChange("counterID", data.counterID)}
-        />}
+          <ERPDataCombobox
+            {...getFieldProps("counterID")}
+            id="counterID"
+            field={{
+              id: "counterID",
+              required: true,
+              getListUrl: Urls.data_counters,
+              valueKey: "id",
+              labelKey: "name",
+            }}
+            label={t("counter")}
+            required={true}
+            onChangeData={(data: any) => handleFieldChange("counterID", data.counterID)}
+          />}
         <ERPDataCombobox
           {...getFieldProps("employeeID")}
           id="employeeID"
@@ -134,20 +134,20 @@ export const UserManage: React.FC = React.memo(() => {
         <ERPInput
           {...getFieldProps("maxDiscPercAllowed")}
           label={t("max_dis%")}
-          min={0}
+          type="text"
           placeholder={t("max_dis%")}
           required={false}
-          type="number"
           onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", parseFloat(data.maxDiscPercAllowed))}
         />
-        {applicationSettings.mainSettings.maintainBusinessType=='Restaurant' && 
-        <ERPInput
-          {...getFieldProps("passkey")}
-          label={t("passkey")}
-          placeholder={t("passkey")}
-          required={false}
-          onChangeData={(data: any) => handleFieldChange("passkey", data.passkey)}
-        />}
+
+        {applicationSettings.mainSettings.maintainBusinessType == 'Restaurant' &&
+          <ERPInput
+            {...getFieldProps("passkey")}
+            label={t("passkey")}
+            placeholder={t("passkey")}
+            required={false}
+            onChangeData={(data: any) => handleFieldChange("passkey", data.passkey)}
+          />}
       </div>
       <ERPFormButtons
         onClear={handleClear}

@@ -138,6 +138,12 @@ export interface PropertiesState {
     left?: number;
     right?: number;
   };
+  margins?: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+}
   /// background
   bg_color?: string;
   bg_image_position?: string;
@@ -559,6 +565,12 @@ export const initialTemplateState: ActionState<TemplateState> = {
       payment_stub_label: "",
       amount_enclosed_label: "",
       payment_stub_position: "same_page",
+      margins: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
+      }
     },
     headerState: {
       showLogo: false,
@@ -822,6 +834,12 @@ export const initialBacodeTemplateState: ActionState<TemplateState> = {
       pageSize: "Custom",
       padding: { top: 0, bottom: 0, left: 0, right: 0 },
       bg_color: "#FFFFFF",
+      margins: {
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
+      }
     },
     barcodeState: {
        placedComponents:[],

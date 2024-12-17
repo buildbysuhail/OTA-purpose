@@ -159,8 +159,8 @@ const ERPModal = React.memo(
                         </div>
                       )}
                     </DialogTitle>
-                    <div className={ "max-h-[calc(100vh-8rem)]"}>
-                      <ERPScrollArea className={`max-h-[calc(100vh-16rem)] overflow-y-auto pr-2`}>
+                    <div className={ "max-h-[calc(100vh-15rem)]"}>
+                      <ERPScrollArea className={`max-h-[calc(100vh-15rem)] overflow-y-auto pr-2`}>
                         {content &&
                           cloneElement(
                             content,

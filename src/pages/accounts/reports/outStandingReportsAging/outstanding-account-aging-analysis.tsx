@@ -101,6 +101,7 @@ const OutstandingAccountAgingAnalysis =  ({contentProps, enablefilter = false}:O
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                  heightToAdjustOnWindows={window.innerHeight-649}
                   columns={columns}
                   postData = {contentProps}
                   gridHeader={t("account_aging_analysis")}

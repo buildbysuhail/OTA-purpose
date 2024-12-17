@@ -316,6 +316,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   }, []);
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
   const [preferences, setPreferences] = useState<GridPreference>();
+  debugger;
   const [filter, setFilter] = useState<any>(filterInitialData);
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any }>({ isOpen: false, props: {} });
@@ -345,7 +346,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
       const dss = { ..._filter }
       console.log(`prev:${filter}`);
+      console.log(filter);
       console.log(`latest:${_filter}`);
+      console.log(_filter);
+      console.log(dss);
+      
       if (filterShowCount == 0) {
         setFilterShowCount((prev) => prev + 1);
         console.log(`filterShowCountsfdfdfdfd: ${filterShowCount}`);

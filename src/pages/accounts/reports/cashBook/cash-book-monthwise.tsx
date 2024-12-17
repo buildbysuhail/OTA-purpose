@@ -134,6 +134,7 @@ const CashBookMonthWise:FC<CashBookMonthWiseProps> = ({postData , contentProps})
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
+                 heightToAdjustOnWindows={window.innerHeight-649}
                   showSerialNo={true}
                   columns={columns}
                   gridHeader={t("cash_book")}

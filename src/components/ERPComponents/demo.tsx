@@ -1,11 +1,20 @@
+import { Dispatch, SetStateAction } from "react";
 import { ActivityLog } from "./erp-activitylog"
+import { X } from "lucide-react";
+
+interface DemoProps {
+  setIsOpen: Dispatch<SetStateAction<boolean>>; // Prop for controlling sidebar visibility
+}
 
 
-export default function Demo() {
+export default function Demo({ setIsOpen }: DemoProps) {
     
 
   return (
-    <div className="p-4 pt-[67px]">
+    <div className="p-4 ">
+      <button className="text-gray-500 hover:text-gray-700" onClick={() => {debugger; setIsOpen(false)}} >
+          <X className="h-5 w-5" />
+        </button>
       <ActivityLog 
         customerName="xcvxcxc"
         activities={[

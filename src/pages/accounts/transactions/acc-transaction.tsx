@@ -25,6 +25,7 @@ import { AccTransactionUserConfig } from "./acc-transaction-user-config";
 import BillWisePopup from "./billwise-popup";
 import CustomerDetailsSidebar from "../../transaction-base/customer-details";
 import AttachmentSidebar from "../../transaction-base/Attachment-button";
+import ActivityLogSidebar from "../../transaction-base/ActivityLog-button";
 
 interface BilledItem {
   id?: number;
@@ -1886,6 +1887,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       </div>
       <CustomerDetailsSidebar ></CustomerDetailsSidebar>
       <AttachmentSidebar></AttachmentSidebar>
+      <ActivityLogSidebar></ActivityLogSidebar>
       <div className="flex items-center justify-between p-4 sticky bottom-0 left-0 right-0 bg-white z-50 shadow-md w-full">
         <div className=" flex items-center gap-4">
           {formElements.printOnSave.visible && (

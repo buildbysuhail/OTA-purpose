@@ -3,10 +3,11 @@ import ERPResizableSidebar from "../../components/ERPComponents/erp-resizable-si
 // import CustomerDetails from "../../components/ERPComponents/customerdetails";
 import { useAppState } from "../../utilities/hooks/useAppState";
 import ERPAttachment from "../../components/ERPComponents/erp-attachment";
+import Demo from "../../components/ERPComponents/demo";
 
-interface AttachmentSidebarProps {
+interface ActivityLogSidebarProps {
 }
-const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({
+const ActivityLogSidebar: React.FC<ActivityLogSidebarProps> = ({
  
 }) => {
   const [sidebarWidth, setSidebarWidth] = useState(400);
@@ -15,16 +16,16 @@ const AttachmentSidebar: React.FC<AttachmentSidebarProps> = ({
   const appState = useAppState();
   return (
     <>
-    <ERPResizableSidebar isOpen={isOpen} setIsOpen={setIsOpen}  children={ <ERPAttachment  setIsOpen={setIsOpen} />}></ERPResizableSidebar>
+    <ERPResizableSidebar isOpen={isOpen} setIsOpen={setIsOpen}  children={ <Demo  setIsOpen={setIsOpen} />}></ERPResizableSidebar>
      
       <button
-        className="fixed top-[3.5rem] right-[227px] p-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition-colors duration-200"
+        className="fixed top-[3.5rem] right-[357px] p-2 bg-primary hover:bg-blue-600 text-white rounded shadow transition-colors duration-200"
         onClick={() => {setIsOpen((pre: boolean) =>{debugger; return !pre})}}
       >
-      ERP attachment
+      ERP Activity
       </button>
     </>
   );
 };
 
-export default AttachmentSidebar;
+export default ActivityLogSidebar;

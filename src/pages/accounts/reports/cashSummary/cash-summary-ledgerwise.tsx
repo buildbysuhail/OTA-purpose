@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import CashSummaryReportFilter, { CashSummaryReportFilterInitialState } from "./cash-summary-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface CashSummaryLedgerwise {
   from: Date
@@ -18,6 +19,7 @@ interface CashSummaryLedgerwise {
 const CashSummaryLedgerwise = () => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const { getFormattedValue} = useNumberFormat()
   const [filter, setFilter] =useState<CashSummaryLedgerwise>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -42,7 +44,8 @@ const CashSummaryLedgerwise = () => {
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
+ 
   </span>
       ),
     },
@@ -55,7 +58,7 @@ const CashSummaryLedgerwise = () => {
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+  {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
   </span>
       ),
     },
@@ -68,7 +71,7 @@ const CashSummaryLedgerwise = () => {
       width: 300,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
     },

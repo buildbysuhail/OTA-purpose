@@ -10,11 +10,13 @@ import DayBookBillWise from "../dayBook/dayBookSummary/day-book-billwise";
 import CashBookReportFilter, { CashBookReportFilterInitialState } from "./cash-book-report-filter";
 import CashBookMonthWise from "./cash-book-monthwise";
 import ERPModal from "../../../../components/ERPComponents/erp-modal";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 // interface DayBookSummary {
 //   from: Date
 // }
 const CashBookSummary = () => {
   const dispatch = useAppDispatch();
+  const { getFormattedValue} = useNumberFormat()
   const [isOpenDetails, setIsOpenDetails] = useState<{
       isOpen: boolean;
       key: number;
@@ -46,7 +48,7 @@ const CashBookSummary = () => {
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+ {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
   </span>
       ),
     },
@@ -59,7 +61,7 @@ const CashBookSummary = () => {
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+ {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
   </span>
       ),
     },
@@ -72,11 +74,10 @@ const CashBookSummary = () => {
       width: 200,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.ledgerName==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+  {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),
     },
-    
     {
       dataField: "branch",
       caption:  t("branch"),

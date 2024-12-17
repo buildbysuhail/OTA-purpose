@@ -7,6 +7,7 @@ import ErpDevGrid from "../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface CashBookDetailedProps {
   contentProps?: any
@@ -15,6 +16,7 @@ interface CashBookDetailedProps {
 const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedProps) => {
   const dispatch = useAppDispatch();
   const { t } = useTranslation();
+   const { getFormattedValue} = useNumberFormat()
   // const [filter, setFilter] =useState<CashBookDetailed>({from: new Date()});
   const rootState = useRootState();
   const columns: DevGridColumn[] = [
@@ -59,10 +61,10 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 500,
+      width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)} ${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data?.debit >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
     },
@@ -75,7 +77,7 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+{`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1* cellElement.data.credit) : getFormattedValue(cellElement.data.credit)} ${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data?.credit >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
     },
@@ -88,7 +90,7 @@ const CashBookDetailed= ({contentProps, enablefilter = false}:CashBookDetailedPr
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
   </span>
       ),
     },

@@ -506,7 +506,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
 
           pdfColumnsWidths.forEach((width, index) => {
             if (width === 0) {
-              pdfColumnsWidths[index] = defaultColumnWidth;
+              pdfColumnsWidths[index] = defaultColumnWidth < 300 ? 300 : defaultColumnWidth;
             }
           });
         }

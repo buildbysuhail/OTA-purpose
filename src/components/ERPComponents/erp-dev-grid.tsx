@@ -316,8 +316,8 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   }, []);
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);
   const [preferences, setPreferences] = useState<GridPreference>();
-  debugger;
-  const [filter, setFilter] = useState<any>(filterInitialData);
+  const initialFilterState = useMemo(() => filterInitialData || {}, [filterInitialData]);
+  const [filter, setFilter] = useState<any>({});
   const [filterShowCount, setFilterShowCount] = useState<number>(0);
   const [isChildOpen, setIsChildOpen] = useState<{ isOpen: boolean; props: any }>({ isOpen: false, props: {} });
   const [showFilter, setShowFilter] = useState<boolean>(false);
@@ -328,6 +328,11 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   useEffect(() => {
     set_reload(reload);
   }, [reload]);
+  useEffect(() => {
+    if (filterInitialData && Object.keys(filter).length === 0) {
+      setFilter(filterInitialData);
+    }
+  }, [filterInitialData]);
   useEffect(() => {
     if (gridId != "" && columns != undefined && columns != null) {
       onApplyPreferences(getInitialPreference(gridId, columns));
@@ -669,7 +674,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
                 <ErpGridGlobalFilter
                   width={filterWidth}
                   gridId={gridId}
-                  initialData={_filterInitialData}
+                  initialData={filter}
                   content={
                     filterContent
                     // <LedgerReportFilter /> // Pass standalone JSX content

@@ -297,7 +297,17 @@ export const PartiesManage: React.FC<PartiesManageProps> = React.memo(
                 handleFieldChange("cstNumber", data.cstNumber)
               }
             />
-           
+             <ERPInput
+              {...getFieldProps("creditDays", "int")}
+              min={0}
+              label={t("credit_days")}
+              type="number"
+              placeholder={t("credit_days")}
+              required={false}
+              onChangeData={(data: any) =>
+                handleFieldChange("creditDays",  parseInt(data.creditDays))
+              }
+            />
             <ERPInput
               {...getFieldProps("creditAmount")}
               min={0}

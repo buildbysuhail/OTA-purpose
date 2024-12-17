@@ -26,11 +26,11 @@ export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, mi
       value = parseInt((value as string).replace('.',''));
     }
   }
-  // if(type == "decimal" && value != undefined && value != undefined && !Number.isNaN(value)) {
-  //   debugger;
-  //   const str = value.toString();
+  if(type == "decimal" && value != undefined && value != undefined && !Number.isNaN(value)) {
+    debugger;
+    const str = value.toString();
     
-  // }
+  }
   const validation = getNestedValue(data?.validations, fieldId);
   const checked =
     getNestedValue(data?.data ? data?.data : data, fieldId) || false;

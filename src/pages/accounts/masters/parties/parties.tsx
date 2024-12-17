@@ -176,7 +176,7 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       </div>
     );
   };
-  const columns: DevGridColumn[] = [
+  const columns: DevGridColumn[] =( [
     {
       dataField: "siNo",
       caption: t("SiNo"),
@@ -432,17 +432,6 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       width: 100,
     },
     {
-      dataField: "routeName",
-      caption: t("route_name"),
-      dataType: "string",
-      allowSorting: true,
-      allowSearch: true,
-      allowFiltering: true,
-      width: 100,
-      visible: type === 'Supp',
-      showInPdf: type === 'Supp'
-    },
-    {
       dataField: "arabicName",
       caption: t("arabic_name"),
       dataType: "string",
@@ -573,7 +562,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
         />
       ),
     },
-  ];
+  ]);
+  // .filter(x=> x.dataField !== "routeName" ) as DevGridColumn[]??new Array<DevGridColumn>();
   useEffect(() => {
     dispatch(toggleParties({ ...rootState, reload: true }));
   }, []);
@@ -585,7 +575,17 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
             <div className="p-4">
               <div className="grid grid-cols-1 gap-3">
                 <ErpDevGrid
-                  columns={columns}
+                  columns={type === "Cust" ? [...columns] : [...columns,
+                    {
+                      dataField: "routeName",
+                      caption: t("route_name"),
+                      dataType: "string",
+                      allowSorting: true,
+                      allowSearch: true,
+                      allowFiltering: true,
+                      width: 100,
+                      showInPdf:true,
+                    }]}
                   gridHeader={type === 'Cust' ? t("customers") : t("suppliers")}
                   dataUrl={`${Urls.parties}type/${type}`}
                   gridId={gridId}

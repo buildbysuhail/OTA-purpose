@@ -87,6 +87,7 @@ export const initialPartiesData = {
     billwiseBillApplicable: false,
     creditDays: 0,
     creditAmount: 0,
+    opBalance: 0,
     priceCategoryID: 0,
     formTypeID: 0,
     partyPhoto: "",

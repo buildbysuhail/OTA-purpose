@@ -41,7 +41,7 @@ const CashSummaryLedgerwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+    
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
   {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1* cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
@@ -68,7 +68,7 @@ const CashSummaryLedgerwise = () => {
       dataType: "number",
       allowSearch: true,
       allowFiltering: true,
-      width: 300,
+   
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
    {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}

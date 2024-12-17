@@ -16,7 +16,7 @@ export const getFieldPropsGlobal = (fieldId: string, data: any,type?: string, mi
   } else if (Number.isNaN(_value)) {
     value = _value;
   } else {
-    value = _value || "";
+    value = _value || ""; 
   }
  
   const validation = getNestedValue(data?.validations, fieldId);

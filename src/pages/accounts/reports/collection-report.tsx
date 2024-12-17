@@ -12,6 +12,7 @@ import { ActionType } from "../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import PaymentReportFilter, { PaymentReportFilterInitialState } from "./payment-report-filter";
 import CollectionReportFilter, { CollectionReportFilterInitialState } from "./collection-report-filter";
+import { useNumberFormat } from "../../../utilities/hooks/use-number-format";
 
 interface CollectionReport {
 
@@ -24,6 +25,7 @@ const CollectionReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
+      const { getFormattedValue} = useNumberFormat()
   const { t } = useTranslation();
   const [filter, setFilter] =useState<CollectionReport>({from: new Date()});
   const rootState = useRootState();
@@ -99,7 +101,8 @@ const CollectionReport = () => {
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.amount}
+   {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)} ${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data?.amount >= 0 ? 'Dr' : 'Cr' }`}
+
   </span>
       ),
     },

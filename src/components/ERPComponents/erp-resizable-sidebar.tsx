@@ -36,7 +36,7 @@ const ERPResizableSidebar: React.FC<ERPResizableSidebarProps> = ({
           resizeHandles={[appState.appState.dir === "rtl" ? "e" : "w"]}
           handle={<div className={`custom-handle ${ appState.appState.dir === "rtl" ? "ltr" : "rtl"}`} />}
           onResize={(e, { size }) => setSidebarWidth(size.width)}
-          className="resizable-sidebar mt-[60px] "
+          className="resizable-sidebar mt-[60px] h-svh"
         >
           {children}
         </ResizableBox>

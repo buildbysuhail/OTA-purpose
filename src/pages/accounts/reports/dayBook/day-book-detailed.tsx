@@ -8,9 +8,11 @@ import Urls from "../../../../redux/urls";
 import { ActionType } from "../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../redux/slices/popup-reducer";
 import DayBookReportFilter, { DayBookReportFilterInitialState } from "./day-book-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 const DayBookDetailed = () => {
   const { t } = useTranslation();
+   const { getFormattedValue} = useNumberFormat()
   const columns: DevGridColumn[] = [
     {
       dataField: "date",
@@ -115,9 +117,17 @@ const DayBookDetailed = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
-  </span>
+        <span
+          className={`${
+               "font-bold text-red text-lg"
+          }`}
+        >
+          {`${cellElement.data?.balance == null 
+            ? '0' 
+            : cellElement.data.balance < 0 
+            ? getFormattedValue(-1 * cellElement.data.balance) + ' Cr' 
+            : getFormattedValue(cellElement.data.balance) + ' Dr' }`}
+        </span>
       ),
     },
   ];

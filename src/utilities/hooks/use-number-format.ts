@@ -45,7 +45,7 @@ export const useNumberFormat = () => {
     return parseFloat(val.toFixed(decimalPlaces));
   }
   
-  function getFormattedValue(val: number, ignoreNullOrZero: boolean = true): string {
+  function getFormattedValue(val: number, ignoreNullOrZero: boolean = false): string {
     debugger;
     if(ignoreNullOrZero && (val == undefined || val == null || val == 0 ))
     {

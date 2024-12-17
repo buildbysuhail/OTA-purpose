@@ -46,7 +46,7 @@ const HideAccountLedger = () => {
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - 200;
-    let gridHeightWindows = wh - 600;
+    let gridHeightWindows = wh - 300;
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
   const { t } = useTranslation("masters");

@@ -364,9 +364,9 @@ export function useFormManager<T>({
 
 
   const getFieldProps = useCallback(
-    (fieldId: string): FormField => {
+    (fieldId: string, type?: string): FormField => {
       
-      return getFieldPropsGlobal(fieldId,(useApiClient ? localFormState : reduxFormState));
+      return getFieldPropsGlobal(fieldId,(useApiClient ? localFormState : reduxFormState),type);
     },
     [(useApiClient ? localFormState : reduxFormState)?.data]
   );

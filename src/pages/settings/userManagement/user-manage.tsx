@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { initialDataUser, UserData } from "./user-manage-types";
 import { toggleUserPopup } from "../../../redux/slices/popup-reducer";
 import { ERPFormButtons } from "../../../components/ERPComponents/erp-form-buttons";
@@ -9,8 +9,12 @@ import { useFormManager } from "../../../utilities/hooks/useFormManagerOptions";
 import { useRootState } from "../../../utilities/hooks/useRootState";
 import ERPDataCombobox from "../../../components/ERPComponents/erp-data-combobox";
 import { useTranslation } from "react-i18next";
+import { Settings } from "lucide-react";
+import ApplicationSettings from "../system/application-settings";
+import { RootState } from "../../../redux/store";
 
 export const UserManage: React.FC = React.memo(() => {
+  const applicationSettings = useSelector((state:RootState)=>state.ApplicationSettings);
   const rootState = useRootState();
   const dispatch = useDispatch();
   const {t} = useTranslation("userManage");
@@ -97,6 +101,7 @@ export const UserManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("userTypeCode", data.userTypeCode)}
         />
+        {applicationSettings.accountsSettings.allowSalesCounter &&
         <ERPDataCombobox
           {...getFieldProps("counterID")}
           id="counterID"
@@ -110,7 +115,7 @@ export const UserManage: React.FC = React.memo(() => {
           label={t("counter")}
           required={true}
           onChangeData={(data: any) => handleFieldChange("counterID", data.counterID)}
-        />
+        />}
         <ERPDataCombobox
           {...getFieldProps("employeeID")}
           id="employeeID"
@@ -125,20 +130,24 @@ export const UserManage: React.FC = React.memo(() => {
           required={true}
           onChangeData={(data: any) => handleFieldChange("employeeID", data.employeeID)}
         />
+
         <ERPInput
           {...getFieldProps("maxDiscPercAllowed")}
           label={t("max_dis%")}
+          min={0}
           placeholder={t("max_dis%")}
           required={false}
-          onChangeData={(data: any) => handleFieldChange("maxDiscPercAllowed", data.maxDiscPercAllowed)}
+          type="number"
+          onChangeData={(data) => handleFieldChange("maxDiscPercAllowed", parseFloat(data.maxDiscPercAllowed))}
         />
+        {applicationSettings.mainSettings.maintainBusinessType=='Restaurant' && 
         <ERPInput
           {...getFieldProps("passkey")}
           label={t("passkey")}
           placeholder={t("passkey")}
           required={false}
           onChangeData={(data: any) => handleFieldChange("passkey", data.passkey)}
-        />
+        />}
       </div>
       <ERPFormButtons
         onClear={handleClear}

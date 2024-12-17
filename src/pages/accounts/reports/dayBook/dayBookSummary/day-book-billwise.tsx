@@ -7,6 +7,7 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 interface DayBookBillwiseProps {
   contentProps?: any
@@ -14,6 +15,7 @@ interface DayBookBillwiseProps {
 }
 const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwiseProps) => {
   const dispatch = useAppDispatch();
+  const { getFormattedValue} = useNumberFormat()
   const { t } = useTranslation();
   // const [filter, setFilter] =useState<DayBookBillWise>({from: new Date()});
   const rootState = useRootState();
@@ -89,7 +91,8 @@ const DayBookBillWise = ({contentProps, enablefilter = false}:DayBookBillwisePro
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.particulars==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+ {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1* cellElement.data.balance) : getFormattedValue(cellElement.data.balance)} ${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data?.balance >= 0 ? 'Dr' : 'Cr' }`}
+
   </span>
       ),
     },

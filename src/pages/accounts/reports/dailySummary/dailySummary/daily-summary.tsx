@@ -7,6 +7,7 @@ import ErpDevGrid from "../../../../../components/ERPComponents/erp-dev-grid";
 import Urls from "../../../../../redux/urls";
 import { ActionType } from "../../../../../redux/types";
 import { toggleCostCentrePopup } from "../../../../../redux/slices/popup-reducer";
+import { useNumberFormat } from "../../../../../utilities/hooks/use-number-format";
 
 interface DailySummary {
 
@@ -19,6 +20,7 @@ interface DailySummary {
 }
 const DailySummary = () => {
   const dispatch = useAppDispatch();
+  const { getFormattedValue} = useNumberFormat()
   const { t } = useTranslation();
   const [filter, setFilter] =useState<DailySummary>({transactionDate: new Date(), counterID: 0,costCentreID: 0,counterShiftId: 0,employeeID: 0});
   const [voucherType, setVoucherType] =useState<string>("");
@@ -32,6 +34,11 @@ const DailySummary = () => {
       allowFiltering: true,
       visible:false,
       width: 300,
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
+   {cellElement.data.cType}
+  </span>
+      ),
     },
     {
       dataField: "description",
@@ -39,15 +46,23 @@ const DailySummary = () => {
       dataType: "string",
       allowSearch: true,
       allowFiltering: true,
-    
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
+   {cellElement.data.description}
+  </span>
+      ),
     },
     {
       dataField: "amount",
       caption:  t("amount"),
       dataType: "number",
-      allowSearch: true,
+      allowSearch: true, 
       allowFiltering: true,
-      
+      cellRender: (cellElement: any, cellInfo: any) => (
+        <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
+  {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
+  </span>
+      ),
     },
   ];
   const detailsColumns: DevGridColumn[] = [
@@ -184,8 +199,6 @@ const DailySummary = () => {
     </div>
   </div>
 </div>
-
-      
     </Fragment>
   );
 };

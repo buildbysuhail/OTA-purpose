@@ -16,7 +16,7 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
   const [showAddress, setShowAddress] = useState(false)
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="max-w-2xl mx-auto p-4 overflow-auto h-svh">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
@@ -80,6 +80,189 @@ export default function CustomerDetails({ setIsOpen }: CustomerDetailsProps) {
             </div>
           </div>
 
+          {/* Contact Details */}
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold">Contact Details</h2>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Customer Type</div>
+                  <div>Business</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Currency</div>
+                  <div>INR</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Payment Terms</div>
+                  <div>Due On Receipt</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Portal Status</div>
+                  <div>
+                    <span className="px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">
+                      Disabled
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">Portal Language</div>
+                <div>English</div>
+              </div>
+            </div>
+
+            {/* Contact Persons */}
+            <div>
+              <button 
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg"
+                onClick={() => setShowContactPersons(!showContactPersons)}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Contact Persons</span>
+                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">1</span>
+                </div>
+                <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${showContactPersons ? 'rotate-90' : ''}`} />
+              </button>
+              {showContactPersons && <ContactPersons />}
+            </div>
+
+            {/* Address */}
+            <div>
+              <button 
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg"
+                onClick={() => setShowAddress(!showAddress)}
+              >
+                <span className="font-medium">Address</span>
+                <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${showAddress ? 'rotate-90' : ''}`} />
+              </button>
+              {showAddress && <Address />}
+            </div>
+          </div>
+          {/* Contact Details */}
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold">Contact Details</h2>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Customer Type</div>
+                  <div>Business</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Currency</div>
+                  <div>INR</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Payment Terms</div>
+                  <div>Due On Receipt</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Portal Status</div>
+                  <div>
+                    <span className="px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">
+                      Disabled
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">Portal Language</div>
+                <div>English</div>
+              </div>
+            </div>
+
+            {/* Contact Persons */}
+            <div>
+              <button 
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg"
+                onClick={() => setShowContactPersons(!showContactPersons)}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Contact Persons</span>
+                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">1</span>
+                </div>
+                <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${showContactPersons ? 'rotate-90' : ''}`} />
+              </button>
+              {showContactPersons && <ContactPersons />}
+            </div>
+
+            {/* Address */}
+            <div>
+              <button 
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg"
+                onClick={() => setShowAddress(!showAddress)}
+              >
+                <span className="font-medium">Address</span>
+                <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${showAddress ? 'rotate-90' : ''}`} />
+              </button>
+              {showAddress && <Address />}
+            </div>
+          </div>
+          {/* Contact Details */}
+          <div className="space-y-6">
+            <h2 className="text-lg font-semibold">Contact Details</h2>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Customer Type</div>
+                  <div>Business</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Currency</div>
+                  <div>INR</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="text-sm text-muted-foreground">Payment Terms</div>
+                  <div>Due On Receipt</div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Portal Status</div>
+                  <div>
+                    <span className="px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">
+                      Disabled
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="text-sm text-muted-foreground">Portal Language</div>
+                <div>English</div>
+              </div>
+            </div>
+
+            {/* Contact Persons */}
+            <div>
+              <button 
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg"
+                onClick={() => setShowContactPersons(!showContactPersons)}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">Contact Persons</span>
+                  <span className="px-2 py-1 text-xs font-medium bg-gray-100 rounded-full">1</span>
+                </div>
+                <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${showContactPersons ? 'rotate-90' : ''}`} />
+              </button>
+              {showContactPersons && <ContactPersons />}
+            </div>
+
+            {/* Address */}
+            <div>
+              <button 
+                className="w-full flex items-center justify-between p-4 hover:bg-gray-50 rounded-lg"
+                onClick={() => setShowAddress(!showAddress)}
+              >
+                <span className="font-medium">Address</span>
+                <ChevronRight className={`h-5 w-5 text-gray-400 transition-transform ${showAddress ? 'rotate-90' : ''}`} />
+              </button>
+              {showAddress && <Address />}
+            </div>
+          </div>
           {/* Contact Details */}
           <div className="space-y-6">
             <h2 className="text-lg font-semibold">Contact Details</h2>

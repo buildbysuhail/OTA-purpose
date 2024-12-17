@@ -58,11 +58,11 @@ const DailySummary = () => {
       dataType: "number",
       allowSearch: true, 
       allowFiltering: true,
-      cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
-  {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
-  </span>
-      ),
+  //     cellRender: (cellElement: any, cellInfo: any) => (
+  //       <span className={`${cellElement.data.cType==="NS"||cellElement.data.cType==="CRS"||cellElement.data.cType==="CASHSI"||cellElement.data.cType==="CB"?'font-bold text-red text-lg':''}`}>
+  // {`${cellElement.data?.amount == 0 || cellElement.data?.amount == null ? '' : cellElement.data.amount < 0 ? getFormattedValue(-1* cellElement.data.amount) : getFormattedValue(cellElement.data.amount)}`}
+  // </span>
+  //     ),
     },
   ];
   const detailsColumns: DevGridColumn[] = [

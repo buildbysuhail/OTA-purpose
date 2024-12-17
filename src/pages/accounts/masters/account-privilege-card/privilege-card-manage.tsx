@@ -30,7 +30,7 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
       () => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: true })),
       [dispatch]
     ),
-    onClose: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null,reload: false })), [dispatch]),
+    onClose: useCallback(() => dispatch(togglePrivilegeCardPopup({ isOpen: false, key: null, reload: false })), [dispatch]),
     key: rootState.PopupData.privilegeCard.key,
     keyField: "privilegeCardsID",
     useApiClient: true,
@@ -127,12 +127,33 @@ export const PrivilegeCardManage: React.FC = React.memo(() => {
           onChangeData={(data: any) => handleFieldChange("cardType", data.cardType)}
           label={t("card_type")}
         />
-        <ERPInput
+        {/* <ERPInput
           {...getFieldProps('oBalance')}
           label={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
           placeholder={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
           type="number"
           onChangeData={(data: any) => handleFieldChange('oBalance', data.oBalance)}
+        /> */}
+
+        <ERPInput
+          {...getFieldProps("oBalance")}
+          min={0}
+          label={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
+          placeholder={formState?.data.cardType == "Privilege" ? t("op_balance") : t("amount")}
+          type="number"
+          required={false}
+          onChange={(e) => {
+            const value = e.target.value
+              .replace(/\.{2,}/g, '.')
+              .replace(/[^0-9.]/g, '');
+
+            const parts = value.split('.');
+            const finalValue = parts.length > 2
+              ? `${parts[0]}.${parts.slice(1).join('')}`
+              : value;
+
+            handleFieldChange("oBalance", finalValue);
+          }}
         />
         <ERPDateInput
           {...getFieldProps("activatedDate")}

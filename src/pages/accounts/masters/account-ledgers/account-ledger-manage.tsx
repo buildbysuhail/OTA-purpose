@@ -151,7 +151,7 @@ export const AccountLedgerManage = () => {
             (formState?.data?.ledgerID <= 0 && (
               <>
                 <div className="">
-                  <ERPInput
+                  {/* <ERPInput
                     min={0}
                     {...getFieldProps("opBalance")}
                     label={t("opening_balance")}
@@ -159,7 +159,28 @@ export const AccountLedgerManage = () => {
                     onChangeData={(data: any) =>
                       handleFieldChange("opBalance", data.opBalance)
                     }
-                  />
+                  /> */}
+                  <ERPInput
+                {...getFieldProps("opBalance")}
+                min={0}
+                disabled={isEdit}
+                label={t("op_balance")}
+                type="text"
+                placeholder={t("op_balance")}
+                required={false}
+                onChange={(e) => {
+                  const value = e.target.value
+                    .replace(/\.{2,}/g, '.')  // Replace multiple consecutive dots with a single dot
+                    .replace(/[^0-9.]/g, '');  // Remove any non-numeric characters except first dot
+
+                  const parts = value.split('.');
+                  const finalValue = parts.length > 2
+                    ? `${parts[0]}.${parts.slice(1).join('')}`
+                    : value;
+
+                  handleFieldChange("opBalance", finalValue);
+                }}
+              />
                 </div>
                 <div className="">
                   <ERPDataCombobox

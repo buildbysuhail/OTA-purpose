@@ -439,8 +439,8 @@ const Parties: React.FC<PartiesProps> = ({ type = 'Cust' ,gridId='grd_cust'}) =>
       allowSearch: true,
       allowFiltering: true,
       width: 100,
-      visible: type == 'Supp',
-      showInPdf: type == 'Supp'
+      visible: type === 'Supp',
+      showInPdf: type === 'Supp'
     },
     {
       dataField: "arabicName",

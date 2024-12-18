@@ -47,5 +47,33 @@ export const useUserRights = () => {
 
     return result;
   };
-  return { hasRight };
+  const getAllowedFormCodes = (
+    formCodes: string[],
+    action: UserAction
+  ): string[] => {
+    const userTypeCode = userSession.userTypeCode;
+
+    // Automatically grant rights if userTypeCode is "BA" or "CA"
+    if (userTypeCode === "BA" || userTypeCode === "CA") {
+      return formCodes;
+    }
+
+    try {
+      let dtUserRights: UserTypeRights[] = userRights;
+
+      return formCodes.filter((formCode) => {
+        const filteredRows = dtUserRights.filter(
+          (row: any) => row.formCode === formCode
+        );
+        const out =
+          filteredRows.length > 0 &&
+          filteredRows[0]?.userRights?.includes(action);
+        return out;
+      });
+    } catch (error) {
+      console.error("Error checking user rights:", error);
+      return [];
+    }
+  };
+  return { hasRight, getAllowedFormCodes };
 };

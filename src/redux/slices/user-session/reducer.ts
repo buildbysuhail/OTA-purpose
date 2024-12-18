@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { setBranch, userSession } from "./thunk";
 import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
 import Cookies from "js-cookie";
-import { modelToBase64 } from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 export interface BranchSelectDto {
   id: number;
   name?: string;
@@ -49,7 +49,6 @@ export interface UserModel {
   systemCode: string | "";
   systemName: string | "";
 }
-// export const initialState : login  =  {loading: false, token: ""};
 export const initialUserSessionData: UserModel = {
   userId: 0,
   displayName: "",
@@ -82,9 +81,14 @@ export const initialUserSessionData: UserModel = {
   userName: "",
   counterName: ""
 };
+let ass = localStorage.getItem("up");
+  
+    export const up: UserModel = ass != undefined && ass != null && ass != "" 
+    ? customJsonParse(atob(ass)) : initialUserSessionData;
+// export const initialState : login  =  {loading: false, token: ""};
 const userSessionSlice = createSlice({
   name: "userSession",
-  initialState: initialUserSessionData,
+  initialState: up,
   reducers: {
     setUserSession: (state, action: PayloadAction<UserModel>) => {
       return action.payload;

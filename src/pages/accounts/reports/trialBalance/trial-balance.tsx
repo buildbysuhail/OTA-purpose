@@ -43,7 +43,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.particulars}
 </span>
       ),
@@ -55,7 +55,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
   {cellElement.data.groupNameInArabic}
 </span>
       ),
@@ -67,7 +67,7 @@ const TrialBalance = () => {
       allowSearch: true,
       allowFiltering: true,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' : ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' : ''}`}>
   {cellElement.data.ledgerNameInArabic}
 </span>
       ),
@@ -80,7 +80,7 @@ const TrialBalance = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.debit}
 </span>
       ),
@@ -93,7 +93,7 @@ const TrialBalance = () => {
       allowFiltering: true,
       width: 250,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.credit}
 </span>
       ),
@@ -107,7 +107,7 @@ const TrialBalance = () => {
       allowFiltering: true,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green text-lg' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red text-lg': ''}`}>
+        <span className={`${cellElement.data.isGroup == true ? 'pl-4 font-bold text-green' :cellElement.data.particulars=="TOTAL"?'pl-4 font-bold text-red': ''}`}>
   {cellElement.data.isGroup}
 </span>
       ),

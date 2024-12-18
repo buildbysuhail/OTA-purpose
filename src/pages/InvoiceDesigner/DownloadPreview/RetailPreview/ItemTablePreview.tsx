@@ -10,9 +10,9 @@ const ItemTablePreview = ({ template, data }: DownloadPreviewProps) => {
   const headerBgColor = itemTableState?.tableHeaderBgColor || "#fff";
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
-  const paddingTop = template?.propertiesState?.margins?.top || 10;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
+  const paddingTop = template?.propertiesState?.padding?.top || 10;
 
   /// Items
   const ItemsfontSize = itemTableState?.itemRowFontSize;

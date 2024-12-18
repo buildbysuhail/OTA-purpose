@@ -16,8 +16,8 @@ const DNPSTemplate = ({ data, template }: DNSPTEmpProps) => {
   const bottomBackgroundColor = template?.footerState?.bg_color || "#fff";
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left || 30;
-  const paddingRight = template?.propertiesState?.margins?.right || 30;
+  const paddingLeft = template?.propertiesState?.padding?.left || 30;
+  const paddingRight = template?.propertiesState?.padding?.right || 30;
 
   const styles = StyleSheet.create({
     headerFooterStyle: {

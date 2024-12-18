@@ -15,9 +15,9 @@ const HeaderPreview = ({ template, data, docIDKey, docTitle,  currencySymbol, cu
   const numberField = docTitle && headerState?.numberField;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
-  const paddingTop = template?.propertiesState?.margins?.top || 10;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
+  const paddingTop = template?.propertiesState?.padding?.top || 10;
 
   /// font size and color
   const fontSize = template?.propertiesState?.font_size || 12;
@@ -444,8 +444,8 @@ const ReceiptTablePrintPreview = ({ data, template, currencySymbol }: DownloadPr
   const headerState = template?.headerState;
 
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left;
-  const paddingRight = template?.propertiesState?.margins?.right;
+  const paddingLeft = template?.propertiesState?.padding?.left;
+  const paddingRight = template?.propertiesState?.padding?.right;
   return (
     <View style={{ width: "100%", paddingLeft, paddingRight, fontSize: 12 }}>
       <View style={{ marginVertical: "10px", paddingVertical: "10px", display: "flex", flexDirection: "row", borderTop: "1px solid #E5E7E8" }}>

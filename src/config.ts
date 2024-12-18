@@ -15,6 +15,7 @@ interface Config {
   google: GoogleConfig;
   facebook: FacebookConfig;
   api: ApiConfig;
+
   webDir: string;
 }
 

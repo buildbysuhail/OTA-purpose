@@ -4,10 +4,15 @@ import { getApplicationSettings } from './thunk';
 import { ApplicationSettingsInitialState } from './application-settings-types';
 import { ApplicationSettingsType } from '../../../pages/settings/system/application-settings-types/application-settings-types';
 import { ApplicationMainSettings } from '../../../pages/settings/system/application-settings-types/application-settings-types-main';
-
+import { customJsonParse } from '../../../utilities/jsonConverter';
+ let ass = localStorage.getItem("as");
+  
+    export const appSettings: ApplicationSettingsType = ass != undefined && ass != null && ass != "" 
+    ? customJsonParse(atob(ass)) : ApplicationSettingsInitialState;
+    
 const applicationSettingsSlice = createSlice({
   name: 'applicationSettings',
-  initialState: ApplicationSettingsInitialState, // Use `initialState` here
+  initialState: appSettings != undefined ? appSettings : ApplicationSettingsInitialState, // Use `initialState` here
   reducers: {
     setApplicationSettings: (state, action: PayloadAction<ApplicationSettingsType>) => {
       return action.payload;
@@ -39,11 +44,11 @@ const applicationSettingsSlice = createSlice({
   },
   extraReducers: (builder) => {
     
-    // builder.addCase(getApplicationSettings.fulfilled, (state, action: PayloadAction<any>) => {
-    //   console.log(action.payload);
+    builder.addCase(getApplicationSettings.fulfilled, (state, action: PayloadAction<any>) => {
+      console.log(action.payload);
       
-    //   return action.payload;
-    // });
+      return action.payload;
+    });
   },
 });
 

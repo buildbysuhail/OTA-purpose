@@ -36,6 +36,7 @@ const navigate = useNavigate()
 
  useEffect(() => {
   loadCounterData();
+  setReload(true)
 }, []);
 
  const loadCounterData = async () => {
@@ -64,7 +65,7 @@ const handleSubmit = async () => {
   setReload(false)
   setIsSaving(true);
   try {
-    const response = await api.put(Urls.counter_settings_current_data,counterData);  
+    const response = await api.put(Urls.counter_settings,counterData);  
     handleResponse(response,()=>{setReload(true)},() => { })
   } catch (error) {
     console.error("Error loading settings:", error);

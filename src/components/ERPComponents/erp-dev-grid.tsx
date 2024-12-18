@@ -311,7 +311,7 @@ const ERPDevGrid: React.FC<ERPDevGridProps> = ({
   useEffect(() => {
     let wh = window.innerHeight;
     let gridHeightMobile = wh - heightToAdjustOnMobile; // Assuming 200px is the height to minus for mobile
-    let gridHeightWindows = wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
+    let gridHeightWindows = (wh - heightToAdjustOnWindows)<300?300:wh - heightToAdjustOnWindows; // Assuming 100px is the height to minus for windows
     setGridHeight({ mobile: gridHeightMobile, windows: gridHeightWindows });
   }, []);
   const [gridCols, setGridCols] = useState<DevGridColumn[]>(columns);

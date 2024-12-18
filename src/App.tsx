@@ -26,7 +26,7 @@ import {
   initialUserSessionData,
   UserModel,
 } from "./redux/slices/user-session/reducer";
-import { customJsonParse } from "./utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "./utilities/jsonConverter";
 import { syncAppStates } from "./pages/auth/syncSettings";
 import {
   AppState,
@@ -55,6 +55,7 @@ import { UserTypeRights } from "./redux/slices/user-rights/reducer";
 import Urls from "./redux/urls";
 import { setApplicationSettings } from "./redux/slices/app/application-settings-reducer";
 import ERPAttachment from "./components/ERPComponents/erp-attachment";
+import { ApplicationSettingsType } from "./pages/settings/system/application-settings-types/application-settings-types";
 
 export const LoadingAnimation = () => {
   return (
@@ -65,6 +66,11 @@ export const LoadingAnimation = () => {
 };
 
 function App() {
+
+  useEffect(() => {
+    
+    load();
+  }, []);
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
     try {
@@ -89,17 +95,28 @@ function App() {
   
 
   useEffect(() => {
-    load();
-  }, []);
-
-  useEffect(() => {
-    debugger;
+    
     const token = localStorage.getItem("token");
 
 
     let upt = localStorage.getItem("up");
     let urr = localStorage.getItem("ur");
     let utt = localStorage.getItem("ut");
+    let ass = localStorage.getItem("as");
+  
+    let appSettings: ApplicationSettingsType;
+    try {
+      debugger;
+      if (ass != undefined && ass != null && ass != "") {
+        appSettings = customJsonParse(atob(ass));
+        dispatch(setApplicationSettings(
+          {
+            ...appSettings,
+            apiLoaded: false
+        }));
+      }
+    } catch (error) { }
+  
   
     let userRights: UserTypeRights[] = [];
     try {
@@ -115,7 +132,7 @@ function App() {
         userProfileDetails = customJsonParse(atob(upt));
       }
     } catch (error) { }
-  debugger;
+  
     let userThemes: AppState = appInitialState;
     try {
     console.log("utt:", utt);
@@ -128,7 +145,7 @@ function App() {
     let locale = languagesData.find(
       (l) => l.code == userProfileDetails.language
     ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
-    debugger;
+    
     syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
     const language = userProfileDetails?.language;
 
@@ -146,6 +163,7 @@ function App() {
   const load = async() => {
     
     const settings = await api.getAsync(Urls.application_setting);
+    localStorage.setItem('as', modelToBase64(settings))
     dispatch(setApplicationSettings(
       {
         ...settings,

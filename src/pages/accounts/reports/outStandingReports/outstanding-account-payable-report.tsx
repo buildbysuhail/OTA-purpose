@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { ActionType } from "../../../../redux/types";
 import { useSearchParams } from "react-router-dom";
 import OutstandingPayableReportFilter, { OutstandingPayableReportFilterInitialState } from "./outstanding-payable-report-filter";
+import { useNumberFormat } from "../../../../utilities/hooks/use-number-format";
 
 interface OutstandingAccountPayableReport {
 
@@ -23,6 +24,7 @@ const OutstandingAccountPayableReport = () => {
   //   return payableParam === "true"; // Convert the string to boolean
   // });
   const dispatch = useAppDispatch();
+     const { getFormattedValue } = useNumberFormat()
   const { t } = useTranslation();
   const [filter, setFilter] =useState<OutstandingAccountPayableReport>({from: new Date()});
   const rootState = useRootState();
@@ -73,7 +75,7 @@ const OutstandingAccountPayableReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.debit}
+  {`${cellElement.data?.debit == 0 || cellElement.data?.debit == null ? '' : cellElement.data.debit < 0 ? getFormattedValue(-1 * cellElement.data.debit) : getFormattedValue(cellElement.data.debit)}`}
   </span>
       ),
     },
@@ -86,8 +88,8 @@ const OutstandingAccountPayableReport = () => {
       visible:false,
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
-        <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.credit}
+      <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
+   {`${cellElement.data?.credit == 0 || cellElement.data?.credit == null ? '' : cellElement.data.credit < 0 ? getFormattedValue(-1 * cellElement.data.credit) : getFormattedValue(cellElement.data.credit)}`}
   </span>
       ),
     },
@@ -100,7 +102,7 @@ const OutstandingAccountPayableReport = () => {
       width: 150,
       cellRender: (cellElement: any, cellInfo: any) => (
         <span className={`${cellElement.data.party==="TOTAL" ? 'font-bold text-red text-lg' : ''}`}>
-  {cellElement.data.balance}
+   {`${cellElement.data?.balance == 0 || cellElement.data?.balance == null ? '' : cellElement.data.balance < 0 ? getFormattedValue(-1 * cellElement.data.balance) : getFormattedValue(cellElement.data.balance)}`}
   </span>
       ),
     },

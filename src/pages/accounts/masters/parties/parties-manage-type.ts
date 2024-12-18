@@ -79,7 +79,7 @@ export const initialPartiesData = {
     address4: "",
     officePhone: "",
     workPhone: "",
-    mobilePhone: "",
+    mobilePhone: "", 
     contactPhone: "",
     faxNumber: "",
     webURL: "",
@@ -133,6 +133,7 @@ export const initialPartiesData = {
     createdUserID: 0,
     visitSequenceNo: 0,
     accGroupID: 0
+    
   },
   validations: {
     partyID: "",

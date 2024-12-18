@@ -11,6 +11,7 @@ import { RootState } from "../../redux/store";
 import { Autocomplete, CircularProgress, TextField, Theme, SxProps, Typography, AutocompleteProps, AutocompleteValue, AutocompleteChangeReason, AutocompleteChangeDetails, Paper } from "@mui/material";
 import { createPortal } from "react-dom";
 import { styled } from "@mui/system";
+import ERPElementValidationMessage from "./erp-element-validation-message";
 
 interface Option {
   value: string;
@@ -1135,10 +1136,14 @@ export default function ERPDataCombobox({
               document.body // Render to body to escape parent constraints
             )}
         </Combobox>
-        <div className="text-[#374151] text-xs font-medium ">
-          {infoWithLineBreaks(info)}
-        </div>
-        {validation && (<div className="mt-1 text-xs text-[#ef4444]">{validation}</div>)}
+        {info != undefined && info != null && info != "" && (
+          <div className="text-[#374151] text-xs font-medium ">
+            {infoWithLineBreaks(info)}
+          </div>
+        )}
+        {validation != undefined && validation != null && validation != "" && (
+          <ERPElementValidationMessage validation={validation} />
+        )}
       </div>
     );
   }

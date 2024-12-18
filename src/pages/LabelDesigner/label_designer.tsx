@@ -14,7 +14,7 @@ import {
   X,
   Image,
   Table,
-  QrCode,
+  QrCode as QrCodeIcon,
 } from "lucide-react";
 // Import the images
 
@@ -71,6 +71,7 @@ import {
   LabelState,
   PlacedComponent,
   PropertiesState,
+  QRCodeProps,
   tableColumns,
   TemplateState,
 } from "../InvoiceDesigner/Designer/interfaces";
@@ -84,6 +85,9 @@ import { convertFileToBase64 } from "../../utilities/file-utils";
 import { TemplateGroupTypes } from "../InvoiceDesigner/constants/TemplateCategories";
 import { AddColumnsManage } from "./column-manage";
 import { EditButton } from "./edit-button";
+import { QRCodeSVG } from "qrcode.react";
+import QRCode from 'qrcode.react';
+
 
 interface SaveDialogProps {
   isOpen: boolean;
@@ -414,7 +418,7 @@ export default function ExtendedPDFBarcodeDesigner() {
     {
       id: DesignerElementType.qrCode,
       label: "QrCode",
-      icon: <QrCode className="w-4 h-4" />,
+      icon: <QrCodeIcon className="w-4 h-4" />,
       defaultContent: "QrCode",
     },
   ];
@@ -474,6 +478,20 @@ export default function ExtendedPDFBarcodeDesigner() {
               fontStyle: "normal",
             },
           }),
+          qrCodeProps: {
+            value: "",
+            size: 0,
+            level: "M",
+            bgColor: "",
+            fgColor: "",
+            marginSize: 0,
+            imageSettings: {
+              src: '',
+              height: 16,
+              width: 16,
+              excavate: true,
+            }
+          }
         };
 
         const placedComponents = [
@@ -647,6 +665,59 @@ export default function ExtendedPDFBarcodeDesigner() {
     setEditingColumnData(undefined);
   };
 
+
+  const handleQRCodePropertyChange = (
+    property: any,
+    value: any
+  ) => {
+    if (
+      selectedComponent &&
+      selectedComponent.type === DesignerElementType.qrCode &&
+      selectedComponent.qrCodeProps
+    ) {
+      let updatedQRCodeProps;
+
+      if (property === "imageSettings") {
+        updatedQRCodeProps = {
+          ...selectedComponent.qrCodeProps,
+          imageSettings: {
+            ...selectedComponent.qrCodeProps.imageSettings,
+            ...value
+          }
+        };
+      } else {
+        updatedQRCodeProps = {
+          ...selectedComponent.qrCodeProps,
+          [property]: value
+        };
+      }
+
+      const updatedComponents =
+        templateData?.barcodeState?.placedComponents?.map((comp) =>
+          comp.id === selectedComponent.id 
+            ? {
+                ...comp,
+                qrCodeProps: updatedQRCodeProps,
+              }
+            : comp
+        ) as PlacedComponent[];
+
+      setTemplateData((prev: TemplateState) => ({
+        ...prev,
+        barcodeState: {
+          ...prev.barcodeState,
+          placedComponents: updatedComponents || [],
+        },
+      }));
+
+      setSelectedComponent({
+        ...selectedComponent,
+        qrCodeProps: updatedQRCodeProps,
+      });
+    }
+  };
+  
+  
   const handleMouseDown = (e: React.MouseEvent, component: PlacedComponent) => {
     const canvasRect = canvasRef.current?.getBoundingClientRect();
     if (canvasRect) {
@@ -1222,32 +1293,27 @@ export default function ExtendedPDFBarcodeDesigner() {
             />
           </div>
         );
-      case DesignerElementType.qrCode:
-        return (
+        case DesignerElementType.qrCode:
+          return (
           <div
             key={component.id}
             style={{
               ...style,
-              width: `${component.lineHeight}px`,
-              padding: 0,
-              position: "relative",
-              overflow: "visible",
-              border:
-                selectedComponent?.id === component.id
-                  ? "2px solid #2196f3"
-                  : "none",
-            }}
+            height:"auto",width:"auto",
+            border:selectedComponent?.id === component.id
+                  ? "2px solid #2196f3": "none",   
+          }}
             onClick={() => handleComponentClick(component)}
             onMouseDown={(e) => handleMouseDown(e, component)}
           >
-            <div
-              style={{
-                borderTop: `${component?.lineThickness || 1}px ${
-                  component?.lineType || "solid"
-                } ${component?.lineColor || "black"}`,
-                width: `${component.lineHeight}px`,
-                margin: 0,
-              }}
+            <QRCodeSVG
+              value={component.qrCodeProps?.value || "skjhgfhsdjhg"}
+              size={component.qrCodeProps?.size || 150}
+              level={component.qrCodeProps?.level || "M"}
+              bgColor={component.qrCodeProps?.bgColor || "black"}
+              fgColor={component.qrCodeProps?.fgColor || "white"}
+              marginSize={component.qrCodeProps?.marginSize ||2}
+              imageSettings={component.qrCodeProps?.imageSettings}
             />
             <DeleteButton
               id={component.id}
@@ -1256,6 +1322,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             />
           </div>
         );
+
     }
   };
 
@@ -1543,6 +1610,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 overflow-auto pr-1"
                   // className="max-h-[calc(100vh-8rem)] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 pr-1 "
                 >
+
                   {selectedComponent.type !== DesignerElementType.table &&
                     selectedComponent.type !== DesignerElementType.line && (
                       <Box sx={{ mb: 1 }}>
@@ -1582,7 +1650,16 @@ export default function ExtendedPDFBarcodeDesigner() {
                             }
                           />
                         )
-                        :(
+                        :selectedComponent.type === DesignerElementType.qrCode ?(
+                          
+                          <ERPInput
+                          id="value"
+                          label="QR Code Value"
+                          value={selectedComponent.qrCodeProps?.value}
+                          data={selectedComponent.qrCodeProps}
+                          onChange={(e) => handleQRCodePropertyChange("value", e.target.value)}
+                        />
+                        ):(
                           <ERPInput
                             id="content"
                             label="Content"
@@ -1620,12 +1697,13 @@ export default function ExtendedPDFBarcodeDesigner() {
                       }
                     />
                   </Box>
+
                   {selectedComponent && selectedComponent.type === DesignerElementType.image &&(
                     <Box sx={{ mb: 1 }}>
                     <ERPDataCombobox
                     id="imgFit"
                     data={selectedComponent}
-                    label="imgFit"
+                    label="Image Fit"
                     field={{
                       id: "imgFit",
                       valueKey: "value",
@@ -1724,6 +1802,123 @@ export default function ExtendedPDFBarcodeDesigner() {
                     </Box>
                   )}
 
+{selectedComponent && selectedComponent.type === DesignerElementType.qrCode && (
+                   <Box sx={{ mb: 1, display: 'flex', flexDirection: 'column', gap: 1 }}>
+                      <Box>
+                        <ERPSlider
+                          label="QR Code Size"
+                          value={selectedComponent.qrCodeProps?.size || 128}
+                          onChange={(e) => handleQRCodePropertyChange("size", e.target.valueAsNumber)}
+                          min={64}
+                          max={512}
+                        />
+                      
+                      </Box>
+                      <Box>
+                        <ERPDataCombobox
+                          id="level"
+                          data={selectedComponent.qrCodeProps}
+                          label="Error Correction Level"
+                          field={{
+                            id: "level",
+                            valueKey: "value",
+                            labelKey: "label",
+                          }}
+                          options={[
+                            { value: "L", label: "Low" },
+                            { value: "M", label: "Medium" },
+                            { value: "Q", label: "Quartile" },
+                            { value: "H", label: "High" },
+                          ]}
+                          onChange={(e) => handleQRCodePropertyChange("level", e.value)}
+                        />
+                      </Box>
+                      <Box>
+                        <ERPInput
+                          id="bgColor"
+                          label="Background Color"
+                          type="color"
+                          value={selectedComponent.qrCodeProps?.bgColor || "#FFFFFF"}
+                          data={selectedComponent.qrCodeProps}
+                          onChange={(e) => handleQRCodePropertyChange("bgColor", e.target.value)}
+                        />
+                      </Box>
+                      <Box>
+                        <ERPInput
+                          id="fgColor"
+                          label="Foreground Color"
+                          type="color"
+                          value={selectedComponent.qrCodeProps?.fgColor || "#000000"}
+                          data={selectedComponent.qrCodeProps}
+                          onChange={(e) => handleQRCodePropertyChange("fgColor", e.target.value)}
+                        />
+                      </Box>
+                      <Box>
+                        <ERPInput
+                          id="logoUrl"
+                          label="Logo URL"
+                          value={selectedComponent.qrCodeProps?.imageSettings?.src || ""}
+                          data={selectedComponent.qrCodeProps}
+                          onChange={(e) => handleQRCodePropertyChange("imageSettings", {
+                            ...selectedComponent.qrCodeProps?.imageSettings,
+                            src: e.target.value,
+                          })}
+                        />
+                      </Box>
+                      {selectedComponent.qrCodeProps?.imageSettings?.src && (
+                        <>
+                          <Box>
+                            <ERPSlider
+                              label={`Logo Width (${selectedComponent.qrCodeProps?.imageSettings?.width})`}
+                              value={selectedComponent.qrCodeProps?.imageSettings?.width}
+                              onChange={(e) => handleQRCodePropertyChange("imageSettings", {
+                                ...selectedComponent.qrCodeProps?.imageSettings,
+                                width: e.target.valueAsNumber,
+                              })}
+                              min={10}
+                              max={30}
+                            />
+                          </Box>
+                          <Box>
+                            <ERPSlider
+                              label={`Logo Height (${selectedComponent.qrCodeProps?.imageSettings?.height})`}
+                              value={selectedComponent.qrCodeProps?.imageSettings?.height || 24}
+                              onChange={(e) => handleQRCodePropertyChange("imageSettings", {
+                                ...selectedComponent.qrCodeProps?.imageSettings,
+                                height: e.target.valueAsNumber,
+                              })}
+                              min={10}
+                              max={30}
+                            />
+                          </Box>
+                          <Box>
+                            <ERPCheckbox
+                              id="excavate"
+                              label="Excavate (Clear QR background under logo)"
+                              data={selectedComponent.qrCodeProps}
+                              checked={selectedComponent.qrCodeProps?.imageSettings?.excavate ?? false}
+                              onChange={(e) => handleQRCodePropertyChange("imageSettings", {
+                                ...selectedComponent.qrCodeProps?.imageSettings,
+                                excavate: e.target.checked,
+                              })}
+                            />
+                          </Box>
+                        </>
+                      )}
+                      <Box>
+                        <ERPInput
+                          id="marginSize"
+                          label="Margin Size"
+                          type="number"
+                          value={selectedComponent.qrCodeProps?.marginSize || 0}
+                          data={selectedComponent.qrCodeProps}
+                          onChange={(e) => handleQRCodePropertyChange("marginSize", parseInt(e.target.value, 10))}
+                        />
+                      </Box>
+                    
+                    </Box>
+                  )}
+                  
                   {selectedComponent.type === DesignerElementType.line ? (
                     <Box
                       sx={{ mb: 1 }}
@@ -1760,7 +1955,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                       </Box>
                     </Box>
                   ) : (
-                    selectedComponent.type !== DesignerElementType.table && (
+                    (selectedComponent.type !== DesignerElementType.table && selectedComponent.type !== DesignerElementType.qrCode) && (
                       <Box
                         sx={{ mb: 1 }}
                         className="flex justify-start gap-2 items-center"
@@ -1873,7 +2068,7 @@ export default function ExtendedPDFBarcodeDesigner() {
                   )}
 
                   {selectedComponent.type !== DesignerElementType.line &&
-                    selectedComponent.type !== DesignerElementType.table && (
+                    selectedComponent.type !== DesignerElementType.table && selectedComponent.type !== DesignerElementType.qrCode && (
                       <Box
                         sx={{ mb: 1 }}
                         className="flex justify-start gap-2 items-center"

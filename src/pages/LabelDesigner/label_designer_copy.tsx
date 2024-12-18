@@ -373,6 +373,20 @@ export default function ExtendedPDFBarcodeDesigner() {
               fontStyle: "normal",
             },
           }),
+          qrCodeProps: {
+            value: "",
+            size: 0,
+            level: "M",
+            bgColor: "",
+            fgColor: "",
+            marginSize: 0,
+            imageSettings: {
+              src: '',
+              height: 16,
+              width: 16,
+              excavate: true,
+            }
+          }
         };
 
         const placedComponents = [
@@ -1816,11 +1830,11 @@ export default function ExtendedPDFBarcodeDesigner() {
                         placeholder={
                           side.charAt(0).toUpperCase() + side.slice(1)
                         }
-                        value={templateData?.propertiesState?.margins?.[side]}
+                        value={templateData?.propertiesState?.padding?.[side]}
                         data={templateData?.propertiesState}
                         onChange={(e) =>
-                          handlePagePropsChange("margins", {
-                            ...templateData?.propertiesState?.margins,
+                          handlePagePropsChange("padding", {
+                            ...templateData?.propertiesState?.padding,
                             [side]: parseInt(e.target.value),
                           })
                         }
@@ -1877,7 +1891,7 @@ export default function ExtendedPDFBarcodeDesigner() {
             style={{
               width: "8.5in",
               height: "11in",
-              margin: `${pxToPoint(templateData?.propertiesState?.margins?.top ||0)}pt ${pxToPoint(templateData?.propertiesState?.margins?.right||0)}pt ${pxToPoint(templateData?.propertiesState?.margins?.bottom||0)}pt ${pxToPoint(templateData?.propertiesState?.margins?.left||0)}pt`,
+              margin: `${pxToPoint(templateData?.propertiesState?.padding?.top ||0)}pt ${pxToPoint(templateData?.propertiesState?.padding?.right||0)}pt ${pxToPoint(templateData?.propertiesState?.padding?.bottom||0)}pt ${pxToPoint(templateData?.propertiesState?.padding?.left||0)}pt`,
             }}
           >
             {templateData?.barcodeState?.placedComponents?.map(renderComponent)}

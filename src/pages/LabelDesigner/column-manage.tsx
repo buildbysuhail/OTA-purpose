@@ -16,7 +16,7 @@ interface AddColumnsManageProps {
     onSubmit: (columnData: tableColumns) => void;
     onDelete?: () => void;
     initialData?: tableColumns;
-  }
+  }   
   export const AddColumnsManage: React.FC<AddColumnsManageProps> = React.memo(({onSubmit, onDelete, initialData}) => {
     const [ColumnData, setColumnData] = React.useState<tableColumns>({} as tableColumns); 
       

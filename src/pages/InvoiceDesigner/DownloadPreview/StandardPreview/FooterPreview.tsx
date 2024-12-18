@@ -4,9 +4,9 @@ import { Text, View, Image, StyleSheet } from "@react-pdf/renderer";
 
 const BottomPreview = ({ template, data, templateGroupId }: DownloadPreviewProps) => {
   /// Padings
-  const paddingLeft = template?.propertiesState?.margins?.left || 10;
-  const paddingRight = template?.propertiesState?.margins?.right || 10;
-  const paddingBottom = template?.propertiesState?.margins?.bottom || 50;
+  const paddingLeft = template?.propertiesState?.padding?.left || 10;
+  const paddingRight = template?.propertiesState?.padding?.right || 10;
+  const paddingBottom = template?.propertiesState?.padding?.bottom || 50;
 
   /// label font size and color
   const labelFontSize = template?.propertiesState?.label_font_size || 12;

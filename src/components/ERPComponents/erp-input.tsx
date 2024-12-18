@@ -24,7 +24,7 @@ import { handleNavigation } from "../../utilities/shortKeys";
 import { Background } from "devextreme-react/cjs/range-selector";
 
 // Mocking the ERPElementValidationMessage component
-const ERPElementValidationMessage = ({ validation, }: { validation?: string; }) => <div className="text-red text-xs">{validation}</div>;
+const ERPElementValidationMessage = ({ validation, }: { validation?: string; }) => validation != undefined && validation != null && validation != "" ? (<div className="text-red text-xs">{validation}</div>) : (null);
 type ERPInputBaseProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "size" | "prefix" | "color">;
 interface ERPInputProps extends ERPInputBaseProps {
   id: string;
@@ -409,10 +409,9 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
       debugger;
       const ds = min != undefined ? parseFloat(min.toString()) : undefined;
       const sd = parseFloat(e.target?.value);
-     if(type == "number" && ds != undefined && ds >= 0 && sd < 0)
-     {
-      return false;
-     }
+      if (type == "number" && ds != undefined && ds >= 0 && sd < 0) {
+        return false;
+      }
       onChangeData &&
         data &&
         onChangeData(setNestedValue(data, id, e.target?.value));
@@ -477,11 +476,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
           <TextField {...muiProps}
           // className= {`${appState.mode == 'dark' ? "form-control" : ``}`} 
           />
-          <ERPElementValidationMessage validation={validation} />
-          <Typography
+          {validation != undefined && validation != null && validation != "" && (
+            <ERPElementValidationMessage validation={validation} />
+          )}
+          {info != undefined && info != null && info != "" && (<Typography
             className="text-[#374151] text-xs font-medium mt-1">
             {infoWithLineBreaks(info)}
-          </Typography>
+          </Typography>)}
         </div>
       );
     }
@@ -590,10 +591,13 @@ const ERPInput = forwardRef<HTMLInputElement, ERPInputProps>(
               </div>
             )}
           </div>
-          <ERPElementValidationMessage validation={validation} />
-          <div className="text-[#374151] text-xs font-medium ">
-            {infoWithLineBreaks(info)}
-          </div>
+          {validation != undefined && validation != null && validation != "" && (
+            <ERPElementValidationMessage validation={validation} />
+          )}
+          {info != undefined && info != null && info != "" && (
+            <div className="text-[#374151] text-xs font-medium ">
+              {infoWithLineBreaks(info)}
+            </div>)}
         </div>
       );
     }

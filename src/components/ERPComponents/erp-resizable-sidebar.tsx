@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ResizableBox } from "react-resizable";
 import "react-resizable/css/styles.css"; // Ensure you include ResizableBox's styles
-import "./erp-resizable-sidebar.css"; // Move styles specific to this component here
+// import "./erp-resizable-sidebar.css"; // Move styles specific to this component here
 import { useAppState } from "../../utilities/hooks/useAppState";
 
 interface ERPResizableSidebarProps {

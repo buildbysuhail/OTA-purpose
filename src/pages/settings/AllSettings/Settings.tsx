@@ -98,8 +98,8 @@ const Settings = () => {
         </div>
         <div className="py-6 px-4 max-w-4xl mx-auto w-full h-full overflow-auto scrollbar-hide">
           <div className="w-full flex flex-wrap gap-4 justify-center">
-            {settingsRoutes?.map((item: any, idx: number) => {
-             item.disabled = true;
+            {SettingsMenuItems?.map((item: any, idx: number) => {
+            //  item.disabled = true;
               return <SettingsCard data={item} key={`QKLJM34${idx}`}  />;
             })}
           </div>

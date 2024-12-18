@@ -633,141 +633,482 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
             <div className="w-[100px]"></div>
           </div>
 
-          <div className="flex flex-wrap gap-4">
-            {formElements.voucherPrefix.visible && (
-              <ERPInput
-                id="master_voucherPrefix"
-                className="max-w-[120px] min-w-[80px]"
-                label={formElements.voucherPrefix.label}
-                value={formState.transaction.master.voucherPrefix}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { voucherPrefix: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.voucherPrefix?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
+          <div className="grid grid-cols-2 gap-8">
+            <div className="">
+              <div className="grid grid-cols-2 gap-2">
+                {formElements.voucherPrefix.visible && (
+                  <ERPInput
+                    id="master_voucherPrefix"
+                    label={formElements.voucherPrefix.label}
+                    value={formState.transaction.master.voucherPrefix}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { voucherPrefix: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.voucherPrefix?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+                {formElements.voucherNumber.visible && (
+                  <ERPInput
+                    id="voucherNumber"
+                    label={formElements.voucherNumber.label}
+                    value={formState.transaction.master.voucherNumber}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { voucherNumber: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.voucherNumber?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+              </div>
 
-            {formElements.voucherNumber.visible && (
-              <ERPInput
-                id="voucherNumber"
-                className="max-w-[120px] min-w-[100px]"
-                label={formElements.voucherNumber.label}
-                value={formState.transaction.master.voucherNumber}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { voucherNumber: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.voucherNumber?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
+              {formElements.masterAccount.visible && (
+                <div>
+                  <ERPDataCombobox
+                    id="masterAccount"
+                    label={formElements.masterAccount.label}
+                    value={formState.masterAccountID}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateHandleFieldChange({
+                          fields: { masterAccountID: e.target.value },
+                        })
+                      )
+                    }
+                    field={{
+                      valueKey: "id",
+                      labelKey: "name",
+                      required: true,
+                      getListUrl: Urls.data_acc_ledgers,
+                    }}
+                    disabled={
+                      formElements.masterAccount?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                  <div className="flex justify-between items-center mt-1">
+                    <span className="text-xs text-gray-500">
+                      Bal: {formState.masterBalance || "0.00"}
+                    </span>
+                  </div>
+                </div>
+              )}
 
-            {formElements.transactionDate.visible && (
-              <ERPDateInput
-                id="transactionDate"
-                className="w-[150px] "
-                label={formElements.transactionDate.label}
-                value={new Date(formState.transaction.master.transactionDate)}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { transactionDate: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.transactionDate?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
+              <div className="grid grid-cols-2 gap-2">
+                {formElements.chequeNumber.visible && (
+                  <ERPInput
+                    id="chequeNumber"
+                    label={formElements.chequeNumber.label}
+                    value={formState.row.chequeNumber}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { chequeNumber: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.chequeNumber?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+                {formElements.bankDate.visible && (
+                  <ERPDateInput
+                    id="bankDate"
+                    label={formElements.bankDate.label}
+                    value={new Date(formState.row.bankDate)}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { bankDate: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.bankDate?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {formElements.currencyID.visible && (
+                  <ERPDataCombobox
+                    id="currencyID"
+                    label={formElements.currencyID.label}
+                    field={{
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_currencies,
+                    }}
+                    onChangeData={(e) =>
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { currencyId: e.value, currencyName: e.label },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.currencyID?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+                {formElements.exchangeRate.visible && (
+                  <ERPInput
+                    id="exchangeRate"
+                    label={formElements.exchangeRate.label}
+                    type="number"
+                    value={formState.row.exchangeRate}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { exchangeRate: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.exchangeRate?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+              </div>
+            </div>
 
-            {formElements.referenceNumber.visible && (
-              <ERPInput
-                id="referenceNumber"
-                className="min-w-[130px] max-w-[160px]"
-                label={formElements.referenceNumber.label}
-                value={formState.transaction.master.referenceNumber}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { referenceNumber: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.referenceNumber?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
+            <div className="">
+              <div className="grid grid-cols-2 gap-2">
+                {formElements.referenceNumber.visible && (
+                  <ERPInput
+                    id="referenceNumber"
+                    label={formElements.referenceNumber.label}
+                    value={formState.transaction.master.referenceNumber}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { referenceNumber: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.referenceNumber?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+                {formElements.transactionDate.visible && (
+                  <ERPDateInput
+                    id="transactionDate"
+                    label={formElements.transactionDate.label}
+                    value={new Date(formState.transaction.master.transactionDate)}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { transactionDate: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.transactionDate?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+                {formElements.referenceDate.visible && (
+                  <ERPDateInput
+                    id="referenceDate"
+                    label={formElements.referenceDate.label}
+                    value={new Date(formState.transaction.master.referenceDate)}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { referenceDate: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.referenceDate?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+                {formElements.employee.visible && (
+                  <ERPDataCombobox
+                    id="employeeId"
+                    label={formElements.employee.label}
+                    value={formState.masterAccountID}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { employeeId: e.target.value },
+                        })
+                      )
+                    }
+                    field={{
+                      valueKey: "id",
+                      labelKey: "name",
+                      required: true,
+                      getListUrl: Urls.data_employees,
+                    }}
+                    disabled={
+                      formElements.employee?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                {formElements.remarks.visible && (
+                  <ERPInput
+                    id="remarks"
+                    label={formElements.remarks.label}
+                    value={formState.transaction.master.remarks}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { remarks: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.remarks?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
 
-            {formElements.referenceDate.visible && (
-              <ERPDateInput
-                className="min-w-[130px] max-w-[160px]"
-                id="referenceDate"
-                label={formElements.referenceDate.label}
-                value={new Date(formState.transaction.master.referenceDate)}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { referenceDate: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.referenceDate?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
+                {formElements.commonNarration.visible && (
+                  <ERPInput
+                    id="notes"
+                    label={formElements.commonNarration.label}
+                    value={formState.transaction.master.commonNarration}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateTransactionMasterHandleFieldChange({
+                          fields: { commonNarration: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.commonNarration?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
 
-            {formElements.masterAccount.visible && (
-              <div className="w-1/4">
-                <ERPDataCombobox
-                  id="masterAccount"
-                  className="min-w-[200px]"
-                  label={formElements.masterAccount.label}
-                  value={formState.masterAccountID}
+                {formElements.projectId.visible && (
+                  <ERPDataCombobox
+                    id="project"
+                    label={formElements.projectId.label}
+                    field={{
+                      valueKey: "id",
+                      labelKey: "name",
+                      getListUrl: Urls.data_projects,
+                    }}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { projectId: e.target.value },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.projectId?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="">
+            <div className="flex items-center gap-2">
+              {formElements.ledgerCode.visible && (
+                <ERPInput
+                  id="ledgerCode"
+                  className=""
+                  label={formElements.ledgerCode.label}
+                  value={formState.row.ledgerCode}
+                  ref={ledgerCodeRef}
                   onChange={(e) =>
                     dispatch(
-                      accFormStateHandleFieldChange({
-                        fields: { masterAccountID: e.target.value },
+                      accFormStateRowHandleFieldChange({
+                        fields: { ledgerCode: e.target.value },
                       })
                     )
                   }
+                  disabled={
+                    formElements.ledgerCode?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
+                />
+              )}
+              {/* {formState?.row.ledgerId?.toString()} */}
+              {formElements.ledgerId.visible && (
+                <ERPDataCombobox
+                  id="ledgerId"
+                  className="w-full"
+                  label={formElements.ledgerId.label}
+                  data={formState.row}
+                  onSelectItem={(e) => {
+                    dispatch(
+                      accFormStateRowHandleFieldChange({
+                        fields: { ledgerId: e.value, ledgerName: e.label },
+                      })
+                    );
+                  }}
                   field={{
+                    id: "ledgerId",
                     valueKey: "id",
                     labelKey: "name",
                     required: true,
                     getListUrl: Urls.data_acc_ledgers,
                   }}
                   disabled={
-                    formElements.masterAccount?.disabled ||
+                    formElements.ledgerId?.disabled ||
                     formElements.pnlMasters?.disabled
                   }
                 />
-                <div className="flex justify-between items-center mt-1">
-                  <span className="text-xs text-gray-500">
-                    Bal: {formState.masterBalance || "0.00"}
-                  </span>
-                </div>
+              )}
+
+              {formElements.amount.visible && (
+                <ERPInput
+                  id="amount"
+                  className=""
+                  label={formElements.amount.label}
+                  type="number"
+                  value={formState.row.amount}
+                  onChange={(e) =>
+                    dispatch(
+                      accFormStateRowHandleFieldChange({
+                        fields: { amount: e.target.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formElements.amount?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
+                />
+              )}
+              <div className="xl:w-[170px] lg:w-[250px]">
+                {formElements.hasDiscount.visible && (
+                  <ERPCheckbox
+                    id="hasDiscount"
+                    className="pt-[10px] pr-[10px]"
+                    label={formElements.hasDiscount.label}
+                    checked={formState.row.hasDiscount}
+                    onChange={(e) =>
+                      dispatch(
+                        accFormStateRowHandleFieldChange({
+                          fields: { hasDiscount: e.target.checked },
+                        })
+                      )
+                    }
+                    disabled={
+                      formElements.hasDiscount?.disabled ||
+                      formElements.pnlMasters?.disabled
+                    }
+                  />
+                )}
               </div>
+              {formElements.discount.visible && (
+                <ERPInput
+                  id="discount"
+                  label={formElements.discount.label}
+                  value={formState.row.discount}
+                  onChange={(e) =>
+                    dispatch(
+                      accFormStateRowHandleFieldChange({
+                        fields: { discount: e.target.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formElements.discount?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
+                />
+              )}
+            </div>
 
-            )}
+            <div className="flex flex-wrap gap-4">
+              <span className="text-blue-600 font-bold self-center">
+                Group Name:
+              </span>
+            </div>
+          </div>
 
+          <div className="">
+            <div className="flex items-center gap-2">
+              {formElements.narration.visible && (
+                <ERPInput
+                  id="narration"
+                  className="w-full"
+                  label={formElements.narration.label}
+                  value={formState.row.narration}
+                  onChange={(e) =>
+                    dispatch(
+                      accFormStateRowHandleFieldChange({
+                        fields: { narration: e.target.value },
+                      })
+                    )
+                  }
+                  disabled={
+                    formElements.narration?.disabled ||
+                    formElements.pnlMasters?.disabled
+                  }
+                />
+              )}
+
+              {(formState.transaction?.master?.isLocked == undefined ||
+                formState.transaction?.master?.isLocked == true) &&
+                (userSession.userTypeCode == "CA" ||
+                  userSession.userTypeCode == "BA")}
+              <div className="flex items-center gap-2 mt-3">
+                <ERPButton
+                  title="Billwise"
+                  variant="secondary"
+                  onClick={() => {
+                    dispatch(
+                      accFormStateHandleFieldChange({
+                        fields: { showbillwise: true },
+                      })
+                    );
+                  }}
+                />
+                <ERPButton
+                  title="Add"
+                  variant="primary"
+                  loading={formState.rowProcessing}
+                  type="button"
+                  onClick={() => {
+                    // validate()
+                    dispatch(accFormStateTransactionDetailsRowAdd(formState.row));
+                  }}
+                />
+              </div>
+            </div>
+            <div className="text-red-600 font-bold text-sm">
+              Amount in Words: {formState.amountInWords}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-4">
             {formElements.drCr.visible && (
               <ERPDataCombobox
                 id="drCr"
@@ -791,143 +1132,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 ]}
                 disabled={
                   formElements.drCr?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-
-            {formElements.employee.visible && (
-              <ERPDataCombobox
-                id="employeeId"
-                className="min-w-[200px]"
-                label={formElements.employee.label}
-                value={formState.masterAccountID}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { employeeId: e.target.value },
-                    })
-                  )
-                }
-                field={{
-                  valueKey: "id",
-                  labelKey: "name",
-                  required: true,
-                  getListUrl: Urls.data_employees,
-                }}
-                disabled={
-                  formElements.employee?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-
-            {formElements.remarks.visible && (
-              <ERPInput
-                id="remarks"
-                className="max-w-[500px]"
-                label={formElements.remarks.label}
-                value={formState.transaction.master.remarks}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { remarks: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.remarks?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-
-            {formElements.commonNarration.visible && (
-              <ERPInput
-                id="notes"
-                className="max-w-[500px]"
-                label={formElements.commonNarration.label}
-                value={formState.transaction.master.commonNarration}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateTransactionMasterHandleFieldChange({
-                      fields: { commonNarration: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.commonNarration?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-          </div>
-
-          <div className="grid grid-cols-3 gap-4">
-            {formElements.ledgerCode.visible && (
-              <ERPInput
-                id="ledgerCode"
-                className=""
-                label={formElements.ledgerCode.label}
-                value={formState.row.ledgerCode}
-                ref={ledgerCodeRef}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { ledgerCode: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.ledgerCode?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-            {/* {formState?.row.ledgerId?.toString()} */}
-            {formElements.ledgerId.visible && (
-              <ERPDataCombobox
-                id="ledgerId"
-                className=""
-                label={formElements.ledgerId.label}
-                data={formState.row}
-                onSelectItem={(e) => {
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { ledgerId: e.value, ledgerName: e.label },
-                    })
-                  );
-                }}
-                field={{
-                  id: "ledgerId",
-                  valueKey: "id",
-                  labelKey: "name",
-                  required: true,
-                  getListUrl: Urls.data_acc_ledgers,
-                }}
-                disabled={
-                  formElements.ledgerId?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-
-            {formElements.amount.visible && (
-              <ERPInput
-                id="amount"
-                className=""
-                label={formElements.amount.label}
-                type="number"
-                value={formState.row.amount}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { amount: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.amount?.disabled ||
                   formElements.pnlMasters?.disabled
                 }
               />
@@ -961,182 +1165,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               }
             />
           )}
-
-          <div className="flex items-center gap-4">
-            {formElements.narration.visible && (
-              <ERPInput
-                id="narration"
-                className="w-full"
-                label={formElements.narration.label}
-                value={formState.row.narration}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { narration: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.narration?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-
-            {(formState.transaction?.master?.isLocked == undefined ||
-              formState.transaction?.master?.isLocked == true) &&
-              (userSession.userTypeCode == "CA" ||
-                userSession.userTypeCode == "BA")}
-            <ERPButton
-              title="Billwise"
-              variant="secondary"
-              onClick={() => {
-                dispatch(
-                  accFormStateHandleFieldChange({
-                    fields: { showbillwise: true },
-                  })
-                );
-              }}
-            />
-            <ERPButton
-              title="Add"
-              variant="primary"
-              className="h-fit"
-              loading={formState.rowProcessing}
-              type="button"
-              onClick={() => {
-                // validate()
-                dispatch(accFormStateTransactionDetailsRowAdd(formState.row));
-              }}
-            />
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            <span className="text-blue-600 font-bold self-center">
-              Group Name:
-            </span>
-            {formElements.currencyID.visible && (
-              <ERPDataCombobox
-                id="currencyID"
-                className="min-w-[150px] max-w-[200px]"
-                label={formElements.currencyID.label}
-                field={{
-                  valueKey: "id",
-                  labelKey: "name",
-                  getListUrl: Urls.data_currencies,
-                }}
-                onChangeData={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { currencyId: e.value, currencyName: e.label },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.currencyID?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-            {formElements.exchangeRate.visible && (
-              <ERPInput
-                id="exchangeRate"
-                className="min-w-[200px] max-w-[250px]"
-                label={formElements.exchangeRate.label}
-                type="number"
-                value={formState.row.exchangeRate}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { exchangeRate: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.exchangeRate?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-            <div className="flex items-center">
-              {formElements.hasDiscount.visible && (
-                <ERPCheckbox
-                  id="hasDiscount"
-                  className="pt-[10px] pr-[10px]"
-                  label={formElements.hasDiscount.label}
-                  checked={formState.row.hasDiscount}
-                  onChange={(e) =>
-                    dispatch(
-                      accFormStateRowHandleFieldChange({
-                        fields: { hasDiscount: e.target.checked },
-                      })
-                    )
-                  }
-                  disabled={
-                    formElements.hasDiscount?.disabled ||
-                    formElements.pnlMasters?.disabled
-                  }
-                />
-              )}
-              {formElements.discount.visible && (
-                <ERPInput
-                  id="discount"
-                  className="min-w-[100px] max-w-[250px]"
-                  label={formElements.discount.label}
-                  value={formState.row.discount}
-                  onChange={(e) =>
-                    dispatch(
-                      accFormStateRowHandleFieldChange({
-                        fields: { discount: e.target.value },
-                      })
-                    )
-                  }
-                  disabled={
-                    formElements.discount?.disabled ||
-                    formElements.pnlMasters?.disabled
-                  }
-                />
-              )}
-            </div>
-            {formElements.chequeNumber.visible && (
-              <ERPInput
-                id="chequeNumber"
-                className="min-w-[100px] max-w-[120px]"
-                label={formElements.chequeNumber.label}
-                value={formState.row.chequeNumber}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { chequeNumber: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.chequeNumber?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-            {formElements.bankDate.visible && (
-              <ERPDateInput
-                id="bankDate"
-                className="min-w-[100px] max-w-[120px]"
-                label={formElements.bankDate.label}
-                value={new Date(formState.row.bankDate)}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { bankDate: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.bankDate?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
-          </div>
 
           <div className="flex flex-wrap gap-4">
             {(voucherType == "BP" || voucherType == "CQP") && (
@@ -1193,29 +1221,6 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
                 )}
               </>
             )}
-            {formElements.projectId.visible && (
-              <ERPDataCombobox
-                id="project"
-                className="min-w-[180px]"
-                label={formElements.projectId.label}
-                field={{
-                  valueKey: "id",
-                  labelKey: "name",
-                  getListUrl: Urls.data_projects,
-                }}
-                onChange={(e) =>
-                  dispatch(
-                    accFormStateRowHandleFieldChange({
-                      fields: { projectId: e.target.value },
-                    })
-                  )
-                }
-                disabled={
-                  formElements.projectId?.disabled ||
-                  formElements.pnlMasters?.disabled
-                }
-              />
-            )}
             {formElements.costCentreId.visible && (
               <ERPDataCombobox
                 id="costCentre"
@@ -1240,9 +1245,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
               />
             )}
           </div>
-          <div className="text-red-600 font-bold text-sm">
-            Amount in Words: {formState.amountInWords}
-          </div>
+
           <ErpDevGrid
             columns={columns}
             height={gridHeight}
@@ -1888,7 +1891,7 @@ const AccTransactionForm: React.FC<AccTransactionProps> = ({
       <CustomerDetailsSidebar ></CustomerDetailsSidebar>
       <AttachmentSidebar></AttachmentSidebar>
       <ActivityLogSidebar></ActivityLogSidebar>
-      <div className="flex items-center justify-between p-4 sticky bottom-0 left-0 right-0 bg-white z-50 shadow-md w-full">
+      <div className="flex items-center justify-between z-10 fixed bottom-0 bg-white shadow-lg w-[-webkit-fill-available] p-2">
         <div className=" flex items-center gap-4">
           {formElements.printOnSave.visible && (
             <ERPCheckbox

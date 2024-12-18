@@ -36,6 +36,7 @@ const navigate = useNavigate()
 
  useEffect(() => {
   loadCounterData();
+  setReload(true)
 }, []);
 
  const loadCounterData = async () => {

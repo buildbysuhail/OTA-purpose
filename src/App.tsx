@@ -65,6 +65,11 @@ export const LoadingAnimation = () => {
 };
 
 function App() {
+
+  useEffect(() => {
+    
+    load();
+  }, []);
   const _dispatch = useAppDispatch();
   const _setDeviceInfo = async () => {
     try {
@@ -89,11 +94,7 @@ function App() {
   
 
   useEffect(() => {
-    load();
-  }, []);
-
-  useEffect(() => {
-    debugger;
+    
     const token = localStorage.getItem("token");
 
 
@@ -115,7 +116,7 @@ function App() {
         userProfileDetails = customJsonParse(atob(upt));
       }
     } catch (error) { }
-  debugger;
+  
     let userThemes: AppState = appInitialState;
     try {
     console.log("utt:", utt);
@@ -128,7 +129,7 @@ function App() {
     let locale = languagesData.find(
       (l) => l.code == userProfileDetails.language
     ) ?? { code: "en", name: "English", flag: usFlag, rtl: false };
-    debugger;
+    
     syncAppStates(dispatch, userThemes, userProfileDetails,userRights, locale);
     const language = userProfileDetails?.language;
 

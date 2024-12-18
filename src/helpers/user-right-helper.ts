@@ -10,6 +10,7 @@ export enum UserAction {
   BlockedDiscount = "B",
   Export = "X",
   Print = "P",
+  Show = "S",
 }
 export const useUserRights = () => {
   const userSession = useAppSelector((state: RootState) => state.UserSession);
@@ -47,12 +48,12 @@ export const useUserRights = () => {
 
     return result;
   };
-  const getAllowedFormCodes = (
+ const getAllowedFormCodes = (
     formCodes: string[],
     action: UserAction
   ): string[] => {
     const userTypeCode = userSession.userTypeCode;
-
+debugger;
     // Automatically grant rights if userTypeCode is "BA" or "CA"
     if (userTypeCode === "BA" || userTypeCode === "CA") {
       return formCodes;

@@ -21,6 +21,7 @@ import { useTranslation } from "react-i18next";
 import { ReportsMenuItems } from "./sidemenu/reports-routes";
 import { Countries } from "../../../redux/slices/user-session/reducer";
 import ItemTableDesigner from "../../../pages/InvoiceDesigner/Designer/ItemTableDesigner";
+import { UserAction, useUserRights } from "../../../helpers/user-right-helper";
 interface SidebarProps {
   type: "erp" | "account-settings" | "workspace-settings" | "settings" | "reports";
 }
@@ -28,7 +29,7 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
   let userSession = useAppSelector((state: RootState) => state.UserSession);
   let applicationSettings = useAppSelector((state: RootState) => state.ApplicationSettings);
-
+const {getAllowedFormCodes}=useUserRights();
   const [menuitems, setMenuitems] = useState<any>(() => {
     console.log(`type${type}`);
     console.log(`type${SettingsMenuItems}`);
@@ -100,11 +101,19 @@ const Sidebar: FC<SidebarProps> = React.memo(({ type }) => {
     }
     else if (type == "erp") {
       let st: [] = []
+      
       st = menuitems;
+
+      const allowedFormCodes= getAllowedFormCodes( menuitems.map((x: any) =>
+        x.children ? x.children.map((item: any) => item.rights) : []),UserAction.Show);
+
       const sd = st.map((x: any) => x.children?.map((item: any) => {
         item.visible = true;
         item.disabled = false;
 
+        if(!allowedFormCodes.find(x=>x==item.rights)){
+          item.visible=false;
+        }
         if (exludedRoutes.find(route =>
           route.title === item.title && route.countries.find(x => x == userSession.countryId) != undefined
         )) {

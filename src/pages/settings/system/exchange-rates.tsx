@@ -298,7 +298,7 @@ const ExchangeRates = () => {
                   </Toolbar>
                 </DataGrid>
               </div>
-              <div className="grid grid-cols-1 gap-3">
+              <div className="grid grid-cols-1 gap-3 pt-4">
                 <ERPButton
                   className="justify-self-end"
                   type="button"

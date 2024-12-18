@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IdTextDto, IdTextLogoDto } from "../../../base/id-text-is-default-dto";
 import Cookies from "js-cookie";
-import { modelToBase64 } from "../../../utilities/jsonConverter";
+import { customJsonParse, modelToBase64 } from "../../../utilities/jsonConverter";
 
 export interface UserTypeRights {
   formCode: string;
@@ -12,9 +12,13 @@ export interface UserTypeRights {
   formCode: string;
   userRights: string;
 }
+let ass = localStorage.getItem("up");
+  
+    export const up: UserTypeRights[] = ass != undefined && ass != null && ass != "" 
+    ? customJsonParse(atob(ass)) : initialState;
 const userRightsSlice = createSlice({
   name: "userRights",
-  initialState,
+  initialState:up,
   reducers: {
     setUserRights: (state, action: PayloadAction<UserTypeRights[]>) => {
       return action.payload;

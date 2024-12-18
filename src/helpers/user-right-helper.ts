@@ -48,12 +48,12 @@ export const useUserRights = () => {
 
     return result;
   };
- const getAllowedFormCodes = (
+  const getAllowedFormCodes = (
     formCodes: string[],
     action: UserAction
   ): string[] => {
     const userTypeCode = userSession.userTypeCode;
-debugger;
+    debugger;
     // Automatically grant rights if userTypeCode is "BA" or "CA"
     if (userTypeCode === "BA" || userTypeCode === "CA") {
       return formCodes;
@@ -66,10 +66,11 @@ debugger;
         const filteredRows = dtUserRights.filter(
           (row: any) => row.formCode === formCode
         );
-        const out =
+      
+        return (
           filteredRows.length > 0 &&
-          filteredRows[0]?.userRights?.includes(action);
-        return out;
+          filteredRows[0]?.userRights?.includes(action)
+        );
       });
     } catch (error) {
       console.error("Error checking user rights:", error);
